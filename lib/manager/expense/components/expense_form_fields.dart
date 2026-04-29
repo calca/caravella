@@ -9,8 +9,9 @@ import '../widgets/category_dialog.dart';
 import '../location/widgets/compact_location_indicator.dart';
 import '../widgets/participant_selector_widget.dart';
 import '../widgets/category_selector_widget.dart';
-import '../widgets/voice_input_button.dart';
 import '../state/expense_form_controller.dart';
+import '../widgets/voice_input_button.dart';
+import '../../../services/voice_input_service.dart';
 
 /// Builds the core form fields: amount, name, paid-by, and category
 /// These fields are always visible regardless of expansion state
@@ -63,7 +64,7 @@ class ExpenseFormFields extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (isInitialExpense) _buildVoiceInputSection(context, gloc),
+            if (!isInitialExpense) _buildVoiceInputSection(context, gloc),
             _buildAmountField(context, gloc, style),
             SizedBox(height: FormTheme.fieldSpacing),
             _buildNameField(context, gloc, style),
@@ -73,97 +74,6 @@ class ExpenseFormFields extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget _buildVoiceInputSection(
-    BuildContext context,
-    gen.AppLocalizations gloc,
-  ) {
-    final locale = Localizations.localeOf(context);
-    final localeId = '${locale.languageCode}_${locale.countryCode ?? locale.languageCode.toUpperCase()}';
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        children: [
-          VoiceInputButton(
-            localeId: localeId,
-            participantNames: participants.map((p) => p.name).toList(),
-            onVoiceResult: (result) => _handleVoiceInput(context, result, gloc),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              gloc.voice_input_hint,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontStyle: FontStyle.italic,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handleVoiceInput(
-    BuildContext context,
-    Map<String, dynamic> result,
-    gen.AppLocalizations gloc,
-  ) {
-    final amount = result['amount'] as double?;
-    final name = result['name'] as String?;
-    final categoryName = result['category'] as String?;
-    final paidByName = result['paidBy'] as String?;
-    final date = result['date'] as DateTime?;
-
-    if (amount != null && amount > 0) {
-      controller.amountController.text = amount.toString();
-    }
-    if (name != null && name.isNotEmpty) {
-      controller.nameController.text = name;
-    }
-    if (categoryName != null && categoryName.isNotEmpty) {
-      final matchedCategory = categories.where(
-        (c) => c.name.toLowerCase().contains(categoryName.toLowerCase()) ||
-               categoryName.toLowerCase().contains(c.name.toLowerCase()),
-      ).firstOrNull;
-      if (matchedCategory != null) {
-        controller.updateCategory(matchedCategory);
-      }
-    }
-    if (paidByName != null && paidByName.isNotEmpty) {
-      final matched = participants.where(
-        (p) => p.name.toLowerCase() == paidByName.toLowerCase(),
-      ).firstOrNull;
-      if (matched != null) {
-        controller.updatePaidBy(matched);
-      }
-    }
-    if (date != null) {
-      controller.updateDate(date);
-    }
-
-    // Focus next empty field
-    if (amount == null || amount <= 0) {
-      controller.amountFocus.requestFocus();
-    } else if (name == null || name.isEmpty) {
-      controller.nameFocus.requestFocus();
-    }
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            amount != null ? '✓ ${amount.toStringAsFixed(2)}${name != null ? ' - $name' : ''}' : gloc.voice_input_error,
-          ),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
   }
 
   Widget _buildAmountField(
@@ -388,75 +298,98 @@ class ExpenseFormFields extends StatelessWidget {
     String participantName,
   ) async {
     if (onParticipantAdded == null) return;
-    onParticipantAdded!(participantName);
-    await Future.delayed(const Duration(milliseconds: 100));
-    // Notify parent to update participants list
-    // The parent will handle finding the new participant and updating the controller
+    // Await the callback so the parent component (_onParticipantAdded) can update
+    // the lifecycle manager and auto-select the participant before the sheet closes.
+    await onParticipantAdded!(participantName);
   }
 
-  /// Selects a participant by name with retry mechanism for newly added participants
+  /// Selects a participant by name from the current list.
+  /// For newly added participants the auto-selection is handled in the parent
+  /// component's _onParticipantAdded handler: once the notifier update
+  /// microtask completes, that handler calls _controller.updatePaidBy directly.
+  /// This method therefore only acts immediately when the participant is already
+  /// present in the list.
   void _selectParticipantByName(String name) {
-    LoggerService.info(
-      'Selecting participant by name: "$name", current participants: ${participants.map((p) => p.name).toList()}',
-      name: 'expense.participant',
-    );
-
-    // First try to find the participant in the current list
     final found = participants.where((p) => p.name == name).firstOrNull;
 
     if (found != null) {
-      // Participant found in list, use it immediately
-      LoggerService.info(
-        'Found participant immediately: ${found.name} (ID: ${found.id})',
-        name: 'expense.participant',
-      );
       controller.updatePaidBy(found);
     } else {
-      // Participant not yet in list (newly added), wait for list update
-      LoggerService.warning(
-        'Participant not found immediately, starting retry mechanism',
+      // The participant was just added inline; _onParticipantAdded in
+      // ExpenseFormComponent calls _controller.updatePaidBy once the notifier
+      // update microtask has run, so no action is needed here.
+      LoggerService.debug(
+        'Participant "$name" not yet in list; selection will be handled by onParticipantAdded.',
         name: 'expense.participant',
       );
-      _waitForParticipantAndSelect(name);
     }
   }
 
-  /// Waits for participant to appear in list and then selects it
-  Future<void> _waitForParticipantAndSelect(String name) async {
-    // Try multiple times with progressive delays - increased timeouts
-    final delays = [50, 100, 150, 200, 300, 500, 700]; // Total: 2 seconds max
-
-    LoggerService.info(
-      'Starting participant wait cycle for: "$name"',
-      name: 'expense.participant',
+  Widget _buildVoiceInputSection(
+    BuildContext context,
+    gen.AppLocalizations gloc,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        children: [
+          VoiceInputButton(
+            participants: participants,
+            onVoiceResult: (parsed) => _handleVoiceInput(context, parsed, gloc),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              gloc.voice_input_hint,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                fontStyle: FontStyle.italic,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
+  }
 
-    for (int i = 0; i < delays.length; i++) {
-      await Future.delayed(Duration(milliseconds: delays[i]));
-
-      // Refresh the participant list to get the latest state
-      onParticipantsUpdated?.call(participants);
-
-      final found = participants.where((p) => p.name == name).firstOrNull;
-      if (found != null) {
-        LoggerService.info(
-          'Found participant after ${i + 1} retries: ${found.name} (ID: ${found.id})',
-          name: 'expense.participant',
-        );
-        controller.updatePaidBy(found);
-        return;
-      }
-
-      LoggerService.debug(
-        'Retry ${i + 1}/${delays.length}: Participant "$name" not yet available. Current participants: ${participants.map((p) => p.name).toList()}',
-        name: 'expense.participant',
+  void _handleVoiceInput(
+    BuildContext context,
+    VoiceParseResult parsed,
+    gen.AppLocalizations gloc,
+  ) {
+    if (parsed.amount != null && parsed.amount! > 0) {
+      controller.amountController.text = parsed.amount!.toString();
+    }
+    if (parsed.name != null && parsed.name!.isNotEmpty) {
+      controller.nameController.text = parsed.name!;
+    }
+    if (parsed.category != null && categories.isNotEmpty) {
+      final match = categories.firstWhere(
+        (c) => c.name.toLowerCase() == parsed.category!.toLowerCase(),
+        orElse: () => categories.first,
       );
+      controller.updateCategory(match);
+    }
+    if (parsed.paidBy != null && participants.isNotEmpty) {
+      final match = participants.firstWhere(
+        (p) => p.name.toLowerCase() == parsed.paidBy!.toLowerCase(),
+        orElse: () => participants.first,
+      );
+      controller.updatePaidBy(match);
+    }
+    if (parsed.date != null) {
+      controller.updateDate(parsed.date!);
     }
 
-    // If still not found after all retries, log error but don't create temp participant
-    LoggerService.error(
-      'Failed to find participant "$name" after all retries. This indicates a synchronization issue.',
-      name: 'expense.participant',
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(gloc.voice_input_tap_to_speak),
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 }

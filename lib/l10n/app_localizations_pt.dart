@@ -2267,6 +2267,27 @@ class AppLocalizationsPt extends AppLocalizations {
   String get save_label => 'Salvar';
 
   @override
+  String get from_unsplash => 'Do Unsplash';
+
+  @override
+  String get unsplash_search_hint => 'Buscar fotos no Unsplash...';
+
+  @override
+  String get unsplash_no_results => 'Nenhuma imagem encontrada';
+
+  @override
+  String get unsplash_downloading => 'Baixando imagem...';
+
+  @override
+  String get unsplash_error => 'Falha ao carregar as imagens';
+
+  @override
+  String get unsplash_photos_by => 'Fotos de';
+
+  @override
+  String get unsplash_use_photo => 'Usar esta foto';
+
+  @override
   String get voice_input_button => 'Adicionar por voz';
 
   @override
@@ -2288,7 +2309,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get voice_input_not_available => 'Reconhecimento de voz não disponível';
 
   @override
-  String get voice_input_hint => 'Tente dizer: \'50 reais para o jantar no restaurante\'';
+  String get voice_input_hint => "Tente dizer: '50 reais para o jantar no restaurante'";
 
   @override
   String get voice_add_expense => 'Adicionar por voz';

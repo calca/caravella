@@ -2210,6 +2210,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get save_label => '保存';
 
   @override
+  String get from_unsplash => '从Unsplash搜索';
+
+  @override
+  String get unsplash_search_hint => '搜索Unsplash照片...';
+
+  @override
+  String get unsplash_no_results => '未找到图片';
+
+  @override
+  String get unsplash_downloading => '正在下载图片...';
+
+  @override
+  String get unsplash_error => '加载图片失败';
+
+  @override
+  String get unsplash_photos_by => '照片来自';
+
+  @override
+  String get unsplash_use_photo => '使用此照片';
+
+  @override
   String get voice_input_button => '语音输入';
 
   @override
@@ -2231,7 +2252,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voice_input_not_available => '语音识别不可用';
 
   @override
-  String get voice_input_hint => '尝试说：\'50元晚餐\'';
+  String get voice_input_hint => "尝试说：'50元晚餐'";
 
   @override
   String get voice_add_expense => '语音添加';

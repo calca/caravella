@@ -944,4 +944,18 @@
   ,"@voice_expense_saved": {"description": "Conferma quando la spesa viene salvata via voce"}
   ,"voice_expense_needs_more_info": "Mancano alcune info – completa il modulo"
   ,"@voice_expense_needs_more_info": {"description": "Messaggio quando l'input vocale non ha i dati necessari"}
+  ,"from_unsplash": "Da Unsplash"
+  ,"@from_unsplash": {"description": "Opzione per cercare un'immagine di sfondo su Unsplash"}
+  ,"unsplash_search_hint": "Cerca foto su Unsplash..."
+  ,"@unsplash_search_hint": {"description": "Testo suggerimento nella barra di ricerca Unsplash"}
+  ,"unsplash_no_results": "Nessuna immagine trovata"
+  ,"@unsplash_no_results": {"description": "Messaggio quando la ricerca Unsplash non restituisce risultati"}
+  ,"unsplash_downloading": "Scaricamento immagine..."
+  ,"@unsplash_downloading": {"description": "Etichetta di caricamento durante il download di una foto da Unsplash"}
+  ,"unsplash_error": "Impossibile caricare le immagini"
+  ,"@unsplash_error": {"description": "Messaggio di errore quando la ricerca o il download da Unsplash fallisce"}
+  ,"unsplash_photos_by": "Foto di"
+  ,"@unsplash_photos_by": {"description": "Prefisso attribuzione prima del link al brand Unsplash in fondo alla pagina di ricerca"}
+  ,"unsplash_use_photo": "Usa questa foto"
+  ,"@unsplash_use_photo": {"description": "Pulsante per confermare la selezione di una foto Unsplash nel pannello di anteprima"}
 }

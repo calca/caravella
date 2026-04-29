@@ -33,6 +33,7 @@ export 'map/map.dart';
 
 // Utilities
 export 'utils/debounce.dart';
+export 'widgets/group_background_utils.dart';
 
 // Convenience barrel export
 export 'widgets/widgets.dart';

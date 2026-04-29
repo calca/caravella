@@ -39,6 +39,15 @@
         android:xlargeScreens="false"
         android:requiresSmallestWidthDp="320" />
     
+    <!-- Restrict installation to smartphones only (exclude tablets and other large-screen devices) -->
+    <!-- This ensures the app is optimized for smartphone form factors -->
+    <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="false"
+        android:xlargeScreens="false"
+        android:requiresSmallestWidthDp="320" />
+    
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
