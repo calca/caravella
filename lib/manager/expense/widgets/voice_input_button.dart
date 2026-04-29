@@ -23,7 +23,7 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
   final VoiceInputService _voiceService = VoiceInputService();
   bool _isListening = false;
   bool _isProcessing = false;
-  bool _isAvailable = false;
+  bool _isAvailable = true;
   late AnimationController _animationController;
 
   @override
@@ -33,16 +33,6 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     );
-    _checkAvailability();
-  }
-
-  Future<void> _checkAvailability() async {
-    final available = await _voiceService.isAvailable();
-    if (mounted) {
-      setState(() {
-        _isAvailable = available;
-      });
-    }
   }
 
   @override
@@ -100,6 +90,9 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
           setState(() {
             _isListening = false;
             _isProcessing = false;
+            if (error == 'Voice recognition not available') {
+              _isAvailable = false;
+            }
           });
           _animationController.stop();
           
