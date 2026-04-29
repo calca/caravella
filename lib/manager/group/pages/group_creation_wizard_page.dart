@@ -34,18 +34,13 @@ class _WizardPageViewPhysics extends ScrollPhysics {
   }
 
   @override
-  double applyBoundaryConditions(ScrollMetrics position, double value) {
-    // value < position.pixels means swiping forward (to next page)
-    // value > position.pixels means swiping backward (to previous page)
-    if (value < position.pixels && !canGoNext) {
-      // Block forward swipe
-      return value - position.pixels;
-    }
-    if (value > position.pixels && !canGoPrev) {
-      // Block backward swipe
-      return value - position.pixels;
-    }
-    return super.applyBoundaryConditions(position, value);
+  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
+    // offset > 0 = user swiping left (going to next page, pixels increase)
+    // offset < 0 = user swiping right (going to previous page, pixels decrease)
+    // This only applies to gesture-based scrolling, not programmatic animateToPage.
+    if (offset > 0 && !canGoNext) return 0.0;
+    if (offset < 0 && !canGoPrev) return 0.0;
+    return super.applyPhysicsToUserOffset(position, offset);
   }
 }
 
@@ -121,26 +116,34 @@ class WizardState extends ChangeNotifier {
   void nextStep() {
     if (_currentStep < totalSteps - 1) {
       _currentStep++;
-      if (_pageController.hasClients) {
-        _pageController.nextPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
       notifyListeners();
+      final targetStep = _currentStep;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_pageController.hasClients) {
+          _pageController.animateToPage(
+            targetStep,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
     }
   }
 
   void previousStep() {
     if (_currentStep > 0) {
       _currentStep--;
-      if (_pageController.hasClients) {
-        _pageController.previousPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
       notifyListeners();
+      final targetStep = _currentStep;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_pageController.hasClients) {
+          _pageController.animateToPage(
+            targetStep,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
     }
   }
 
