@@ -125,41 +125,41 @@ class VoiceInputService {
 
     // Yesterday expressions
     if (_containsAny(t, [
-      'ieri',               // IT
-      'yesterday',          // EN
-      'ayer',               // ES
-      'ontem',              // PT
-      '昨天', '昨日',        // ZH
+      'ieri', // IT
+      'yesterday', // EN
+      'ayer', // ES
+      'ontem', // PT
+      '昨天', '昨日', // ZH
     ])) {
       parsedDate = now.subtract(const Duration(days: 1));
     }
     // Day-before-yesterday
     else if (_containsAny(t, [
-      "l'altro ieri", 'altroieri',  // IT
-      'day before yesterday',        // EN
-      'anteayer',                    // ES
-      'anteontem',                   // PT
-      '前天',                         // ZH
+      "l'altro ieri", 'altroieri', // IT
+      'day before yesterday', // EN
+      'anteayer', // ES
+      'anteontem', // PT
+      '前天', // ZH
     ])) {
       parsedDate = now.subtract(const Duration(days: 2));
     }
     // Last week
     else if (_containsAny(t, [
-      'settimana scorsa', 'la settimana scorsa',  // IT
-      'last week',                                 // EN
-      'la semana pasada', 'semana pasada',         // ES
-      'semana passada', 'na semana passada',       // PT
-      '上周', '上週', '上个星期', '上個星期',          // ZH
+      'settimana scorsa', 'la settimana scorsa', // IT
+      'last week', // EN
+      'la semana pasada', 'semana pasada', // ES
+      'semana passada', 'na semana passada', // PT
+      '上周', '上週', '上个星期', '上個星期', // ZH
     ])) {
       parsedDate = now.subtract(const Duration(days: 7));
     }
     // Last month
     else if (_containsAny(t, [
-      'mese scorso', 'il mese scorso',       // IT
-      'last month',                           // EN
-      'el mes pasado', 'mes pasado',          // ES
-      'mês passado', 'no mês passado',        // PT
-      '上个月', '上個月',                       // ZH
+      'mese scorso', 'il mese scorso', // IT
+      'last month', // EN
+      'el mes pasado', 'mes pasado', // ES
+      'mês passado', 'no mês passado', // PT
+      '上个月', '上個月', // ZH
     ])) {
       parsedDate = DateTime(now.year, now.month - 1, now.day);
     }
@@ -168,17 +168,62 @@ class VoiceInputService {
       // Each inner list = [Mon, Tue, Wed, Thu, Fri, Sat, Sun] for that locale
       final dayGroups = [
         // IT
-        ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'],
+        [
+          'lunedì',
+          'martedì',
+          'mercoledì',
+          'giovedì',
+          'venerdì',
+          'sabato',
+          'domenica',
+        ],
         // EN
-        ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+        [
+          'monday',
+          'tuesday',
+          'wednesday',
+          'thursday',
+          'friday',
+          'saturday',
+          'sunday',
+        ],
         // ES
-        ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'],
+        [
+          'lunes',
+          'martes',
+          'miércoles',
+          'jueves',
+          'viernes',
+          'sábado',
+          'domingo',
+        ],
         // PT
-        ['segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira',
-         'sexta-feira', 'sábado', 'domingo'],
+        [
+          'segunda-feira',
+          'terça-feira',
+          'quarta-feira',
+          'quinta-feira',
+          'sexta-feira',
+          'sábado',
+          'domingo',
+        ],
         // ZH
-        ['周一', '周二', '周三', '周四', '周五', '周六', '周日',
-         '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
+        [
+          '周一',
+          '周二',
+          '周三',
+          '周四',
+          '周五',
+          '周六',
+          '周日',
+          '星期一',
+          '星期二',
+          '星期三',
+          '星期四',
+          '星期五',
+          '星期六',
+          '星期日',
+        ],
       ];
 
       outer:
@@ -202,11 +247,11 @@ class VoiceInputService {
     // Structured keyword patterns for all 5 locales
     final paidByPattern = RegExp(
       r'(?:'
-      r'pagato\s+da|pagata\s+da|pago\s+da|'   // IT
-      r'paid\s+by|'                             // EN
-      r'pagado\s+por|pagada\s+por|'            // ES
-      r'pago\s+por|paga\s+por|'                // PT
-      r'由\s*|付款人\s*[:：]?\s*'               // ZH
+      r'pagato\s+da|pagata\s+da|pago\s+da|' // IT
+      r'paid\s+by|' // EN
+      r'pagado\s+por|pagada\s+por|' // ES
+      r'pago\s+por|paga\s+por|' // PT
+      r'由\s*|付款人\s*[:：]?\s*' // ZH
       r')\s*([a-z\u00c0-\u024f\u4e00-\u9fff][a-z\u00c0-\u024f\u4e00-\u9fff\s]+?)'
       r'(?:\s+(?:per|para|por|for|de|di)|\s*$)',
       caseSensitive: false,
@@ -336,12 +381,27 @@ class VoiceInputService {
     // Strip all date tokens
     for (final expr in [
       // IT
-      'settimana scorsa', 'la settimana scorsa', 'mese scorso', 'il mese scorso',
+      'settimana scorsa',
+      'la settimana scorsa',
+      'mese scorso',
+      'il mese scorso',
       "l'altro ieri", 'altroieri', 'ieri',
-      'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica',
+      'lunedì',
+      'martedì',
+      'mercoledì',
+      'giovedì',
+      'venerdì',
+      'sabato',
+      'domenica',
       // EN
       'day before yesterday', 'yesterday', 'last week', 'last month',
-      'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+      'sunday',
       // ES
       'anteayer', 'ayer', 'semana pasada', 'la semana pasada',
       'mes pasado', 'el mes pasado',
