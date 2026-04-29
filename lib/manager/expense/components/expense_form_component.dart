@@ -3,6 +3,7 @@ library;
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -420,31 +421,53 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       name: 'expense.participant',
     );
 
+    // Fire the callback which adds the participant to the data store (notifier).
+    // We do NOT await this — the callback itself is async and calls addParticipant,
+    // which updates _currentGroup synchronously (before its own I/O await).
     widget.config.onParticipantAdded!(participantName);
 
-    // Give more time for the notifier to update and persist the new participant
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    // Force immediate update of lifecycle manager with fresh participant list
-    final participants = widget.config.participants;
-    LoggerService.info(
-      'Updating lifecycle manager with participants: ${participants.map((p) => p.name).toList()}',
-      name: 'expense.participant',
-    );
-
-    _lifecycleManager.updateParticipants(List.from(participants));
-    setState(() {});
-
-    // Additional update to ensure complete synchronization
+    // Yield control so the microtask scheduled by the fire-and-forget callback
+    // above can run.  Even though the notifier's _currentGroup update is
+    // synchronous inside addParticipant, the callback's async function starts
+    // as a new microtask/event, so we must suspend here at least once to let it
+    // execute.  A short timer is used as a safe buffer against platform-specific
+    // async scheduling subtleties.
     await Future.delayed(const Duration(milliseconds: 100));
+
+    if (!mounted) return;
+
+    // Read the updated participants directly from the notifier (already updated in memory).
+    final notifier = context.read<ExpenseGroupNotifier?>();
+    final notifierParticipants = notifier?.currentGroup?.participants;
+
+    List<ExpenseParticipant> updatedParticipants;
+    if (notifierParticipants != null &&
+        notifierParticipants.any((p) => p.name == participantName)) {
+      updatedParticipants = notifierParticipants;
+    } else {
+      // Fallback for flows where the notifier is not used (e.g. notification sheet).
+      updatedParticipants = widget.config.participants;
+    }
+
+    _lifecycleManager.updateParticipants(List.from(updatedParticipants));
+
+    // Auto-select the newly added participant as the paidBy field.
+    final newParticipant =
+        updatedParticipants.where((p) => p.name == participantName).firstOrNull;
+    if (newParticipant != null) {
+      LoggerService.info(
+        'Auto-selecting newly added participant: "${newParticipant.name}"',
+        name: 'expense.participant',
+      );
+      _controller.updatePaidBy(newParticipant);
+    }
+
+    setState(() {});
 
     LoggerService.info(
       'Participant add process completed for: "$participantName"',
       name: 'expense.participant',
     );
-
-    // Note: Don't call _controller.updatePaidBy here - let the modal selection handle it
-    // to avoid conflicts with the automatic selection when modal closes
   }
 
   Future<void> _scanReceipt() async {

@@ -231,18 +231,26 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
         // Auto-select the newly added participant and close modal
         // This provides immediate feedback and allows the user to see their selection
-        if (mounted) {
-          // Small delay to ensure UI updates are visible
-          await Future.delayed(const Duration(milliseconds: 100));
-          if (mounted) {
-            Navigator.of(context).pop(val as T);
-          }
-        }
+        await _closeSheetSafely(result: val as T);
+      } else {
+        // For non-String items (e.g., ExpenseCategory), close the sheet after adding.
+        // Selection is handled by the onAddItemInline callback chain.
+        await _closeSheetSafely();
       }
     } catch (e) {
       if (mounted) {
         AppToast.show(context, 'Error adding item: $e', type: ToastType.error);
       }
+    }
+  }
+
+  /// Waits briefly for UI updates to settle, then closes the sheet.
+  /// Passes [result] to Navigator.pop when provided (e.g. for auto-selection).
+  Future<void> _closeSheetSafely({T? result}) async {
+    if (!mounted) return;
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (mounted) {
+      Navigator.of(context).pop(result);
     }
   }
 

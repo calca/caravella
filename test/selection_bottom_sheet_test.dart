@@ -253,5 +253,82 @@ void main() {
       // Verify that the modal opened and shows the add button even with no items
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
+
+    testWidgets(
+      'should close sheet after adding a non-String (category-like) item inline',
+      (tester) async {
+        // Use a simple custom type to simulate ExpenseCategory behaviour
+        String? addedItemName;
+        final items = <_TestItem>[
+          _TestItem(id: '1', name: 'Cibo'),
+          _TestItem(id: '2', name: 'Trasporti'),
+        ];
+
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+            supportedLocales: gen.AppLocalizations.supportedLocales,
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: ElevatedButton(
+                  onPressed: () async {
+                    await showSelectionBottomSheet<_TestItem>(
+                      context: context,
+                      items: items,
+                      selected: null,
+                      itemLabel: (item) => item.name,
+                      sheetTitle: 'Seleziona categoria',
+                      onAddItemInline: (name) async {
+                        // Simulate persisting the category
+                        addedItemName = name;
+                        items.add(_TestItem(id: '3', name: name));
+                      },
+                      addItemHint: 'Nome categoria',
+                      addLabel: 'Aggiungi',
+                      cancelLabel: 'Annulla',
+                      addCategoryLabel: 'Aggiungi categoria',
+                      alreadyExistsMessage: 'Categoria già esistente',
+                    );
+                  },
+                  child: const Text('Open Sheet'),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        // Open the bottom sheet
+        await tester.tap(find.text('Open Sheet'));
+        await tester.pumpAndSettle();
+
+        // Sheet is open
+        expect(find.text('Seleziona categoria'), findsOneWidget);
+
+        // Tap the inline add button
+        await tester.tap(find.text('Aggiungi categoria'));
+        await tester.pumpAndSettle();
+
+        // Enter new category name
+        await tester.enterText(find.byType(TextField), 'Alloggio');
+        await tester.pumpAndSettle();
+
+        // Commit the addition
+        await tester.tap(find.byIcon(Icons.check_rounded));
+        await tester.pumpAndSettle();
+
+        // Verify the callback was called
+        expect(addedItemName, equals('Alloggio'));
+
+        // Verify the sheet closed automatically
+        expect(find.text('Seleziona categoria'), findsNothing);
+      },
+    );
   });
+}
+
+/// Simple test model to simulate a non-String selectable item (like ExpenseCategory).
+class _TestItem {
+  final String id;
+  final String name;
+  const _TestItem({required this.id, required this.name});
 }
