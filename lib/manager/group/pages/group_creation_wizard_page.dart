@@ -301,16 +301,14 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
       // navigate to the newly created group detail page
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group != null && mounted) {
-        // Pop the wizard
-        Navigator.of(context).pop();
-        // Navigate to the group detail page
-        if (mounted) {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ExpenseGroupDetailPage(trip: group),
-            ),
-          );
-        }
+        // Capture navigator before pop to avoid detached context
+        final nav = Navigator.of(context);
+        nav.pop();
+        await nav.push(
+          MaterialPageRoute(
+            builder: (context) => ExpenseGroupDetailPage(trip: group),
+          ),
+        );
       } else if (mounted) {
         Navigator.of(context).pop();
       }
