@@ -58,12 +58,9 @@ class UnsplashService {
       if (response.statusCode == 200) {
         final body = json.decode(response.body) as Map<String, dynamic>;
         final results = (body['results'] as List<dynamic>?) ?? [];
-        final photos =
-            results
-                .map(
-                  (e) => UnsplashPhoto.fromJson(e as Map<String, dynamic>),
-                )
-                .toList();
+        final photos = results
+            .map((e) => UnsplashPhoto.fromJson(e as Map<String, dynamic>))
+            .toList();
         LoggerService.info(
           'Unsplash search for "$query" returned ${photos.length} results',
           name: 'api.unsplash',
@@ -130,8 +127,10 @@ class UnsplashService {
     );
     await file.writeAsBytes(response.bodyBytes);
 
-    LoggerService.info('Downloaded Unsplash photo to ${file.path}',
-        name: 'api.unsplash');
+    LoggerService.info(
+      'Downloaded Unsplash photo to ${file.path}',
+      name: 'api.unsplash',
+    );
     return file;
   }
 
