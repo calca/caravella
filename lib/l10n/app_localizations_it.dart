@@ -2283,6 +2283,42 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get search_no_results_hint => 'Prova termini diversi o modifica i filtri';
+  String get voice_input_button => 'Inserisci con la voce';
+
+  @override
+  String get voice_input_listening => 'In ascolto...';
+
+  @override
+  String get voice_input_tap_to_speak => 'Tocca per parlare';
+
+  @override
+  String get voice_input_processing => 'Elaborazione...';
+
+  @override
+  String get voice_input_error => 'Errore nel riconoscimento vocale';
+
+  @override
+  String get voice_input_permission_denied => 'Permesso microfono negato';
+
+  @override
+  String get voice_input_not_available =>
+      'Riconoscimento vocale non disponibile';
+
+  @override
+  String get voice_input_hint =>
+      'Prova a dire: \'50 euro per cena al ristorante\'';
+
+  @override
+  String get voice_add_expense => 'Aggiungi con la voce';
+
+  @override
+  String get voice_expense_saved => 'Spesa salvata!';
+
+  @override
+  String get voice_expense_needs_more_info =>
+      'Mancano alcune info – completa il modulo';
+
+  @override
   String get from_unsplash => 'Da Unsplash';
 
   @override
@@ -2302,4 +2338,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => 'Usa questa foto';
+
+  @override
+  String get scan_receipt => 'Scansiona scontrino';
+
+  @override
+  String get scanning_receipt => 'Scansione scontrino...';
+
+  @override
+  String get receipt_scan_error => 'Errore nella scansione dello scontrino';
+
+  @override
+  String get no_text_found => 'Nessun testo trovato nell\'immagine';
+
+  @override
+  String get receipt_scanned => 'Scontrino scansionato';
 }

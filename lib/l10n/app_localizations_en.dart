@@ -2273,6 +2273,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search_no_results_hint => 'Try different search terms or adjust filters';
+  String get voice_input_button => 'Add by voice';
+
+  @override
+  String get voice_input_listening => 'Listening...';
+
+  @override
+  String get voice_input_tap_to_speak => 'Tap to speak';
+
+  @override
+  String get voice_input_processing => 'Processing...';
+
+  @override
+  String get voice_input_error => 'Voice recognition error';
+
+  @override
+  String get voice_input_permission_denied => 'Microphone permission denied';
+
+  @override
+  String get voice_input_not_available => 'Voice recognition not available';
+
+  @override
+  String get voice_input_hint =>
+      'Try saying: \'50 dollars for dinner at restaurant\'';
+
+  @override
+  String get voice_add_expense => 'Add by voice';
+
+  @override
+  String get voice_expense_saved => 'Expense saved!';
+
+  @override
+  String get voice_expense_needs_more_info =>
+      'Some info missing – fill in the form';
+
+  @override
   String get from_unsplash => 'From Unsplash';
 
   @override
@@ -2292,4 +2327,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => 'Use this photo';
+
+  @override
+  String get scan_receipt => 'Scan receipt';
+
+  @override
+  String get scanning_receipt => 'Scanning receipt...';
+
+  @override
+  String get receipt_scan_error => 'Error scanning receipt';
+
+  @override
+  String get no_text_found => 'No text found in image';
+
+  @override
+  String get receipt_scanned => 'Receipt scanned';
 }

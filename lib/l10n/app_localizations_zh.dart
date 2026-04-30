@@ -2226,6 +2226,39 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get search_no_results_hint => '尝试不同的搜索词或调整过滤条件';
+  String get voice_input_button => '语音输入';
+
+  @override
+  String get voice_input_listening => '正在聆听...';
+
+  @override
+  String get voice_input_tap_to_speak => '点击说话';
+
+  @override
+  String get voice_input_processing => '处理中...';
+
+  @override
+  String get voice_input_error => '语音识别错误';
+
+  @override
+  String get voice_input_permission_denied => '麦克风权限被拒绝';
+
+  @override
+  String get voice_input_not_available => '语音识别不可用';
+
+  @override
+  String get voice_input_hint => '尝试说：\'50元晚餐\'';
+
+  @override
+  String get voice_add_expense => '语音添加';
+
+  @override
+  String get voice_expense_saved => '支出已保存！';
+
+  @override
+  String get voice_expense_needs_more_info => '信息不足，请填写表单';
+
+  @override
   String get from_unsplash => '从Unsplash搜索';
 
   @override
@@ -2245,4 +2278,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => '使用此照片';
+
+  @override
+  String get scan_receipt => '扫描收据';
+
+  @override
+  String get scanning_receipt => '正在扫描收据...';
+
+  @override
+  String get receipt_scan_error => '扫描收据时出错';
+
+  @override
+  String get no_text_found => '图像中未找到文本';
+
+  @override
+  String get receipt_scanned => '收据已扫描';
 }

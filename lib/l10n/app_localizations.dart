@@ -4390,6 +4390,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try different search terms or adjust filters'**
   String get search_no_results_hint;
+  /// Label for the button to activate voice input
+  ///
+  /// In en, this message translates to:
+  /// **'Add by voice'**
+  String get voice_input_button;
+
+  /// Message shown during voice recording
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get voice_input_listening;
+
+  /// Hint to start speaking
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to speak'**
+  String get voice_input_tap_to_speak;
+
+  /// Message shown during voice text processing
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get voice_input_processing;
+
+  /// Error message for voice recognition issues
+  ///
+  /// In en, this message translates to:
+  /// **'Voice recognition error'**
+  String get voice_input_error;
+
+  /// Message when user denies microphone permission
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission denied'**
+  String get voice_input_permission_denied;
+
+  /// Message when voice recognition is not available on the device
+  ///
+  /// In en, this message translates to:
+  /// **'Voice recognition not available'**
+  String get voice_input_not_available;
+
+  /// Example hint for using voice input
+  ///
+  /// In en, this message translates to:
+  /// **'Try saying: \'50 dollars for dinner at restaurant\''**
+  String get voice_input_hint;
+
+  /// Label for the voice add expense CTA on home card
+  ///
+  /// In en, this message translates to:
+  /// **'Add by voice'**
+  String get voice_add_expense;
+
+  /// Confirmation message when expense is saved via voice
+  ///
+  /// In en, this message translates to:
+  /// **'Expense saved!'**
+  String get voice_expense_saved;
+
+  /// Message when voice input lacks required fields
+  ///
+  /// In en, this message translates to:
+  /// **'Some info missing – fill in the form'**
+  String get voice_expense_needs_more_info;
+
   /// Option to search for a background image on Unsplash
   ///
   /// In en, this message translates to:
@@ -4431,6 +4497,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use this photo'**
   String get unsplash_use_photo;
+
+  /// Button to scan a receipt with OCR
+  ///
+  /// In en, this message translates to:
+  /// **'Scan receipt'**
+  String get scan_receipt;
+
+  /// Message during OCR receipt scanning
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning receipt...'**
+  String get scanning_receipt;
+
+  /// Error message when OCR scanning fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error scanning receipt'**
+  String get receipt_scan_error;
+
+  /// Message when OCR finds no text in the image
+  ///
+  /// In en, this message translates to:
+  /// **'No text found in image'**
+  String get no_text_found;
+
+  /// Success message after OCR scanning
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt scanned'**
+  String get receipt_scanned;
 }
 
 class _AppLocalizationsDelegate

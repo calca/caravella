@@ -2286,6 +2286,41 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get search_no_results_hint => 'Prueba diferentes términos o ajusta los filtros';
+  String get voice_input_button => 'Añadir por voz';
+
+  @override
+  String get voice_input_listening => 'Escuchando...';
+
+  @override
+  String get voice_input_tap_to_speak => 'Toca para hablar';
+
+  @override
+  String get voice_input_processing => 'Procesando...';
+
+  @override
+  String get voice_input_error => 'Error de reconocimiento de voz';
+
+  @override
+  String get voice_input_permission_denied => 'Permiso de micrófono denegado';
+
+  @override
+  String get voice_input_not_available => 'Reconocimiento de voz no disponible';
+
+  @override
+  String get voice_input_hint =>
+      'Intenta decir: \'50 euros para la cena en el restaurante\'';
+
+  @override
+  String get voice_add_expense => 'Añadir por voz';
+
+  @override
+  String get voice_expense_saved => '¡Gasto guardado!';
+
+  @override
+  String get voice_expense_needs_more_info =>
+      'Falta información – completa el formulario';
+
+  @override
   String get from_unsplash => 'Desde Unsplash';
 
   @override
@@ -2305,4 +2340,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => 'Usar esta foto';
+
+  @override
+  String get scan_receipt => 'Escanear recibo';
+
+  @override
+  String get scanning_receipt => 'Escaneando recibo...';
+
+  @override
+  String get receipt_scan_error => 'Error al escanear el recibo';
+
+  @override
+  String get no_text_found => 'No se encontró texto en la imagen';
+
+  @override
+  String get receipt_scanned => 'Recibo escaneado';
 }

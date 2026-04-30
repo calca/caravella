@@ -1,11 +1,14 @@
 library;
 
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core/caravella_core.dart' hide ImageSource;
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../widgets/expense_form_actions_widget.dart';
+import '../widgets/voice_capture_bottom_sheet.dart';
 import '../state/expense_form_controller.dart';
 import '../state/expense_form_state.dart';
 import 'expense_form_config.dart';
@@ -14,6 +17,7 @@ import 'expense_form_orchestrator.dart';
 import 'expense_form_fields.dart';
 import 'expense_form_extended_fields.dart';
 import 'expense_form_compact_header.dart';
+import '../../../data/services/receipt_scanner_service.dart';
 
 /// Main expense form component - refactored to use config object pattern
 ///
@@ -45,6 +49,7 @@ class ExpenseFormComponent extends StatefulWidget {
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
+    void Function(VoidCallback?)? onVoiceCallbackChanged,
   }) {
     return ExpenseFormComponent(
       config: ExpenseFormConfig.create(
@@ -67,6 +72,7 @@ class ExpenseFormComponent extends StatefulWidget {
         showActionsRow: showActionsRow,
         onFormValidityChanged: onFormValidityChanged,
         onSaveCallbackChanged: onSaveCallbackChanged,
+        onVoiceCallbackChanged: onVoiceCallbackChanged,
       ),
     );
   }
@@ -136,6 +142,8 @@ class ExpenseFormComponent extends StatefulWidget {
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
+    void Function(VoidCallback?)? onVoiceCallbackChanged,
+    void Function(VoidCallback?)? onScanReceiptCallbackChanged,
   }) : config = ExpenseFormConfig(
          initialExpense: initialExpense,
          participants: participants,
@@ -159,6 +167,8 @@ class ExpenseFormComponent extends StatefulWidget {
          showActionsRow: showActionsRow,
          onFormValidityChanged: onFormValidityChanged,
          onSaveCallbackChanged: onSaveCallbackChanged,
+         onVoiceCallbackChanged: onVoiceCallbackChanged,
+         onScanReceiptCallbackChanged: onScanReceiptCallbackChanged,
          isReadOnly: isReadOnly,
        );
 
@@ -171,6 +181,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   late ExpenseFormLifecycleManager _lifecycleManager;
   late ExpenseFormOrchestrator _orchestrator;
   late ExpenseFormController _controller;
+
+  // Receipt scanner
+  final _receiptScanner = ReceiptScannerService();
+  final _imagePicker = ImagePicker();
 
   // Getter per determinare se mostrare i campi estesi
   bool get _shouldShowExtendedFields =>
@@ -200,6 +214,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         if (widget.config.onSaveCallbackChanged != null) {
           _controller.addListener(_notifySaveCallbackWithContext);
           _notifySaveCallbackWithContext(); // Initial state
+        }
+
+        if (widget.config.onVoiceCallbackChanged != null) {
+          _notifyVoiceCallback();
+        }
+
+        if (widget.config.onScanReceiptCallbackChanged != null) {
+          _notifyScanReceiptCallback();
         }
 
         // Setup focus listeners for scroll coordination
@@ -263,6 +285,25 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final isValid = _controller.isFormValid;
     final callback = isValid ? () => _orchestrator.saveExpense(context) : null;
     widget.config.onSaveCallbackChanged?.call(callback);
+  }
+
+  void _notifyVoiceCallback() {
+    final isEdit =
+        widget.config.initialExpense?.id != null &&
+        widget.config.initialExpense!.id.isNotEmpty;
+    final showVoice = !isEdit && !widget.config.isReadOnly;
+    final callback = showVoice ? () => _showVoiceCapture(context) : null;
+    widget.config.onVoiceCallbackChanged?.call(callback);
+  }
+
+  void _notifyScanReceiptCallback() {
+    final isEdit =
+        widget.config.initialExpense?.id != null &&
+        widget.config.initialExpense!.id.isNotEmpty;
+    final callback = (!isEdit && !widget.config.isReadOnly)
+        ? _scanReceipt
+        : null;
+    widget.config.onScanReceiptCallbackChanged?.call(callback);
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -445,8 +486,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     _lifecycleManager.updateParticipants(List.from(updatedParticipants));
 
     // Auto-select the newly added participant as the paidBy field.
-    final newParticipant =
-        updatedParticipants.where((p) => p.name == participantName).firstOrNull;
+    final newParticipant = updatedParticipants
+        .where((p) => p.name == participantName)
+        .firstOrNull;
     if (newParticipant != null) {
       LoggerService.info(
         'Auto-selecting newly added participant: "${newParticipant.name}"',
@@ -463,6 +505,104 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
   }
 
+  Future<void> _scanReceipt() async {
+    final gloc = gen.AppLocalizations.of(context);
+
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        final bottomInset = MediaQuery.of(sheetContext).padding.bottom;
+        return GroupBottomSheetScaffold(
+          title: gloc.scan_receipt,
+          padding: EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            bottomInset > 0 ? bottomInset : 12,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: Text(gloc.from_camera),
+                onTap: () => Navigator.pop(sheetContext, ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: Text(gloc.from_gallery),
+                onTap: () => Navigator.pop(sheetContext, ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source == null || !mounted) return;
+
+    try {
+      final pickedFile = await _imagePicker.pickImage(source: source);
+      if (pickedFile == null || !mounted) return;
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.scanning_receipt),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+
+      final imageFile = File(pickedFile.path);
+      final result = await _receiptScanner.scanReceipt(imageFile);
+
+      if (!mounted) return;
+
+      final amount = result['amount'] as double?;
+      final description = result['description'] as String?;
+
+      if (amount == null && description == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(gloc.no_text_found),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+        return;
+      }
+
+      if (amount != null) {
+        _controller.amountController.text = amount.toString();
+      }
+      if (description != null && description.isNotEmpty) {
+        _controller.nameController.text = description;
+      }
+      _controller.markDirty();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.receipt_scanned),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.receipt_scan_error),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   Widget _buildDivider(BuildContext context) {
     if (_shouldShowExtendedFields) {
       // In full edit mode: reserve vertical space but no visual divider
@@ -477,33 +617,88 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
   }
 
-  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
-      ExpenseFormActionsWidget(
-        onSave: _controller.isFormValid
-            ? () => _orchestrator.saveExpense(context)
-            : null,
-        isFormValid: _controller.isFormValid,
-        isEdit:
-            widget.config.initialExpense?.id != null &&
-            widget.config.initialExpense!.id.isNotEmpty,
-        onDelete: widget.config.hasDeleteAction
-            ? () => _orchestrator.deleteExpense(context)
-            : null,
-        textStyle: style,
-        showExpandButton:
-            !(widget.config.fullEdit ||
-                widget.config.initialExpense != null ||
-                _controller.isExpanded),
-        onExpand: widget.config.onExpand != null
-            ? () => widget.config.onExpand!(_controller.state)
-            : null,
+  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) {
+    final isEdit =
+        widget.config.initialExpense?.id != null &&
+        widget.config.initialExpense!.id.isNotEmpty;
+    final showVoice = !isEdit && !widget.config.isReadOnly;
+
+    return ExpenseFormActionsWidget(
+      onSave: _controller.isFormValid
+          ? () => _orchestrator.saveExpense(context)
+          : null,
+      isFormValid: _controller.isFormValid,
+      isEdit: isEdit,
+      onDelete: widget.config.hasDeleteAction
+          ? () => _orchestrator.deleteExpense(context)
+          : null,
+      textStyle: style,
+      showExpandButton:
+          !(widget.config.fullEdit ||
+              widget.config.initialExpense != null ||
+              _controller.isExpanded),
+      onExpand: widget.config.onExpand != null
+          ? () => widget.config.onExpand!(_controller.state)
+          : null,
+      onScanReceipt: widget.config.initialExpense == null ? _scanReceipt : null,
+      showVoiceButton: showVoice,
+      onVoiceTap: showVoice ? () => _showVoiceCapture(context) : null,
+    );
+  }
+
+  Future<void> _showVoiceCapture(BuildContext context) async {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final localeId = '${locale}_${locale.toUpperCase()}';
+    final participantNames = _lifecycleManager.participants
+        .map((p) => p.name)
+        .toList();
+
+    await VoiceCaptureBottomSheet.show(
+      context: context,
+      participantNames: participantNames,
+      localeId: localeId,
+      onVoiceResult: (parsed) => _applyVoiceResult(parsed),
+    );
+  }
+
+  void _applyVoiceResult(Map<String, dynamic> parsed) {
+    final amount = parsed['amount'] as double?;
+    if (amount != null && amount > 0) {
+      _controller.amountController.text = amount.toString();
+    }
+    final name = parsed['name'] as String?;
+    if (name != null && name.isNotEmpty) {
+      _controller.nameController.text = name;
+    }
+    final categoryKeyword = parsed['category'] as String?;
+    if (categoryKeyword != null && _lifecycleManager.categories.isNotEmpty) {
+      final match = _lifecycleManager.categories.firstWhere(
+        (c) => c.name.toLowerCase() == categoryKeyword.toLowerCase(),
+        orElse: () => _lifecycleManager.categories.first,
       );
+      _controller.updateCategory(match);
+    }
+    final paidByName = parsed['paidBy'] as String?;
+    if (paidByName != null && _lifecycleManager.participants.isNotEmpty) {
+      final match = _lifecycleManager.participants.firstWhere(
+        (p) => p.name.toLowerCase() == paidByName.toLowerCase(),
+        orElse: () => _lifecycleManager.participants.first,
+      );
+      _controller.updatePaidBy(match);
+    }
+    final date = parsed['date'] as DateTime?;
+    if (date != null) {
+      _controller.updateDate(date);
+    }
+  }
 
   @override
   void dispose() {
     if (widget.config.onSaveCallbackChanged != null) {
       _controller.removeListener(_notifySaveCallbackWithContext);
     }
+    widget.config.onVoiceCallbackChanged?.call(null);
+    widget.config.onScanReceiptCallbackChanged?.call(null);
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();

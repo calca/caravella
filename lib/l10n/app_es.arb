@@ -949,6 +949,28 @@
   ,"@search_no_results": {"description": "Mostrado cuando la búsqueda no encuentra gastos"}
   ,"search_no_results_hint": "Prueba diferentes términos o ajusta los filtros"
   ,"@search_no_results_hint": {"description": "Texto de ayuda cuando la búsqueda no tiene resultados"}
+  ,"voice_input_button": "Añadir por voz"
+  ,"@voice_input_button": {"description": "Etiqueta del botón para activar la entrada de voz"}
+  ,"voice_input_listening": "Escuchando..."
+  ,"@voice_input_listening": {"description": "Mensaje mostrado durante la grabación de voz"}
+  ,"voice_input_tap_to_speak": "Toca para hablar"
+  ,"@voice_input_tap_to_speak": {"description": "Sugerencia para empezar a hablar"}
+  ,"voice_input_processing": "Procesando..."
+  ,"@voice_input_processing": {"description": "Mensaje mostrado durante el procesamiento del texto de voz"}
+  ,"voice_input_error": "Error de reconocimiento de voz"
+  ,"@voice_input_error": {"description": "Mensaje de error para problemas de reconocimiento de voz"}
+  ,"voice_input_permission_denied": "Permiso de micrófono denegado"
+  ,"@voice_input_permission_denied": {"description": "Mensaje cuando el usuario deniega el permiso del micrófono"}
+  ,"voice_input_not_available": "Reconocimiento de voz no disponible"
+  ,"@voice_input_not_available": {"description": "Mensaje cuando el reconocimiento de voz no está disponible en el dispositivo"}
+  ,"voice_input_hint": "Intenta decir: '50 euros para la cena en el restaurante'"
+  ,"@voice_input_hint": {"description": "Sugerencia de ejemplo para usar la entrada de voz"}
+  ,"voice_add_expense": "Añadir por voz"
+  ,"@voice_add_expense": {"description": "Etiqueta para la CTA de voz en la tarjeta de inicio"}
+  ,"voice_expense_saved": "¡Gasto guardado!"
+  ,"@voice_expense_saved": {"description": "Confirmación cuando el gasto se guarda por voz"}
+  ,"voice_expense_needs_more_info": "Falta información – completa el formulario"
+  ,"@voice_expense_needs_more_info": {"description": "Mensaje cuando faltan datos requeridos"}
   ,"from_unsplash": "Desde Unsplash"
   ,"@from_unsplash": {"description": "Opción para buscar una imagen de fondo en Unsplash"}
   ,"unsplash_search_hint": "Buscar fotos en Unsplash..."
@@ -963,4 +985,14 @@
   ,"@unsplash_photos_by": {"description": "Prefijo de atribución antes del enlace al brand Unsplash al final de la página de búsqueda"}
   ,"unsplash_use_photo": "Usar esta foto"
   ,"@unsplash_use_photo": {"description": "Botón para confirmar la selección de una foto de Unsplash en la hoja de vista previa"}
+  ,"scan_receipt": "Escanear recibo"
+  ,"@scan_receipt": {"description": "Botón para escanear un recibo con OCR"}
+  ,"scanning_receipt": "Escaneando recibo..."
+  ,"@scanning_receipt": {"description": "Mensaje durante el escaneo OCR del recibo"}
+  ,"receipt_scan_error": "Error al escanear el recibo"
+  ,"@receipt_scan_error": {"description": "Mensaje de error cuando falla el escaneo OCR"}
+  ,"no_text_found": "No se encontró texto en la imagen"
+  ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
+  ,"receipt_scanned": "Recibo escaneado"
+  ,"@receipt_scanned": {"description": "Mensaje de éxito después del escaneo OCR"}
 }
