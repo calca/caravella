@@ -50,11 +50,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
           tooltip: gloc.scan_receipt,
           onPressed: onScanReceipt,
           icon: const Icon(Icons.document_scanner_outlined, size: 24),
-          style: IconButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            minimumSize: const Size(48, 48),
-            padding: EdgeInsets.zero,
-          ),
+          style: iconButtonStyle,
         ),
       );
     }

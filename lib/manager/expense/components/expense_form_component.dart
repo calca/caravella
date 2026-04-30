@@ -143,6 +143,7 @@ class ExpenseFormComponent extends StatefulWidget {
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
     void Function(VoidCallback?)? onVoiceCallbackChanged,
+    void Function(VoidCallback?)? onScanReceiptCallbackChanged,
   }) : config = ExpenseFormConfig(
          initialExpense: initialExpense,
          participants: participants,
@@ -167,6 +168,7 @@ class ExpenseFormComponent extends StatefulWidget {
          onFormValidityChanged: onFormValidityChanged,
          onSaveCallbackChanged: onSaveCallbackChanged,
          onVoiceCallbackChanged: onVoiceCallbackChanged,
+         onScanReceiptCallbackChanged: onScanReceiptCallbackChanged,
          isReadOnly: isReadOnly,
        );
 
@@ -216,6 +218,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
         if (widget.config.onVoiceCallbackChanged != null) {
           _notifyVoiceCallback();
+        }
+
+        if (widget.config.onScanReceiptCallbackChanged != null) {
+          _notifyScanReceiptCallback();
         }
 
         // Setup focus listeners for scroll coordination
@@ -288,6 +294,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final showVoice = !isEdit && !widget.config.isReadOnly;
     final callback = showVoice ? () => _showVoiceCapture(context) : null;
     widget.config.onVoiceCallbackChanged?.call(callback);
+  }
+
+  void _notifyScanReceiptCallback() {
+    final isEdit =
+        widget.config.initialExpense?.id != null &&
+        widget.config.initialExpense!.id.isNotEmpty;
+    final callback =
+        (!isEdit && !widget.config.isReadOnly) ? _scanReceipt : null;
+    widget.config.onScanReceiptCallbackChanged?.call(callback);
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -672,6 +687,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _controller.removeListener(_notifySaveCallbackWithContext);
     }
     widget.config.onVoiceCallbackChanged?.call(null);
+    widget.config.onScanReceiptCallbackChanged?.call(null);
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();

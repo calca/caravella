@@ -22,6 +22,7 @@ class ExpenseFormConfig {
   final void Function(bool)? onFormValidityChanged;
   final void Function(VoidCallback?)? onSaveCallbackChanged;
   final void Function(VoidCallback?)? onVoiceCallbackChanged;
+  final void Function(VoidCallback?)? onScanReceiptCallbackChanged;
 
   // Display options
   final bool fullEdit;
@@ -59,6 +60,7 @@ class ExpenseFormConfig {
     this.onFormValidityChanged,
     this.onSaveCallbackChanged,
     this.onVoiceCallbackChanged,
+    this.onScanReceiptCallbackChanged,
 
     // Display options
     this.fullEdit = false,
@@ -104,6 +106,7 @@ class ExpenseFormConfig {
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
     void Function(VoidCallback?)? onVoiceCallbackChanged,
+    void Function(VoidCallback?)? onScanReceiptCallbackChanged,
   }) {
     return ExpenseFormConfig(
       participants: participants,
@@ -126,6 +129,7 @@ class ExpenseFormConfig {
       onFormValidityChanged: onFormValidityChanged,
       onSaveCallbackChanged: onSaveCallbackChanged,
       onVoiceCallbackChanged: onVoiceCallbackChanged,
+      onScanReceiptCallbackChanged: onScanReceiptCallbackChanged,
       isReadOnly: isReadOnly,
     );
   }
