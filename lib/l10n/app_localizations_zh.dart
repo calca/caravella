@@ -2210,6 +2210,39 @@ class AppLocalizationsZh extends AppLocalizations {
   String get save_label => '保存';
 
   @override
+  String get voice_input_button => '语音输入';
+
+  @override
+  String get voice_input_listening => '正在聆听...';
+
+  @override
+  String get voice_input_tap_to_speak => '点击说话';
+
+  @override
+  String get voice_input_processing => '处理中...';
+
+  @override
+  String get voice_input_error => '语音识别错误';
+
+  @override
+  String get voice_input_permission_denied => '麦克风权限被拒绝';
+
+  @override
+  String get voice_input_not_available => '语音识别不可用';
+
+  @override
+  String get voice_input_hint => '尝试说：\'50元晚餐\'';
+
+  @override
+  String get voice_add_expense => '语音添加';
+
+  @override
+  String get voice_expense_saved => '支出已保存！';
+
+  @override
+  String get voice_expense_needs_more_info => '信息不足，请填写表单';
+
+  @override
   String get from_unsplash => '从Unsplash搜索';
 
   @override

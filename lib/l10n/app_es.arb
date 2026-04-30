@@ -937,6 +937,28 @@
   ,"@export_markdown_description": {"description": "Descripción corta para el formato de exportación Markdown"}
   ,"save_label": "Guardar"
   ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
+  ,"voice_input_button": "Añadir por voz"
+  ,"@voice_input_button": {"description": "Etiqueta del botón para activar la entrada de voz"}
+  ,"voice_input_listening": "Escuchando..."
+  ,"@voice_input_listening": {"description": "Mensaje mostrado durante la grabación de voz"}
+  ,"voice_input_tap_to_speak": "Toca para hablar"
+  ,"@voice_input_tap_to_speak": {"description": "Sugerencia para empezar a hablar"}
+  ,"voice_input_processing": "Procesando..."
+  ,"@voice_input_processing": {"description": "Mensaje mostrado durante el procesamiento del texto de voz"}
+  ,"voice_input_error": "Error de reconocimiento de voz"
+  ,"@voice_input_error": {"description": "Mensaje de error para problemas de reconocimiento de voz"}
+  ,"voice_input_permission_denied": "Permiso de micrófono denegado"
+  ,"@voice_input_permission_denied": {"description": "Mensaje cuando el usuario deniega el permiso del micrófono"}
+  ,"voice_input_not_available": "Reconocimiento de voz no disponible"
+  ,"@voice_input_not_available": {"description": "Mensaje cuando el reconocimiento de voz no está disponible en el dispositivo"}
+  ,"voice_input_hint": "Intenta decir: '50 euros para la cena en el restaurante'"
+  ,"@voice_input_hint": {"description": "Sugerencia de ejemplo para usar la entrada de voz"}
+  ,"voice_add_expense": "Añadir por voz"
+  ,"@voice_add_expense": {"description": "Etiqueta para la CTA de voz en la tarjeta de inicio"}
+  ,"voice_expense_saved": "¡Gasto guardado!"
+  ,"@voice_expense_saved": {"description": "Confirmación cuando el gasto se guarda por voz"}
+  ,"voice_expense_needs_more_info": "Falta información – completa el formulario"
+  ,"@voice_expense_needs_more_info": {"description": "Mensaje cuando faltan datos requeridos"}
   ,"from_unsplash": "Desde Unsplash"
   ,"@from_unsplash": {"description": "Opción para buscar una imagen de fondo en Unsplash"}
   ,"unsplash_search_hint": "Buscar fotos en Unsplash..."

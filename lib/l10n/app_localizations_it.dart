@@ -2267,6 +2267,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String get save_label => 'Salva';
 
   @override
+  String get voice_input_button => 'Inserisci con la voce';
+
+  @override
+  String get voice_input_listening => 'In ascolto...';
+
+  @override
+  String get voice_input_tap_to_speak => 'Tocca per parlare';
+
+  @override
+  String get voice_input_processing => 'Elaborazione...';
+
+  @override
+  String get voice_input_error => 'Errore nel riconoscimento vocale';
+
+  @override
+  String get voice_input_permission_denied => 'Permesso microfono negato';
+
+  @override
+  String get voice_input_not_available =>
+      'Riconoscimento vocale non disponibile';
+
+  @override
+  String get voice_input_hint =>
+      'Prova a dire: \'50 euro per cena al ristorante\'';
+
+  @override
+  String get voice_add_expense => 'Aggiungi con la voce';
+
+  @override
+  String get voice_expense_saved => 'Spesa salvata!';
+
+  @override
+  String get voice_expense_needs_more_info =>
+      'Mancano alcune info – completa il modulo';
+
+  @override
   String get from_unsplash => 'Da Unsplash';
 
   @override

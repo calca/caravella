@@ -20,11 +20,24 @@
     <!-- Notification permission for persistent expense tracking notifications (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     
+    <!-- Microphone permission for voice input of expenses (optional feature) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    
     <!-- Declare that these permissions are not required for basic app functionality -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.location" android:required="false" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
     <uses-feature android:name="android.hardware.location.network" android:required="false" />
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    
+    <!-- Restrict installation to smartphones only (exclude tablets and other large-screen devices) -->
+    <!-- This ensures the app is optimized for smartphone form factors -->
+    <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="false"
+        android:xlargeScreens="false"
+        android:requiresSmallestWidthDp="320" />
     
     <!-- Restrict installation to smartphones only (exclude tablets and other large-screen devices) -->
     <!-- This ensures the app is optimized for smartphone form factors -->
