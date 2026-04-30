@@ -54,6 +54,12 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
+
+    // Start listening as soon as the bottom sheet is visible.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _startListening();
+    });
   }
 
   @override
@@ -70,6 +76,12 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
       if (mounted) setState(() => _isListening = false);
       return;
     }
+
+    await _startListening();
+  }
+
+  Future<void> _startListening() async {
+    if (_isListening || _isProcessing) return;
 
     if (!mounted) return;
     setState(() {
@@ -130,7 +142,7 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
           const SizedBox(height: 20),
           Center(
             child: Text(
-              gloc.voice_input_hint,
+              _isListening ? gloc.voice_input_listening : gloc.voice_input_hint,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 fontStyle: FontStyle.italic,

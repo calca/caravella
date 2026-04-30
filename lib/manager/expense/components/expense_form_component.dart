@@ -46,6 +46,7 @@ class ExpenseFormComponent extends StatefulWidget {
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
+    void Function(VoidCallback?)? onVoiceCallbackChanged,
   }) {
     return ExpenseFormComponent(
       config: ExpenseFormConfig.create(
@@ -68,6 +69,7 @@ class ExpenseFormComponent extends StatefulWidget {
         showActionsRow: showActionsRow,
         onFormValidityChanged: onFormValidityChanged,
         onSaveCallbackChanged: onSaveCallbackChanged,
+        onVoiceCallbackChanged: onVoiceCallbackChanged,
       ),
     );
   }
@@ -137,6 +139,7 @@ class ExpenseFormComponent extends StatefulWidget {
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
+    void Function(VoidCallback?)? onVoiceCallbackChanged,
   }) : config = ExpenseFormConfig(
          initialExpense: initialExpense,
          participants: participants,
@@ -160,6 +163,7 @@ class ExpenseFormComponent extends StatefulWidget {
          showActionsRow: showActionsRow,
          onFormValidityChanged: onFormValidityChanged,
          onSaveCallbackChanged: onSaveCallbackChanged,
+         onVoiceCallbackChanged: onVoiceCallbackChanged,
          isReadOnly: isReadOnly,
        );
 
@@ -201,6 +205,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         if (widget.config.onSaveCallbackChanged != null) {
           _controller.addListener(_notifySaveCallbackWithContext);
           _notifySaveCallbackWithContext(); // Initial state
+        }
+
+        if (widget.config.onVoiceCallbackChanged != null) {
+          _notifyVoiceCallback();
         }
 
         // Setup focus listeners for scroll coordination
@@ -264,6 +272,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final isValid = _controller.isFormValid;
     final callback = isValid ? () => _orchestrator.saveExpense(context) : null;
     widget.config.onSaveCallbackChanged?.call(callback);
+  }
+
+  void _notifyVoiceCallback() {
+    final isEdit =
+        widget.config.initialExpense?.id != null &&
+        widget.config.initialExpense!.id.isNotEmpty;
+    final showVoice = !isEdit && !widget.config.isReadOnly;
+    final callback = showVoice ? () => _showVoiceCapture(context) : null;
+    widget.config.onVoiceCallbackChanged?.call(callback);
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -558,6 +575,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     if (widget.config.onSaveCallbackChanged != null) {
       _controller.removeListener(_notifySaveCallbackWithContext);
     }
+    widget.config.onVoiceCallbackChanged?.call(null);
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();

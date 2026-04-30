@@ -4,6 +4,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:share_plus/share_plus.dart';
 import '../components/expense_form_component.dart';
+import '../widgets/expense_form_actions_widget.dart';
 
 /// Full-screen page for creating or editing an expense
 class ExpenseFormPage extends StatefulWidget {
@@ -31,6 +32,7 @@ class ExpenseFormPage extends StatefulWidget {
 class _ExpenseFormPageState extends State<ExpenseFormPage> {
   bool _isFormValid = false;
   VoidCallback? _saveCallback;
+  VoidCallback? _voiceCallback;
 
   void _updateFormValidity(bool isValid) {
     if (_isFormValid != isValid && mounted) {
@@ -50,6 +52,18 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
         if (mounted) {
           setState(() {
             _saveCallback = callback;
+          });
+        }
+      });
+    }
+  }
+
+  void _updateVoiceCallback(VoidCallback? callback) {
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _voiceCallback = callback;
           });
         }
       });
@@ -96,6 +110,10 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final isReadOnly = widget.group.archived;
+    final isEdit =
+      widget.initialExpense?.id != null &&
+      widget.initialExpense!.id.isNotEmpty;
+    final viewInsetsBottom = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
       appBar: AppBar(
@@ -122,59 +140,81 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
           ],
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SafeArea(
-              bottom: false,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SectionHeader(
-                      title: isReadOnly
-                          ? gloc.expense
-                          : (widget.initialExpense?.id != null && widget.initialExpense!.id.isNotEmpty
-                                ? gloc.edit_expense
-                                : gloc.new_expense),
-                      description: '${gloc.group} ${widget.group.title}',
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SectionHeader(
+                title: isReadOnly
+                    ? gloc.expense
+                    : (widget.initialExpense?.id != null && widget.initialExpense!.id.isNotEmpty
+                          ? gloc.edit_expense
+                          : gloc.new_expense),
+                description: '${gloc.group} ${widget.group.title}',
+              ),
+              const SizedBox(height: 24),
+              ExpenseFormComponent.legacy(
+                initialExpense: widget.initialExpense,
+                participants: widget.group.participants,
+                categories: widget.group.categories,
+                tripStartDate: widget.group.startDate,
+                tripEndDate: widget.group.endDate,
+                shouldAutoClose: true,
+                fullEdit: true,
+                showGroupHeader: false,
+                showActionsRow: false,
+                currency: widget.group.currency,
+                autoLocationEnabled: widget.group.autoLocationEnabled,
+                onExpenseAdded: widget.onExpenseSaved,
+                onCategoryAdded: widget.onCategoryAdded,
+                onParticipantAdded: widget.onParticipantAdded,
+                onDelete: widget.onDelete,
+                onFormValidityChanged: _updateFormValidity,
+                onSaveCallbackChanged: _updateSaveCallback,
+                onVoiceCallbackChanged: _updateVoiceCallback,
+                groupId: widget.group.id,
+                isReadOnly: isReadOnly,
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: isReadOnly
+          ? null
+          : AnimatedPadding(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              padding: EdgeInsets.only(bottom: viewInsetsBottom),
+              child: SafeArea(
+                top: false,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border(
+                      top: BorderSide(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outlineVariant
+                            .withValues(alpha: 0.3),
+                        width: 1,
+                      ),
                     ),
-                    const SizedBox(height: 24),
-                    ExpenseFormComponent.legacy(
-                      initialExpense: widget.initialExpense,
-                      participants: widget.group.participants,
-                      categories: widget.group.categories,
-                      tripStartDate: widget.group.startDate,
-                      tripEndDate: widget.group.endDate,
-                      shouldAutoClose: true,
-                      fullEdit: true,
-                      showGroupHeader: false,
-                      showActionsRow: false,
-                      currency: widget.group.currency,
-                      autoLocationEnabled: widget.group.autoLocationEnabled,
-                      onExpenseAdded: widget.onExpenseSaved,
-                      onCategoryAdded: widget.onCategoryAdded,
-                      onParticipantAdded: widget.onParticipantAdded,
-                      onDelete: widget.onDelete,
-                      onFormValidityChanged: _updateFormValidity,
-                      onSaveCallbackChanged: _updateSaveCallback,
-                      groupId: widget.group.id,
-                      isReadOnly: isReadOnly,
-                    ),
-                  ],
+                  ),
+                  child: ExpenseFormActionsWidget(
+                    onSave: _isFormValid ? _handleSave : null,
+                    isFormValid: _isFormValid,
+                    isEdit: isEdit,
+                    showExpandButton: false,
+                    showVoiceButton: !isEdit,
+                    onVoiceTap: _voiceCallback,
+                  ),
                 ),
               ),
             ),
-          ),
-          if (!isReadOnly)
-            BottomActionBar(
-              onPressed: _handleSave,
-              label: widget.initialExpense?.id != null && widget.initialExpense!.id.isNotEmpty ? gloc.save : gloc.add,
-              enabled: _isFormValid,
-            ),
-        ],
-      ),
     );
   }
 }

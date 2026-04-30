@@ -31,7 +31,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
-    // Shared style for icon buttons (mic + expand).
+    // Shared style for all action buttons in the row.
     final iconButtonStyle = IconButton.styleFrom(
       backgroundColor: colorScheme.surfaceContainerHighest,
       foregroundColor: colorScheme.onSurfaceVariant,
@@ -71,11 +71,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     if (isEdit && onDelete != null) {
       leftButtons.add(
         IconButton(
-          style: IconButton.styleFrom(
-            minimumSize: const Size(48, 48),
-            padding: EdgeInsets.zero,
-            backgroundColor: colorScheme.surfaceContainer,
-          ),
+          style: iconButtonStyle,
           tooltip: gloc.delete_expense,
           onPressed: onDelete,
           icon: Icon(Icons.delete_outline, color: colorScheme.error, size: 24),
@@ -104,6 +100,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
           onPressed: onSave,
           style: TextButton.styleFrom(
             backgroundColor: colorScheme.surfaceContainerHighest,
+            foregroundColor: colorScheme.onSurfaceVariant,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             minimumSize: const Size(48, 48),
             shape: RoundedRectangleBorder(
