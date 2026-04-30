@@ -80,11 +80,11 @@ dependencies:
   chewie: ^1.14.0
   zentoast: ^0.2.2
   talker_flutter: ^5.1.17
+  google_mlkit_text_recognition: ^0.15.1
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
     path: packages/play_store_updates
   android_nav_setting: ^0.0.2+2
-  google_mlkit_text_recognition: ^0.15.1
 
 dev_dependencies:
   flutter_test:
