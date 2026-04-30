@@ -102,7 +102,7 @@ void main() {
     });
 
     test('no category keyword', () {
-      expect(parse('20 euro per regalo')['category'], isNull);
+      expect(parse('20 euro per Marco')['category'], isNull);
     });
   });
 
