@@ -111,8 +111,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     final gloc = gen.AppLocalizations.of(context);
     final isReadOnly = widget.group.archived;
     final isEdit =
-      widget.initialExpense?.id != null &&
-      widget.initialExpense!.id.isNotEmpty;
+        widget.initialExpense?.id != null &&
+        widget.initialExpense!.id.isNotEmpty;
     final viewInsetsBottom = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
@@ -122,7 +122,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
-          if (widget.initialExpense?.id != null && widget.initialExpense!.id.isNotEmpty) ...[
+          if (widget.initialExpense?.id != null &&
+              widget.initialExpense!.id.isNotEmpty) ...[
             IconButton(
               icon: const Icon(Icons.share_outlined),
               tooltip: gloc.share_label,
@@ -150,7 +151,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
               SectionHeader(
                 title: isReadOnly
                     ? gloc.expense
-                    : (widget.initialExpense?.id != null && widget.initialExpense!.id.isNotEmpty
+                    : (widget.initialExpense?.id != null &&
+                              widget.initialExpense!.id.isNotEmpty
                           ? gloc.edit_expense
                           : gloc.new_expense),
                 description: '${gloc.group} ${widget.group.title}',
@@ -196,10 +198,9 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                     color: Theme.of(context).colorScheme.surface,
                     border: Border(
                       top: BorderSide(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .outlineVariant
-                            .withValues(alpha: 0.3),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outlineVariant.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
