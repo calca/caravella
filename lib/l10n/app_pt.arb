@@ -938,4 +938,14 @@
   ,"@unsplash_photos_by": {"description": "Prefixo de atribuição antes do link da marca Unsplash no final da página de pesquisa"}
   ,"unsplash_use_photo": "Usar esta foto"
   ,"@unsplash_use_photo": {"description": "Botão para confirmar a seleção de uma foto do Unsplash no painel de pré-visualização"}
+  ,"scan_receipt": "Escanear recibo"
+  ,"@scan_receipt": {"description": "Botão para escanear um recibo com OCR"}
+  ,"scanning_receipt": "Escaneando recibo..."
+  ,"@scanning_receipt": {"description": "Mensagem durante o escaneamento OCR do recibo"}
+  ,"receipt_scan_error": "Erro ao escanear recibo"
+  ,"@receipt_scan_error": {"description": "Mensagem de erro quando o escaneamento OCR falha"}
+  ,"no_text_found": "Nenhum texto encontrado na imagem"
+  ,"@no_text_found": {"description": "Mensagem quando o OCR não encontra texto na imagem"}
+  ,"receipt_scanned": "Recibo escaneado"
+  ,"@receipt_scanned": {"description": "Mensagem de sucesso após o escaneamento OCR"}
 }

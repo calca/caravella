@@ -995,4 +995,14 @@
   ,"@unsplash_photos_by": {"description": "Attribution prefix before the Unsplash brand link at the bottom of the search page"}
   ,"unsplash_use_photo": "Use this photo"
   ,"@unsplash_use_photo": {"description": "Button to confirm selection of an Unsplash photo in the preview sheet"}
+  ,"scan_receipt": "Scan receipt"
+  ,"@scan_receipt": {"description": "Button to scan a receipt with OCR"}
+  ,"scanning_receipt": "Scanning receipt..."
+  ,"@scanning_receipt": {"description": "Message during OCR receipt scanning"}
+  ,"receipt_scan_error": "Error scanning receipt"
+  ,"@receipt_scan_error": {"description": "Error message when OCR scanning fails"}
+  ,"no_text_found": "No text found in image"
+  ,"@no_text_found": {"description": "Message when OCR finds no text in the image"}
+  ,"receipt_scanned": "Receipt scanned"
+  ,"@receipt_scanned": {"description": "Success message after OCR scanning"}
 }

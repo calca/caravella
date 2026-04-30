@@ -1,8 +1,10 @@
 library;
 
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core/caravella_core.dart' hide ImageSource;
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../widgets/expense_form_actions_widget.dart';
@@ -15,6 +17,7 @@ import 'expense_form_orchestrator.dart';
 import 'expense_form_fields.dart';
 import 'expense_form_extended_fields.dart';
 import 'expense_form_compact_header.dart';
+import '../../../data/services/receipt_scanner_service.dart';
 
 /// Main expense form component - refactored to use config object pattern
 ///
@@ -140,6 +143,7 @@ class ExpenseFormComponent extends StatefulWidget {
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
     void Function(VoidCallback?)? onVoiceCallbackChanged,
+    void Function(VoidCallback?)? onScanReceiptCallbackChanged,
   }) : config = ExpenseFormConfig(
          initialExpense: initialExpense,
          participants: participants,
@@ -164,6 +168,7 @@ class ExpenseFormComponent extends StatefulWidget {
          onFormValidityChanged: onFormValidityChanged,
          onSaveCallbackChanged: onSaveCallbackChanged,
          onVoiceCallbackChanged: onVoiceCallbackChanged,
+         onScanReceiptCallbackChanged: onScanReceiptCallbackChanged,
          isReadOnly: isReadOnly,
        );
 
@@ -176,6 +181,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   late ExpenseFormLifecycleManager _lifecycleManager;
   late ExpenseFormOrchestrator _orchestrator;
   late ExpenseFormController _controller;
+
+  // Receipt scanner
+  final _receiptScanner = ReceiptScannerService();
+  final _imagePicker = ImagePicker();
 
   // Getter per determinare se mostrare i campi estesi
   bool get _shouldShowExtendedFields =>
@@ -209,6 +218,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
         if (widget.config.onVoiceCallbackChanged != null) {
           _notifyVoiceCallback();
+        }
+
+        if (widget.config.onScanReceiptCallbackChanged != null) {
+          _notifyScanReceiptCallback();
         }
 
         // Setup focus listeners for scroll coordination
@@ -281,6 +294,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final showVoice = !isEdit && !widget.config.isReadOnly;
     final callback = showVoice ? () => _showVoiceCapture(context) : null;
     widget.config.onVoiceCallbackChanged?.call(callback);
+  }
+
+  void _notifyScanReceiptCallback() {
+    final isEdit =
+        widget.config.initialExpense?.id != null &&
+        widget.config.initialExpense!.id.isNotEmpty;
+    final callback = (!isEdit && !widget.config.isReadOnly)
+        ? _scanReceipt
+        : null;
+    widget.config.onScanReceiptCallbackChanged?.call(callback);
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -482,6 +505,104 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
   }
 
+  Future<void> _scanReceipt() async {
+    final gloc = gen.AppLocalizations.of(context);
+
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        final bottomInset = MediaQuery.of(sheetContext).padding.bottom;
+        return GroupBottomSheetScaffold(
+          title: gloc.scan_receipt,
+          padding: EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            bottomInset > 0 ? bottomInset : 12,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: Text(gloc.from_camera),
+                onTap: () => Navigator.pop(sheetContext, ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: Text(gloc.from_gallery),
+                onTap: () => Navigator.pop(sheetContext, ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source == null || !mounted) return;
+
+    try {
+      final pickedFile = await _imagePicker.pickImage(source: source);
+      if (pickedFile == null || !mounted) return;
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.scanning_receipt),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+
+      final imageFile = File(pickedFile.path);
+      final result = await _receiptScanner.scanReceipt(imageFile);
+
+      if (!mounted) return;
+
+      final amount = result['amount'] as double?;
+      final description = result['description'] as String?;
+
+      if (amount == null && description == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(gloc.no_text_found),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+        return;
+      }
+
+      if (amount != null) {
+        _controller.amountController.text = amount.toString();
+      }
+      if (description != null && description.isNotEmpty) {
+        _controller.nameController.text = description;
+      }
+      _controller.markDirty();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.receipt_scanned),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.receipt_scan_error),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   Widget _buildDivider(BuildContext context) {
     if (_shouldShowExtendedFields) {
       // In full edit mode: reserve vertical space but no visual divider
@@ -519,6 +640,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       onExpand: widget.config.onExpand != null
           ? () => widget.config.onExpand!(_controller.state)
           : null,
+      onScanReceipt: widget.config.initialExpense == null ? _scanReceipt : null,
       showVoiceButton: showVoice,
       onVoiceTap: showVoice ? () => _showVoiceCapture(context) : null,
     );
@@ -576,6 +698,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _controller.removeListener(_notifySaveCallbackWithContext);
     }
     widget.config.onVoiceCallbackChanged?.call(null);
+    widget.config.onScanReceiptCallbackChanged?.call(null);
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();

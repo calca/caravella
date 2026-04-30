@@ -2311,4 +2311,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => 'Use this photo';
+
+  @override
+  String get scan_receipt => 'Scan receipt';
+
+  @override
+  String get scanning_receipt => 'Scanning receipt...';
+
+  @override
+  String get receipt_scan_error => 'Error scanning receipt';
+
+  @override
+  String get no_text_found => 'No text found in image';
+
+  @override
+  String get receipt_scanned => 'Receipt scanned';
 }

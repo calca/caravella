@@ -2322,4 +2322,19 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => 'Usar esta foto';
+
+  @override
+  String get scan_receipt => 'Escanear recibo';
+
+  @override
+  String get scanning_receipt => 'Escaneando recibo...';
+
+  @override
+  String get receipt_scan_error => 'Erro ao escanear recibo';
+
+  @override
+  String get no_text_found => 'Nenhum texto encontrado na imagem';
+
+  @override
+  String get receipt_scanned => 'Recibo escaneado';
 }
