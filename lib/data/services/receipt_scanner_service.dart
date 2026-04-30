@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// Service for scanning receipts using on-device OCR
 class ReceiptScannerService {
@@ -17,13 +18,15 @@ class ReceiptScannerService {
       final recognizedText = await _textRecognizer.processImage(inputImage);
       
       if (recognizedText.text.isEmpty) {
+        LoggerService.info('OCR: no text found in image', name: 'receipt_scanner');
         return {'amount': null, 'description': null};
       }
 
-      // Extract amount and description from recognized text
+      LoggerService.info('OCR: text recognized (${recognizedText.text.length} chars)', name: 'receipt_scanner');
       final result = _parseReceiptText(recognizedText.text);
       return result;
-    } catch (e) {
+    } catch (e, st) {
+      LoggerService.error('OCR: failed to scan receipt', name: 'receipt_scanner', error: e, stackTrace: st);
       rethrow;
     }
   }

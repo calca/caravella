@@ -2322,4 +2322,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => 'Usa questa foto';
+
+  @override
+  String get scan_receipt => 'Scansiona scontrino';
+
+  @override
+  String get scanning_receipt => 'Scansione scontrino...';
+
+  @override
+  String get receipt_scan_error => 'Errore nella scansione dello scontrino';
+
+  @override
+  String get no_text_found => 'Nessun testo trovato nell\'immagine';
+
+  @override
+  String get receipt_scanned => 'Scontrino scansionato';
 }

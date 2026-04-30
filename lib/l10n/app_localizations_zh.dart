@@ -2262,4 +2262,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => '使用此照片';
+
+  @override
+  String get scan_receipt => '扫描收据';
+
+  @override
+  String get scanning_receipt => '正在扫描收据...';
+
+  @override
+  String get receipt_scan_error => '扫描收据时出错';
+
+  @override
+  String get no_text_found => '图片中未找到文字';
+
+  @override
+  String get receipt_scanned => '收据已扫描';
 }

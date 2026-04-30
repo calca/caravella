@@ -4462,6 +4462,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use this photo'**
   String get unsplash_use_photo;
+
+  /// Button to scan a receipt with OCR
+  ///
+  /// In en, this message translates to:
+  /// **'Scan receipt'**
+  String get scan_receipt;
+
+  /// Message during OCR receipt scanning
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning receipt...'**
+  String get scanning_receipt;
+
+  /// Error message when OCR scanning fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error scanning receipt'**
+  String get receipt_scan_error;
+
+  /// Message when OCR finds no text in the image
+  ///
+  /// In en, this message translates to:
+  /// **'No text found in image'**
+  String get no_text_found;
+
+  /// Success message after OCR scanning
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt scanned'**
+  String get receipt_scanned;
 }
 
 class _AppLocalizationsDelegate
