@@ -300,8 +300,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final isEdit =
         widget.config.initialExpense?.id != null &&
         widget.config.initialExpense!.id.isNotEmpty;
-    final callback =
-        (!isEdit && !widget.config.isReadOnly) ? _scanReceipt : null;
+    final callback = (!isEdit && !widget.config.isReadOnly)
+        ? _scanReceipt
+        : null;
     widget.config.onScanReceiptCallbackChanged?.call(callback);
   }
 
@@ -507,26 +508,36 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Future<void> _scanReceipt() async {
     final gloc = gen.AppLocalizations.of(context);
 
-    // Show bottom sheet to choose camera or gallery
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: Text(gloc.from_camera),
-              onTap: () => Navigator.pop(context, ImageSource.camera),
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: Text(gloc.from_gallery),
-              onTap: () => Navigator.pop(context, ImageSource.gallery),
-            ),
-          ],
-        ),
-      ),
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        final bottomInset = MediaQuery.of(sheetContext).padding.bottom;
+        return GroupBottomSheetScaffold(
+          title: gloc.scan_receipt,
+          padding: EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            bottomInset > 0 ? bottomInset : 12,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: Text(gloc.from_camera),
+                onTap: () => Navigator.pop(sheetContext, ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: Text(gloc.from_gallery),
+                onTap: () => Navigator.pop(sheetContext, ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
     );
 
     if (source == null || !mounted) return;
