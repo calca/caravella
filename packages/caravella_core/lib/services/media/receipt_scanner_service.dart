@@ -1,7 +1,7 @@
 /// Service abstraction for receipt scanning operations using OCR
 /// Isolates platform dependencies (google_mlkit_text_recognition) for better testability
 abstract class ReceiptScannerService {
-  /// Scan a receipt image and extract all recognised text
+  /// Scan a receipt image and extract all recognized text
   ///
   /// [imagePath] - The absolute path to the image file to scan
   ///
