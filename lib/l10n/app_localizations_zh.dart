@@ -2273,7 +2273,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get receipt_scan_error => '扫描收据时出错';
 
   @override
-  String get no_text_found => '图片中未找到文字';
+  String get no_text_found => '图像中未找到文本';
 
   @override
   String get receipt_scanned => '收据已扫描';
