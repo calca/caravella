@@ -6,6 +6,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../widgets/expense_form_actions_widget.dart';
+import '../widgets/voice_capture_bottom_sheet.dart';
 import '../state/expense_form_controller.dart';
 import '../state/expense_form_state.dart';
 import 'expense_form_config.dart';
@@ -45,6 +46,7 @@ class ExpenseFormComponent extends StatefulWidget {
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
+    void Function(VoidCallback?)? onVoiceCallbackChanged,
   }) {
     return ExpenseFormComponent(
       config: ExpenseFormConfig.create(
@@ -67,6 +69,7 @@ class ExpenseFormComponent extends StatefulWidget {
         showActionsRow: showActionsRow,
         onFormValidityChanged: onFormValidityChanged,
         onSaveCallbackChanged: onSaveCallbackChanged,
+        onVoiceCallbackChanged: onVoiceCallbackChanged,
       ),
     );
   }
@@ -136,6 +139,7 @@ class ExpenseFormComponent extends StatefulWidget {
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
+    void Function(VoidCallback?)? onVoiceCallbackChanged,
   }) : config = ExpenseFormConfig(
          initialExpense: initialExpense,
          participants: participants,
@@ -159,6 +163,7 @@ class ExpenseFormComponent extends StatefulWidget {
          showActionsRow: showActionsRow,
          onFormValidityChanged: onFormValidityChanged,
          onSaveCallbackChanged: onSaveCallbackChanged,
+         onVoiceCallbackChanged: onVoiceCallbackChanged,
          isReadOnly: isReadOnly,
        );
 
@@ -200,6 +205,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         if (widget.config.onSaveCallbackChanged != null) {
           _controller.addListener(_notifySaveCallbackWithContext);
           _notifySaveCallbackWithContext(); // Initial state
+        }
+
+        if (widget.config.onVoiceCallbackChanged != null) {
+          _notifyVoiceCallback();
         }
 
         // Setup focus listeners for scroll coordination
@@ -263,6 +272,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final isValid = _controller.isFormValid;
     final callback = isValid ? () => _orchestrator.saveExpense(context) : null;
     widget.config.onSaveCallbackChanged?.call(callback);
+  }
+
+  void _notifyVoiceCallback() {
+    final isEdit =
+        widget.config.initialExpense?.id != null &&
+        widget.config.initialExpense!.id.isNotEmpty;
+    final showVoice = !isEdit && !widget.config.isReadOnly;
+    final callback = showVoice ? () => _showVoiceCapture(context) : null;
+    widget.config.onVoiceCallbackChanged?.call(callback);
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -445,8 +463,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     _lifecycleManager.updateParticipants(List.from(updatedParticipants));
 
     // Auto-select the newly added participant as the paidBy field.
-    final newParticipant =
-        updatedParticipants.where((p) => p.name == participantName).firstOrNull;
+    final newParticipant = updatedParticipants
+        .where((p) => p.name == participantName)
+        .firstOrNull;
     if (newParticipant != null) {
       LoggerService.info(
         'Auto-selecting newly added participant: "${newParticipant.name}"',
@@ -477,33 +496,86 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
   }
 
-  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
-      ExpenseFormActionsWidget(
-        onSave: _controller.isFormValid
-            ? () => _orchestrator.saveExpense(context)
-            : null,
-        isFormValid: _controller.isFormValid,
-        isEdit:
-            widget.config.initialExpense?.id != null &&
-            widget.config.initialExpense!.id.isNotEmpty,
-        onDelete: widget.config.hasDeleteAction
-            ? () => _orchestrator.deleteExpense(context)
-            : null,
-        textStyle: style,
-        showExpandButton:
-            !(widget.config.fullEdit ||
-                widget.config.initialExpense != null ||
-                _controller.isExpanded),
-        onExpand: widget.config.onExpand != null
-            ? () => widget.config.onExpand!(_controller.state)
-            : null,
+  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) {
+    final isEdit =
+        widget.config.initialExpense?.id != null &&
+        widget.config.initialExpense!.id.isNotEmpty;
+    final showVoice = !isEdit && !widget.config.isReadOnly;
+
+    return ExpenseFormActionsWidget(
+      onSave: _controller.isFormValid
+          ? () => _orchestrator.saveExpense(context)
+          : null,
+      isFormValid: _controller.isFormValid,
+      isEdit: isEdit,
+      onDelete: widget.config.hasDeleteAction
+          ? () => _orchestrator.deleteExpense(context)
+          : null,
+      textStyle: style,
+      showExpandButton:
+          !(widget.config.fullEdit ||
+              widget.config.initialExpense != null ||
+              _controller.isExpanded),
+      onExpand: widget.config.onExpand != null
+          ? () => widget.config.onExpand!(_controller.state)
+          : null,
+      showVoiceButton: showVoice,
+      onVoiceTap: showVoice ? () => _showVoiceCapture(context) : null,
+    );
+  }
+
+  Future<void> _showVoiceCapture(BuildContext context) async {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final localeId = '${locale}_${locale.toUpperCase()}';
+    final participantNames = _lifecycleManager.participants
+        .map((p) => p.name)
+        .toList();
+
+    await VoiceCaptureBottomSheet.show(
+      context: context,
+      participantNames: participantNames,
+      localeId: localeId,
+      onVoiceResult: (parsed) => _applyVoiceResult(parsed),
+    );
+  }
+
+  void _applyVoiceResult(Map<String, dynamic> parsed) {
+    final amount = parsed['amount'] as double?;
+    if (amount != null && amount > 0) {
+      _controller.amountController.text = amount.toString();
+    }
+    final name = parsed['name'] as String?;
+    if (name != null && name.isNotEmpty) {
+      _controller.nameController.text = name;
+    }
+    final categoryKeyword = parsed['category'] as String?;
+    if (categoryKeyword != null && _lifecycleManager.categories.isNotEmpty) {
+      final match = _lifecycleManager.categories.firstWhere(
+        (c) => c.name.toLowerCase() == categoryKeyword.toLowerCase(),
+        orElse: () => _lifecycleManager.categories.first,
       );
+      _controller.updateCategory(match);
+    }
+    final paidByName = parsed['paidBy'] as String?;
+    if (paidByName != null && _lifecycleManager.participants.isNotEmpty) {
+      final match = _lifecycleManager.participants.firstWhere(
+        (p) => p.name.toLowerCase() == paidByName.toLowerCase(),
+        orElse: () => _lifecycleManager.participants.first,
+      );
+      _controller.updatePaidBy(match);
+    }
+    final date = parsed['date'] as DateTime?;
+    if (date != null) {
+      _controller.updateDate(date);
+    }
+  }
 
   @override
   void dispose() {
     if (widget.config.onSaveCallbackChanged != null) {
       _controller.removeListener(_notifySaveCallbackWithContext);
     }
+    widget.config.onVoiceCallbackChanged?.call(null);
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();

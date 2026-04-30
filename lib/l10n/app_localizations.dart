@@ -4355,6 +4355,72 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save_label;
 
+  /// Label for the button to activate voice input
+  ///
+  /// In en, this message translates to:
+  /// **'Add by voice'**
+  String get voice_input_button;
+
+  /// Message shown during voice recording
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get voice_input_listening;
+
+  /// Hint to start speaking
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to speak'**
+  String get voice_input_tap_to_speak;
+
+  /// Message shown during voice text processing
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get voice_input_processing;
+
+  /// Error message for voice recognition issues
+  ///
+  /// In en, this message translates to:
+  /// **'Voice recognition error'**
+  String get voice_input_error;
+
+  /// Message when user denies microphone permission
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission denied'**
+  String get voice_input_permission_denied;
+
+  /// Message when voice recognition is not available on the device
+  ///
+  /// In en, this message translates to:
+  /// **'Voice recognition not available'**
+  String get voice_input_not_available;
+
+  /// Example hint for using voice input
+  ///
+  /// In en, this message translates to:
+  /// **'Try saying: \'50 dollars for dinner at restaurant\''**
+  String get voice_input_hint;
+
+  /// Label for the voice add expense CTA on home card
+  ///
+  /// In en, this message translates to:
+  /// **'Add by voice'**
+  String get voice_add_expense;
+
+  /// Confirmation message when expense is saved via voice
+  ///
+  /// In en, this message translates to:
+  /// **'Expense saved!'**
+  String get voice_expense_saved;
+
+  /// Message when voice input lacks required fields
+  ///
+  /// In en, this message translates to:
+  /// **'Some info missing – fill in the form'**
+  String get voice_expense_needs_more_info;
+
   /// Option to search for a background image on Unsplash
   ///
   /// In en, this message translates to:

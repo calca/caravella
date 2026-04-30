@@ -902,6 +902,28 @@
   ,"@export_markdown_description": {"description": "Descrição curta para o formato de exportação Markdown"}
   ,"save_label": "Salvar"
   ,"@save_label": {"description": "Rótulo para o botão de salvar"}
+  ,"voice_input_button": "Adicionar por voz"
+  ,"@voice_input_button": {"description": "Rótulo do botão para ativar a entrada de voz"}
+  ,"voice_input_listening": "Ouvindo..."
+  ,"@voice_input_listening": {"description": "Mensagem exibida durante a gravação de voz"}
+  ,"voice_input_tap_to_speak": "Toque para falar"
+  ,"@voice_input_tap_to_speak": {"description": "Dica para começar a falar"}
+  ,"voice_input_processing": "Processando..."
+  ,"@voice_input_processing": {"description": "Mensagem exibida durante o processamento do texto de voz"}
+  ,"voice_input_error": "Erro de reconhecimento de voz"
+  ,"@voice_input_error": {"description": "Mensagem de erro para problemas de reconhecimento de voz"}
+  ,"voice_input_permission_denied": "Permissão do microfone negada"
+  ,"@voice_input_permission_denied": {"description": "Mensagem quando o usuário nega a permissão do microfone"}
+  ,"voice_input_not_available": "Reconhecimento de voz não disponível"
+  ,"@voice_input_not_available": {"description": "Mensagem quando o reconhecimento de voz não está disponível no dispositivo"}
+  ,"voice_input_hint": "Tente dizer: '50 reais para o jantar no restaurante'"
+  ,"@voice_input_hint": {"description": "Dica de exemplo para usar a entrada de voz"}
+  ,"voice_add_expense": "Adicionar por voz"
+  ,"@voice_add_expense": {"description": "Rótulo para a CTA de voz no cartão inicial"}
+  ,"voice_expense_saved": "Despesa salva!"
+  ,"@voice_expense_saved": {"description": "Confirmação quando a despesa é salva por voz"}
+  ,"voice_expense_needs_more_info": "Algumas informações estão faltando – preencha o formulário"
+  ,"@voice_expense_needs_more_info": {"description": "Mensagem quando faltam campos obrigatórios"}
   ,"from_unsplash": "Do Unsplash"
   ,"@from_unsplash": {"description": "Opção para buscar uma imagem de fundo no Unsplash"}
   ,"unsplash_search_hint": "Buscar fotos no Unsplash..."

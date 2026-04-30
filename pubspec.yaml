@@ -69,6 +69,7 @@ dependencies:
   timeago: ^3.7.1
   gpt_markdown: ^1.1.6
   image_picker_platform_interface: ^2.11.1
+  speech_to_text: ^7.0.0
   flutter_local_notifications: ^21.0.0
   flutter_map: ^8.3.0
   latlong2: ^0.10.1
@@ -99,6 +100,7 @@ dependency_overrides:
   # Force latlong2 to ^0.10.1; flutter_map 8.3.0 caps at ^0.9.1 but API is compatible
   latlong2: ^0.10.1
   # Force package_info_plus to ^9.0.0; 10.x requires win32 ^6.x, incompatible with file_picker 11.x (win32 ^5.x)
+  # We don't use Linux platform so geolocator_linux won't be used at runtime
   package_info_plus: ^9.0.0
 
 flutter_launcher_icons:

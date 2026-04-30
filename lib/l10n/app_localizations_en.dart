@@ -2257,6 +2257,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save_label => 'Save';
 
   @override
+  String get voice_input_button => 'Add by voice';
+
+  @override
+  String get voice_input_listening => 'Listening...';
+
+  @override
+  String get voice_input_tap_to_speak => 'Tap to speak';
+
+  @override
+  String get voice_input_processing => 'Processing...';
+
+  @override
+  String get voice_input_error => 'Voice recognition error';
+
+  @override
+  String get voice_input_permission_denied => 'Microphone permission denied';
+
+  @override
+  String get voice_input_not_available => 'Voice recognition not available';
+
+  @override
+  String get voice_input_hint =>
+      'Try saying: \'50 dollars for dinner at restaurant\'';
+
+  @override
+  String get voice_add_expense => 'Add by voice';
+
+  @override
+  String get voice_expense_saved => 'Expense saved!';
+
+  @override
+  String get voice_expense_needs_more_info =>
+      'Some info missing – fill in the form';
+
+  @override
   String get from_unsplash => 'From Unsplash';
 
   @override
