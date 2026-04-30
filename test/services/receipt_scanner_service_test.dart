@@ -3,12 +3,6 @@ import 'package:io_caravella_egm/data/services/receipt_scanner_service.dart';
 
 void main() {
   group('ReceiptScannerService', () {
-    late ReceiptScannerService service;
-
-    setUp(() {
-      service = ReceiptScannerService();
-    });
-
     test('parseReceiptText extracts amount from TOTALE pattern', () {
       // This tests the internal parsing logic
       final text = '''

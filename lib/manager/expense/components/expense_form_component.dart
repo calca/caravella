@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core/caravella_core.dart' hide ImageSource;
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../widgets/expense_form_actions_widget.dart';
