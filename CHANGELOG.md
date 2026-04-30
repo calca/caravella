@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Receipt scanner service using Google ML Kit OCR (`google_mlkit_text_recognition`)
+  - New `ReceiptScannerService` abstraction in `caravella_core` for platform-independent receipt text extraction
+  - `ReceiptScannerServiceImpl` in `lib/data/services/` provides on-device OCR via ML Kit (Latin script)
+
 ## [1.6.0] - 2026-04-03
 
 ### Added
