@@ -958,4 +958,14 @@
   ,"@unsplash_photos_by": {"description": "Prefisso attribuzione prima del link al brand Unsplash in fondo alla pagina di ricerca"}
   ,"unsplash_use_photo": "Usa questa foto"
   ,"@unsplash_use_photo": {"description": "Pulsante per confermare la selezione di una foto Unsplash nel pannello di anteprima"}
+  ,"scan_receipt": "Scansiona scontrino"
+  ,"@scan_receipt": {"description": "Pulsante per scansionare uno scontrino con OCR"}
+  ,"scanning_receipt": "Scansione scontrino..."
+  ,"@scanning_receipt": {"description": "Messaggio durante la scansione OCR dello scontrino"}
+  ,"receipt_scan_error": "Errore nella scansione dello scontrino"
+  ,"@receipt_scan_error": {"description": "Messaggio di errore quando la scansione OCR fallisce"}
+  ,"no_text_found": "Nessun testo trovato nell'immagine"
+  ,"@no_text_found": {"description": "Messaggio quando l'OCR non trova testo nell'immagine"}
+  ,"receipt_scanned": "Scontrino scansionato"
+  ,"@receipt_scanned": {"description": "Messaggio di successo dopo la scansione OCR"}
 }

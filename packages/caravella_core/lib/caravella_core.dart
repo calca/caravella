@@ -41,7 +41,6 @@ export 'services/user/rating_service.dart';
 export 'services/media/file_picker_service.dart';
 export 'services/media/image_compression_service.dart';
 export 'services/media/location_service_abstraction.dart';
-export 'services/media/receipt_scanner_service.dart';
 
 // Services - Shortcuts
 export 'services/shortcuts/app_shortcuts_service.dart';

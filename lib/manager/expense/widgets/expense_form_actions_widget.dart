@@ -10,6 +10,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   final bool
   showExpandButton; // When true shows an expand button (only in add/compact mode)
   final VoidCallback? onExpand;
+  final VoidCallback? onScanReceipt; // Scan receipt with OCR
   final bool showVoiceButton;
   final VoidCallback? onVoiceTap;
 
@@ -22,6 +23,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     this.textStyle,
     this.showExpandButton = false,
     this.onExpand,
+    this.onScanReceipt,
     this.showVoiceButton = false,
     this.onVoiceTap,
   });
@@ -40,6 +42,18 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     );
 
     final leftButtons = <Widget>[];
+
+    // Add scan receipt button (only in add mode, not edit mode)
+    if (!isEdit && onScanReceipt != null) {
+      leftButtons.add(
+        IconButton(
+          tooltip: gloc.scan_receipt,
+          onPressed: onScanReceipt,
+          icon: const Icon(Icons.document_scanner_outlined, size: 24),
+          style: iconButtonStyle,
+        ),
+      );
+    }
 
     // Mic — leftmost
     if (showVoiceButton && onVoiceTap != null) {

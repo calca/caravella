@@ -4,7 +4,7 @@
     <!-- Internet permission required for loading map tiles from OpenStreetMap -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Camera permission for taking photos of group backgrounds and expense attachments (optional feature) -->
+    <!-- Camera permission for taking photos of group backgrounds, scanning receipts with OCR, and expense attachments (optional feature) -->
     <uses-permission android:name="android.permission.CAMERA" />
     
     <!-- Media permissions for selecting existing photos (optional feature) -->

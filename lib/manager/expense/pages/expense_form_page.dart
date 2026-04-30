@@ -33,6 +33,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   bool _isFormValid = false;
   VoidCallback? _saveCallback;
   VoidCallback? _voiceCallback;
+  VoidCallback? _scanCallback;
 
   void _updateFormValidity(bool isValid) {
     if (_isFormValid != isValid && mounted) {
@@ -64,6 +65,18 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
         if (mounted) {
           setState(() {
             _voiceCallback = callback;
+          });
+        }
+      });
+    }
+  }
+
+  void _updateScanCallback(VoidCallback? callback) {
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _scanCallback = callback;
           });
         }
       });
@@ -177,6 +190,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                 onFormValidityChanged: _updateFormValidity,
                 onSaveCallbackChanged: _updateSaveCallback,
                 onVoiceCallbackChanged: _updateVoiceCallback,
+                onScanReceiptCallbackChanged: _updateScanCallback,
                 groupId: widget.group.id,
                 isReadOnly: isReadOnly,
               ),
@@ -212,6 +226,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                     showExpandButton: false,
                     showVoiceButton: !isEdit,
                     onVoiceTap: _voiceCallback,
+                    onScanReceipt: _scanCallback,
                   ),
                 ),
               ),
