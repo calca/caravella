@@ -176,8 +176,9 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
 
     // Has location filter
     if (_filterHasLocation) {
-      filtered =
-          filtered.where((e) => e.location?.hasLocation ?? false).toList();
+      filtered = filtered
+          .where((e) => e.location?.hasLocation ?? false)
+          .toList();
     }
 
     // Sort by date (newest first)
@@ -225,9 +226,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
               onPressed: _clearAllFilters,
               icon: const Icon(Icons.clear, size: 16),
               label: Text(gloc.clear_filters),
-              style: TextButton.styleFrom(
-                foregroundColor: colorScheme.primary,
-              ),
+              style: TextButton.styleFrom(foregroundColor: colorScheme.primary),
             ),
         ],
       ),
@@ -290,20 +289,18 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
             filterHasLocation: _filterHasLocation,
             onCategorySelected: (id) {
               setState(() {
-                _selectedCategoryId =
-                    _selectedCategoryId == id ? null : id;
+                _selectedCategoryId = _selectedCategoryId == id ? null : id;
               });
             },
             onParticipantSelected: (id) {
               setState(() {
-                _selectedParticipantId =
-                    _selectedParticipantId == id ? null : id;
+                _selectedParticipantId = _selectedParticipantId == id
+                    ? null
+                    : id;
               });
             },
             onHasAttachmentToggled: () {
-              setState(
-                () => _filterHasAttachment = !_filterHasAttachment,
-              );
+              setState(() => _filterHasAttachment = !_filterHasAttachment);
             },
             onHasLocationToggled: () {
               setState(() => _filterHasLocation = !_filterHasLocation);
@@ -329,8 +326,9 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
                         category: expense.category.name,
                         date: expense.date,
                         currency: widget.currency,
-                        highlightQuery:
-                            _searchQuery.trim().isEmpty ? null : _searchQuery,
+                        highlightQuery: _searchQuery.trim().isEmpty
+                            ? null
+                            : _searchQuery,
                         onTap: () => widget.onExpenseTap(expense),
                       );
                     },
@@ -409,7 +407,8 @@ class _DateCalendarStrip extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: rowDates.map((date) {
-        final isSelected = selectedDate != null &&
+        final isSelected =
+            selectedDate != null &&
             date.year == selectedDate!.year &&
             date.month == selectedDate!.month &&
             date.day == selectedDate!.day;
@@ -427,9 +426,7 @@ class _DateCalendarStrip extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 2),
             padding: const EdgeInsets.symmetric(vertical: 6),
             decoration: BoxDecoration(
-              color: isSelected
-                  ? colorScheme.primary
-                  : Colors.transparent,
+              color: isSelected ? colorScheme.primary : Colors.transparent,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -442,8 +439,8 @@ class _DateCalendarStrip extends StatelessWidget {
                     color: isSelected
                         ? colorScheme.onPrimary
                         : hasExpenses
-                            ? colorScheme.onSurface
-                            : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                        ? colorScheme.onSurface
+                        : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                     fontSize: 10,
                   ),
                 ),
@@ -455,8 +452,8 @@ class _DateCalendarStrip extends StatelessWidget {
                     color: isSelected
                         ? colorScheme.onPrimary
                         : hasExpenses
-                            ? colorScheme.onSurface
-                            : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                        ? colorScheme.onSurface
+                        : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
                 ),
                 const SizedBox(height: 3),
@@ -468,8 +465,8 @@ class _DateCalendarStrip extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: hasExpenses
                         ? (isSelected
-                            ? colorScheme.onPrimary
-                            : colorScheme.primary)
+                              ? colorScheme.onPrimary
+                              : colorScheme.primary)
                         : Colors.transparent,
                   ),
                 ),
@@ -523,25 +520,29 @@ class _FilterChipsSection extends StatelessWidget {
         child: Row(
           children: [
             // Category chips
-            ...categories.map((cat) => Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: _SearchFilterChip(
-                label: cat.name,
-                selected: selectedCategoryId == cat.id,
-                onSelected: () => onCategorySelected(cat.id),
+            ...categories.map(
+              (cat) => Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: _SearchFilterChip(
+                  label: cat.name,
+                  selected: selectedCategoryId == cat.id,
+                  onSelected: () => onCategorySelected(cat.id),
+                ),
               ),
-            )),
+            ),
 
             // Participant chips
-            ...participants.map((p) => Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: _SearchFilterChip(
-                label: p.name,
-                selected: selectedParticipantId == p.id,
-                onSelected: () => onParticipantSelected(p.id),
-                icon: Icons.person_outline,
+            ...participants.map(
+              (p) => Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: _SearchFilterChip(
+                  label: p.name,
+                  selected: selectedParticipantId == p.id,
+                  onSelected: () => onParticipantSelected(p.id),
+                  icon: Icons.person_outline,
+                ),
               ),
-            )),
+            ),
 
             // Has attachment chip
             Padding(
@@ -647,9 +648,7 @@ class _EmptySearchState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              hasActiveFilters
-                  ? gloc.search_no_results
-                  : gloc.search_expenses,
+              hasActiveFilters ? gloc.search_no_results : gloc.search_expenses,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),

@@ -768,7 +768,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          GroupHeader(trip: trip, onPinToggle: _handlePinToggle),
+                          GroupHeader(
+                            trip: trip,
+                            onPinToggle: _handlePinToggle,
+                          ),
                           const SizedBox(height: 32),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
