@@ -1349,6 +1349,7 @@
   "search_no_results_hint": "尝试不同的搜索词或调整过滤条件",
   "@search_no_results_hint": {
     "description": "搜索无结果时的帮助文字"
+  },
   "voice_input_button": "语音输入",
   "@voice_input_button": {
     "description": "激活语音输入按钮的标签"
