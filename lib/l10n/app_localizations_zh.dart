@@ -2226,6 +2226,8 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get search_no_results_hint => '尝试不同的搜索词或调整过滤条件';
+
+  @override
   String get voice_input_button => '语音输入';
 
   @override

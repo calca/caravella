@@ -4390,6 +4390,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try different search terms or adjust filters'**
   String get search_no_results_hint;
+
   /// Label for the button to activate voice input
   ///
   /// In en, this message translates to:

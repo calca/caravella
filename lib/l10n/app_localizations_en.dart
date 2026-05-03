@@ -2272,7 +2272,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_no_results => 'No expenses found';
 
   @override
-  String get search_no_results_hint => 'Try different search terms or adjust filters';
+  String get search_no_results_hint =>
+      'Try different search terms or adjust filters';
+
+  @override
   String get voice_input_button => 'Add by voice';
 
   @override

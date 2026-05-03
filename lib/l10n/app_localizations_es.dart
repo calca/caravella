@@ -2285,7 +2285,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get search_no_results => 'No se encontraron gastos';
 
   @override
-  String get search_no_results_hint => 'Prueba diferentes términos o ajusta los filtros';
+  String get search_no_results_hint =>
+      'Prueba diferentes términos o ajusta los filtros';
+
+  @override
   String get voice_input_button => 'Añadir por voz';
 
   @override

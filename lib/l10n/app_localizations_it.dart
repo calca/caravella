@@ -2282,7 +2282,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get search_no_results => 'Nessuna spesa trovata';
 
   @override
-  String get search_no_results_hint => 'Prova termini diversi o modifica i filtri';
+  String get search_no_results_hint =>
+      'Prova termini diversi o modifica i filtri';
+
+  @override
   String get voice_input_button => 'Inserisci con la voce';
 
   @override
