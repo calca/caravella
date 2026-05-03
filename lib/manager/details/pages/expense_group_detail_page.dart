@@ -744,11 +744,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             DecoratedBox(
                               decoration: BoxDecoration(gradient: bg.gradient),
                             ),
-                          // Contenuto header (sotto la toolbar)
+                          // Contenuto header (sotto la toolbar, con padding superiore di 16)
                           Padding(
                             padding: const EdgeInsets.fromLTRB(
                               16,
-                              toolbarH,
+                              toolbarH + 16,
                               16,
                               0,
                             ),
