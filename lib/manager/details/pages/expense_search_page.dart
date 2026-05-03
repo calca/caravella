@@ -81,7 +81,10 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     _computeCalendarDates();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _searchFocusNode.requestFocus();
+      if (mounted) {
+        _searchFocusNode.requestFocus();
+        _scrollToTargetDate();
+      }
     });
   }
 
@@ -94,6 +97,9 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   }
 
   /// Builds a continuous date range and the set of dates with expenses.
+  ///
+  /// Always produces at least 14 days (2 weeks) so the calendar strip is
+  /// never too narrow.
   void _computeCalendarDates() {
     final dateSet = <DateTime>{};
     for (final e in widget.expenses) {
@@ -101,23 +107,83 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     }
     _expenseDateSet = dateSet;
 
+    // Base range: from the earliest to the latest expense date.
+    // Fall back to today when there are no expenses.
+    final DateTime rangeStart;
+    final DateTime rangeEnd;
     if (dateSet.isEmpty) {
-      _calendarDates = [];
-      return;
+      final now = DateTime.now();
+      rangeStart = DateTime(now.year, now.month, now.day);
+      rangeEnd = rangeStart;
+    } else {
+      final sorted = dateSet.toList()..sort();
+      rangeStart = sorted.first;
+      rangeEnd = sorted.last;
     }
 
-    final sorted = dateSet.toList()..sort();
-    final first = sorted.first;
-    final last = sorted.last;
-
-    // Build a continuous range from first to last date
+    // Build a continuous range from rangeStart to rangeEnd.
     final dates = <DateTime>[];
-    var current = first;
-    while (!current.isAfter(last)) {
+    var current = rangeStart;
+    while (!current.isAfter(rangeEnd)) {
       dates.add(current);
       current = DateTime(current.year, current.month, current.day + 1);
     }
+
+    // Ensure a minimum of 14 days (2 full rows of 7).
+    while (dates.length < 14) {
+      final last = dates.last;
+      dates.add(DateTime(last.year, last.month, last.day + 1));
+    }
+
     _calendarDates = dates;
+  }
+
+  /// Scrolls the calendar strip so that today (if within the displayed range)
+  /// is centred.  If today is outside the range, centres the most recent date.
+  void _scrollToTargetDate() {
+    if (_calendarDates.isEmpty || !_dateScrollController.hasClients) return;
+
+    final now = DateTime.now();
+    final todayNorm = DateTime(now.year, now.month, now.day);
+
+    // Pick today when it falls inside the calendar range, otherwise the last
+    // displayed date (most recent).
+    final DateTime target;
+    if (!todayNorm.isBefore(_calendarDates.first) &&
+        !todayNorm.isAfter(_calendarDates.last)) {
+      target = todayNorm;
+    } else {
+      target = _calendarDates.last;
+    }
+
+    // The calendar is split into two rows at the midpoint.  A date at index i
+    // appears in column (i) for row-1 or column (i - midpoint) for row-2.
+    // Both rows share the same horizontal scroll, so we compute the column
+    // position within whichever row the target date sits in.
+    final midpoint = (_calendarDates.length / 2).ceil();
+    final idx = _calendarDates.indexWhere(
+      (d) =>
+          d.year == target.year &&
+          d.month == target.month &&
+          d.day == target.day,
+    );
+    if (idx == -1) return;
+
+    final col = idx < midpoint ? idx : idx - midpoint;
+
+    // Each cell: 48 px wide + 2 × 2 px horizontal margin = 52 px.
+    // Inner horizontal padding of the scroll content: 8 px on each side.
+    const cellWidth = 52.0;
+    const hPadding = 8.0;
+
+    final viewport = _dateScrollController.position.viewportDimension;
+    final maxScroll = _dateScrollController.position.maxScrollExtent;
+
+    final offset =
+        (hPadding + col * cellWidth + cellWidth / 2 - viewport / 2)
+            .clamp(0.0, maxScroll);
+
+    _dateScrollController.jumpTo(offset);
   }
 
   /// Filtered expense list based on all active filters.
@@ -238,6 +304,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
             child: TextField(
               controller: _searchController,
               focusNode: _searchFocusNode,
+              autofocus: true,
               decoration: InputDecoration(
                 hintText: gloc.search_all_fields_hint,
                 prefixIcon: const Icon(Icons.search_outlined, size: 20),
