@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.6.1+91
+version: 1.7.2+92
 
 environment:
   sdk: ">=3.9.0 <4.0.0"
@@ -80,11 +80,11 @@ dependencies:
   chewie: ^1.14.0
   zentoast: ^0.2.2
   talker_flutter: ^5.1.17
+  google_mlkit_text_recognition: ^0.15.1
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
     path: packages/play_store_updates
   android_nav_setting: ^0.0.2+2
-  google_mlkit_text_recognition: ^0.15.1
 
 dev_dependencies:
   flutter_test:
