@@ -407,6 +407,9 @@ class _UnsplashThumbnailState extends State<_UnsplashThumbnail> {
   Uint8List? _bytes;
   bool _error = false;
   bool _visible = false;
+  // Incremented on every new fetch; checked after each await so that
+  // responses from a superseded request are silently discarded.
+  int _generation = 0;
 
   @override
   void initState() {
@@ -414,26 +417,44 @@ class _UnsplashThumbnailState extends State<_UnsplashThumbnail> {
     _fetch();
   }
 
+  @override
+  void didUpdateWidget(_UnsplashThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.url != widget.url) {
+      // Immediately invalidate any in-flight request from the old URL before
+      // resetting state and starting a new fetch.
+      ++_generation;
+      setState(() {
+        _bytes = null;
+        _error = false;
+        _visible = false;
+      });
+      _fetch();
+    }
+  }
+
   Future<void> _fetch() async {
+    final gen = ++_generation;
+    final url = widget.url;
     try {
       final response = await http
-          .get(Uri.parse(widget.url))
+          .get(Uri.parse(url))
           .timeout(const Duration(seconds: 15));
-      if (response.statusCode == 200 && mounted) {
+      if (response.statusCode == 200 && _generation == gen && mounted) {
         setState(() => _bytes = response.bodyBytes);
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) setState(() => _visible = true);
+          if (_generation == gen && mounted) setState(() => _visible = true);
         });
       }
     } on TimeoutException {
       LoggerService.warning(
-        'Thumbnail load timed out: ${widget.url}',
+        'Thumbnail load timed out: $url',
         name: 'api.unsplash',
       );
-      if (mounted) setState(() => _error = true);
+      if (_generation == gen && mounted) setState(() => _error = true);
     } catch (e) {
       LoggerService.warning('Thumbnail load failed: $e', name: 'api.unsplash');
-      if (mounted) setState(() => _error = true);
+      if (_generation == gen && mounted) setState(() => _error = true);
     }
   }
 
