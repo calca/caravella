@@ -961,6 +961,8 @@
   ,"@save_label": {"description": "Label for save action button"}
   ,"search_expenses": "Search expenses"
   ,"@search_expenses": {"description": "Title for the expense search page"}
+  ,"search_in_group": "Search in {groupName}"
+  ,"@search_in_group": {"description": "Hint text for search input using the group name", "placeholders": {"groupName": {"type": "String"}}}
   ,"search_all_fields_hint": "Search all fields..."
   ,"@search_all_fields_hint": {"description": "Hint text for search input that searches across all expense fields"}
   ,"has_attachment": "Has attachment"

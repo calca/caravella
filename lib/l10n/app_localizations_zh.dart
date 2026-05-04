@@ -2213,6 +2213,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get search_expenses => '搜索费用';
 
   @override
+  String search_in_group(String groupName) {
+    return '在 $groupName 中搜索';
+  }
+
+  @override
   String get search_all_fields_hint => '搜索所有字段...';
 
   @override

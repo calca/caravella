@@ -924,6 +924,8 @@
   ,"@save_label": {"description": "Etichetta per il pulsante di salvataggio"}
   ,"search_expenses": "Cerca spese"
   ,"@search_expenses": {"description": "Titolo della pagina di ricerca spese"}
+  ,"search_in_group": "Cerca in {groupName}"
+  ,"@search_in_group": {"description": "Testo suggerimento per input ricerca con il nome del gruppo", "placeholders": {"groupName": {"type": "String"}}}
   ,"search_all_fields_hint": "Cerca in tutti i campi..."
   ,"@search_all_fields_hint": {"description": "Testo suggerimento per input ricerca che cerca in tutti i campi"}
   ,"has_attachment": "Con allegato"

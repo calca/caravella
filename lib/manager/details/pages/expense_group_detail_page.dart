@@ -155,6 +155,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       categories: _trip!.categories,
       participants: _trip!.participants,
       currency: _trip!.currency,
+      groupName: _trip!.title,
       onExpenseTap: _openEditExpense,
     );
   }
@@ -736,12 +737,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 onPressed: () => Navigator.of(context).pop(),
               ),
               actions: [
-                if (trip.expenses.isNotEmpty)
-                  IconButton(
-                    icon: const Icon(Icons.search_outlined),
-                    tooltip: gen.AppLocalizations.of(context).search_expenses,
-                    onPressed: () => _openSearchPage(),
-                  ),
+                IconButton(
+                  icon: const Icon(Icons.settings_outlined),
+                  tooltip: gen.AppLocalizations.of(context).options,
+                  onPressed: () => _showSettingsPage(),
+                ),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.pin,
@@ -786,6 +786,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 hasExpenses: trip.expenses.isNotEmpty,
                                 onOverview: trip.expenses.isNotEmpty
                                     ? _openUnifiedOverviewPage
+                                    : null,
+                                onSearch: trip.expenses.isNotEmpty
+                                    ? _openSearchPage
                                     : null,
                                 onOptions: _showSettingsPage,
                               ),

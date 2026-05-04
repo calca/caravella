@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -18,6 +19,7 @@ class ExpenseSearchPage extends StatefulWidget {
   final List<ExpenseCategory> categories;
   final List<ExpenseParticipant> participants;
   final String currency;
+  final String groupName;
   final void Function(ExpenseDetails) onExpenseTap;
 
   const ExpenseSearchPage({
@@ -26,6 +28,7 @@ class ExpenseSearchPage extends StatefulWidget {
     required this.categories,
     required this.participants,
     required this.currency,
+    required this.groupName,
     required this.onExpenseTap,
   });
 
@@ -36,6 +39,7 @@ class ExpenseSearchPage extends StatefulWidget {
     required List<ExpenseCategory> categories,
     required List<ExpenseParticipant> participants,
     required String currency,
+    required String groupName,
     required void Function(ExpenseDetails) onExpenseTap,
   }) {
     return Navigator.of(context).push(
@@ -45,6 +49,7 @@ class ExpenseSearchPage extends StatefulWidget {
           categories: categories,
           participants: participants,
           currency: currency,
+          groupName: groupName,
           onExpenseTap: onExpenseTap,
         ),
       ),
@@ -179,9 +184,8 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     final viewport = _dateScrollController.position.viewportDimension;
     final maxScroll = _dateScrollController.position.maxScrollExtent;
 
-    final offset =
-        (hPadding + col * cellWidth + cellWidth / 2 - viewport / 2)
-            .clamp(0.0, maxScroll);
+    final offset = (hPadding + col * cellWidth + cellWidth / 2 - viewport / 2)
+        .clamp(0.0, maxScroll);
 
     _dateScrollController.jumpTo(offset);
   }
@@ -273,62 +277,80 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     _searchController.clear();
   }
 
+  void _unfocus() => _searchFocusNode.unfocus();
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final filteredExpenses = _filteredExpenses;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final appBarColor = colorScheme.surfaceContainerHighest;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(gloc.search_expenses),
-        backgroundColor: colorScheme.surfaceContainer,
+        backgroundColor: appBarColor,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
-        scrolledUnderElevation: 1,
-        actions: [
-          if (_hasActiveFilters)
-            TextButton.icon(
-              onPressed: _clearAllFilters,
-              icon: const Icon(Icons.clear, size: 16),
-              label: Text(gloc.clear_filters),
-              style: TextButton.styleFrom(foregroundColor: colorScheme.primary),
+        scrolledUnderElevation: 0,
+        titleSpacing: 0,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        ),
+        title: Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: TextField(
+            controller: _searchController,
+            focusNode: _searchFocusNode,
+            autofocus: true,
+            style: Theme.of(context).textTheme.bodyLarge,
+            decoration: InputDecoration(
+              hintText: gloc.search_in_group(widget.groupName),
+              suffixIcon: _searchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.close_rounded, size: 20),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() => _searchQuery = '');
+                      },
+                    )
+                  : _hasActiveFilters
+                  ? IconButton(
+                      icon: const Icon(Icons.filter_list_off_rounded, size: 20),
+                      onPressed: _clearAllFilters,
+                      tooltip: gloc.clear_filters,
+                    )
+                  : null,
+              filled: true,
+              fillColor: appBarColor,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(28),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(28),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(28),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 0,
+              ),
+              isDense: false,
             ),
-        ],
+            onChanged: (value) => setState(() => _searchQuery = value),
+            cursorColor: colorScheme.onSurface,
+          ),
+        ),
       ),
       body: Column(
         children: [
-          // Search input
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-            child: TextField(
-              controller: _searchController,
-              focusNode: _searchFocusNode,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: gloc.search_all_fields_hint,
-                prefixIcon: const Icon(Icons.search_outlined, size: 20),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.close, size: 20),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() => _searchQuery = '');
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
-              onChanged: (value) => setState(() => _searchQuery = value),
-            ),
-          ),
-
           // Date calendar strip (2-row, scrollable)
           if (_calendarDates.isNotEmpty) ...[
             const SizedBox(height: 12),
@@ -338,6 +360,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
               selectedDate: _selectedDate,
               scrollController: _dateScrollController,
               onDateSelected: (date) {
+                _unfocus();
                 setState(() {
                   _selectedDate = _selectedDate == date ? null : date;
                 });
@@ -355,11 +378,13 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
             filterHasAttachment: _filterHasAttachment,
             filterHasLocation: _filterHasLocation,
             onCategorySelected: (id) {
+              _unfocus();
               setState(() {
                 _selectedCategoryId = _selectedCategoryId == id ? null : id;
               });
             },
             onParticipantSelected: (id) {
+              _unfocus();
               setState(() {
                 _selectedParticipantId = _selectedParticipantId == id
                     ? null
@@ -367,9 +392,11 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
               });
             },
             onHasAttachmentToggled: () {
+              _unfocus();
               setState(() => _filterHasAttachment = !_filterHasAttachment);
             },
             onHasLocationToggled: () {
+              _unfocus();
               setState(() => _filterHasLocation = !_filterHasLocation);
             },
           ),
@@ -396,7 +423,10 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
                         highlightQuery: _searchQuery.trim().isEmpty
                             ? null
                             : _searchQuery,
-                        onTap: () => widget.onExpenseTap(expense),
+                        onTap: () {
+                          _unfocus();
+                          widget.onExpenseTap(expense);
+                        },
                       );
                     },
                   ),
@@ -586,19 +616,7 @@ class _FilterChipsSection extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Row(
           children: [
-            // Category chips
-            ...categories.map(
-              (cat) => Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: _SearchFilterChip(
-                  label: cat.name,
-                  selected: selectedCategoryId == cat.id,
-                  onSelected: () => onCategorySelected(cat.id),
-                ),
-              ),
-            ),
-
-            // Participant chips
+            // Participant chips (paid by)
             ...participants.map(
               (p) => Padding(
                 padding: const EdgeInsets.only(right: 8),
@@ -607,6 +625,18 @@ class _FilterChipsSection extends StatelessWidget {
                   selected: selectedParticipantId == p.id,
                   onSelected: () => onParticipantSelected(p.id),
                   icon: Icons.person_outline,
+                ),
+              ),
+            ),
+
+            // Category chips
+            ...categories.map(
+              (cat) => Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: _SearchFilterChip(
+                  label: cat.name,
+                  selected: selectedCategoryId == cat.id,
+                  onSelected: () => onCategorySelected(cat.id),
                 ),
               ),
             ),
@@ -656,32 +686,38 @@ class _SearchFilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return FilterChip(
-      avatar: icon != null
-          ? Icon(
-              icon,
-              size: 16,
-              color: selected
-                  ? scheme.onPrimaryContainer
-                  : scheme.onSurfaceVariant,
-            )
-          : null,
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
-      showCheckmark: false,
-      side: BorderSide(
-        color: selected
-            ? scheme.onSurfaceVariant.withValues(alpha: 0.2)
-            : scheme.outlineVariant.withValues(alpha: 0.4),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashColor: scheme.onSurface.withValues(alpha: 0.08),
+        highlightColor: Colors.transparent,
       ),
-      backgroundColor: scheme.surfaceContainerHigh,
-      selectedColor: scheme.onSurfaceVariant.withValues(alpha: 0.15),
-      labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
-        fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-        color: selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
+      child: FilterChip(
+        avatar: icon != null
+            ? Icon(
+                icon,
+                size: 16,
+                color: selected
+                    ? scheme.onPrimaryContainer
+                    : scheme.onSurfaceVariant,
+              )
+            : null,
+        label: Text(label),
+        selected: selected,
+        onSelected: (_) => onSelected(),
+        showCheckmark: false,
+        side: BorderSide(
+          color: selected
+              ? scheme.onSurfaceVariant.withValues(alpha: 0.2)
+              : scheme.outlineVariant.withValues(alpha: 0.4),
+        ),
+        backgroundColor: scheme.surfaceContainerHigh,
+        selectedColor: scheme.onSurfaceVariant.withValues(alpha: 0.15),
+        labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+          color: selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
+        ),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

@@ -939,6 +939,8 @@
   ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
   ,"search_expenses": "Buscar gastos"
   ,"@search_expenses": {"description": "Título de la página de búsqueda de gastos"}
+  ,"search_in_group": "Buscar en {groupName}"
+  ,"@search_in_group": {"description": "Texto de sugerencia para búsqueda usando el nombre del grupo", "placeholders": {"groupName": {"type": "String"}}}
   ,"search_all_fields_hint": "Buscar en todos los campos..."
   ,"@search_all_fields_hint": {"description": "Texto de sugerencia para búsqueda en todos los campos"}
   ,"has_attachment": "Con adjunto"

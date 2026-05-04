@@ -4361,6 +4361,12 @@ abstract class AppLocalizations {
   /// **'Search expenses'**
   String get search_expenses;
 
+  /// Hint text for search input using the group name
+  ///
+  /// In en, this message translates to:
+  /// **'Search in {groupName}'**
+  String search_in_group(String groupName);
+
   /// Hint text for search input that searches across all expense fields
   ///
   /// In en, this message translates to:

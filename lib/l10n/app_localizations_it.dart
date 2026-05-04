@@ -2270,6 +2270,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get search_expenses => 'Cerca spese';
 
   @override
+  String search_in_group(String groupName) {
+    return 'Cerca in $groupName';
+  }
+
+  @override
   String get search_all_fields_hint => 'Cerca in tutti i campi...';
 
   @override
