@@ -2270,6 +2270,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get save_label => 'Guardar';
 
   @override
+  String get search_expenses => 'Buscar gastos';
+
+  @override
+  String search_in_group(String groupName) {
+    return 'Buscar en $groupName';
+  }
+
+  @override
+  String get search_all_fields_hint => 'Buscar en todos los campos...';
+
+  @override
+  String get has_attachment => 'Con adjunto';
+
+  @override
+  String get has_location => 'Con ubicación';
+
+  @override
+  String get search_no_results => 'No se encontraron gastos';
+
+  @override
+  String get search_no_results_hint =>
+      'Prueba diferentes términos o ajusta los filtros';
+
+  @override
   String get voice_input_button => 'Añadir por voz';
 
   @override

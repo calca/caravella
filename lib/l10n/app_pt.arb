@@ -902,6 +902,20 @@
   ,"@export_markdown_description": {"description": "Descrição curta para o formato de exportação Markdown"}
   ,"save_label": "Salvar"
   ,"@save_label": {"description": "Rótulo para o botão de salvar"}
+  ,"search_expenses": "Pesquisar despesas"
+  ,"@search_expenses": {"description": "Título da página de pesquisa de despesas"}
+  ,"search_in_group": "Pesquisar em {groupName}"
+  ,"@search_in_group": {"description": "Texto de sugestão para pesquisa usando o nome do grupo", "placeholders": {"groupName": {"type": "String"}}}
+  ,"search_all_fields_hint": "Pesquisar em todos os campos..."
+  ,"@search_all_fields_hint": {"description": "Texto de sugestão para pesquisa em todos os campos"}
+  ,"has_attachment": "Com anexo"
+  ,"@has_attachment": {"description": "Rótulo de filtro para despesas com anexos"}
+  ,"has_location": "Com localização"
+  ,"@has_location": {"description": "Rótulo de filtro para despesas com dados de localização"}
+  ,"search_no_results": "Nenhuma despesa encontrada"
+  ,"@search_no_results": {"description": "Mostrado quando a pesquisa não encontra despesas"}
+  ,"search_no_results_hint": "Tente termos diferentes ou ajuste os filtros"
+  ,"@search_no_results_hint": {"description": "Texto de ajuda quando a pesquisa não tem resultados"}
   ,"voice_input_button": "Adicionar por voz"
   ,"@voice_input_button": {"description": "Rótulo do botão para ativar a entrada de voz"}
   ,"voice_input_listening": "Ouvindo..."

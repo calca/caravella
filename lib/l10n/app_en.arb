@@ -959,6 +959,20 @@
   ,"@export_markdown_description": {"description": "Short description for Markdown export format"}
   ,"save_label": "Save"
   ,"@save_label": {"description": "Label for save action button"}
+  ,"search_expenses": "Search expenses"
+  ,"@search_expenses": {"description": "Title for the expense search page"}
+  ,"search_in_group": "Search in {groupName}"
+  ,"@search_in_group": {"description": "Hint text for search input using the group name", "placeholders": {"groupName": {"type": "String"}}}
+  ,"search_all_fields_hint": "Search all fields..."
+  ,"@search_all_fields_hint": {"description": "Hint text for search input that searches across all expense fields"}
+  ,"has_attachment": "Has attachment"
+  ,"@has_attachment": {"description": "Filter label for expenses with attachments"}
+  ,"has_location": "Has location"
+  ,"@has_location": {"description": "Filter label for expenses with location data"}
+  ,"search_no_results": "No expenses found"
+  ,"@search_no_results": {"description": "Shown when search returns no matching expenses"}
+  ,"search_no_results_hint": "Try different search terms or adjust filters"
+  ,"@search_no_results_hint": {"description": "Helper text when expense search has no results"}
   ,"voice_input_button": "Add by voice"
   ,"@voice_input_button": {"description": "Label for the button to activate voice input"}
   ,"voice_input_listening": "Listening..."

@@ -29,6 +29,7 @@ import '../../../services/notification_manager.dart';
 
 import 'unified_overview_page.dart';
 import 'group_settings_page.dart';
+import 'expense_search_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -66,7 +67,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
   // Removed manual refresh state (_reloading, _listOpacity)
-  bool _hideHeader = false; // nascondi header quando filtri aperti
   late final ScrollController _scrollController;
   bool _fabVisible = true; // controllo visibilità totale
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
@@ -144,6 +144,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip == null) return;
     Navigator.of(context).push(
       MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
+    );
+  }
+
+  void _openSearchPage() {
+    if (_trip == null) return;
+    ExpenseSearchPage.show(
+      context,
+      expenses: _trip!.expenses,
+      categories: _trip!.categories,
+      participants: _trip!.participants,
+      currency: _trip!.currency,
+      groupName: _trip!.title,
+      onExpenseTap: _openEditExpense,
     );
   }
 
@@ -673,7 +686,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
     final colorScheme = Theme.of(context).colorScheme;
     final totalExpenses = trip.getTotalExpenses();
-    final showCollapsedTitle = _hideHeader || _collapsedTitleVisible;
+    final showCollapsedTitle = _collapsedTitleVisible;
 
     // Calcola altezza espansa: toolbar + avatar + titolo + totale + azioni
     const double toolbarH = 56.0;
@@ -681,7 +694,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     // GroupHeader: padding(16) + avatar(circleSize) + title(~34) + SizedBox(16)
     // + SizedBox(32) + Row(GroupTotal+GroupActions, ~60) + SizedBox(24)
     final headerContentH = 16 + circleSize + 34 + 16 + 32 + 60 + 24;
-    final expandedH = _hideHeader ? toolbarH : toolbarH + headerContentH;
+    final expandedH = toolbarH + headerContentH;
     _headerExpandedHeight = expandedH;
 
     final bg = GroupBackgroundUtils.resolve(
@@ -723,68 +736,71 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 icon: const Icon(Icons.arrow_back_rounded),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              flexibleSpace: _hideHeader
-                  ? null
-                  : FlexibleSpaceBar(
-                      collapseMode: CollapseMode.pin,
-                      background: Stack(
-                        fit: StackFit.expand,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.settings_outlined),
+                  tooltip: gen.AppLocalizations.of(context).options,
+                  onPressed: () => _showSettingsPage(),
+                ),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin,
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Sfondo: immagine quando presente, altrimenti surfaceContainer
+                    if (bg.hasImage)
+                      Image.file(
+                        File(bg.imagePath!),
+                        fit: BoxFit.cover,
+                        alignment: Alignment.topCenter,
+                      )
+                    else
+                      ColoredBox(color: colorScheme.surfaceContainer),
+                    // Overlay gradiente solo quando c'è un'immagine
+                    if (bg.hasImage && bg.gradient != null)
+                      DecoratedBox(
+                        decoration: BoxDecoration(gradient: bg.gradient),
+                      ),
+                    // Contenuto header (sotto la toolbar, con padding superiore di 16)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, toolbarH + 16, 16, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // Sfondo: immagine quando presente, altrimenti surfaceContainer
-                          if (bg.hasImage)
-                            Image.file(
-                              File(bg.imagePath!),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                            )
-                          else
-                            ColoredBox(color: colorScheme.surfaceContainer),
-                          // Overlay gradiente solo quando c'è un'immagine
-                          if (bg.hasImage && bg.gradient != null)
-                            DecoratedBox(
-                              decoration: BoxDecoration(gradient: bg.gradient),
-                            ),
-                          // Contenuto header (sotto la toolbar, con padding superiore di 16)
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16,
-                              toolbarH + 16,
-                              16,
-                              0,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                GroupHeader(
-                                  trip: trip,
-                                  onPinToggle: _handlePinToggle,
-                                ),
-                                const SizedBox(height: 32),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: GroupTotal(
-                                        total: totalExpenses,
-                                        currency: trip.currency,
-                                      ),
-                                    ),
-                                    GroupActions(
-                                      hasExpenses: trip.expenses.isNotEmpty,
-                                      onOverview: trip.expenses.isNotEmpty
-                                          ? _openUnifiedOverviewPage
-                                          : null,
-                                      onOptions: _showSettingsPage,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 24),
-                              ],
-                            ),
+                          GroupHeader(
+                            trip: trip,
+                            onPinToggle: _handlePinToggle,
                           ),
+                          const SizedBox(height: 32),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: GroupTotal(
+                                  total: totalExpenses,
+                                  currency: trip.currency,
+                                ),
+                              ),
+                              GroupActions(
+                                hasExpenses: trip.expenses.isNotEmpty,
+                                onOverview: trip.expenses.isNotEmpty
+                                    ? _openUnifiedOverviewPage
+                                    : null,
+                                onSearch: trip.expenses.isNotEmpty
+                                    ? _openSearchPage
+                                    : null,
+                                onOptions: _showSettingsPage,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
                         ],
                       ),
                     ),
+                  ],
+                ),
+              ),
             ),
             SliverToBoxAdapter(
               child: Container(
@@ -807,13 +823,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           expenses: trip.expenses,
                           currency: trip.currency,
                           onExpenseTap: _openEditExpense,
-                          categories: trip.categories,
-                          participants: trip.participants,
-                          onFiltersVisibilityChanged: (visible) {
-                            if (mounted) {
-                              setState(() => _hideHeader = visible);
-                            }
-                          },
                           onAddExpense: _showAddExpenseSheet,
                           newlyAddedExpenseId: _newlyAddedExpenseId,
                         ),
