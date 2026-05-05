@@ -3,6 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../../../settings/pages/settings_page.dart';
+import '../../search/group_search_page.dart';
 
 class HomeCardsHeader extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -130,6 +131,13 @@ class HomeCardsHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
+
+        // Search icon: opens the full-screen group search page
+        IconButton(
+          icon: Icon(Icons.search_rounded, color: theme.colorScheme.onSurface),
+          tooltip: localizations.show_search,
+          onPressed: () => GroupSearchPage.show(context),
+        ),
 
         // CTA button: apre direttamente la pagina delle impostazioni
         IconButton(
