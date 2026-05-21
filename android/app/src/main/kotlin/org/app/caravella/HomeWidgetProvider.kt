@@ -9,6 +9,7 @@ import android.content.Intent
 import android.widget.RemoteViews
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.util.Locale
+import kotlin.concurrent.thread
 
 class HomeWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(
@@ -16,9 +17,7 @@ class HomeWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray,
     ) {
-        appWidgetIds.forEach { appWidgetId ->
-            updateAppWidget(context, appWidgetManager, appWidgetId)
-        }
+        updateAllWidgets(context)
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
@@ -58,8 +57,21 @@ class HomeWidgetProvider : AppWidgetProvider() {
             val week = AppFunctionStorageReader.getWeekTotal(context, config.groupId)
 
             if (today == null || week == null) {
-                HomeWidgetPrefs.clearWidgetConfig(context, appWidgetId)
-                setUnconfiguredState(context, appWidgetId, views)
+                views.setTextViewText(
+                    R.id.widget_group_title,
+                    config.groupTitle,
+                )
+                views.setTextViewText(R.id.widget_today_value, "-")
+                views.setTextViewText(R.id.widget_week_value, "-")
+                views.setTextViewText(
+                    R.id.widget_quick_add_button,
+                    context.getString(R.string.widget_quick_add),
+                )
+                views.setBoolean(R.id.widget_quick_add_button, "setEnabled", true)
+                views.setOnClickPendingIntent(
+                    R.id.widget_quick_add_button,
+                    createQuickAddIntent(context, appWidgetId, config.groupId, config.groupTitle),
+                )
                 appWidgetManager.updateAppWidget(appWidgetId, views)
                 return
             }
@@ -92,12 +104,15 @@ class HomeWidgetProvider : AppWidgetProvider() {
         }
 
         fun updateAllWidgets(context: Context) {
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            val widgetIds = appWidgetManager.getAppWidgetIds(
-                ComponentName(context, HomeWidgetProvider::class.java),
-            )
-            widgetIds.forEach { appWidgetId ->
-                updateAppWidget(context, appWidgetManager, appWidgetId)
+            val applicationContext = context.applicationContext
+            thread {
+                val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
+                val widgetIds = appWidgetManager.getAppWidgetIds(
+                    ComponentName(applicationContext, HomeWidgetProvider::class.java),
+                )
+                widgetIds.forEach { appWidgetId ->
+                    updateAppWidget(applicationContext, appWidgetManager, appWidgetId)
+                }
             }
         }
 
@@ -173,6 +188,7 @@ internal data class WidgetGroupConfig(
 
 internal object HomeWidgetPrefs {
     private const val PREFS_NAME = "caravella_widget_prefs"
+    private const val DEFAULT_CURRENCY = "€"
 
     private fun keyGroupId(appWidgetId: Int) = "widget_${appWidgetId}_group_id"
     private fun keyGroupTitle(appWidgetId: Int) = "widget_${appWidgetId}_group_title"
@@ -197,7 +213,8 @@ internal object HomeWidgetPrefs {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val groupId = prefs.getString(keyGroupId(appWidgetId), null) ?: return null
         val groupTitle = prefs.getString(keyGroupTitle(appWidgetId), null) ?: return null
-        val groupCurrency = prefs.getString(keyGroupCurrency(appWidgetId), "€") ?: "€"
+        val groupCurrency = prefs.getString(keyGroupCurrency(appWidgetId), DEFAULT_CURRENCY)
+            ?: DEFAULT_CURRENCY
         return WidgetGroupConfig(
             groupId = groupId,
             groupTitle = groupTitle,

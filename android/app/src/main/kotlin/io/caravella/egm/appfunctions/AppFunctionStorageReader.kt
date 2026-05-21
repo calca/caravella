@@ -65,6 +65,7 @@ internal object AppFunctionStorageReader {
     private const val TABLE_PARTICIPANTS = "participants"
     private const val TABLE_CATEGORIES = "categories"
     private const val TABLE_EXPENSES = "expenses"
+    private const val DEFAULT_CURRENCY = "€"
 
     private const val TAG = "AppFunctionStorageReader"
 
@@ -463,7 +464,7 @@ internal object AppFunctionStorageReader {
                 GroupSummary(
                     id = obj.optString("id"),
                     title = obj.optString("title"),
-                    currency = obj.optString("currency", "€"),
+                    currency = obj.optString("currency", DEFAULT_CURRENCY),
                 )
             )
         }
@@ -481,7 +482,7 @@ internal object AppFunctionStorageReader {
             groupId = groupId,
             groupTitle = group.optString("title"),
             totalBalance = total,
-            currency = group.optString("currency", "€"),
+            currency = group.optString("currency", DEFAULT_CURRENCY),
         )
     }
 
@@ -517,7 +518,7 @@ internal object AppFunctionStorageReader {
         return RecentExpensesResult(
             groupId = groupId,
             groupTitle = group.optString("title"),
-            currency = group.optString("currency", "€"),
+            currency = group.optString("currency", DEFAULT_CURRENCY),
             expenses = summaries,
         )
     }
@@ -540,7 +541,7 @@ internal object AppFunctionStorageReader {
             groupId = groupId,
             groupTitle = group.optString("title"),
             todayTotal = total,
-            currency = group.optString("currency", "€"),
+            currency = group.optString("currency", DEFAULT_CURRENCY),
         )
     }
 
@@ -573,7 +574,7 @@ internal object AppFunctionStorageReader {
             groupId = groupId,
             groupTitle = group.optString("title"),
             weekTotal = total,
-            currency = group.optString("currency", "€"),
+            currency = group.optString("currency", DEFAULT_CURRENCY),
         )
     }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import '../logging/logger_service.dart';
 
 /// Service to manage Android home widget refresh.
 ///
@@ -12,8 +13,12 @@ class AppHomeWidgetService {
   static Future<void> updateWidgets() async {
     try {
       await _channel.invokeMethod('updateHomeWidget');
-    } catch (_) {
-      // Silently fail - widgets are optional UI convenience.
+    } catch (e) {
+      LoggerService.error(
+        'Unable to refresh Android home widget',
+        name: 'widget',
+        error: e,
+      );
     }
   }
 }
