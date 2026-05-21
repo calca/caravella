@@ -4,9 +4,16 @@ import 'package:home_widget/home_widget.dart';
 
 import '../logging/logger_service.dart';
 
-/// Callback invoked when a home widget requests opening a group.
+/// Callback invoked when a home widget action is tapped.
 typedef HomeWidgetTapCallback =
-    void Function(String groupId, String groupTitle);
+    void Function(
+      HomeWidgetTapAction action,
+      String groupId,
+      String groupTitle,
+    );
+
+/// Supported actions emitted by the home widget.
+enum HomeWidgetTapAction { addExpense, openGroup }
 
 /// Service to manage Android home widget refresh.
 ///
@@ -19,7 +26,8 @@ class AppHomeWidgetService {
       'io.caravella.egm.HomeWidgetProvider';
   static const String _tapScheme = 'caravella';
   static const String _tapHost = 'home_widget';
-  static const String _tapPath = '/add_expense';
+  static const String _addExpensePath = '/add_expense';
+  static const String _openGroupPath = '/open_group';
 
   static StreamSubscription<Uri?>? _widgetTapSubscription;
   /// Serializes repeated initialize calls to avoid overlapping subscriptions.
@@ -97,11 +105,16 @@ class AppHomeWidgetService {
 
   static void _forwardTapIfValid(Uri? uri, HomeWidgetTapCallback onTap) {
     if (uri == null) return;
-    if (uri.scheme != _tapScheme ||
-        uri.host != _tapHost ||
-        uri.path != _tapPath) {
+    if (uri.scheme != _tapScheme || uri.host != _tapHost) {
       return;
     }
+
+    final action = switch (uri.path) {
+      _addExpensePath => HomeWidgetTapAction.addExpense,
+      _openGroupPath => HomeWidgetTapAction.openGroup,
+      _ => null,
+    };
+    if (action == null) return;
 
     final groupId = uri.queryParameters['groupId'];
     final groupTitle = uri.queryParameters['groupTitle'];
@@ -111,6 +124,6 @@ class AppHomeWidgetService {
         groupTitle.isEmpty) {
       return;
     }
-    onTap(groupId, groupTitle);
+    onTap(action, groupId, groupTitle);
   }
 }

@@ -60,6 +60,7 @@ void main() {
   });
 
   test('initializeTapHandling forwards valid initial home widget tap', () async {
+    HomeWidgetTapAction? tappedAction;
     String? tappedGroupId;
     String? tappedGroupTitle;
 
@@ -71,11 +72,13 @@ void main() {
           return null;
         });
 
-    await AppHomeWidgetService.initializeTapHandling((groupId, groupTitle) {
+    await AppHomeWidgetService.initializeTapHandling((action, groupId, groupTitle) {
+      tappedAction = action;
       tappedGroupId = groupId;
       tappedGroupTitle = groupTitle;
     });
 
+    expect(tappedAction, HomeWidgetTapAction.addExpense);
     expect(tappedGroupId, 'g1');
     expect(tappedGroupTitle, 'Trip');
   });
@@ -91,7 +94,7 @@ void main() {
           return null;
         });
 
-    await AppHomeWidgetService.initializeTapHandling((_, __) {
+    await AppHomeWidgetService.initializeTapHandling((_, __, ___) {
       callbackCalled = true;
     });
 
@@ -99,13 +102,15 @@ void main() {
   });
 
   test('initializeTapHandling forwards widgetClicked stream tap', () async {
+    HomeWidgetTapAction? tappedAction;
     String? tappedGroupId;
     String? tappedGroupTitle;
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async => null);
 
-    await AppHomeWidgetService.initializeTapHandling((groupId, groupTitle) {
+    await AppHomeWidgetService.initializeTapHandling((action, groupId, groupTitle) {
+      tappedAction = action;
       tappedGroupId = groupId;
       tappedGroupTitle = groupTitle;
     });
@@ -121,6 +126,7 @@ void main() {
         );
     await completer.future;
 
+    expect(tappedAction, HomeWidgetTapAction.addExpense);
     expect(tappedGroupId, 'g2');
     expect(tappedGroupTitle, 'Trip2');
   });
@@ -138,7 +144,7 @@ void main() {
             return null;
           });
 
-      await AppHomeWidgetService.initializeTapHandling((groupId, _) {
+      await AppHomeWidgetService.initializeTapHandling((_, groupId, __) {
         tappedIds.add(groupId);
       });
 
@@ -170,7 +176,7 @@ void main() {
             return null;
           });
 
-      await AppHomeWidgetService.initializeTapHandling((_, __) {
+      await AppHomeWidgetService.initializeTapHandling((_, __, ___) {
         callbackCalled = true;
       });
 
@@ -189,7 +195,7 @@ void main() {
           return null;
         });
 
-    await AppHomeWidgetService.initializeTapHandling((_, __) {
+    await AppHomeWidgetService.initializeTapHandling((_, __, ___) {
       callbackCalled = true;
     });
 
@@ -202,7 +208,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async => null);
 
-    await AppHomeWidgetService.initializeTapHandling((_, __) {
+    await AppHomeWidgetService.initializeTapHandling((_, __, ___) {
       callbackCalled = true;
     });
     await AppHomeWidgetService.disposeTapHandling();
@@ -219,5 +225,29 @@ void main() {
     await completer.future;
 
     expect(callbackCalled, isFalse);
+  });
+
+  test('initializeTapHandling forwards open group action', () async {
+    HomeWidgetTapAction? tappedAction;
+    String? tappedGroupId;
+    String? tappedGroupTitle;
+
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+          if (methodCall.method == 'initiallyLaunchedFromHomeWidget') {
+            return 'caravella://home_widget/open_group?groupId=g1&groupTitle=Trip';
+          }
+          return null;
+        });
+
+    await AppHomeWidgetService.initializeTapHandling((action, groupId, groupTitle) {
+      tappedAction = action;
+      tappedGroupId = groupId;
+      tappedGroupTitle = groupTitle;
+    });
+
+    expect(tappedAction, HomeWidgetTapAction.openGroup);
+    expect(tappedGroupId, 'g1');
+    expect(tappedGroupTitle, 'Trip');
   });
 }

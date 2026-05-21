@@ -3,6 +3,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 import '../../manager/details/pages/expense_group_detail_page.dart';
+import '../../services/notification_manager.dart';
 
 /// Service for initializing and managing platform shortcuts
 /// This provides the UI-specific implementation for the core shortcuts navigation service
@@ -20,7 +21,7 @@ class ShortcutsInitialization {
       ShortcutsNavigationService.handleShortcutTap,
     );
     await PlatformHomeWidgetManager.initializeTapHandling(
-      ShortcutsNavigationService.handleShortcutTap,
+      _handleHomeWidgetTap,
     );
 
     // Update shortcuts with current data
@@ -43,5 +44,17 @@ class ShortcutsInitialization {
   /// Show error message using app toast (UI implementation)
   static void _showError(BuildContext context, String message) {
     AppToast.show(context, message, type: ToastType.error);
+  }
+
+  static void _handleHomeWidgetTap(
+    HomeWidgetTapAction action,
+    String groupId,
+    String groupTitle,
+  ) {
+    if (action == HomeWidgetTapAction.addExpense) {
+      NotificationManager.handleAddExpenseAction(groupId);
+      return;
+    }
+    ShortcutsNavigationService.handleShortcutTap(groupId, groupTitle);
   }
 }

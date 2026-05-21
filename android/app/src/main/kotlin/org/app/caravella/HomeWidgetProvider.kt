@@ -83,13 +83,15 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 title = context.getString(R.string.widget_unconfigured_title),
                 todayValue = "-",
                 groupTotalValue = "-",
-                buttonLabel = context.getString(R.string.widget_select_group),
-                buttonAction = glanceActionStartActivity(
+                primaryButtonLabel = context.getString(R.string.widget_select_group),
+                primaryButtonAction = glanceActionStartActivity(
                     Intent(context, HomeWidgetConfigureActivity::class.java).apply {
                         putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     },
                 ),
+                secondaryButtonLabel = null,
+                secondaryButtonAction = null,
                 useGroupBackground = false,
                 backgroundColor = null,
                 backgroundImagePath = null,
@@ -102,8 +104,8 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 title = title,
                 todayValue = totals?.todayTotal?.let { formatAmount(it, currency) } ?: "-",
                 groupTotalValue = totals?.groupTotal?.let { formatAmount(it, currency) } ?: "-",
-                buttonLabel = context.getString(R.string.widget_quick_add),
-                buttonAction = homeWidgetActionStartActivity<MainActivity>(
+                primaryButtonLabel = context.getString(R.string.widget_quick_add),
+                primaryButtonAction = homeWidgetActionStartActivity<MainActivity>(
                     context = context,
                     // Keep aligned with AppHomeWidgetService tap parsing.
                     // URI format: caravella://home_widget/add_expense?groupId=...&groupTitle=...
@@ -111,6 +113,19 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                         .scheme("caravella")
                         .authority("home_widget")
                         .appendPath("add_expense")
+                        .appendQueryParameter("groupId", config.groupId)
+                        .appendQueryParameter("groupTitle", title)
+                        .build(),
+                ),
+                secondaryButtonLabel = context.getString(R.string.widget_open_group),
+                secondaryButtonAction = homeWidgetActionStartActivity<MainActivity>(
+                    context = context,
+                    // Keep aligned with AppHomeWidgetService tap parsing.
+                    // URI format: caravella://home_widget/open_group?groupId=...&groupTitle=...
+                    uri = Uri.Builder()
+                        .scheme("caravella")
+                        .authority("home_widget")
+                        .appendPath("open_group")
                         .appendQueryParameter("groupId", config.groupId)
                         .appendQueryParameter("groupTitle", title)
                         .build(),
@@ -183,13 +198,36 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                         }
                     }
 
-                    Button(
-                        text = model.buttonLabel,
-                        onClick = model.buttonAction,
-                        modifier = GlanceModifier
-                            .fillMaxWidth()
-                            .padding(top = 12.dp),
-                    )
+                    if (model.secondaryButtonLabel == null || model.secondaryButtonAction == null) {
+                        Button(
+                            text = model.primaryButtonLabel,
+                            onClick = model.primaryButtonAction,
+                            modifier = GlanceModifier
+                                .fillMaxWidth()
+                                .padding(top = 12.dp),
+                        )
+                    } else {
+                        Row(
+                            modifier = GlanceModifier
+                                .fillMaxWidth()
+                                .padding(top = 12.dp),
+                        ) {
+                            Button(
+                                text = model.primaryButtonLabel,
+                                onClick = model.primaryButtonAction,
+                                modifier = GlanceModifier
+                                    .defaultWeight()
+                                    .padding(end = 4.dp),
+                            )
+                            Button(
+                                text = model.secondaryButtonLabel,
+                                onClick = model.secondaryButtonAction,
+                                modifier = GlanceModifier
+                                    .defaultWeight()
+                                    .padding(start = 4.dp),
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -232,8 +270,10 @@ private data class WidgetUiModel(
     val title: String,
     val todayValue: String,
     val groupTotalValue: String,
-    val buttonLabel: String,
-    val buttonAction: Action,
+    val primaryButtonLabel: String,
+    val primaryButtonAction: Action,
+    val secondaryButtonLabel: String?,
+    val secondaryButtonAction: Action?,
     val useGroupBackground: Boolean,
     val backgroundColor: Int?,
     val backgroundImagePath: String?,
