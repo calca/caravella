@@ -1,31 +1,34 @@
 package io.caravella.egm
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.widget.RemoteViews
+import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.components.Button
+import androidx.glance.appwidget.provideContent
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.defaultWeight
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.padding
+import androidx.glance.text.FontWeight
+import androidx.glance.text.Text
+import androidx.glance.text.TextStyle
+import androidx.glance.unit.dp
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.util.Locale
-import kotlin.concurrent.thread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class HomeWidgetProvider : AppWidgetProvider() {
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray,
-    ) {
-        updateAllWidgets(context)
-    }
-
-    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        super.onDeleted(context, appWidgetIds)
-        appWidgetIds.forEach { appWidgetId ->
-            HomeWidgetPrefs.clearWidgetConfig(context, appWidgetId)
-        }
-    }
+class HomeWidgetProvider : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = CaravellaHomeWidget
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -38,147 +41,113 @@ class HomeWidgetProvider : AppWidgetProvider() {
         }
     }
 
-    companion object {
-        fun updateAppWidget(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int,
-        ) {
-            val views = RemoteViews(context.packageName, R.layout.caravella_widget)
-            val config = HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)
-
-            if (config == null) {
-                setUnconfiguredState(context, appWidgetId, views)
-                appWidgetManager.updateAppWidget(appWidgetId, views)
-                return
-            }
-
-            val today = AppFunctionStorageReader.getTodayTotal(context, config.groupId)
-            val week = AppFunctionStorageReader.getWeekTotal(context, config.groupId)
-
-            if (today == null || week == null) {
-                views.setTextViewText(
-                    R.id.widget_group_title,
-                    config.groupTitle,
-                )
-                views.setTextViewText(R.id.widget_today_value, "-")
-                views.setTextViewText(R.id.widget_week_value, "-")
-                views.setTextViewText(
-                    R.id.widget_quick_add_button,
-                    context.getString(R.string.widget_quick_add),
-                )
-                views.setBoolean(R.id.widget_quick_add_button, "setEnabled", true)
-                views.setOnClickPendingIntent(
-                    R.id.widget_quick_add_button,
-                    createQuickAddIntent(context, appWidgetId, config.groupId, config.groupTitle),
-                )
-                appWidgetManager.updateAppWidget(appWidgetId, views)
-                return
-            }
-
-            views.setTextViewText(R.id.widget_group_title, today.groupTitle)
-            views.setTextViewText(
-                R.id.widget_today_value,
-                formatAmount(today.todayTotal, today.currency),
-            )
-            views.setTextViewText(
-                R.id.widget_week_value,
-                formatAmount(week.weekTotal, week.currency),
-            )
-            views.setTextViewText(
-                R.id.widget_quick_add_button,
-                context.getString(R.string.widget_quick_add),
-            )
-            views.setBoolean(R.id.widget_quick_add_button, "setEnabled", true)
-            views.setOnClickPendingIntent(
-                R.id.widget_quick_add_button,
-                createQuickAddIntent(
-                    context,
-                    appWidgetId,
-                    today.groupId,
-                    today.groupTitle,
-                ),
-            )
-
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        super.onDeleted(context, appWidgetIds)
+        appWidgetIds.forEach { appWidgetId ->
+            HomeWidgetPrefs.clearWidgetConfig(context, appWidgetId)
         }
+    }
 
+    companion object {
         fun updateAllWidgets(context: Context) {
             val applicationContext = context.applicationContext
-            thread {
-                val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
-                val widgetIds = appWidgetManager.getAppWidgetIds(
-                    ComponentName(applicationContext, HomeWidgetProvider::class.java),
-                )
-                widgetIds.forEach { appWidgetId ->
-                    updateAppWidget(applicationContext, appWidgetManager, appWidgetId)
-                }
+            CoroutineScope(Dispatchers.IO).launch {
+                CaravellaHomeWidget.updateAll(applicationContext)
             }
-        }
-
-        private fun setUnconfiguredState(
-            context: Context,
-            appWidgetId: Int,
-            views: RemoteViews,
-        ) {
-            views.setTextViewText(
-                R.id.widget_group_title,
-                context.getString(R.string.widget_unconfigured_title),
-            )
-            views.setTextViewText(R.id.widget_today_value, "-")
-            views.setTextViewText(R.id.widget_week_value, "-")
-            views.setTextViewText(
-                R.id.widget_quick_add_button,
-                context.getString(R.string.widget_select_group),
-            )
-            views.setBoolean(R.id.widget_quick_add_button, "setEnabled", true)
-            views.setOnClickPendingIntent(
-                R.id.widget_quick_add_button,
-                createConfigureIntent(context, appWidgetId),
-            )
-        }
-
-        private fun createQuickAddIntent(
-            context: Context,
-            appWidgetId: Int,
-            groupId: String,
-            groupTitle: String,
-        ): PendingIntent {
-            val intent = Intent(context, MainActivity::class.java).apply {
-                action = "io.caravella.egm.ADD_EXPENSE"
-                putExtra("groupId", groupId)
-                putExtra("groupTitle", groupTitle)
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            return PendingIntent.getActivity(
-                context,
-                appWidgetId,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
-        private fun createConfigureIntent(
-            context: Context,
-            appWidgetId: Int,
-        ): PendingIntent {
-            val intent = Intent(context, HomeWidgetConfigureActivity::class.java).apply {
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            return PendingIntent.getActivity(
-                context,
-                appWidgetId,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
-        private fun formatAmount(amount: Double, currency: String): String {
-            return String.format(Locale.getDefault(), "%.2f %s", amount, currency)
         }
     }
 }
+
+private object CaravellaHomeWidget : GlanceAppWidget() {
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
+        val config = HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)
+
+        val model = if (config == null) {
+            WidgetUiModel(
+                title = context.getString(R.string.widget_unconfigured_title),
+                todayValue = "-",
+                weekValue = "-",
+                buttonLabel = context.getString(R.string.widget_select_group),
+                buttonIntent = Intent(context, HomeWidgetConfigureActivity::class.java).apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                },
+            )
+        } else {
+            val totals = AppFunctionStorageReader.getWidgetTotals(context, config.groupId)
+            val title = totals?.groupTitle ?: config.groupTitle
+            val currency = totals?.currency ?: config.groupCurrency
+            WidgetUiModel(
+                title = title,
+                todayValue = totals?.todayTotal?.let { formatAmount(it, currency) } ?: "-",
+                weekValue = totals?.weekTotal?.let { formatAmount(it, currency) } ?: "-",
+                buttonLabel = context.getString(R.string.widget_quick_add),
+                buttonIntent = Intent(context, MainActivity::class.java).apply {
+                    action = "io.caravella.egm.ADD_EXPENSE"
+                    putExtra("groupId", config.groupId)
+                    putExtra("groupTitle", title)
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                },
+            )
+        }
+
+        provideContent {
+            Column(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .padding(12.dp),
+            ) {
+                Text(
+                    text = model.title,
+                    style = TextStyle(fontWeight = FontWeight.Bold),
+                    maxLines = 1,
+                )
+
+                Row(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                ) {
+                    Column(modifier = GlanceModifier.defaultWeight()) {
+                        Text(text = context.getString(R.string.widget_today_label))
+                        Text(
+                            text = model.todayValue,
+                            modifier = GlanceModifier.padding(top = 2.dp),
+                        )
+                    }
+                    Column(modifier = GlanceModifier.defaultWeight()) {
+                        Text(text = context.getString(R.string.widget_week_label))
+                        Text(
+                            text = model.weekValue,
+                            modifier = GlanceModifier.padding(top = 2.dp),
+                        )
+                    }
+                }
+
+                Button(
+                    text = model.buttonLabel,
+                    onClick = actionStartActivity(model.buttonIntent),
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                )
+            }
+        }
+    }
+
+    private fun formatAmount(amount: Double, currency: String): String {
+        return String.format(Locale.getDefault(), "%.2f %s", amount, currency)
+    }
+}
+
+private data class WidgetUiModel(
+    val title: String,
+    val todayValue: String,
+    val weekValue: String,
+    val buttonLabel: String,
+    val buttonIntent: Intent,
+)
 
 internal data class WidgetGroupConfig(
     val groupId: String,

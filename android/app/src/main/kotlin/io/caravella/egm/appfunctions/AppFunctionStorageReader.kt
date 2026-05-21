@@ -65,9 +65,15 @@ internal object AppFunctionStorageReader {
     private const val TABLE_PARTICIPANTS = "participants"
     private const val TABLE_CATEGORIES = "categories"
     private const val TABLE_EXPENSES = "expenses"
+    private const val VIEW_WIDGET_TOTALS = "widget_group_totals"
     private const val DEFAULT_CURRENCY = "€"
 
     private const val TAG = "AppFunctionStorageReader"
+    @Volatile
+    private var isWidgetTotalsViewEnsured = false
+    @Volatile
+    private var widgetTotalsViewFirstDay: Int? = null
+    private val widgetTotalsViewLock = Any()
 
     // ------------------------------------------------------------------
     // Backend detection
@@ -146,6 +152,25 @@ internal object AppFunctionStorageReader {
             getWeekTotalSqlite(context, groupId)
         } else {
             getWeekTotalJson(context, groupId)
+        }
+    }
+
+    /**
+     * Returns both widget totals in a single read for [groupId].
+     */
+    fun getWidgetTotals(context: Context, groupId: String): WidgetTotalsResult? {
+        return if (isSqliteBackend(context)) {
+            getWidgetTotalsSqlite(context, groupId)
+        } else {
+            val today = getTodayTotalJson(context, groupId) ?: return null
+            val week = getWeekTotalJson(context, groupId) ?: return null
+            WidgetTotalsResult(
+                groupId = groupId,
+                groupTitle = today.groupTitle,
+                todayTotal = today.todayTotal,
+                weekTotal = week.weekTotal,
+                currency = today.currency,
+            )
         }
     }
 
@@ -336,45 +361,13 @@ internal object AppFunctionStorageReader {
 
     private fun getTodayTotalSqlite(context: Context, groupId: String): TodayTotalResult? {
         return try {
-            openDb(context).use { db ->
-                // Fetch group header
-                val groupCursor = db.query(
-                    TABLE_GROUPS,
-                    arrayOf("title", "currency"),
-                    "id = ? AND archived = 0",
-                    arrayOf(groupId), null, null, null,
-                )
-                val (title, currency) = groupCursor.use {
-                    if (!it.moveToFirst()) return null
-                    Pair(
-                        it.getString(it.getColumnIndexOrThrow("title")),
-                        it.getString(it.getColumnIndexOrThrow("currency")),
-                    )
-                }
-                // Compute start/end of today in epoch milliseconds
-                val zone = ZoneId.systemDefault()
-                val today = LocalDate.now(zone)
-                val todayStart = today.atStartOfDay(zone).toInstant().toEpochMilli()
-                val todayEnd = today.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
-
-                val sumCursor = db.rawQuery(
-                    """
-                    SELECT COALESCE(SUM(amount), 0) AS total
-                    FROM $TABLE_EXPENSES
-                    WHERE group_id = ? AND date >= ? AND date < ?
-                    """.trimIndent(),
-                    arrayOf(groupId, todayStart.toString(), todayEnd.toString()),
-                )
-                val total = sumCursor.use {
-                    if (it.moveToFirst()) it.getDouble(0) else 0.0
-                }
-                TodayTotalResult(
-                    groupId = groupId,
-                    groupTitle = title,
-                    todayTotal = total,
-                    currency = currency,
-                )
-            }
+            val totals = getWidgetTotalsSqlite(context, groupId) ?: return null
+            TodayTotalResult(
+                groupId = totals.groupId,
+                groupTitle = totals.groupTitle,
+                todayTotal = totals.todayTotal,
+                currency = totals.currency,
+            )
         } catch (e: Exception) {
             Log.e(TAG, "getTodayTotalSqlite failed for group $groupId", e)
             null
@@ -383,50 +376,106 @@ internal object AppFunctionStorageReader {
 
     private fun getWeekTotalSqlite(context: Context, groupId: String): WeekTotalResult? {
         return try {
-            openDb(context).use { db ->
-                val groupCursor = db.query(
-                    TABLE_GROUPS,
-                    arrayOf("title", "currency"),
-                    "id = ? AND archived = 0",
-                    arrayOf(groupId), null, null, null,
-                )
-                val (title, currency) = groupCursor.use {
-                    if (!it.moveToFirst()) return null
-                    Pair(
-                        it.getString(it.getColumnIndexOrThrow("title")),
-                        it.getString(it.getColumnIndexOrThrow("currency")),
-                    )
-                }
-
-                val zone = ZoneId.systemDefault()
-                val today = LocalDate.now(zone)
-                val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
-                val weekStartDate = today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
-                val weekEndDate = weekStartDate.plusDays(7)
-                val weekStart = weekStartDate.atStartOfDay(zone).toInstant().toEpochMilli()
-                val weekEnd = weekEndDate.atStartOfDay(zone).toInstant().toEpochMilli()
-
-                val sumCursor = db.rawQuery(
-                    """
-                    SELECT COALESCE(SUM(amount), 0) AS total
-                    FROM $TABLE_EXPENSES
-                    WHERE group_id = ? AND date >= ? AND date < ?
-                    """.trimIndent(),
-                    arrayOf(groupId, weekStart.toString(), weekEnd.toString()),
-                )
-                val total = sumCursor.use {
-                    if (it.moveToFirst()) it.getDouble(0) else 0.0
-                }
-                WeekTotalResult(
-                    groupId = groupId,
-                    groupTitle = title,
-                    weekTotal = total,
-                    currency = currency,
-                )
-            }
+            val totals = getWidgetTotalsSqlite(context, groupId) ?: return null
+            WeekTotalResult(
+                groupId = totals.groupId,
+                groupTitle = totals.groupTitle,
+                weekTotal = totals.weekTotal,
+                currency = totals.currency,
+            )
         } catch (e: Exception) {
             Log.e(TAG, "getWeekTotalSqlite failed for group $groupId", e)
             null
+        }
+    }
+
+    private fun getWidgetTotalsSqlite(context: Context, groupId: String): WidgetTotalsResult? {
+        return try {
+            // Write access is required the first time to create/update the shared SQL view.
+            openDbReadWrite(context).use { db ->
+                // Convert ISO-8601 DayOfWeek (1=Monday..7=Sunday) to SQLite %w (0=Sunday..6=Saturday).
+                val firstDayOfWeekSqlite = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value % 7
+                ensureWidgetTotalsView(db, firstDayOfWeekSqlite)
+                val cursor = db.rawQuery(
+                    """
+                    SELECT group_id, group_title, currency, today_total, week_total
+                    FROM $VIEW_WIDGET_TOTALS
+                    WHERE group_id = ?
+                    """.trimIndent(),
+                    arrayOf(groupId),
+                )
+                cursor.use {
+                    if (!it.moveToFirst()) return null
+                    WidgetTotalsResult(
+                        groupId = it.getString(it.getColumnIndexOrThrow("group_id")),
+                        groupTitle = it.getString(it.getColumnIndexOrThrow("group_title")),
+                        currency = it.getString(it.getColumnIndexOrThrow("currency")),
+                        todayTotal = it.getDouble(it.getColumnIndexOrThrow("today_total")),
+                        weekTotal = it.getDouble(it.getColumnIndexOrThrow("week_total")),
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getWidgetTotalsSqlite failed for group $groupId", e)
+            null
+        }
+    }
+
+    private fun ensureWidgetTotalsView(db: SQLiteDatabase, firstDayOfWeekSqlite: Int) {
+        synchronized(widgetTotalsViewLock) {
+            if (isWidgetTotalsViewEnsured && widgetTotalsViewFirstDay == firstDayOfWeekSqlite) return
+            if (widgetTotalsViewFirstDay != null && widgetTotalsViewFirstDay != firstDayOfWeekSqlite) {
+                db.execSQL("DROP VIEW IF EXISTS $VIEW_WIDGET_TOTALS")
+            }
+            db.execSQL(
+                """
+                CREATE VIEW IF NOT EXISTS $VIEW_WIDGET_TOTALS AS
+                SELECT
+                    g.id AS group_id,
+                    g.title AS group_title,
+                    COALESCE(NULLIF(g.currency, ''), '$DEFAULT_CURRENCY') AS currency,
+                    COALESCE(
+                        SUM(
+                            CASE
+                                WHEN e.local_date = d.today_local THEN e.amount
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS today_total,
+                    COALESCE(
+                        SUM(
+                            CASE
+                                WHEN e.local_date >= d.week_start
+                                    AND e.local_date < date(d.week_start, '+7 days') THEN e.amount
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS week_total
+                FROM $TABLE_GROUPS g
+                LEFT JOIN (
+                    -- expenses.date is stored as epoch milliseconds, so divide by 1000 for SQLite date funcs.
+                    SELECT ex.group_id, ex.amount, date(ex.date / 1000, 'unixepoch', 'localtime') AS local_date
+                    FROM $TABLE_EXPENSES ex
+                ) e ON e.group_id = g.id
+                CROSS JOIN (
+                    SELECT
+                        date('now', 'localtime') AS today_local,
+                        -- Move from today back to the locale-specific first day of this week.
+                        date(
+                            'now',
+                            'localtime',
+                            -- SQLite %w is Sunday=0..Saturday=6; adjust using locale first-day index.
+                            '-' || ((CAST(strftime('%w', 'now', 'localtime') AS INTEGER) - $firstDayOfWeekSqlite + 7) % 7) || ' days'
+                        ) AS week_start
+                ) d
+                WHERE g.archived = 0
+                GROUP BY g.id, g.title, g.currency
+                """.trimIndent(),
+            )
+            isWidgetTotalsViewEnsured = true
+            widgetTotalsViewFirstDay = firstDayOfWeekSqlite
         }
     }
 
@@ -855,6 +904,14 @@ internal object AppFunctionStorageReader {
     data class WeekTotalResult(
         val groupId: String,
         val groupTitle: String,
+        val weekTotal: Double,
+        val currency: String,
+    )
+
+    data class WidgetTotalsResult(
+        val groupId: String,
+        val groupTitle: String,
+        val todayTotal: Double,
         val weekTotal: Double,
         val currency: String,
     )

@@ -85,4 +85,6 @@ dependencies {
     // Android App Functions – exposes Caravella capabilities to Android AI agents.
     // See: https://developer.android.com/reference/androidx/appfunctions
     implementation("androidx.appfunctions:appfunctions:1.0.0-alpha01")
+    implementation("androidx.glance:glance-appwidget:1.1.1")
+    implementation("androidx.glance:glance-material3:1.1.1")
 }

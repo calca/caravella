@@ -70,8 +70,7 @@ class HomeWidgetConfigureActivity : Activity() {
                         groupCurrency = selectedGroup.currency,
                     )
 
-                    val manager = AppWidgetManager.getInstance(this)
-                    HomeWidgetProvider.updateAppWidget(this, manager, appWidgetId)
+                    HomeWidgetProvider.updateAllWidgets(this)
 
                     val resultIntent = Intent().putExtra(
                         AppWidgetManager.EXTRA_APPWIDGET_ID,
