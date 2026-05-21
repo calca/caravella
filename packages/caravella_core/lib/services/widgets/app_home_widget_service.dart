@@ -5,11 +5,17 @@ import '../logging/logger_service.dart';
 ///
 /// Note: Platform checks are handled by [PlatformHomeWidgetManager].
 class AppHomeWidgetService {
+  // Must match the provider class in
+  // android/app/src/main/kotlin/org/app/caravella/HomeWidgetProvider.kt
+  // and the receiver declared in AndroidManifest.xml.
+  static const String _androidWidgetProvider =
+      'io.caravella.egm.HomeWidgetProvider';
+
   /// Requests Android to refresh all Caravella widgets.
   static Future<void> updateWidgets() async {
     try {
       await HomeWidget.updateWidget(
-        qualifiedAndroidName: 'io.caravella.egm.HomeWidgetProvider',
+        qualifiedAndroidName: _androidWidgetProvider,
       );
     } catch (e) {
       LoggerService.error(
