@@ -257,9 +257,9 @@ void main() {
     testWidgets('this month chip filters expenses', (tester) async {
       final now = DateTime.now();
       final thisMonth = DateTime(now.year, now.month, 10);
-      final lastMonth = DateTime(now.year, now.month, 1).subtract(
-        const Duration(days: 1),
-      );
+      final lastMonth = now.month == 1
+          ? DateTime(now.year - 1, 12, 15)
+          : DateTime(now.year, now.month - 1, 15);
       final monthExpenses = [
         ExpenseDetails(
           id: 'current-month',

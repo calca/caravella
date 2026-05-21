@@ -98,6 +98,13 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   DateTime _normalizeDate(DateTime date) =>
       DateTime(date.year, date.month, date.day);
 
+  DateTime _endOfMonth(DateTime date) {
+    final firstDayOfNextMonth = date.month == 12
+        ? DateTime(date.year + 1, 1, 1)
+        : DateTime(date.year, date.month + 1, 1);
+    return firstDayOfNextMonth.subtract(const Duration(days: 1));
+  }
+
   void _setDateFilter(
     _ExpenseSearchDateFilter? filter, {
     DateTime? startDate,
@@ -140,7 +147,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
         _setDateFilter(
           filter,
           startDate: DateTime(today.year, today.month, 1),
-          endDate: DateTime(today.year, today.month + 1, 0),
+          endDate: _endOfMonth(today),
         );
         break;
       case _ExpenseSearchDateFilter.range:
