@@ -64,6 +64,8 @@ class ExpenseSearchPage extends StatefulWidget {
 enum _ExpenseSearchDateFilter { today, last7Days, thisMonth, range }
 
 class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
+  static const int _last7DaysCount = 7;
+
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
@@ -128,7 +130,9 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
       case _ExpenseSearchDateFilter.last7Days:
         _setDateFilter(
           filter,
-          startDate: today.subtract(const Duration(days: 6)),
+          startDate: today.subtract(
+            const Duration(days: _last7DaysCount - 1),
+          ),
           endDate: today,
         );
         break;
