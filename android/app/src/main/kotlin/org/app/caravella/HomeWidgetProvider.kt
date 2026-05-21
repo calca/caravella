@@ -282,6 +282,7 @@ private data class WidgetUiModel(
     val backgroundImagePath: String?,
 )
 
+// Label + action pair used by widget primary/secondary buttons.
 private data class WidgetButton(
     val label: String,
     val action: Action,

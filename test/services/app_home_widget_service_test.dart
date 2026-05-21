@@ -144,7 +144,7 @@ void main() {
             return null;
           });
 
-      await AppHomeWidgetService.initializeTapHandling((_, groupId, __) {
+      await AppHomeWidgetService.initializeTapHandling((_, groupId, _) {
         tappedIds.add(groupId);
       });
 
