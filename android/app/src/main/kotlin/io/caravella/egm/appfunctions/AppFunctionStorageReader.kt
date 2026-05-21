@@ -164,12 +164,21 @@ internal object AppFunctionStorageReader {
         } else {
             val today = getTodayTotalJson(context, groupId) ?: return null
             val week = getWeekTotalJson(context, groupId) ?: return null
+            val group = findGroupJson(context, groupId) ?: return null
+            val totalBalance = getTotalBalanceJson(context, groupId)
             WidgetTotalsResult(
                 groupId = groupId,
                 groupTitle = today.groupTitle,
                 todayTotal = today.todayTotal,
                 weekTotal = week.weekTotal,
+                groupTotal = totalBalance?.totalBalance ?: 0.0,
                 currency = today.currency,
+                groupColor = if (group.has("color") && !group.isNull("color")) {
+                    group.optInt("color")
+                } else {
+                    null
+                },
+                groupBackgroundImagePath = group.optString("file").takeIf { it.isNotBlank() },
             )
         }
     }
@@ -227,7 +236,7 @@ internal object AppFunctionStorageReader {
             openDb(context).use { db ->
                 val cursor = db.query(
                     TABLE_GROUPS,
-                    arrayOf("id", "title", "currency"),
+                    arrayOf("id", "title", "currency", "color", "file"),
                     "archived = 0",
                     null, null, null, "timestamp DESC",
                 )
@@ -239,6 +248,14 @@ internal object AppFunctionStorageReader {
                                 id = it.getString(it.getColumnIndexOrThrow("id")),
                                 title = it.getString(it.getColumnIndexOrThrow("title")),
                                 currency = it.getString(it.getColumnIndexOrThrow("currency")),
+                                color = if (it.isNull(it.getColumnIndexOrThrow("color"))) {
+                                    null
+                                } else {
+                                    it.getInt(it.getColumnIndexOrThrow("color"))
+                                },
+                                backgroundImagePath = it.getString(
+                                    it.getColumnIndexOrThrow("file"),
+                                )?.takeIf { filePath -> filePath.isNotBlank() },
                             )
                         )
                     }
@@ -398,7 +415,15 @@ internal object AppFunctionStorageReader {
                 ensureWidgetTotalsView(db, firstDayOfWeekSqlite)
                 val cursor = db.rawQuery(
                     """
-                    SELECT group_id, group_title, currency, today_total, week_total
+                    SELECT
+                        group_id,
+                        group_title,
+                        currency,
+                        today_total,
+                        week_total,
+                        group_total,
+                        group_color,
+                        group_background_image_path
                     FROM $VIEW_WIDGET_TOTALS
                     WHERE group_id = ?
                     """.trimIndent(),
@@ -412,6 +437,15 @@ internal object AppFunctionStorageReader {
                         currency = it.getString(it.getColumnIndexOrThrow("currency")),
                         todayTotal = it.getDouble(it.getColumnIndexOrThrow("today_total")),
                         weekTotal = it.getDouble(it.getColumnIndexOrThrow("week_total")),
+                        groupTotal = it.getDouble(it.getColumnIndexOrThrow("group_total")),
+                        groupColor = if (it.isNull(it.getColumnIndexOrThrow("group_color"))) {
+                            null
+                        } else {
+                            it.getInt(it.getColumnIndexOrThrow("group_color"))
+                        },
+                        groupBackgroundImagePath = it.getString(
+                            it.getColumnIndexOrThrow("group_background_image_path"),
+                        )?.takeIf { path -> path.isNotBlank() },
                     )
                 }
             }
@@ -434,6 +468,8 @@ internal object AppFunctionStorageReader {
                     g.id AS group_id,
                     g.title AS group_title,
                     COALESCE(NULLIF(g.currency, ''), '$DEFAULT_CURRENCY') AS currency,
+                    g.color AS group_color,
+                    g.file AS group_background_image_path,
                     COALESCE(
                         SUM(
                             CASE
@@ -452,7 +488,8 @@ internal object AppFunctionStorageReader {
                             END
                         ),
                         0
-                    ) AS week_total
+                    ) AS week_total,
+                    COALESCE(SUM(e.amount), 0) AS group_total
                 FROM $TABLE_GROUPS g
                 LEFT JOIN (
                     -- expenses.date is stored as epoch milliseconds, so divide by 1000 for SQLite date funcs.
@@ -471,7 +508,7 @@ internal object AppFunctionStorageReader {
                         ) AS week_start
                 ) d
                 WHERE g.archived = 0
-                GROUP BY g.id, g.title, g.currency
+                GROUP BY g.id, g.title, g.currency, g.color, g.file
                 """.trimIndent(),
             )
             isWidgetTotalsViewEnsured = true
@@ -514,6 +551,12 @@ internal object AppFunctionStorageReader {
                     id = obj.optString("id"),
                     title = obj.optString("title"),
                     currency = obj.optString("currency", DEFAULT_CURRENCY),
+                    color = if (obj.has("color") && !obj.isNull("color")) {
+                        obj.optInt("color")
+                    } else {
+                        null
+                    },
+                    backgroundImagePath = obj.optString("file").takeIf { it.isNotBlank() },
                 )
             )
         }
@@ -866,7 +909,13 @@ internal object AppFunctionStorageReader {
         data class Failure(val reason: String) : SaveExpenseResult()
     }
 
-    data class GroupSummary(val id: String, val title: String, val currency: String)
+    data class GroupSummary(
+        val id: String,
+        val title: String,
+        val currency: String,
+        val color: Int? = null,
+        val backgroundImagePath: String? = null,
+    )
 
     data class BalanceResult(
         val groupId: String,
@@ -913,6 +962,9 @@ internal object AppFunctionStorageReader {
         val groupTitle: String,
         val todayTotal: Double,
         val weekTotal: Double,
+        val groupTotal: Double,
         val currency: String,
+        val groupColor: Int?,
+        val groupBackgroundImagePath: String?,
     )
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.CheckBox
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -38,8 +39,10 @@ class HomeWidgetConfigureActivity : Activity() {
         val listView = findViewById<ListView>(R.id.widget_config_group_list)
         val progressBar = findViewById<ProgressBar>(R.id.widget_config_progress)
         val emptyView = findViewById<TextView>(R.id.widget_config_empty)
+        val groupBackgroundToggle = findViewById<CheckBox>(R.id.widget_config_use_group_background)
 
         listView.emptyView = emptyView
+        groupBackgroundToggle.isChecked = HomeWidgetPrefs.getUseGroupBackground(this, appWidgetId)
 
         thread {
             val groups = AppFunctionStorageReader.getActiveGroups(this)
@@ -68,6 +71,7 @@ class HomeWidgetConfigureActivity : Activity() {
                         groupId = selectedGroup.id,
                         groupTitle = selectedGroup.title,
                         groupCurrency = selectedGroup.currency,
+                        useGroupBackground = groupBackgroundToggle.isChecked,
                     )
 
                     HomeWidgetProvider.updateAllWidgets(this)
