@@ -13,6 +13,7 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL = "io.caravella.egm/backup"
     private val SHORTCUTS_CHANNEL = "io.caravella.egm/shortcuts"
     private val APP_FUNCTIONS_CHANNEL = "io.caravella.egm/app_functions"
+    private val HOME_WIDGET_CHANNEL = "io.caravella.egm/home_widget"
 
     private var shortcutsChannel: MethodChannel? = null
     private var appFunctionsChannel: MethodChannel? = null
@@ -33,11 +34,13 @@ class MainActivity : FlutterActivity() {
         
         // Handle both shortcut and App Function intents
         handleAddExpenseIntent(intent)
+        HomeWidgetProvider.updateAllWidgets(this)
     }
     
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleAddExpenseIntent(intent)
+        HomeWidgetProvider.updateAllWidgets(this)
     }
     
     /**
@@ -108,6 +111,22 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, HOME_WIDGET_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "updateHomeWidget" -> {
+                        try {
+                            HomeWidgetProvider.updateAllWidgets(this)
+                            result.success(true)
+                        } catch (e: Exception) {
+                            result.error("WIDGET_ERROR", "Failed to update widget: ${e.message}", null)
+                        }
+                    }
+
+                    else -> result.notImplemented()
+                }
+            }
         
         // Shortcuts channel
         shortcutsChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SHORTCUTS_CHANNEL)

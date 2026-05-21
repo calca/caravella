@@ -10,6 +10,9 @@ import java.io.File
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.Locale
 import java.util.UUID
 
 /**
@@ -130,6 +133,18 @@ internal object AppFunctionStorageReader {
             getTodayTotalSqlite(context, groupId)
         } else {
             getTodayTotalJson(context, groupId)
+        }
+    }
+
+    /**
+     * Returns the sum of all expenses in the current local week for [groupId].
+     * Returns `null` when the group cannot be found.
+     */
+    fun getWeekTotal(context: Context, groupId: String): WeekTotalResult? {
+        return if (isSqliteBackend(context)) {
+            getWeekTotalSqlite(context, groupId)
+        } else {
+            getWeekTotalJson(context, groupId)
         }
     }
 
@@ -365,6 +380,55 @@ internal object AppFunctionStorageReader {
         }
     }
 
+    private fun getWeekTotalSqlite(context: Context, groupId: String): WeekTotalResult? {
+        return try {
+            openDb(context).use { db ->
+                val groupCursor = db.query(
+                    TABLE_GROUPS,
+                    arrayOf("title", "currency"),
+                    "id = ? AND archived = 0",
+                    arrayOf(groupId), null, null, null,
+                )
+                val (title, currency) = groupCursor.use {
+                    if (!it.moveToFirst()) return null
+                    Pair(
+                        it.getString(it.getColumnIndexOrThrow("title")),
+                        it.getString(it.getColumnIndexOrThrow("currency")),
+                    )
+                }
+
+                val zone = ZoneId.systemDefault()
+                val today = LocalDate.now(zone)
+                val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+                val weekStartDate = today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
+                val weekEndDate = weekStartDate.plusDays(7)
+                val weekStart = weekStartDate.atStartOfDay(zone).toInstant().toEpochMilli()
+                val weekEnd = weekEndDate.atStartOfDay(zone).toInstant().toEpochMilli()
+
+                val sumCursor = db.rawQuery(
+                    """
+                    SELECT COALESCE(SUM(amount), 0) AS total
+                    FROM $TABLE_EXPENSES
+                    WHERE group_id = ? AND date >= ? AND date < ?
+                    """.trimIndent(),
+                    arrayOf(groupId, weekStart.toString(), weekEnd.toString()),
+                )
+                val total = sumCursor.use {
+                    if (it.moveToFirst()) it.getDouble(0) else 0.0
+                }
+                WeekTotalResult(
+                    groupId = groupId,
+                    groupTitle = title,
+                    weekTotal = total,
+                    currency = currency,
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getWeekTotalSqlite failed for group $groupId", e)
+            null
+        }
+    }
+
     // ------------------------------------------------------------------
     // JSON implementation
     // ------------------------------------------------------------------
@@ -476,6 +540,39 @@ internal object AppFunctionStorageReader {
             groupId = groupId,
             groupTitle = group.optString("title"),
             todayTotal = total,
+            currency = group.optString("currency", "€"),
+        )
+    }
+
+    private fun getWeekTotalJson(context: Context, groupId: String): WeekTotalResult? {
+        val group = findGroupJson(context, groupId) ?: return null
+        val expenses = group.optJSONArray("expenses") ?: JSONArray()
+
+        val zone = ZoneId.systemDefault()
+        val today = LocalDate.now(zone)
+        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+        val weekStartDate = today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
+        val weekEndDate = weekStartDate.plusDays(7)
+
+        var total = 0.0
+        for (i in 0 until expenses.length()) {
+            val e = expenses.optJSONObject(i) ?: continue
+            val dateStr = e.optString("date", "")
+            if (dateStr.length < 10) continue
+            val localDate = try {
+                LocalDate.parse(dateStr.substring(0, 10))
+            } catch (_: Exception) {
+                continue
+            }
+            if (!localDate.isBefore(weekStartDate) && localDate.isBefore(weekEndDate)) {
+                total += e.optDouble("amount", 0.0)
+            }
+        }
+
+        return WeekTotalResult(
+            groupId = groupId,
+            groupTitle = group.optString("title"),
+            weekTotal = total,
             currency = group.optString("currency", "€"),
         )
     }
@@ -751,6 +848,13 @@ internal object AppFunctionStorageReader {
         val groupId: String,
         val groupTitle: String,
         val todayTotal: Double,
+        val currency: String,
+    )
+
+    data class WeekTotalResult(
+        val groupId: String,
+        val groupTitle: String,
+        val weekTotal: Double,
         val currency: String,
     )
 }

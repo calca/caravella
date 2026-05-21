@@ -1,6 +1,8 @@
+import 'dart:async';
+
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:caravella_core/caravella_core.dart';
 import '../services/notification_manager.dart';
 
 /// Sets up all global providers for the app.
@@ -12,6 +14,10 @@ class ProviderSetup {
         ChangeNotifierProvider(
           create: (_) {
             final notifier = ExpenseGroupNotifier();
+            notifier.setShortcutsUpdateCallback(() {
+              unawaited(PlatformShortcutsManager.updateShortcuts());
+              unawaited(PlatformHomeWidgetManager.updateHomeWidgets());
+            });
             // Register callback to cancel notification when archiving
             notifier.setNotificationCancelCallback((groupId) async {
               await NotificationManager().cancelNotificationForGroup(groupId);

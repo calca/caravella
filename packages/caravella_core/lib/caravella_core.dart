@@ -47,6 +47,10 @@ export 'services/shortcuts/app_shortcuts_service.dart';
 export 'services/shortcuts/platform_shortcuts_manager.dart';
 export 'services/shortcuts/shortcuts_navigation_service.dart';
 
+// Services - Widgets
+export 'services/widgets/app_home_widget_service.dart';
+export 'services/widgets/platform_home_widget_manager.dart';
+
 // State Management
 export 'state/app_functions_enabled_notifier.dart';
 export 'state/auto_backup_notifier.dart';
