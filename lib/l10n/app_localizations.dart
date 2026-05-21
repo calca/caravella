@@ -854,6 +854,12 @@ abstract class AppLocalizations {
   /// **'7 days'**
   String get last_7_days;
 
+  /// No description provided for @this_month.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get this_month;
+
   /// No description provided for @recent_activity.
   ///
   /// In en, this message translates to:

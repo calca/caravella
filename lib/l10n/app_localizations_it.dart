@@ -412,6 +412,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get last_7_days => '7 giorni';
 
   @override
+  String get this_month => 'Questo mese';
+
+  @override
   String get recent_activity => 'Attività recente';
 
   @override

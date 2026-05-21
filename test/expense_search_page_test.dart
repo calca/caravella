@@ -68,6 +68,7 @@ void main() {
           categories: testCategories,
           participants: testParticipants,
           currency: '€',
+          groupName: 'Test group',
           onExpenseTap: (_) {},
         ),
       );
@@ -77,8 +78,7 @@ void main() {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
-      // Verify page title
-      expect(find.text('Search expenses'), findsOneWidget);
+      expect(find.text('Search in Test group'), findsOneWidget);
 
       // Verify all expenses are listed
       expect(find.text('Pizza dinner'), findsOneWidget);
@@ -212,28 +212,81 @@ void main() {
       expect(find.text('Groceries'), findsNothing);
     });
 
-    testWidgets('date calendar strip is displayed', (tester) async {
+    testWidgets('date filter chips are displayed', (tester) async {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
-      // Should display the day numbers from our test dates
-      expect(find.text('15'), findsOneWidget); // March 15
-      expect(find.text('14'), findsOneWidget); // March 14
-      expect(find.text('13'), findsOneWidget); // March 13
+      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('7 days'), findsOneWidget);
+      expect(find.text('This month'), findsOneWidget);
+      expect(find.text('Select period'), findsOneWidget);
     });
 
-    testWidgets('tapping a date filters expenses', (tester) async {
-      await tester.pumpWidget(buildSearchPage());
+    testWidgets('today chip filters expenses', (tester) async {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day, 12);
+      final todayExpenses = [
+        ExpenseDetails(
+          id: 'today',
+          name: 'Today expense',
+          amount: 10.00,
+          category: testCategories[0],
+          paidBy: testParticipants[0],
+          date: today,
+        ),
+        ExpenseDetails(
+          id: 'yesterday',
+          name: 'Yesterday expense',
+          amount: 20.00,
+          category: testCategories[1],
+          paidBy: testParticipants[1],
+          date: today.subtract(const Duration(days: 1)),
+        ),
+      ];
+
+      await tester.pumpWidget(buildSearchPage(expenses: todayExpenses));
       await tester.pumpAndSettle();
 
-      // Tap on the date cell showing "15" (March 15)
-      await tester.tap(find.text('15'));
+      await tester.tap(find.text('Today'));
       await tester.pumpAndSettle();
 
-      // Only Pizza dinner is on March 15
-      expect(find.text('Pizza dinner'), findsOneWidget);
-      expect(find.text('Bus ticket'), findsNothing);
-      expect(find.text('Groceries'), findsNothing);
+      expect(find.text('Today expense'), findsOneWidget);
+      expect(find.text('Yesterday expense'), findsNothing);
+    });
+
+    testWidgets('this month chip filters expenses', (tester) async {
+      final now = DateTime.now();
+      final thisMonth = DateTime(now.year, now.month, 10);
+      final lastMonth = DateTime(now.year, now.month, 1).subtract(
+        const Duration(days: 1),
+      );
+      final monthExpenses = [
+        ExpenseDetails(
+          id: 'current-month',
+          name: 'Current month expense',
+          amount: 12.00,
+          category: testCategories[0],
+          paidBy: testParticipants[0],
+          date: thisMonth,
+        ),
+        ExpenseDetails(
+          id: 'last-month',
+          name: 'Last month expense',
+          amount: 8.00,
+          category: testCategories[1],
+          paidBy: testParticipants[1],
+          date: lastMonth,
+        ),
+      ];
+
+      await tester.pumpWidget(buildSearchPage(expenses: monthExpenses));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('This month'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Current month expense'), findsOneWidget);
+      expect(find.text('Last month expense'), findsNothing);
     });
 
     testWidgets('clear button resets all filters', (tester) async {
@@ -244,11 +297,9 @@ void main() {
       await tester.enterText(find.byType(TextField), 'Pizza');
       await tester.pumpAndSettle();
 
-      // Clear button should appear
-      expect(find.text('Clear'), findsOneWidget);
+      expect(find.byTooltip('Clear'), findsOneWidget);
 
-      // Tap clear
-      await tester.tap(find.text('Clear'));
+      await tester.tap(find.byTooltip('Clear'));
       await tester.pumpAndSettle();
 
       // All expenses should be shown again
@@ -300,75 +351,17 @@ void main() {
       expect(find.text('Bus ticket'), findsOneWidget);
     });
 
-    testWidgets('calendar shows continuous date range with gap days', (
+    testWidgets('range chip opens reusable period selector', (
       tester,
     ) async {
-      // Create expenses with a gap (March 10 and March 13 — gap on 11, 12)
-      final gapExpenses = [
-        ExpenseDetails(
-          id: 'g1',
-          name: 'Early expense',
-          amount: 10.00,
-          category: testCategories[0],
-          paidBy: testParticipants[0],
-          date: DateTime(2024, 3, 10),
-        ),
-        ExpenseDetails(
-          id: 'g2',
-          name: 'Late expense',
-          amount: 20.00,
-          category: testCategories[1],
-          paidBy: testParticipants[1],
-          date: DateTime(2024, 3, 13),
-        ),
-      ];
-
-      await tester.pumpWidget(buildSearchPage(expenses: gapExpenses));
+      await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
-      // Continuous range should include the gap days 11 and 12
-      expect(find.text('10'), findsOneWidget);
-      expect(find.text('11'), findsOneWidget);
-      expect(find.text('12'), findsOneWidget);
-      expect(find.text('13'), findsOneWidget);
-    });
-
-    testWidgets('expense indicator dots are shown for days with expenses', (
-      tester,
-    ) async {
-      // Create expenses with a gap to verify dot indicators
-      final gapExpenses = [
-        ExpenseDetails(
-          id: 'g1',
-          name: 'Day 10 expense',
-          amount: 10.00,
-          category: testCategories[0],
-          paidBy: testParticipants[0],
-          date: DateTime(2024, 3, 10),
-        ),
-        ExpenseDetails(
-          id: 'g2',
-          name: 'Day 13 expense',
-          amount: 20.00,
-          category: testCategories[1],
-          paidBy: testParticipants[1],
-          date: DateTime(2024, 3, 13),
-        ),
-      ];
-
-      await tester.pumpWidget(buildSearchPage(expenses: gapExpenses));
+      await tester.tap(find.text('Select period'));
       await tester.pumpAndSettle();
 
-      // Find all Container widgets that are 5x5 (indicator dots)
-      final dotFinder = find.byWidgetPredicate((widget) =>
-          widget is Container &&
-          widget.constraints?.maxWidth == 5 &&
-          widget.constraints?.maxHeight == 5);
-
-      // There should be 4 date cells (10, 11, 12, 13), each with a dot container.
-      // Days 10 and 13 have visible (colored) dots; days 11 and 12 have transparent dots.
-      // All 4 have the container widget.
-      expect(dotFinder, findsNWidgets(4));
+      expect(find.text('Suggested duration'), findsOneWidget);
+      expect(find.text('OK'), findsOneWidget);
     });
   });
 }

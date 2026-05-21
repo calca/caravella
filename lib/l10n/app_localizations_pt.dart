@@ -411,6 +411,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get last_7_days => '7 dias';
 
   @override
+  String get this_month => 'Este mês';
+
+  @override
   String get recent_activity => 'Atividade recente';
 
   @override

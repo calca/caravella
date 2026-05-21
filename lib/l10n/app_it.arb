@@ -133,6 +133,7 @@
   "participant_count": "{count, plural, one {{count} partecipante} other {{count} partecipanti}}",
   "@participant_count": {"description": "Conteggio partecipanti con plurale", "placeholders": {"count": {}}},
   "last_7_days": "7 giorni",
+  "this_month": "Questo mese",
   "recent_activity": "Attività recente",
   "recent_expenses": "Spese recenti",
   "@recent_expenses": {"description": "Etichetta per la sezione delle spese recenti"},

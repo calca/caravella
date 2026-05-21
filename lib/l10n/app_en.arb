@@ -167,6 +167,7 @@
   "@participant_count": {"description": "Pluralized participant count", "placeholders": {"count": {}}},
   "participants_label": "Participants",
   "last_7_days": "7 days",
+  "this_month": "This month",
   "recent_activity": "Recent activity",
   "recent_expenses": "Recent expenses",
   "@recent_expenses": {"description": "Label for recent expenses section"},

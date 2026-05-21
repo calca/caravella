@@ -410,6 +410,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get last_7_days => '7 días';
 
   @override
+  String get this_month => 'Este mes';
+
+  @override
   String get recent_activity => 'Actividad reciente';
 
   @override

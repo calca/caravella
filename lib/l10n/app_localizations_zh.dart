@@ -403,6 +403,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get last_7_days => '过去7天';
 
   @override
+  String get this_month => '本月';
+
+  @override
   String get recent_activity => '最近活动';
 
   @override
