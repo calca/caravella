@@ -400,7 +400,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get participants_label => '参与者';
 
   @override
-  String get last_7_days => '过去7天';
+  String get last_7_days => '最近7天';
+
+  @override
+  String get today => '今天';
 
   @override
   String get this_month => '本月';

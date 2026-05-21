@@ -851,8 +851,14 @@ abstract class AppLocalizations {
   /// No description provided for @last_7_days.
   ///
   /// In en, this message translates to:
-  /// **'7 days'**
+  /// **'Last 7 days'**
   String get last_7_days;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
 
   /// No description provided for @this_month.
   ///

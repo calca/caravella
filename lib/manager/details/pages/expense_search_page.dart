@@ -346,7 +346,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
         children: [
           const SizedBox(height: 12),
           _DateFilterChipsSection(
-            todayLabel: gloc.spent_today,
+            todayLabel: gloc.today,
             last7DaysLabel: gloc.last_7_days,
             thisMonthLabel: gloc.this_month,
             rangeLabel: _formatDateRangeLabel(context),

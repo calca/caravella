@@ -217,7 +217,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Today'), findsOneWidget);
-      expect(find.text('7 days'), findsOneWidget);
+      expect(find.text('Last 7 days'), findsOneWidget);
       expect(find.text('This month'), findsOneWidget);
       expect(find.text('Select period'), findsOneWidget);
     });
