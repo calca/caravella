@@ -51,10 +51,13 @@ class ShortcutsInitialization {
     String groupId,
     String groupTitle,
   ) {
-    if (action == HomeWidgetTapAction.addExpense) {
-      NotificationManager.handleAddExpenseAction(groupId);
-      return;
+    switch (action) {
+      case HomeWidgetTapAction.addExpense:
+        NotificationManager.handleAddExpenseAction(groupId);
+        break;
+      case HomeWidgetTapAction.openGroup:
+        ShortcutsNavigationService.handleShortcutTap(groupId, groupTitle);
+        break;
     }
-    ShortcutsNavigationService.handleShortcutTap(groupId, groupTitle);
   }
 }

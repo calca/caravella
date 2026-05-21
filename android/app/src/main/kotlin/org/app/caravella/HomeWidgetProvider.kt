@@ -83,15 +83,16 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 title = context.getString(R.string.widget_unconfigured_title),
                 todayValue = "-",
                 groupTotalValue = "-",
-                primaryButtonLabel = context.getString(R.string.widget_select_group),
-                primaryButtonAction = glanceActionStartActivity(
-                    Intent(context, HomeWidgetConfigureActivity::class.java).apply {
-                        putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    },
+                primaryButton = WidgetButton(
+                    label = context.getString(R.string.widget_select_group),
+                    action = glanceActionStartActivity(
+                        Intent(context, HomeWidgetConfigureActivity::class.java).apply {
+                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        },
+                    ),
                 ),
-                secondaryButtonLabel = null,
-                secondaryButtonAction = null,
+                secondaryButton = null,
                 useGroupBackground = false,
                 backgroundColor = null,
                 backgroundImagePath = null,
@@ -104,31 +105,35 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 title = title,
                 todayValue = totals?.todayTotal?.let { formatAmount(it, currency) } ?: "-",
                 groupTotalValue = totals?.groupTotal?.let { formatAmount(it, currency) } ?: "-",
-                primaryButtonLabel = context.getString(R.string.widget_quick_add),
-                primaryButtonAction = homeWidgetActionStartActivity<MainActivity>(
-                    context = context,
-                    // Keep aligned with AppHomeWidgetService tap parsing.
-                    // URI format: caravella://home_widget/add_expense?groupId=...&groupTitle=...
-                    uri = Uri.Builder()
-                        .scheme("caravella")
-                        .authority("home_widget")
-                        .appendPath("add_expense")
-                        .appendQueryParameter("groupId", config.groupId)
-                        .appendQueryParameter("groupTitle", title)
-                        .build(),
+                primaryButton = WidgetButton(
+                    label = context.getString(R.string.widget_quick_add),
+                    action = homeWidgetActionStartActivity<MainActivity>(
+                        context = context,
+                        // Keep aligned with AppHomeWidgetService tap parsing.
+                        // URI format: caravella://home_widget/add_expense?groupId=...&groupTitle=...
+                        uri = Uri.Builder()
+                            .scheme("caravella")
+                            .authority("home_widget")
+                            .appendPath("add_expense")
+                            .appendQueryParameter("groupId", config.groupId)
+                            .appendQueryParameter("groupTitle", title)
+                            .build(),
+                    ),
                 ),
-                secondaryButtonLabel = context.getString(R.string.widget_open_group),
-                secondaryButtonAction = homeWidgetActionStartActivity<MainActivity>(
-                    context = context,
-                    // Keep aligned with AppHomeWidgetService tap parsing.
-                    // URI format: caravella://home_widget/open_group?groupId=...&groupTitle=...
-                    uri = Uri.Builder()
-                        .scheme("caravella")
-                        .authority("home_widget")
-                        .appendPath("open_group")
-                        .appendQueryParameter("groupId", config.groupId)
-                        .appendQueryParameter("groupTitle", title)
-                        .build(),
+                secondaryButton = WidgetButton(
+                    label = context.getString(R.string.widget_open_group),
+                    action = homeWidgetActionStartActivity<MainActivity>(
+                        context = context,
+                        // Keep aligned with AppHomeWidgetService tap parsing.
+                        // URI format: caravella://home_widget/open_group?groupId=...&groupTitle=...
+                        uri = Uri.Builder()
+                            .scheme("caravella")
+                            .authority("home_widget")
+                            .appendPath("open_group")
+                            .appendQueryParameter("groupId", config.groupId)
+                            .appendQueryParameter("groupTitle", title)
+                            .build(),
+                    ),
                 ),
                 useGroupBackground = config.useGroupBackground,
                 backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
@@ -198,10 +203,10 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                         }
                     }
 
-                    if (model.secondaryButtonLabel == null || model.secondaryButtonAction == null) {
+                    if (model.secondaryButton == null) {
                         Button(
-                            text = model.primaryButtonLabel,
-                            onClick = model.primaryButtonAction,
+                            text = model.primaryButton.label,
+                            onClick = model.primaryButton.action,
                             modifier = GlanceModifier
                                 .fillMaxWidth()
                                 .padding(top = 12.dp),
@@ -213,15 +218,15 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                 .padding(top = 12.dp),
                         ) {
                             Button(
-                                text = model.primaryButtonLabel,
-                                onClick = model.primaryButtonAction,
+                                text = model.primaryButton.label,
+                                onClick = model.primaryButton.action,
                                 modifier = GlanceModifier
                                     .defaultWeight()
                                     .padding(end = 4.dp),
                             )
                             Button(
-                                text = model.secondaryButtonLabel,
-                                onClick = model.secondaryButtonAction,
+                                text = model.secondaryButton.label,
+                                onClick = model.secondaryButton.action,
                                 modifier = GlanceModifier
                                     .defaultWeight()
                                     .padding(start = 4.dp),
@@ -270,13 +275,16 @@ private data class WidgetUiModel(
     val title: String,
     val todayValue: String,
     val groupTotalValue: String,
-    val primaryButtonLabel: String,
-    val primaryButtonAction: Action,
-    val secondaryButtonLabel: String?,
-    val secondaryButtonAction: Action?,
+    val primaryButton: WidgetButton,
+    val secondaryButton: WidgetButton?,
     val useGroupBackground: Boolean,
     val backgroundColor: Int?,
     val backgroundImagePath: String?,
+)
+
+private data class WidgetButton(
+    val label: String,
+    val action: Action,
 )
 
 internal data class WidgetGroupConfig(
