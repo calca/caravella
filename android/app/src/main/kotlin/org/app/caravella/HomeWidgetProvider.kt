@@ -11,10 +11,11 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.action.Action
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.action.actionStartActivity as glanceActionStartActivity
 import androidx.glance.appwidget.components.Button
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
@@ -32,6 +33,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.dp
 import androidx.glance.unit.sp
+import es.antonborri.home_widget.actionStartActivity as homeWidgetActionStartActivity
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.io.File
 import java.io.IOException
@@ -82,10 +84,12 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 todayValue = "-",
                 groupTotalValue = "-",
                 buttonLabel = context.getString(R.string.widget_select_group),
-                buttonIntent = Intent(context, HomeWidgetConfigureActivity::class.java).apply {
-                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                },
+                buttonAction = glanceActionStartActivity(
+                    Intent(context, HomeWidgetConfigureActivity::class.java).apply {
+                        putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    },
+                ),
                 useGroupBackground = false,
                 backgroundColor = null,
                 backgroundImagePath = null,
@@ -99,12 +103,18 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 todayValue = totals?.todayTotal?.let { formatAmount(it, currency) } ?: "-",
                 groupTotalValue = totals?.groupTotal?.let { formatAmount(it, currency) } ?: "-",
                 buttonLabel = context.getString(R.string.widget_quick_add),
-                buttonIntent = Intent(context, MainActivity::class.java).apply {
-                    action = "io.caravella.egm.ADD_EXPENSE"
-                    putExtra("groupId", config.groupId)
-                    putExtra("groupTitle", title)
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                },
+                buttonAction = homeWidgetActionStartActivity<MainActivity>(
+                    context = context,
+                    // Keep aligned with AppHomeWidgetService tap parsing.
+                    // URI format: caravella://home_widget/add_expense?groupId=...&groupTitle=...
+                    uri = Uri.Builder()
+                        .scheme("caravella")
+                        .authority("home_widget")
+                        .appendPath("add_expense")
+                        .appendQueryParameter("groupId", config.groupId)
+                        .appendQueryParameter("groupTitle", title)
+                        .build(),
+                ),
                 useGroupBackground = config.useGroupBackground,
                 backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
                 backgroundImagePath = if (config.useGroupBackground) {
@@ -175,7 +185,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
 
                     Button(
                         text = model.buttonLabel,
-                        onClick = actionStartActivity(model.buttonIntent),
+                        onClick = model.buttonAction,
                         modifier = GlanceModifier
                             .fillMaxWidth()
                             .padding(top = 12.dp),
@@ -223,7 +233,7 @@ private data class WidgetUiModel(
     val todayValue: String,
     val groupTotalValue: String,
     val buttonLabel: String,
-    val buttonIntent: Intent,
+    val buttonAction: Action,
     val useGroupBackground: Boolean,
     val backgroundColor: Int?,
     val backgroundImagePath: String?,

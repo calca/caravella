@@ -19,6 +19,9 @@ class ShortcutsInitialization {
     await PlatformShortcutsManager.initialize(
       ShortcutsNavigationService.handleShortcutTap,
     );
+    await PlatformHomeWidgetManager.initializeTapHandling(
+      ShortcutsNavigationService.handleShortcutTap,
+    );
 
     // Update shortcuts with current data
     await PlatformShortcutsManager.updateShortcuts();
