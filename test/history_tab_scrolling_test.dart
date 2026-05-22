@@ -71,7 +71,7 @@ void main() {
       );
     });
 
-    testWidgets('Tabs are hidden when search is active', (
+    testWidgets('Search icon is present and tabs are always visible', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
@@ -85,68 +85,45 @@ void main() {
         reason: 'TabBar should be visible initially',
       );
 
-      // Find and tap the search icon
+      // Find the search icon
       final searchIconFinder = find.byIcon(Icons.search_rounded);
       expect(searchIconFinder, findsOneWidget);
-      await tester.tap(searchIconFinder);
-      await tester.pump(const Duration(milliseconds: 400));
 
-      // After opening search, tabs should be hidden
+      // The icon is always Icons.search_rounded (no toggle icon)
       expect(
-        find.byType(TabBar),
+        find.byIcon(Icons.search_off_rounded),
         findsNothing,
-        reason: 'TabBar should be hidden when search is active',
+        reason: 'search_off_rounded icon should not exist; search uses a push page',
       );
 
-      // Search bar should be visible
-      expect(
-        find.byType(SearchBar),
-        findsOneWidget,
-        reason: 'SearchBar should be visible when search is active',
-      );
-
-      // Turn off search
-      final searchOffIconFinder = find.byIcon(Icons.search_off_rounded);
-      expect(searchOffIconFinder, findsOneWidget);
-      await tester.tap(searchOffIconFinder);
-      await tester.pump(const Duration(milliseconds: 400));
-
-      // Tabs should be visible again
+      // TabBar stays present at all times
       expect(
         find.byType(TabBar),
         findsOneWidget,
-        reason: 'TabBar should be visible again when search is disabled',
+        reason: 'TabBar should remain visible at all times on the history page',
       );
     });
 
-    testWidgets('Search UI toggles correctly when active', (
+    testWidgets('TabBarView is always present on history page', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
 
       await tester.pump(const Duration(milliseconds: 400));
 
-      // Open search
-      final searchIconFinder = find.byIcon(Icons.search_rounded);
-      await tester.tap(searchIconFinder);
-      await tester.pump(const Duration(milliseconds: 400));
-
-      // When search is active, TabBarView should not be present
+      // TabBarView should always be present (search is on a separate page)
       expect(
         find.byType(TabBarView),
-        findsNothing,
-        reason: 'TabBarView should not be present when search is active',
+        findsOneWidget,
+        reason: 'TabBarView should always be present; search is a separate page',
       );
 
-      // Search bar should be visible
+      // SearchBar widget should NOT be present on the history page itself
       expect(
         find.byType(SearchBar),
-        findsOneWidget,
-        reason: 'SearchBar should be visible when search is active',
+        findsNothing,
+        reason: 'SearchBar should not be inlined on the history page',
       );
-
-      // Results container may vary (empty state or list). Do not over-constrain structure.
-      // Just ensure the main content isn't the TabBarView and the UI is responsive to input.
     });
 
     testWidgets('User can swipe between Active and Archived tabs', (
