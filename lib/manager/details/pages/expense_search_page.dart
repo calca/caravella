@@ -137,9 +137,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
       case _ExpenseSearchDateFilter.last7Days:
         _setDateFilter(
           filter,
-          startDate: today.subtract(
-            const Duration(days: _last7DaysCount - 1),
-          ),
+          startDate: today.subtract(const Duration(days: _last7DaysCount - 1)),
           endDate: today,
         );
         break;
@@ -360,18 +358,14 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
             thisMonthLabel: gloc.this_month,
             rangeLabel: _formatDateRangeLabel(context),
             selectedDateFilter: _selectedDateFilter,
-            onTodaySelected: () => _togglePresetFilter(
-              _ExpenseSearchDateFilter.today,
-            ),
-            onLast7DaysSelected: () => _togglePresetFilter(
-              _ExpenseSearchDateFilter.last7Days,
-            ),
-            onThisMonthSelected: () => _togglePresetFilter(
-              _ExpenseSearchDateFilter.thisMonth,
-            ),
-            onRangeSelected: () => _togglePresetFilter(
-              _ExpenseSearchDateFilter.range,
-            ),
+            onTodaySelected: () =>
+                _togglePresetFilter(_ExpenseSearchDateFilter.today),
+            onLast7DaysSelected: () =>
+                _togglePresetFilter(_ExpenseSearchDateFilter.last7Days),
+            onThisMonthSelected: () =>
+                _togglePresetFilter(_ExpenseSearchDateFilter.thisMonth),
+            onRangeSelected: () =>
+                _togglePresetFilter(_ExpenseSearchDateFilter.range),
           ),
 
           // Filter chips
