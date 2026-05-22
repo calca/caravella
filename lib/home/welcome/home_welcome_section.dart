@@ -25,19 +25,19 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 900),
     );
 
     // Content enters first
     _contentFadeAnimation = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.0, 0.65, curve: Curves.easeOut),
+      curve: const Interval(0.0, 0.55, curve: Curves.easeOutCubic),
     );
 
     // Background enters last with a soft fade-in
     _backgroundFadeAnimation = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.45, 1.0, curve: Curves.easeInOut),
+      curve: const Interval(0.35, 1.0, curve: Curves.easeOutCubic),
     );
 
     // Defer animation and system UI setup to after first frame
@@ -159,9 +159,11 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
             child: FadeTransition(
               key: const ValueKey('welcome_background_fade'),
               opacity: _backgroundFadeAnimation,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: backgroundGradient, // Use gradient instead of solid color
+              child: RepaintBoundary(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: backgroundGradient, // Use gradient instead of solid color
+                  ),
                 ),
               ),
             ),

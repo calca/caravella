@@ -44,7 +44,7 @@ void main() {
       expect(titleFade.opacity.value, greaterThan(0.0));
       expect(backgroundFade.opacity.value, 0.0);
 
-      await tester.pump(const Duration(milliseconds: 230));
+      await tester.pump(const Duration(milliseconds: 260));
 
       titleFade = tester.widget<FadeTransition>(
         find.byKey(const ValueKey('welcome_title_fade')),
@@ -55,7 +55,7 @@ void main() {
       expect(backgroundFade.opacity.value, greaterThan(0.0));
       expect(titleFade.opacity.value, greaterThan(backgroundFade.opacity.value));
 
-      await tester.pump(const Duration(milliseconds: 480));
+      await tester.pump(const Duration(milliseconds: 600));
 
       titleFade = tester.widget<FadeTransition>(
         find.byKey(const ValueKey('welcome_title_fade')),
