@@ -166,7 +166,9 @@
   "participant_count": "{count, plural, one {{count} participant} other {{count} participants}}",
   "@participant_count": {"description": "Pluralized participant count", "placeholders": {"count": {}}},
   "participants_label": "Participants",
-  "last_7_days": "7 days",
+  "last_7_days": "Last 7 days",
+  "today": "Today",
+  "this_month": "This month",
   "recent_activity": "Recent activity",
   "recent_expenses": "Recent expenses",
   "@recent_expenses": {"description": "Label for recent expenses section"},
@@ -665,6 +667,8 @@
   ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
   ,"clear_filters": "Clear"
   ,"@clear_filters": {"description": "Button to clear expense filters"}
+  ,"filters": "Filters"
+  ,"@filters": {"description": "Section label for expense filters"}
   ,"show_filters": "Show filters"
   ,"@show_filters": {"description": "Label to show filters"}
   ,"hide_filters": "Hide filters"

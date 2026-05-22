@@ -148,7 +148,9 @@
   "expenses": "Gastos",
   "participants": "Participantes",
   "participants_label": "Participantes",
-  "last_7_days": "7 días",
+  "last_7_days": "Últimos 7 días",
+  "today": "Hoy",
+  "this_month": "Este mes",
   "recent_activity": "Actividad reciente",
   "recent_expenses": "Gastos recientes",
   "@recent_expenses": {"description": "Etiqueta para la sección de gastos recientes"},
@@ -642,6 +644,8 @@
   ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}
   ,"clear_filters": "Limpiar"
   ,"@clear_filters": {"description": "Botón para limpiar filtros de gastos"}
+  ,"filters": "Filtros"
+  ,"@filters": {"description": "Etiqueta de sección para filtros de gastos"}
   ,"show_filters": "Mostrar filtros"
   ,"@show_filters": {"description": "Etiqueta para mostrar filtros"}
   ,"hide_filters": "Ocultar filtros"

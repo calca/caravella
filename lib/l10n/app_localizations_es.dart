@@ -407,7 +407,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get participants_label => 'Participantes';
 
   @override
-  String get last_7_days => '7 días';
+  String get last_7_days => 'Últimos 7 días';
+
+  @override
+  String get today => 'Hoy';
+
+  @override
+  String get this_month => 'Este mes';
 
   @override
   String get recent_activity => 'Actividad reciente';
@@ -1772,6 +1778,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get clear_filters => 'Limpiar';
+
+  @override
+  String get filters => 'Filtros';
 
   @override
   String get show_filters => 'Mostrar filtros';
