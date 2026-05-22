@@ -1747,6 +1747,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get clear_filters => '清除';
 
   @override
+  String get filters => '筛选器';
+
+  @override
   String get show_filters => '显示筛选器';
 
   @override

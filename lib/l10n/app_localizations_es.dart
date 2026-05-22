@@ -1780,6 +1780,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get clear_filters => 'Limpiar';
 
   @override
+  String get filters => 'Filtros';
+
+  @override
   String get show_filters => 'Mostrar filtros';
 
   @override

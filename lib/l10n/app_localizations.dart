@@ -3506,6 +3506,12 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear_filters;
 
+  /// Section label for expense filters
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
   /// Label to show filters
   ///
   /// In en, this message translates to:

@@ -1778,6 +1778,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get clear_filters => 'Clear';
 
   @override
+  String get filters => 'Filtros';
+
+  @override
   String get show_filters => 'Show filters';
 
   @override

@@ -644,6 +644,8 @@
   ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}
   ,"clear_filters": "Limpiar"
   ,"@clear_filters": {"description": "Botón para limpiar filtros de gastos"}
+  ,"filters": "Filtros"
+  ,"@filters": {"description": "Etiqueta de sección para filtros de gastos"}
   ,"show_filters": "Mostrar filtros"
   ,"@show_filters": {"description": "Etiqueta para mostrar filtros"}
   ,"hide_filters": "Ocultar filtros"

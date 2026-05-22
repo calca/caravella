@@ -352,6 +352,8 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
       body: Column(
         children: [
           const SizedBox(height: 12),
+          _SearchFilterSectionLabel(label: gloc.dates),
+          const SizedBox(height: 6),
           _DateFilterChipsSection(
             todayLabel: gloc.today,
             last7DaysLabel: gloc.last_7_days,
@@ -373,7 +375,9 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
           ),
 
           // Filter chips
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
+          _SearchFilterSectionLabel(label: gloc.filters),
+          const SizedBox(height: 6),
           _FilterChipsSection(
             categories: widget.categories,
             participants: widget.participants,
@@ -603,6 +607,31 @@ class _FilterChipsSection extends StatelessWidget {
               icon: Icons.location_on_outlined,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchFilterSectionLabel extends StatelessWidget {
+  final String label;
+
+  const _SearchFilterSectionLabel({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          label,
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );
