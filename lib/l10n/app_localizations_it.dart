@@ -409,7 +409,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get participants_label => 'Partecipanti';
 
   @override
-  String get last_7_days => '7 giorni';
+  String get last_7_days => 'Ultimi 7 giorni';
+
+  @override
+  String get today => 'Oggi';
+
+  @override
+  String get this_month => 'Questo mese';
 
   @override
   String get recent_activity => 'Attività recente';

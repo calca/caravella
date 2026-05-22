@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../group/widgets/period_selection_bottom_sheet.dart';
 import '../widgets/expense_amount_card.dart';
 
 /// Full-screen search page for expenses within a group.
@@ -10,7 +11,7 @@ import '../widgets/expense_amount_card.dart';
 /// Features:
 /// - Full-text search across all expense fields (name, note, category, paidBy,
 ///   location, amount)
-/// - 2-row scrollable date calendar (2 weeks visible) for quick date filtering
+/// - Quick date filter chips with reusable range picker
 /// - Category and paid-by filter chips
 /// - Has-attachment and has-location toggle filters
 /// - Results displayed using [ExpenseAmountCard]
@@ -60,35 +61,29 @@ class ExpenseSearchPage extends StatefulWidget {
   State<ExpenseSearchPage> createState() => _ExpenseSearchPageState();
 }
 
+enum _ExpenseSearchDateFilter { today, last7Days, thisMonth, range }
+
 class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
+  static const int _last7DaysCount = 7;
+
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
   String _searchQuery = '';
   String? _selectedCategoryId;
   String? _selectedParticipantId;
-  DateTime? _selectedDate;
+  _ExpenseSearchDateFilter? _selectedDateFilter;
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
   bool _filterHasAttachment = false;
   bool _filterHasLocation = false;
-
-  /// Set of dates (day-level) that have expenses – used for highlighting.
-  late Set<DateTime> _expenseDateSet;
-
-  /// Continuous range of dates from earliest to latest expense.
-  late List<DateTime> _calendarDates;
-
-  /// The scroll controller for the date calendar strip.
-  final ScrollController _dateScrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _computeCalendarDates();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _searchFocusNode.requestFocus();
-        _scrollToTargetDate();
       }
     });
   }
@@ -97,97 +92,99 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   void dispose() {
     _searchController.dispose();
     _searchFocusNode.dispose();
-    _dateScrollController.dispose();
     super.dispose();
   }
 
-  /// Builds a continuous date range and the set of dates with expenses.
-  ///
-  /// Always produces at least 14 days (2 weeks) so the calendar strip is
-  /// never too narrow.
-  void _computeCalendarDates() {
-    final dateSet = <DateTime>{};
-    for (final e in widget.expenses) {
-      dateSet.add(DateTime(e.date.year, e.date.month, e.date.day));
-    }
-    _expenseDateSet = dateSet;
+  DateTime _normalizeDate(DateTime date) =>
+      DateTime(date.year, date.month, date.day);
 
-    // Base range: from the earliest to the latest expense date.
-    // Fall back to today when there are no expenses.
-    final DateTime rangeStart;
-    final DateTime rangeEnd;
-    if (dateSet.isEmpty) {
-      final now = DateTime.now();
-      rangeStart = DateTime(now.year, now.month, now.day);
-      rangeEnd = rangeStart;
-    } else {
-      final sorted = dateSet.toList()..sort();
-      rangeStart = sorted.first;
-      rangeEnd = sorted.last;
-    }
-
-    // Build a continuous range from rangeStart to rangeEnd.
-    final dates = <DateTime>[];
-    var current = rangeStart;
-    while (!current.isAfter(rangeEnd)) {
-      dates.add(current);
-      current = DateTime(current.year, current.month, current.day + 1);
-    }
-
-    // Ensure a minimum of 14 days (2 full rows of 7).
-    while (dates.length < 14) {
-      final last = dates.last;
-      dates.add(DateTime(last.year, last.month, last.day + 1));
-    }
-
-    _calendarDates = dates;
+  DateTime _endOfMonth(DateTime date) {
+    final firstDayOfNextMonth = date.month == 12
+        ? DateTime(date.year + 1, 1, 1)
+        : DateTime(date.year, date.month + 1, 1);
+    return firstDayOfNextMonth.subtract(const Duration(days: 1));
   }
 
-  /// Scrolls the calendar strip so that today (if within the displayed range)
-  /// is centred.  If today is outside the range, centres the most recent date.
-  void _scrollToTargetDate() {
-    if (_calendarDates.isEmpty || !_dateScrollController.hasClients) return;
+  void _setDateFilter(
+    _ExpenseSearchDateFilter? filter, {
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
+    setState(() {
+      _selectedDateFilter = filter;
+      _selectedStartDate = startDate != null ? _normalizeDate(startDate) : null;
+      _selectedEndDate = endDate != null ? _normalizeDate(endDate) : null;
+    });
+  }
 
-    final now = DateTime.now();
-    final todayNorm = DateTime(now.year, now.month, now.day);
-
-    // Pick today when it falls inside the calendar range, otherwise the last
-    // displayed date (most recent).
-    final DateTime target;
-    if (!todayNorm.isBefore(_calendarDates.first) &&
-        !todayNorm.isAfter(_calendarDates.last)) {
-      target = todayNorm;
-    } else {
-      target = _calendarDates.last;
+  void _togglePresetFilter(_ExpenseSearchDateFilter filter) {
+    if (filter == _ExpenseSearchDateFilter.range) {
+      _openRangePicker();
+      return;
     }
 
-    // The calendar is split into two rows at the midpoint.  A date at index i
-    // appears in column (i) for row-1 or column (i - midpoint) for row-2.
-    // Both rows share the same horizontal scroll, so we compute the column
-    // position within whichever row the target date sits in.
-    final midpoint = (_calendarDates.length / 2).ceil();
-    final idx = _calendarDates.indexWhere(
-      (d) =>
-          d.year == target.year &&
-          d.month == target.month &&
-          d.day == target.day,
+    if (_selectedDateFilter == filter) {
+      _setDateFilter(null);
+      return;
+    }
+
+    final today = _normalizeDate(DateTime.now());
+
+    switch (filter) {
+      case _ExpenseSearchDateFilter.today:
+        _setDateFilter(filter, startDate: today, endDate: today);
+        break;
+      case _ExpenseSearchDateFilter.last7Days:
+        _setDateFilter(
+          filter,
+          startDate: today.subtract(
+            const Duration(days: _last7DaysCount - 1),
+          ),
+          endDate: today,
+        );
+        break;
+      case _ExpenseSearchDateFilter.thisMonth:
+        _setDateFilter(
+          filter,
+          startDate: DateTime(today.year, today.month, 1),
+          endDate: _endOfMonth(today),
+        );
+        break;
+      case _ExpenseSearchDateFilter.range:
+        break;
+    }
+  }
+
+  Future<void> _openRangePicker() async {
+    _unfocus();
+    await showPeriodSelectionBottomSheet(
+      context: context,
+      initialStartDate: _selectedStartDate,
+      initialEndDate: _selectedEndDate,
+      onSelectionChanged: (startDate, endDate) {
+        if (startDate == null || endDate == null) {
+          return;
+        }
+        _setDateFilter(
+          _ExpenseSearchDateFilter.range,
+          startDate: startDate,
+          endDate: endDate,
+        );
+      },
     );
-    if (idx == -1) return;
+  }
 
-    final col = idx < midpoint ? idx : idx - midpoint;
+  String _formatDateRangeLabel(BuildContext context) {
+    if (_selectedDateFilter != _ExpenseSearchDateFilter.range ||
+        _selectedStartDate == null ||
+        _selectedEndDate == null) {
+      return gen.AppLocalizations.of(context).select_period;
+    }
 
-    // Each cell: 48 px wide + 2 × 2 px horizontal margin = 52 px.
-    // Inner horizontal padding of the scroll content: 8 px on each side.
-    const cellWidth = 52.0;
-    const hPadding = 8.0;
-
-    final viewport = _dateScrollController.position.viewportDimension;
-    final maxScroll = _dateScrollController.position.maxScrollExtent;
-
-    final offset = (hPadding + col * cellWidth + cellWidth / 2 - viewport / 2)
-        .clamp(0.0, maxScroll);
-
-    _dateScrollController.jumpTo(offset);
+    final locale = Localizations.localeOf(context).toString();
+    final formatter = DateFormat.Md(locale);
+    return '${formatter.format(_selectedStartDate!)} - '
+        '${formatter.format(_selectedEndDate!)}';
   }
 
   /// Filtered expense list based on all active filters.
@@ -214,14 +211,15 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     }
 
     // Date filter
-    if (_selectedDate != null) {
+    if (_selectedStartDate != null && _selectedEndDate != null) {
       filtered = filtered.where((expense) {
-        final ed = DateTime(
+        final expenseDate = DateTime(
           expense.date.year,
           expense.date.month,
           expense.date.day,
         );
-        return ed == _selectedDate;
+        return !expenseDate.isBefore(_selectedStartDate!) &&
+            !expenseDate.isAfter(_selectedEndDate!);
       }).toList();
     }
 
@@ -258,7 +256,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
 
   bool get _hasActiveFilters {
     return _searchQuery.isNotEmpty ||
-        _selectedDate != null ||
+        (_selectedStartDate != null && _selectedEndDate != null) ||
         _selectedCategoryId != null ||
         _selectedParticipantId != null ||
         _filterHasAttachment ||
@@ -268,7 +266,9 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   void _clearAllFilters() {
     setState(() {
       _searchQuery = '';
-      _selectedDate = null;
+      _selectedDateFilter = null;
+      _selectedStartDate = null;
+      _selectedEndDate = null;
       _selectedCategoryId = null;
       _selectedParticipantId = null;
       _filterHasAttachment = false;
@@ -351,22 +351,26 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
       ),
       body: Column(
         children: [
-          // Date calendar strip (2-row, scrollable)
-          if (_calendarDates.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            _DateCalendarStrip(
-              dates: _calendarDates,
-              expenseDates: _expenseDateSet,
-              selectedDate: _selectedDate,
-              scrollController: _dateScrollController,
-              onDateSelected: (date) {
-                _unfocus();
-                setState(() {
-                  _selectedDate = _selectedDate == date ? null : date;
-                });
-              },
+          const SizedBox(height: 12),
+          _DateFilterChipsSection(
+            todayLabel: gloc.today,
+            last7DaysLabel: gloc.last_7_days,
+            thisMonthLabel: gloc.this_month,
+            rangeLabel: _formatDateRangeLabel(context),
+            selectedDateFilter: _selectedDateFilter,
+            onTodaySelected: () => _togglePresetFilter(
+              _ExpenseSearchDateFilter.today,
             ),
-          ],
+            onLast7DaysSelected: () => _togglePresetFilter(
+              _ExpenseSearchDateFilter.last7Days,
+            ),
+            onThisMonthSelected: () => _togglePresetFilter(
+              _ExpenseSearchDateFilter.thisMonth,
+            ),
+            onRangeSelected: () => _togglePresetFilter(
+              _ExpenseSearchDateFilter.range,
+            ),
+          ),
 
           // Filter chips
           const SizedBox(height: 8),
@@ -438,140 +442,79 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
 }
 
 // ---------------------------------------------------------------------------
-// Date calendar strip – shows 2 rows of date cells, scrollable horizontally
+// Date filter chips
 // ---------------------------------------------------------------------------
 
-class _DateCalendarStrip extends StatelessWidget {
-  final List<DateTime> dates;
-  final Set<DateTime> expenseDates;
-  final DateTime? selectedDate;
-  final ScrollController scrollController;
-  final ValueChanged<DateTime> onDateSelected;
+class _DateFilterChipsSection extends StatelessWidget {
+  final String todayLabel;
+  final String last7DaysLabel;
+  final String thisMonthLabel;
+  final String rangeLabel;
+  final _ExpenseSearchDateFilter? selectedDateFilter;
+  final VoidCallback onTodaySelected;
+  final VoidCallback onLast7DaysSelected;
+  final VoidCallback onThisMonthSelected;
+  final VoidCallback onRangeSelected;
 
-  const _DateCalendarStrip({
-    required this.dates,
-    required this.expenseDates,
-    required this.selectedDate,
-    required this.scrollController,
-    required this.onDateSelected,
+  const _DateFilterChipsSection({
+    required this.todayLabel,
+    required this.last7DaysLabel,
+    required this.thisMonthLabel,
+    required this.rangeLabel,
+    required this.selectedDateFilter,
+    required this.onTodaySelected,
+    required this.onLast7DaysSelected,
+    required this.onThisMonthSelected,
+    required this.onRangeSelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final locale = Localizations.localeOf(context);
-
-    // Split dates into two rows for the 2-row calendar
-    final int midpoint = (dates.length / 2).ceil();
-    final row1 = dates.sublist(0, midpoint);
-    final row2 = dates.sublist(midpoint);
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
-        controller: scrollController,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildRow(row1, colorScheme, locale, context),
-              const SizedBox(height: 4),
-              _buildRow(row2, colorScheme, locale, context),
-            ],
-          ),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: _SearchFilterChip(
+                label: todayLabel,
+                selected: selectedDateFilter == _ExpenseSearchDateFilter.today,
+                onSelected: onTodaySelected,
+                icon: Icons.today_outlined,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: _SearchFilterChip(
+                label: last7DaysLabel,
+                selected:
+                    selectedDateFilter == _ExpenseSearchDateFilter.last7Days,
+                onSelected: onLast7DaysSelected,
+                icon: Icons.history_outlined,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: _SearchFilterChip(
+                label: thisMonthLabel,
+                selected:
+                    selectedDateFilter == _ExpenseSearchDateFilter.thisMonth,
+                onSelected: onThisMonthSelected,
+                icon: Icons.calendar_month_outlined,
+              ),
+            ),
+            _SearchFilterChip(
+              label: rangeLabel,
+              selected: selectedDateFilter == _ExpenseSearchDateFilter.range,
+              onSelected: onRangeSelected,
+              icon: Icons.date_range_outlined,
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildRow(
-    List<DateTime> rowDates,
-    ColorScheme colorScheme,
-    Locale locale,
-    BuildContext context,
-  ) {
-    if (rowDates.isEmpty) return const SizedBox.shrink();
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: rowDates.map((date) {
-        final isSelected =
-            selectedDate != null &&
-            date.year == selectedDate!.year &&
-            date.month == selectedDate!.month &&
-            date.day == selectedDate!.day;
-
-        final hasExpenses = expenseDates.contains(date);
-
-        final dayName = DateFormat.E(locale.toString()).format(date);
-        final dayNum = date.day.toString();
-
-        return GestureDetector(
-          onTap: () => onDateSelected(date),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 48,
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            decoration: BoxDecoration(
-              color: isSelected ? colorScheme.primary : Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  dayName,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: isSelected
-                        ? colorScheme.onPrimary
-                        : hasExpenses
-                        ? colorScheme.onSurface
-                        : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                    fontSize: 10,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  dayNum,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: hasExpenses ? FontWeight.w700 : FontWeight.w400,
-                    color: isSelected
-                        ? colorScheme.onPrimary
-                        : hasExpenses
-                        ? colorScheme.onSurface
-                        : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                  ),
-                ),
-                const SizedBox(height: 3),
-                // Expense indicator dot
-                Container(
-                  width: 5,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: hasExpenses
-                        ? (isSelected
-                              ? colorScheme.onPrimary
-                              : colorScheme.primary)
-                        : Colors.transparent,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
     );
   }
 }
