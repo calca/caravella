@@ -10,6 +10,9 @@ import java.io.File
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.Locale
 import java.util.UUID
 
 /**
@@ -62,8 +65,15 @@ internal object AppFunctionStorageReader {
     private const val TABLE_PARTICIPANTS = "participants"
     private const val TABLE_CATEGORIES = "categories"
     private const val TABLE_EXPENSES = "expenses"
+    private const val VIEW_WIDGET_TOTALS = "widget_group_totals"
+    private const val DEFAULT_CURRENCY = "€"
 
     private const val TAG = "AppFunctionStorageReader"
+    @Volatile
+    private var isWidgetTotalsViewEnsured = false
+    @Volatile
+    private var widgetTotalsViewFirstDay: Int? = null
+    private val widgetTotalsViewLock = Any()
 
     // ------------------------------------------------------------------
     // Backend detection
@@ -134,6 +144,46 @@ internal object AppFunctionStorageReader {
     }
 
     /**
+     * Returns the sum of all expenses in the current local week for [groupId].
+     * Returns `null` when the group cannot be found.
+     */
+    fun getWeekTotal(context: Context, groupId: String): WeekTotalResult? {
+        return if (isSqliteBackend(context)) {
+            getWeekTotalSqlite(context, groupId)
+        } else {
+            getWeekTotalJson(context, groupId)
+        }
+    }
+
+    /**
+     * Returns both widget totals in a single read for [groupId].
+     */
+    fun getWidgetTotals(context: Context, groupId: String): WidgetTotalsResult? {
+        return if (isSqliteBackend(context)) {
+            getWidgetTotalsSqlite(context, groupId)
+        } else {
+            val today = getTodayTotalJson(context, groupId) ?: return null
+            val week = getWeekTotalJson(context, groupId) ?: return null
+            val group = findGroupJson(context, groupId) ?: return null
+            val totalBalance = getTotalBalanceJson(context, groupId)
+            WidgetTotalsResult(
+                groupId = groupId,
+                groupTitle = today.groupTitle,
+                todayTotal = today.todayTotal,
+                weekTotal = week.weekTotal,
+                groupTotal = totalBalance?.totalBalance ?: 0.0,
+                currency = today.currency,
+                groupColor = if (group.has("color") && !group.isNull("color")) {
+                    group.optInt("color")
+                } else {
+                    null
+                },
+                groupBackgroundImagePath = group.optString("file").takeIf { it.isNotBlank() },
+            )
+        }
+    }
+
+    /**
      * Persists a new expense entry for [groupId] directly to the active storage
      * backend **without starting the Flutter engine**.
      *
@@ -186,7 +236,7 @@ internal object AppFunctionStorageReader {
             openDb(context).use { db ->
                 val cursor = db.query(
                     TABLE_GROUPS,
-                    arrayOf("id", "title", "currency"),
+                    arrayOf("id", "title", "currency", "color", "file"),
                     "archived = 0",
                     null, null, null, "timestamp DESC",
                 )
@@ -198,6 +248,14 @@ internal object AppFunctionStorageReader {
                                 id = it.getString(it.getColumnIndexOrThrow("id")),
                                 title = it.getString(it.getColumnIndexOrThrow("title")),
                                 currency = it.getString(it.getColumnIndexOrThrow("currency")),
+                                color = if (it.isNull(it.getColumnIndexOrThrow("color"))) {
+                                    null
+                                } else {
+                                    it.getInt(it.getColumnIndexOrThrow("color"))
+                                },
+                                backgroundImagePath = it.getString(
+                                    it.getColumnIndexOrThrow("file"),
+                                )?.takeIf { filePath -> filePath.isNotBlank() },
                             )
                         )
                     }
@@ -320,48 +378,141 @@ internal object AppFunctionStorageReader {
 
     private fun getTodayTotalSqlite(context: Context, groupId: String): TodayTotalResult? {
         return try {
-            openDb(context).use { db ->
-                // Fetch group header
-                val groupCursor = db.query(
-                    TABLE_GROUPS,
-                    arrayOf("title", "currency"),
-                    "id = ? AND archived = 0",
-                    arrayOf(groupId), null, null, null,
-                )
-                val (title, currency) = groupCursor.use {
-                    if (!it.moveToFirst()) return null
-                    Pair(
-                        it.getString(it.getColumnIndexOrThrow("title")),
-                        it.getString(it.getColumnIndexOrThrow("currency")),
-                    )
-                }
-                // Compute start/end of today in epoch milliseconds
-                val zone = ZoneId.systemDefault()
-                val today = LocalDate.now(zone)
-                val todayStart = today.atStartOfDay(zone).toInstant().toEpochMilli()
-                val todayEnd = today.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
-
-                val sumCursor = db.rawQuery(
-                    """
-                    SELECT COALESCE(SUM(amount), 0) AS total
-                    FROM $TABLE_EXPENSES
-                    WHERE group_id = ? AND date >= ? AND date < ?
-                    """.trimIndent(),
-                    arrayOf(groupId, todayStart.toString(), todayEnd.toString()),
-                )
-                val total = sumCursor.use {
-                    if (it.moveToFirst()) it.getDouble(0) else 0.0
-                }
-                TodayTotalResult(
-                    groupId = groupId,
-                    groupTitle = title,
-                    todayTotal = total,
-                    currency = currency,
-                )
-            }
+            val totals = getWidgetTotalsSqlite(context, groupId) ?: return null
+            TodayTotalResult(
+                groupId = totals.groupId,
+                groupTitle = totals.groupTitle,
+                todayTotal = totals.todayTotal,
+                currency = totals.currency,
+            )
         } catch (e: Exception) {
             Log.e(TAG, "getTodayTotalSqlite failed for group $groupId", e)
             null
+        }
+    }
+
+    private fun getWeekTotalSqlite(context: Context, groupId: String): WeekTotalResult? {
+        return try {
+            val totals = getWidgetTotalsSqlite(context, groupId) ?: return null
+            WeekTotalResult(
+                groupId = totals.groupId,
+                groupTitle = totals.groupTitle,
+                weekTotal = totals.weekTotal,
+                currency = totals.currency,
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "getWeekTotalSqlite failed for group $groupId", e)
+            null
+        }
+    }
+
+    private fun getWidgetTotalsSqlite(context: Context, groupId: String): WidgetTotalsResult? {
+        return try {
+            // Write access is required the first time to create/update the shared SQL view.
+            openDbReadWrite(context).use { db ->
+                // Convert ISO-8601 DayOfWeek (1=Monday..7=Sunday) to SQLite %w (0=Sunday..6=Saturday).
+                val firstDayOfWeekSqlite = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value % 7
+                ensureWidgetTotalsView(db, firstDayOfWeekSqlite)
+                val cursor = db.rawQuery(
+                    """
+                    SELECT
+                        group_id,
+                        group_title,
+                        currency,
+                        today_total,
+                        week_total,
+                        group_total,
+                        group_color,
+                        group_background_image_path
+                    FROM $VIEW_WIDGET_TOTALS
+                    WHERE group_id = ?
+                    """.trimIndent(),
+                    arrayOf(groupId),
+                )
+                cursor.use {
+                    if (!it.moveToFirst()) return null
+                    WidgetTotalsResult(
+                        groupId = it.getString(it.getColumnIndexOrThrow("group_id")),
+                        groupTitle = it.getString(it.getColumnIndexOrThrow("group_title")),
+                        currency = it.getString(it.getColumnIndexOrThrow("currency")),
+                        todayTotal = it.getDouble(it.getColumnIndexOrThrow("today_total")),
+                        weekTotal = it.getDouble(it.getColumnIndexOrThrow("week_total")),
+                        groupTotal = it.getDouble(it.getColumnIndexOrThrow("group_total")),
+                        groupColor = if (it.isNull(it.getColumnIndexOrThrow("group_color"))) {
+                            null
+                        } else {
+                            it.getInt(it.getColumnIndexOrThrow("group_color"))
+                        },
+                        groupBackgroundImagePath = it.getString(
+                            it.getColumnIndexOrThrow("group_background_image_path"),
+                        )?.takeIf { path -> path.isNotBlank() },
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getWidgetTotalsSqlite failed for group $groupId", e)
+            null
+        }
+    }
+
+    private fun ensureWidgetTotalsView(db: SQLiteDatabase, firstDayOfWeekSqlite: Int) {
+        synchronized(widgetTotalsViewLock) {
+            if (isWidgetTotalsViewEnsured && widgetTotalsViewFirstDay == firstDayOfWeekSqlite) return
+            if (widgetTotalsViewFirstDay != null && widgetTotalsViewFirstDay != firstDayOfWeekSqlite) {
+                db.execSQL("DROP VIEW IF EXISTS $VIEW_WIDGET_TOTALS")
+            }
+            db.execSQL(
+                """
+                CREATE VIEW IF NOT EXISTS $VIEW_WIDGET_TOTALS AS
+                SELECT
+                    g.id AS group_id,
+                    g.title AS group_title,
+                    COALESCE(NULLIF(g.currency, ''), '$DEFAULT_CURRENCY') AS currency,
+                    g.color AS group_color,
+                    g.file AS group_background_image_path,
+                    COALESCE(
+                        SUM(
+                            CASE
+                                WHEN e.local_date = d.today_local THEN e.amount
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS today_total,
+                    COALESCE(
+                        SUM(
+                            CASE
+                                WHEN e.local_date >= d.week_start
+                                    AND e.local_date < date(d.week_start, '+7 days') THEN e.amount
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS week_total,
+                    COALESCE(SUM(e.amount), 0) AS group_total
+                FROM $TABLE_GROUPS g
+                LEFT JOIN (
+                    -- expenses.date is stored as epoch milliseconds, so divide by 1000 for SQLite date funcs.
+                    SELECT ex.group_id, ex.amount, date(ex.date / 1000, 'unixepoch', 'localtime') AS local_date
+                    FROM $TABLE_EXPENSES ex
+                ) e ON e.group_id = g.id
+                CROSS JOIN (
+                    SELECT
+                        date('now', 'localtime') AS today_local,
+                        -- Move from today back to the locale-specific first day of this week.
+                        date(
+                            'now',
+                            'localtime',
+                            -- SQLite %w is Sunday=0..Saturday=6; adjust using locale first-day index.
+                            '-' || ((CAST(strftime('%w', 'now', 'localtime') AS INTEGER) - $firstDayOfWeekSqlite + 7) % 7) || ' days'
+                        ) AS week_start
+                ) d
+                WHERE g.archived = 0
+                GROUP BY g.id, g.title, g.currency, g.color, g.file
+                """.trimIndent(),
+            )
+            isWidgetTotalsViewEnsured = true
+            widgetTotalsViewFirstDay = firstDayOfWeekSqlite
         }
     }
 
@@ -399,7 +550,13 @@ internal object AppFunctionStorageReader {
                 GroupSummary(
                     id = obj.optString("id"),
                     title = obj.optString("title"),
-                    currency = obj.optString("currency", "€"),
+                    currency = obj.optString("currency", DEFAULT_CURRENCY),
+                    color = if (obj.has("color") && !obj.isNull("color")) {
+                        obj.optInt("color")
+                    } else {
+                        null
+                    },
+                    backgroundImagePath = obj.optString("file").takeIf { it.isNotBlank() },
                 )
             )
         }
@@ -417,7 +574,7 @@ internal object AppFunctionStorageReader {
             groupId = groupId,
             groupTitle = group.optString("title"),
             totalBalance = total,
-            currency = group.optString("currency", "€"),
+            currency = group.optString("currency", DEFAULT_CURRENCY),
         )
     }
 
@@ -453,7 +610,7 @@ internal object AppFunctionStorageReader {
         return RecentExpensesResult(
             groupId = groupId,
             groupTitle = group.optString("title"),
-            currency = group.optString("currency", "€"),
+            currency = group.optString("currency", DEFAULT_CURRENCY),
             expenses = summaries,
         )
     }
@@ -476,7 +633,40 @@ internal object AppFunctionStorageReader {
             groupId = groupId,
             groupTitle = group.optString("title"),
             todayTotal = total,
-            currency = group.optString("currency", "€"),
+            currency = group.optString("currency", DEFAULT_CURRENCY),
+        )
+    }
+
+    private fun getWeekTotalJson(context: Context, groupId: String): WeekTotalResult? {
+        val group = findGroupJson(context, groupId) ?: return null
+        val expenses = group.optJSONArray("expenses") ?: JSONArray()
+
+        val zone = ZoneId.systemDefault()
+        val today = LocalDate.now(zone)
+        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+        val weekStartDate = today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
+        val weekEndDate = weekStartDate.plusDays(7)
+
+        var total = 0.0
+        for (i in 0 until expenses.length()) {
+            val e = expenses.optJSONObject(i) ?: continue
+            val dateStr = e.optString("date", "")
+            if (dateStr.length < 10) continue
+            val localDate = try {
+                LocalDate.parse(dateStr.substring(0, 10))
+            } catch (_: Exception) {
+                continue
+            }
+            if (!localDate.isBefore(weekStartDate) && localDate.isBefore(weekEndDate)) {
+                total += e.optDouble("amount", 0.0)
+            }
+        }
+
+        return WeekTotalResult(
+            groupId = groupId,
+            groupTitle = group.optString("title"),
+            weekTotal = total,
+            currency = group.optString("currency", DEFAULT_CURRENCY),
         )
     }
 
@@ -719,7 +909,13 @@ internal object AppFunctionStorageReader {
         data class Failure(val reason: String) : SaveExpenseResult()
     }
 
-    data class GroupSummary(val id: String, val title: String, val currency: String)
+    data class GroupSummary(
+        val id: String,
+        val title: String,
+        val currency: String,
+        val color: Int? = null,
+        val backgroundImagePath: String? = null,
+    )
 
     data class BalanceResult(
         val groupId: String,
@@ -752,5 +948,23 @@ internal object AppFunctionStorageReader {
         val groupTitle: String,
         val todayTotal: Double,
         val currency: String,
+    )
+
+    data class WeekTotalResult(
+        val groupId: String,
+        val groupTitle: String,
+        val weekTotal: Double,
+        val currency: String,
+    )
+
+    data class WidgetTotalsResult(
+        val groupId: String,
+        val groupTitle: String,
+        val todayTotal: Double,
+        val weekTotal: Double,
+        val groupTotal: Double,
+        val currency: String,
+        val groupColor: Int?,
+        val groupBackgroundImagePath: String?,
     )
 }

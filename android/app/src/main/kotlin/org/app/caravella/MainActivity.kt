@@ -33,11 +33,13 @@ class MainActivity : FlutterActivity() {
         
         // Handle both shortcut and App Function intents
         handleAddExpenseIntent(intent)
+        HomeWidgetProvider.updateAllWidgets(this)
     }
     
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleAddExpenseIntent(intent)
+        HomeWidgetProvider.updateAllWidgets(this)
     }
     
     /**
@@ -108,7 +110,7 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
-        
+
         // Shortcuts channel
         shortcutsChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SHORTCUTS_CHANNEL)
         shortcutsChannel?.setMethodCallHandler { call, result ->

@@ -6,4 +6,19 @@
     <string name="app_function_get_balance_name">Get group balance</string>
     <string name="app_function_get_recent_expenses_name">Get recent expenses</string>
     <string name="app_function_get_today_total_name">Get today\'s total</string>
+
+    <!-- Home widget -->
+    <string name="widget_description">Track today and group totals</string>
+    <string name="widget_today_label">Today</string>
+    <string name="widget_group_total_label">Group total</string>
+    <string name="widget_quick_add">Quick add expense</string>
+    <string name="widget_open_group">Open group</string>
+    <string name="widget_select_group">Select expense group</string>
+    <string name="widget_unconfigured_title">Widget not configured</string>
+    <string name="widget_config_title">Select the expense group for this widget</string>
+    <string name="widget_config_empty">No active expense groups available</string>
+    <string name="widget_config_use_group_background">Use group style as background</string>
+    <string name="widget_config_show_group_name">Show group name</string>
+    <string name="widget_config_select_group_a11y">Select group %1$s with currency %2$s</string>
+    <string name="widget_config_currency_label">Currency: %1$s</string>
 </resources>

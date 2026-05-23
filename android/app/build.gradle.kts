@@ -4,6 +4,7 @@ import java.io.FileInputStream
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("org.jetbrains.kotlin.plugin.compose")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -42,6 +43,10 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    buildFeatures {
+        compose = true
     }
 
     flavorDimensions.add("environment")
@@ -85,4 +90,8 @@ dependencies {
     // Android App Functions – exposes Caravella capabilities to Android AI agents.
     // See: https://developer.android.com/reference/androidx/appfunctions
     implementation("androidx.appfunctions:appfunctions:1.0.0-alpha01")
+    implementation("androidx.glance:glance-appwidget:1.1.1")
+    implementation("androidx.glance:glance-material3:1.1.1")
+    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation("androidx.compose.material3:material3:1.3.1")
 }
