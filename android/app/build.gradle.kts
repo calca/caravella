@@ -85,13 +85,13 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
     // Android App Functions – exposes Caravella capabilities to Android AI agents.
     // See: https://developer.android.com/reference/androidx/appfunctions
     implementation("androidx.appfunctions:appfunctions:1.0.0-alpha09")
     implementation("androidx.glance:glance-appwidget:1.1.1")
     implementation("androidx.glance:glance-material3:1.1.1")
-    implementation("androidx.activity:activity-compose:1.9.3")
-    implementation("androidx.compose.material3:material3:1.3.1")
+    implementation("androidx.activity:activity-compose:1.13.0")
+    implementation("androidx.compose.material3:material3:1.4.0")
 }
