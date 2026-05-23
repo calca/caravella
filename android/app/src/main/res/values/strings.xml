@@ -19,4 +19,6 @@
     <string name="widget_config_empty">No active expense groups available</string>
     <string name="widget_config_use_group_background">Use group style as background</string>
     <string name="widget_config_show_group_name">Show group name</string>
+    <string name="widget_config_select_group_a11y">Select group %1$s with currency %2$s</string>
+    <string name="widget_config_currency_label">Currency: %1$s</string>
 </resources>
