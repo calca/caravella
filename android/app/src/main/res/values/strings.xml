@@ -18,4 +18,5 @@
     <string name="widget_config_title">Select the expense group for this widget</string>
     <string name="widget_config_empty">No active expense groups available</string>
     <string name="widget_config_use_group_background">Use group style as background</string>
+    <string name="widget_config_show_group_name">Show group name</string>
 </resources>

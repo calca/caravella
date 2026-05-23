@@ -83,6 +83,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 title = context.getString(R.string.widget_unconfigured_title),
                 todayValue = "-",
                 groupTotalValue = "-",
+                showGroupName = true,
                 primaryButton = WidgetButton(
                     label = context.getString(R.string.widget_select_group),
                     action = glanceActionStartActivity(
@@ -105,6 +106,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 title = title,
                 todayValue = totals?.todayTotal?.let { formatAmount(it, currency) } ?: "-",
                 groupTotalValue = totals?.groupTotal?.let { formatAmount(it, currency) } ?: "-",
+                showGroupName = config.showGroupName,
                 primaryButton = WidgetButton(
                     label = context.getString(R.string.widget_quick_add),
                     action = homeWidgetActionStartActivity<MainActivity>(
@@ -174,16 +176,18 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                         .fillMaxSize()
                         .padding(12.dp),
                 ) {
-                    Text(
-                        text = model.title,
-                        style = TextStyle(fontWeight = FontWeight.Bold),
-                        maxLines = 1,
-                    )
+                    if (model.showGroupName) {
+                        Text(
+                            text = model.title,
+                            style = TextStyle(fontWeight = FontWeight.Bold),
+                            maxLines = 1,
+                        )
+                    }
 
                     Row(
                         modifier = GlanceModifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
+                            .padding(top = if (model.showGroupName) 8.dp else 0.dp),
                     ) {
                         Column(modifier = GlanceModifier.defaultWeight()) {
                             Text(text = context.getString(R.string.widget_today_label))
@@ -275,6 +279,7 @@ private data class WidgetUiModel(
     val title: String,
     val todayValue: String,
     val groupTotalValue: String,
+    val showGroupName: Boolean,
     val primaryButton: WidgetButton,
     val secondaryButton: WidgetButton?,
     val useGroupBackground: Boolean,
@@ -293,6 +298,7 @@ internal data class WidgetGroupConfig(
     val groupTitle: String,
     val groupCurrency: String,
     val useGroupBackground: Boolean,
+    val showGroupName: Boolean,
 )
 
 internal object HomeWidgetPrefs {
@@ -303,6 +309,7 @@ internal object HomeWidgetPrefs {
     private fun keyGroupTitle(appWidgetId: Int) = "widget_${appWidgetId}_group_title"
     private fun keyGroupCurrency(appWidgetId: Int) = "widget_${appWidgetId}_group_currency"
     private fun keyUseGroupBackground(appWidgetId: Int) = "widget_${appWidgetId}_use_group_background"
+    private fun keyShowGroupName(appWidgetId: Int) = "widget_${appWidgetId}_show_group_name"
 
     fun saveWidgetConfig(
         context: Context,
@@ -311,6 +318,7 @@ internal object HomeWidgetPrefs {
         groupTitle: String,
         groupCurrency: String,
         useGroupBackground: Boolean,
+        showGroupName: Boolean,
     ) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
@@ -318,12 +326,18 @@ internal object HomeWidgetPrefs {
             .putString(keyGroupTitle(appWidgetId), groupTitle)
             .putString(keyGroupCurrency(appWidgetId), groupCurrency)
             .putBoolean(keyUseGroupBackground(appWidgetId), useGroupBackground)
+            .putBoolean(keyShowGroupName(appWidgetId), showGroupName)
             .apply()
     }
 
     fun getUseGroupBackground(context: Context, appWidgetId: Int): Boolean {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getBoolean(keyUseGroupBackground(appWidgetId), true)
+    }
+
+    fun getShowGroupName(context: Context, appWidgetId: Int): Boolean {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean(keyShowGroupName(appWidgetId), true)
     }
 
     fun getWidgetConfig(context: Context, appWidgetId: Int): WidgetGroupConfig? {
@@ -337,6 +351,7 @@ internal object HomeWidgetPrefs {
             groupTitle = groupTitle,
             groupCurrency = groupCurrency,
             useGroupBackground = getUseGroupBackground(context, appWidgetId),
+            showGroupName = getShowGroupName(context, appWidgetId),
         )
     }
 
@@ -347,6 +362,7 @@ internal object HomeWidgetPrefs {
             .remove(keyGroupTitle(appWidgetId))
             .remove(keyGroupCurrency(appWidgetId))
             .remove(keyUseGroupBackground(appWidgetId))
+            .remove(keyShowGroupName(appWidgetId))
             .apply()
     }
 }

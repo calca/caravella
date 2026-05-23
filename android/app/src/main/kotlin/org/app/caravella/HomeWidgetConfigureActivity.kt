@@ -40,9 +40,11 @@ class HomeWidgetConfigureActivity : Activity() {
         val progressBar = findViewById<ProgressBar>(R.id.widget_config_progress)
         val emptyView = findViewById<TextView>(R.id.widget_config_empty)
         val groupBackgroundToggle = findViewById<CheckBox>(R.id.widget_config_use_group_background)
+        val showGroupNameToggle = findViewById<CheckBox>(R.id.widget_config_show_group_name)
 
         listView.emptyView = emptyView
         groupBackgroundToggle.isChecked = HomeWidgetPrefs.getUseGroupBackground(this, appWidgetId)
+        showGroupNameToggle.isChecked = HomeWidgetPrefs.getShowGroupName(this, appWidgetId)
 
         thread {
             val groups = AppFunctionStorageReader.getActiveGroups(this)
@@ -72,6 +74,7 @@ class HomeWidgetConfigureActivity : Activity() {
                         groupTitle = selectedGroup.title,
                         groupCurrency = selectedGroup.currency,
                         useGroupBackground = groupBackgroundToggle.isChecked,
+                        showGroupName = showGroupNameToggle.isChecked,
                     )
 
                     HomeWidgetProvider.updateAllWidgets(this)
