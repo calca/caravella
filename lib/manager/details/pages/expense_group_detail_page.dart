@@ -686,6 +686,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       colorScheme,
       baseColor: colorScheme.surfaceContainer,
     );
+    final imagePath = bg.imagePath;
+    final hasBackgroundImage = imagePath != null && imagePath.isNotEmpty;
 
     return AppSystemUI.surface(
       child: Scaffold(
@@ -733,16 +735,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   fit: StackFit.expand,
                   children: [
                     // Sfondo: immagine quando presente, altrimenti surfaceContainer
-                    if (bg.hasImage)
+                    if (hasBackgroundImage)
                       Image.file(
-                        File(bg.imagePath!),
+                        File(imagePath),
                         fit: BoxFit.cover,
                         alignment: Alignment.topCenter,
                       )
                     else
                       ColoredBox(color: colorScheme.surfaceContainer),
                     // Overlay gradiente solo quando c'è un'immagine
-                    if (bg.hasImage && bg.gradient != null)
+                    if (hasBackgroundImage && bg.gradient != null)
                       DecoratedBox(
                         decoration: BoxDecoration(gradient: bg.gradient),
                       ),
@@ -788,8 +790,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                color: colorScheme
-                    .surfaceContainer, // background behind the decorated box
+                decoration: BoxDecoration(
+                  color: bg.color,
+                  image: hasBackgroundImage
+                      ? DecorationImage(
+                          image: FileImage(File(imagePath)),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        )
+                      : null,
+                  gradient: hasBackgroundImage ? bg.gradient : null,
+                ),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
