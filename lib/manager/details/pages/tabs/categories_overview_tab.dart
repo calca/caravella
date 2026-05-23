@@ -25,56 +25,16 @@ class CategoriesOverviewTab extends StatelessWidget {
       );
     }
 
-    ({DateTime start, DateTime end}) calculateDateRangeLocal() {
-      final now = DateTime.now();
-      if (trip.startDate == null || trip.endDate == null) {
-        if (trip.expenses.isEmpty) {
-          final firstDay = DateTime(now.year, now.month, 1);
-          final lastDay = DateTime(now.year, now.month + 1, 0);
-          return (start: firstDay, end: lastDay);
-        }
-        final sorted = [...trip.expenses]
-          ..sort((a, b) => a.date.compareTo(b.date));
-        final first = sorted.first.date;
-        return (
-          start: DateTime(first.year, first.month, first.day),
-          end: DateTime(now.year, now.month, now.day),
-        );
-      }
-      final startDate = DateTime(
-        trip.startDate!.year,
-        trip.startDate!.month,
-        trip.startDate!.day,
-      );
-      final endDate = DateTime(
-        trip.endDate!.year,
-        trip.endDate!.month,
-        trip.endDate!.day,
-      );
-      final currentDate = DateTime(now.year, now.month, now.day);
-      final effectiveEndDate = endDate.isBefore(currentDate)
-          ? endDate
-          : currentDate;
-      return (start: startDate, end: effectiveEndDate);
-    }
-
     final totalAll = trip.getTotalExpenses();
-    final range = calculateDateRangeLocal();
+    final range = trip.getEffectiveDateRange();
     final totalDays = (range.end.difference(range.start).inDays + 1).clamp(
       1,
       1000000,
     );
 
-    // Build totals per category (include known categories; add uncategorized if needed)
-    final Map<ExpenseCategory, double> categoryTotals = {
-      for (final c in trip.categories)
-        c: trip.expenses
-            .where((e) => e.category.id == c.id)
-            .fold<double>(0, (sum, e) => sum + (e.amount ?? 0)),
-    };
-    final uncategorizedTotal = trip.expenses
-        .where((e) => !trip.categories.any((c) => c.id == e.category.id))
-        .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
+    // Build totals per category using model method
+    final categoryTotals = trip.getCategoryTotals();
+    final uncategorizedTotal = trip.getUncategorizedTotal();
     if (uncategorizedTotal > 0) {
       categoryTotals[ExpenseCategory(
             name: 'UNCATEGORIZED_PLACEHOLDER',

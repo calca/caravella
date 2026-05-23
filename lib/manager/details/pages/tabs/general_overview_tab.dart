@@ -13,55 +13,10 @@ class GeneralOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
   const GeneralOverviewTab({super.key, required this.trip});
 
-  double _total() => trip.expenses.fold(0.0, (s, e) => s + (e.amount ?? 0));
-
-  double _dailyAverage() {
-    if (trip.expenses.isEmpty) return 0;
-    // Distinct days with at least one expense for fairer average
-    final days = trip.expenses
-        .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
-        .toSet()
-        .length;
-    return days == 0 ? 0 : _total() / days;
-  }
-
-  double _monthlyAverage() {
-    if (trip.expenses.isEmpty) return 0;
-    final sorted = trip.expenses.map((e) => e.date).toList()..sort();
-    final first = sorted.first;
-    final last = sorted.last;
-    int months = (last.year - first.year) * 12 + (last.month - first.month) + 1;
-    if (months <= 0) months = 1;
-    return _total() / months;
-  }
-
   // Delegated to shared helpers for consistency
   List<double> _weeklySeries() => buildWeeklySeries(trip);
   List<double> _monthlySeries() => buildMonthlySeries(trip);
   List<double> _dateRangeSeries() => buildAdaptiveDateRangeSeries(trip);
-
-  // Returns participants ordered by activity (number of expenses paid)
-  List<ExpenseParticipantCount> _topParticipants() {
-    final counts = <String, int>{};
-    for (final e in trip.expenses) {
-      final id = e.paidBy.id;
-      counts[id] = (counts[id] ?? 0) + 1;
-    }
-    final byId = {for (final p in trip.participants) p.id: p};
-    final items = <ExpenseParticipantCount>[];
-    for (final entry in counts.entries) {
-      final p = byId[entry.key];
-      if (p != null) items.add(ExpenseParticipantCount(p, entry.value));
-    }
-    // Include participants with zero activity to avoid empty UI on new groups
-    for (final p in trip.participants) {
-      if (!counts.containsKey(p.id)) {
-        items.add(ExpenseParticipantCount(p, 0));
-      }
-    }
-    items.sort((a, b) => b.count.compareTo(a.count));
-    return items;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +35,8 @@ class GeneralOverviewTab extends StatelessWidget {
       );
     }
 
-    final dailyAvg = _dailyAverage();
-    final monthlyAvg = _monthlyAverage();
+    final dailyAvg = trip.getDailyAverage();
+    final monthlyAvg = trip.getMonthlyAverage();
     final weekly = _weeklySeries();
     final monthly = _monthlySeries();
     final dateRange = _dateRangeSeries();
@@ -93,9 +48,9 @@ class GeneralOverviewTab extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           _TopSummaryRow(
-            total: _total(),
+            total: trip.getTotalExpenses(),
             currency: trip.currency,
-            participants: _topParticipants(),
+            participants: trip.getParticipantsByActivity(),
             count: trip.participants.length,
           ),
           const SizedBox(height: 24),
@@ -155,12 +110,6 @@ class GeneralOverviewTab extends StatelessWidget {
       ),
     );
   }
-}
-
-class ExpenseParticipantCount {
-  final ExpenseParticipant participant;
-  final int count;
-  ExpenseParticipantCount(this.participant, this.count);
 }
 
 class _TopSummaryRow extends StatelessWidget {
