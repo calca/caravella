@@ -78,19 +78,13 @@ class MarkdownExporter {
     buffer.writeln('### ${loc.expenses_by_category}');
     buffer.writeln();
 
-    final categoryTotals = <String, double>{};
-    for (final expense in group.expenses) {
-      final catName = expense.category.name;
-      categoryTotals[catName] =
-          (categoryTotals[catName] ?? 0.0) + (expense.amount ?? 0.0);
-    }
-
+    final categoryTotals = group.getCategoryTotals();
     final sortedCategories = categoryTotals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     for (final entry in sortedCategories) {
       buffer.writeln(
-        '- **${_escape(entry.key)}**: ${CurrencyDisplay.formatCurrencyText(entry.value, group.currency)}',
+        '- **${_escape(entry.key.name)}**: ${CurrencyDisplay.formatCurrencyText(entry.value, group.currency)}',
       );
     }
     buffer.writeln();
