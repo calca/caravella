@@ -1052,6 +1052,29 @@ class SqliteExpenseGroupRepository
     });
   }
 
+  @override
+  Future<StorageResult<int>> getTotalExpenseCount() async {
+    return await measureOperation('getTotalExpenseCount', () async {
+      try {
+        final db = await database;
+        final rows = await db.rawQuery(
+          'SELECT COUNT(*) AS total_count FROM $_tableExpenses',
+        );
+        final count = (rows.first['total_count'] as num?)?.toInt() ?? 0;
+        return StorageResult.success(count);
+      } catch (e) {
+        if (e is StorageError) return StorageResult.failure(e);
+        return StorageResult.failure(
+          FileOperationError(
+            'Failed to get total expense count',
+            details: e.toString(),
+            cause: e is Exception ? e : Exception(e.toString()),
+          ),
+        );
+      }
+    });
+  }
+
   /// Close the database connection
   Future<void> close() async {
     if (_database != null) {

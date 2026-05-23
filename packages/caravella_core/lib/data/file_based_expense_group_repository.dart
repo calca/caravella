@@ -796,4 +796,17 @@ class FileBasedExpenseGroupRepository
       return StorageResult.success(sorted.take(limit).toList());
     }, wasFromCache: _isCacheValid());
   }
+
+  @override
+  Future<StorageResult<int>> getTotalExpenseCount() async {
+    return await measureOperation('getTotalExpenseCount', () async {
+      final result = await getAllGroups();
+      if (result.isFailure) return StorageResult.failure(result.error!);
+      final count = result.data!.fold<int>(
+        0,
+        (sum, group) => sum + group.expenses.length,
+      );
+      return StorageResult.success(count);
+    }, wasFromCache: _isCacheValid());
+  }
 }

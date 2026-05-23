@@ -509,4 +509,11 @@ class ExpenseGroupStorageV2 {
     final result = await _repository.getTotalExpenses(groupId);
     return result.unwrapOr(0.0);
   }
+
+  /// Returns the total number of individual expense records across all groups.
+  /// Returns 0 if there are no groups or expenses.
+  static Future<int> getTotalExpenseCount() async {
+    final result = await _repository.getTotalExpenseCount();
+    return result.unwrapOr(0);
+  }
 }

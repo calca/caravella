@@ -107,6 +107,10 @@ abstract class IExpenseGroupRepository {
     String groupId, {
     int limit = 2,
   });
+
+  /// Returns the total number of individual expense records across all groups.
+  /// Returns 0 if there are no groups or expenses.
+  Future<StorageResult<int>> getTotalExpenseCount();
 }
 
 /// Validation helper for expense groups

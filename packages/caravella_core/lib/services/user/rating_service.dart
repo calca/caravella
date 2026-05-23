@@ -31,11 +31,7 @@ class RatingService {
       }
 
       // Get current expense count from all groups
-      final allGroups = await ExpenseGroupStorageV2.getAllGroups();
-      final totalExpenses = allGroups.fold<int>(
-        0,
-        (sum, group) => sum + group.expenses.length,
-      );
+      final totalExpenses = await ExpenseGroupStorageV2.getTotalExpenseCount();
 
       // Update the stored expense count
       final prefs = PreferencesService.instance;
