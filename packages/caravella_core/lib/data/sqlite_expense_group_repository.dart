@@ -957,7 +957,8 @@ class SqliteExpenseGroupRepository
         final now = DateTime.now();
         final startOfDay = DateTime(now.year, now.month, now.day)
             .millisecondsSinceEpoch;
-        final startOfNextDay = DateTime(now.year, now.month, now.day + 1)
+        final startOfNextDay = DateTime(now.year, now.month, now.day)
+            .add(const Duration(days: 1))
             .millisecondsSinceEpoch;
         final rows = await db.rawQuery(
           'SELECT COALESCE(SUM(amount), 0.0) AS today_total '
