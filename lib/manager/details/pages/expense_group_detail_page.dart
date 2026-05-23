@@ -702,6 +702,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       colorScheme,
       baseColor: colorScheme.surfaceContainer,
     );
+    final imagePath = bg.imagePath;
+    final hasBackgroundImage = imagePath != null && imagePath.isNotEmpty;
 
     return AppSystemUI.surface(
       child: Scaffold(
@@ -749,16 +751,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   fit: StackFit.expand,
                   children: [
                     // Sfondo: immagine quando presente, altrimenti surfaceContainer
-                    if (bg.hasImage)
+                    if (hasBackgroundImage)
                       Image.file(
-                        File(bg.imagePath!),
+                        File(imagePath),
                         fit: BoxFit.cover,
                         alignment: Alignment.topCenter,
                       )
                     else
                       ColoredBox(color: colorScheme.surfaceContainer),
                     // Overlay gradiente solo quando c'è un'immagine
-                    if (bg.hasImage && bg.gradient != null)
+                    if (hasBackgroundImage && bg.gradient != null)
                       DecoratedBox(
                         decoration: BoxDecoration(gradient: bg.gradient),
                       ),
@@ -803,45 +805,42 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (bg.hasImage)
-                    Image.file(
-                      File(bg.imagePath!),
-                      fit: BoxFit.cover,
-                      alignment: Alignment.topCenter,
-                    ),
-                  ColoredBox(color: bg.color),
-                  if (bg.gradient != null)
-                    DecoratedBox(
-                      decoration: BoxDecoration(gradient: bg.gradient),
-                    ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: colorScheme.surface,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(24),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FilteredExpenseList(
-                            expenses: trip.expenses,
-                            currency: trip.currency,
-                            onExpenseTap: _openEditExpense,
-                            onAddExpense: _showAddExpenseSheet,
-                            newlyAddedExpenseId: _newlyAddedExpenseId,
-                          ),
-                        ],
-                      ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: bg.color,
+                  image: hasBackgroundImage
+                      ? DecorationImage(
+                          image: FileImage(File(imagePath)),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        )
+                      : null,
+                  gradient: hasBackgroundImage ? bg.gradient : null,
+                ),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
                     ),
                   ),
-                ],
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FilteredExpenseList(
+                          expenses: trip.expenses,
+                          currency: trip.currency,
+                          onExpenseTap: _openEditExpense,
+                          onAddExpense: _showAddExpenseSheet,
+                          newlyAddedExpenseId: _newlyAddedExpenseId,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
             SliverPadding(
