@@ -90,6 +90,27 @@ abstract class IExpenseGroupRepository {
 
   /// Checks data integrity across all groups
   Future<StorageResult<List<String>>> checkDataIntegrity();
+
+  // ---- Aggregation / stats helpers ----
+
+  /// Returns the sum of all expense amounts for [groupId].
+  /// Returns 0.0 if the group does not exist or has no expenses.
+  Future<StorageResult<double>> getTotalExpenses(String groupId);
+
+  /// Returns the sum of expense amounts whose date falls on today's local date
+  /// for [groupId]. Returns 0.0 if the group does not exist.
+  Future<StorageResult<double>> getTodaySpending(String groupId);
+
+  /// Returns up to [limit] of the most recent expenses for [groupId], ordered
+  /// by date descending. Returns an empty list if the group does not exist.
+  Future<StorageResult<List<ExpenseDetails>>> getRecentExpenses(
+    String groupId, {
+    int limit = 2,
+  });
+
+  /// Returns the total number of individual expense records across all groups.
+  /// Returns 0 if there are no groups or expenses.
+  Future<StorageResult<int>> getTotalExpenseCount();
 }
 
 /// Validation helper for expense groups

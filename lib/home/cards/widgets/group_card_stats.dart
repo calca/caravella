@@ -9,7 +9,7 @@ import '../../home_constants.dart';
 ///
 /// Shows either date-range based statistics (for short trips) or
 /// default weekly/monthly charts based on the group's characteristics.
-class GroupCardStats extends StatelessWidget {
+class GroupCardStats extends StatefulWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
   final ThemeData theme;
@@ -21,49 +21,51 @@ class GroupCardStats extends StatelessWidget {
     required this.theme,
   });
 
-  /// Calculate today's total spending
-  double _calculateTodaySpending(ExpenseGroup group) {
-    if (group.expenses.isEmpty) return 0.0;
-    final now = DateTime.now();
-    return group.expenses
-        .where(
-          (e) =>
-              e.date.year == now.year &&
-              e.date.month == now.month &&
-              e.date.day == now.day,
-        )
-        .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
+  @override
+  State<GroupCardStats> createState() => _GroupCardStatsState();
+}
+
+class _GroupCardStatsState extends State<GroupCardStats> {
+  double _todaySpending = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTodaySpending();
   }
 
-  /// Build daily totals for the last 15 days
-  /// Returns a list of doubles representing spending per day
+  @override
+  void didUpdateWidget(GroupCardStats oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.group.id != widget.group.id ||
+        oldWidget.group.expenses.length != widget.group.expenses.length) {
+      _loadTodaySpending();
+    }
+  }
+
+  Future<void> _loadTodaySpending() async {
+    final spending = await ExpenseGroupStorageV2.getTodaySpending(
+      widget.group.id,
+    );
+    if (mounted) {
+      setState(() {
+        _todaySpending = spending;
+      });
+    }
+  }
+
+  /// Build daily totals for the last 15 days via shared utility.
   List<double> _buildLast15DaysTotals() {
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final List<double> dailyTotals = [];
-
-    for (int i = 14; i >= 0; i--) {
-      final date = today.subtract(Duration(days: i));
-      final dayExpenses = group.expenses.where(
-        (e) =>
-            e.date.year == date.year &&
-            e.date.month == date.month &&
-            e.date.day == date.day,
-      );
-      final total = dayExpenses.fold<double>(
-        0,
-        (sum, e) => sum + (e.amount ?? 0),
-      );
-      dailyTotals.add(total);
-    }
-
-    return dailyTotals;
+    final start = DateTime(now.year, now.month, now.day)
+        .subtract(const Duration(days: 14));
+    return calculateDailyTotalsOptimized(widget.group, start, 15);
   }
 
   @override
   Widget build(BuildContext context) {
     // Check if we should show date range chart for groups with dates < 1 month
-    if (shouldShowDateRangeChart(group)) {
+    if (shouldShowDateRangeChart(widget.group)) {
       return _buildDateRangeStatistics();
     }
 
@@ -72,8 +74,7 @@ class GroupCardStats extends StatelessWidget {
   }
 
   Widget _buildExtraInfo() {
-    final todaySpending = _calculateTodaySpending(group);
-    final textColor = theme.colorScheme.onSurfaceVariant.withValues(
+    final textColor = widget.theme.colorScheme.onSurfaceVariant.withValues(
       alpha: HomeLayoutConstants.mutedTextAlpha,
     );
 
@@ -83,8 +84,8 @@ class GroupCardStats extends StatelessWidget {
       children: [
         // "Oggi:" label
         Text(
-          '${localizations.spent_today}:',
-          style: theme.textTheme.bodySmall?.copyWith(
+          '${widget.localizations.spent_today}:',
+          style: widget.theme.textTheme.bodySmall?.copyWith(
             color: textColor,
             fontSize: 12,
           ),
@@ -92,8 +93,8 @@ class GroupCardStats extends StatelessWidget {
         const SizedBox(height: 4),
         // Today's spending value
         CurrencyDisplay(
-          value: todaySpending,
-          currency: group.currency,
+          value: _todaySpending,
+          currency: widget.group.currency,
           valueFontSize: 18,
           currencyFontSize: 14,
           alignment: MainAxisAlignment.end,
@@ -119,7 +120,7 @@ class GroupCardStats extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Last15DaysBarChart(
               dailyTotals: _buildLast15DaysTotals(),
-              theme: theme,
+              theme: widget.theme,
             ),
           ),
         ),
@@ -129,8 +130,8 @@ class GroupCardStats extends StatelessWidget {
 
   Widget _buildDefaultStatistics(BuildContext context) {
     // Weekly and monthly series via shared helpers
-    final dailyTotals = buildWeeklySeries(group);
-    final dailyMonthTotals = buildMonthlySeries(group);
+    final dailyTotals = buildWeeklySeries(widget.group);
+    final dailyMonthTotals = buildMonthlySeries(widget.group);
     final gloc = gen.AppLocalizations.of(context);
 
     // Base statistics
@@ -140,7 +141,7 @@ class GroupCardStats extends StatelessWidget {
         // Weekly chart
         WeeklyExpenseChart(
           dailyTotals: dailyTotals,
-          theme: theme,
+          theme: widget.theme,
           badgeText: gloc.weeklyChartBadge,
           semanticLabel: gloc.weeklyExpensesChart,
         ),
@@ -148,7 +149,7 @@ class GroupCardStats extends StatelessWidget {
         // Monthly chart
         MonthlyExpenseChart(
           dailyTotals: dailyMonthTotals,
-          theme: theme,
+          theme: widget.theme,
           badgeText: gloc.monthlyChartBadge,
           semanticLabel: gloc.monthlyExpensesChart,
         ),

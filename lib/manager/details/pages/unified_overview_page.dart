@@ -78,10 +78,9 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
     final idToName = {for (final p in trip.participants) p.id: p.name};
     // Totals per participant
     buffer.writeln(gloc.expenses_by_participant);
+    final participantTotals = trip.getParticipantTotals();
     for (final p in trip.participants) {
-      final total = trip.expenses
-          .where((e) => e.paidBy.id == p.id)
-          .fold<double>(0, (s, e) => s + (e.amount ?? 0));
+      final total = participantTotals[p.id] ?? 0.0;
       buffer.writeln(
         '- ${p.name}: ${CurrencyDisplay.formatCurrencyText(total, currency)}',
       );

@@ -13,6 +13,7 @@ export 'model/expense_group_color_palette.dart';
 export 'model/expense_group_type.dart';
 export 'model/expense_location.dart';
 export 'model/expense_participant.dart';
+export 'model/group_settlements.dart';
 
 // Storage and Repository
 export 'data/expense_group_repository.dart';

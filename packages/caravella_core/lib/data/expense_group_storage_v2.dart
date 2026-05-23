@@ -492,47 +492,28 @@ class ExpenseGroupStorageV2 {
     String groupId, {
     int limit = 2,
   }) async {
-    final group = await getTripById(groupId);
-    if (group == null || group.expenses.isEmpty) {
-      return [];
-    }
-
-    // Sort expenses by date (newest first) and take the requested limit
-    final sortedExpenses = List<ExpenseDetails>.from(group.expenses);
-    sortedExpenses.sort((a, b) => b.date.compareTo(a.date));
-    return sortedExpenses.take(limit).toList();
+    final result = await _repository.getRecentExpenses(groupId, limit: limit);
+    return result.unwrapOr([]);
   }
 
   /// Calculates the total amount spent today for a specific group.
   /// Returns 0.0 if the group is not found or has no expenses today.
   static Future<double> getTodaySpending(String groupId) async {
-    final group = await getTripById(groupId);
-    if (group == null || group.expenses.isEmpty) {
-      return 0.0;
-    }
-
-    final now = DateTime.now();
-    return group.expenses
-        .where(
-          (e) =>
-              e.date.year == now.year &&
-              e.date.month == now.month &&
-              e.date.day == now.day,
-        )
-        .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
+    final result = await _repository.getTodaySpending(groupId);
+    return result.unwrapOr(0.0);
   }
 
   /// Calculates the total amount of all expenses for a specific group.
   /// Returns 0.0 if the group is not found or has no expenses.
   static Future<double> getTotalExpenses(String groupId) async {
-    final group = await getTripById(groupId);
-    if (group == null || group.expenses.isEmpty) {
-      return 0.0;
-    }
+    final result = await _repository.getTotalExpenses(groupId);
+    return result.unwrapOr(0.0);
+  }
 
-    return group.expenses.fold<double>(
-      0.0,
-      (sum, expense) => sum + (expense.amount ?? 0.0),
-    );
+  /// Returns the total number of individual expense records across all groups.
+  /// Returns 0 if there are no groups or expenses.
+  static Future<int> getTotalExpenseCount() async {
+    final result = await _repository.getTotalExpenseCount();
+    return result.unwrapOr(0);
   }
 }
