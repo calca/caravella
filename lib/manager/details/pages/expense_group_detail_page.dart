@@ -803,33 +803,45 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Container(
-                color: colorScheme
-                    .surfaceContainer, // background behind the decorated box
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(24),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (bg.hasImage)
+                    Image.file(
+                      File(bg.imagePath!),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                    ),
+                  ColoredBox(color: bg.color),
+                  if (bg.gradient != null)
+                    DecoratedBox(
+                      decoration: BoxDecoration(gradient: bg.gradient),
+                    ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FilteredExpenseList(
+                            expenses: trip.expenses,
+                            currency: trip.currency,
+                            onExpenseTap: _openEditExpense,
+                            onAddExpense: _showAddExpenseSheet,
+                            newlyAddedExpenseId: _newlyAddedExpenseId,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FilteredExpenseList(
-                          expenses: trip.expenses,
-                          currency: trip.currency,
-                          onExpenseTap: _openEditExpense,
-                          onAddExpense: _showAddExpenseSheet,
-                          newlyAddedExpenseId: _newlyAddedExpenseId,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                ],
               ),
             ),
             SliverPadding(
