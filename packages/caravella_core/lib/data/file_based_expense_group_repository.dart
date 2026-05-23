@@ -737,4 +737,63 @@ class FileBasedExpenseGroupRepository
   List<String> validateIndexConsistency() {
     return _groupIndex.validateConsistency();
   }
+
+  // ---- Aggregation / stats methods ----
+
+  @override
+  Future<StorageResult<double>> getTotalExpenses(String groupId) async {
+    return await measureOperation('getTotalExpenses', () async {
+      final groupResult = await getGroupById(groupId);
+      if (groupResult.isFailure) {
+        return StorageResult.failure(groupResult.error!);
+      }
+      final group = groupResult.data;
+      if (group == null) return StorageResult.success(0.0);
+      final total = group.expenses.fold<double>(
+        0.0,
+        (sum, e) => sum + (e.amount ?? 0.0),
+      );
+      return StorageResult.success(total);
+    }, wasFromCache: _isCacheValid());
+  }
+
+  @override
+  Future<StorageResult<double>> getTodaySpending(String groupId) async {
+    return await measureOperation('getTodaySpending', () async {
+      final groupResult = await getGroupById(groupId);
+      if (groupResult.isFailure) {
+        return StorageResult.failure(groupResult.error!);
+      }
+      final group = groupResult.data;
+      if (group == null) return StorageResult.success(0.0);
+      final now = DateTime.now();
+      final total = group.expenses
+          .where(
+            (e) =>
+                e.date.year == now.year &&
+                e.date.month == now.month &&
+                e.date.day == now.day,
+          )
+          .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
+      return StorageResult.success(total);
+    }, wasFromCache: _isCacheValid());
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseDetails>>> getRecentExpenses(
+    String groupId, {
+    int limit = 2,
+  }) async {
+    return await measureOperation('getRecentExpenses', () async {
+      final groupResult = await getGroupById(groupId);
+      if (groupResult.isFailure) {
+        return StorageResult.failure(groupResult.error!);
+      }
+      final group = groupResult.data;
+      if (group == null) return StorageResult.success(<ExpenseDetails>[]);
+      final sorted = List<ExpenseDetails>.from(group.expenses)
+        ..sort((a, b) => b.date.compareTo(a.date));
+      return StorageResult.success(sorted.take(limit).toList());
+    }, wasFromCache: _isCacheValid());
+  }
 }

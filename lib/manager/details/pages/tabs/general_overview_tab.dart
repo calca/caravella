@@ -13,28 +13,6 @@ class GeneralOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
   const GeneralOverviewTab({super.key, required this.trip});
 
-  double _total() => trip.expenses.fold(0.0, (s, e) => s + (e.amount ?? 0));
-
-  double _dailyAverage() {
-    if (trip.expenses.isEmpty) return 0;
-    // Distinct days with at least one expense for fairer average
-    final days = trip.expenses
-        .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
-        .toSet()
-        .length;
-    return days == 0 ? 0 : _total() / days;
-  }
-
-  double _monthlyAverage() {
-    if (trip.expenses.isEmpty) return 0;
-    final sorted = trip.expenses.map((e) => e.date).toList()..sort();
-    final first = sorted.first;
-    final last = sorted.last;
-    int months = (last.year - first.year) * 12 + (last.month - first.month) + 1;
-    if (months <= 0) months = 1;
-    return _total() / months;
-  }
-
   // Delegated to shared helpers for consistency
   List<double> _weeklySeries() => buildWeeklySeries(trip);
   List<double> _monthlySeries() => buildMonthlySeries(trip);
@@ -80,8 +58,8 @@ class GeneralOverviewTab extends StatelessWidget {
       );
     }
 
-    final dailyAvg = _dailyAverage();
-    final monthlyAvg = _monthlyAverage();
+    final dailyAvg = trip.getDailyAverage();
+    final monthlyAvg = trip.getMonthlyAverage();
     final weekly = _weeklySeries();
     final monthly = _monthlySeries();
     final dateRange = _dateRangeSeries();
@@ -93,7 +71,7 @@ class GeneralOverviewTab extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           _TopSummaryRow(
-            total: _total(),
+            total: trip.getTotalExpenses(),
             currency: trip.currency,
             participants: _topParticipants(),
             count: trip.participants.length,

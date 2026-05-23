@@ -161,6 +161,53 @@ class ExpenseGroup {
     );
   }
 
+  /// Calcola la media giornaliera delle spese (totale / giorni distinti con spese).
+  /// Restituisce 0.0 se non ci sono spese.
+  double getDailyAverage() {
+    if (expenses.isEmpty) return 0.0;
+    final days = expenses
+        .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
+        .toSet()
+        .length;
+    return days == 0 ? 0.0 : getTotalExpenses() / days;
+  }
+
+  /// Calcola la media mensile delle spese (totale / mesi dal primo all'ultimo).
+  /// Restituisce 0.0 se non ci sono spese.
+  double getMonthlyAverage() {
+    if (expenses.isEmpty) return 0.0;
+    final dates = expenses.map((e) => e.date).toList()..sort();
+    final first = dates.first;
+    final last = dates.last;
+    int months = (last.year - first.year) * 12 + (last.month - first.month) + 1;
+    if (months <= 0) months = 1;
+    return getTotalExpenses() / months;
+  }
+
+  /// Restituisce il totale per ogni categoria del gruppo.
+  /// La mappa ha come chiave la categoria e come valore il totale delle spese.
+  Map<ExpenseCategory, double> getCategoryTotals() {
+    final totals = <ExpenseCategory, double>{};
+    for (final category in categories) {
+      totals[category] = expenses
+          .where((e) => e.category.id == category.id)
+          .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
+    }
+    return totals;
+  }
+
+  /// Restituisce il totale pagato per ogni partecipante (keyed by participant id).
+  Map<String, double> getParticipantTotals() {
+    final totals = <String, double>{};
+    for (final p in participants) {
+      totals[p.id] = 0.0;
+    }
+    for (final e in expenses) {
+      totals[e.paidBy.id] = (totals[e.paidBy.id] ?? 0.0) + (e.amount ?? 0.0);
+    }
+    return totals;
+  }
+
   static ExpenseGroup empty() {
     return ExpenseGroup(
       title: '',

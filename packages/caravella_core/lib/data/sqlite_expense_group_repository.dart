@@ -17,7 +17,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 1;
+  static const int _databaseVersion = 2;
 
   // Table names
   static const String _tableGroups = 'groups';
@@ -25,6 +25,11 @@ class SqliteExpenseGroupRepository
   static const String _tableCategories = 'categories';
   static const String _tableExpenses = 'expenses';
   static const String _tableAttachments = 'attachments';
+
+  // View names
+  static const String _viewGroupTotals = 'v_group_totals';
+  static const String _viewCategoryTotals = 'v_category_totals';
+  static const String _viewParticipantTotals = 'v_participant_totals';
 
   Database? _database;
 
@@ -161,6 +166,40 @@ class SqliteExpenseGroupRepository
     await db.execute(
       'CREATE INDEX idx_expenses_date ON $_tableExpenses(date DESC)',
     );
+
+    // Create aggregation views for efficient stats queries
+    await _createViews(db);
+  }
+
+  /// Creates or re-creates the aggregation views.
+  Future<void> _createViews(Database db) async {
+    // Total amount per group
+    await db.execute('''
+      CREATE VIEW IF NOT EXISTS $_viewGroupTotals AS
+        SELECT group_id, COALESCE(SUM(amount), 0.0) AS total
+        FROM $_tableExpenses
+        GROUP BY group_id
+    ''');
+
+    // Total amount and expense count per category per group
+    await db.execute('''
+      CREATE VIEW IF NOT EXISTS $_viewCategoryTotals AS
+        SELECT group_id, category_id,
+               COALESCE(SUM(amount), 0.0) AS total,
+               COUNT(*) AS expense_count
+        FROM $_tableExpenses
+        GROUP BY group_id, category_id
+    ''');
+
+    // Total amount and expense count per participant per group
+    await db.execute('''
+      CREATE VIEW IF NOT EXISTS $_viewParticipantTotals AS
+        SELECT group_id, paid_by_id,
+               COALESCE(SUM(amount), 0.0) AS total,
+               COUNT(*) AS expense_count
+        FROM $_tableExpenses
+        GROUP BY group_id, paid_by_id
+    ''');
   }
 
   /// Handle database upgrades
@@ -169,7 +208,10 @@ class SqliteExpenseGroupRepository
     int oldVersion,
     int newVersion,
   ) async {
-    // Handle future schema migrations here
+    // v1 → v2: add aggregation views
+    if (oldVersion < 2) {
+      await _createViews(db);
+    }
   }
 
   @override
@@ -878,6 +920,135 @@ class SqliteExpenseGroupRepository
       'location_longitude': expense.location?.longitude,
       'location_name': expense.location?.name,
     };
+  }
+
+  // ---- Aggregation / stats methods ----
+
+  @override
+  Future<StorageResult<double>> getTotalExpenses(String groupId) async {
+    return await measureOperation('getTotalExpenses', () async {
+      try {
+        final db = await database;
+        final rows = await db.rawQuery(
+          'SELECT COALESCE(SUM(amount), 0.0) AS total '
+          'FROM $_tableExpenses WHERE group_id = ?',
+          [groupId],
+        );
+        final total = (rows.first['total'] as num?)?.toDouble() ?? 0.0;
+        return StorageResult.success(total);
+      } catch (e) {
+        if (e is StorageError) return StorageResult.failure(e);
+        return StorageResult.failure(
+          FileOperationError(
+            'Failed to get total expenses',
+            details: e.toString(),
+            cause: e is Exception ? e : Exception(e.toString()),
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  Future<StorageResult<double>> getTodaySpending(String groupId) async {
+    return await measureOperation('getTodaySpending', () async {
+      try {
+        final db = await database;
+        final now = DateTime.now();
+        final startOfDay = DateTime(now.year, now.month, now.day)
+            .millisecondsSinceEpoch;
+        final startOfNextDay = DateTime(now.year, now.month, now.day + 1)
+            .millisecondsSinceEpoch;
+        final rows = await db.rawQuery(
+          'SELECT COALESCE(SUM(amount), 0.0) AS today_total '
+          'FROM $_tableExpenses '
+          'WHERE group_id = ? AND date >= ? AND date < ?',
+          [groupId, startOfDay, startOfNextDay],
+        );
+        final total = (rows.first['today_total'] as num?)?.toDouble() ?? 0.0;
+        return StorageResult.success(total);
+      } catch (e) {
+        if (e is StorageError) return StorageResult.failure(e);
+        return StorageResult.failure(
+          FileOperationError(
+            'Failed to get today spending',
+            details: e.toString(),
+            cause: e is Exception ? e : Exception(e.toString()),
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseDetails>>> getRecentExpenses(
+    String groupId, {
+    int limit = 2,
+  }) async {
+    return await measureOperation('getRecentExpenses', () async {
+      try {
+        final db = await database;
+
+        // Load participants and categories first (needed for mapping)
+        final participantMaps = await db.query(
+          _tableParticipants,
+          where: 'group_id = ?',
+          whereArgs: [groupId],
+        );
+        final participants = participantMaps
+            .map(
+              (m) => ExpenseParticipant(
+                id: m['id'] as String,
+                name: m['name'] as String,
+              ),
+            )
+            .toList();
+
+        final categoryMaps = await db.query(
+          _tableCategories,
+          where: 'group_id = ?',
+          whereArgs: [groupId],
+        );
+        final categories = categoryMaps
+            .map(
+              (m) => ExpenseCategory(
+                id: m['id'] as String,
+                name: m['name'] as String,
+              ),
+            )
+            .toList();
+
+        final expenseMaps = await db.query(
+          _tableExpenses,
+          where: 'group_id = ?',
+          whereArgs: [groupId],
+          orderBy: 'date DESC',
+          limit: limit,
+        );
+
+        final expenses = <ExpenseDetails>[];
+        for (final expenseMap in expenseMaps) {
+          final expense = await _mapToExpense(
+            db,
+            expenseMap,
+            participants,
+            categories,
+          );
+          expenses.add(expense);
+        }
+
+        return StorageResult.success(expenses);
+      } catch (e) {
+        if (e is StorageError) return StorageResult.failure(e);
+        return StorageResult.failure(
+          FileOperationError(
+            'Failed to get recent expenses',
+            details: e.toString(),
+            cause: e is Exception ? e : Exception(e.toString()),
+          ),
+        );
+      }
+    });
   }
 
   /// Close the database connection

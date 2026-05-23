@@ -36,10 +36,9 @@ class ParticipantsOverviewTab extends StatelessWidget {
     final avgPerPerson = participantsCount == 0
         ? 0.0
         : totalAll / participantsCount;
+    final participantTotals = trip.getParticipantTotals();
     final contributionEntries = trip.participants.map((p) {
-      final total = trip.expenses
-          .where((e) => e.paidBy.id == p.id)
-          .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
+      final total = participantTotals[p.id] ?? 0.0;
       final pct = totalAll == 0 ? 0 : (total / totalAll) * 100;
       return (participant: p, total: total, pct: pct);
     }).toList()..sort((a, b) => b.total.compareTo(a.total));

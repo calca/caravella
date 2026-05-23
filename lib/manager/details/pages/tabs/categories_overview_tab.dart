@@ -65,13 +65,8 @@ class CategoriesOverviewTab extends StatelessWidget {
       1000000,
     );
 
-    // Build totals per category (include known categories; add uncategorized if needed)
-    final Map<ExpenseCategory, double> categoryTotals = {
-      for (final c in trip.categories)
-        c: trip.expenses
-            .where((e) => e.category.id == c.id)
-            .fold<double>(0, (sum, e) => sum + (e.amount ?? 0)),
-    };
+    // Build totals per category using model method
+    final categoryTotals = trip.getCategoryTotals();
     final uncategorizedTotal = trip.expenses
         .where((e) => !trip.categories.any((c) => c.id == e.category.id))
         .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
