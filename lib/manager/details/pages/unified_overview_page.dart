@@ -10,7 +10,6 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'tabs/general_overview_tab.dart';
 import 'tabs/participants_overview_tab.dart';
 import 'tabs/categories_overview_tab.dart';
-import 'tabs/usecase/settlements_logic.dart';
 import 'expense_locations_map_page.dart';
 
 /// Overview & statistics page with share (text/image) capability.

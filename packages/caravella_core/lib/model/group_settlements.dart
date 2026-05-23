@@ -1,6 +1,4 @@
 import 'expense_group.dart';
-import 'expense_participant.dart';
-
 /// Strongly-typed settlement item using participant IDs (robust to name changes).
 class Settlement {
   final String fromId; // debtor id
