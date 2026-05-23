@@ -95,6 +95,22 @@ class OfxExporter {
     return buffer.toString();
   }
 
+  /// Builds the OFX filename in the format: YYYY-MM-DD_[title]_export.ofx
+  static String buildFilename(ExpenseGroup? group, {DateTime? now}) {
+    now ??= DateTime.now();
+    final date =
+        '${now.year.toString().padLeft(4, '0')}-'
+        '${now.month.toString().padLeft(2, '0')}-'
+        '${now.day.toString().padLeft(2, '0')}';
+    final rawTitle = group?.title ?? 'export';
+    final safeTitle = rawTitle
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9_-]+'), '_')
+        .replaceAll(RegExp(r'_+'), '_')
+        .replaceAll(RegExp(r'^_+|_+$'), '');
+    return '${date}_${safeTitle}_export.ofx';
+  }
+
   static String _formatOfxDate(DateTime date) {
     return '${date.year.toString().padLeft(4, '0')}'
         '${date.month.toString().padLeft(2, '0')}'

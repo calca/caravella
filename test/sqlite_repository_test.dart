@@ -470,5 +470,151 @@ void main() {
         expect(retrievedExpense.attachments, contains('/path/to/receipt.jpg'));
       });
     });
+
+    // ---- Aggregation / stats methods ----
+
+    group('getTotalExpenses', () {
+      test('returns sum of all expense amounts for a group', () async {
+        final expense2 = ExpenseDetails(
+          id: 'e_total_2',
+          category: category,
+          amount: 30.0,
+          paidBy: participant2,
+          date: DateTime.now(),
+          name: 'Dinner',
+        );
+        final group = testGroup.copyWith(
+          expenses: [testGroup.expenses.first, expense2],
+        );
+        await repository.saveGroup(group);
+
+        final result = await repository.getTotalExpenses(testGroup.id);
+        expect(result.isSuccess, isTrue);
+        expect(result.data, closeTo(80.0, 0.001)); // 50 + 30
+      });
+
+      test('returns 0.0 when group has no expenses', () async {
+        final emptyGroup = testGroup.copyWith(expenses: []);
+        await repository.saveGroup(emptyGroup);
+
+        final result = await repository.getTotalExpenses(testGroup.id);
+        expect(result.isSuccess, isTrue);
+        expect(result.data, equals(0.0));
+      });
+
+      test('returns 0.0 for a non-existent group', () async {
+        final result = await repository.getTotalExpenses('non_existent_id');
+        expect(result.isSuccess, isTrue);
+        expect(result.data, equals(0.0));
+      });
+    });
+
+    group('getTodaySpending', () {
+      test('returns sum of expenses dated today', () async {
+        final todayExpense = ExpenseDetails(
+          id: 'e_today',
+          category: category,
+          amount: 20.0,
+          paidBy: participant1,
+          date: DateTime.now(),
+          name: 'Coffee',
+        );
+        final yesterdayExpense = ExpenseDetails(
+          id: 'e_yesterday',
+          category: category,
+          amount: 100.0,
+          paidBy: participant2,
+          date: DateTime.now().subtract(const Duration(days: 1)),
+          name: 'Old expense',
+        );
+        final group = testGroup.copyWith(
+          expenses: [todayExpense, yesterdayExpense],
+        );
+        await repository.saveGroup(group);
+
+        final result = await repository.getTodaySpending(testGroup.id);
+        expect(result.isSuccess, isTrue);
+        expect(result.data, closeTo(20.0, 0.001));
+      });
+
+      test('returns 0.0 when there are no expenses today', () async {
+        final pastExpense = ExpenseDetails(
+          id: 'e_past',
+          category: category,
+          amount: 50.0,
+          paidBy: participant1,
+          date: DateTime.now().subtract(const Duration(days: 5)),
+          name: 'Past expense',
+        );
+        final group = testGroup.copyWith(expenses: [pastExpense]);
+        await repository.saveGroup(group);
+
+        final result = await repository.getTodaySpending(testGroup.id);
+        expect(result.isSuccess, isTrue);
+        expect(result.data, equals(0.0));
+      });
+    });
+
+    group('getRecentExpenses', () {
+      test('returns most recent expenses in descending date order', () async {
+        final older = ExpenseDetails(
+          id: 'e_older',
+          category: category,
+          amount: 10.0,
+          paidBy: participant1,
+          date: DateTime(2024, 1, 1),
+          name: 'Older',
+        );
+        final newer = ExpenseDetails(
+          id: 'e_newer',
+          category: category,
+          amount: 20.0,
+          paidBy: participant2,
+          date: DateTime(2024, 6, 1),
+          name: 'Newer',
+        );
+        final group = testGroup.copyWith(expenses: [older, newer]);
+        await repository.saveGroup(group);
+
+        final result = await repository.getRecentExpenses(
+          testGroup.id,
+          limit: 2,
+        );
+        expect(result.isSuccess, isTrue);
+        final expenses = result.data!;
+        expect(expenses.length, equals(2));
+        expect(expenses.first.id, equals('e_newer'));
+        expect(expenses.last.id, equals('e_older'));
+      });
+
+      test('respects the limit parameter', () async {
+        final expenses = List.generate(
+          5,
+          (i) => ExpenseDetails(
+            id: 'e_limit_$i',
+            category: category,
+            amount: (i + 1) * 10.0,
+            paidBy: participant1,
+            date: DateTime(2024, 1, i + 1),
+            name: 'Expense $i',
+          ),
+        );
+        final group = testGroup.copyWith(expenses: expenses);
+        await repository.saveGroup(group);
+
+        final result = await repository.getRecentExpenses(
+          testGroup.id,
+          limit: 3,
+        );
+        expect(result.isSuccess, isTrue);
+        expect(result.data!.length, equals(3));
+      });
+
+      test('returns empty list for non-existent group', () async {
+        final result = await repository.getRecentExpenses('non_existent_id');
+        expect(result.isSuccess, isTrue);
+        expect(result.data, isEmpty);
+      });
+    });
   });
 }

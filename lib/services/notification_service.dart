@@ -114,18 +114,7 @@ class NotificationService {
     await cancelGroupNotification(group.id);
 
     // Calculate today's spent
-    final now = DateTime.now();
-
-    final todaySpent = group.expenses.fold<double>(0.0, (sum, expense) {
-      final expenseDate = expense.date;
-      // Check if expense is from today by comparing year, month, and day
-      if (expenseDate.year == now.year &&
-          expenseDate.month == now.month &&
-          expenseDate.day == now.day) {
-        return sum + (expense.amount ?? 0.0);
-      }
-      return sum;
-    });
+    final todaySpent = group.getTodaySpendingSync();
 
     // Build notification content
     final title = group.title.isEmpty ? loc.new_expense_group : group.title;
