@@ -208,6 +208,24 @@ class ExpenseGroup {
     return totals;
   }
 
+  /// Returns the number of expenses paid by each participant (keyed by participant id).
+  Map<String, int> getParticipantActivityCounts() {
+    final counts = <String, int>{};
+    for (final e in expenses) {
+      final id = e.paidBy.id;
+      counts[id] = (counts[id] ?? 0) + 1;
+    }
+    return counts;
+  }
+
+  /// Returns the total amount of expenses not associated with any group category.
+  double getUncategorizedTotal() {
+    final categoryIds = {for (final c in categories) c.id};
+    return expenses
+        .where((e) => !categoryIds.contains(e.category.id))
+        .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
+  }
+
   static ExpenseGroup empty() {
     return ExpenseGroup(
       title: '',

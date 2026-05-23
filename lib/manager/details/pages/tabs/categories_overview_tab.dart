@@ -67,9 +67,7 @@ class CategoriesOverviewTab extends StatelessWidget {
 
     // Build totals per category using model method
     final categoryTotals = trip.getCategoryTotals();
-    final uncategorizedTotal = trip.expenses
-        .where((e) => !trip.categories.any((c) => c.id == e.category.id))
-        .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
+    final uncategorizedTotal = trip.getUncategorizedTotal();
     if (uncategorizedTotal > 0) {
       categoryTotals[ExpenseCategory(
             name: 'UNCATEGORIZED_PLACEHOLDER',

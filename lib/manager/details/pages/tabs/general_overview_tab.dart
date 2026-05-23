@@ -20,11 +20,7 @@ class GeneralOverviewTab extends StatelessWidget {
 
   // Returns participants ordered by activity (number of expenses paid)
   List<ExpenseParticipantCount> _topParticipants() {
-    final counts = <String, int>{};
-    for (final e in trip.expenses) {
-      final id = e.paidBy.id;
-      counts[id] = (counts[id] ?? 0) + 1;
-    }
+    final counts = trip.getParticipantActivityCounts();
     final byId = {for (final p in trip.participants) p.id: p};
     final items = <ExpenseParticipantCount>[];
     for (final entry in counts.entries) {
