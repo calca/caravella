@@ -534,6 +534,8 @@
   ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
   ,"clear_filters": "Clear"
   ,"@clear_filters": {"description": "Button to clear expense filters"}
+  ,"filters": "Filtros"
+  ,"@filters": {"description": "Section label for expense filters"}
   ,"show_filters": "Show filters"
   ,"@show_filters": {"description": "Label to show filters"}
   ,"hide_filters": "Hide filters"
@@ -661,7 +663,9 @@
   ,"import": "Importar"
   ,"import_confirm_message": "Tem certeza de que deseja substituir todas as viagens pelo arquivo \"{file}\"? Esta ação não pode ser desfeita."
   ,"import_error": "Falha na importação. Verifique o formato do arquivo."
-  ,"last_7_days": "7 dias"
+  ,"last_7_days": "Últimos 7 dias"
+  ,"today": "Hoje"
+  ,"this_month": "Este mês"
   ,"license_link": "Ver Licença MIT no GitHub"
   ,"links": "Links"
   ,"no_categories": "Sem categorias"
