@@ -24,6 +24,8 @@ android {
         }
     }
     namespace = "io.caravella.egm"
+    // Hardcoded to 37 because androidx.appfunctions:1.0.0-alpha09 requires compileSdk >= 37,
+    // which is above Flutter's default compileSdkVersion (36).
     compileSdk = 37
     ndkVersion = "28.2.13676358"
 
