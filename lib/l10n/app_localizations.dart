@@ -851,8 +851,20 @@ abstract class AppLocalizations {
   /// No description provided for @last_7_days.
   ///
   /// In en, this message translates to:
-  /// **'7 days'**
+  /// **'Last 7 days'**
   String get last_7_days;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @this_month.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get this_month;
 
   /// No description provided for @recent_activity.
   ///
@@ -3494,6 +3506,12 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear_filters;
 
+  /// Section label for expense filters
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
   /// Label to show filters
   ///
   /// In en, this message translates to:
@@ -4354,6 +4372,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save_label;
+
+  /// Title for the expense search page
+  ///
+  /// In en, this message translates to:
+  /// **'Search expenses'**
+  String get search_expenses;
+
+  /// Hint text for search input using the group name
+  ///
+  /// In en, this message translates to:
+  /// **'Search in {groupName}'**
+  String search_in_group(String groupName);
+
+  /// Hint text for search input that searches across all expense fields
+  ///
+  /// In en, this message translates to:
+  /// **'Search all fields...'**
+  String get search_all_fields_hint;
+
+  /// Filter label for expenses with attachments
+  ///
+  /// In en, this message translates to:
+  /// **'Has attachment'**
+  String get has_attachment;
+
+  /// Filter label for expenses with location data
+  ///
+  /// In en, this message translates to:
+  /// **'Has location'**
+  String get has_location;
+
+  /// Shown when search returns no matching expenses
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses found'**
+  String get search_no_results;
+
+  /// Helper text when expense search has no results
+  ///
+  /// In en, this message translates to:
+  /// **'Try different search terms or adjust filters'**
+  String get search_no_results_hint;
+
+  /// Label for the button to activate voice input
+  ///
+  /// In en, this message translates to:
+  /// **'Add by voice'**
+  String get voice_input_button;
+
+  /// Message shown during voice recording
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get voice_input_listening;
+
+  /// Hint to start speaking
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to speak'**
+  String get voice_input_tap_to_speak;
+
+  /// Message shown during voice text processing
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get voice_input_processing;
+
+  /// Error message for voice recognition issues
+  ///
+  /// In en, this message translates to:
+  /// **'Voice recognition error'**
+  String get voice_input_error;
+
+  /// Message when user denies microphone permission
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission denied'**
+  String get voice_input_permission_denied;
+
+  /// Message when voice recognition is not available on the device
+  ///
+  /// In en, this message translates to:
+  /// **'Voice recognition not available'**
+  String get voice_input_not_available;
+
+  /// Example hint for using voice input
+  ///
+  /// In en, this message translates to:
+  /// **'Try saying: \'50 dollars for dinner at restaurant\''**
+  String get voice_input_hint;
+
+  /// Label for the voice add expense CTA on home card
+  ///
+  /// In en, this message translates to:
+  /// **'Add by voice'**
+  String get voice_add_expense;
+
+  /// Confirmation message when expense is saved via voice
+  ///
+  /// In en, this message translates to:
+  /// **'Expense saved!'**
+  String get voice_expense_saved;
+
+  /// Message when voice input lacks required fields
+  ///
+  /// In en, this message translates to:
+  /// **'Some info missing – fill in the form'**
+  String get voice_expense_needs_more_info;
+
+  /// Option to search for a background image on Unsplash
+  ///
+  /// In en, this message translates to:
+  /// **'From Unsplash'**
+  String get from_unsplash;
+
+  /// Hint text in the Unsplash search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Search Unsplash photos...'**
+  String get unsplash_search_hint;
+
+  /// Message when Unsplash search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No images found'**
+  String get unsplash_no_results;
+
+  /// Loading label while downloading an Unsplash photo
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading image...'**
+  String get unsplash_downloading;
+
+  /// Error message when Unsplash search or download fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load images'**
+  String get unsplash_error;
+
+  /// Attribution prefix before the Unsplash brand link at the bottom of the search page
+  ///
+  /// In en, this message translates to:
+  /// **'Photos by'**
+  String get unsplash_photos_by;
+
+  /// Button to confirm selection of an Unsplash photo in the preview sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Use this photo'**
+  String get unsplash_use_photo;
+
+  /// Button to scan a receipt with OCR
+  ///
+  /// In en, this message translates to:
+  /// **'Scan receipt'**
+  String get scan_receipt;
+
+  /// Message during OCR receipt scanning
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning receipt...'**
+  String get scanning_receipt;
+
+  /// Error message when OCR scanning fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error scanning receipt'**
+  String get receipt_scan_error;
+
+  /// Message when OCR finds no text in the image
+  ///
+  /// In en, this message translates to:
+  /// **'No text found in image'**
+  String get no_text_found;
+
+  /// Success message after OCR scanning
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt scanned'**
+  String get receipt_scanned;
 }
 
 class _AppLocalizationsDelegate

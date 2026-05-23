@@ -12,7 +12,9 @@
         "--dart-define",
         "FLAVOR=dev",
         "--dart-define",
-        "ENABLE_PLAY_UPDATES=true"
+        "ENABLE_PLAY_UPDATES=true",
+        "--dart-define",
+        "UNSPLASH_ACCESS_KEY=${config:caravella.unsplashAccessKey}"
       ]
     },
     {
@@ -24,7 +26,9 @@
         "--flavor",
         "dev",
         "--dart-define",
-        "FLAVOR=dev"
+        "FLAVOR=dev",
+        "--dart-define",
+        "UNSPLASH_ACCESS_KEY=${config:caravella.unsplashAccessKey}"
       ]
     },
     {
@@ -38,7 +42,9 @@
         "--dart-define",
         "FLAVOR=staging",
         "--dart-define",
-        "ENABLE_PLAY_UPDATES=true"
+        "ENABLE_PLAY_UPDATES=true",
+        "--dart-define",
+        "UNSPLASH_ACCESS_KEY=${config:caravella.unsplashAccessKey}"
       ]
     },
         {

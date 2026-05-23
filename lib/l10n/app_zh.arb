@@ -697,7 +697,9 @@
   ,"processing_image": "处理图片中..."
   ,"no_trips_found": "您想去哪里？"
   ,"participants_label": "参与者"
-  ,"last_7_days": "过去7天"
+  ,"last_7_days": "最近7天"
+  ,"today": "今天"
+  ,"this_month": "本月"
   ,"recent_activity": "最近活动"
   ,"about": "关于"
   ,"license_hint": "此应用在MIT许可证下发布。"
@@ -761,6 +763,7 @@
   ,"activity": "活动"
   ,"search_expenses_hint": "按名称或备注搜索..."
   ,"clear_filters": "清除"
+  ,"filters": "筛选器"
   ,"show_filters": "显示筛选器"
   ,"hide_filters": "隐藏筛选器"
   ,"all_categories": "全部"
@@ -1466,5 +1469,113 @@
   "sync_group_enable": "启用同步",
   "@sync_group_enable": {
     "description": "在群组上启用同步的标签"
+  },
+  "search_expenses": "搜索费用",
+  "@search_expenses": {
+    "description": "费用搜索页面标题"
+  },
+  "search_in_group": "在 {groupName} 中搜索",
+  "@search_in_group": {"description": "使用组名称的搜索输入提示文本", "placeholders": {"groupName": {"type": "String"}}},
+  "search_all_fields_hint": "搜索所有字段...",
+  "@search_all_fields_hint": {
+    "description": "搜索所有费用字段的提示文字"
+  },
+  "has_attachment": "有附件",
+  "@has_attachment": {
+    "description": "有附件的费用过滤标签"
+  },
+  "has_location": "有位置",
+  "@has_location": {
+    "description": "有位置数据的费用过滤标签"
+  },
+  "search_no_results": "未找到费用",
+  "@search_no_results": {
+    "description": "搜索未找到费用时显示"
+  },
+  "search_no_results_hint": "尝试不同的搜索词或调整过滤条件",
+  "@search_no_results_hint": {
+    "description": "搜索无结果时的帮助文字"
+  },
+  "voice_input_button": "语音输入",
+  "@voice_input_button": {
+    "description": "激活语音输入按钮的标签"
+  },
+  "voice_input_listening": "正在聆听...",
+  "@voice_input_listening": {
+    "description": "语音录制过程中显示的消息"
+  },
+  "voice_input_tap_to_speak": "点击说话",
+  "@voice_input_tap_to_speak": {
+    "description": "开始说话的提示"
+  },
+  "voice_input_processing": "处理中...",
+  "@voice_input_processing": {
+    "description": "语音文本处理过程中显示的消息"
+  },
+  "voice_input_error": "语音识别错误",
+  "@voice_input_error": {
+    "description": "语音识别问题的错误消息"
+  },
+  "voice_input_permission_denied": "麦克风权限被拒绝",
+  "@voice_input_permission_denied": {
+    "description": "用户拒绝麦克风权限时的消息"
+  },
+  "voice_input_not_available": "语音识别不可用",
+  "@voice_input_not_available": {
+    "description": "设备上语音识别不可用时的消息"
+  },
+  "voice_input_hint": "尝试说：'50元晚餐'",
+  "@voice_input_hint": {
+    "description": "使用语音输入的示例提示"
+  },
+  "voice_add_expense": "语音添加",
+  "@voice_add_expense": {
+    "description": "主页卡片上语音添加按钮的标签"
+  },
+  "voice_expense_saved": "支出已保存！",
+  "@voice_expense_saved": {
+    "description": "通过语音保存支出时的确认消息"
+  },
+  "voice_expense_needs_more_info": "信息不足，请填写表单",
+  "@voice_expense_needs_more_info": {
+    "description": "语音输入缺少必填字段时的提示"
+  },
+  "from_unsplash": "从Unsplash搜索",
+  "@from_unsplash": {
+    "description": "在Unsplash上搜索背景图片的选项"
+  },
+  "unsplash_search_hint": "搜索Unsplash照片...",
+  "@unsplash_search_hint": {
+    "description": "Unsplash搜索栏的提示文字"
+  },
+  "unsplash_no_results": "未找到图片",
+  "@unsplash_no_results": {
+    "description": "Unsplash搜索无结果时的消息"
+  },
+  "unsplash_downloading": "正在下载图片...",
+  "@unsplash_downloading": {
+    "description": "下载Unsplash照片时的加载文字"
+  },
+  "unsplash_error": "加载图片失败",
+  "@unsplash_error": {
+    "description": "Unsplash搜索或下载失败时的错误消息"
+  },
+  "unsplash_photos_by": "照片来自",
+  "@unsplash_photos_by": {
+    "description": "搜索页面底部Unsplash品牌链接前的署名前缀"
+  },
+  "unsplash_use_photo": "使用此照片",
+  "@unsplash_use_photo": {
+    "description": "在预览面板中确认选择Unsplash照片的按钮"
   }
+  ,"scan_receipt": "扫描收据"
+  ,"@scan_receipt": {"description": "使用OCR扫描收据的按钮"}
+  ,"scanning_receipt": "正在扫描收据..."
+  ,"@scanning_receipt": {"description": "OCR扫描收据期间的消息"}
+  ,"receipt_scan_error": "扫描收据时出错"
+  ,"@receipt_scan_error": {"description": "OCR扫描失败时的错误消息"}
+  ,"no_text_found": "图像中未找到文本"
+  ,"@no_text_found": {"description": "OCR在图像中未找到文本时的消息"}
+  ,"receipt_scanned": "收据已扫描"
+  ,"@receipt_scanned": {"description": "OCR扫描后的成功消息"}
 }

@@ -409,7 +409,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get participants_label => 'Partecipanti';
 
   @override
-  String get last_7_days => '7 giorni';
+  String get last_7_days => 'Ultimi 7 giorni';
+
+  @override
+  String get today => 'Oggi';
+
+  @override
+  String get this_month => 'Questo mese';
 
   @override
   String get recent_activity => 'Attività recente';
@@ -1773,6 +1779,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get clear_filters => 'Pulisci';
 
   @override
+  String get filters => 'Filtri';
+
+  @override
   String get show_filters => 'Mostra filtri';
 
   @override
@@ -2265,4 +2274,100 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get save_label => 'Salva';
+
+  @override
+  String get search_expenses => 'Cerca spese';
+
+  @override
+  String search_in_group(String groupName) {
+    return 'Cerca in $groupName';
+  }
+
+  @override
+  String get search_all_fields_hint => 'Cerca in tutti i campi...';
+
+  @override
+  String get has_attachment => 'Con allegato';
+
+  @override
+  String get has_location => 'Con posizione';
+
+  @override
+  String get search_no_results => 'Nessuna spesa trovata';
+
+  @override
+  String get search_no_results_hint =>
+      'Prova termini diversi o modifica i filtri';
+
+  @override
+  String get voice_input_button => 'Inserisci con la voce';
+
+  @override
+  String get voice_input_listening => 'In ascolto...';
+
+  @override
+  String get voice_input_tap_to_speak => 'Tocca per parlare';
+
+  @override
+  String get voice_input_processing => 'Elaborazione...';
+
+  @override
+  String get voice_input_error => 'Errore nel riconoscimento vocale';
+
+  @override
+  String get voice_input_permission_denied => 'Permesso microfono negato';
+
+  @override
+  String get voice_input_not_available =>
+      'Riconoscimento vocale non disponibile';
+
+  @override
+  String get voice_input_hint =>
+      'Prova a dire: \'50 euro per cena al ristorante\'';
+
+  @override
+  String get voice_add_expense => 'Aggiungi con la voce';
+
+  @override
+  String get voice_expense_saved => 'Spesa salvata!';
+
+  @override
+  String get voice_expense_needs_more_info =>
+      'Mancano alcune info – completa il modulo';
+
+  @override
+  String get from_unsplash => 'Da Unsplash';
+
+  @override
+  String get unsplash_search_hint => 'Cerca foto su Unsplash...';
+
+  @override
+  String get unsplash_no_results => 'Nessuna immagine trovata';
+
+  @override
+  String get unsplash_downloading => 'Scaricamento immagine...';
+
+  @override
+  String get unsplash_error => 'Impossibile caricare le immagini';
+
+  @override
+  String get unsplash_photos_by => 'Foto di';
+
+  @override
+  String get unsplash_use_photo => 'Usa questa foto';
+
+  @override
+  String get scan_receipt => 'Scansiona scontrino';
+
+  @override
+  String get scanning_receipt => 'Scansione scontrino...';
+
+  @override
+  String get receipt_scan_error => 'Errore nella scansione dello scontrino';
+
+  @override
+  String get no_text_found => 'Nessun testo trovato nell\'immagine';
+
+  @override
+  String get receipt_scanned => 'Scontrino scansionato';
 }

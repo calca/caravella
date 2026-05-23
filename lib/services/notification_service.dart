@@ -1,6 +1,3 @@
-import 'dart:ui' as ui;
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -107,78 +104,6 @@ class NotificationService {
     }
   }
 
-  /// Extracts initials from the expense group title
-  String _getInitials(String title) {
-    if (title.isEmpty) return '?';
-
-    final words = title.trim().split(RegExp(r'\s+'));
-    if (words.isEmpty) return '?';
-
-    if (words.length == 1) {
-      // Single word: take first 2 characters
-      return words[0].substring(0, words[0].length >= 2 ? 2 : 1).toUpperCase();
-    } else {
-      // Multiple words: take first character of first two words
-      return '${words[0][0]}${words[1][0]}'.toUpperCase();
-    }
-  }
-
-  /// Generates a bitmap image with the initials as a large icon
-  Future<Uint8List?> _generateInitialsIcon(
-    String initials,
-    Color? groupColor,
-  ) async {
-    try {
-      final size = 192.0; // Android notification large icon size
-      final recorder = ui.PictureRecorder();
-      final canvas = Canvas(recorder);
-
-      // Use group color or default teal color
-      final bgColor = groupColor ?? const Color(0xFF009688);
-
-      // Draw circle background
-      final paint = Paint()
-        ..color = bgColor
-        ..style = PaintingStyle.fill;
-      canvas.drawCircle(Offset(size / 2, size / 2), size / 2, paint);
-
-      // Draw text
-      final textPainter = TextPainter(
-        text: TextSpan(
-          text: initials,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: size * 0.4,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Montserrat',
-          ),
-        ),
-        textDirection: ui.TextDirection.ltr,
-      );
-      textPainter.layout();
-
-      final textOffset = Offset(
-        (size - textPainter.width) / 2,
-        (size - textPainter.height) / 2,
-      );
-      textPainter.paint(canvas, textOffset);
-
-      // Convert to image
-      final picture = recorder.endRecording();
-      final img = await picture.toImage(size.toInt(), size.toInt());
-      final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-
-      return byteData?.buffer.asUint8List();
-    } catch (e) {
-      LoggerService.error(
-        'Error generating initials icon',
-        name: 'notification',
-        error: e,
-      );
-      return null;
-    }
-  }
-
   Future<void> showGroupNotification(
     ExpenseGroup group,
     gen.AppLocalizations loc,
@@ -232,14 +157,6 @@ class NotificationService {
       }
     }
 
-    // Generate large icon with initials
-    final initials = _getInitials(title);
-    final iconColor = group.color != null ? Color(group.color!) : null;
-    final largeIconBytes = await _generateInitialsIcon(initials, iconColor);
-    final largeIcon = largeIconBytes != null
-        ? ByteArrayAndroidBitmap(largeIconBytes)
-        : null;
-
     final androidDetails = AndroidNotificationDetails(
       _channelId,
       _channelName,
@@ -259,8 +176,6 @@ class NotificationService {
       indeterminate: false,
       // Small icon in notification bar (uses app launcher icon)
       icon: 'ic_notification',
-      // Large icon with expense group initials
-      largeIcon: largeIcon,
       actions: [
         AndroidNotificationAction(
           'add_expense',

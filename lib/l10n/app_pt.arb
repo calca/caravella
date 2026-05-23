@@ -534,6 +534,8 @@
   ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
   ,"clear_filters": "Clear"
   ,"@clear_filters": {"description": "Button to clear expense filters"}
+  ,"filters": "Filtros"
+  ,"@filters": {"description": "Section label for expense filters"}
   ,"show_filters": "Show filters"
   ,"@show_filters": {"description": "Label to show filters"}
   ,"hide_filters": "Hide filters"
@@ -661,7 +663,9 @@
   ,"import": "Importar"
   ,"import_confirm_message": "Tem certeza de que deseja substituir todas as viagens pelo arquivo \"{file}\"? Esta ação não pode ser desfeita."
   ,"import_error": "Falha na importação. Verifique o formato do arquivo."
-  ,"last_7_days": "7 dias"
+  ,"last_7_days": "Últimos 7 dias"
+  ,"today": "Hoje"
+  ,"this_month": "Este mês"
   ,"license_link": "Ver Licença MIT no GitHub"
   ,"links": "Links"
   ,"no_categories": "Sem categorias"
@@ -962,4 +966,64 @@
   ,"@sync_group_pending": {"description": "Tooltip para status de grupo não sincronizado"}
   ,"sync_group_enable": "Ativar sincronização"
   ,"@sync_group_enable": {"description": "Etiqueta para ativar a sincronização em um grupo"}
+  ,"search_expenses": "Pesquisar despesas"
+  ,"@search_expenses": {"description": "Título da página de pesquisa de despesas"}
+  ,"search_in_group": "Pesquisar em {groupName}"
+  ,"@search_in_group": {"description": "Texto de sugestão para pesquisa usando o nome do grupo", "placeholders": {"groupName": {"type": "String"}}}
+  ,"search_all_fields_hint": "Pesquisar em todos os campos..."
+  ,"@search_all_fields_hint": {"description": "Texto de sugestão para pesquisa em todos os campos"}
+  ,"has_attachment": "Com anexo"
+  ,"@has_attachment": {"description": "Rótulo de filtro para despesas com anexos"}
+  ,"has_location": "Com localização"
+  ,"@has_location": {"description": "Rótulo de filtro para despesas com dados de localização"}
+  ,"search_no_results": "Nenhuma despesa encontrada"
+  ,"@search_no_results": {"description": "Mostrado quando a pesquisa não encontra despesas"}
+  ,"search_no_results_hint": "Tente termos diferentes ou ajuste os filtros"
+  ,"@search_no_results_hint": {"description": "Texto de ajuda quando a pesquisa não tem resultados"}
+  ,"voice_input_button": "Adicionar por voz"
+  ,"@voice_input_button": {"description": "Rótulo do botão para ativar a entrada de voz"}
+  ,"voice_input_listening": "Ouvindo..."
+  ,"@voice_input_listening": {"description": "Mensagem exibida durante a gravação de voz"}
+  ,"voice_input_tap_to_speak": "Toque para falar"
+  ,"@voice_input_tap_to_speak": {"description": "Dica para começar a falar"}
+  ,"voice_input_processing": "Processando..."
+  ,"@voice_input_processing": {"description": "Mensagem exibida durante o processamento do texto de voz"}
+  ,"voice_input_error": "Erro de reconhecimento de voz"
+  ,"@voice_input_error": {"description": "Mensagem de erro para problemas de reconhecimento de voz"}
+  ,"voice_input_permission_denied": "Permissão do microfone negada"
+  ,"@voice_input_permission_denied": {"description": "Mensagem quando o usuário nega a permissão do microfone"}
+  ,"voice_input_not_available": "Reconhecimento de voz não disponível"
+  ,"@voice_input_not_available": {"description": "Mensagem quando o reconhecimento de voz não está disponível no dispositivo"}
+  ,"voice_input_hint": "Tente dizer: '50 reais para o jantar no restaurante'"
+  ,"@voice_input_hint": {"description": "Dica de exemplo para usar a entrada de voz"}
+  ,"voice_add_expense": "Adicionar por voz"
+  ,"@voice_add_expense": {"description": "Rótulo para a CTA de voz no cartão inicial"}
+  ,"voice_expense_saved": "Despesa salva!"
+  ,"@voice_expense_saved": {"description": "Confirmação quando a despesa é salva por voz"}
+  ,"voice_expense_needs_more_info": "Algumas informações estão faltando – preencha o formulário"
+  ,"@voice_expense_needs_more_info": {"description": "Mensagem quando faltam campos obrigatórios"}
+  ,"from_unsplash": "Do Unsplash"
+  ,"@from_unsplash": {"description": "Opção para buscar uma imagem de fundo no Unsplash"}
+  ,"unsplash_search_hint": "Buscar fotos no Unsplash..."
+  ,"@unsplash_search_hint": {"description": "Texto de dica na barra de pesquisa do Unsplash"}
+  ,"unsplash_no_results": "Nenhuma imagem encontrada"
+  ,"@unsplash_no_results": {"description": "Mensagem quando a pesquisa no Unsplash não retorna resultados"}
+  ,"unsplash_downloading": "Baixando imagem..."
+  ,"@unsplash_downloading": {"description": "Texto de carregamento enquanto baixa uma foto do Unsplash"}
+  ,"unsplash_error": "Falha ao carregar as imagens"
+  ,"@unsplash_error": {"description": "Mensagem de erro quando a pesquisa ou download do Unsplash falha"}
+  ,"unsplash_photos_by": "Fotos de"
+  ,"@unsplash_photos_by": {"description": "Prefixo de atribuição antes do link da marca Unsplash no final da página de pesquisa"}
+  ,"unsplash_use_photo": "Usar esta foto"
+  ,"@unsplash_use_photo": {"description": "Botão para confirmar a seleção de uma foto do Unsplash no painel de pré-visualização"}
+  ,"scan_receipt": "Escanear recibo"
+  ,"@scan_receipt": {"description": "Botão para escanear um recibo com OCR"}
+  ,"scanning_receipt": "Escaneando recibo..."
+  ,"@scanning_receipt": {"description": "Mensagem durante o escaneamento OCR do recibo"}
+  ,"receipt_scan_error": "Erro ao escanear recibo"
+  ,"@receipt_scan_error": {"description": "Mensagem de erro quando o escaneamento OCR falha"}
+  ,"no_text_found": "Nenhum texto encontrado na imagem"
+  ,"@no_text_found": {"description": "Mensagem quando o OCR não encontra texto na imagem"}
+  ,"receipt_scanned": "Recibo escaneado"
+  ,"@receipt_scanned": {"description": "Mensagem de sucesso após o escaneamento OCR"}
 }

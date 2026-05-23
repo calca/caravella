@@ -132,7 +132,9 @@
   "participants": "Partecipanti",
   "participant_count": "{count, plural, one {{count} partecipante} other {{count} partecipanti}}",
   "@participant_count": {"description": "Conteggio partecipanti con plurale", "placeholders": {"count": {}}},
-  "last_7_days": "7 giorni",
+  "last_7_days": "Ultimi 7 giorni",
+  "today": "Oggi",
+  "this_month": "Questo mese",
   "recent_activity": "Attività recente",
   "recent_expenses": "Spese recenti",
   "@recent_expenses": {"description": "Etichetta per la sezione delle spese recenti"},
@@ -636,6 +638,8 @@
   ,"@search_expenses_hint": {"description": "Placeholder ricerca spese per nome o nota"}
   ,"clear_filters": "Pulisci"
   ,"@clear_filters": {"description": "Pulsante per pulire i filtri delle spese"}
+  ,"filters": "Filtri"
+  ,"@filters": {"description": "Etichetta sezione filtri spese"}
   ,"show_filters": "Mostra filtri"
   ,"@show_filters": {"description": "Tooltip/etichetta per mostrare i filtri"}
   ,"hide_filters": "Nascondi filtri"
@@ -982,4 +986,64 @@
   ,"@sync_group_pending": {"description": "Tooltip per stato gruppo non sincronizzato"}
   ,"sync_group_enable": "Abilita sincronizzazione"
   ,"@sync_group_enable": {"description": "Etichetta per abilitare la sincronizzazione su un gruppo"}
+  ,"search_expenses": "Cerca spese"
+  ,"@search_expenses": {"description": "Titolo della pagina di ricerca spese"}
+  ,"search_in_group": "Cerca in {groupName}"
+  ,"@search_in_group": {"description": "Testo suggerimento per input ricerca con il nome del gruppo", "placeholders": {"groupName": {"type": "String"}}}
+  ,"search_all_fields_hint": "Cerca in tutti i campi..."
+  ,"@search_all_fields_hint": {"description": "Testo suggerimento per input ricerca che cerca in tutti i campi"}
+  ,"has_attachment": "Con allegato"
+  ,"@has_attachment": {"description": "Etichetta filtro per spese con allegati"}
+  ,"has_location": "Con posizione"
+  ,"@has_location": {"description": "Etichetta filtro per spese con dati di posizione"}
+  ,"search_no_results": "Nessuna spesa trovata"
+  ,"@search_no_results": {"description": "Mostrato quando la ricerca non trova spese"}
+  ,"search_no_results_hint": "Prova termini diversi o modifica i filtri"
+  ,"@search_no_results_hint": {"description": "Testo di aiuto quando la ricerca spese non ha risultati"}
+  ,"voice_input_button": "Inserisci con la voce"
+  ,"@voice_input_button": {"description": "Etichetta del pulsante per attivare l'input vocale"}
+  ,"voice_input_listening": "In ascolto..."
+  ,"@voice_input_listening": {"description": "Messaggio mostrato durante la registrazione vocale"}
+  ,"voice_input_tap_to_speak": "Tocca per parlare"
+  ,"@voice_input_tap_to_speak": {"description": "Suggerimento per iniziare a parlare"}
+  ,"voice_input_processing": "Elaborazione..."
+  ,"@voice_input_processing": {"description": "Messaggio mostrato durante l'elaborazione del testo vocale"}
+  ,"voice_input_error": "Errore nel riconoscimento vocale"
+  ,"@voice_input_error": {"description": "Messaggio di errore per problemi con il riconoscimento vocale"}
+  ,"voice_input_permission_denied": "Permesso microfono negato"
+  ,"@voice_input_permission_denied": {"description": "Messaggio quando l'utente nega il permesso del microfono"}
+  ,"voice_input_not_available": "Riconoscimento vocale non disponibile"
+  ,"@voice_input_not_available": {"description": "Messaggio quando il riconoscimento vocale non è disponibile sul dispositivo"}
+  ,"voice_input_hint": "Prova a dire: '50 euro per cena al ristorante'"
+  ,"@voice_input_hint": {"description": "Suggerimento di esempio per l'uso dell'input vocale"}
+  ,"voice_add_expense": "Aggiungi con la voce"
+  ,"@voice_add_expense": {"description": "Etichetta per la CTA vocale sulla card home"}
+  ,"voice_expense_saved": "Spesa salvata!"
+  ,"@voice_expense_saved": {"description": "Conferma quando la spesa viene salvata via voce"}
+  ,"voice_expense_needs_more_info": "Mancano alcune info – completa il modulo"
+  ,"@voice_expense_needs_more_info": {"description": "Messaggio quando l'input vocale non ha i dati necessari"}
+  ,"from_unsplash": "Da Unsplash"
+  ,"@from_unsplash": {"description": "Opzione per cercare un'immagine di sfondo su Unsplash"}
+  ,"unsplash_search_hint": "Cerca foto su Unsplash..."
+  ,"@unsplash_search_hint": {"description": "Testo suggerimento nella barra di ricerca Unsplash"}
+  ,"unsplash_no_results": "Nessuna immagine trovata"
+  ,"@unsplash_no_results": {"description": "Messaggio quando la ricerca Unsplash non restituisce risultati"}
+  ,"unsplash_downloading": "Scaricamento immagine..."
+  ,"@unsplash_downloading": {"description": "Etichetta di caricamento durante il download di una foto da Unsplash"}
+  ,"unsplash_error": "Impossibile caricare le immagini"
+  ,"@unsplash_error": {"description": "Messaggio di errore quando la ricerca o il download da Unsplash fallisce"}
+  ,"unsplash_photos_by": "Foto di"
+  ,"@unsplash_photos_by": {"description": "Prefisso attribuzione prima del link al brand Unsplash in fondo alla pagina di ricerca"}
+  ,"unsplash_use_photo": "Usa questa foto"
+  ,"@unsplash_use_photo": {"description": "Pulsante per confermare la selezione di una foto Unsplash nel pannello di anteprima"}
+  ,"scan_receipt": "Scansiona scontrino"
+  ,"@scan_receipt": {"description": "Pulsante per scansionare uno scontrino con OCR"}
+  ,"scanning_receipt": "Scansione scontrino..."
+  ,"@scanning_receipt": {"description": "Messaggio durante la scansione OCR dello scontrino"}
+  ,"receipt_scan_error": "Errore nella scansione dello scontrino"
+  ,"@receipt_scan_error": {"description": "Messaggio di errore quando la scansione OCR fallisce"}
+  ,"no_text_found": "Nessun testo trovato nell'immagine"
+  ,"@no_text_found": {"description": "Messaggio quando l'OCR non trova testo nell'immagine"}
+  ,"receipt_scanned": "Scontrino scansionato"
+  ,"@receipt_scanned": {"description": "Messaggio di successo dopo la scansione OCR"}
 }

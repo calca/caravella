@@ -56,8 +56,6 @@ void main() {
               expenses: testExpenses,
               currency: '€',
               onExpenseTap: (expense) {},
-              categories: testCategories,
-              participants: testParticipants,
             ),
           ),
         ),
@@ -71,7 +69,9 @@ void main() {
       expect(find.text('Bus ticket'), findsOneWidget);
     });
 
-    testWidgets('Filter toggle shows filter controls', (tester) async {
+    testWidgets('No inline filter controls are shown in detail list', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -82,8 +82,6 @@ void main() {
               expenses: testExpenses,
               currency: '€',
               onExpenseTap: (expense) {},
-              categories: testCategories,
-              participants: testParticipants,
             ),
           ),
         ),
@@ -91,18 +89,13 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Initially filters should be hidden
-      // Italian localization for search hint
+      // Inline filter/search UI has been removed from this widget.
+      expect(find.byIcon(Icons.filter_list_outlined), findsNothing);
+      expect(find.byType(TextField), findsNothing);
+      expect(find.byType(FilterChip), findsNothing);
       expect(find.text('Cerca per nome o nota...'), findsNothing);
-
-      // Tap the filter toggle button
-      await tester.tap(find.byIcon(Icons.filter_list_outlined));
-      await tester.pumpAndSettle();
-
-      // Now filters should be visible
-      expect(find.text('Cerca per nome o nota...'), findsOneWidget);
-      expect(find.text('Categoria'), findsOneWidget);
-      expect(find.text('Pagato da'), findsOneWidget);
+      expect(find.text('Categoria'), findsNothing);
+      expect(find.text('Pagato da'), findsNothing);
     });
 
     testWidgets('Filter button is disabled when no expenses present', (
@@ -118,8 +111,6 @@ void main() {
               expenses: [], // Empty expenses list
               currency: '€',
               onExpenseTap: (expense) {},
-              categories: testCategories,
-              participants: testParticipants,
             ),
           ),
         ),
@@ -147,8 +138,6 @@ void main() {
                 expenses: [], // Empty expenses list
                 currency: '€',
                 onExpenseTap: (expense) {},
-                categories: testCategories,
-                participants: testParticipants,
                 onAddExpense: () {
                   addExpenseCalled = true;
                 },
@@ -195,8 +184,6 @@ void main() {
               expenses: [], // Empty expenses list
               currency: '\$',
               onExpenseTap: (expense) {},
-              categories: testCategories,
-              participants: testParticipants,
               onAddExpense: () {},
             ),
           ),
@@ -215,7 +202,7 @@ void main() {
       expect(find.text('Add Expense'), findsOneWidget);
     });
 
-    testWidgets('Simple empty state shown when filters are active', (
+    testWidgets('Simple empty state shown when no expenses and no callback', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -225,12 +212,9 @@ void main() {
           locale: const Locale('it'),
           home: Scaffold(
             body: FilteredExpenseList(
-              expenses: testExpenses, // Has expenses but will be filtered out
+              expenses: const <ExpenseDetails>[],
               currency: '€',
               onExpenseTap: (expense) {},
-              categories: testCategories,
-              participants: testParticipants,
-              onAddExpense: () {},
             ),
           ),
         ),
@@ -238,27 +222,13 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Show filters
-      await tester.tap(find.byIcon(Icons.filter_list_outlined));
-      await tester.pumpAndSettle();
+      final context = tester.element(find.byType(FilteredExpenseList));
+      final gloc = AppLocalizations.of(context);
 
-      // Enter a search query that won't match anything
-      await tester.enterText(find.byType(TextField), 'nonexistent');
-      await tester.pumpAndSettle();
-
-      // Should show simple empty state for filtered results, not enhanced empty state
-      expect(
-        find.text('Pronti per iniziare?'),
-        findsNothing,
-      ); // Enhanced state title
-      expect(
-        find.text('Nessuna spesa trovata con i filtri selezionati'),
-        findsOneWidget,
-      ); // Simple filtered state
-      expect(
-        find.byIcon(Icons.search_off_outlined),
-        findsOneWidget,
-      ); // Search off icon for filtered state
+      expect(find.text(gloc.no_expenses_yet), findsOneWidget);
+      expect(find.byIcon(Icons.receipt_long_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.filter_list_outlined), findsNothing);
+      expect(find.byType(TextField), findsNothing);
     });
 
     testWidgets('Month headers are displayed when expenses span multiple months', (
@@ -310,8 +280,6 @@ void main() {
               expenses: expensesMultipleMonths,
               currency: '€',
               onExpenseTap: (expense) {},
-              categories: testCategories,
-              participants: testParticipants,
             ),
           ),
         ),
@@ -393,8 +361,6 @@ void main() {
               expenses: singleMonthExpenses,
               currency: '€',
               onExpenseTap: (expense) {},
-              categories: testCategories,
-              participants: testParticipants,
             ),
           ),
         ),

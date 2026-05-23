@@ -4,11 +4,13 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 class GroupActions extends StatelessWidget {
   final bool hasExpenses;
   final VoidCallback? onOverview;
+  final VoidCallback? onSearch;
   final VoidCallback? onOptions;
   const GroupActions({
     super.key,
     required this.hasExpenses,
     this.onOverview,
+    this.onSearch,
     this.onOptions,
   });
 
@@ -40,12 +42,14 @@ class GroupActions extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Tooltip(
-            message: gen.AppLocalizations.of(context).options,
+            message: hasExpenses
+                ? gen.AppLocalizations.of(context).search_expenses
+                : gen.AppLocalizations.of(context).no_expenses_to_display,
             child: IconButton.filledTonal(
-              onPressed: onOptions,
-              icon: const Icon(Icons.settings_outlined),
+              onPressed: hasExpenses ? onSearch : null,
+              icon: const Icon(Icons.search_outlined),
               iconSize: 24,
-              tooltip: gen.AppLocalizations.of(context).options,
+              tooltip: gen.AppLocalizations.of(context).search_expenses,
               style: IconButton.styleFrom(
                 backgroundColor: colorScheme.surfaceContainerLowest,
                 foregroundColor: colorScheme.onSurface,

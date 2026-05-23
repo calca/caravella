@@ -18,8 +18,6 @@ void main() {
             expenses: const <ExpenseDetails>[],
             currency: 'EUR',
             onExpenseTap: (_) {},
-            categories: const <ExpenseCategory>[],
-            participants: const <ExpenseParticipant>[],
             onAddExpense: () {},
           ),
         ),

@@ -400,7 +400,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get participants_label => '参与者';
 
   @override
-  String get last_7_days => '过去7天';
+  String get last_7_days => '最近7天';
+
+  @override
+  String get today => '今天';
+
+  @override
+  String get this_month => '本月';
 
   @override
   String get recent_activity => '最近活动';
@@ -1741,6 +1747,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get clear_filters => '清除';
 
   @override
+  String get filters => '筛选器';
+
+  @override
   String get show_filters => '显示筛选器';
 
   @override
@@ -2208,4 +2217,96 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get save_label => '保存';
+
+  @override
+  String get search_expenses => '搜索费用';
+
+  @override
+  String search_in_group(String groupName) {
+    return '在 $groupName 中搜索';
+  }
+
+  @override
+  String get search_all_fields_hint => '搜索所有字段...';
+
+  @override
+  String get has_attachment => '有附件';
+
+  @override
+  String get has_location => '有位置';
+
+  @override
+  String get search_no_results => '未找到费用';
+
+  @override
+  String get search_no_results_hint => '尝试不同的搜索词或调整过滤条件';
+
+  @override
+  String get voice_input_button => '语音输入';
+
+  @override
+  String get voice_input_listening => '正在聆听...';
+
+  @override
+  String get voice_input_tap_to_speak => '点击说话';
+
+  @override
+  String get voice_input_processing => '处理中...';
+
+  @override
+  String get voice_input_error => '语音识别错误';
+
+  @override
+  String get voice_input_permission_denied => '麦克风权限被拒绝';
+
+  @override
+  String get voice_input_not_available => '语音识别不可用';
+
+  @override
+  String get voice_input_hint => '尝试说：\'50元晚餐\'';
+
+  @override
+  String get voice_add_expense => '语音添加';
+
+  @override
+  String get voice_expense_saved => '支出已保存！';
+
+  @override
+  String get voice_expense_needs_more_info => '信息不足，请填写表单';
+
+  @override
+  String get from_unsplash => '从Unsplash搜索';
+
+  @override
+  String get unsplash_search_hint => '搜索Unsplash照片...';
+
+  @override
+  String get unsplash_no_results => '未找到图片';
+
+  @override
+  String get unsplash_downloading => '正在下载图片...';
+
+  @override
+  String get unsplash_error => '加载图片失败';
+
+  @override
+  String get unsplash_photos_by => '照片来自';
+
+  @override
+  String get unsplash_use_photo => '使用此照片';
+
+  @override
+  String get scan_receipt => '扫描收据';
+
+  @override
+  String get scanning_receipt => '正在扫描收据...';
+
+  @override
+  String get receipt_scan_error => '扫描收据时出错';
+
+  @override
+  String get no_text_found => '图像中未找到文本';
+
+  @override
+  String get receipt_scanned => '收据已扫描';
 }

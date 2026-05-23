@@ -21,6 +21,8 @@ class ExpenseFormConfig {
   final void Function(ExpenseFormState)? onExpand;
   final void Function(bool)? onFormValidityChanged;
   final void Function(VoidCallback?)? onSaveCallbackChanged;
+  final void Function(VoidCallback?)? onVoiceCallbackChanged;
+  final void Function(VoidCallback?)? onScanReceiptCallbackChanged;
 
   // Display options
   final bool fullEdit;
@@ -57,6 +59,8 @@ class ExpenseFormConfig {
     this.onExpand,
     this.onFormValidityChanged,
     this.onSaveCallbackChanged,
+    this.onVoiceCallbackChanged,
+    this.onScanReceiptCallbackChanged,
 
     // Display options
     this.fullEdit = false,
@@ -101,6 +105,8 @@ class ExpenseFormConfig {
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
     void Function(VoidCallback?)? onSaveCallbackChanged,
+    void Function(VoidCallback?)? onVoiceCallbackChanged,
+    void Function(VoidCallback?)? onScanReceiptCallbackChanged,
   }) {
     return ExpenseFormConfig(
       participants: participants,
@@ -122,6 +128,8 @@ class ExpenseFormConfig {
       showActionsRow: showActionsRow,
       onFormValidityChanged: onFormValidityChanged,
       onSaveCallbackChanged: onSaveCallbackChanged,
+      onVoiceCallbackChanged: onVoiceCallbackChanged,
+      onScanReceiptCallbackChanged: onScanReceiptCallbackChanged,
       isReadOnly: isReadOnly,
     );
   }
@@ -167,7 +175,9 @@ class ExpenseFormConfig {
     );
   }
 
-  bool get isEditMode => initialExpense?.id != null && initialExpense!.id.isNotEmpty;
-  bool get isCreateMode => initialExpense?.id == null || initialExpense!.id.isEmpty;
+  bool get isEditMode =>
+      initialExpense?.id != null && initialExpense!.id.isNotEmpty;
+  bool get isCreateMode =>
+      initialExpense?.id == null || initialExpense!.id.isEmpty;
   bool get hasDeleteAction => onDelete != null;
 }
