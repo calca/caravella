@@ -17,6 +17,7 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionStartActivity as glanceActionStartActivity
 import androidx.glance.appwidget.components.Button
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
@@ -154,11 +155,16 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         }
 
         provideContent {
-            var containerModifier = GlanceModifier.fillMaxSize()
-            if (model.useGroupBackground && model.backgroundColor != null) {
-                containerModifier = containerModifier.background(
+            val baseModifier = GlanceModifier
+                .fillMaxSize()
+                .padding(WidgetOuterPadding)
+                .cornerRadius(WidgetOuterRadius)
+            val containerModifier = if (model.useGroupBackground && model.backgroundColor != null) {
+                baseModifier.background(
                     ColorProvider(toComposeColor(model.backgroundColor)),
                 )
+            } else {
+                baseModifier.background(DefaultWidgetSurface)
             }
 
             Box(modifier = containerModifier) {
@@ -174,12 +180,19 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 Column(
                     modifier = GlanceModifier
                         .fillMaxSize()
-                        .padding(12.dp),
+                        .padding(WidgetLayerSpacing)
+                        .cornerRadius(WidgetInnerRadius)
+                        .background(ContentOverlaySurface)
+                        .padding(WidgetInnerPadding),
                 ) {
                     if (model.showGroupName) {
                         Text(
                             text = model.title,
-                            style = TextStyle(fontWeight = FontWeight.Bold),
+                            style = TextStyle(
+                                color = EmphasisTextColor,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = WidgetBodyTextSize,
+                            ),
                             maxLines = 1,
                         )
                     }
@@ -187,21 +200,46 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     Row(
                         modifier = GlanceModifier
                             .fillMaxWidth()
-                            .padding(top = if (model.showGroupName) 8.dp else 0.dp),
+                            .padding(
+                                top = if (model.showGroupName) {
+                                    WidgetSectionSpacing
+                                } else {
+                                    WidgetMinimalSpacing
+                                },
+                            ),
                     ) {
                         Column(modifier = GlanceModifier.defaultWeight()) {
-                            Text(text = context.getString(R.string.widget_today_label))
+                            Text(
+                                text = context.getString(R.string.widget_today_label),
+                                style = TextStyle(
+                                    color = SecondaryTextColor,
+                                    fontSize = WidgetLabelTextSize,
+                                ),
+                            )
                             Text(
                                 text = model.todayValue,
-                                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold),
+                                style = TextStyle(
+                                    color = EmphasisTextColor,
+                                    fontSize = WidgetTodayValueTextSize,
+                                    fontWeight = FontWeight.Bold,
+                                ),
                                 modifier = GlanceModifier.padding(top = 2.dp),
                             )
                         }
                         Column(modifier = GlanceModifier.defaultWeight()) {
-                            Text(text = context.getString(R.string.widget_group_total_label))
+                            Text(
+                                text = context.getString(R.string.widget_group_total_label),
+                                style = TextStyle(
+                                    color = SecondaryTextColor,
+                                    fontSize = WidgetLabelTextSize,
+                                ),
+                            )
                             Text(
                                 text = model.groupTotalValue,
-                                style = TextStyle(fontSize = 14.sp),
+                                style = TextStyle(
+                                    color = EmphasisTextColor,
+                                    fontSize = WidgetBodyTextSize,
+                                ),
                                 modifier = GlanceModifier.padding(top = 2.dp),
                             )
                         }
@@ -274,6 +312,42 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         }
     }
 }
+
+private val WidgetOuterPadding = 4.dp
+private val WidgetLayerSpacing = 10.dp
+private val WidgetInnerPadding = 12.dp
+private val WidgetSectionSpacing = 10.dp
+private val WidgetMinimalSpacing = 2.dp
+private val WidgetOuterRadius = 24.dp
+private val WidgetInnerRadius = 20.dp
+private val WidgetBodyTextSize = 15.sp
+private val WidgetLabelTextSize = 12.sp
+private val WidgetTodayValueTextSize = 22.sp
+
+// Default widget container surface when group-based background is disabled.
+// Colors are aligned with a soft Material-like neutral surface for baseline readability.
+private val DefaultWidgetSurface = ColorProvider(
+    Color(0xFFF6F4FA), // Light mode
+    Color(0xFF1F1D25), // Dark mode
+)
+
+// Glass-like overlay above image/color backgrounds for better text readability.
+// Uses consistent ~80% opacity in both themes for predictable legibility.
+// This is layered on top of custom group image/color backgrounds.
+private val ContentOverlaySurface = ColorProvider(
+    Color(0xCCFFFFFF), // Light mode (80% white)
+    Color(0xCC000000), // Dark mode (80% black)
+)
+
+private val EmphasisTextColor = ColorProvider(
+    Color(0xFF1D1A24), // Light mode
+    Color(0xFFF4EEFF), // Dark mode
+)
+
+private val SecondaryTextColor = ColorProvider(
+    Color(0xFF5F5A68), // Light mode
+    Color(0xFFC8C2D2), // Dark mode
+)
 
 private data class WidgetUiModel(
     val title: String,
