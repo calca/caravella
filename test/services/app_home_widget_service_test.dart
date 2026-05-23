@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:caravella_core/services/widgets/app_home_widget_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -94,7 +92,7 @@ void main() {
           return null;
         });
 
-    await AppHomeWidgetService.initializeTapHandling((_, __, ___) {
+    await AppHomeWidgetService.initializeTapHandling((_, _, _) {
       callbackCalled = true;
     });
 
@@ -176,7 +174,7 @@ void main() {
             return null;
           });
 
-      await AppHomeWidgetService.initializeTapHandling((_, __, ___) {
+      await AppHomeWidgetService.initializeTapHandling((_, _, _) {
         callbackCalled = true;
       });
 
@@ -195,7 +193,7 @@ void main() {
           return null;
         });
 
-    await AppHomeWidgetService.initializeTapHandling((_, __, ___) {
+    await AppHomeWidgetService.initializeTapHandling((_, _, _) {
       callbackCalled = true;
     });
 
@@ -208,7 +206,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async => null);
 
-    await AppHomeWidgetService.initializeTapHandling((_, __, ___) {
+    await AppHomeWidgetService.initializeTapHandling((_, _, _) {
       callbackCalled = true;
     });
     await AppHomeWidgetService.disposeTapHandling();

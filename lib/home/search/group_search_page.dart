@@ -56,8 +56,8 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
         ExpenseGroupStorageV2.getActiveGroups(),
         ExpenseGroupStorageV2.getArchivedGroups(),
       ]);
-      final active = results[0] as List<ExpenseGroup>;
-      final archived = results[1] as List<ExpenseGroup>;
+      final active = results[0];
+      final archived = results[1];
       if (mounted) {
         setState(() {
           _allGroups = [...active, ...archived];
