@@ -241,6 +241,67 @@ class ExpenseGroup {
         .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
   }
 
+  /// Returns the average amount spent per participant.
+  /// Returns 0.0 if there are no participants.
+  double getAveragePerParticipant() {
+    if (participants.isEmpty) return 0.0;
+    return getTotalExpenses() / participants.length;
+  }
+
+  /// Returns the effective statistics date range for the group.
+  ///
+  /// - If [startDate] and [endDate] are both set, uses them capped at today.
+  /// - Otherwise falls back to [first expense date … today].
+  /// - If there are no expenses and no dates, defaults to the current month.
+  ///
+  /// Accepts an optional [now] reference (defaults to [DateTime.now()]) to aid testability.
+  ({DateTime start, DateTime end}) getEffectiveDateRange([DateTime? now]) {
+    final ref = now ?? DateTime.now();
+    final today = DateTime(ref.year, ref.month, ref.day);
+    if (startDate != null && endDate != null) {
+      final start = DateTime(startDate!.year, startDate!.month, startDate!.day);
+      final end = DateTime(endDate!.year, endDate!.month, endDate!.day);
+      final effectiveEnd = end.isBefore(today) ? end : today;
+      return (start: start, end: effectiveEnd);
+    }
+    if (expenses.isEmpty) {
+      final firstDay = DateTime(today.year, today.month, 1);
+      final lastDay = DateTime(today.year, today.month + 1, 0);
+      return (start: firstDay, end: lastDay);
+    }
+    final sorted = [...expenses]..sort((a, b) => a.date.compareTo(b.date));
+    final first = sorted.first.date;
+    return (
+      start: DateTime(first.year, first.month, first.day),
+      end: today,
+    );
+  }
+
+  /// Returns participants sorted by number of expenses paid (descending).
+  /// Participants with zero activity are included at the end.
+  List<ExpenseParticipantCount> getParticipantsByActivity() {
+    final counts = getParticipantActivityCounts();
+    final items = <ExpenseParticipantCount>[];
+    final seenIds = <String>{};
+    for (final entry in counts.entries) {
+      final p = participants.firstWhere(
+        (p) => p.id == entry.key,
+        orElse: () => ExpenseParticipant(id: entry.key, name: ''),
+      );
+      if (p.name.isNotEmpty) {
+        items.add(ExpenseParticipantCount(p, entry.value));
+        seenIds.add(p.id);
+      }
+    }
+    for (final p in participants) {
+      if (!seenIds.contains(p.id)) {
+        items.add(ExpenseParticipantCount(p, 0));
+      }
+    }
+    items.sort((a, b) => b.count.compareTo(a.count));
+    return items;
+  }
+
   static ExpenseGroup empty() {
     return ExpenseGroup(
       title: '',
@@ -261,4 +322,11 @@ class ExpenseGroup {
       autoLocationEnabled: false, // Auto-location disabilitata di default
     );
   }
+}
+
+/// Associates an [ExpenseParticipant] with a count of expenses they have paid.
+class ExpenseParticipantCount {
+  final ExpenseParticipant participant;
+  final int count;
+  ExpenseParticipantCount(this.participant, this.count);
 }

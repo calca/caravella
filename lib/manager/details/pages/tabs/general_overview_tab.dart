@@ -18,25 +18,6 @@ class GeneralOverviewTab extends StatelessWidget {
   List<double> _monthlySeries() => buildMonthlySeries(trip);
   List<double> _dateRangeSeries() => buildAdaptiveDateRangeSeries(trip);
 
-  // Returns participants ordered by activity (number of expenses paid)
-  List<ExpenseParticipantCount> _topParticipants() {
-    final counts = trip.getParticipantActivityCounts();
-    final byId = {for (final p in trip.participants) p.id: p};
-    final items = <ExpenseParticipantCount>[];
-    for (final entry in counts.entries) {
-      final p = byId[entry.key];
-      if (p != null) items.add(ExpenseParticipantCount(p, entry.value));
-    }
-    // Include participants with zero activity to avoid empty UI on new groups
-    for (final p in trip.participants) {
-      if (!counts.containsKey(p.id)) {
-        items.add(ExpenseParticipantCount(p, 0));
-      }
-    }
-    items.sort((a, b) => b.count.compareTo(a.count));
-    return items;
-  }
-
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
@@ -69,7 +50,7 @@ class GeneralOverviewTab extends StatelessWidget {
           _TopSummaryRow(
             total: trip.getTotalExpenses(),
             currency: trip.currency,
-            participants: _topParticipants(),
+            participants: trip.getParticipantsByActivity(),
             count: trip.participants.length,
           ),
           const SizedBox(height: 24),
@@ -129,12 +110,6 @@ class GeneralOverviewTab extends StatelessWidget {
       ),
     );
   }
-}
-
-class ExpenseParticipantCount {
-  final ExpenseParticipant participant;
-  final int count;
-  ExpenseParticipantCount(this.participant, this.count);
 }
 
 class _TopSummaryRow extends StatelessWidget {

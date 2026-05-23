@@ -33,9 +33,6 @@ class ParticipantsOverviewTab extends StatelessWidget {
 
     final totalAll = trip.getTotalExpenses();
     final participantsCount = trip.participants.length;
-    final avgPerPerson = participantsCount == 0
-        ? 0.0
-        : totalAll / participantsCount;
     final participantTotals = trip.getParticipantTotals();
     final contributionEntries = trip.participants.map((p) {
       final total = participantTotals[p.id] ?? 0.0;
@@ -52,7 +49,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           _AveragePerPersonRow(
-            average: avgPerPerson,
+            average: trip.getAveragePerParticipant(),
             currency: trip.currency,
             participants: trip.participants,
             count: participantsCount,
