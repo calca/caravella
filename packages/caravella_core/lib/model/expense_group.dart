@@ -226,6 +226,21 @@ class ExpenseGroup {
         .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
   }
 
+  /// Returns the total amount spent today (local date).
+  /// Accepts an optional [reference] date (defaults to [DateTime.now()]) to aid testability.
+  double getTodaySpendingSync([DateTime? reference]) {
+    if (expenses.isEmpty) return 0.0;
+    final now = reference ?? DateTime.now();
+    return expenses
+        .where(
+          (e) =>
+              e.date.year == now.year &&
+              e.date.month == now.month &&
+              e.date.day == now.day,
+        )
+        .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
+  }
+
   static ExpenseGroup empty() {
     return ExpenseGroup(
       title: '',

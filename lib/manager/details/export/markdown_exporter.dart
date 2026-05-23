@@ -53,7 +53,7 @@ class MarkdownExporter {
     buffer.writeln();
 
     // Daily average
-    final dailyAverage = _calculateDailyAverage(group);
+    final dailyAverage = group.getDailyAverage();
     buffer.writeln(
       '**${loc.daily_average}**: ${CurrencyDisplay.formatCurrencyText(dailyAverage, group.currency)}',
     );
@@ -64,11 +64,10 @@ class MarkdownExporter {
     buffer.writeln();
 
     final idToName = {for (final p in group.participants) p.id: p.name};
+    final participantTotals = group.getParticipantTotals();
 
     for (final p in group.participants) {
-      final total = group.expenses
-          .where((e) => e.paidBy.id == p.id)
-          .fold<double>(0, (s, e) => s + (e.amount ?? 0));
+      final total = participantTotals[p.id] ?? 0.0;
       buffer.writeln(
         '- **${_escape(p.name)}**: ${CurrencyDisplay.formatCurrencyText(total, group.currency)}',
       );
@@ -164,16 +163,5 @@ class MarkdownExporter {
     return '${date.year.toString().padLeft(4, '0')}-'
         '${date.month.toString().padLeft(2, '0')}-'
         '${date.day.toString().padLeft(2, '0')}';
-  }
-
-  static double _calculateDailyAverage(ExpenseGroup group) {
-    if (group.expenses.isEmpty) return 0;
-    // Calculate distinct days with at least one expense for fairer average
-    final days = group.expenses
-        .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
-        .toSet()
-        .length;
-    final total = group.getTotalExpenses();
-    return days == 0 ? 0 : total / days;
   }
 }
