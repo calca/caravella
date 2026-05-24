@@ -12,6 +12,7 @@ import androidx.glance.ImageProvider
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.action.Action
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -85,7 +86,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 todayValue = "-",
                 groupTotalValue = "-",
                 showGroupName = true,
-                primaryButton = WidgetButton(
+                ctaButton = WidgetButton(
                     label = context.getString(R.string.widget_select_group),
                     action = glanceActionStartActivity(
                         Intent(context, HomeWidgetConfigureActivity::class.java).apply {
@@ -94,7 +95,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                         },
                     ),
                 ),
-                secondaryButton = null,
+                tapAction = null,
                 useGroupBackground = false,
                 backgroundColor = null,
                 backgroundImagePath = null,
@@ -103,41 +104,28 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             val totals = AppFunctionStorageReader.getWidgetTotals(context, config.groupId)
             val title = totals?.groupTitle ?: config.groupTitle
             val currency = totals?.currency ?: config.groupCurrency
+            val addExpenseAction = homeWidgetActionStartActivity<MainActivity>(
+                context = context,
+                // Keep aligned with AppHomeWidgetService tap parsing.
+                // URI format: caravella://home_widget/add_expense?groupId=...&groupTitle=...
+                uri = Uri.Builder()
+                    .scheme("caravella")
+                    .authority("home_widget")
+                    .appendPath("add_expense")
+                    .appendQueryParameter("groupId", config.groupId)
+                    .appendQueryParameter("groupTitle", title)
+                    .build(),
+            )
             WidgetUiModel(
                 title = title,
                 todayValue = totals?.todayTotal?.let { formatAmount(it, currency) } ?: "-",
                 groupTotalValue = totals?.groupTotal?.let { formatAmount(it, currency) } ?: "-",
                 showGroupName = config.showGroupName,
-                primaryButton = WidgetButton(
-                    label = context.getString(R.string.widget_quick_add),
-                    action = homeWidgetActionStartActivity<MainActivity>(
-                        context = context,
-                        // Keep aligned with AppHomeWidgetService tap parsing.
-                        // URI format: caravella://home_widget/add_expense?groupId=...&groupTitle=...
-                        uri = Uri.Builder()
-                            .scheme("caravella")
-                            .authority("home_widget")
-                            .appendPath("add_expense")
-                            .appendQueryParameter("groupId", config.groupId)
-                            .appendQueryParameter("groupTitle", title)
-                            .build(),
-                    ),
+                ctaButton = WidgetButton(
+                    label = "+",
+                    action = addExpenseAction,
                 ),
-                secondaryButton = WidgetButton(
-                    label = context.getString(R.string.widget_open_group),
-                    action = homeWidgetActionStartActivity<MainActivity>(
-                        context = context,
-                        // Keep aligned with AppHomeWidgetService tap parsing.
-                        // URI format: caravella://home_widget/open_group?groupId=...&groupTitle=...
-                        uri = Uri.Builder()
-                            .scheme("caravella")
-                            .authority("home_widget")
-                            .appendPath("open_group")
-                            .appendQueryParameter("groupId", config.groupId)
-                            .appendQueryParameter("groupTitle", title)
-                            .build(),
-                    ),
-                ),
+                tapAction = addExpenseAction,
                 useGroupBackground = config.useGroupBackground,
                 backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
                 backgroundImagePath = if (config.useGroupBackground) {
@@ -167,8 +155,13 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             } else {
                 baseModifier.background(DefaultWidgetSurface)
             }
+            val clickableContainerModifier = if (model.tapAction != null) {
+                containerModifier.clickable(model.tapAction)
+            } else {
+                containerModifier
+            }
 
-            Box(modifier = containerModifier) {
+            Box(modifier = clickableContainerModifier) {
                 if (backgroundImageProvider != null) {
                     Image(
                         provider = backgroundImageProvider,
@@ -210,13 +203,26 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                             ),
                     ) {
                         Column(modifier = GlanceModifier.defaultWeight()) {
-                            Text(
-                                text = context.getString(R.string.widget_today_label),
-                                style = TextStyle(
-                                    color = SecondaryTextColor,
-                                    fontSize = WidgetLabelTextSize,
-                                ),
-                            )
+                            Box(
+                                modifier = GlanceModifier
+                                    .cornerRadius(WidgetTodayPillRadius)
+                                    .background(WidgetTodayPillSurface)
+                                    .padding(
+                                        start = WidgetTodayPillHorizontalPadding,
+                                        top = WidgetTodayPillVerticalPadding,
+                                        end = WidgetTodayPillHorizontalPadding,
+                                        bottom = WidgetTodayPillVerticalPadding,
+                                    ),
+                            ) {
+                                Text(
+                                    text = context.getString(R.string.widget_today_label),
+                                    style = TextStyle(
+                                        color = WidgetTodayPillTextColor,
+                                        fontSize = WidgetLabelTextSize,
+                                        fontWeight = FontWeight.Bold,
+                                    ),
+                                )
+                            }
                             Text(
                                 text = model.todayValue,
                                 style = TextStyle(
@@ -239,42 +245,22 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                 text = model.groupTotalValue,
                                 style = TextStyle(
                                     color = EmphasisTextColor,
-                                    fontSize = WidgetBodyTextSize,
+                                    fontSize = WidgetGroupTotalValueTextSize,
+                                    fontWeight = FontWeight.Bold,
                                 ),
                                 modifier = GlanceModifier.padding(top = 2.dp),
                             )
                         }
                     }
 
-                    if (model.secondaryButton == null) {
+                    if (model.ctaButton != null) {
                         Button(
-                            text = model.primaryButton.label,
-                            onClick = model.primaryButton.action,
+                            text = model.ctaButton.label,
+                            onClick = model.ctaButton.action,
                             modifier = GlanceModifier
                                 .fillMaxWidth()
                                 .padding(top = 12.dp),
                         )
-                    } else {
-                        Row(
-                            modifier = GlanceModifier
-                                .fillMaxWidth()
-                                .padding(top = 12.dp),
-                        ) {
-                            Button(
-                                text = model.primaryButton.label,
-                                onClick = model.primaryButton.action,
-                                modifier = GlanceModifier
-                                    .defaultWeight()
-                                    .padding(end = 4.dp),
-                            )
-                            Button(
-                                text = model.secondaryButton.label,
-                                onClick = model.secondaryButton.action,
-                                modifier = GlanceModifier
-                                    .defaultWeight()
-                                    .padding(start = 4.dp),
-                            )
-                        }
                     }
                 }
             }
@@ -324,6 +310,10 @@ private val WidgetInnerRadius = 20.dp
 private val WidgetBodyTextSize = 15.sp
 private val WidgetLabelTextSize = 12.sp
 private val WidgetTodayValueTextSize = 22.sp
+private val WidgetGroupTotalValueTextSize = 18.sp
+private val WidgetTodayPillRadius = 16.dp
+private val WidgetTodayPillHorizontalPadding = 8.dp
+private val WidgetTodayPillVerticalPadding = 2.dp
 
 // Default widget container surface when group-based background is disabled.
 // Colors are aligned with a soft Material-like neutral surface for baseline readability.
@@ -350,13 +340,23 @@ private val SecondaryTextColor = ColorProvider(
     Color(0xFFC8C2D2), // Dark mode
 )
 
+private val WidgetTodayPillSurface = ColorProvider(
+    Color(0xFFE1D8F8), // Light mode
+    Color(0xFF4D3B73), // Dark mode
+)
+
+private val WidgetTodayPillTextColor = ColorProvider(
+    Color(0xFF2E1B52), // Light mode
+    Color(0xFFF3ECFF), // Dark mode
+)
+
 private data class WidgetUiModel(
     val title: String,
     val todayValue: String,
     val groupTotalValue: String,
     val showGroupName: Boolean,
-    val primaryButton: WidgetButton,
-    val secondaryButton: WidgetButton?,
+    val ctaButton: WidgetButton?,
+    val tapAction: Action?,
     val useGroupBackground: Boolean,
     val backgroundColor: Int?,
     val backgroundImagePath: String?,
