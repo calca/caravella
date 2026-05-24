@@ -23,6 +23,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -69,7 +70,7 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
                     HomeWidgetConfigureScreen(
                         appWidgetId = appWidgetId,
                         modifier = Modifier.padding(innerPadding),
-                        onConfigSaved = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName, transparentBackground ->
+                        onConfigSaved = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName, backgroundTransparency ->
                             HomeWidgetPrefs.saveWidgetConfig(
                                 context = this,
                                 appWidgetId = appWidgetId,
@@ -78,7 +79,7 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
                                 groupCurrency = groupCurrency,
                                 useGroupBackground = useGroupBackground,
                                 showGroupName = showGroupName,
-                                transparentBackground = transparentBackground,
+                                backgroundTransparency = backgroundTransparency,
                             )
 
                             HomeWidgetProvider.updateAllWidgets(this)
@@ -111,7 +112,7 @@ private enum class HomeWidgetConfigureTab {
 private fun HomeWidgetConfigureScreen(
     appWidgetId: Int,
     modifier: Modifier = Modifier,
-    onConfigSaved: (String, String, String, Boolean, Boolean, Boolean) -> Unit,
+    onConfigSaved: (String, String, String, Boolean, Boolean, Int) -> Unit,
 ) {
     val context = LocalContext.current
     var uiState by remember { mutableStateOf<HomeWidgetConfigureUiState>(HomeWidgetConfigureUiState.Loading) }
@@ -125,8 +126,8 @@ private fun HomeWidgetConfigureScreen(
     var showGroupName by remember {
         mutableStateOf(HomeWidgetPrefs.getShowGroupName(context, appWidgetId))
     }
-    var transparentBackground by remember {
-        mutableStateOf(HomeWidgetPrefs.getTransparentBackground(context, appWidgetId))
+    var backgroundTransparency by remember {
+        mutableStateOf(HomeWidgetPrefs.getBackgroundTransparency(context, appWidgetId))
     }
 
     LaunchedEffect(Unit) {
@@ -261,10 +262,10 @@ private fun HomeWidgetConfigureScreen(
                         onCheckedChange = { showGroupName = it },
                     )
 
-                    WidgetConfigToggleRow(
-                        label = context.getString(R.string.widget_config_transparent_background),
-                        checked = transparentBackground,
-                        onCheckedChange = { transparentBackground = it },
+                    WidgetConfigSliderRow(
+                        label = context.getString(R.string.widget_config_background_transparency),
+                        value = backgroundTransparency,
+                        onValueChange = { backgroundTransparency = it },
                     )
                 }
             }
@@ -285,7 +286,7 @@ private fun HomeWidgetConfigureScreen(
                         group.currency,
                         useGroupBackground,
                         showGroupName,
-                        transparentBackground,
+                        backgroundTransparency,
                     )
                 }
             },
@@ -322,6 +323,31 @@ private fun WidgetConfigToggleRow(
             text = label,
             modifier = Modifier.padding(start = 8.dp),
             style = MaterialTheme.typography.bodyMedium,
+        )
+    }
+}
+
+@Composable
+private fun WidgetConfigSliderRow(
+    label: String,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+    ) {
+        Text(
+            text = "$label: $value%",
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        Slider(
+            value = value.toFloat(),
+            onValueChange = { onValueChange(it.toInt()) },
+            valueRange = 0f..100f,
+            steps = 3,
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

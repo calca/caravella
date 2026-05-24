@@ -115,7 +115,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 ),
                 tapAction = null,
                 useGroupBackground = false,
-                transparentBackground = false,
+                backgroundTransparency = 0,
                 backgroundColor = null,
                 backgroundImagePath = null,
             )
@@ -149,7 +149,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 ),
                 tapAction = addExpenseAction,
                 useGroupBackground = config.useGroupBackground,
-                transparentBackground = config.transparentBackground,
+                backgroundTransparency = config.backgroundTransparency,
                 backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
                 backgroundImagePath = if (config.useGroupBackground) {
                     totals?.groupBackgroundImagePath
@@ -201,13 +201,13 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
 
                 if (isCompact) {
                     // Compact 1x1 layout: just today value centered
-                    val overlayModifier = if (model.transparentBackground) {
+                    val overlayModifier = if (model.backgroundTransparency >= 100) {
                         GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
                     } else {
                         GlanceModifier
                             .fillMaxSize()
                             .cornerRadius(WidgetOuterRadius)
-                            .background(ContentOverlaySurface)
+                            .background(contentOverlaySurface(model.backgroundTransparency))
                             .padding(WidgetCompactPadding)
                     }
                     Box(
@@ -239,7 +239,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     }
                 } else {
                     // Standard layout
-                    val overlayModifier = if (model.transparentBackground) {
+                    val overlayModifier = if (model.backgroundTransparency >= 100) {
                         GlanceModifier
                             .fillMaxSize()
                             .padding(WidgetInnerPadding)
@@ -248,7 +248,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                             .fillMaxSize()
                             .padding(WidgetLayerSpacing)
                             .cornerRadius(WidgetInnerRadius)
-                            .background(ContentOverlaySurface)
+                            .background(contentOverlaySurface(model.backgroundTransparency))
                             .padding(WidgetInnerPadding)
                     }
 
@@ -468,10 +468,20 @@ private val DefaultWidgetSurface = ColorProvider(
 // Glass-like overlay above image/color backgrounds for better text readability.
 // Uses consistent ~80% opacity in both themes for predictable legibility.
 // This is layered on top of custom group image/color backgrounds.
-private val ContentOverlaySurface = ColorProvider(
-    Color(0xCCFFFFFF), // Light mode (80% white)
-    Color(0xCC000000), // Dark mode (80% black)
-)
+/**
+ * Returns the content overlay surface color with alpha based on the transparency level.
+ * transparency=0 → full overlay (0xCC alpha ≈ 80%), transparency=100 → no overlay (fully transparent).
+ */
+private fun contentOverlaySurface(transparency: Int): ColorProvider {
+    // Base alpha is 0xCC (204) at transparency=0; linearly decreases to 0x00 at transparency=100.
+    val clampedTransparency = transparency.coerceIn(0, 100)
+    val alpha = ((100 - clampedTransparency) * 0xCC / 100)
+    val alphaHex = alpha.toLong()
+    return ColorProvider(
+        Color((alphaHex shl 24) or 0xFFFFFF),  // Light mode (white overlay)
+        Color((alphaHex shl 24) or 0x000000),  // Dark mode (black overlay)
+    )
+}
 
 private val EmphasisTextColor = ColorProvider(
     Color(0xFF1D1A24), // Light mode
@@ -501,7 +511,7 @@ private data class WidgetUiModel(
     val ctaButton: WidgetButton?,
     val tapAction: Action?,
     val useGroupBackground: Boolean,
-    val transparentBackground: Boolean,
+    val backgroundTransparency: Int,
     val backgroundColor: Int?,
     val backgroundImagePath: String?,
 )
@@ -518,7 +528,7 @@ internal data class WidgetGroupConfig(
     val groupCurrency: String,
     val useGroupBackground: Boolean,
     val showGroupName: Boolean,
-    val transparentBackground: Boolean,
+    val backgroundTransparency: Int,
 )
 
 internal object HomeWidgetPrefs {
@@ -530,7 +540,7 @@ internal object HomeWidgetPrefs {
     private fun keyGroupCurrency(appWidgetId: Int) = "widget_${appWidgetId}_group_currency"
     private fun keyUseGroupBackground(appWidgetId: Int) = "widget_${appWidgetId}_use_group_background"
     private fun keyShowGroupName(appWidgetId: Int) = "widget_${appWidgetId}_show_group_name"
-    private fun keyTransparentBackground(appWidgetId: Int) = "widget_${appWidgetId}_transparent_background"
+    private fun keyBackgroundTransparency(appWidgetId: Int) = "widget_${appWidgetId}_background_transparency"
 
     fun saveWidgetConfig(
         context: Context,
@@ -540,7 +550,7 @@ internal object HomeWidgetPrefs {
         groupCurrency: String,
         useGroupBackground: Boolean,
         showGroupName: Boolean,
-        transparentBackground: Boolean,
+        backgroundTransparency: Int,
     ) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
@@ -549,7 +559,7 @@ internal object HomeWidgetPrefs {
             .putString(keyGroupCurrency(appWidgetId), groupCurrency)
             .putBoolean(keyUseGroupBackground(appWidgetId), useGroupBackground)
             .putBoolean(keyShowGroupName(appWidgetId), showGroupName)
-            .putBoolean(keyTransparentBackground(appWidgetId), transparentBackground)
+            .putInt(keyBackgroundTransparency(appWidgetId), backgroundTransparency)
             .apply()
     }
 
@@ -563,9 +573,9 @@ internal object HomeWidgetPrefs {
             .getBoolean(keyShowGroupName(appWidgetId), true)
     }
 
-    fun getTransparentBackground(context: Context, appWidgetId: Int): Boolean {
+    fun getBackgroundTransparency(context: Context, appWidgetId: Int): Int {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getBoolean(keyTransparentBackground(appWidgetId), false)
+            .getInt(keyBackgroundTransparency(appWidgetId), 0)
     }
 
     fun getWidgetConfig(context: Context, appWidgetId: Int): WidgetGroupConfig? {
@@ -580,7 +590,7 @@ internal object HomeWidgetPrefs {
             groupCurrency = groupCurrency,
             useGroupBackground = getUseGroupBackground(context, appWidgetId),
             showGroupName = getShowGroupName(context, appWidgetId),
-            transparentBackground = getTransparentBackground(context, appWidgetId),
+            backgroundTransparency = getBackgroundTransparency(context, appWidgetId),
         )
     }
 
@@ -592,7 +602,7 @@ internal object HomeWidgetPrefs {
             .remove(keyGroupCurrency(appWidgetId))
             .remove(keyUseGroupBackground(appWidgetId))
             .remove(keyShowGroupName(appWidgetId))
-            .remove(keyTransparentBackground(appWidgetId))
+            .remove(keyBackgroundTransparency(appWidgetId))
             .apply()
     }
 }
