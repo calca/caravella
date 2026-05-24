@@ -121,7 +121,10 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 todayValue = totals?.todayTotal?.let { formatAmount(it, currency) } ?: "-",
                 groupTotalValue = totals?.groupTotal?.let { formatAmount(it, currency) } ?: "-",
                 showGroupName = config.showGroupName,
-                ctaButton = null,
+                ctaButton = WidgetButton(
+                    label = "+",
+                    action = addExpenseAction,
+                ),
                 tapAction = addExpenseAction,
                 useGroupBackground = config.useGroupBackground,
                 backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
