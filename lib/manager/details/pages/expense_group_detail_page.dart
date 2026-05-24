@@ -791,9 +791,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             SliverToBoxAdapter(
               child: Container(
                 decoration: BoxDecoration(
-                  color: hasBackgroundImage
-                      ? colorScheme.surfaceContainer
-                      : bg.color,
+                  color: bg.color,
+                  image: hasBackgroundImage
+                      ? DecorationImage(
+                          image: FileImage(File(imagePath)),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        )
+                      : null,
+                  gradient: hasBackgroundImage ? bg.gradient : null,
                 ),
                 child: Container(
                   width: double.infinity,
