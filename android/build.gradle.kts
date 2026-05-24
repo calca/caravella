@@ -14,8 +14,6 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(":app")
-}
-subprojects {
     afterEvaluate {
         // Force compileSdk = 37 for all Android library subprojects (e.g. home_widget)
         // so they satisfy transitive dependencies on glance-appwidget:1.3.0-alpha01 and
