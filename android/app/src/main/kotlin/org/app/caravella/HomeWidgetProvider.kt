@@ -16,24 +16,24 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionStartActivity as glanceActionStartActivity
-import androidx.glance.appwidget.components.Button
+import androidx.glance.Button
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
 import androidx.glance.layout.Row
-import androidx.glance.layout.defaultWeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import androidx.glance.unit.dp
-import androidx.glance.unit.sp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import es.antonborri.home_widget.actionStartActivity as homeWidgetActionStartActivity
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.io.File
@@ -160,8 +160,9 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 .padding(WidgetOuterPadding)
                 .cornerRadius(WidgetOuterRadius)
             val containerModifier = if (model.useGroupBackground && model.backgroundColor != null) {
+                val bgColor = toComposeColor(model.backgroundColor)
                 baseModifier.background(
-                    ColorProvider(toComposeColor(model.backgroundColor)),
+                    ColorProvider(day = bgColor, night = bgColor),
                 )
             } else {
                 baseModifier.background(DefaultWidgetSurface)
