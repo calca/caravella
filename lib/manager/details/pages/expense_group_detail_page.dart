@@ -789,42 +789,49 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: bg.color,
-                  image: hasBackgroundImage
-                      ? DecorationImage(
-                          image: FileImage(File(imagePath)),
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                        )
-                      : null,
-                  gradient: hasBackgroundImage ? bg.gradient : null,
-                ),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(24),
+              child: Stack(
+                children: [
+                  if (hasBackgroundImage) ...[
+                    Positioned.fill(
+                      child: Image.file(
+                        File(imagePath),
+                        fit: BoxFit.cover,
+                        alignment: Alignment.topCenter,
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FilteredExpenseList(
-                          expenses: trip.expenses,
-                          currency: trip.currency,
-                          onExpenseTap: _openEditExpense,
-                          onAddExpense: _showAddExpenseSheet,
-                          newlyAddedExpenseId: _newlyAddedExpenseId,
+                    if (bg.gradient != null)
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(gradient: bg.gradient),
                         ),
-                      ],
+                      ),
+                  ] else
+                    Positioned.fill(child: ColoredBox(color: bg.color)),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FilteredExpenseList(
+                            expenses: trip.expenses,
+                            currency: trip.currency,
+                            onExpenseTap: _openEditExpense,
+                            onAddExpense: _showAddExpenseSheet,
+                            newlyAddedExpenseId: _newlyAddedExpenseId,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
             SliverPadding(
