@@ -27,7 +27,7 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
-import androidx.glance.color.ColorProvider
+import androidx.glance.unit.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -457,6 +457,22 @@ private val WidgetGroupTotalValueTextSize = 22.sp
 private val WidgetTodayPillRadius = 16.dp
 private val WidgetTodayPillHorizontalPadding = 8.dp
 private val WidgetTodayPillVerticalPadding = 2.dp
+
+/**
+ * Creates a [ColorProvider] that resolves to [day] in light mode and [night] in dark mode.
+ * Replaces the removed `androidx.glance.color.ColorProvider(day, night)` factory.
+ */
+private fun ColorProvider(day: Color, night: Color): ColorProvider {
+    return DayNightColorProvider(day, night)
+}
+
+private data class DayNightColorProvider(val day: Color, val night: Color) : ColorProvider {
+    override fun getColor(context: Context): Color {
+        val nightMode = context.resources.configuration.uiMode and
+            android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        return if (nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES) night else day
+    }
+}
 
 // Default widget container surface when group-based background is disabled.
 // Colors are aligned with a soft Material-like neutral surface for baseline readability.
