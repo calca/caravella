@@ -203,13 +203,26 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                             ),
                     ) {
                         Column(modifier = GlanceModifier.defaultWeight()) {
-                            Text(
-                                text = context.getString(R.string.widget_today_label),
-                                style = TextStyle(
-                                    color = SecondaryTextColor,
-                                    fontSize = WidgetLabelTextSize,
-                                ),
-                            )
+                            Box(
+                                modifier = GlanceModifier
+                                    .cornerRadius(WidgetTodayPillRadius)
+                                    .background(WidgetTodayPillSurface)
+                                    .padding(
+                                        start = WidgetTodayPillHorizontalPadding,
+                                        top = WidgetTodayPillVerticalPadding,
+                                        end = WidgetTodayPillHorizontalPadding,
+                                        bottom = WidgetTodayPillVerticalPadding,
+                                    ),
+                            ) {
+                                Text(
+                                    text = "Today",
+                                    style = TextStyle(
+                                        color = WidgetTodayPillTextColor,
+                                        fontSize = WidgetLabelTextSize,
+                                        fontWeight = FontWeight.Bold,
+                                    ),
+                                )
+                            }
                             Text(
                                 text = model.todayValue,
                                 style = TextStyle(
@@ -232,7 +245,8 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                 text = model.groupTotalValue,
                                 style = TextStyle(
                                     color = EmphasisTextColor,
-                                    fontSize = WidgetBodyTextSize,
+                                    fontSize = WidgetGroupTotalValueTextSize,
+                                    fontWeight = FontWeight.Bold,
                                 ),
                                 modifier = GlanceModifier.padding(top = 2.dp),
                             )
@@ -296,6 +310,10 @@ private val WidgetInnerRadius = 20.dp
 private val WidgetBodyTextSize = 15.sp
 private val WidgetLabelTextSize = 12.sp
 private val WidgetTodayValueTextSize = 22.sp
+private val WidgetGroupTotalValueTextSize = 18.sp
+private val WidgetTodayPillRadius = 999.dp
+private val WidgetTodayPillHorizontalPadding = 8.dp
+private val WidgetTodayPillVerticalPadding = 2.dp
 
 // Default widget container surface when group-based background is disabled.
 // Colors are aligned with a soft Material-like neutral surface for baseline readability.
@@ -320,6 +338,16 @@ private val EmphasisTextColor = ColorProvider(
 private val SecondaryTextColor = ColorProvider(
     Color(0xFF5F5A68), // Light mode
     Color(0xFFC8C2D2), // Dark mode
+)
+
+private val WidgetTodayPillSurface = ColorProvider(
+    Color(0xFFE1D8F8), // Light mode
+    Color(0xFF4D3B73), // Dark mode
+)
+
+private val WidgetTodayPillTextColor = ColorProvider(
+    Color(0xFF2E1B52), // Light mode
+    Color(0xFFF3ECFF), // Dark mode
 )
 
 private data class WidgetUiModel(
