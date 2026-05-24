@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="?android:attr/colorBackground"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -69,6 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginTop="12dp"
+        android:contentDescription="@string/widget_quick_add"
         android:text="+" />
 
 </LinearLayout>

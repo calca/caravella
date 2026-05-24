@@ -123,6 +123,9 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             )
             WidgetUiModel(
                 title = title,
+                // Default to 0.0 when totals are unavailable (e.g. first load before
+                // any expenses exist) so the widget always shows a formatted amount
+                // instead of a placeholder dash.
                 todayValue = formatAmount(totals?.todayTotal ?: 0.0, currency),
                 groupTotalValue = formatAmount(totals?.groupTotal ?: 0.0, currency),
                 showGroupName = config.showGroupName,
