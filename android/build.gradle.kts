@@ -15,6 +15,14 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(":app")
 }
+subprojects {
+    afterEvaluate {
+        // Force compileSdk = 37 for all Android library subprojects (e.g. home_widget)
+        // so they satisfy transitive dependencies on glance-appwidget:1.3.0-alpha01 and
+        // remote-creation-android:1.0.0-alpha11 that require API 37.
+        extensions.findByType<com.android.build.gradle.LibraryExtension>()?.compileSdk = 37
+    }
+}
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
