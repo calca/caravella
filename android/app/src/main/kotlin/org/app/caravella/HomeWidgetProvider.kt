@@ -7,22 +7,28 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
-import androidx.glance.Image
-import androidx.glance.ImageProvider
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.glance.Button
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.Image
+import androidx.glance.ImageProvider
+import androidx.glance.LocalSize
 import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity as glanceActionStartActivity
-import androidx.glance.Button
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
+import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
@@ -33,8 +39,6 @@ import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import es.antonborri.home_widget.actionStartActivity as homeWidgetActionStartActivity
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.io.File
@@ -81,6 +85,15 @@ class HomeWidgetProvider : GlanceAppWidgetReceiver() {
 }
 
 private object CaravellaHomeWidget : GlanceAppWidget() {
+    // Responsive size breakpoints for adaptive layout
+    private val SMALL = DpSize(57.dp, 57.dp)
+    private val MEDIUM = DpSize(130.dp, 130.dp)
+    private val WIDE = DpSize(200.dp, 130.dp)
+
+    override val sizeMode = SizeMode.Responsive(
+        setOf(SMALL, MEDIUM, WIDE),
+    )
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val appWidgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
         val config = HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)
@@ -102,6 +115,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 ),
                 tapAction = null,
                 useGroupBackground = false,
+                backgroundTransparency = 0,
                 backgroundColor = null,
                 backgroundImagePath = null,
             )
@@ -135,6 +149,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 ),
                 tapAction = addExpenseAction,
                 useGroupBackground = config.useGroupBackground,
+                backgroundTransparency = config.backgroundTransparency,
                 backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
                 backgroundImagePath = if (config.useGroupBackground) {
                     totals?.groupBackgroundImagePath
@@ -151,9 +166,12 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         }
 
         provideContent {
+            val size = LocalSize.current
+            val isCompact = size.width < 130.dp || size.height < 130.dp
+            val isWide = size.width >= 200.dp
+
             val baseModifier = GlanceModifier
                 .fillMaxSize()
-                .padding(WidgetOuterPadding)
                 .cornerRadius(WidgetOuterRadius)
             val containerModifier = if (model.useGroupBackground && model.backgroundColor != null) {
                 val bgColor = toComposeColor(model.backgroundColor)
@@ -175,103 +193,215 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                         provider = backgroundImageProvider,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = GlanceModifier.fillMaxSize(),
+                        modifier = GlanceModifier
+                            .fillMaxSize()
+                            .cornerRadius(WidgetOuterRadius),
                     )
                 }
 
-                Column(
-                    modifier = GlanceModifier
-                        .fillMaxSize()
-                        .padding(WidgetLayerSpacing)
-                        .cornerRadius(WidgetInnerRadius)
-                        .background(ContentOverlaySurface)
-                        .padding(WidgetInnerPadding),
-                ) {
-                    if (model.showGroupName) {
-                        Text(
-                            text = model.title,
-                            style = TextStyle(
-                                color = EmphasisTextColor,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = WidgetBodyTextSize,
-                            ),
-                            maxLines = 1,
-                        )
+                if (isCompact) {
+                    // Compact 1x1 layout: just today value centered
+                    val overlayModifier = if (model.backgroundTransparency >= 100) {
+                        GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
+                    } else {
+                        GlanceModifier
+                            .fillMaxSize()
+                            .cornerRadius(WidgetOuterRadius)
+                            .background(contentOverlaySurface(model.backgroundTransparency))
+                            .padding(WidgetCompactPadding)
                     }
-
-                    Row(
-                        modifier = GlanceModifier
-                            .fillMaxWidth()
-                            .padding(
-                                top = if (model.showGroupName) {
-                                    WidgetSectionSpacing
-                                } else {
-                                    WidgetMinimalSpacing
-                                },
-                            ),
+                    Box(
+                        modifier = overlayModifier,
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Column(modifier = GlanceModifier.defaultWeight()) {
-                            Box(
-                                modifier = GlanceModifier
-                                    .cornerRadius(WidgetTodayPillRadius)
-                                    .background(WidgetTodayPillSurface)
-                                    .padding(
-                                        start = WidgetTodayPillHorizontalPadding,
-                                        top = WidgetTodayPillVerticalPadding,
-                                        end = WidgetTodayPillHorizontalPadding,
-                                        bottom = WidgetTodayPillVerticalPadding,
-                                    ),
-                            ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            if (model.showGroupName) {
                                 Text(
-                                    text = context.getString(R.string.widget_today_label),
+                                    text = model.title,
                                     style = TextStyle(
-                                        color = WidgetTodayPillTextColor,
-                                        fontSize = WidgetLabelTextSize,
+                                        color = EmphasisTextColor,
                                         fontWeight = FontWeight.Bold,
+                                        fontSize = WidgetLabelTextSize,
                                     ),
+                                    maxLines = 1,
                                 )
                             }
                             Text(
                                 text = model.todayValue,
                                 style = TextStyle(
                                     color = EmphasisTextColor,
-                                    fontSize = WidgetTodayValueTextSize,
+                                    fontSize = WidgetCompactValueTextSize,
                                     fontWeight = FontWeight.Bold,
                                 ),
-                                modifier = GlanceModifier.padding(top = 2.dp),
-                            )
-                        }
-                        Column(modifier = GlanceModifier.defaultWeight()) {
-                            Text(
-                                text = context.getString(R.string.widget_group_total_label),
-                                style = TextStyle(
-                                    color = SecondaryTextColor,
-                                    fontSize = WidgetLabelTextSize,
-                                ),
-                            )
-                            Text(
-                                text = model.groupTotalValue,
-                                style = TextStyle(
-                                    color = EmphasisTextColor,
-                                    fontSize = WidgetGroupTotalValueTextSize,
-                                    fontWeight = FontWeight.Bold,
-                                ),
-                                modifier = GlanceModifier.padding(top = 2.dp),
+                                maxLines = 1,
                             )
                         }
                     }
+                } else {
+                    // Standard layout
+                    val overlayModifier = if (model.backgroundTransparency >= 100) {
+                        GlanceModifier
+                            .fillMaxSize()
+                            .padding(WidgetInnerPadding)
+                    } else {
+                        GlanceModifier
+                            .fillMaxSize()
+                            .padding(WidgetLayerSpacing)
+                            .cornerRadius(WidgetInnerRadius)
+                            .background(contentOverlaySurface(model.backgroundTransparency))
+                            .padding(WidgetInnerPadding)
+                    }
 
-                    if (model.ctaButton != null) {
-                        Row(
-                            modifier = GlanceModifier
-                                .fillMaxWidth()
-                                .padding(top = 12.dp),
-                            horizontalAlignment = androidx.glance.layout.Alignment.End,
-                        ) {
-                            Button(
-                                text = model.ctaButton.label,
-                                onClick = model.ctaButton.action,
+                    Column(modifier = overlayModifier) {
+                        if (model.showGroupName) {
+                            Text(
+                                text = model.title,
+                                style = TextStyle(
+                                    color = EmphasisTextColor,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = WidgetBodyTextSize,
+                                ),
+                                maxLines = 1,
                             )
+                        }
+
+                        if (isWide) {
+                            // Wide layout: today and group total side by side
+                            Row(
+                                modifier = GlanceModifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        top = if (model.showGroupName) {
+                                            WidgetSectionSpacing
+                                        } else {
+                                            WidgetMinimalSpacing
+                                        },
+                                    ),
+                            ) {
+                                Column(modifier = GlanceModifier.defaultWeight()) {
+                                    Box(
+                                        modifier = GlanceModifier
+                                            .cornerRadius(WidgetTodayPillRadius)
+                                            .background(WidgetTodayPillSurface)
+                                            .padding(
+                                                start = WidgetTodayPillHorizontalPadding,
+                                                top = WidgetTodayPillVerticalPadding,
+                                                end = WidgetTodayPillHorizontalPadding,
+                                                bottom = WidgetTodayPillVerticalPadding,
+                                            ),
+                                    ) {
+                                        Text(
+                                            text = context.getString(R.string.widget_today_label),
+                                            style = TextStyle(
+                                                color = WidgetTodayPillTextColor,
+                                                fontSize = WidgetLabelTextSize,
+                                                fontWeight = FontWeight.Bold,
+                                            ),
+                                        )
+                                    }
+                                    Text(
+                                        text = model.todayValue,
+                                        style = TextStyle(
+                                            color = EmphasisTextColor,
+                                            fontSize = WidgetTodayValueTextSize,
+                                            fontWeight = FontWeight.Bold,
+                                        ),
+                                        modifier = GlanceModifier.padding(top = 2.dp),
+                                    )
+                                }
+                                Column(modifier = GlanceModifier.defaultWeight()) {
+                                    Text(
+                                        text = context.getString(R.string.widget_group_total_label),
+                                        style = TextStyle(
+                                            color = SecondaryTextColor,
+                                            fontSize = WidgetLabelTextSize,
+                                        ),
+                                    )
+                                    Text(
+                                        text = model.groupTotalValue,
+                                        style = TextStyle(
+                                            color = EmphasisTextColor,
+                                            fontSize = WidgetGroupTotalValueTextSize,
+                                            fontWeight = FontWeight.Bold,
+                                        ),
+                                        modifier = GlanceModifier.padding(top = 2.dp),
+                                    )
+                                }
+                            }
+                        } else {
+                            // Medium layout: stacked vertically, only today value
+                            Column(
+                                modifier = GlanceModifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        top = if (model.showGroupName) {
+                                            WidgetSectionSpacing
+                                        } else {
+                                            WidgetMinimalSpacing
+                                        },
+                                    ),
+                            ) {
+                                Box(
+                                    modifier = GlanceModifier
+                                        .cornerRadius(WidgetTodayPillRadius)
+                                        .background(WidgetTodayPillSurface)
+                                        .padding(
+                                            start = WidgetTodayPillHorizontalPadding,
+                                            top = WidgetTodayPillVerticalPadding,
+                                            end = WidgetTodayPillHorizontalPadding,
+                                            bottom = WidgetTodayPillVerticalPadding,
+                                        ),
+                                ) {
+                                    Text(
+                                        text = context.getString(R.string.widget_today_label),
+                                        style = TextStyle(
+                                            color = WidgetTodayPillTextColor,
+                                            fontSize = WidgetLabelTextSize,
+                                            fontWeight = FontWeight.Bold,
+                                        ),
+                                    )
+                                }
+                                Text(
+                                    text = model.todayValue,
+                                    style = TextStyle(
+                                        color = EmphasisTextColor,
+                                        fontSize = WidgetTodayValueTextSize,
+                                        fontWeight = FontWeight.Bold,
+                                    ),
+                                    modifier = GlanceModifier.padding(top = 2.dp),
+                                )
+                                Text(
+                                    text = context.getString(R.string.widget_group_total_label),
+                                    style = TextStyle(
+                                        color = SecondaryTextColor,
+                                        fontSize = WidgetLabelTextSize,
+                                    ),
+                                    modifier = GlanceModifier.padding(top = 8.dp),
+                                )
+                                Text(
+                                    text = model.groupTotalValue,
+                                    style = TextStyle(
+                                        color = EmphasisTextColor,
+                                        fontSize = WidgetGroupTotalValueTextSize,
+                                        fontWeight = FontWeight.Bold,
+                                    ),
+                                    modifier = GlanceModifier.padding(top = 2.dp),
+                                )
+                            }
+                        }
+
+                        if (isWide && model.ctaButton != null) {
+                            Row(
+                                modifier = GlanceModifier
+                                    .fillMaxWidth()
+                                    .padding(top = 12.dp),
+                                horizontalAlignment = Alignment.End,
+                            ) {
+                                Button(
+                                    text = model.ctaButton.label,
+                                    onClick = model.ctaButton.action,
+                                )
+                            }
                         }
                     }
                 }
@@ -312,17 +442,18 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
     }
 }
 
-private val WidgetOuterPadding = 4.dp
 private val WidgetLayerSpacing = 10.dp
 private val WidgetInnerPadding = 12.dp
+private val WidgetCompactPadding = 6.dp
 private val WidgetSectionSpacing = 10.dp
 private val WidgetMinimalSpacing = 2.dp
 private val WidgetOuterRadius = 24.dp
 private val WidgetInnerRadius = 20.dp
 private val WidgetBodyTextSize = 15.sp
 private val WidgetLabelTextSize = 12.sp
-private val WidgetTodayValueTextSize = 22.sp
-private val WidgetGroupTotalValueTextSize = 18.sp
+private val WidgetTodayValueTextSize = 18.sp
+private val WidgetCompactValueTextSize = 16.sp
+private val WidgetGroupTotalValueTextSize = 22.sp
 private val WidgetTodayPillRadius = 16.dp
 private val WidgetTodayPillHorizontalPadding = 8.dp
 private val WidgetTodayPillVerticalPadding = 2.dp
@@ -337,10 +468,20 @@ private val DefaultWidgetSurface = ColorProvider(
 // Glass-like overlay above image/color backgrounds for better text readability.
 // Uses consistent ~80% opacity in both themes for predictable legibility.
 // This is layered on top of custom group image/color backgrounds.
-private val ContentOverlaySurface = ColorProvider(
-    Color(0xCCFFFFFF), // Light mode (80% white)
-    Color(0xCC000000), // Dark mode (80% black)
-)
+/**
+ * Returns the content overlay surface color with alpha based on the transparency level.
+ * transparency=0 → full overlay (0xCC alpha ≈ 80%), transparency=100 → no overlay (fully transparent).
+ */
+private fun contentOverlaySurface(transparency: Int): ColorProvider {
+    // Base alpha is 0xCC (204) at transparency=0; linearly decreases to 0x00 at transparency=100.
+    val clampedTransparency = transparency.coerceIn(0, 100)
+    val alpha = ((100 - clampedTransparency) * 0xCC / 100.0).toInt()
+    val alphaHex = alpha.toLong()
+    return ColorProvider(
+        Color((alphaHex shl 24) or 0xFFFFFF),  // Light mode (white overlay)
+        Color((alphaHex shl 24) or 0x000000),  // Dark mode (black overlay)
+    )
+}
 
 private val EmphasisTextColor = ColorProvider(
     Color(0xFF1D1A24), // Light mode
@@ -370,6 +511,7 @@ private data class WidgetUiModel(
     val ctaButton: WidgetButton?,
     val tapAction: Action?,
     val useGroupBackground: Boolean,
+    val backgroundTransparency: Int,
     val backgroundColor: Int?,
     val backgroundImagePath: String?,
 )
@@ -386,6 +528,7 @@ internal data class WidgetGroupConfig(
     val groupCurrency: String,
     val useGroupBackground: Boolean,
     val showGroupName: Boolean,
+    val backgroundTransparency: Int,
 )
 
 internal object HomeWidgetPrefs {
@@ -397,6 +540,7 @@ internal object HomeWidgetPrefs {
     private fun keyGroupCurrency(appWidgetId: Int) = "widget_${appWidgetId}_group_currency"
     private fun keyUseGroupBackground(appWidgetId: Int) = "widget_${appWidgetId}_use_group_background"
     private fun keyShowGroupName(appWidgetId: Int) = "widget_${appWidgetId}_show_group_name"
+    private fun keyBackgroundTransparency(appWidgetId: Int) = "widget_${appWidgetId}_background_transparency"
 
     fun saveWidgetConfig(
         context: Context,
@@ -406,6 +550,7 @@ internal object HomeWidgetPrefs {
         groupCurrency: String,
         useGroupBackground: Boolean,
         showGroupName: Boolean,
+        backgroundTransparency: Int,
     ) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
@@ -414,6 +559,7 @@ internal object HomeWidgetPrefs {
             .putString(keyGroupCurrency(appWidgetId), groupCurrency)
             .putBoolean(keyUseGroupBackground(appWidgetId), useGroupBackground)
             .putBoolean(keyShowGroupName(appWidgetId), showGroupName)
+            .putInt(keyBackgroundTransparency(appWidgetId), backgroundTransparency)
             .apply()
     }
 
@@ -425,6 +571,11 @@ internal object HomeWidgetPrefs {
     fun getShowGroupName(context: Context, appWidgetId: Int): Boolean {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getBoolean(keyShowGroupName(appWidgetId), true)
+    }
+
+    fun getBackgroundTransparency(context: Context, appWidgetId: Int): Int {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getInt(keyBackgroundTransparency(appWidgetId), 0)
     }
 
     fun getWidgetConfig(context: Context, appWidgetId: Int): WidgetGroupConfig? {
@@ -439,6 +590,7 @@ internal object HomeWidgetPrefs {
             groupCurrency = groupCurrency,
             useGroupBackground = getUseGroupBackground(context, appWidgetId),
             showGroupName = getShowGroupName(context, appWidgetId),
+            backgroundTransparency = getBackgroundTransparency(context, appWidgetId),
         )
     }
 
@@ -450,6 +602,7 @@ internal object HomeWidgetPrefs {
             .remove(keyGroupCurrency(appWidgetId))
             .remove(keyUseGroupBackground(appWidgetId))
             .remove(keyShowGroupName(appWidgetId))
+            .remove(keyBackgroundTransparency(appWidgetId))
             .apply()
     }
 }
