@@ -268,12 +268,7 @@ private fun HomeWidgetConfigureScreen(
             enabled = selectedGroup != null,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            val buttonText = if (selectedGroup == null) {
-                context.getString(R.string.widget_config_save_disabled)
-            } else {
-                context.getString(R.string.widget_config_save)
-            }
-            Text(text = buttonText)
+            Text(text = context.getString(R.string.widget_config_save))
         }
     }
 }
