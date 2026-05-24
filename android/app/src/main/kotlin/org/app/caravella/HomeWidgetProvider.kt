@@ -311,7 +311,7 @@ private val WidgetBodyTextSize = 15.sp
 private val WidgetLabelTextSize = 12.sp
 private val WidgetTodayValueTextSize = 22.sp
 private val WidgetGroupTotalValueTextSize = 18.sp
-private val WidgetTodayPillRadius = 999.dp
+private val WidgetTodayPillRadius = 16.dp
 private val WidgetTodayPillHorizontalPadding = 8.dp
 private val WidgetTodayPillVerticalPadding = 2.dp
 
