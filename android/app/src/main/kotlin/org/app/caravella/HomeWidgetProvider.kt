@@ -88,10 +88,10 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
     // Responsive size breakpoints for adaptive layout
     private val SMALL = DpSize(57.dp, 57.dp)
     private val MEDIUM = DpSize(130.dp, 130.dp)
-    private val LARGE = DpSize(200.dp, 130.dp)
+    private val WIDE = DpSize(200.dp, 130.dp)
 
     override val sizeMode = SizeMode.Responsive(
-        setOf(SMALL, MEDIUM, LARGE),
+        setOf(SMALL, MEDIUM, WIDE),
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {

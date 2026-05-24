@@ -178,8 +178,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
     // Update shortcuts after data is loaded
     PlatformShortcutsManager.updateShortcuts();
-    // Refresh home widgets so they display current data (handles first-launch case
-    // where the widget was placed before the app had initialized storage).
+    // Refresh home widgets so they always display current data on each load.
     unawaited(PlatformHomeWidgetManager.updateHomeWidgets());
   }
 
