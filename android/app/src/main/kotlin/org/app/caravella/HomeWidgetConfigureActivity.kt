@@ -16,10 +16,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,7 +64,7 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
             MaterialTheme {
                 HomeWidgetConfigureScreen(
                     appWidgetId = appWidgetId,
-                    onGroupSelected = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName ->
+                    onConfigSaved = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName ->
                         HomeWidgetPrefs.saveWidgetConfig(
                             context = this,
                             appWidgetId = appWidgetId,
@@ -92,13 +95,22 @@ private sealed interface HomeWidgetConfigureUiState {
     data class Loaded(val groups: List<AppFunctionStorageReader.GroupSummary>) : HomeWidgetConfigureUiState
 }
 
+private enum class HomeWidgetConfigureTab {
+    Group,
+    Options,
+}
+
 @Composable
 private fun HomeWidgetConfigureScreen(
     appWidgetId: Int,
-    onGroupSelected: (String, String, String, Boolean, Boolean) -> Unit,
+    onConfigSaved: (String, String, String, Boolean, Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     var uiState by remember { mutableStateOf<HomeWidgetConfigureUiState>(HomeWidgetConfigureUiState.Loading) }
+    var selectedTab by remember { mutableStateOf(HomeWidgetConfigureTab.Group) }
+    var selectedGroupId by remember {
+        mutableStateOf(HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)?.groupId)
+    }
     var useGroupBackground by remember {
         mutableStateOf(HomeWidgetPrefs.getUseGroupBackground(context, appWidgetId))
     }
@@ -111,6 +123,10 @@ private fun HomeWidgetConfigureScreen(
         uiState = HomeWidgetConfigureUiState.Loaded(groups)
     }
 
+    val selectedGroup = (uiState as? HomeWidgetConfigureUiState.Loaded)
+        ?.groups
+        ?.firstOrNull { it.id == selectedGroupId }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -122,88 +138,142 @@ private fun HomeWidgetConfigureScreen(
             style = MaterialTheme.typography.titleMedium,
         )
 
-        WidgetConfigToggleRow(
-            label = context.getString(R.string.widget_config_use_group_background),
-            checked = useGroupBackground,
-            onCheckedChange = { useGroupBackground = it },
-        )
+        TabRow(selectedTabIndex = selectedTab.ordinal) {
+            Tab(
+                selected = selectedTab == HomeWidgetConfigureTab.Group,
+                onClick = { selectedTab = HomeWidgetConfigureTab.Group },
+                text = { Text(text = context.getString(R.string.widget_config_tab_group)) },
+            )
+            Tab(
+                selected = selectedTab == HomeWidgetConfigureTab.Options,
+                onClick = { selectedTab = HomeWidgetConfigureTab.Options },
+                text = { Text(text = context.getString(R.string.widget_config_tab_options)) },
+            )
+        }
 
-        WidgetConfigToggleRow(
-            label = context.getString(R.string.widget_config_show_group_name),
-            checked = showGroupName,
-            onCheckedChange = { showGroupName = it },
-        )
-
-        when (val state = uiState) {
-            HomeWidgetConfigureUiState.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is HomeWidgetConfigureUiState.Loaded -> {
-                if (state.groups.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(text = context.getString(R.string.widget_config_empty))
+        when (selectedTab) {
+            HomeWidgetConfigureTab.Group -> {
+                when (val state = uiState) {
+                    HomeWidgetConfigureUiState.Loading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                    ) {
-                        itemsIndexed(state.groups, key = { _, group -> group.id }) { index, group ->
-                            Column(
+
+                    is HomeWidgetConfigureUiState.Loaded -> {
+                        if (state.groups.isEmpty()) {
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .semantics {
-                                        role = Role.Button
-                                        contentDescription = context.getString(
-                                            R.string.widget_config_select_group_a11y,
-                                            group.title,
-                                            group.currency,
-                                        )
-                                    }
-                                    .clickable {
-                                        onGroupSelected(
-                                            group.id,
-                                            group.title,
-                                            group.currency,
-                                            useGroupBackground,
-                                            showGroupName,
-                                        )
-                                    }
-                                    .padding(vertical = 12.dp),
+                                    .weight(1f),
+                                contentAlignment = Alignment.Center,
                             ) {
-                                Text(
-                                    text = group.title,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
-                                Text(
-                                    text = context.getString(
-                                        R.string.widget_config_currency_label,
-                                        group.currency,
-                                    ),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                )
+                                Text(text = context.getString(R.string.widget_config_empty))
                             }
-                            if (index < state.groups.lastIndex) {
-                                HorizontalDivider()
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                            ) {
+                                itemsIndexed(state.groups, key = { _, group -> group.id }) { index, group ->
+                                    val isSelected = selectedGroupId == group.id
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .semantics {
+                                                role = Role.Button
+                                                contentDescription = context.getString(
+                                                    R.string.widget_config_select_group_a11y,
+                                                    group.title,
+                                                    group.currency,
+                                                )
+                                            }
+                                            .clickable { selectedGroupId = group.id }
+                                            .padding(vertical = 12.dp),
+                                    ) {
+                                        Text(
+                                            text = group.title,
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            color = if (isSelected) {
+                                                MaterialTheme.colorScheme.primary
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurface
+                                            },
+                                        )
+                                        Text(
+                                            text = context.getString(
+                                                R.string.widget_config_currency_label,
+                                                group.currency,
+                                            ),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                        )
+                                        if (isSelected) {
+                                            Text(
+                                                text = context.getString(R.string.widget_config_selected),
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.primary,
+                                            )
+                                        }
+                                    }
+                                    if (index < state.groups.lastIndex) {
+                                        HorizontalDivider()
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+
+            HomeWidgetConfigureTab.Options -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    WidgetConfigToggleRow(
+                        label = context.getString(R.string.widget_config_use_group_background),
+                        checked = useGroupBackground,
+                        onCheckedChange = { useGroupBackground = it },
+                    )
+
+                    WidgetConfigToggleRow(
+                        label = context.getString(R.string.widget_config_show_group_name),
+                        checked = showGroupName,
+                        onCheckedChange = { showGroupName = it },
+                    )
+                }
+            }
+        }
+
+        Button(
+            onClick = {
+                selectedGroup?.let { group ->
+                    onConfigSaved(
+                        group.id,
+                        group.title,
+                        group.currency,
+                        useGroupBackground,
+                        showGroupName,
+                    )
+                }
+            },
+            enabled = selectedGroup != null,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            val buttonText = if (selectedGroup == null) {
+                context.getString(R.string.widget_config_save_disabled)
+            } else {
+                context.getString(R.string.widget_config_save)
+            }
+            Text(text = buttonText)
         }
     }
 }
