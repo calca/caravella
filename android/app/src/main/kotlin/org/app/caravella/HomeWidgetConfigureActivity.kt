@@ -209,6 +209,13 @@ private fun HomeWidgetConfigureScreen(
                                             ),
                                             style = MaterialTheme.typography.bodyMedium,
                                         )
+                                        if (isSelected) {
+                                            Text(
+                                                text = context.getString(R.string.widget_config_selected),
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.primary,
+                                            )
+                                        }
                                     }
                                     if (index < state.groups.lastIndex) {
                                         HorizontalDivider()
