@@ -475,7 +475,7 @@ private val DefaultWidgetSurface = ColorProvider(
 private fun contentOverlaySurface(transparency: Int): ColorProvider {
     // Base alpha is 0xCC (204) at transparency=0; linearly decreases to 0x00 at transparency=100.
     val clampedTransparency = transparency.coerceIn(0, 100)
-    val alpha = ((100 - clampedTransparency) * 0xCC / 100)
+    val alpha = ((100 - clampedTransparency) * 0xCC / 100.0).toInt()
     val alphaHex = alpha.toLong()
     return ColorProvider(
         Color((alphaHex shl 24) or 0xFFFFFF),  // Light mode (white overlay)
