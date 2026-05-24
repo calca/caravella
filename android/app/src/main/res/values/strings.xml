@@ -26,4 +26,9 @@
     <string name="widget_config_selected">Selected</string>
     <string name="widget_config_select_group_a11y">Select group %1$s with currency %2$s</string>
     <string name="widget_config_currency_label">Currency: %1$s</string>
+
+    <!-- Widget preview (shown in widget picker) -->
+    <string name="widget_preview_group_name">My Trip</string>
+    <string name="widget_preview_today_value">12.50 €</string>
+    <string name="widget_preview_total_value">245.00 €</string>
 </resources>

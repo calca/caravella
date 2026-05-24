@@ -47,6 +47,11 @@ import kotlinx.coroutines.launch
 class HomeWidgetProvider : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = CaravellaHomeWidget
 
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        updateAllWidgets(context)
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         when (intent.action) {
@@ -118,8 +123,11 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             )
             WidgetUiModel(
                 title = title,
-                todayValue = totals?.todayTotal?.let { formatAmount(it, currency) } ?: "-",
-                groupTotalValue = totals?.groupTotal?.let { formatAmount(it, currency) } ?: "-",
+                // Default to 0.0 when totals are unavailable (e.g. first load before
+                // any expenses exist) so the widget always shows a formatted amount
+                // instead of a placeholder dash.
+                todayValue = formatAmount(totals?.todayTotal ?: 0.0, currency),
+                groupTotalValue = formatAmount(totals?.groupTotal ?: 0.0, currency),
                 showGroupName = config.showGroupName,
                 ctaButton = WidgetButton(
                     label = "+",
@@ -254,13 +262,17 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     }
 
                     if (model.ctaButton != null) {
-                        Button(
-                            text = model.ctaButton.label,
-                            onClick = model.ctaButton.action,
+                        Row(
                             modifier = GlanceModifier
                                 .fillMaxWidth()
                                 .padding(top = 12.dp),
-                        )
+                            horizontalAlignment = androidx.glance.layout.Alignment.End,
+                        ) {
+                            Button(
+                                text = model.ctaButton.label,
+                                onClick = model.ctaButton.action,
+                            )
+                        }
                     }
                 }
             }
