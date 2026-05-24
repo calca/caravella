@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -109,7 +108,9 @@ private fun HomeWidgetConfigureScreen(
     val context = LocalContext.current
     var uiState by remember { mutableStateOf<HomeWidgetConfigureUiState>(HomeWidgetConfigureUiState.Loading) }
     var selectedTab by remember { mutableStateOf(HomeWidgetConfigureTab.Group) }
-    var selectedGroupId by remember { mutableStateOf<String?>(null) }
+    var selectedGroupId by remember {
+        mutableStateOf(HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)?.groupId)
+    }
     var useGroupBackground by remember {
         mutableStateOf(HomeWidgetPrefs.getUseGroupBackground(context, appWidgetId))
     }
@@ -118,7 +119,6 @@ private fun HomeWidgetConfigureScreen(
     }
 
     LaunchedEffect(Unit) {
-        selectedGroupId = HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)?.groupId
         val groups = withContext(Dispatchers.IO) { AppFunctionStorageReader.getActiveGroups(context) }
         uiState = HomeWidgetConfigureUiState.Loaded(groups)
     }
@@ -200,7 +200,11 @@ private fun HomeWidgetConfigureScreen(
                                         Text(
                                             text = group.title,
                                             style = MaterialTheme.typography.bodyLarge,
-                                            color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                                            color = if (isSelected) {
+                                                MaterialTheme.colorScheme.primary
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurface
+                                            },
                                         )
                                         Text(
                                             text = context.getString(
