@@ -3,7 +3,6 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     id("org.jetbrains.kotlin.plugin.compose")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
@@ -24,7 +23,8 @@ android {
         }
     }
     namespace = "io.caravella.egm"
-    compileSdk = flutter.compileSdkVersion
+    // Hardcoded to 37 to stay above Flutter's default compileSdkVersion (36).
+    compileSdk = 37
     ndkVersion = "28.2.13676358"
 
     compileOptions {
@@ -90,7 +90,9 @@ dependencies {
 
     // Android App Functions – exposes Caravella capabilities to Android AI agents.
     // See: https://developer.android.com/reference/androidx/appfunctions
-    implementation("androidx.appfunctions:appfunctions:1.0.0-alpha09")
+    // Pinned to alpha01: CaravellaAppFunctionService uses Builder(qualifiedName, id) which
+    // was made internal in alpha09. Update together with CaravellaAppFunctionService.kt.
+    implementation("androidx.appfunctions:appfunctions:1.0.0-alpha01")
     implementation("androidx.glance:glance-appwidget:1.3.0-alpha01")
     implementation("androidx.glance:glance-material3:1.3.0-alpha01")
     implementation("androidx.activity:activity-compose:1.13.0")

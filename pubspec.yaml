@@ -45,7 +45,7 @@ dependencies:
   
   # External dependencies
   provider: ^6.1.5
-  file_picker: ^11.0.2
+  file_picker: ^10.3.11
   image_picker: ^1.2.1
   image_picker_android: ^0.8.13
   image: ^4.8.0
@@ -95,12 +95,12 @@ dev_dependencies:
   sqflite_common_ffi: ^2.4.0+2
 
 dependency_overrides:
-  # Force win32 to ^5.9.0: file_picker 11.x requires win32 ^5.9.0 (win32 6.x has breaking API changes)
+  # Force win32 to ^5.9.0: file_picker requires win32 ^5.9.0 (win32 6.x has breaking API changes)
   # share_plus 13.x declares ^6.0.1 but its Windows code uses only basic APIs compatible with 5.x
   win32: ^5.9.0
   # Force latlong2 to ^0.10.1; flutter_map 8.3.0 caps at ^0.9.1 but API is compatible
   latlong2: ^0.10.1
-  # Force package_info_plus to ^9.0.0; 10.x requires win32 ^6.x, incompatible with file_picker 11.x (win32 ^5.x)
+  # Force package_info_plus to ^9.0.0; 10.x requires win32 ^6.x, incompatible with file_picker (win32 ^5.x)
   # We don't use Linux platform so geolocator_linux won't be used at runtime
   package_info_plus: ^9.0.0
 
