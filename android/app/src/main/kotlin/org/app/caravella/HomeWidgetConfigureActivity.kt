@@ -69,7 +69,7 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
                     HomeWidgetConfigureScreen(
                         appWidgetId = appWidgetId,
                         modifier = Modifier.padding(innerPadding),
-                        onConfigSaved = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName ->
+                        onConfigSaved = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName, transparentBackground ->
                             HomeWidgetPrefs.saveWidgetConfig(
                                 context = this,
                                 appWidgetId = appWidgetId,
@@ -78,6 +78,7 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
                                 groupCurrency = groupCurrency,
                                 useGroupBackground = useGroupBackground,
                                 showGroupName = showGroupName,
+                                transparentBackground = transparentBackground,
                             )
 
                             HomeWidgetProvider.updateAllWidgets(this)
@@ -110,7 +111,7 @@ private enum class HomeWidgetConfigureTab {
 private fun HomeWidgetConfigureScreen(
     appWidgetId: Int,
     modifier: Modifier = Modifier,
-    onConfigSaved: (String, String, String, Boolean, Boolean) -> Unit,
+    onConfigSaved: (String, String, String, Boolean, Boolean, Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     var uiState by remember { mutableStateOf<HomeWidgetConfigureUiState>(HomeWidgetConfigureUiState.Loading) }
@@ -123,6 +124,9 @@ private fun HomeWidgetConfigureScreen(
     }
     var showGroupName by remember {
         mutableStateOf(HomeWidgetPrefs.getShowGroupName(context, appWidgetId))
+    }
+    var transparentBackground by remember {
+        mutableStateOf(HomeWidgetPrefs.getTransparentBackground(context, appWidgetId))
     }
 
     LaunchedEffect(Unit) {
@@ -256,6 +260,12 @@ private fun HomeWidgetConfigureScreen(
                         checked = showGroupName,
                         onCheckedChange = { showGroupName = it },
                     )
+
+                    WidgetConfigToggleRow(
+                        label = context.getString(R.string.widget_config_transparent_background),
+                        checked = transparentBackground,
+                        onCheckedChange = { transparentBackground = it },
+                    )
                 }
             }
         }
@@ -275,6 +285,7 @@ private fun HomeWidgetConfigureScreen(
                         group.currency,
                         useGroupBackground,
                         showGroupName,
+                        transparentBackground,
                     )
                 }
             },

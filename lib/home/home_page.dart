@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
@@ -176,6 +178,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
     // Update shortcuts after data is loaded
     PlatformShortcutsManager.updateShortcuts();
+    // Refresh home widgets so they display current data (handles first-launch case
+    // where the widget was placed before the app had initialized storage).
+    unawaited(PlatformHomeWidgetManager.updateHomeWidgets());
   }
 
   Future<void> _performUpdateCheckIfNeeded() async {
