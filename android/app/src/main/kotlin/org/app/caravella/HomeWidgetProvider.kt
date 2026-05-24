@@ -215,7 +215,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                     ),
                             ) {
                                 Text(
-                                    text = "Today",
+                                    text = context.getString(R.string.widget_today_label),
                                     style = TextStyle(
                                         color = WidgetTodayPillTextColor,
                                         fontSize = WidgetLabelTextSize,
