@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -46,6 +48,7 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
     private var appWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         setResult(Activity.RESULT_CANCELED)
@@ -62,29 +65,32 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                HomeWidgetConfigureScreen(
-                    appWidgetId = appWidgetId,
-                    onConfigSaved = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName ->
-                        HomeWidgetPrefs.saveWidgetConfig(
-                            context = this,
-                            appWidgetId = appWidgetId,
-                            groupId = groupId,
-                            groupTitle = groupTitle,
-                            groupCurrency = groupCurrency,
-                            useGroupBackground = useGroupBackground,
-                            showGroupName = showGroupName,
-                        )
+                Scaffold { innerPadding ->
+                    HomeWidgetConfigureScreen(
+                        appWidgetId = appWidgetId,
+                        modifier = Modifier.padding(innerPadding),
+                        onConfigSaved = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName ->
+                            HomeWidgetPrefs.saveWidgetConfig(
+                                context = this,
+                                appWidgetId = appWidgetId,
+                                groupId = groupId,
+                                groupTitle = groupTitle,
+                                groupCurrency = groupCurrency,
+                                useGroupBackground = useGroupBackground,
+                                showGroupName = showGroupName,
+                            )
 
-                        HomeWidgetProvider.updateAllWidgets(this)
+                            HomeWidgetProvider.updateAllWidgets(this)
 
-                        val resultIntent = Intent().putExtra(
-                            AppWidgetManager.EXTRA_APPWIDGET_ID,
-                            appWidgetId,
-                        )
-                        setResult(Activity.RESULT_OK, resultIntent)
-                        finish()
-                    },
-                )
+                            val resultIntent = Intent().putExtra(
+                                AppWidgetManager.EXTRA_APPWIDGET_ID,
+                                appWidgetId,
+                            )
+                            setResult(Activity.RESULT_OK, resultIntent)
+                            finish()
+                        },
+                    )
+                }
             }
         }
     }
@@ -103,6 +109,7 @@ private enum class HomeWidgetConfigureTab {
 @Composable
 private fun HomeWidgetConfigureScreen(
     appWidgetId: Int,
+    modifier: Modifier = Modifier,
     onConfigSaved: (String, String, String, Boolean, Boolean) -> Unit,
 ) {
     val context = LocalContext.current
@@ -128,7 +135,7 @@ private fun HomeWidgetConfigureScreen(
         ?.firstOrNull { it.id == selectedGroupId }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),

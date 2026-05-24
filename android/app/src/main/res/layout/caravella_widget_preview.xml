@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/widget_group_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
+        android:text="@string/widget_preview_group_name"
         android:textAppearance="@android:style/TextAppearance.Material.Medium"
         android:textStyle="bold" />
 
@@ -27,18 +28,18 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/widget_today_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_today_label"
                 android:textAppearance="@android:style/TextAppearance.Material.Small" />
 
             <TextView
-                android:id="@+id/widget_today_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:text="@string/widget_preview_today_value"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -48,23 +49,22 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/widget_week_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_group_total_label"
                 android:textAppearance="@android:style/TextAppearance.Material.Small" />
 
             <TextView
-                android:id="@+id/widget_week_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:text="@string/widget_preview_total_value"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
     <Button
-        android:id="@+id/widget_quick_add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
