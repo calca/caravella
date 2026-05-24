@@ -253,6 +253,12 @@ private fun HomeWidgetConfigureScreen(
             }
         }
 
+        val saveButtonDescription = if (selectedGroup == null) {
+            context.getString(R.string.widget_config_save_disabled)
+        } else {
+            context.getString(R.string.widget_config_save)
+        }
+
         Button(
             onClick = {
                 selectedGroup?.let { group ->
@@ -266,7 +272,11 @@ private fun HomeWidgetConfigureScreen(
                 }
             },
             enabled = selectedGroup != null,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics {
+                    contentDescription = saveButtonDescription
+                },
         ) {
             Text(text = context.getString(R.string.widget_config_save))
         }
