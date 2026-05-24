@@ -167,7 +167,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final filename = CsvExporter.buildFilename(_trip);
           String? dirPath;
           try {
-            dirPath = await FilePicker.getDirectoryPath(
+            dirPath = await FilePicker.platform.getDirectoryPath(
               dialogTitle: gloc.csv_select_directory_title,
             );
           } catch (_) {
@@ -246,7 +246,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final filename = OfxExporter.buildFilename(_trip);
           String? dirPath;
           try {
-            dirPath = await FilePicker.getDirectoryPath(
+            dirPath = await FilePicker.platform.getDirectoryPath(
               dialogTitle: gloc.ofx_select_directory_title,
             );
           } catch (_) {
@@ -325,7 +325,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final filename = MarkdownExporter.buildFilename(_trip);
           String? dirPath;
           try {
-            dirPath = await FilePicker.getDirectoryPath(
+            dirPath = await FilePicker.platform.getDirectoryPath(
               dialogTitle: gloc.markdown_select_directory_title,
             );
           } catch (_) {

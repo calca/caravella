@@ -215,7 +215,7 @@ class DataBackupPage extends StatelessWidget {
     BuildContext context,
     gen.AppLocalizations loc,
   ) async {
-    final result = await FilePicker.pickFiles(
+    final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['zip', 'json'],
     );
