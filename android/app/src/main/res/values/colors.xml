@@ -7,4 +7,7 @@
     <!-- Splash screen colors - match icon background -->
     <color name="splash_background_light">#009688</color>
     <color name="splash_background_dark">#009688</color>
+
+    <!-- Widget colors -->
+    <color name="widget_primary">#6750A4</color>
 </resources>
