@@ -19,7 +19,6 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/delete_expense_dialog.dart';
 import '../../expense/pages/expense_form_page.dart';
 import '../widgets/group_header.dart';
-import '../widgets/group_total.dart';
 import '../widgets/group_actions.dart';
 import '../widgets/filtered_expense_list.dart';
 import '../export/ofx_exporter.dart';
@@ -635,6 +634,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
+  double _calculateTodaySpending(ExpenseGroup trip) {
+    if (trip.expenses.isEmpty) return 0.0;
+    final now = DateTime.now();
+    return trip.expenses
+        .where(
+          (e) =>
+              e.date.year == now.year &&
+              e.date.month == now.month &&
+              e.date.day == now.day,
+        )
+        .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
+  }
+
   Widget _buildAnimatedFab(ColorScheme colorScheme) {
     if (_trip?.archived == true) return const SizedBox.shrink();
 
@@ -670,14 +682,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
     final colorScheme = Theme.of(context).colorScheme;
     final totalExpenses = trip.getTotalExpenses();
+    final todaySpending = _calculateTodaySpending(trip);
     final showCollapsedTitle = _collapsedTitleVisible;
 
-    // Calcola altezza espansa: toolbar + avatar + titolo + totale + azioni
+    // Calcola altezza espansa: toolbar + header (titolo/totali) + CTA
     const double toolbarH = 56.0;
-    final circleSize = MediaQuery.of(context).size.width * 0.3;
-    // GroupHeader: padding(16) + avatar(circleSize) + title(~34) + SizedBox(16)
-    // + SizedBox(32) + Row(GroupTotal+GroupActions, ~60) + SizedBox(24)
-    final headerContentH = 16 + circleSize + 34 + 16 + 32 + 60 + 24;
+    // Keep some extra breathing room to avoid overflow on larger text scales.
+    final headerContentH = 16 + 170 + 16 + 54 + 16;
     final expandedH = toolbarH + headerContentH;
     _headerExpandedHeight = expandedH;
 
@@ -686,14 +697,34 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       colorScheme,
       baseColor: colorScheme.surfaceContainer,
     );
-    final imagePath = bg.imagePath;
-    final hasBackgroundImage = imagePath != null && imagePath.isNotEmpty;
+
+    final sharedBackground = Stack(
+      fit: StackFit.expand,
+      children: [
+        if (bg.hasImage)
+          Image.file(
+            File(bg.imagePath!),
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
+          )
+        else if (bg.gradient != null)
+          ColoredBox(color: colorScheme.surfaceContainer)
+        else
+          ColoredBox(color: bg.color),
+        if (bg.gradient != null)
+          DecoratedBox(decoration: BoxDecoration(gradient: bg.gradient)),
+      ],
+    );
 
     return AppSystemUI.surface(
       child: Scaffold(
-        body: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            sharedBackground,
+            CustomScrollView(
+              controller: _scrollController,
+              slivers: [
             SliverAppBar(
               pinned: true,
               floating: false,
@@ -701,8 +732,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               toolbarHeight: toolbarH,
               collapsedHeight: toolbarH,
               elevation: 0,
-              scrolledUnderElevation: 1,
-              backgroundColor: colorScheme.surfaceContainer,
+              scrolledUnderElevation: showCollapsedTitle ? 1 : 0,
+              surfaceTintColor: Colors.transparent,
+              backgroundColor: showCollapsedTitle
+                  ? colorScheme.surface.withValues(alpha: 0.98)
+                  : Colors.transparent,
               foregroundColor: colorScheme.onSurface,
               centerTitle: false,
               title: AnimatedOpacity(
@@ -722,116 +756,61 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 icon: const Icon(Icons.arrow_back_rounded),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.settings_outlined),
-                  tooltip: gen.AppLocalizations.of(context).options,
-                  onPressed: () => _showSettingsPage(),
-                ),
-              ],
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.pin,
-                background: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    // Sfondo: immagine quando presente, altrimenti surfaceContainer
-                    if (hasBackgroundImage)
-                      Image.file(
-                        File(imagePath),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter,
-                      )
-                    else
-                      ColoredBox(color: colorScheme.surfaceContainer),
-                    // Overlay gradiente solo quando c'è un'immagine
-                    if (hasBackgroundImage && bg.gradient != null)
-                      DecoratedBox(
-                        decoration: BoxDecoration(gradient: bg.gradient),
+                background: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, toolbarH + 12, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GroupHeader(
+                        trip: trip,
+                        totalExpenses: totalExpenses,
+                        todaySpending: todaySpending,
                       ),
-                    // Contenuto header (sotto la toolbar, con padding superiore di 16)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, toolbarH + 16, 16, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GroupHeader(
-                            trip: trip,
-                            onPinToggle: _handlePinToggle,
-                          ),
-                          const SizedBox(height: 32),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: GroupTotal(
-                                  total: totalExpenses,
-                                  currency: trip.currency,
-                                ),
-                              ),
-                              GroupActions(
-                                hasExpenses: trip.expenses.isNotEmpty,
-                                onOverview: trip.expenses.isNotEmpty
-                                    ? _openUnifiedOverviewPage
-                                    : null,
-                                onSearch: trip.expenses.isNotEmpty
-                                    ? _openSearchPage
-                                    : null,
-                                onOptions: _showSettingsPage,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                        ],
+                      const SizedBox(height: 16),
+                      GroupActions(
+                        hasExpenses: trip.expenses.isNotEmpty,
+                        isPinned: trip.pinned,
+                        onOverview: trip.expenses.isNotEmpty
+                            ? _openUnifiedOverviewPage
+                            : null,
+                        onSearch: trip.expenses.isNotEmpty
+                            ? _openSearchPage
+                            : null,
+                        onFavorite: trip.archived ? null : _handlePinToggle,
+                        onOptions: _showSettingsPage,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 12),
+                    ],
+                  ),
                 ),
               ),
             ),
             SliverToBoxAdapter(
-              child: Stack(
-                children: [
-                  if (hasBackgroundImage) ...[
-                    Positioned.fill(
-                      child: Image.file(
-                        File(imagePath),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter,
-                      ),
-                    ),
-                    if (bg.gradient != null)
-                      Positioned.fill(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(gradient: bg.gradient),
-                        ),
-                      ),
-                  ] else
-                    Positioned.fill(child: ColoredBox(color: bg.color)),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: colorScheme.surface,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(24),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FilteredExpenseList(
-                            expenses: trip.expenses,
-                            currency: trip.currency,
-                            onExpenseTap: _openEditExpense,
-                            onAddExpense: _showAddExpenseSheet,
-                            newlyAddedExpenseId: _newlyAddedExpenseId,
-                          ),
-                        ],
-                      ),
-                    ),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: colorScheme.surface.withValues(alpha: 0.9),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
                   ),
-                ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FilteredExpenseList(
+                        expenses: trip.expenses,
+                        currency: trip.currency,
+                        onExpenseTap: _openEditExpense,
+                        onAddExpense: _showAddExpenseSheet,
+                        newlyAddedExpenseId: _newlyAddedExpenseId,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             SliverPadding(
@@ -839,10 +818,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               sliver: SliverToBoxAdapter(
                 child: Container(
                   height: _calculateBottomPadding(),
-                  color: colorScheme.surface,
+                  color: colorScheme.surface.withValues(alpha: 0.9),
                 ),
               ),
             ),
+          ],
+        ),
           ],
         ),
         floatingActionButton: _buildAnimatedFab(colorScheme),
