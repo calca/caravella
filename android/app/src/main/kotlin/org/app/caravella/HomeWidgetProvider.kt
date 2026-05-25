@@ -38,6 +38,7 @@ import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import es.antonborri.home_widget.actionStartActivity as homeWidgetActionStartActivity
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.io.File
 import java.io.IOException
@@ -121,19 +122,17 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             val totals = AppFunctionStorageReader.getWidgetTotals(context, config.groupId)
             val title = totals?.groupTitle ?: config.groupTitle
             val currency = totals?.currency ?: config.groupCurrency
-            val addExpenseAction = glanceActionStartActivity(
-                Intent(context, MainActivity::class.java).apply {
-                    action = "es.antonborri.home_widget.action.LAUNCH"
-                    // Keep aligned with AppHomeWidgetService tap parsing.
-                    // URI format: caravella://home_widget/add_expense?groupId=...&groupTitle=...
-                    data = Uri.Builder()
-                        .scheme("caravella")
-                        .authority("home_widget")
-                        .appendPath("add_expense")
-                        .appendQueryParameter("groupId", config.groupId)
-                        .appendQueryParameter("groupTitle", title)
-                        .build()
-                },
+            val addExpenseAction = homeWidgetActionStartActivity<MainActivity>(
+                context = context,
+                // Keep aligned with AppHomeWidgetService tap parsing.
+                // URI format: caravella://home_widget/add_expense?groupId=...&groupTitle=...
+                uri = Uri.Builder()
+                    .scheme("caravella")
+                    .authority("home_widget")
+                    .appendPath("add_expense")
+                    .appendQueryParameter("groupId", config.groupId)
+                    .appendQueryParameter("groupTitle", title)
+                    .build(),
             )
             WidgetUiModel(
                 title = title,
