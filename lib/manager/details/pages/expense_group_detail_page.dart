@@ -725,105 +725,110 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             CustomScrollView(
               controller: _scrollController,
               slivers: [
-            SliverAppBar(
-              pinned: true,
-              floating: false,
-              expandedHeight: expandedH,
-              toolbarHeight: toolbarH,
-              collapsedHeight: toolbarH,
-              elevation: 0,
-              scrolledUnderElevation: showCollapsedTitle ? 1 : 0,
-              surfaceTintColor: Colors.transparent,
-              backgroundColor: showCollapsedTitle
-                  ? colorScheme.surface.withValues(alpha: 0.98)
-                  : Colors.transparent,
-              foregroundColor: colorScheme.onSurface,
-              centerTitle: false,
-              title: AnimatedOpacity(
-                opacity: showCollapsedTitle ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 220),
-                child: Text(
-                  trip.title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_rounded),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              flexibleSpace: FlexibleSpaceBar(
-                collapseMode: CollapseMode.pin,
-                background: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, toolbarH + 12, 16, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GroupHeader(
-                        trip: trip,
-                        totalExpenses: totalExpenses,
-                        todaySpending: todaySpending,
+                SliverAppBar(
+                  pinned: true,
+                  floating: false,
+                  expandedHeight: expandedH,
+                  toolbarHeight: toolbarH,
+                  collapsedHeight: toolbarH,
+                  elevation: 0,
+                  scrolledUnderElevation: showCollapsedTitle ? 1 : 0,
+                  surfaceTintColor: Colors.transparent,
+                  backgroundColor: showCollapsedTitle
+                      ? colorScheme.surface.withValues(alpha: 0.98)
+                      : Colors.transparent,
+                  foregroundColor: colorScheme.onSurface,
+                  centerTitle: false,
+                  title: AnimatedOpacity(
+                    opacity: showCollapsedTitle ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 220),
+                    child: Text(
+                      trip.title,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
                       ),
-                      const SizedBox(height: 16),
-                      GroupActions(
-                        hasExpenses: trip.expenses.isNotEmpty,
-                        isPinned: trip.pinned,
-                        onOverview: trip.expenses.isNotEmpty
-                            ? _openUnifiedOverviewPage
-                            : null,
-                        onSearch: trip.expenses.isNotEmpty
-                            ? _openSearchPage
-                            : null,
-                        onFavorite: trip.archived ? null : _handlePinToggle,
-                        onOptions: _showSettingsPage,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    background: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        16,
+                        toolbarH + 12,
+                        16,
+                        0,
                       ),
-                      const SizedBox(height: 12),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: colorScheme.surface.withValues(alpha: 0.9),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FilteredExpenseList(
-                        expenses: trip.expenses,
-                        currency: trip.currency,
-                        onExpenseTap: _openEditExpense,
-                        onAddExpense: _showAddExpenseSheet,
-                        newlyAddedExpenseId: _newlyAddedExpenseId,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GroupHeader(
+                            trip: trip,
+                            totalExpenses: totalExpenses,
+                            todaySpending: todaySpending,
+                          ),
+                          const SizedBox(height: 16),
+                          GroupActions(
+                            hasExpenses: trip.expenses.isNotEmpty,
+                            isPinned: trip.pinned,
+                            onOverview: trip.expenses.isNotEmpty
+                                ? _openUnifiedOverviewPage
+                                : null,
+                            onSearch: trip.expenses.isNotEmpty
+                                ? _openSearchPage
+                                : null,
+                            onFavorite: trip.archived ? null : _handlePinToggle,
+                            onOptions: _showSettingsPage,
+                          ),
+                          const SizedBox(height: 12),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(bottom: 0),
-              sliver: SliverToBoxAdapter(
-                child: Container(
-                  height: _calculateBottomPadding(),
-                  color: colorScheme.surface.withValues(alpha: 0.9),
+                SliverToBoxAdapter(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface.withValues(alpha: 0.9),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FilteredExpenseList(
+                            expenses: trip.expenses,
+                            currency: trip.currency,
+                            onExpenseTap: _openEditExpense,
+                            onAddExpense: _showAddExpenseSheet,
+                            newlyAddedExpenseId: _newlyAddedExpenseId,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                SliverPadding(
+                  padding: const EdgeInsets.only(bottom: 0),
+                  sliver: SliverToBoxAdapter(
+                    child: Container(
+                      height: _calculateBottomPadding(),
+                      color: colorScheme.surface.withValues(alpha: 0.9),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
           ],
         ),
         floatingActionButton: _buildAnimatedFab(colorScheme),
