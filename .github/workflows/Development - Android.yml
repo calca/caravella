@@ -16,6 +16,10 @@ jobs:
       UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
@@ -73,6 +77,10 @@ jobs:
           ref: ${{ github.ref }}
           token: ${{ secrets.GH_PAT }}
           fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'

@@ -34,6 +34,10 @@ jobs:
             exit 1
           fi
           echo "TRACK=${{ github.event.inputs.track }}" >> $GITHUB_ENV
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
