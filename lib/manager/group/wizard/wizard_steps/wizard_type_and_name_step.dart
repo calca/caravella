@@ -144,50 +144,67 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
 
   @override
   Widget build(BuildContext context) {
+    const stepContentPadding = 24.0;
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final titleFieldStyle = theme.textTheme.titleMedium?.copyWith(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: theme.colorScheme.onSurface,
+    );
+    final titleFieldDecoration = FormTheme.getBorderlessDecoration(
+      hintText: gloc.enter_title,
+    ).copyWith(
+      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+    );
 
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Friendly emoji icon (random selection)
-            Text(_selectedEmoji, style: const TextStyle(fontSize: 72)),
-
-            const SizedBox(height: 24),
-
-            // Step description
-            Text(
-              gloc.wizard_type_and_name_description,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 32),
-
-            // Compact content container
-            Container(
-              constraints: const BoxConstraints(maxWidth: 400),
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        padding: const EdgeInsets.all(stepContentPadding),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: max(0, constraints.maxHeight - (stepContentPadding * 2)),
+          ),
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 420),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // Friendly emoji icon (random selection)
+                  Text(_selectedEmoji, style: const TextStyle(fontSize: 72)),
+
+                  const SizedBox(height: 24),
+
+                  // Step description
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      gloc.wizard_type_and_name_description,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+
                   // Group name input with type icon
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 4, bottom: 8),
+                        padding: const EdgeInsets.only(bottom: 12),
                         child: Text(
                           gloc.wizard_name_description,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: theme.colorScheme.onSurface,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       GroupNameWithIconField(
@@ -200,17 +217,19 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                             wizardState.nextStep();
                           }
                         },
+                        hintText: gloc.enter_title,
+                        textAlign: TextAlign.center,
+                        textStyle: titleFieldStyle,
+                        decoration: titleFieldDecoration,
                       ),
                       // Error message
                       Consumer<GroupFormState>(
                         builder: (context, state, child) {
                           return state.title.isEmpty
                               ? Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 8.0,
-                                    left: 4,
-                                  ),
+                                  padding: const EdgeInsets.only(top: 8),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
                                         Icons.info_outline,
@@ -236,7 +255,7 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

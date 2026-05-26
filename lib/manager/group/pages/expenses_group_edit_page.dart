@@ -423,6 +423,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                     const SizedBox(height: 12),
                     GroupNameWithIconField(
                       onIconTap: () => _showGroupTypeSelector(context),
+                      hintText: gloc.enter_title,
                     ),
                   ],
                 ),

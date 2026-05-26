@@ -101,6 +101,84 @@ void main() {
       expect(finishButton.onPressed, isNotNull);
     });
 
+    testWidgets('Create CTA should be full width and title field centered', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+            ChangeNotifierProvider(create: (_) => UserNameNotifier()),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: const [
+              gen.AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: gen.AppLocalizations.supportedLocales,
+            home: const GroupCreationWizardPage(fromWelcome: false),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final scaffoldWidth = tester.getSize(find.byType(Scaffold).first).width;
+      final finishButtonWidth = tester.getSize(find.byType(FilledButton)).width;
+      expect(finishButtonWidth, closeTo(scaffoldWidth - 40, 0.1));
+
+      final titleField = tester.widget<TextField>(find.byType(TextField).first);
+      expect(titleField.textAlign, TextAlign.center);
+      expect(titleField.style?.fontSize, 18);
+
+      final contentPadding = titleField.decoration?.contentPadding as EdgeInsets;
+      expect(contentPadding.left, 20);
+      expect(contentPadding.right, 20);
+    });
+
+    testWidgets('Wizard should not advance when swiping horizontally', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+            ChangeNotifierProvider(create: (_) => UserNameNotifier()),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: const [
+              gen.AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: gen.AppLocalizations.supportedLocales,
+            home: const GroupCreationWizardPage(fromWelcome: true),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final pageView = tester.widget<PageView>(find.byType(PageView));
+      expect(pageView.physics, isA<NeverScrollableScrollPhysics>());
+
+      final scaffoldContext = tester.element(find.byType(Scaffold).first);
+      final gloc = gen.AppLocalizations.of(scaffoldContext);
+      final wizardState = Provider.of<WizardState>(
+        scaffoldContext,
+        listen: false,
+      );
+
+      await tester.drag(find.byType(PageView), const Offset(-300, 0));
+      await tester.pumpAndSettle();
+
+      expect(wizardState.currentStep, 0);
+      expect(find.text(gloc.wizard_user_name_welcome), findsOneWidget);
+    });
+
     testWidgets('Should navigate through all wizard steps', (
       WidgetTester tester,
     ) async {
