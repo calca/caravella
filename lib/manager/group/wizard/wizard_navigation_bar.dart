@@ -26,10 +26,92 @@ class WizardNavigationBar extends StatelessWidget {
               return const SizedBox.shrink();
             }
 
+            final showPrevious = wizardState.currentStep > 0;
+            final showSkip = _isOptionalStep(
+              wizardState.currentStep,
+              wizardState,
+            );
+
+            final primaryButton = Consumer2<GroupFormState, GroupFormController>(
+              builder: (context, formState, controller, child) {
+                final isSecondToLastStep =
+                    wizardState.currentStep == wizardState.totalSteps - 2;
+                final canProceed = _canProceedFromStep(
+                  wizardState.currentStep,
+                  formState,
+                  wizardState,
+                );
+
+                if (isSecondToLastStep) {
+                  // Second to last step: save and go to completion
+                  return FilledButton(
+                    onPressed: canProceed
+                        ? () async {
+                            // Close keyboard before proceeding
+                            FocusScope.of(context).unfocus();
+                            final group = await _saveGroup(
+                              context,
+                              controller,
+                              wizardState,
+                            );
+                            if (group != null && context.mounted) {
+                              wizardState.setSavedGroupId(group.id);
+                              // Mark that user completed wizard (no longer first start)
+                              await PreferencesService.instance.appState
+                                  .setIsFirstStart(false);
+                              wizardState.nextStep();
+                            }
+                          }
+                        : null,
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(gloc.wizard_finish),
+                  );
+                }
+
+                return FilledButton.icon(
+                  onPressed: canProceed
+                      ? () {
+                          // Close keyboard before proceeding
+                          FocusScope.of(context).unfocus();
+                          // Add user as participant when moving from user name step
+                          _handleStepTransition(
+                            context,
+                            wizardState,
+                            formState,
+                          );
+                          wizardState.nextStep();
+                        }
+                      : null,
+                  label: Text(gloc.wizard_next),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                );
+              },
+            );
+
+            if (!showPrevious && !showSkip) {
+              return SizedBox(width: double.infinity, child: primaryButton);
+            }
+
             return Row(
               children: [
                 // Previous button
-                if (wizardState.currentStep > 0) ...[
+                if (showPrevious) ...[
                   TextButton.icon(
                     onPressed: wizardState.previousStep,
                     icon: const Icon(Icons.arrow_back_rounded, size: 20),
@@ -50,7 +132,7 @@ class WizardNavigationBar extends StatelessWidget {
                 const Spacer(),
 
                 // Skip button for optional steps
-                if (_isOptionalStep(wizardState.currentStep, wizardState)) ...[
+                if (showSkip) ...[
                   Consumer<GroupFormState>(
                     builder: (context, formState, child) {
                       return TextButton(
@@ -77,77 +159,7 @@ class WizardNavigationBar extends StatelessWidget {
                 ],
 
                 // Next/Finish button
-                Consumer2<GroupFormState, GroupFormController>(
-                  builder: (context, formState, controller, child) {
-                    final isSecondToLastStep =
-                        wizardState.currentStep == wizardState.totalSteps - 2;
-                    final canProceed = _canProceedFromStep(
-                      wizardState.currentStep,
-                      formState,
-                      wizardState,
-                    );
-
-                    if (isSecondToLastStep) {
-                      // Second to last step: save and go to completion
-                      return FilledButton(
-                        onPressed: canProceed
-                            ? () async {
-                                // Close keyboard before proceeding
-                                FocusScope.of(context).unfocus();
-                                final group = await _saveGroup(
-                                  context,
-                                  controller,
-                                  wizardState,
-                                );
-                                if (group != null && context.mounted) {
-                                  wizardState.setSavedGroupId(group.id);
-                                  // Mark that user completed wizard (no longer first start)
-                                  await PreferencesService.instance.appState
-                                      .setIsFirstStart(false);
-                                  wizardState.nextStep();
-                                }
-                              }
-                            : null,
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 16,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(gloc.wizard_finish),
-                      );
-                    }
-
-                    return FilledButton.icon(
-                      onPressed: canProceed
-                          ? () {
-                              // Close keyboard before proceeding
-                              FocusScope.of(context).unfocus();
-                              // Add user as participant when moving from user name step
-                              _handleStepTransition(
-                                context,
-                                wizardState,
-                                formState,
-                              );
-                              wizardState.nextStep();
-                            }
-                          : null,
-                      label: Text(gloc.wizard_next),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                primaryButton,
               ],
             );
           },

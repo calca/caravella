@@ -5,8 +5,17 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class GroupTitleField extends StatefulWidget {
   final VoidCallback? onSubmitted;
+  final TextAlign textAlign;
+  final TextStyle? style;
+  final InputDecoration? decoration;
 
-  const GroupTitleField({super.key, this.onSubmitted});
+  const GroupTitleField({
+    super.key,
+    this.onSubmitted,
+    this.textAlign = TextAlign.start,
+    this.style,
+    this.decoration,
+  });
 
   @override
   State<GroupTitleField> createState() => _GroupTitleFieldState();
@@ -63,10 +72,13 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
     }
     return TextField(
       controller: _controller,
-      style: FormTheme.getFieldTextStyle(context),
+      style: widget.style ?? FormTheme.getFieldTextStyle(context),
+      textAlign: widget.textAlign,
       textInputAction: TextInputAction.next,
       autofocus: false,
-      decoration: FormTheme.getBorderlessDecoration(hintText: 'Nome gruppo'),
+      decoration:
+          widget.decoration ??
+          FormTheme.getBorderlessDecoration(hintText: 'Nome gruppo'),
       onSubmitted: widget.onSubmitted != null ? (_) => widget.onSubmitted!() : null,
     );
   }

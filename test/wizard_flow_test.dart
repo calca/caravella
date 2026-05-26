@@ -101,6 +101,43 @@ void main() {
       expect(finishButton.onPressed, isNotNull);
     });
 
+    testWidgets('Create CTA should be full width and title field centered', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+            ChangeNotifierProvider(create: (_) => UserNameNotifier()),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: const [
+              gen.AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: gen.AppLocalizations.supportedLocales,
+            home: const GroupCreationWizardPage(fromWelcome: false),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final scaffoldWidth = tester.getSize(find.byType(Scaffold).first).width;
+      final finishButtonWidth = tester.getSize(find.byType(FilledButton)).width;
+      expect(finishButtonWidth, closeTo(scaffoldWidth - 40, 0.1));
+
+      final titleField = tester.widget<TextField>(find.byType(TextField).first);
+      expect(titleField.textAlign, TextAlign.center);
+      expect(titleField.style?.fontSize, 18);
+
+      final contentPadding = titleField.decoration?.contentPadding as EdgeInsets;
+      expect(contentPadding.left, 20);
+      expect(contentPadding.right, 20);
+    });
+
     testWidgets('Should navigate through all wizard steps', (
       WidgetTester tester,
     ) async {
