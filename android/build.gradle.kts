@@ -28,7 +28,9 @@ gradle.afterProject {
     extensions.findByType<com.android.build.gradle.LibraryExtension>()?.let { lib ->
         lib.compileSdk = 37
         // AGP 9.x requires namespace in build.gradle; inject from manifest if missing.
-        if (lib.namespace.isNullOrEmpty()) {
+        // Accessing lib.namespace throws if not set in AGP 9.x, so use try-catch.
+        val hasNamespace = try { !lib.namespace.isNullOrEmpty() } catch (_: Exception) { false }
+        if (!hasNamespace) {
             val manifest = file("src/main/AndroidManifest.xml")
             if (manifest.exists()) {
                 val pkg = Regex("""package\s*=\s*"([^"]+)"""")

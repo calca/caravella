@@ -85,7 +85,7 @@ dependencies:
   play_store_updates:
     path: packages/play_store_updates
   android_nav_setting: ^0.0.2+2
-  home_widget: ^0.9.1
+  home_widget: ^0.9.2
 
 dev_dependencies:
   flutter_test:
