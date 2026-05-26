@@ -96,6 +96,12 @@ dev_dependencies:
   sqflite_common_ffi: ^2.4.0+3
 
 dependency_overrides:
+  android_nav_setting:
+    path: packages/android_nav_setting
+  file_picker:
+    path: packages/file_picker
+  home_widget:
+    path: packages/home_widget
   # file_picker 11.x still compiles against the win32 5.x API surface used by
   # this project.
   win32: ^5.9.0

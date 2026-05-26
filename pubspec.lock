@@ -51,10 +51,9 @@ packages:
   android_nav_setting:
     dependency: "direct main"
     description:
-      name: android_nav_setting
-      sha256: db50a40265b6cf43b7a0984a984127bbc3c300a324fb16a915821eea1b51d6be
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/android_nav_setting"
+      relative: true
+    source: path
     version: "0.0.2+2"
   ansicolor:
     dependency: transitive
@@ -289,10 +288,9 @@ packages:
   file_picker:
     dependency: "direct main"
     description:
-      name: file_picker
-      sha256: f13a03000d942e476bc1ff0a736d2e9de711d2f89a95cd4c1d88f861c3348387
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/file_picker"
+      relative: true
+    source: path
     version: "11.0.2"
   file_selector_linux:
     dependency: transitive
@@ -597,10 +595,9 @@ packages:
   home_widget:
     dependency: "direct main"
     description:
-      name: home_widget
-      sha256: "7a32f7d6a3afd542126fb0004acba939a41ee57d874172926212774fbce684d3"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/home_widget"
+      relative: true
+    source: path
     version: "0.9.2"
   hooks:
     dependency: transitive
