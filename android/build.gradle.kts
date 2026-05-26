@@ -1,3 +1,20 @@
+// Expose AGP 9.1.0 and Kotlin 2.1.0 on the root buildscript classpath so that
+// Flutter plugin subprojects whose build.gradle still declares older AGP/Kotlin
+// in their own buildscript block resolve the correct version via the parent
+// classloader (parent-first classloading).  Without this, plugins like
+// file_picker load AGP 8.x from their own buildscript which is incompatible
+// with Gradle 9.x and silently fails to compile.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:9.1.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
+    }
+}
+
 allprojects {
     repositories {
         google()

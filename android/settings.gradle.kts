@@ -14,6 +14,20 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+
+    // Force AGP 9.1.0 and Kotlin 2.1.0 for any plugin request that goes through
+    // pluginManagement resolution (e.g. legacy buildscript-based plugins that
+    // Gradle 9.x may attempt to resolve via settings).
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id.startsWith("com.android")) {
+                useVersion("9.1.0")
+            }
+            if (requested.id.id.startsWith("org.jetbrains.kotlin")) {
+                useVersion("2.1.0")
+            }
+        }
+    }
 }
 
 plugins {
