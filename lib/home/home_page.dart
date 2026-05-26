@@ -313,10 +313,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           // Stack children during transition for seamless crossfade
           return Stack(
             alignment: Alignment.topCenter,
-            children: [
-              ...previousChildren,
-              if (currentChild != null) currentChild,
-            ],
+            children: [...previousChildren, ?currentChild],
           );
         },
         child: _buildContent(gloc),
