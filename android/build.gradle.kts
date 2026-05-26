@@ -1,24 +1,27 @@
-// Expose AGP 9.1.0 and Kotlin 2.1.0 on the root buildscript classpath so that
-// Flutter plugin subprojects whose build.gradle still declares older AGP/Kotlin
-// in their own buildscript block resolve the correct version via the parent
-// classloader (parent-first classloading).  Without this, plugins like
-// file_picker load AGP 8.x from their own buildscript which is incompatible
-// with Gradle 9.x and silently fails to compile.
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:9.1.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
-    }
-}
-
 allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+}
+
+// Inject a buildscript resolution strategy into every subproject BEFORE its own
+// build.gradle evaluates.  Flutter plugin subprojects (e.g. file_picker,
+// home_widget) still declare older AGP/Kotlin in their own buildscript blocks.
+// The force() ensures Gradle resolves AGP 9.1.0 even when the plugin requests
+// an older version, preventing silent compilation failures under Gradle 9.x.
+gradle.beforeProject {
+    buildscript {
+        repositories {
+            google()
+            mavenCentral()
+        }
+        configurations.all {
+            resolutionStrategy {
+                force("com.android.tools.build:gradle:9.1.0")
+                force("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
+            }
+        }
     }
 }
 
@@ -44,6 +47,15 @@ subprojects {
 gradle.afterProject {
     extensions.findByType<com.android.build.gradle.LibraryExtension>()?.let { lib ->
         lib.compileSdk = 37
+
+        // Some plugins (e.g. file_picker) skip applying kotlin-android on AGP 9+,
+        // relying on built-in Kotlin.  Built-in Kotlin may not compile sources for
+        // library subprojects using the legacy apply-plugin style.  Force-apply the
+        // Kotlin plugin if it isn't already present.
+        if (!plugins.hasPlugin("org.jetbrains.kotlin.android")) {
+            apply(plugin = "org.jetbrains.kotlin.android")
+        }
+
         // AGP 9.x requires namespace in build.gradle; inject from manifest if missing.
         // Accessing lib.namespace throws if not set in AGP 9.x, so use try-catch.
         val hasNamespace = try { !lib.namespace.isNullOrEmpty() } catch (_: Exception) { false }
