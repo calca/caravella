@@ -144,6 +144,7 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
 
   @override
   Widget build(BuildContext context) {
+    const stepContentPadding = 24.0;
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final titleFieldStyle = theme.textTheme.titleMedium?.copyWith(
@@ -152,17 +153,17 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
       color: theme.colorScheme.onSurface,
     );
     final titleFieldDecoration = FormTheme.getBorderlessDecoration(
-      hintText: 'Nome gruppo',
+      hintText: gloc.enter_title,
     ).copyWith(
       contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
     );
 
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(stepContentPadding),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: max(0, constraints.maxHeight - 48),
+            minHeight: max(0, constraints.maxHeight - (stepContentPadding * 2)),
           ),
           child: Center(
             child: Container(
@@ -181,7 +182,7 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       gloc.wizard_type_and_name_description,
-                      style: theme.textTheme.headlineMedium?.copyWith(
+                      style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -216,6 +217,7 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                             wizardState.nextStep();
                           }
                         },
+                        hintText: gloc.enter_title,
                         textAlign: TextAlign.center,
                         textStyle: titleFieldStyle,
                         decoration: titleFieldDecoration,

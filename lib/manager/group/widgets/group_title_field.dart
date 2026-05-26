@@ -5,6 +5,8 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class GroupTitleField extends StatefulWidget {
   final VoidCallback? onSubmitted;
+  /// Optional localized hint. When omitted, the field is rendered without hint text.
+  final String? hintText;
   final TextAlign textAlign;
   final TextStyle? style;
   final InputDecoration? decoration;
@@ -12,6 +14,7 @@ class GroupTitleField extends StatefulWidget {
   const GroupTitleField({
     super.key,
     this.onSubmitted,
+    this.hintText,
     this.textAlign = TextAlign.start,
     this.style,
     this.decoration,
@@ -78,7 +81,7 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
       autofocus: false,
       decoration:
           widget.decoration ??
-          FormTheme.getBorderlessDecoration(hintText: 'Nome gruppo'),
+          FormTheme.getBorderlessDecoration(hintText: widget.hintText),
       onSubmitted: widget.onSubmitted != null ? (_) => widget.onSubmitted!() : null,
     );
   }
