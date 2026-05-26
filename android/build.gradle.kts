@@ -41,20 +41,11 @@ subprojects {
 // remote-creation-android:1.0.0-alpha11 that require API 37.
 // Also force namespace on plugins that still declare it only in AndroidManifest.xml,
 // which AGP 9.x no longer supports for namespace resolution.
-// gradle.afterProject runs after each project's build script completes, avoiding
-// both the ordering issue of plugins.withId (fires before compileSdk is set) and
-// the "project already evaluated" error from project.afterEvaluate.
+// AGP 9.x provides built-in Kotlin support, so plugins that skip kotlin-android
+// on AGP 9+ are correct — do NOT force-apply it (causes lifecycle errors).
 gradle.afterProject {
     extensions.findByType<com.android.build.gradle.LibraryExtension>()?.let { lib ->
         lib.compileSdk = 37
-
-        // Some plugins (e.g. file_picker) skip applying kotlin-android on AGP 9+,
-        // relying on built-in Kotlin.  Built-in Kotlin may not compile sources for
-        // library subprojects using the legacy apply-plugin style.  Force-apply the
-        // Kotlin plugin if it isn't already present.
-        if (!plugins.hasPlugin("org.jetbrains.kotlin.android")) {
-            apply(plugin = "org.jetbrains.kotlin.android")
-        }
 
         // AGP 9.x requires namespace in build.gradle; inject from manifest if missing.
         // Accessing lib.namespace throws if not set in AGP 9.x, so use try-catch.
