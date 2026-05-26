@@ -19,11 +19,26 @@ subprojects {
 // Force compileSdk = 37 for all Android library subprojects (e.g. home_widget)
 // so they satisfy transitive dependencies on glance-appwidget:1.3.0-alpha01 and
 // remote-creation-android:1.0.0-alpha11 that require API 37.
+// Also force namespace on plugins that still declare it only in AndroidManifest.xml,
+// which AGP 9.x no longer supports for namespace resolution.
 // gradle.afterProject runs after each project's build script completes, avoiding
 // both the ordering issue of plugins.withId (fires before compileSdk is set) and
 // the "project already evaluated" error from project.afterEvaluate.
 gradle.afterProject {
-    extensions.findByType<com.android.build.gradle.LibraryExtension>()?.compileSdk = 37
+    extensions.findByType<com.android.build.gradle.LibraryExtension>()?.let { lib ->
+        lib.compileSdk = 37
+        // AGP 9.x requires namespace in build.gradle; inject from manifest if missing.
+        if (lib.namespace.isNullOrEmpty()) {
+            val manifest = file("src/main/AndroidManifest.xml")
+            if (manifest.exists()) {
+                val pkg = Regex("""package\s*=\s*"([^"]+)"""")
+                    .find(manifest.readText())?.groupValues?.get(1)
+                if (!pkg.isNullOrEmpty()) {
+                    lib.namespace = pkg
+                }
+            }
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {
