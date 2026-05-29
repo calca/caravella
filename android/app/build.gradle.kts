@@ -16,7 +16,7 @@ android {
             if (keystorePropertiesFile.exists()) {
                 val keystoreProperties = Properties()
                 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-                storeFile = file(keystoreProperties["storeFile"] as String)
+                storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
                 storePassword = keystoreProperties["storePassword"] as String
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
@@ -24,8 +24,7 @@ android {
         }
     }
     namespace = "io.caravella.egm"
-    // Hardcoded to 37 to stay above Flutter's default compileSdkVersion (36).
-    compileSdk = 37
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
 
     compileOptions {
@@ -96,8 +95,7 @@ dependencies {
     // Pinned to alpha01: CaravellaAppFunctionService uses Builder(qualifiedName, id) which
     // was made internal in alpha09. Update together with CaravellaAppFunctionService.kt.
     implementation("androidx.appfunctions:appfunctions:1.0.0-alpha01")
-    implementation("androidx.glance:glance-appwidget:1.3.0-alpha01")
-    implementation("androidx.glance:glance-material3:1.3.0-alpha01")
+    implementation("androidx.glance:glance-appwidget:1.1.1")
     implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
     implementation("androidx.compose.material3:material3:1.4.0")
