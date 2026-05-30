@@ -45,11 +45,11 @@ dependencies:
   
   # External dependencies
   provider: ^6.1.5
-  file_picker: ^11.0.2
+  file_picker: ^12.0.0-beta.5
   image_picker: ^1.2.1
   image_picker_android: ^0.8.13
   image: ^4.8.0
-  package_info_plus: ^9.0.0
+  package_info_plus: ^10.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -96,11 +96,8 @@ dev_dependencies:
   sqflite_common_ffi: ^2.4.0+3
 
 dependency_overrides:
-  # file_picker 11.x still compiles against the win32 5.x API surface used by
-  # this project.
-  win32: ^5.9.0
-  # geolocator_linux still constrains package_info_plus to the 9.x line.
-  package_info_plus: ^9.0.0
+  # geolocator_linux has not widened its package_info_plus constraint yet.
+  package_info_plus: ^10.1.0
 
 flutter_launcher_icons:
   android: true
