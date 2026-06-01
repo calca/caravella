@@ -689,23 +689,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final Color homeBackgroundColor = colorScheme.surfaceContainer;
 
     Widget buildHeaderBackground() {
-      return Stack(
-        fit: StackFit.expand,
-        children: [
-          if (bg.hasImage)
-            Image.file(
-              File(bg.imagePath!),
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-            )
-          else if (bg.gradient != null)
-            ColoredBox(color: colorScheme.surfaceContainer)
-          else
-            ColoredBox(color: homeBackgroundColor),
-          if (bg.gradient != null)
-            DecoratedBox(decoration: BoxDecoration(gradient: bg.gradient)),
-        ],
-      );
+      if (bg.hasImage) {
+        return Image.file(
+          File(bg.imagePath!),
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
+        );
+      }
+
+      if (bg.gradient != null) {
+        // Color-only groups expose a gradient in GroupBackground; here we
+        // intentionally keep a flat color for a cleaner SliverAppBar.
+        return ColoredBox(color: bg.color);
+      }
+
+      return ColoredBox(color: homeBackgroundColor);
     }
 
     Widget buildHeaderBridgeBackground() {
@@ -718,13 +716,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       }
 
       if (bg.gradient != null) {
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            ColoredBox(color: colorScheme.surfaceContainer),
-            DecoratedBox(decoration: BoxDecoration(gradient: bg.gradient)),
-          ],
-        );
+        return ColoredBox(color: bg.color);
       }
 
       return ColoredBox(color: homeBackgroundColor);
