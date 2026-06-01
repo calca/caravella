@@ -766,6 +766,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             group: trip,
                             localizations: gloc,
                             theme: theme,
+                            showDateRange: false,
+                            showPinnedBadge: false,
+                            centerTitleHorizontally: true,
                           ),
                           const SizedBox(height: 8),
                           GroupCardAmounts(
@@ -773,7 +776,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             theme: theme,
                             localizations: gloc,
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 42),
                           GroupActions(
                             hasExpenses: trip.expenses.isNotEmpty,
                             isPinned: trip.pinned,
@@ -786,7 +789,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             onFavorite: trip.archived ? null : _handlePinToggle,
                             onOptions: _showSettingsPage,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 0),
                         ],
                       ),
                     ),
