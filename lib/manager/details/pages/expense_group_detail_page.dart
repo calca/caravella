@@ -635,7 +635,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
-
   Widget _buildAnimatedFab(ColorScheme colorScheme) {
     if (_trip?.archived == true) return const SizedBox.shrink();
 
@@ -686,6 +685,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       colorScheme,
       baseColor: colorScheme.surfaceContainer,
     );
+    final bool usesDefaultGroupBackground = !bg.hasImage && bg.gradient == null;
+    final Color homeBackgroundColor = colorScheme.surfaceContainer;
 
     final sharedBackground = Stack(
       fit: StackFit.expand,
@@ -699,7 +700,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         else if (bg.gradient != null)
           ColoredBox(color: colorScheme.surfaceContainer)
         else
-          ColoredBox(color: bg.color),
+          ColoredBox(color: homeBackgroundColor),
         if (bg.gradient != null)
           DecoratedBox(decoration: BoxDecoration(gradient: bg.gradient)),
       ],
@@ -724,8 +725,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   scrolledUnderElevation: showCollapsedTitle ? 1 : 0,
                   surfaceTintColor: Colors.transparent,
                   backgroundColor: showCollapsedTitle
-                      ? colorScheme.surface.withValues(alpha: 0.98)
-                      : Colors.transparent,
+                      ? (usesDefaultGroupBackground
+                            ? homeBackgroundColor
+                            : colorScheme.surface.withValues(alpha: 0.98))
+                      : (usesDefaultGroupBackground
+                            ? homeBackgroundColor
+                            : Colors.transparent),
                   foregroundColor: colorScheme.onSurface,
                   centerTitle: false,
                   title: AnimatedOpacity(
@@ -791,7 +796,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: bg.color,
+                      color: colorScheme.surface,
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
@@ -818,7 +823,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   sliver: SliverToBoxAdapter(
                     child: Container(
                       height: _calculateBottomPadding(),
-                      color: bg.color,
+                      color: colorScheme.surface,
                     ),
                   ),
                 ),
