@@ -101,7 +101,7 @@ void main() {
       expect(finishButton.onPressed, isNotNull);
     });
 
-    testWidgets('Create CTA should be full width and title field centered', (
+    testWidgets('Create CTA should be full width and title field left-aligned', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -130,7 +130,7 @@ void main() {
       expect(finishButtonWidth, closeTo(scaffoldWidth - 40, 0.1));
 
       final titleField = tester.widget<TextField>(find.byType(TextField).first);
-      expect(titleField.textAlign, TextAlign.center);
+      expect(titleField.textAlign, TextAlign.start);
       expect(titleField.style?.fontSize, 18);
 
       final contentPadding = titleField.decoration?.contentPadding as EdgeInsets;

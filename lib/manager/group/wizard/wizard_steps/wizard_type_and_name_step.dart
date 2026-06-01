@@ -196,17 +196,6 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Text(
-                          gloc.wizard_name_description,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
                       GroupNameWithIconField(
                         onIconTap: () => _showGroupTypeSelector(context),
                         onSubmitted: () {
@@ -218,7 +207,7 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                           }
                         },
                         hintText: gloc.enter_title,
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         textStyle: titleFieldStyle,
                         decoration: titleFieldDecoration,
                       ),
