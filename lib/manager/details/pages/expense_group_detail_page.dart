@@ -703,9 +703,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           else
             ColoredBox(color: homeBackgroundColor),
           if (bg.gradient != null)
-            DecoratedBox(
-              decoration: BoxDecoration(gradient: bg.gradient),
-            ),
+            DecoratedBox(decoration: BoxDecoration(gradient: bg.gradient)),
         ],
       );
     }
@@ -724,9 +722,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           fit: StackFit.expand,
           children: [
             ColoredBox(color: colorScheme.surfaceContainer),
-            DecoratedBox(
-              decoration: BoxDecoration(gradient: bg.gradient),
-            ),
+            DecoratedBox(decoration: BoxDecoration(gradient: bg.gradient)),
           ],
         );
       }
