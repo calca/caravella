@@ -16,6 +16,13 @@ class AppConfig {
     defaultValue: false,
   );
 
+  /// Enable Android home widget via build flag
+  /// Usage: --dart-define=ENABLE_ANDROID_WIDGET=true
+  static const bool enableAndroidWidget = bool.fromEnvironment(
+    'ENABLE_ANDROID_WIDGET',
+    defaultValue: true,
+  );
+
   static String get appName {
     switch (environment) {
       case Environment.dev:
