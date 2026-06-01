@@ -110,11 +110,8 @@ Il progetto supporta l'esclusione del widget Android tramite un flag di compilaz
 ### Build con Widget Android (default)
 
 ```bash
-# Il widget è abilitato di default
+# Il widget è abilitato di default, non serve specificare il flag
 flutter build apk --dart-define=FLAVOR=prod --flavor prod --release
-
-# Con flag esplicito
-flutter build apk --dart-define=ENABLE_ANDROID_WIDGET=true --dart-define=FLAVOR=prod --flavor prod --release
 ```
 
 ### Build senza Widget Android (CI/GitHub Workflows)
