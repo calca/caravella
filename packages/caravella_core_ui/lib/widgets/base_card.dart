@@ -67,6 +67,7 @@ class BaseCard extends StatelessWidget {
         image: DecorationImage(
           image: FileImage(File(backgroundImage!)),
           fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
           colorFilter: ColorFilter.mode(
             theme.colorScheme.surface.withValues(alpha: 0.9),
             BlendMode.srcOver,
@@ -156,6 +157,7 @@ class BaseCard extends StatelessWidget {
                   image: DecorationImage(
                     image: FileImage(File(backgroundImage!)),
                     fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
                   ),
                 ),
               ),
