@@ -682,27 +682,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       baseColor: colorScheme.surfaceContainer,
     );
     final Color homeBackgroundColor = colorScheme.surfaceContainer;
-
-    LinearGradient? invertGradient(LinearGradient? gradient) {
-      if (gradient == null) return null;
-      final List<double>? invertedStops = gradient.stops == null
-          ? null
-          : gradient.stops!
-                .map((stop) => 1.0 - stop)
-                .toList()
-                .reversed
-                .toList();
-      return LinearGradient(
-        begin: gradient.begin,
-        end: gradient.end,
-        colors: gradient.colors.reversed.toList(),
-        stops: invertedStops,
-        tileMode: gradient.tileMode,
-        transform: gradient.transform,
-      );
-    }
-
-    final LinearGradient? detailGradient = invertGradient(bg.gradient);
+    final LinearGradient? detailGradient = bg.gradient;
 
     Widget buildHeaderBackground() {
       if (bg.hasImage) {
