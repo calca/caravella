@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+      ENABLE_ANDROID_WIDGET: "false"
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
