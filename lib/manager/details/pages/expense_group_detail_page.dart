@@ -18,8 +18,9 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 // Replaced bottom sheet overview with full page navigation
 import '../widgets/delete_expense_dialog.dart';
 import '../../expense/pages/expense_form_page.dart';
-import '../widgets/group_header.dart';
 import '../widgets/group_actions.dart';
+import '../../../home/cards/widgets/group_card_header.dart';
+import '../../../home/cards/widgets/group_card_amounts.dart';
 import '../widgets/filtered_expense_list.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
@@ -634,18 +635,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
-  double _calculateTodaySpending(ExpenseGroup trip) {
-    if (trip.expenses.isEmpty) return 0.0;
-    final now = DateTime.now();
-    return trip.expenses
-        .where(
-          (e) =>
-              e.date.year == now.year &&
-              e.date.month == now.month &&
-              e.date.day == now.day,
-        )
-        .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
-  }
 
   Widget _buildAnimatedFab(ColorScheme colorScheme) {
     if (_trip?.archived == true) return const SizedBox.shrink();
@@ -681,8 +670,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final colorScheme = Theme.of(context).colorScheme;
-    final totalExpenses = trip.getTotalExpenses();
-    final todaySpending = _calculateTodaySpending(trip);
+    final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     final showCollapsedTitle = _collapsedTitleVisible;
 
     // Calcola altezza espansa: toolbar + header (titolo/totali) + CTA
@@ -759,19 +748,25 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
                     background: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        16,
-                        toolbarH + 12,
-                        16,
-                        0,
+                      padding: EdgeInsets.only(
+                        top: toolbarH,
+                        left: 16,
+                        right: 16,
                       ),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          GroupHeader(
-                            trip: trip,
-                            totalExpenses: totalExpenses,
-                            todaySpending: todaySpending,
+                          GroupCardHeader(
+                            group: trip,
+                            localizations: gloc,
+                            theme: theme,
+                          ),
+                          const SizedBox(height: 8),
+                          GroupCardAmounts(
+                            group: trip,
+                            theme: theme,
+                            localizations: gloc,
                           ),
                           const SizedBox(height: 16),
                           GroupActions(
@@ -796,7 +791,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: colorScheme.surface.withValues(alpha: 0.9),
+                      color: bg.color,
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
@@ -823,7 +818,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   sliver: SliverToBoxAdapter(
                     child: Container(
                       height: _calculateBottomPadding(),
-                      color: colorScheme.surface.withValues(alpha: 0.9),
+                      color: bg.color,
                     ),
                   ),
                 ),
