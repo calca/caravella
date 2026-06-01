@@ -111,7 +111,8 @@
 
         <receiver
             android:name=".HomeWidgetProvider"
-            android:exported="false">
+            android:exported="false"
+            android:enabled="@bool/enable_android_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.intent.action.DATE_CHANGED" />
@@ -125,7 +126,8 @@
 
         <activity
             android:name=".HomeWidgetConfigureActivity"
-            android:exported="true">
+            android:exported="true"
+            android:enabled="@bool/enable_android_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>

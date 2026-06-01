@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+      ENABLE_ANDROID_WIDGET: "false"
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -61,7 +62,7 @@ jobs:
       - name: Run tests
         run: flutter test
       - name: Build prod App Bundle (signed)
-        run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+        run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - name: Get app version
         id: get_version
         run: |

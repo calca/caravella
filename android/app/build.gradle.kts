@@ -9,6 +9,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val enableAndroidWidget: Boolean = (project.findProperty("enableAndroidWidget") as? String)?.toBoolean()
+    ?: System.getenv("ENABLE_ANDROID_WIDGET")?.toBoolean()
+    ?: true
+
 android {
     signingConfigs {
         create("release") {
@@ -39,6 +43,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        resValue("bool", "enable_android_widget", enableAndroidWidget.toString())
     }
 
     buildFeatures {
