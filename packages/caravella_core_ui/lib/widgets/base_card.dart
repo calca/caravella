@@ -138,8 +138,7 @@ class BaseCard extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-              highlightColor:
-                  theme.colorScheme.primary.withValues(alpha: 0.05),
+              highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
               child: Padding(padding: padding, child: child),
             ),
           )
@@ -191,10 +190,10 @@ class BaseCard extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: onTap,
-                splashColor:
-                    theme.colorScheme.primary.withValues(alpha: 0.1),
-                highlightColor:
-                    theme.colorScheme.primary.withValues(alpha: 0.05),
+                splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                highlightColor: theme.colorScheme.primary.withValues(
+                  alpha: 0.05,
+                ),
                 child: Padding(padding: padding, child: child),
               ),
             ),
