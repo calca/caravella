@@ -87,7 +87,14 @@ class ExpenseGroupAvatar extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: bgColor,
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.12),
+          width: 1,
+        ),
+      ),
       child: Center(
         child: Text(
           initials,

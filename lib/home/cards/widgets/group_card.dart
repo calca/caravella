@@ -51,6 +51,7 @@ class GroupCard extends StatelessWidget {
       curve: Curves.easeInOut,
       height: double.infinity, // Assicura che usi tutto lo spazio verticale
       child: BaseCard(
+        isFlat: false,
         margin: const EdgeInsets.only(bottom: 16),
         borderRadius: BorderRadius.circular(32),
         backgroundColor: bg.color,
