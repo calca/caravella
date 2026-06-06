@@ -1,7 +1,6 @@
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../pages/tabs/usecase/settlements_logic.dart';
 
 /// Utility for generating Markdown export for an expense group.
 class MarkdownExporter {
@@ -53,7 +52,7 @@ class MarkdownExporter {
     buffer.writeln();
 
     // Daily average
-    final dailyAverage = _calculateDailyAverage(group);
+    final dailyAverage = group.getDailyAverage();
     buffer.writeln(
       '**${loc.daily_average}**: ${CurrencyDisplay.formatCurrencyText(dailyAverage, group.currency)}',
     );
@@ -64,11 +63,10 @@ class MarkdownExporter {
     buffer.writeln();
 
     final idToName = {for (final p in group.participants) p.id: p.name};
+    final participantTotals = group.getParticipantTotals();
 
     for (final p in group.participants) {
-      final total = group.expenses
-          .where((e) => e.paidBy.id == p.id)
-          .fold<double>(0, (s, e) => s + (e.amount ?? 0));
+      final total = participantTotals[p.id] ?? 0.0;
       buffer.writeln(
         '- **${_escape(p.name)}**: ${CurrencyDisplay.formatCurrencyText(total, group.currency)}',
       );
@@ -79,19 +77,13 @@ class MarkdownExporter {
     buffer.writeln('### ${loc.expenses_by_category}');
     buffer.writeln();
 
-    final categoryTotals = <String, double>{};
-    for (final expense in group.expenses) {
-      final catName = expense.category.name;
-      categoryTotals[catName] =
-          (categoryTotals[catName] ?? 0.0) + (expense.amount ?? 0.0);
-    }
-
+    final categoryTotals = group.getCategoryTotals();
     final sortedCategories = categoryTotals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     for (final entry in sortedCategories) {
       buffer.writeln(
-        '- **${_escape(entry.key)}**: ${CurrencyDisplay.formatCurrencyText(entry.value, group.currency)}',
+        '- **${_escape(entry.key.name)}**: ${CurrencyDisplay.formatCurrencyText(entry.value, group.currency)}',
       );
     }
     buffer.writeln();
@@ -164,16 +156,5 @@ class MarkdownExporter {
     return '${date.year.toString().padLeft(4, '0')}-'
         '${date.month.toString().padLeft(2, '0')}-'
         '${date.day.toString().padLeft(2, '0')}';
-  }
-
-  static double _calculateDailyAverage(ExpenseGroup group) {
-    if (group.expenses.isEmpty) return 0;
-    // Calculate distinct days with at least one expense for fairer average
-    final days = group.expenses
-        .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
-        .toSet()
-        .length;
-    final total = group.getTotalExpenses();
-    return days == 0 ? 0 : total / days;
   }
 }

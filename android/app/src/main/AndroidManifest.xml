@@ -108,6 +108,30 @@
                 android:name="androidx.appfunctions.APP_FUNCTION_DECLARATIONS"
                 android:resource="@xml/app_function_declarations" />
         </service>
+
+        <receiver
+            android:name=".HomeWidgetProvider"
+            android:exported="false"
+            android:enabled="@bool/enable_android_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/caravella_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".HomeWidgetConfigureActivity"
+            android:exported="true"
+            android:enabled="@bool/enable_android_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
         <!-- Default notification icon for Android notifications -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

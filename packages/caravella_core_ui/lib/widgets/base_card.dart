@@ -67,6 +67,7 @@ class BaseCard extends StatelessWidget {
         image: DecorationImage(
           image: FileImage(File(backgroundImage!)),
           fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
           colorFilter: ColorFilter.mode(
             theme.colorScheme.surface.withValues(alpha: 0.9),
             BlendMode.srcOver,
@@ -137,8 +138,7 @@ class BaseCard extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-              highlightColor:
-                  theme.colorScheme.primary.withValues(alpha: 0.05),
+              highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
               child: Padding(padding: padding, child: child),
             ),
           )
@@ -156,6 +156,7 @@ class BaseCard extends StatelessWidget {
                   image: DecorationImage(
                     image: FileImage(File(backgroundImage!)),
                     fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
                   ),
                 ),
               ),
@@ -189,10 +190,10 @@ class BaseCard extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: onTap,
-                splashColor:
-                    theme.colorScheme.primary.withValues(alpha: 0.1),
-                highlightColor:
-                    theme.colorScheme.primary.withValues(alpha: 0.05),
+                splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                highlightColor: theme.colorScheme.primary.withValues(
+                  alpha: 0.05,
+                ),
                 child: Padding(padding: padding, child: child),
               ),
             ),

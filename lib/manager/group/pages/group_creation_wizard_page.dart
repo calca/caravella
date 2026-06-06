@@ -13,37 +13,6 @@ import '../wizard/wizard_steps/wizard_type_and_name_step.dart';
 import '../wizard/wizard_steps/wizard_completion_step.dart';
 import '../../details/pages/expense_group_detail_page.dart';
 
-/// Custom physics that blocks swiping to next page when validation fails
-class _WizardPageViewPhysics extends ScrollPhysics {
-  final bool canGoNext;
-  final bool canGoPrev;
-
-  const _WizardPageViewPhysics({
-    required this.canGoNext,
-    required this.canGoPrev,
-    super.parent,
-  });
-
-  @override
-  _WizardPageViewPhysics applyTo(ScrollPhysics? ancestor) {
-    return _WizardPageViewPhysics(
-      canGoNext: canGoNext,
-      canGoPrev: canGoPrev,
-      parent: buildParent(ancestor),
-    );
-  }
-
-  @override
-  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
-    // offset > 0 = user swiping left (going to next page, pixels increase)
-    // offset < 0 = user swiping right (going to previous page, pixels decrease)
-    // This only applies to gesture-based scrolling, not programmatic animateToPage.
-    if (offset > 0 && !canGoNext) return 0.0;
-    if (offset < 0 && !canGoPrev) return 0.0;
-    return super.applyPhysicsToUserOffset(position, offset);
-  }
-}
-
 class GroupCreationWizardPage extends StatefulWidget {
   /// If true, shows the user name step when launched from welcome page
   /// (only if user name is not already set)
@@ -262,32 +231,6 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
     return !controller.hasChanges;
   }
 
-  bool _canProceedFromStep(
-    int step,
-    GroupFormState formState,
-    WizardState wizardState,
-  ) {
-    if (wizardState.includeUserNameStep) {
-      // With user name step: 0=name, 1=type&name, 2=completion
-      switch (step) {
-        case 0: // User name step (optional)
-          return true;
-        case 1: // Type and name step (only name is required)
-          return formState.title.trim().isNotEmpty;
-        default:
-          return true;
-      }
-    } else {
-      // Without user name step: 0=type&name, 1=completion
-      switch (step) {
-        case 0: // Type and name step (only name is required)
-          return formState.title.trim().isNotEmpty;
-        default:
-          return true;
-      }
-    }
-  }
-
   Future<void> _handleCompletionBackAction(WizardState wizardState) async {
     // When on completion step, back gesture acts like the CTA button
     final groupId = wizardState.savedGroupId;
@@ -394,43 +337,21 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
 
                   // Wizard content
                   Expanded(
-                    child: Consumer<GroupFormState>(
-                      builder: (context, formState, child) {
-                        final isLastStep =
-                            wizardState.currentStep ==
-                            wizardState.totalSteps - 1;
-                        final canGoNext =
-                            !isLastStep &&
-                            _canProceedFromStep(
-                              wizardState.currentStep,
-                              formState,
-                              wizardState,
-                            );
-                        final canGoPrev =
-                            wizardState.currentStep > 0 &&
-                            !isLastStep; // Can't go back from completion
-                        return PageView(
-                          controller: wizardState.pageController,
-                          physics: isLastStep
-                              ? const NeverScrollableScrollPhysics()
-                              : _WizardPageViewPhysics(
-                                  canGoNext: canGoNext,
-                                  canGoPrev: canGoPrev,
-                                ),
-                          onPageChanged: (index) {
-                            wizardState.syncWithPage(index);
-                          },
-                          children: [
-                            if (wizardState.includeUserNameStep)
-                              const WizardUserNameStep(),
-                            const WizardTypeAndNameStep(),
-                            WizardCompletionStep(
-                              groupId: wizardState.savedGroupId ?? '',
-                              fromWelcome: widget.fromWelcome,
-                            ),
-                          ],
-                        );
+                    child: PageView(
+                      controller: wizardState.pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      onPageChanged: (index) {
+                        wizardState.syncWithPage(index);
                       },
+                      children: [
+                        if (wizardState.includeUserNameStep)
+                          const WizardUserNameStep(),
+                        const WizardTypeAndNameStep(),
+                        WizardCompletionStep(
+                          groupId: wizardState.savedGroupId ?? '',
+                          fromWelcome: widget.fromWelcome,
+                        ),
+                      ],
                     ),
                   ),
 

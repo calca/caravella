@@ -316,6 +316,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                     const SizedBox(height: 12),
                     GroupNameWithIconField(
                       onIconTap: () => _showGroupTypeSelector(context),
+                      hintText: gloc.enter_title,
                     ),
                   ],
                 ),

@@ -18,9 +18,9 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 // Replaced bottom sheet overview with full page navigation
 import '../widgets/delete_expense_dialog.dart';
 import '../../expense/pages/expense_form_page.dart';
-import '../widgets/group_header.dart';
-import '../widgets/group_total.dart';
 import '../widgets/group_actions.dart';
+import '../../../home/cards/widgets/group_card_header.dart';
+import '../../../home/cards/widgets/group_card_amounts.dart';
 import '../widgets/filtered_expense_list.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
@@ -45,23 +45,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   // CSV export moved to CsvExporter
 
-  // OFX export moved to OfxExporter.generate
-
-  /// Costruisce il nome file OFX
-  String _buildOfxFilename() {
-    final now = DateTime.now();
-    final date =
-        '${now.year.toString().padLeft(4, '0')}-'
-        '${now.month.toString().padLeft(2, '0')}-'
-        '${now.day.toString().padLeft(2, '0')}';
-    final rawTitle = _trip?.title ?? 'export';
-    final safeTitle = rawTitle
-        .toLowerCase()
-        .replaceAll(RegExp(r'[^a-z0-9_-]+'), '_')
-        .replaceAll(RegExp(r'_+'), '_')
-        .trim();
-    return '${date}_${safeTitle}_export.ofx';
-  }
+  // OFX export moved to OfxExporter.generate and OfxExporter.buildFilename
 
   ExpenseGroup? _trip;
   bool _deleted = false;
@@ -72,8 +56,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
   bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
   String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
-  double _headerExpandedHeight =
-      300.0; // aggiornato in build(), usato in _onScroll
+  static const double _expandedHeaderHeight = 300.0;
+  static const double _collapsedTitleThreshold = _expandedHeaderHeight - 56.0;
 
   @override
   void initState() {
@@ -259,7 +243,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             }
             return;
           }
-          final filename = _buildOfxFilename();
+          final filename = OfxExporter.buildFilename(_trip);
           String? dirPath;
           try {
             dirPath = await FilePicker.getDirectoryPath(
@@ -310,7 +294,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           }
           final tempDir = await getTemporaryDirectory();
           final file = await File(
-            '${tempDir.path}/${_buildOfxFilename()}',
+            '${tempDir.path}/${OfxExporter.buildFilename(_trip)}',
           ).create();
           await file.writeAsString(ofx);
           if (!rootContext.mounted) return; // ensure still alive before share
@@ -633,8 +617,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
 
     // Mostra titolo nella appbar quando la flexible space è quasi collassata
-    final threshold = (_headerExpandedHeight - 56).clamp(0.0, double.infinity);
-    final shouldShow = _scrollController.offset > threshold;
+    final shouldShow = _scrollController.offset > _collapsedTitleThreshold;
     if (shouldShow != _collapsedTitleVisible && mounted) {
       setState(() => _collapsedTitleVisible = shouldShow);
     }
@@ -685,161 +668,171 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final colorScheme = Theme.of(context).colorScheme;
-    final totalExpenses = trip.getTotalExpenses();
+    final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     final showCollapsedTitle = _collapsedTitleVisible;
+    final contentOverlayColor = colorScheme.surface.withValues(alpha: 0.95);
 
-    // Calcola altezza espansa: toolbar + avatar + titolo + totale + azioni
     const double toolbarH = 56.0;
-    final circleSize = MediaQuery.of(context).size.width * 0.3;
-    // GroupHeader: padding(16) + avatar(circleSize) + title(~34) + SizedBox(16)
-    // + SizedBox(32) + Row(GroupTotal+GroupActions, ~60) + SizedBox(24)
-    final headerContentH = 16 + circleSize + 34 + 16 + 32 + 60 + 24;
-    final expandedH = toolbarH + headerContentH;
-    _headerExpandedHeight = expandedH;
+    const double expandedH = _expandedHeaderHeight;
 
     final bg = GroupBackgroundUtils.resolve(
       trip,
       colorScheme,
       baseColor: colorScheme.surfaceContainer,
     );
+    final Color homeBackgroundColor = colorScheme.surfaceContainer;
+    final LinearGradient? detailGradient = bg.gradient;
+
+    Widget buildHeaderBackground() {
+      if (bg.hasImage) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.file(
+              File(bg.imagePath!),
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+            ),
+            if (detailGradient != null)
+              DecoratedBox(decoration: BoxDecoration(gradient: detailGradient)),
+          ],
+        );
+      }
+
+      if (detailGradient != null) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            ColoredBox(color: bg.color),
+            DecoratedBox(decoration: BoxDecoration(gradient: detailGradient)),
+          ],
+        );
+      }
+
+      return ColoredBox(color: homeBackgroundColor);
+    }
 
     return AppSystemUI.surface(
       child: Scaffold(
-        body: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              floating: false,
-              expandedHeight: expandedH,
-              toolbarHeight: toolbarH,
-              collapsedHeight: toolbarH,
-              elevation: 0,
-              scrolledUnderElevation: 1,
-              backgroundColor: colorScheme.surfaceContainer,
-              foregroundColor: colorScheme.onSurface,
-              centerTitle: false,
-              title: AnimatedOpacity(
-                opacity: showCollapsedTitle ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 220),
-                child: Text(
-                  trip.title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_rounded),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.settings_outlined),
-                  tooltip: gen.AppLocalizations.of(context).options,
-                  onPressed: () => _showSettingsPage(),
-                ),
-              ],
-              flexibleSpace: FlexibleSpaceBar(
-                collapseMode: CollapseMode.pin,
-                background: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    // Sfondo: immagine quando presente, altrimenti surfaceContainer
-                    if (bg.hasImage)
-                      Image.file(
-                        File(bg.imagePath!),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter,
-                      )
-                    else
-                      ColoredBox(color: colorScheme.surfaceContainer),
-                    // Overlay gradiente solo quando c'è un'immagine
-                    if (bg.hasImage && bg.gradient != null)
-                      DecoratedBox(
-                        decoration: BoxDecoration(gradient: bg.gradient),
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(child: buildHeaderBackground()),
+            CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  floating: false,
+                  expandedHeight: expandedH,
+                  toolbarHeight: toolbarH,
+                  collapsedHeight: toolbarH,
+                  elevation: 0,
+                  scrolledUnderElevation: 0,
+                  surfaceTintColor: Colors.transparent,
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: colorScheme.onSurface,
+                  centerTitle: false,
+                  title: AnimatedOpacity(
+                    opacity: showCollapsedTitle ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 220),
+                    child: Text(
+                      trip.title,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
                       ),
-                    // Contenuto header (sotto la toolbar, con padding superiore di 16)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, toolbarH + 16, 16, 0),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    background: Padding(
+                      padding: EdgeInsets.only(
+                        top: toolbarH,
+                        left: 16,
+                        right: 16,
+                      ),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          GroupHeader(
-                            trip: trip,
-                            onPinToggle: _handlePinToggle,
+                          GroupCardHeader(
+                            group: trip,
+                            localizations: gloc,
+                            theme: theme,
+                            showDateRange: false,
+                            showPinnedBadge: false,
+                            centerTitleHorizontally: true,
                           ),
-                          const SizedBox(height: 32),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: GroupTotal(
-                                  total: totalExpenses,
-                                  currency: trip.currency,
-                                ),
-                              ),
-                              GroupActions(
-                                hasExpenses: trip.expenses.isNotEmpty,
-                                onOverview: trip.expenses.isNotEmpty
-                                    ? _openUnifiedOverviewPage
-                                    : null,
-                                onSearch: trip.expenses.isNotEmpty
-                                    ? _openSearchPage
-                                    : null,
-                                onOptions: _showSettingsPage,
-                              ),
-                            ],
+                          const SizedBox(height: 8),
+                          GroupCardAmounts(
+                            group: trip,
+                            theme: theme,
+                            localizations: gloc,
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 42),
+                          GroupActions(
+                            hasExpenses: trip.expenses.isNotEmpty,
+                            isPinned: trip.pinned,
+                            onOverview: trip.expenses.isNotEmpty
+                                ? _openUnifiedOverviewPage
+                                : null,
+                            onSearch: trip.expenses.isNotEmpty
+                                ? _openSearchPage
+                                : null,
+                            onFavorite: trip.archived ? null : _handlePinToggle,
+                            onOptions: _showSettingsPage,
+                          ),
+                          const SizedBox(height: 0),
                         ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                color: colorScheme
-                    .surfaceContainer, // background behind the decorated box
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface,
+                SliverToBoxAdapter(
+                  child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(24),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FilteredExpenseList(
-                          expenses: trip.expenses,
-                          currency: trip.currency,
-                          onExpenseTap: _openEditExpense,
-                          onAddExpense: _showAddExpenseSheet,
-                          newlyAddedExpenseId: _newlyAddedExpenseId,
+                    child: Container(
+                      width: double.infinity,
+                      color: contentOverlayColor,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FilteredExpenseList(
+                              expenses: trip.expenses,
+                              currency: trip.currency,
+                              onExpenseTap: _openEditExpense,
+                              onAddExpense: _showAddExpenseSheet,
+                              newlyAddedExpenseId: _newlyAddedExpenseId,
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(bottom: 0),
-              sliver: SliverToBoxAdapter(
-                child: Container(
-                  height: _calculateBottomPadding(),
-                  color: colorScheme.surface,
+                SliverPadding(
+                  padding: const EdgeInsets.only(bottom: 0),
+                  sliver: SliverToBoxAdapter(
+                    child: Container(
+                      height: _calculateBottomPadding(),
+                      color: contentOverlayColor,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),

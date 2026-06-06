@@ -3,62 +3,96 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class GroupActions extends StatelessWidget {
   final bool hasExpenses;
+  final bool isPinned;
   final VoidCallback? onOverview;
   final VoidCallback? onSearch;
+  final VoidCallback? onFavorite;
   final VoidCallback? onOptions;
   const GroupActions({
     super.key,
     required this.hasExpenses,
+    required this.isPinned,
     this.onOverview,
     this.onSearch,
+    this.onFavorite,
     this.onOptions,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    // final loc = MaterialLocalizations.of(context); // Removed unused local variable
-    return SizedBox(
-      height: 54,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Tooltip(
-            message: hasExpenses
-                ? gen.AppLocalizations.of(context).overview_and_statistics
-                : gen.AppLocalizations.of(context).no_expenses_to_display,
-            child: IconButton.filledTonal(
-              onPressed: hasExpenses ? onOverview : null,
-              icon: const Icon(Icons.analytics_outlined),
-              iconSize: 24,
-              tooltip: gen.AppLocalizations.of(context).overview,
-              style: IconButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainerLowest,
-                foregroundColor: colorScheme.onSurface,
-                minimumSize: const Size(54, 54),
-              ),
+    final gloc = gen.AppLocalizations.of(context);
+
+    ButtonStyle ctaStyle() {
+      return IconButton.styleFrom(
+        backgroundColor: colorScheme.surfaceContainerLowest,
+        foregroundColor: colorScheme.onSurface,
+        minimumSize: const Size(54, 54),
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final horizontalPadding = 0.0;
+        return SizedBox(
+          height: 54,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Tooltip(
+                  message: isPinned ? gloc.unpin_group : gloc.pin_group,
+                  child: IconButton.filledTonal(
+                    onPressed: onFavorite,
+                    icon: Icon(
+                      isPinned ? Icons.favorite : Icons.favorite_border,
+                    ),
+                    iconSize: 24,
+                    tooltip: isPinned ? gloc.unpin_group : gloc.pin_group,
+                    style: ctaStyle(),
+                  ),
+                ),
+                Tooltip(
+                  message: hasExpenses
+                      ? gloc.overview_and_statistics
+                      : gloc.no_expenses_to_display,
+                  child: IconButton.filledTonal(
+                    onPressed: hasExpenses ? onOverview : null,
+                    icon: const Icon(Icons.analytics_outlined),
+                    iconSize: 24,
+                    tooltip: gloc.overview,
+                    style: ctaStyle(),
+                  ),
+                ),
+                Tooltip(
+                  message: hasExpenses
+                      ? gloc.search_expenses
+                      : gloc.no_expenses_to_display,
+                  child: IconButton.filledTonal(
+                    onPressed: hasExpenses ? onSearch : null,
+                    icon: const Icon(Icons.search_outlined),
+                    iconSize: 24,
+                    tooltip: gloc.search_expenses,
+                    style: ctaStyle(),
+                  ),
+                ),
+                Tooltip(
+                  message: gloc.options,
+                  child: IconButton.filledTonal(
+                    onPressed: onOptions,
+                    icon: const Icon(Icons.settings_outlined),
+                    iconSize: 24,
+                    tooltip: gloc.options,
+                    style: ctaStyle(),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 8),
-          Tooltip(
-            message: hasExpenses
-                ? gen.AppLocalizations.of(context).search_expenses
-                : gen.AppLocalizations.of(context).no_expenses_to_display,
-            child: IconButton.filledTonal(
-              onPressed: hasExpenses ? onSearch : null,
-              icon: const Icon(Icons.search_outlined),
-              iconSize: 24,
-              tooltip: gen.AppLocalizations.of(context).search_expenses,
-              style: IconButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainerLowest,
-                foregroundColor: colorScheme.onSurface,
-                minimumSize: const Size(54, 54),
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -47,8 +47,8 @@ class VoiceInputService {
           _isListening = false;
         }
       },
-      localeId: localeId,
       listenOptions: stt.SpeechListenOptions(
+        localeId: localeId,
         listenMode: stt.ListenMode.confirmation,
         cancelOnError: true,
         partialResults: false,

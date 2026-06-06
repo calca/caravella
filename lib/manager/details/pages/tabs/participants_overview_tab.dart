@@ -1,7 +1,6 @@
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'usecase/settlements_logic.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:share_plus/share_plus.dart';
 import '../../widgets/stat_card.dart';
@@ -33,13 +32,9 @@ class ParticipantsOverviewTab extends StatelessWidget {
 
     final totalAll = trip.getTotalExpenses();
     final participantsCount = trip.participants.length;
-    final avgPerPerson = participantsCount == 0
-        ? 0.0
-        : totalAll / participantsCount;
+    final participantTotals = trip.getParticipantTotals();
     final contributionEntries = trip.participants.map((p) {
-      final total = trip.expenses
-          .where((e) => e.paidBy.id == p.id)
-          .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
+      final total = participantTotals[p.id] ?? 0.0;
       final pct = totalAll == 0 ? 0 : (total / totalAll) * 100;
       return (participant: p, total: total, pct: pct);
     }).toList()..sort((a, b) => b.total.compareTo(a.total));
@@ -53,7 +48,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           _AveragePerPersonRow(
-            average: avgPerPerson,
+            average: trip.getAveragePerParticipant(),
             currency: trip.currency,
             participants: trip.participants,
             count: participantsCount,

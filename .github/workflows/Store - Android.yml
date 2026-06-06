@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+      ENABLE_ANDROID_WIDGET: "false"
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -36,10 +37,12 @@ jobs:
           echo "TRACK=${{ github.event.inputs.track }}" >> $GITHUB_ENV
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.44.0'
           channel: 'stable'
       - name: Decode keystore from secret
         run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
+          echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+          test -s android/upload-keystore.jks
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
       - name: Configure signing properties
@@ -59,7 +62,7 @@ jobs:
       - name: Run tests
         run: flutter test
       - name: Build prod App Bundle (signed)
-        run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+        run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - name: Get app version
         id: get_version
         run: |

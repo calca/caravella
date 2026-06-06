@@ -6,4 +6,32 @@
     <string name="app_function_get_balance_name">Get group balance</string>
     <string name="app_function_get_recent_expenses_name">Get recent expenses</string>
     <string name="app_function_get_today_total_name">Get today\'s total</string>
+
+    <!-- Home widget -->
+    <string name="widget_description">Track today and group totals</string>
+    <string name="widget_today_label">today:</string>
+    <string name="widget_total_spent_label">Total Spent</string>
+    <string name="widget_group_total_label">Group total</string>
+    <string name="widget_quick_add">Quick add expense</string>
+    <string name="widget_open_group">Open group</string>
+    <string name="widget_select_group">Select expense group</string>
+    <string name="widget_unconfigured_title">Widget not configured</string>
+    <string name="widget_config_title">Select the expense group for this widget</string>
+    <string name="widget_config_empty">No active expense groups available</string>
+    <string name="widget_config_use_group_background">Use group style as background</string>
+    <string name="widget_config_show_group_name">Show group name</string>
+    <string name="widget_config_background_transparency">Transparency</string>
+    <string name="widget_config_tab_group">Expense group</string>
+    <string name="widget_config_tab_options">Widget options</string>
+    <string name="widget_config_save">Save</string>
+    <string name="widget_config_save_disabled">Select a group to save</string>
+    <string name="widget_config_selected">Selected</string>
+    <string name="widget_config_select_group_a11y">Select group %1$s with currency %2$s</string>
+    <string name="widget_config_currency_label">Currency: %1$s</string>
+
+    <!-- Widget preview (shown in widget picker) -->
+    <string name="widget_preview_group_name">My Trip</string>
+    <string name="widget_preview_today_value">12.50 €</string>
+    <string name="widget_preview_total_value">245.00 €</string>
+    <string name="widget_preview_today_chip">today: 12.50 €</string>
 </resources>

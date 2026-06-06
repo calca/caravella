@@ -17,6 +17,7 @@ dependencies:
   intl: ^0.20.2
   archive: ^4.0.9
   in_app_review: ^2.0.10
+  home_widget: ^0.9.1
   sqflite: ^2.4.1
   talker: ^5.1.17
   talker_flutter: ^5.1.17
@@ -30,7 +31,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  sqflite_common_ffi: ^2.3.4
+  sqflite_common_ffi: ^2.4.0+3
 
 flutter:
   uses-material-design: true

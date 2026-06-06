@@ -12,6 +12,9 @@ class GroupCardHeader extends StatelessWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
   final ThemeData theme;
+  final bool showDateRange;
+  final bool showPinnedBadge;
+  final bool centerTitleHorizontally;
 
   /// Whether the group's data is fully synced with peers.
   /// `null` means sync status is unknown or not applicable.
@@ -23,6 +26,9 @@ class GroupCardHeader extends StatelessWidget {
     required this.localizations,
     required this.theme,
     this.isSynced,
+    this.showDateRange = true,
+    this.showPinnedBadge = true,
+    this.centerTitleHorizontally = false,
   });
 
   String _formatDateRange(ExpenseGroup group, gen.AppLocalizations loc) {
@@ -51,25 +57,32 @@ class GroupCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_buildTitle(), _buildDateRange()],
+      crossAxisAlignment: centerTitleHorizontally
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
+      children: [_buildTitle(), if (showDateRange) _buildDateRange()],
     );
   }
 
   Widget _buildTitle() {
+    final title = Text(
+      group.title,
+      textAlign: centerTitleHorizontally ? TextAlign.center : TextAlign.start,
+      style: theme.textTheme.headlineMedium?.copyWith(
+        fontWeight: FontWeight.w600,
+        fontSize: HomeLayoutConstants.cardTitleFontSize,
+      ),
+      overflow: TextOverflow.ellipsis,
+    );
+
+    if (centerTitleHorizontally) {
+      return SizedBox(width: double.infinity, child: title);
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Text(
-            group.title,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: HomeLayoutConstants.cardTitleFontSize,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
+        Expanded(child: title),
         GroupSyncIndicator(group: group, isSynced: isSynced),
       ],
     );
@@ -104,7 +117,7 @@ class GroupCardHeader extends StatelessWidget {
               ),
             ] else
               const Spacer(),
-            if (group.pinned)
+            if (group.pinned && showPinnedBadge)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(

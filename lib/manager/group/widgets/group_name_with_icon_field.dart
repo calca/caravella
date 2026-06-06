@@ -10,11 +10,20 @@ import 'group_title_field.dart';
 class GroupNameWithIconField extends StatelessWidget {
   final VoidCallback onIconTap;
   final VoidCallback? onSubmitted;
+  /// Optional localized hint forwarded to the embedded title field.
+  final String? hintText;
+  final TextAlign textAlign;
+  final TextStyle? textStyle;
+  final InputDecoration? decoration;
 
   const GroupNameWithIconField({
     super.key,
     required this.onIconTap,
     this.onSubmitted,
+    this.hintText,
+    this.textAlign = TextAlign.start,
+    this.textStyle,
+    this.decoration,
   });
 
   @override
@@ -45,7 +54,15 @@ class GroupNameWithIconField extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Expanded(child: GroupTitleField(onSubmitted: onSubmitted)),
+          Expanded(
+            child: GroupTitleField(
+              onSubmitted: onSubmitted,
+              hintText: hintText,
+              textAlign: textAlign,
+              style: textStyle,
+              decoration: decoration,
+            ),
+          ),
         ],
       ),
     );

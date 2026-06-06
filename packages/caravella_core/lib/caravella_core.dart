@@ -13,6 +13,7 @@ export 'model/expense_group_color_palette.dart';
 export 'model/expense_group_type.dart';
 export 'model/expense_location.dart';
 export 'model/expense_participant.dart';
+export 'model/group_settlements.dart';
 
 // Storage and Repository
 export 'data/expense_group_repository.dart';
@@ -46,6 +47,10 @@ export 'services/media/location_service_abstraction.dart';
 export 'services/shortcuts/app_shortcuts_service.dart';
 export 'services/shortcuts/platform_shortcuts_manager.dart';
 export 'services/shortcuts/shortcuts_navigation_service.dart';
+
+// Services - Widgets
+export 'services/widgets/app_home_widget_service.dart';
+export 'services/widgets/platform_home_widget_manager.dart';
 
 // Sync
 export 'sync/device_identity.dart';

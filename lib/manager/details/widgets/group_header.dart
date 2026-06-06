@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'group_total.dart';
 
 class ParticipantAvatar extends StatelessWidget {
   final ExpenseParticipant participant;
@@ -85,7 +87,14 @@ class ExpenseGroupAvatar extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: bgColor,
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.12),
+          width: 1,
+        ),
+      ),
       child: Center(
         child: Text(
           initials,
@@ -102,78 +111,24 @@ class ExpenseGroupAvatar extends StatelessWidget {
 
 class GroupHeader extends StatelessWidget {
   final ExpenseGroup trip;
-  final VoidCallback? onPinToggle;
+  final double totalExpenses;
+  final double todaySpending;
 
-  const GroupHeader({super.key, required this.trip, this.onPinToggle});
+  const GroupHeader({
+    super.key,
+    required this.trip,
+    required this.totalExpenses,
+    required this.todaySpending,
+  });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final double circleSize = MediaQuery.of(context).size.width * 0.3;
     final gloc = gen.AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Center(
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: trip.archived ? null : onPinToggle,
-                child: Semantics(
-                  button: true,
-                  enabled: !trip.archived,
-                  label: trip.pinned ? gloc.unpin_group : gloc.pin_group,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: ExpenseGroupAvatar(trip: trip, size: circleSize),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: trip.archived ? null : onPinToggle,
-                  child: Semantics(
-                    button: true,
-                    enabled: !trip.archived,
-                    label: trip.pinned ? gloc.unpin_group : gloc.pin_group,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: colorScheme.surfaceDim,
-                        shape: BoxShape.circle,
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        transitionBuilder: (child, animation) {
-                          return ScaleTransition(
-                            scale: animation,
-                            child: child,
-                          );
-                        },
-                        child: Icon(
-                          trip.pinned
-                              ? Icons.favorite
-                              : (trip.archived
-                                    ? Icons.archive_outlined
-                                    : Icons.favorite_border),
-                          key: ValueKey(trip.pinned ? 'pinned' : 'unpinned'),
-                          size: circleSize * 0.15,
-                          color: trip.pinned
-                              ? colorScheme.primary
-                              : colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
         Text(
           trip.title,
           textAlign: TextAlign.center,
@@ -185,6 +140,52 @@ class GroupHeader extends StatelessWidget {
             fontSize: 28,
           ),
         ),
+        const SizedBox(height: 16),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: GroupTotal(
+              total: totalExpenses,
+              currency: trip.currency,
+              alignment: CrossAxisAlignment.center,
+              valueFontSize: 34,
+              currencyFontSize: 22,
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              CurrencyDisplay(
+                value: todaySpending.abs(),
+                currency: trip.currency,
+                valueFontSize: 16,
+                currencyFontSize: 12,
+                alignment: MainAxisAlignment.start,
+                showDecimals: true,
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w700,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                gloc.spent_today.toLowerCase(),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
       ],
     );
   }

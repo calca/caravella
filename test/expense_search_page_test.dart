@@ -98,7 +98,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Only Pizza dinner should be visible
-      expect(find.text('Pizza dinner'), findsOneWidget);
+      expect(find.text('Pizza dinner', findRichText: true), findsOneWidget);
       expect(find.text('Bus ticket'), findsNothing);
       expect(find.text('Groceries'), findsNothing);
     });
@@ -110,7 +110,7 @@ void main() {
       await tester.enterText(find.byType(TextField), 'transport');
       await tester.pumpAndSettle();
 
-      expect(find.text('Bus ticket'), findsOneWidget);
+      expect(find.text('Bus ticket', findRichText: true), findsOneWidget);
       expect(find.text('Pizza dinner'), findsNothing);
     });
 
@@ -122,7 +122,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Bus ticket is in Transport category
-      expect(find.text('Bus ticket'), findsOneWidget);
+      expect(find.text('Bus ticket', findRichText: true), findsOneWidget);
       expect(find.text('Pizza dinner'), findsNothing);
     });
 
@@ -134,7 +134,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Bob paid for Bus ticket
-      expect(find.text('Bus ticket'), findsOneWidget);
+      expect(find.text('Bus ticket', findRichText: true), findsOneWidget);
       expect(find.text('Pizza dinner'), findsNothing);
     });
 
@@ -144,8 +144,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Category chips
-      expect(find.text('Food'), findsOneWidget);
-      expect(find.text('Transport'), findsOneWidget);
+      expect(find.widgetWithText(FilterChip, 'Food'), findsOneWidget);
+      expect(find.widgetWithText(FilterChip, 'Transport'), findsOneWidget);
 
       // Participant chips
       expect(find.text('Alice'), findsOneWidget);
@@ -161,7 +161,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap Food category chip
-      await tester.tap(find.text('Food'));
+      await tester.tap(find.widgetWithText(FilterChip, 'Food'));
       await tester.pumpAndSettle();
 
       // Only Food expenses should be shown (Pizza dinner and Groceries)
@@ -202,7 +202,9 @@ void main() {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
-      // Tap "Has location" chip
+      // Tap "Has location" chip (may be outside the visible viewport; scroll it into view first)
+      await tester.ensureVisible(find.text('Has location'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Has location'));
       await tester.pumpAndSettle();
 
@@ -297,9 +299,10 @@ void main() {
       await tester.enterText(find.byType(TextField), 'Pizza');
       await tester.pumpAndSettle();
 
-      expect(find.byTooltip('Clear'), findsOneWidget);
+      // The search text is active, so the suffix shows a close icon (no tooltip)
+      expect(find.byIcon(Icons.close_rounded), findsOneWidget);
 
-      await tester.tap(find.byTooltip('Clear'));
+      await tester.tap(find.byIcon(Icons.close_rounded));
       await tester.pumpAndSettle();
 
       // All expenses should be shown again
@@ -341,12 +344,12 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap Food to filter
-      await tester.tap(find.text('Food'));
+      await tester.tap(find.widgetWithText(FilterChip, 'Food'));
       await tester.pumpAndSettle();
       expect(find.text('Bus ticket'), findsNothing);
 
       // Tap Food again to deselect
-      await tester.tap(find.text('Food'));
+      await tester.tap(find.widgetWithText(FilterChip, 'Food'));
       await tester.pumpAndSettle();
       expect(find.text('Bus ticket'), findsOneWidget);
     });

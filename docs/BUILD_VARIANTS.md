@@ -102,3 +102,33 @@ flutter build apk --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=FLAVOR=de
 - Il widget `UpdateCheckWidget` mostra sempre l'opzione ma è disabilitata quando non su Android
 - La funzione `checkAndShowUpdateIfNeeded()` viene chiamata all'avvio ma non fa nulla se gli updates sono disabilitati
 - Il logger adapter permette al package di usare il sistema di logging dell'app principale
+
+## Android Home Widget
+
+Il progetto supporta l'esclusione del widget Android tramite un flag di compilazione.
+
+### Build con Widget Android (default)
+
+```bash
+# Il widget è abilitato di default, non serve specificare il flag
+flutter build apk --dart-define=FLAVOR=prod --flavor prod --release
+```
+
+### Build senza Widget Android (CI/GitHub Workflows)
+
+```bash
+# Disabilita il widget Android
+flutter build apk --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=FLAVOR=prod --flavor prod --release
+```
+
+### Come Funziona
+
+1. **AppConfig.enableAndroidWidget** legge il flag `ENABLE_ANDROID_WIDGET` (default: `true`)
+2. **PlatformHomeWidgetManager** controlla il flag prima di eseguire qualsiasi operazione widget
+3. **Android nativo**: il `build.gradle.kts` legge il flag dalla property Gradle o dalla variabile d'ambiente `ENABLE_ANDROID_WIDGET` e:
+   - Genera una risorsa booleana `@bool/enable_android_widget`
+   - Il `AndroidManifest.xml` usa `android:enabled="@bool/enable_android_widget"` su receiver e activity del widget
+4. Se `ENABLE_ANDROID_WIDGET=false`:
+   - Il widget non viene inizializzato lato Flutter
+   - Il receiver e l'activity nativa sono disabilitati nel manifest
+   - Il widget non appare nel picker di widget Android
