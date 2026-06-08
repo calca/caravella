@@ -14,6 +14,9 @@ class GroupCard extends StatelessWidget {
   final bool isSelected;
   final double selectionProgress;
 
+  /// Whether this group's data is fully synced with peers.
+  final bool? isSynced;
+
   const GroupCard({
     super.key,
     required this.group,
@@ -23,6 +26,7 @@ class GroupCard extends StatelessWidget {
     this.onCategoryAdded,
     this.isSelected = false,
     this.selectionProgress = 0.0,
+    this.isSynced,
   });
 
   Color _getSelectedColor(bool isDarkMode) {
@@ -73,6 +77,7 @@ class GroupCard extends StatelessWidget {
           theme: theme,
           onExpenseAdded: onGroupUpdated,
           onCategoryAdded: onCategoryAdded,
+          isSynced: isSynced,
         ),
       ),
     );

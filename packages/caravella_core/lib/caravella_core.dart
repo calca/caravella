@@ -52,6 +52,22 @@ export 'services/shortcuts/shortcuts_navigation_service.dart';
 export 'services/widgets/app_home_widget_service.dart';
 export 'services/widgets/platform_home_widget_manager.dart';
 
+// Sync
+export 'sync/device_identity.dart';
+export 'sync/utils/sync_clock.dart';
+export 'sync/models/sync_result.dart';
+export 'sync/models/sync_status.dart';
+export 'sync/sync_dao.dart';
+export 'sync/delta_builder.dart';
+export 'sync/conflict_resolver.dart';
+export 'sync/sync_manager.dart';
+export 'sync/json/group_serializer.dart';
+export 'sync/json/json_merger.dart';
+export 'sync/json/local_json_store.dart';
+export 'sync/channels/cloud_relay_channel.dart';
+export 'sync/channels/lan_sync_channel.dart';
+export 'sync/sync_orchestrator.dart';
+
 // State Management
 export 'state/app_functions_enabled_notifier.dart';
 export 'state/auto_backup_notifier.dart';

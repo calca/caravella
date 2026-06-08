@@ -23,6 +23,7 @@ class ExpenseGroup {
   groupType; // Tipologia del gruppo (viaggio, personale, famiglia, altro)
   final bool
   autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
+  final bool syncEnabled; // Whether this group is shared/synced with other devices
 
   ExpenseGroup({
     required this.title,
@@ -41,6 +42,7 @@ class ExpenseGroup {
     this.notificationEnabled = false, // Default a false
     this.groupType, // Opzionale, tipologia del gruppo
     this.autoLocationEnabled = false, // Default a false
+    this.syncEnabled = false, // Default a false
   }) : timestamp = timestamp ?? DateTime.now(),
        id = id ?? const Uuid().v4();
 
@@ -85,6 +87,7 @@ class ExpenseGroup {
       ), // Legge la tipologia
       autoLocationEnabled:
           json['autoLocationEnabled'] ?? false, // Legge il valore auto-location
+      syncEnabled: json['syncEnabled'] ?? false, // Legge il valore sync
     );
   }
 
@@ -106,6 +109,7 @@ class ExpenseGroup {
         notificationEnabled, // Salva il valore della notifica
     'groupType': groupType?.toJson(), // Salva la tipologia
     'autoLocationEnabled': autoLocationEnabled, // Salva il valore auto-location
+    'syncEnabled': syncEnabled, // Salva il valore sync
   };
 
   ExpenseGroup copyWith({
@@ -126,6 +130,7 @@ class ExpenseGroup {
     Object? color = _notProvided,
     Object? groupType = _notProvided,
     bool? autoLocationEnabled,
+    bool? syncEnabled,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -147,6 +152,7 @@ class ExpenseGroup {
           ? this.groupType
           : groupType as ExpenseGroupType?,
       autoLocationEnabled: autoLocationEnabled ?? this.autoLocationEnabled,
+      syncEnabled: syncEnabled ?? this.syncEnabled,
     );
   }
 
@@ -320,6 +326,7 @@ class ExpenseGroup {
       notificationEnabled: false, // Notifica inizialmente disabilitata
       groupType: null, // Tipologia inizialmente vuota
       autoLocationEnabled: false, // Auto-location disabilitata di default
+      syncEnabled: false, // Sync disabilitato di default
     );
   }
 }

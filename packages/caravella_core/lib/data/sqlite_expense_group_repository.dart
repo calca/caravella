@@ -7,6 +7,9 @@ import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
 import '../model/expense_location.dart';
 import '../model/expense_group_type.dart';
+import '../services/logging/logger_service.dart';
+import '../sync/device_identity.dart';
+import '../sync/utils/sync_clock.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
@@ -17,14 +20,23 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 2;
+  static const int _databaseVersion = 3;
 
-  // Table names
-  static const String _tableGroups = 'groups';
-  static const String _tableParticipants = 'participants';
-  static const String _tableCategories = 'categories';
-  static const String _tableExpenses = 'expenses';
-  static const String _tableAttachments = 'attachments';
+  // Table names — accessible for SyncDao and other sync infrastructure
+  static const String tableGroups = 'groups';
+  static const String tableParticipants = 'participants';
+  static const String tableCategories = 'categories';
+  static const String tableExpenses = 'expenses';
+  static const String tableAttachments = 'attachments';
+  static const String tableDeviceMeta = 'device_meta';
+  static const String tableSyncLog = 'sync_log';
+
+  // Legacy aliases kept private for internal use
+  static const String _tableGroups = tableGroups;
+  static const String _tableParticipants = tableParticipants;
+  static const String _tableCategories = tableCategories;
+  static const String _tableExpenses = tableExpenses;
+  static const String _tableAttachments = tableAttachments;
 
   // View names
   static const String _viewGroupTotals = 'v_group_totals';
@@ -78,7 +90,7 @@ class SqliteExpenseGroupRepository
 
   /// Create database schema
   Future<void> _createDatabase(Database db, int version) async {
-    // Groups table
+    // Groups table (includes sync columns from v2)
     await db.execute('''
       CREATE TABLE $_tableGroups (
         id TEXT PRIMARY KEY,
@@ -93,7 +105,12 @@ class SqliteExpenseGroupRepository
         color INTEGER,
         notification_enabled INTEGER NOT NULL DEFAULT 0,
         group_type TEXT,
-        auto_location_enabled INTEGER NOT NULL DEFAULT 0
+        auto_location_enabled INTEGER NOT NULL DEFAULT 0,
+        device_id TEXT NOT NULL DEFAULT '',
+        updated_at INTEGER NOT NULL DEFAULT 0,
+        deleted INTEGER NOT NULL DEFAULT 0,
+        sync_version INTEGER NOT NULL DEFAULT 0,
+        sync_enabled INTEGER NOT NULL DEFAULT 0
       )
     ''');
 
@@ -167,6 +184,35 @@ class SqliteExpenseGroupRepository
       'CREATE INDEX idx_expenses_date ON $_tableExpenses(date DESC)',
     );
 
+    // Sync-related tables (v2)
+    await db.execute('''
+      CREATE TABLE $tableDeviceMeta (
+        device_id TEXT PRIMARY KEY,
+        device_name TEXT,
+        last_seen INTEGER,
+        vector_clock TEXT
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE $tableSyncLog (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        peer_id TEXT NOT NULL,
+        channel TEXT NOT NULL,
+        synced_at INTEGER NOT NULL,
+        delta_sent INTEGER NOT NULL DEFAULT 0,
+        delta_recv INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+
+    // Sync indexes
+    await db.execute(
+      'CREATE INDEX idx_groups_updated_at ON $_tableGroups(updated_at)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_groups_deleted ON $_tableGroups(deleted)',
+    );
+
     // Create aggregation views for efficient stats queries
     await _createViews(db);
   }
@@ -208,9 +254,83 @@ class SqliteExpenseGroupRepository
     int oldVersion,
     int newVersion,
   ) async {
-    // v1 → v2: add aggregation views
     if (oldVersion < 2) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v2',
+        name: 'storage.sqlite',
+      );
+
+      // Add sync columns to groups table
+      await db.execute(
+        "ALTER TABLE $_tableGroups ADD COLUMN device_id TEXT NOT NULL DEFAULT ''",
+      );
+      await db.execute(
+        'ALTER TABLE $_tableGroups ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute(
+        'ALTER TABLE $_tableGroups ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute(
+        'ALTER TABLE $_tableGroups ADD COLUMN sync_version INTEGER NOT NULL DEFAULT 0',
+      );
+
+      // Create new sync tables
+      await db.execute('''
+        CREATE TABLE $tableDeviceMeta (
+          device_id TEXT PRIMARY KEY,
+          device_name TEXT,
+          last_seen INTEGER,
+          vector_clock TEXT
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE $tableSyncLog (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          peer_id TEXT NOT NULL,
+          channel TEXT NOT NULL,
+          synced_at INTEGER NOT NULL,
+          delta_sent INTEGER NOT NULL DEFAULT 0,
+          delta_recv INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
+
+      // Create indexes for sync columns
+      await db.execute(
+        'CREATE INDEX idx_groups_updated_at ON $_tableGroups(updated_at)',
+      );
+      await db.execute(
+        'CREATE INDEX idx_groups_deleted ON $_tableGroups(deleted)',
+      );
+
+      // Backfill: set updated_at = timestamp for all existing groups
+      await db.execute(
+        'UPDATE $_tableGroups SET updated_at = timestamp WHERE updated_at = 0',
+      );
+
+      // Add aggregation views
       await _createViews(db);
+
+      LoggerService.info(
+        'Database migration to v2 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 3) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v3',
+        name: 'storage.sqlite',
+      );
+
+      await db.execute(
+        'ALTER TABLE $_tableGroups ADD COLUMN sync_enabled INTEGER NOT NULL DEFAULT 0',
+      );
+
+      LoggerService.info(
+        'Database migration to v3 complete',
+        name: 'storage.sqlite',
+      );
     }
   }
 
@@ -729,9 +849,13 @@ class SqliteExpenseGroupRepository
 
   // Helper methods
 
-  /// Load all groups from database
+  /// Load all groups from database (excludes soft-deleted groups)
   Future<List<ExpenseGroup>> _loadAllGroups(Database db) async {
-    final groupMaps = await db.query(_tableGroups);
+    final groupMaps = await db.query(
+      _tableGroups,
+      where: 'deleted = ?',
+      whereArgs: [0],
+    );
     final groups = <ExpenseGroup>[];
 
     for (final groupMap in groupMaps) {
@@ -832,11 +956,23 @@ class SqliteExpenseGroupRepository
           ? ExpenseGroupType.fromJson(map['group_type'])
           : null,
       autoLocationEnabled: (map['auto_location_enabled'] as int) == 1,
+      syncEnabled: (map['sync_enabled'] as int?) == 1,
     );
   }
 
   /// Convert ExpenseGroup to database map
   Map<String, dynamic> _groupToMap(ExpenseGroup group) {
+    final nowMs = SyncClock.nowMs();
+    String deviceId = '';
+    if (DeviceIdentity.isInitialized) {
+      deviceId = DeviceIdentity.instance.deviceId;
+    } else {
+      LoggerService.debug(
+        'DeviceIdentity not initialized — saving group with empty device_id',
+        name: 'storage.sqlite',
+      );
+    }
+
     return {
       'id': group.id,
       'title': group.title,
@@ -851,6 +987,11 @@ class SqliteExpenseGroupRepository
       'notification_enabled': group.notificationEnabled ? 1 : 0,
       'group_type': group.groupType?.toJson(),
       'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
+      'sync_enabled': group.syncEnabled ? 1 : 0,
+      'device_id': deviceId,
+      'updated_at': nowMs,
+      'deleted': 0,
+      'sync_version': 0,
     };
   }
 

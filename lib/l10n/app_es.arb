@@ -941,6 +941,66 @@
   ,"@export_markdown_description": {"description": "Descripción corta para el formato de exportación Markdown"}
   ,"save_label": "Guardar"
   ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
+  ,"sync_title": "Sincronización"
+  ,"@sync_title": {"description": "Título para la página de ajustes de sync"}
+  ,"sync_local_title": "Sync local"
+  ,"@sync_local_title": {"description": "Título para la sección de sync LAN local"}
+  ,"sync_local_description": "Sincronización automática en red Wi-Fi"
+  ,"@sync_local_description": {"description": "Descripción para sync LAN"}
+  ,"sync_cloud_title": "Sync en la nube"
+  ,"@sync_cloud_title": {"description": "Título para la sección de sync en la nube"}
+  ,"sync_cloud_description": "Sincronización vía Google Drive"
+  ,"@sync_cloud_description": {"description": "Descripción para sync en la nube"}
+  ,"sync_cloud_enable": "Activar sync en la nube"
+  ,"@sync_cloud_enable": {"description": "Etiqueta para activar sync en la nube"}
+  ,"sync_cloud_privacy": "Tus datos se guardan en tu Google Drive personal, no en servidores de terceros."
+  ,"@sync_cloud_privacy": {"description": "Aviso de privacidad para sync en la nube"}
+  ,"sync_history_title": "Historial de sync"
+  ,"@sync_history_title": {"description": "Título para la sección de historial de sync"}
+  ,"sync_status_synced": "Sincronizado"
+  ,"@sync_status_synced": {"description": "Estado cuando sync está actualizado"}
+  ,"sync_status_syncing": "Sincronizando..."
+  ,"@sync_status_syncing": {"description": "Estado durante sync activo"}
+  ,"sync_status_error": "Error de sync"
+  ,"@sync_status_error": {"description": "Estado en caso de error de sync"}
+  ,"sync_status_never": "Nunca sincronizado"
+  ,"@sync_status_never": {"description": "Estado cuando no se ha realizado sync"}
+  ,"sync_now": "Sincronizar ahora"
+  ,"@sync_now": {"description": "Botón para iniciar sync manual"}
+  ,"sync_last_sync": "Último sync: {time}"
+  ,"@sync_last_sync": {"description": "Muestra la hora del último sync","placeholders": {"time": {"type": "String"}}}
+  ,"sync_bt_title": "Sync Bluetooth"
+  ,"@sync_bt_title": {"description": "Título para sync Bluetooth"}
+  ,"sync_bt_searching": "Buscando dispositivos cercanos..."
+  ,"@sync_bt_searching": {"description": "Estado mientras busca peers BT"}
+  ,"sync_bt_sync_with": "Sincronizar"
+  ,"@sync_bt_sync_with": {"description": "Botón para sincronizar con un peer BT"}
+  ,"sync_bt_completed": "Sincronización completada"
+  ,"@sync_bt_completed": {"description": "Estado cuando sync BT completado"}
+  ,"sync_bt_received_sent": "Recibidos {received}, enviados {sent} registros"
+  ,"@sync_bt_received_sent": {"description": "Resumen después de sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
+  ,"sync_bt_error": "Sincronización fallida"
+  ,"@sync_bt_error": {"description": "Estado cuando sync BT falla"}
+  ,"sync_bt_retry": "Reintentar"
+  ,"@sync_bt_retry": {"description": "Botón para reintentar sync BT"}
+  ,"sync_history_empty": "Sin historial de sync"
+  ,"@sync_history_empty": {"description": "Estado vacío para historial de sync"}
+  ,"sync_channel_lan": "LAN"
+  ,"@sync_channel_lan": {"description": "Nombre del canal LAN"}
+  ,"sync_channel_bluetooth": "Bluetooth"
+  ,"@sync_channel_bluetooth": {"description": "Nombre del canal Bluetooth"}
+  ,"sync_channel_cloud": "Nube"
+  ,"@sync_channel_cloud": {"description": "Nombre del canal nube"}
+  ,"sync_records_exchanged": "{sent} enviados, {received} recibidos"
+  ,"@sync_records_exchanged": {"description": "Resumen de registros intercambiados","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
+  ,"sync_group_shared": "Grupo compartido"
+  ,"@sync_group_shared": {"description": "Tooltip para icono de grupo compartido"}
+  ,"sync_group_synced": "Todos los cambios sincronizados"
+  ,"@sync_group_synced": {"description": "Tooltip para estado de grupo sincronizado"}
+  ,"sync_group_pending": "Cambios aún no sincronizados"
+  ,"@sync_group_pending": {"description": "Tooltip para estado de grupo no sincronizado"}
+  ,"sync_group_enable": "Habilitar sincronización"
+  ,"@sync_group_enable": {"description": "Etiqueta para habilitar la sincronización en un grupo"}
   ,"search_expenses": "Buscar gastos"
   ,"@search_expenses": {"description": "Título de la página de búsqueda de gastos"}
   ,"search_in_group": "Buscar en {groupName}"

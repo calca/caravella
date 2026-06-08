@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../home_constants.dart';
+import 'group_sync_indicator.dart';
 
 /// Displays the header section of a group card.
 ///
-/// This includes the group title and optionally the pin badge and date range.
+/// This includes the group title and optionally the pin badge, date range,
+/// and sync status indicator for shared groups.
 class GroupCardHeader extends StatelessWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
@@ -14,11 +16,16 @@ class GroupCardHeader extends StatelessWidget {
   final bool showPinnedBadge;
   final bool centerTitleHorizontally;
 
+  /// Whether the group's data is fully synced with peers.
+  /// `null` means sync status is unknown or not applicable.
+  final bool? isSynced;
+
   const GroupCardHeader({
     super.key,
     required this.group,
     required this.localizations,
     required this.theme,
+    this.isSynced,
     this.showDateRange = true,
     this.showPinnedBadge = true,
     this.centerTitleHorizontally = false,
@@ -75,14 +82,8 @@ class GroupCardHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // ExpenseGroupAvatar(
-        //   trip: group,
-        //   size: HomeLayoutConstants.headerHeight - 32,
-        //   backgroundColor:
-        //       theme.colorScheme.surfaceContainer, // avatar diameter ~56
-        // ),
-        // const SizedBox(width: 8),
         Expanded(child: title),
+        GroupSyncIndicator(group: group, isSynced: isSynced),
       ],
     );
   }
