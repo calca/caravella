@@ -130,9 +130,7 @@ class AmountInputWidget extends StatelessWidget {
         errorBorder: InputBorder.none,
         focusedErrorBorder: InputBorder.none,
         hintText: '0.00',
-        hintStyle: amountStyle?.copyWith(
-          color: color.withValues(alpha: 0.35),
-        ),
+        hintStyle: amountStyle?.copyWith(color: color.withValues(alpha: 0.35)),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         isDense: false,
         contentPadding: const EdgeInsets.symmetric(vertical: 4),
