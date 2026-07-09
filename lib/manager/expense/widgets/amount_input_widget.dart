@@ -48,23 +48,24 @@ class AmountInputWidget extends StatelessWidget {
         focusNode: focusNode,
         enabled: enabled,
         style: textStyle ?? FormTheme.getFieldTextStyle(context),
-        decoration: FormTheme.getStandardDecoration(
-          hintText: label != null ? '${label!} *' : null,
-          isDense: true,
-          suffixIcon: leading == null && trailing != null
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: trailing,
-                )
-              : null,
-        ).copyWith(
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          suffixIconConstraints: const BoxConstraints(
-            minHeight: 32,
-            minWidth: 32,
-          ),
-          semanticCounterText: '',
-        ),
+        decoration:
+            FormTheme.getStandardDecoration(
+              hintText: label != null ? '${label!} *' : null,
+              isDense: true,
+              suffixIcon: leading == null && trailing != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: trailing,
+                    )
+                  : null,
+            ).copyWith(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              suffixIconConstraints: const BoxConstraints(
+                minHeight: 32,
+                minWidth: 32,
+              ),
+              semanticCounterText: '',
+            ),
         keyboardType: TextInputType.text,
         textInputAction: textInputAction ?? TextInputAction.next,
         validator: validator,

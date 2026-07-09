@@ -119,37 +119,38 @@ void main() {
       );
     });
 
-    testWidgets('FormTheme borderless amount decoration is configured correctly', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: CaravellaThemes.light,
-          home: Builder(
-            builder: (context) {
-              final style = Theme.of(context).textTheme.bodyLarge;
-              final decoration = FormTheme.getBorderlessAmountDecoration(
-                hintText: '123.45',
-                hintStyle: style,
-              );
+    testWidgets(
+      'FormTheme borderless amount decoration is configured correctly',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: CaravellaThemes.light,
+            home: Builder(
+              builder: (context) {
+                final style = Theme.of(context).textTheme.bodyLarge;
+                final decoration = FormTheme.getBorderlessAmountDecoration(
+                  hintText: '123.45',
+                  hintStyle: style,
+                );
 
-              expect(decoration.border, equals(InputBorder.none));
-              expect(decoration.enabledBorder, equals(InputBorder.none));
-              expect(decoration.focusedBorder, equals(InputBorder.none));
-              expect(decoration.hintText, equals('123.45'));
-              expect(decoration.hintStyle, equals(style));
-              expect(decoration.isDense, isFalse);
-              expect(
-                decoration.contentPadding,
-                const EdgeInsets.symmetric(vertical: 4),
-              );
+                expect(decoration.border, equals(InputBorder.none));
+                expect(decoration.enabledBorder, equals(InputBorder.none));
+                expect(decoration.focusedBorder, equals(InputBorder.none));
+                expect(decoration.hintText, equals('123.45'));
+                expect(decoration.hintStyle, equals(style));
+                expect(decoration.isDense, isFalse);
+                expect(
+                  decoration.contentPadding,
+                  const EdgeInsets.symmetric(vertical: 4),
+                );
 
-              return const SizedBox.shrink();
-            },
+                return const SizedBox.shrink();
+              },
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     test('FormTheme Gmail app bar search background is darker than base', () {
       final lightColor = FormTheme.getGmailAppBarSearchBackground(

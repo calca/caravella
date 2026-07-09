@@ -566,9 +566,7 @@ void _showNameDialog(
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: InputDecoration(
-            hintText: loc.settings_user_name_hint,
-          ),
+          decoration: InputDecoration(hintText: loc.settings_user_name_hint),
           textCapitalization: TextCapitalization.words,
           maxLength: 50,
         ),

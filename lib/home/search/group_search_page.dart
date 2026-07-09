@@ -17,9 +17,9 @@ class GroupSearchPage extends StatefulWidget {
 
   /// Pushes [GroupSearchPage] on the navigator stack.
   static Future<void> show(BuildContext context) {
-    return Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const GroupSearchPage()),
-    );
+    return Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const GroupSearchPage()));
   }
 
   @override
@@ -81,9 +81,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
   List<ExpenseGroup> _applyFilter(List<ExpenseGroup> groups) {
     if (_searchQuery.isEmpty) return groups;
     final query = _searchQuery.toLowerCase();
-    return groups
-        .where((g) => g.title.toLowerCase().contains(query))
-        .toList();
+    return groups.where((g) => g.title.toLowerCase().contains(query)).toList();
   }
 
   void _onSearchChanged(String value) {
@@ -119,8 +117,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
         titleSpacing: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              isDark ? Brightness.light : Brightness.dark,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
           statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
         ),
         title: Padding(
@@ -169,10 +166,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
     );
   }
 
-  Widget _buildEmptyState(
-    gen.AppLocalizations gloc,
-    ColorScheme colorScheme,
-  ) {
+  Widget _buildEmptyState(gen.AppLocalizations gloc, ColorScheme colorScheme) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
