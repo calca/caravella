@@ -568,7 +568,6 @@ void _showNameDialog(
           autofocus: true,
           decoration: InputDecoration(
             hintText: loc.settings_user_name_hint,
-            border: const OutlineInputBorder(),
           ),
           textCapitalization: TextCapitalization.words,
           maxLength: 50,

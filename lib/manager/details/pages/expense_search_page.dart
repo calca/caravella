@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../group/widgets/period_selection_bottom_sheet.dart';
@@ -284,7 +285,8 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     final filteredExpenses = _filteredExpenses;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final appBarColor = colorScheme.surfaceContainerHighest;
+    final appBarColor = FormTheme.getGmailAppBarSearchBackground(colorScheme);
+    final searchBackgroundColor = appBarColor;
 
     return Scaffold(
       appBar: AppBar(
@@ -305,7 +307,8 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
             focusNode: _searchFocusNode,
             autofocus: true,
             style: Theme.of(context).textTheme.bodyLarge,
-            decoration: InputDecoration(
+            decoration: FormTheme.getSearchPillDecoration(
+              backgroundColor: searchBackgroundColor,
               hintText: gloc.search_in_group(widget.groupName),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
@@ -322,25 +325,6 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
                       tooltip: gloc.clear_filters,
                     )
                   : null,
-              filled: true,
-              fillColor: appBarColor,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 0,
-              ),
-              isDense: false,
             ),
             onChanged: (value) => setState(() => _searchQuery = value),
             cursorColor: colorScheme.onSurface,

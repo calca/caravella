@@ -48,10 +48,8 @@ class AmountInputWidget extends StatelessWidget {
         focusNode: focusNode,
         enabled: enabled,
         style: textStyle ?? FormTheme.getFieldTextStyle(context),
-        decoration: InputDecoration(
+        decoration: FormTheme.getStandardDecoration(
           hintText: label != null ? '${label!} *' : null,
-          // rely on theme hintStyle
-          floatingLabelBehavior: FloatingLabelBehavior.never,
           isDense: true,
           suffixIcon: leading == null && trailing != null
               ? Padding(
@@ -59,11 +57,12 @@ class AmountInputWidget extends StatelessWidget {
                   child: trailing,
                 )
               : null,
+        ).copyWith(
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           suffixIconConstraints: const BoxConstraints(
             minHeight: 32,
             minWidth: 32,
           ),
-          contentPadding: FormTheme.standardContentPadding,
           semanticCounterText: '',
         ),
         keyboardType: TextInputType.text,
@@ -122,19 +121,9 @@ class AmountInputWidget extends StatelessWidget {
       style: amountStyle,
       textAlign: TextAlign.left,
       maxLines: 1,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        focusedErrorBorder: InputBorder.none,
+      decoration: FormTheme.getBorderlessAmountDecoration(
         hintText: '0.00',
         hintStyle: amountStyle?.copyWith(color: color.withValues(alpha: 0.35)),
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        isDense: false,
-        contentPadding: const EdgeInsets.symmetric(vertical: 4),
-        semanticCounterText: '',
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       textInputAction: textInputAction ?? TextInputAction.next,

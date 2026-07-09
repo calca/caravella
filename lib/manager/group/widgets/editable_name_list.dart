@@ -194,8 +194,7 @@ class _EditableNameListState extends State<EditableNameList> {
                   controller: _editController,
                   focusNode: _editFocus,
                   autofocus: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
+                  decoration: FormTheme.getBorderlessDecoration(
                     hintText: widget.hintLabel,
                   ),
                   textInputAction: TextInputAction.done,
@@ -236,8 +235,7 @@ class _EditableNameListState extends State<EditableNameList> {
                   controller: _addController,
                   focusNode: _addFocus,
                   autofocus: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
+                  decoration: FormTheme.getBorderlessDecoration(
                     hintText: widget.hintLabel,
                   ),
                   textInputAction: TextInputAction.done,
