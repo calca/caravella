@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'developer_page.dart';
 import 'data_backup_page.dart';
+import 'group_type_templates_page.dart';
 import 'whats_new_page.dart';
 import '../../settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
@@ -44,6 +45,7 @@ class SettingsPage extends StatelessWidget {
             ),
             children: [
               _buildGeneralSection(context, loc, locale),
+              _buildPersonalizationSection(context, loc),
               _buildPrivacySection(context, loc),
               _buildDataSection(context, loc),
               _buildInfoSection(context, loc),
@@ -85,6 +87,17 @@ class SettingsPage extends StatelessWidget {
         if (isAndroid) const SizedBox(height: 8),
         if (isAndroid) _buildAppFunctionsRow(context, loc),
       ],
+    );
+  }
+
+  Widget _buildPersonalizationSection(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) {
+    return SettingsSection(
+      title: loc.settings_group_templates_section_title,
+      description: loc.settings_group_templates_section_desc,
+      children: [_buildGroupTemplatesRow(context, loc)],
     );
   }
 
@@ -340,6 +353,33 @@ class SettingsPage extends StatelessWidget {
         onTap: () => Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (ctx) => const DataBackupPage())),
+      ),
+    );
+  }
+
+  Widget _buildGroupTemplatesRow(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return SettingsCard(
+      context: context,
+      color: colorScheme.surface,
+      child: ListTile(
+        leading: const Icon(Icons.category_outlined),
+        title: Text(
+          loc.settings_group_templates_manage_title,
+          style: textTheme.titleMedium,
+        ),
+        subtitle: Text(
+          loc.settings_group_templates_manage_desc,
+          style: textTheme.bodySmall,
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const GroupTypeTemplatesPage()),
+        ),
       ),
     );
   }

@@ -9,6 +9,8 @@ import 'package:io_caravella_egm/services/notification_service.dart';
 import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
+import '../group_type/group_type_localization.dart';
+import '../group_type/group_type_selector_sheet.dart';
 import '../widgets/group_name_with_icon_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
@@ -142,7 +144,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
 
           // Initialize default categories for the current group type
           if (_state.groupType != null) {
-            final defaultCategories = _getLocalizedCategories(
+            final defaultCategories = GroupTypeLocalization
+                .localizedDefaultCategories(
               gloc,
               _state.groupType!,
             );
@@ -251,110 +254,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
   }
 
   void _showGroupTypeSelector(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    final controller = context.read<GroupFormController>();
-    final currentType = context.read<GroupFormState>().groupType;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => GroupBottomSheetScaffold(
-        title: gloc.group_type,
-        scrollable: false,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ...ExpenseGroupType.values.map((type) {
-              final isSelected = currentType == type;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: SelectionTile(
-                  leading: Icon(
-                    type.icon,
-                    size: 24,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface,
-                  ),
-                  title: _getGroupTypeName(gloc, type),
-                  trailing: isSelected
-                      ? Icon(
-                          Icons.check_circle,
-                          size: 24,
-                          color: Theme.of(context).colorScheme.primary,
-                        )
-                      : null,
-                  onTap: () {
-                    controller.setGroupType(
-                      isSelected ? null : type,
-                      autoPopulateCategories: !isSelected,
-                      defaultCategoryNames: !isSelected
-                          ? _getLocalizedCategories(gloc, type)
-                          : null,
-                      previousTypeCategoryNames: currentType != null
-                          ? _getLocalizedCategories(gloc, currentType)
-                          : null,
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  borderRadius: 8,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 12,
-                  ),
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getGroupTypeName(gen.AppLocalizations gloc, ExpenseGroupType type) {
-    switch (type) {
-      case ExpenseGroupType.travel:
-        return gloc.group_type_travel;
-      case ExpenseGroupType.personal:
-        return gloc.group_type_personal;
-      case ExpenseGroupType.family:
-        return gloc.group_type_family;
-      case ExpenseGroupType.other:
-        return gloc.group_type_other;
-    }
-  }
-
-  List<String> _getLocalizedCategories(
-    gen.AppLocalizations gloc,
-    ExpenseGroupType type,
-  ) {
-    switch (type) {
-      case ExpenseGroupType.travel:
-        return [
-          gloc.category_travel_transport,
-          gloc.category_travel_accommodation,
-          gloc.category_travel_restaurants,
-        ];
-      case ExpenseGroupType.personal:
-        return [
-          gloc.category_personal_shopping,
-          gloc.category_personal_health,
-          gloc.category_personal_entertainment,
-        ];
-      case ExpenseGroupType.family:
-        return [
-          gloc.category_family_groceries,
-          gloc.category_family_home,
-          gloc.category_family_bills,
-        ];
-      case ExpenseGroupType.other:
-        return [
-          gloc.category_other_misc,
-          gloc.category_other_utilities,
-          gloc.category_other_services,
-        ];
-    }
+    showGroupTypeSelectorSheet(context);
   }
 
   // Tab validation helpers

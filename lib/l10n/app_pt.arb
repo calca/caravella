@@ -966,4 +966,21 @@
   ,"@no_text_found": {"description": "Mensagem quando o OCR não encontra texto na imagem"}
   ,"receipt_scanned": "Recibo escaneado"
   ,"@receipt_scanned": {"description": "Mensagem de sucesso após o escaneamento OCR"}
+  ,"settings_group_templates_section_title": "Modelos de grupo"
+  ,"settings_group_templates_section_desc": "Personalize seus modelos de tipo de grupo"
+  ,"settings_group_templates_manage_title": "Gerenciar modelos"
+  ,"settings_group_templates_manage_desc": "Crie, edite e exclua modelos personalizados"
+  ,"settings_group_templates_page_title": "Modelos de grupo"
+  ,"settings_group_templates_empty_state": "Nenhum modelo ainda"
+  ,"settings_group_templates_add_title": "Adicionar modelo"
+  ,"settings_group_templates_edit_title": "Editar modelo"
+  ,"settings_group_templates_name_label": "Nome do modelo"
+  ,"settings_group_templates_name_hint": "Digite um nome para o modelo"
+  ,"settings_group_templates_icon_label": "Ícone"
+  ,"settings_group_templates_categories_label": "Categorias padrão"
+  ,"settings_group_templates_category_hint": "Adicionar uma categoria"
+  ,"settings_group_templates_validation_error": "Nome e pelo menos uma categoria são obrigatórios"
+  ,"settings_group_templates_delete_title": "Excluir modelo"
+  ,"settings_group_templates_delete_message": "Excluir o modelo \"{templateName}\"?"
+  ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
 }

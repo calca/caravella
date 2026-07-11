@@ -1081,6 +1081,56 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_user_name_hint => '输入您的名称';
 
   @override
+  String get settings_group_templates_section_title => '分组模板';
+
+  @override
+  String get settings_group_templates_section_desc => '自定义分组类型预设';
+
+  @override
+  String get settings_group_templates_manage_title => '管理模板';
+
+  @override
+  String get settings_group_templates_manage_desc => '创建、编辑和删除自定义模板';
+
+  @override
+  String get settings_group_templates_page_title => '分组模板';
+
+  @override
+  String get settings_group_templates_empty_state => '暂无模板';
+
+  @override
+  String get settings_group_templates_add_title => '新增模板';
+
+  @override
+  String get settings_group_templates_edit_title => '编辑模板';
+
+  @override
+  String get settings_group_templates_name_label => '模板名称';
+
+  @override
+  String get settings_group_templates_name_hint => '输入模板名称';
+
+  @override
+  String get settings_group_templates_icon_label => '图标';
+
+  @override
+  String get settings_group_templates_categories_label => '默认分类';
+
+  @override
+  String get settings_group_templates_category_hint => '添加分类';
+
+  @override
+  String get settings_group_templates_validation_error => '必须填写名称且至少添加一个分类';
+
+  @override
+  String get settings_group_templates_delete_title => '删除模板';
+
+  @override
+  String settings_group_templates_delete_message(String templateName) {
+    return '删除模板“$templateName”？';
+  }
+
+  @override
   String get default_participant_me => '我';
 
   @override

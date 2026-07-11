@@ -17,6 +17,8 @@ class GroupFormState extends ChangeNotifier {
     'name': 'Euro',
   };
   ExpenseGroupType? groupType = ExpenseGroupType.personal;
+  int? customTemplateIconCodePoint;
+  String? customTemplateId;
   bool autoLocationEnabled = false;
   bool loadingImage = false;
   bool isSaving = false;
@@ -105,6 +107,20 @@ class GroupFormState extends ChangeNotifier {
 
   void setGroupType(ExpenseGroupType? type) {
     groupType = type;
+    if (type != null) {
+      customTemplateIconCodePoint = null;
+      customTemplateId = null;
+    }
+    notifyListeners();
+  }
+
+  void setCustomTemplateSelection({
+    required String templateId,
+    required int iconCodePoint,
+  }) {
+    groupType = null;
+    customTemplateId = templateId;
+    customTemplateIconCodePoint = iconCodePoint;
     notifyListeners();
   }
 

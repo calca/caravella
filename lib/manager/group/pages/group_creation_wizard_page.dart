@@ -6,6 +6,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
+import '../group_type/group_type_localization.dart';
 import '../wizard/wizard_step_indicator.dart';
 import '../wizard/wizard_navigation_bar.dart';
 import '../wizard/wizard_steps/wizard_user_name_step.dart';
@@ -180,7 +181,8 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
 
         // Initialize default categories for the default group type
         if (state.groupType != null) {
-          final defaultCategories = _getLocalizedCategories(
+          final defaultCategories = GroupTypeLocalization
+              .localizedDefaultCategories(
             gloc,
             state.groupType!,
           );
@@ -188,38 +190,6 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
         }
       }
     });
-  }
-
-  List<String> _getLocalizedCategories(
-    gen.AppLocalizations gloc,
-    ExpenseGroupType type,
-  ) {
-    switch (type) {
-      case ExpenseGroupType.travel:
-        return [
-          gloc.category_travel_transport,
-          gloc.category_travel_accommodation,
-          gloc.category_travel_restaurants,
-        ];
-      case ExpenseGroupType.personal:
-        return [
-          gloc.category_personal_shopping,
-          gloc.category_personal_health,
-          gloc.category_personal_entertainment,
-        ];
-      case ExpenseGroupType.family:
-        return [
-          gloc.category_family_groceries,
-          gloc.category_family_home,
-          gloc.category_family_bills,
-        ];
-      case ExpenseGroupType.other:
-        return [
-          gloc.category_other_misc,
-          gloc.category_other_utilities,
-          gloc.category_other_services,
-        ];
-    }
   }
 
   bool _canPop(WizardState wizardState) {

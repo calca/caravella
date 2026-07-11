@@ -11,6 +11,7 @@ export 'model/expense_details.dart';
 export 'model/expense_group.dart';
 export 'model/expense_group_color_palette.dart';
 export 'model/expense_group_type.dart';
+export 'model/group_type_template.dart';
 export 'model/expense_location.dart';
 export 'model/expense_participant.dart';
 export 'model/group_settlements.dart';
@@ -33,6 +34,7 @@ export 'services/logging/logger_service.dart';
 
 // Services - Storage
 export 'services/storage/preferences_service.dart';
+export 'services/storage/group_type_template_service.dart';
 export 'services/storage/attachments_storage_service.dart';
 
 // Services - User Feedback

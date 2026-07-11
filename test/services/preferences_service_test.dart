@@ -99,6 +99,27 @@ void main() {
         expect(autoBackup, false);
       });
 
+      group('group type templates preferences', () {
+        test('should return null when no templates payload is set', () {
+          final payload = prefs.groupTypeTemplates.getTemplatesJson();
+          expect(payload, null);
+        });
+
+        test('should store and retrieve templates payload correctly', () async {
+          const payload =
+              '[{"id":"1","name":"Trip","iconCodePoint":1,"defaultCategories":["A"]}]';
+          await prefs.groupTypeTemplates.setTemplatesJson(payload);
+          final retrieved = prefs.groupTypeTemplates.getTemplatesJson();
+          expect(retrieved, payload);
+        });
+
+        test('should clear templates payload correctly', () async {
+          await prefs.groupTypeTemplates.setTemplatesJson('[{"id":"1"}]');
+          await prefs.groupTypeTemplates.clearTemplates();
+          expect(prefs.groupTypeTemplates.getTemplatesJson(), null);
+        });
+      });
+
       test('should store and retrieve auto backup state correctly', () async {
         await prefs.backup.setAutoBackupEnabled(true);
         final autoBackup = prefs.backup.isAutoBackupEnabled();

@@ -986,4 +986,21 @@
   ,"@no_text_found": {"description": "Messaggio quando l'OCR non trova testo nell'immagine"}
   ,"receipt_scanned": "Scontrino scansionato"
   ,"@receipt_scanned": {"description": "Messaggio di successo dopo la scansione OCR"}
+  ,"settings_group_templates_section_title": "Template gruppi"
+  ,"settings_group_templates_section_desc": "Personalizza i preset per i tipi di gruppo"
+  ,"settings_group_templates_manage_title": "Gestisci template"
+  ,"settings_group_templates_manage_desc": "Crea, modifica ed elimina template personalizzati"
+  ,"settings_group_templates_page_title": "Template gruppi"
+  ,"settings_group_templates_empty_state": "Nessun template disponibile"
+  ,"settings_group_templates_add_title": "Nuovo template"
+  ,"settings_group_templates_edit_title": "Modifica template"
+  ,"settings_group_templates_name_label": "Nome template"
+  ,"settings_group_templates_name_hint": "Inserisci un nome template"
+  ,"settings_group_templates_icon_label": "Icona"
+  ,"settings_group_templates_categories_label": "Categorie predefinite"
+  ,"settings_group_templates_category_hint": "Aggiungi una categoria"
+  ,"settings_group_templates_validation_error": "Nome e almeno una categoria sono obbligatori"
+  ,"settings_group_templates_delete_title": "Elimina template"
+  ,"settings_group_templates_delete_message": "Eliminare il template \"{templateName}\"?"
+  ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
 }
