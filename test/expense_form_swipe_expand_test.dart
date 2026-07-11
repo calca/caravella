@@ -54,5 +54,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(expandedState, isNotNull);
+    expect(expandedState!.paidBy?.id, 'p1');
+    expect(expandedState!.category?.id, 'c1');
+    expect(expandedState!.isExpanded, isTrue);
   });
 }

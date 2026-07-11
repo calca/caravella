@@ -177,6 +177,8 @@ class ExpenseFormComponent extends StatefulWidget {
 }
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
+  /// Minimum upward swipe velocity (logical pixels/second) required to trigger
+  /// compact-to-full edit expansion without accidental activation on small drags.
   static const double _swipeUpExpandVelocityThreshold = -250;
 
   final _formKey = GlobalKey<FormState>();
