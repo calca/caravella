@@ -7,7 +7,7 @@ import 'package:io_caravella_egm/manager/expense/components/expense_form_compone
 
 void main() {
   const swipeUpOffset = Offset(0, -350);
-  const swipeUpVelocity = 400.0;
+  const swipeUpVelocity = 300.0;
 
   testWidgets('compact expense form expands via swipe up without expand button', (
     tester,
