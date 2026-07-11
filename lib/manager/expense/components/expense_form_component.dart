@@ -177,6 +177,8 @@ class ExpenseFormComponent extends StatefulWidget {
 }
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
+  static const double _swipeUpExpandVelocityThreshold = -250;
+
   final _formKey = GlobalKey<FormState>();
   late ExpenseFormLifecycleManager _lifecycleManager;
   late ExpenseFormOrchestrator _orchestrator;
@@ -349,7 +351,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         behavior: HitTestBehavior.translucent,
         onVerticalDragEnd: (details) {
           if (_canSwipeExpandToFullEdit &&
-              (details.primaryVelocity ?? 0) < -250) {
+              (details.primaryVelocity ?? 0) <
+                  _swipeUpExpandVelocityThreshold) {
             _orchestrator.expand();
           }
         },

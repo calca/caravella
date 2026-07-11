@@ -6,6 +6,9 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/manager/expense/components/expense_form_component.dart';
 
 void main() {
+  const swipeUpOffset = Offset(0, -350);
+  const swipeUpVelocity = 1200.0;
+
   testWidgets('compact expense form expands via swipe up without expand button', (
     tester,
   ) async {
@@ -43,7 +46,11 @@ void main() {
 
     expect(find.byIcon(Icons.arrow_circle_up_outlined), findsNothing);
 
-    await tester.fling(find.byType(ExpenseFormComponent), const Offset(0, -350), 1200);
+    await tester.fling(
+      find.byType(ExpenseFormComponent),
+      swipeUpOffset,
+      swipeUpVelocity,
+    );
     await tester.pumpAndSettle();
 
     expect(expandedState, isNotNull);
