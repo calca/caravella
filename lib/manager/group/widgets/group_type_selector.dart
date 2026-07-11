@@ -47,6 +47,10 @@ class GroupTypeSelector extends StatelessWidget {
                 try {
                   templates = context.watch<GroupTypeTemplatesNotifier>().templates;
                 } catch (_) {
+                  LoggerService.warning(
+                    'Group templates notifier is unavailable',
+                    name: 'state.notifier',
+                  );
                   templates = const <GroupTypeTemplate>[];
                 }
                 String? selectedTemplateName;

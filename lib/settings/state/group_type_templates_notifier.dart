@@ -16,6 +16,10 @@ class GroupTypeTemplatesNotifier extends ChangeNotifier {
     try {
       _templates = _service.getTemplates();
     } on StateError {
+      LoggerService.warning(
+        'Group templates preferences are unavailable',
+        name: 'state.notifier',
+      );
       _templates = [];
     }
     notifyListeners();

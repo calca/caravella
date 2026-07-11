@@ -22,6 +22,10 @@ void showGroupTypeSelectorSheet(BuildContext context) {
     try {
       templates = context.read<GroupTypeTemplatesNotifier>().templates;
     } catch (_) {
+      LoggerService.warning(
+        'Group templates notifier is unavailable',
+        name: 'state.notifier',
+      );
       templates = const <GroupTypeTemplate>[];
     }
   }
