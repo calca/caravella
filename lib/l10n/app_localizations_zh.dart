@@ -1081,7 +1081,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_user_name_hint => '输入您的名称';
 
   @override
-  String get settings_group_templates_section_title => '分组模板';
+  String get settings_group_templates_section_title => '分组类型模板';
 
   @override
   String get settings_group_templates_section_desc => '自定义分组类型预设';
@@ -1093,7 +1093,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_group_templates_manage_desc => '创建、编辑和删除自定义模板';
 
   @override
-  String get settings_group_templates_page_title => '分组模板';
+  String get settings_group_templates_page_title => '分组类型模板';
 
   @override
   String get settings_group_templates_empty_state => '暂无模板';

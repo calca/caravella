@@ -1103,7 +1103,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_user_name_hint => 'Insira seu nome';
 
   @override
-  String get settings_group_templates_section_title => 'Modelos de grupo';
+  String get settings_group_templates_section_title => 'Modelos de tipo de grupo';
 
   @override
   String get settings_group_templates_section_desc =>
@@ -1117,7 +1117,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Crie, edite e exclua modelos personalizados';
 
   @override
-  String get settings_group_templates_page_title => 'Modelos de grupo';
+  String get settings_group_templates_page_title => 'Modelos de tipo de grupo';
 
   @override
   String get settings_group_templates_empty_state => 'Nenhum modelo ainda';

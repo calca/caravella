@@ -1101,7 +1101,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_user_name_hint => 'Inserisci il tuo nome';
 
   @override
-  String get settings_group_templates_section_title => 'Template gruppi';
+  String get settings_group_templates_section_title => 'Template tipologia gruppi';
 
   @override
   String get settings_group_templates_section_desc =>
@@ -1115,7 +1115,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Crea, modifica ed elimina template personalizzati';
 
   @override
-  String get settings_group_templates_page_title => 'Template gruppi';
+  String get settings_group_templates_page_title => 'Template tipologia gruppi';
 
   @override
   String get settings_group_templates_empty_state => 'Nessun template disponibile';

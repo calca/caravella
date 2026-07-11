@@ -2187,7 +2187,7 @@ abstract class AppLocalizations {
   String get settings_user_name_hint;
 
   /// In en, this message translates to:
-  /// **'Group templates'**
+  /// **'Group type templates'**
   String get settings_group_templates_section_title;
 
   /// In en, this message translates to:
@@ -2203,7 +2203,7 @@ abstract class AppLocalizations {
   String get settings_group_templates_manage_desc;
 
   /// In en, this message translates to:
-  /// **'Group templates'**
+  /// **'Group type templates'**
   String get settings_group_templates_page_title;
 
   /// In en, this message translates to:

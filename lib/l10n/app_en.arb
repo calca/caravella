@@ -1023,11 +1023,11 @@
   ,"@no_text_found": {"description": "Message when OCR finds no text in the image"}
   ,"receipt_scanned": "Receipt scanned"
   ,"@receipt_scanned": {"description": "Success message after OCR scanning"}
-  ,"settings_group_templates_section_title": "Group templates"
+  ,"settings_group_templates_section_title": "Group type templates"
   ,"settings_group_templates_section_desc": "Customize your group type presets"
   ,"settings_group_templates_manage_title": "Manage templates"
   ,"settings_group_templates_manage_desc": "Create, edit, and delete custom templates"
-  ,"settings_group_templates_page_title": "Group templates"
+  ,"settings_group_templates_page_title": "Group type templates"
   ,"settings_group_templates_empty_state": "No templates yet"
   ,"settings_group_templates_add_title": "Add template"
   ,"settings_group_templates_edit_title": "Edit template"

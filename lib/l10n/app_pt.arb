@@ -966,11 +966,11 @@
   ,"@no_text_found": {"description": "Mensagem quando o OCR não encontra texto na imagem"}
   ,"receipt_scanned": "Recibo escaneado"
   ,"@receipt_scanned": {"description": "Mensagem de sucesso após o escaneamento OCR"}
-  ,"settings_group_templates_section_title": "Modelos de grupo"
+  ,"settings_group_templates_section_title": "Modelos de tipo de grupo"
   ,"settings_group_templates_section_desc": "Personalize seus modelos de tipo de grupo"
   ,"settings_group_templates_manage_title": "Gerenciar modelos"
   ,"settings_group_templates_manage_desc": "Crie, edite e exclua modelos personalizados"
-  ,"settings_group_templates_page_title": "Modelos de grupo"
+  ,"settings_group_templates_page_title": "Modelos de tipo de grupo"
   ,"settings_group_templates_empty_state": "Nenhum modelo ainda"
   ,"settings_group_templates_add_title": "Adicionar modelo"
   ,"settings_group_templates_edit_title": "Editar modelo"
