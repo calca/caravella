@@ -136,7 +136,7 @@ class ExpenseFormFields extends StatelessWidget {
           enabled: !isReadOnly,
         ),
         controller.isNameValid,
-        controller.amountTouched,
+        controller.nameTouched,
       ),
     );
   }

@@ -58,6 +58,7 @@ class ExpenseFormController extends ChangeNotifier {
 
   // Touch state getters
   bool get amountTouched => _state.amountTouched;
+  bool get nameTouched => _state.nameTouched;
   bool get paidByTouched => _state.paidByTouched;
   bool get categoryTouched => _state.categoryTouched;
 
@@ -84,6 +85,7 @@ class ExpenseFormController extends ChangeNotifier {
     noteController.addListener(_onNoteChanged);
 
     amountFocus.addListener(_onAmountFocusChanged);
+    nameFocus.addListener(_onNameFocusChanged);
   }
 
   void _onNameChanged() {
@@ -103,8 +105,17 @@ class ExpenseFormController extends ChangeNotifier {
   }
 
   void _onAmountFocusChanged() {
-    if (amountFocus.hasFocus && !_state.amountTouched) {
+    // Mark the field as touched only once it loses focus (blur), so the
+    // error styling doesn't flash on the initial autofocus before the user
+    // has had a chance to enter a value.
+    if (!amountFocus.hasFocus && !_state.amountTouched) {
       _updateState(_state.copyWith(amountTouched: true));
+    }
+  }
+
+  void _onNameFocusChanged() {
+    if (!nameFocus.hasFocus && !_state.nameTouched) {
+      _updateState(_state.copyWith(nameTouched: true));
     }
   }
 
@@ -229,6 +240,7 @@ class ExpenseFormController extends ChangeNotifier {
     amountController.removeListener(_onAmountChanged);
     noteController.removeListener(_onNoteChanged);
     amountFocus.removeListener(_onAmountFocusChanged);
+    nameFocus.removeListener(_onNameFocusChanged);
 
     nameController.dispose();
     amountController.dispose();

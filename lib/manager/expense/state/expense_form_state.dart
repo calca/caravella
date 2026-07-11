@@ -21,6 +21,7 @@ class ExpenseFormState {
 
   // Touched state for validation feedback
   final bool amountTouched;
+  final bool nameTouched;
   final bool paidByTouched;
   final bool categoryTouched;
 
@@ -38,6 +39,7 @@ class ExpenseFormState {
     this.isExpanded = false,
     this.isRetrievingLocation = false,
     this.amountTouched = false,
+    this.nameTouched = false,
     this.paidByTouched = false,
     this.categoryTouched = false,
   });
@@ -104,6 +106,7 @@ class ExpenseFormState {
     bool? isExpanded,
     bool? isRetrievingLocation,
     bool? amountTouched,
+    bool? nameTouched,
     bool? paidByTouched,
     bool? categoryTouched,
   }) {
@@ -121,6 +124,7 @@ class ExpenseFormState {
       isExpanded: isExpanded ?? this.isExpanded,
       isRetrievingLocation: isRetrievingLocation ?? this.isRetrievingLocation,
       amountTouched: amountTouched ?? this.amountTouched,
+      nameTouched: nameTouched ?? this.nameTouched,
       paidByTouched: paidByTouched ?? this.paidByTouched,
       categoryTouched: categoryTouched ?? this.categoryTouched,
     );
