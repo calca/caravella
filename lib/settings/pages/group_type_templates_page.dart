@@ -10,19 +10,6 @@ import '../widgets/settings_card.dart';
 class GroupTypeTemplatesPage extends StatelessWidget {
   const GroupTypeTemplatesPage({super.key});
 
-  static const List<IconData> _availableIcons = [
-    Icons.flight_takeoff,
-    Icons.person,
-    Icons.family_restroom,
-    Icons.widgets_outlined,
-    Icons.directions_car,
-    Icons.restaurant,
-    Icons.home,
-    Icons.hotel,
-    Icons.sports_esports,
-    Icons.event,
-  ];
-
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
@@ -38,7 +25,7 @@ class GroupTypeTemplatesPage extends StatelessWidget {
           return ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
             itemCount: templates.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            separatorBuilder: (_, _) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final template = templates[index];
               return SettingsCard(
@@ -127,7 +114,7 @@ class GroupTypeTemplatesPage extends StatelessWidget {
     final categoryController = TextEditingController();
     final categories = <String>[...?template?.defaultCategories];
     var iconCodePoint =
-        template?.iconCodePoint ?? _availableIcons.first.codePoint;
+        template?.iconCodePoint ?? GroupTypeLocalization.availableIcons.first.codePoint;
     var validationMessage = '';
 
     await showDialog<void>(
@@ -158,7 +145,7 @@ class GroupTypeTemplatesPage extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _availableIcons.map((icon) {
+                  children: GroupTypeLocalization.availableIcons.map((icon) {
                     final selected = icon.codePoint == iconCodePoint;
                     return InkWell(
                       borderRadius: BorderRadius.circular(12),
