@@ -3,6 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class GroupTypeLocalization {
+  /// Icons available for group type templates, ordered by appearance in the
+  /// template editor.
+  static const List<IconData> availableIcons = [
+    Icons.flight_takeoff,
+    Icons.person,
+    Icons.family_restroom,
+    Icons.widgets_outlined,
+    Icons.directions_car,
+    Icons.restaurant,
+    Icons.home,
+    Icons.hotel,
+    Icons.sports_esports,
+    Icons.event,
+  ];
+
   static String typeName(gen.AppLocalizations gloc, ExpenseGroupType type) {
     switch (type) {
       case ExpenseGroupType.travel:
@@ -50,11 +65,9 @@ class GroupTypeLocalization {
 
   static IconData iconFromCodePoint(int codePoint) {
     if (codePoint <= 0) return Icons.category_outlined;
-    return IconData(
-      codePoint,
-      fontFamily: 'MaterialIcons',
-      fontPackage: null,
-      matchTextDirection: false,
-    );
+    for (final icon in availableIcons) {
+      if (icon.codePoint == codePoint) return icon;
+    }
+    return Icons.category_outlined;
   }
 }
