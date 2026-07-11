@@ -44,7 +44,10 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.byIcon(Icons.arrow_circle_up_outlined), findsNothing);
+    final l10n = gen.AppLocalizations.of(
+      tester.element(find.byType(ExpenseFormComponent)),
+    );
+    expect(find.byTooltip(l10n.expand_form), findsNothing);
 
     await tester.fling(
       find.byType(ExpenseFormComponent),
