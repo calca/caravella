@@ -423,7 +423,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   _buildDivider(context),
                   ListenableBuilder(
                     listenable: _controller,
-                    builder: (context, _) => _buildActionsRow(null),
+                    builder: (context, _) => _buildActionsRow(),
                   ),
                 ],
               ],
@@ -652,7 +652,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
   }
 
-  Widget _buildActionsRow(TextStyle? style) {
+  Widget _buildActionsRow() {
     final isEdit =
         widget.config.initialExpense?.id != null &&
         widget.config.initialExpense!.id.isNotEmpty;
@@ -667,7 +667,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       onDelete: widget.config.hasDeleteAction
           ? () => _orchestrator.deleteExpense(context)
           : null,
-      textStyle: style,
       showExpandButton: false,
       onExpand: null,
       onScanReceipt: widget.config.initialExpense == null ? _scanReceipt : null,
