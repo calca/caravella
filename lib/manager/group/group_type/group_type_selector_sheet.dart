@@ -7,9 +7,28 @@ import 'package:provider/provider.dart';
 import '../../../settings/state/group_type_templates_notifier.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
-import '../group_edit_mode.dart';
 import '../widgets/selection_tile.dart';
 import 'group_type_localization.dart';
+
+Widget _buildTypeIcon(
+  BuildContext context,
+  IconData icon, {
+  required bool isSelected,
+}) {
+  final scheme = Theme.of(context).colorScheme;
+  return Container(
+    padding: const EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: isSelected ? scheme.primaryContainer : scheme.surfaceContainerHigh,
+    ),
+    child: Icon(
+      icon,
+      size: 22,
+      color: isSelected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
+    ),
+  );
+}
 
 void showGroupTypeSelectorSheet(BuildContext context) {
   final gloc = gen.AppLocalizations.of(context);
@@ -18,16 +37,14 @@ void showGroupTypeSelectorSheet(BuildContext context) {
   final currentType = state.groupType;
   final currentTemplateId = state.customTemplateId;
   List<GroupTypeTemplate> templates = const <GroupTypeTemplate>[];
-  if (controller.mode == GroupEditMode.create) {
-    try {
-      templates = context.read<GroupTypeTemplatesNotifier>().templates;
-    } catch (_) {
-      LoggerService.warning(
-        'Group templates notifier is unavailable',
-        name: 'state.notifier',
-      );
-      templates = const <GroupTypeTemplate>[];
-    }
+  try {
+    templates = context.read<GroupTypeTemplatesNotifier>().templates;
+  } catch (_) {
+    LoggerService.warning(
+      'Group templates notifier is unavailable',
+      name: 'state.notifier',
+    );
+    templates = const <GroupTypeTemplate>[];
   }
   List<String>? previousSelectionCategories() {
     if (currentType != null) {
@@ -58,13 +75,7 @@ void showGroupTypeSelectorSheet(BuildContext context) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: SelectionTile(
-                leading: Icon(
-                  type.icon,
-                  size: 24,
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurface,
-                ),
+                leading: _buildTypeIcon(context, type.icon, isSelected: isSelected),
                 title: GroupTypeLocalization.typeName(gloc, type),
                 trailing: isSelected
                     ? Icon(
@@ -72,6 +83,11 @@ void showGroupTypeSelectorSheet(BuildContext context) {
                         size: 24,
                         color: Theme.of(context).colorScheme.primary,
                       )
+                    : null,
+                backgroundColor: isSelected
+                    ? Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer.withValues(alpha: 0.28)
                     : null,
                 onTap: () {
                   controller.setGroupType(
@@ -112,23 +128,25 @@ void showGroupTypeSelectorSheet(BuildContext context) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: SelectionTile(
-                  leading: Icon(
+                  leading: _buildTypeIcon(
+                    context,
                     GroupTypeLocalization.iconFromCodePoint(
                       template.iconCodePoint,
                     ),
-                    size: 24,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface,
+                    isSelected: isSelected,
                   ),
                   title: template.name,
-                  subtitle: template.defaultCategories.join(', '),
                   trailing: isSelected
                       ? Icon(
                           Icons.check_circle,
                           size: 24,
                           color: Theme.of(context).colorScheme.primary,
                         )
+                      : null,
+                  backgroundColor: isSelected
+                      ? Theme.of(
+                          context,
+                        ).colorScheme.primaryContainer.withValues(alpha: 0.28)
                       : null,
                   onTap: () {
                     controller.applyCustomTemplate(

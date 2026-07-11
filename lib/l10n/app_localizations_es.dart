@@ -1105,7 +1105,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_user_name_hint => 'Ingresa tu nombre';
 
   @override
-  String get settings_group_templates_section_title => 'Plantillas de grupo';
+  String get settings_group_templates_section_title => 'Plantillas de tipo de grupo';
 
   @override
   String get settings_group_templates_section_desc =>
@@ -1119,7 +1119,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Crea, edita y elimina plantillas personalizadas';
 
   @override
-  String get settings_group_templates_page_title => 'Plantillas de grupo';
+  String get settings_group_templates_page_title => 'Plantillas de tipo de grupo';
 
   @override
   String get settings_group_templates_empty_state => 'Aún no hay plantillas';

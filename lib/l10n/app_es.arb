@@ -1001,11 +1001,11 @@
   ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
   ,"receipt_scanned": "Recibo escaneado"
   ,"@receipt_scanned": {"description": "Mensaje de éxito después del escaneo OCR"}
-  ,"settings_group_templates_section_title": "Plantillas de grupo"
+  ,"settings_group_templates_section_title": "Plantillas de tipo de grupo"
   ,"settings_group_templates_section_desc": "Personaliza tus preajustes de tipo de grupo"
   ,"settings_group_templates_manage_title": "Gestionar plantillas"
   ,"settings_group_templates_manage_desc": "Crea, edita y elimina plantillas personalizadas"
-  ,"settings_group_templates_page_title": "Plantillas de grupo"
+  ,"settings_group_templates_page_title": "Plantillas de tipo de grupo"
   ,"settings_group_templates_empty_state": "Aún no hay plantillas"
   ,"settings_group_templates_add_title": "Añadir plantilla"
   ,"settings_group_templates_edit_title": "Editar plantilla"

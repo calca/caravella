@@ -986,11 +986,11 @@
   ,"@no_text_found": {"description": "Messaggio quando l'OCR non trova testo nell'immagine"}
   ,"receipt_scanned": "Scontrino scansionato"
   ,"@receipt_scanned": {"description": "Messaggio di successo dopo la scansione OCR"}
-  ,"settings_group_templates_section_title": "Template gruppi"
+  ,"settings_group_templates_section_title": "Template tipologia gruppi"
   ,"settings_group_templates_section_desc": "Personalizza i preset per i tipi di gruppo"
   ,"settings_group_templates_manage_title": "Gestisci template"
   ,"settings_group_templates_manage_desc": "Crea, modifica ed elimina template personalizzati"
-  ,"settings_group_templates_page_title": "Template gruppi"
+  ,"settings_group_templates_page_title": "Template tipologia gruppi"
   ,"settings_group_templates_empty_state": "Nessun template disponibile"
   ,"settings_group_templates_add_title": "Nuovo template"
   ,"settings_group_templates_edit_title": "Modifica template"

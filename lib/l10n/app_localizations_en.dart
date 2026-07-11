@@ -1097,7 +1097,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_user_name_hint => 'Enter your name';
 
   @override
-  String get settings_group_templates_section_title => 'Group templates';
+  String get settings_group_templates_section_title => 'Group type templates';
 
   @override
   String get settings_group_templates_section_desc =>
@@ -1111,7 +1111,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Create, edit, and delete custom templates';
 
   @override
-  String get settings_group_templates_page_title => 'Group templates';
+  String get settings_group_templates_page_title => 'Group type templates';
 
   @override
   String get settings_group_templates_empty_state => 'No templates yet';
