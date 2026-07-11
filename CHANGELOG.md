@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Settings: new **Group templates** section to create/edit/delete custom group templates (name, icon, default categories), persisted via `PreferencesService`
+- Group creation: type selector now includes custom templates and applies their default categories when selected, while preserving built-in `ExpenseGroupType` behavior
+
 ### Fixed
 - Add expense form: amount and description fields no longer show a reddish "invalid" background as soon as the sheet opens (the amount field autofocuses, which previously marked both fields as touched instantly); the fields are now only flagged as touched after the user leaves them
 - Add expense form: the description field's validation state is now tracked independently from the amount field, instead of incorrectly sharing the amount field's touched flag

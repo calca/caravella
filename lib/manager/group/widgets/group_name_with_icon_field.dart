@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../data/group_form_state.dart';
 import 'group_title_field.dart';
+import '../group_type/group_type_localization.dart';
 
 /// Reusable widget that displays a group name input field with an icon
 /// representing the selected group type. The icon is tappable to change
@@ -28,9 +29,9 @@ class GroupNameWithIconField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<GroupFormState, ExpenseGroupType?>(
-      selector: (context, s) => s.groupType,
-      builder: (context, groupType, child) => Row(
+    return Selector<GroupFormState, (ExpenseGroupType?, int?)>(
+      selector: (context, s) => (s.groupType, s.customTemplateIconCodePoint),
+      builder: (context, value, child) => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
@@ -47,7 +48,8 @@ class GroupNameWithIconField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                groupType?.icon ?? Icons.category_outlined,
+                value.$1?.icon ??
+                    GroupTypeLocalization.iconFromCodePoint(value.$2 ?? 0),
                 size: 24,
                 color: Theme.of(context).colorScheme.onSurface,
               ),

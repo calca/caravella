@@ -1001,4 +1001,21 @@
   ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
   ,"receipt_scanned": "Recibo escaneado"
   ,"@receipt_scanned": {"description": "Mensaje de éxito después del escaneo OCR"}
+  ,"settings_group_templates_section_title": "Plantillas de grupo"
+  ,"settings_group_templates_section_desc": "Personaliza tus preajustes de tipo de grupo"
+  ,"settings_group_templates_manage_title": "Gestionar plantillas"
+  ,"settings_group_templates_manage_desc": "Crea, edita y elimina plantillas personalizadas"
+  ,"settings_group_templates_page_title": "Plantillas de grupo"
+  ,"settings_group_templates_empty_state": "Aún no hay plantillas"
+  ,"settings_group_templates_add_title": "Añadir plantilla"
+  ,"settings_group_templates_edit_title": "Editar plantilla"
+  ,"settings_group_templates_name_label": "Nombre de la plantilla"
+  ,"settings_group_templates_name_hint": "Introduce un nombre de plantilla"
+  ,"settings_group_templates_icon_label": "Icono"
+  ,"settings_group_templates_categories_label": "Categorías predeterminadas"
+  ,"settings_group_templates_category_hint": "Añadir una categoría"
+  ,"settings_group_templates_validation_error": "Se requiere nombre y al menos una categoría"
+  ,"settings_group_templates_delete_title": "Eliminar plantilla"
+  ,"settings_group_templates_delete_message": "¿Eliminar la plantilla \"{templateName}\"?"
+  ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/settings/state/group_type_templates_notifier.dart';
 import '../data/group_form_state.dart';
-import '../group_form_controller.dart';
+import '../group_type/group_type_localization.dart';
+import '../group_type/group_type_selector_sheet.dart';
 import 'section_flat.dart';
 import 'selection_tile.dart';
+import 'package:provider/provider.dart';
 
 /// Widget for selecting the expense group type.
 /// Shows only the selected type and opens a bottom sheet for selection.
@@ -30,20 +32,50 @@ class GroupTypeSelector extends StatelessWidget {
               spacing: 4,
             ),
             const SizedBox(height: 8),
-            Selector<GroupFormState, ExpenseGroupType?>(
-              selector: (context, state) => state.groupType,
-              builder: (context, selectedType, child) {
+            Selector<GroupFormState, (ExpenseGroupType?, String?, int?)>(
+              selector: (context, state) =>
+                  (
+                    state.groupType,
+                    state.customTemplateId,
+                    state.customTemplateIconCodePoint,
+                  ),
+              builder: (context, selectedValue, child) {
+                final selectedType = selectedValue.$1;
+                final selectedTemplateId = selectedValue.$2;
+                final selectedTemplateIcon = selectedValue.$3;
+                List<GroupTypeTemplate> templates = const <GroupTypeTemplate>[];
+                try {
+                  templates = context.watch<GroupTypeTemplatesNotifier>().templates;
+                } catch (_) {
+                  LoggerService.warning(
+                    'Group templates notifier is unavailable',
+                    name: 'state.notifier',
+                  );
+                  templates = const <GroupTypeTemplate>[];
+                }
+                String? selectedTemplateName;
+                if (selectedTemplateId != null) {
+                  for (final template in templates) {
+                    if (template.id == selectedTemplateId) {
+                      selectedTemplateName = template.name;
+                      break;
+                    }
+                  }
+                }
                 return SelectionTile(
                   leading: Icon(
-                    selectedType?.icon ?? Icons.category_outlined,
+                    selectedType?.icon ??
+                        GroupTypeLocalization.iconFromCodePoint(
+                          selectedTemplateIcon ?? 0,
+                        ),
                     size: 24,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                   title: selectedType != null
-                      ? _getTypeName(gloc, selectedType)
-                      : 'Seleziona tipo',
+                      ? GroupTypeLocalization.typeName(gloc, selectedType)
+                      : (selectedTemplateName ?? gloc.group_type_description),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _showTypeSelector(context),
+                  onTap: () => showGroupTypeSelectorSheet(context),
                   borderRadius: 8,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -56,113 +88,5 @@ class GroupTypeSelector extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  void _showTypeSelector(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    final controller = context.read<GroupFormController>();
-    final currentType = context.read<GroupFormState>().groupType;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => GroupBottomSheetScaffold(
-        title: gloc.group_type,
-        scrollable: false,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ...ExpenseGroupType.values.map((type) {
-              final isSelected = currentType == type;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: SelectionTile(
-                  leading: Icon(
-                    type.icon,
-                    size: 24,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface,
-                  ),
-                  title: _getTypeName(gloc, type),
-                  trailing: isSelected
-                      ? Icon(
-                          Icons.check_circle,
-                          size: 24,
-                          color: Theme.of(context).colorScheme.primary,
-                        )
-                      : null,
-                  onTap: () {
-                    controller.setGroupType(
-                      isSelected ? null : type,
-                      autoPopulateCategories: !isSelected,
-                      defaultCategoryNames: !isSelected
-                          ? _getLocalizedCategories(gloc, type)
-                          : null,
-                      previousTypeCategoryNames: currentType != null
-                          ? _getLocalizedCategories(gloc, currentType)
-                          : null,
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  borderRadius: 8,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 12,
-                  ),
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getTypeName(gen.AppLocalizations gloc, ExpenseGroupType type) {
-    switch (type) {
-      case ExpenseGroupType.travel:
-        return gloc.group_type_travel;
-      case ExpenseGroupType.personal:
-        return gloc.group_type_personal;
-      case ExpenseGroupType.family:
-        return gloc.group_type_family;
-      case ExpenseGroupType.other:
-        return gloc.group_type_other;
-    }
-  }
-
-  /// Gets localized category names for the given type
-  List<String> _getLocalizedCategories(
-    gen.AppLocalizations gloc,
-    ExpenseGroupType type,
-  ) {
-    switch (type) {
-      case ExpenseGroupType.travel:
-        return [
-          gloc.category_travel_transport,
-          gloc.category_travel_accommodation,
-          gloc.category_travel_restaurants,
-        ];
-      case ExpenseGroupType.personal:
-        return [
-          gloc.category_personal_shopping,
-          gloc.category_personal_health,
-          gloc.category_personal_entertainment,
-        ];
-      case ExpenseGroupType.family:
-        return [
-          gloc.category_family_groceries,
-          gloc.category_family_home,
-          gloc.category_family_bills,
-        ];
-      case ExpenseGroupType.other:
-        return [
-          gloc.category_other_misc,
-          gloc.category_other_utilities,
-          gloc.category_other_services,
-        ];
-    }
   }
 }
