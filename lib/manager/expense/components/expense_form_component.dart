@@ -346,6 +346,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final gloc = gen.AppLocalizations.of(context);
+    final smallStyle = Theme.of(context).textTheme.bodyMedium;
 
     return PopScope(
       canPop: !_controller.state.isDirty,
@@ -423,8 +424,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   _buildDivider(context),
                   ListenableBuilder(
                     listenable: _controller,
-                    builder: (context, _) =>
-                        _buildActionsRow(Theme.of(context).textTheme.bodyMedium),
+                    builder: (context, _) => _buildActionsRow(smallStyle),
                   ),
                 ],
               ],
