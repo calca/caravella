@@ -109,12 +109,16 @@ class ExpenseFormActionsWidget extends StatelessWidget {
         ...leftChildren,
         if (leftChildren.isNotEmpty) const SizedBox(width: 8),
         const Spacer(),
-        // Aggiungi / Save — same background and height as icon buttons
+        // Aggiungi / Save — green filled when valid, muted when invalid
         TextButton(
           onPressed: onSave,
           style: TextButton.styleFrom(
-            backgroundColor: colorScheme.surfaceContainerHighest,
-            foregroundColor: colorScheme.onSurfaceVariant,
+            backgroundColor: isFormValid
+                ? colorScheme.primary
+                : colorScheme.surfaceContainerHighest,
+            foregroundColor: isFormValid
+                ? colorScheme.onPrimary
+                : colorScheme.onSurfaceVariant,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             minimumSize: const Size(48, 48),
             shape: RoundedRectangleBorder(
@@ -126,9 +130,6 @@ class ExpenseFormActionsWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
-              color: isFormValid
-                  ? colorScheme.primary
-                  : colorScheme.onSurface.withValues(alpha: 0.8),
             ),
             overflow: TextOverflow.ellipsis,
           ),
