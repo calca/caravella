@@ -177,6 +177,11 @@ class ExpenseFormComponent extends StatefulWidget {
 }
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
+  /// Minimum negative Y velocity (logical pixels/second) required to trigger
+  /// compact-to-full edit expansion. In Flutter coordinates, upward swipes
+  /// produce negative vertical velocity values.
+  static const double _swipeUpExpandVelocityThreshold = -250;
+
   final _formKey = GlobalKey<FormState>();
   late ExpenseFormLifecycleManager _lifecycleManager;
   late ExpenseFormOrchestrator _orchestrator;
@@ -191,6 +196,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       widget.config.fullEdit ||
       widget.config.initialExpense != null ||
       _controller.isExpanded;
+
+  bool get _canSwipeExpandToFullEdit =>
+      !widget.config.fullEdit &&
+      widget.config.initialExpense == null &&
+      !_controller.isExpanded &&
+      widget.config.onExpand != null;
 
   @override
   void initState() {
@@ -335,71 +346,89 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final gloc = gen.AppLocalizations.of(context);
-    final smallStyle = Theme.of(context).textTheme.bodyMedium;
 
     return PopScope(
       canPop: !_controller.state.isDirty,
       onPopInvokedWithResult: _handlePop,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ExpenseFormCompactHeader(
-              groupTitle: widget.config.groupTitle,
-              showGroupHeader: widget.config.showGroupHeader,
-            ),
-            ExpenseFormFields(
-              controller: _controller,
-              participants: _lifecycleManager.participants,
-              categories: _lifecycleManager.categories,
-              onCategoryAdded: _onCategoryAdded,
-              onParticipantAdded: widget.config.onParticipantAdded != null
-                  ? _onParticipantAdded
-                  : null,
-              onCategoriesUpdated: (newCategories) {
-                _lifecycleManager.updateCategories(newCategories);
-                setState(() {});
-              },
-              onParticipantsUpdated: (newParticipants) {
-                _lifecycleManager.updateParticipants(newParticipants);
-                setState(() {});
-              },
-              fullEdit: widget.config.fullEdit,
-              autoLocationEnabled: widget.config.autoLocationEnabled,
-              location: _controller.state.location,
-              isRetrievingLocation: _lifecycleManager.isRetrievingLocation,
-              onClearLocation: _clearLocation,
-              currency: widget.config.currency,
-              onSaveExpense: () => _orchestrator.saveExpense(context),
-              isInitialExpense: widget.config.initialExpense != null,
-              isReadOnly: widget.config.isReadOnly,
-            ),
-            if (_shouldShowExtendedFields)
-              ListenableBuilder(
-                listenable: _controller,
-                builder: (context, _) => ExpenseFormExtendedFields(
+      child: Semantics(
+        customSemanticsActions: _canSwipeExpandToFullEdit
+            ? {
+                CustomSemanticsAction(
+                  label: gloc.expand_form,
+                ): _orchestrator.expand,
+              }
+            : const {},
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onVerticalDragEnd: (details) {
+            if (_canSwipeExpandToFullEdit &&
+                (details.primaryVelocity ?? 0) <
+                    _swipeUpExpandVelocityThreshold) {
+              _orchestrator.expand();
+            }
+          },
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ExpenseFormCompactHeader(
+                  groupTitle: widget.config.groupTitle,
+                  showGroupHeader: widget.config.showGroupHeader,
+                ),
+                ExpenseFormFields(
                   controller: _controller,
-                  tripStartDate: widget.config.tripStartDate,
-                  tripEndDate: widget.config.tripEndDate,
-                  locale: locale,
-                  groupId: widget.config.groupId,
-                  groupName: widget.config.groupTitle ?? 'Unnamed',
+                  participants: _lifecycleManager.participants,
+                  categories: _lifecycleManager.categories,
+                  onCategoryAdded: _onCategoryAdded,
+                  onParticipantAdded: widget.config.onParticipantAdded != null
+                      ? _onParticipantAdded
+                      : null,
+                  onCategoriesUpdated: (newCategories) {
+                    _lifecycleManager.updateCategories(newCategories);
+                    setState(() {});
+                  },
+                  onParticipantsUpdated: (newParticipants) {
+                    _lifecycleManager.updateParticipants(newParticipants);
+                    setState(() {});
+                  },
+                  fullEdit: widget.config.fullEdit,
                   autoLocationEnabled: widget.config.autoLocationEnabled,
-                  isInitialExpense: widget.config.initialExpense != null,
-                  isFormValid: _controller.isFormValid,
+                  location: _controller.state.location,
+                  isRetrievingLocation: _lifecycleManager.isRetrievingLocation,
+                  onClearLocation: _clearLocation,
+                  currency: widget.config.currency,
                   onSaveExpense: () => _orchestrator.saveExpense(context),
+                  isInitialExpense: widget.config.initialExpense != null,
                   isReadOnly: widget.config.isReadOnly,
                 ),
-              ),
-            if (widget.config.showActionsRow) ...[
-              _buildDivider(context),
-              ListenableBuilder(
-                listenable: _controller,
-                builder: (context, _) => _buildActionsRow(gloc, smallStyle),
-              ),
-            ],
-          ],
+                if (_shouldShowExtendedFields)
+                  ListenableBuilder(
+                    listenable: _controller,
+                    builder: (context, _) => ExpenseFormExtendedFields(
+                      controller: _controller,
+                      tripStartDate: widget.config.tripStartDate,
+                      tripEndDate: widget.config.tripEndDate,
+                      locale: locale,
+                      groupId: widget.config.groupId,
+                      groupName: widget.config.groupTitle ?? 'Unnamed',
+                      autoLocationEnabled: widget.config.autoLocationEnabled,
+                      isInitialExpense: widget.config.initialExpense != null,
+                      isFormValid: _controller.isFormValid,
+                      onSaveExpense: () => _orchestrator.saveExpense(context),
+                      isReadOnly: widget.config.isReadOnly,
+                    ),
+                  ),
+                if (widget.config.showActionsRow) ...[
+                  _buildDivider(context),
+                  ListenableBuilder(
+                    listenable: _controller,
+                    builder: (context, _) => _buildActionsRow(),
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -623,7 +652,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
   }
 
-  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) {
+  Widget _buildActionsRow() {
     final isEdit =
         widget.config.initialExpense?.id != null &&
         widget.config.initialExpense!.id.isNotEmpty;
@@ -638,14 +667,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       onDelete: widget.config.hasDeleteAction
           ? () => _orchestrator.deleteExpense(context)
           : null,
-      textStyle: style,
-      showExpandButton:
-          !(widget.config.fullEdit ||
-              widget.config.initialExpense != null ||
-              _controller.isExpanded),
-      onExpand: widget.config.onExpand != null
-          ? () => widget.config.onExpand!(_controller.state)
-          : null,
+      showExpandButton: false,
+      onExpand: null,
       onScanReceipt: widget.config.initialExpense == null ? _scanReceipt : null,
       showVoiceButton: showVoice,
       onVoiceTap: showVoice ? () => _showVoiceCapture(context) : null,

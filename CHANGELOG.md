@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add expense form: amount and description fields no longer show a reddish "invalid" background as soon as the sheet opens (the amount field autofocuses, which previously marked both fields as touched instantly); the fields are now only flagged as touched after the user leaves them
 - Add expense form: the description field's validation state is now tracked independently from the amount field, instead of incorrectly sharing the amount field's touched flag
 - Add expense form: the "Add"/"Save" button now correctly turns primary-colored as soon as all required fields become valid, instead of staying gray until an unrelated rebuild occurred
+- Add expense compact sheet: removed the full-edit action button and enabled swipe-up gesture to open the full edit flow
 
 ## [1.6.0] - 2026-04-03
 
