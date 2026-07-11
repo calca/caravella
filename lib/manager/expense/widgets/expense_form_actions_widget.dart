@@ -130,9 +130,6 @@ class ExpenseFormActionsWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
-              color: isFormValid
-                  ? colorScheme.onPrimary
-                  : colorScheme.onSurface.withValues(alpha: 0.8),
             ),
             overflow: TextOverflow.ellipsis,
           ),
