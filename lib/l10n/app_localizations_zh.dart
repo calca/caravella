@@ -2263,6 +2263,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voice_input_not_available => '语音识别不可用';
 
   @override
+  String get voice_input_no_speech => '没有听到任何内容，请重试。';
+
+  @override
   String get voice_input_hint => '尝试说：\'50元晚餐\'';
 
   @override
@@ -2303,6 +2306,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get receipt_scan_error => '扫描收据时出错';
+
+  @override
+  String get receipt_scan_permission_denied => '相机或照片访问权限已关闭。请在手机设置中启用它以扫描收据。';
 
   @override
   String get no_text_found => '图像中未找到文本';

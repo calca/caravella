@@ -2324,6 +2324,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get voice_input_not_available => 'Reconocimiento de voz no disponible';
 
   @override
+  String get voice_input_no_speech =>
+      'No he escuchado nada. Inténtalo de nuevo.';
+
+  @override
   String get voice_input_hint =>
       'Intenta decir: \'50 euros para la cena en el restaurante\'';
 
@@ -2366,6 +2370,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get receipt_scan_error => 'Error al escanear el recibo';
+
+  @override
+  String get receipt_scan_permission_denied =>
+      'El acceso a la cámara o a las fotos está desactivado. Actívalo en los Ajustes del teléfono para escanear un recibo.';
 
   @override
   String get no_text_found => 'No se encontró texto en la imagen';

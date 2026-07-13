@@ -34,6 +34,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   VoidCallback? _saveCallback;
   VoidCallback? _voiceCallback;
   VoidCallback? _scanCallback;
+  VoidCallback? _scanFromGalleryCallback;
 
   void _updateFormValidity(bool isValid) {
     if (_isFormValid != isValid && mounted) {
@@ -77,6 +78,18 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
         if (mounted) {
           setState(() {
             _scanCallback = callback;
+          });
+        }
+      });
+    }
+  }
+
+  void _updateScanFromGalleryCallback(VoidCallback? callback) {
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _scanFromGalleryCallback = callback;
           });
         }
       });
@@ -191,6 +204,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                 onSaveCallbackChanged: _updateSaveCallback,
                 onVoiceCallbackChanged: _updateVoiceCallback,
                 onScanReceiptCallbackChanged: _updateScanCallback,
+                onScanReceiptFromGalleryCallbackChanged:
+                    _updateScanFromGalleryCallback,
                 groupId: widget.group.id,
                 isReadOnly: isReadOnly,
               ),
@@ -227,6 +242,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                     showVoiceButton: !isEdit,
                     onVoiceTap: _voiceCallback,
                     onScanReceipt: _scanCallback,
+                    onScanReceiptFromGallery: _scanFromGalleryCallback,
                   ),
                 ),
               ),

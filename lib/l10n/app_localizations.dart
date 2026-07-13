@@ -4457,6 +4457,12 @@ abstract class AppLocalizations {
   /// **'Voice recognition not available'**
   String get voice_input_not_available;
 
+  /// Message when voice recognition heard nothing or timed out with no match
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t catch that. Try again.'**
+  String get voice_input_no_speech;
+
   /// Example hint for using voice input
   ///
   /// In en, this message translates to:
@@ -4540,6 +4546,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error scanning receipt'**
   String get receipt_scan_error;
+
+  /// Error message when camera or photo library permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Camera or photo access is off. Enable it in your phone\'s Settings to scan a receipt.'**
+  String get receipt_scan_permission_denied;
 
   /// Message when OCR finds no text in the image
   ///

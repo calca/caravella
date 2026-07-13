@@ -90,7 +90,7 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
           setState(() {
             _isListening = false;
             _isProcessing = false;
-            if (error == 'Voice recognition not available') {
+            if (error == VoiceInputError.notAvailable) {
               _isAvailable = false;
             }
           });
@@ -98,11 +98,7 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                error == 'Voice recognition not available'
-                    ? gloc.voice_input_not_available
-                    : gloc.voice_input_error,
-              ),
+              content: Text(_errorMessage(gloc, error)),
               duration: const Duration(seconds: 3),
             ),
           );
@@ -110,6 +106,19 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
       },
       localeId: widget.localeId,
     );
+  }
+
+  String _errorMessage(gen.AppLocalizations gloc, VoiceInputError error) {
+    switch (error) {
+      case VoiceInputError.notAvailable:
+        return gloc.voice_input_not_available;
+      case VoiceInputError.permissionDenied:
+        return gloc.voice_input_permission_denied;
+      case VoiceInputError.noSpeech:
+        return gloc.voice_input_no_speech;
+      case VoiceInputError.recognitionFailed:
+        return gloc.voice_input_error;
+    }
   }
 
   Future<void> _stopListening() async {

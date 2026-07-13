@@ -89,14 +89,30 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
           _showSnack(_getError(error));
         }
       },
+      onDone: () {
+        if (mounted) {
+          _pulseController.stop();
+          setState(() {
+            _isListening = false;
+            _isProcessing = false;
+          });
+        }
+      },
     );
   }
 
-  String _getError(String error) {
+  String _getError(VoiceInputError error) {
     final gloc = gen.AppLocalizations.of(context);
-    return error == 'Voice recognition not available'
-        ? gloc.voice_input_not_available
-        : gloc.voice_input_error;
+    switch (error) {
+      case VoiceInputError.notAvailable:
+        return gloc.voice_input_not_available;
+      case VoiceInputError.permissionDenied:
+        return gloc.voice_input_permission_denied;
+      case VoiceInputError.noSpeech:
+        return gloc.voice_input_no_speech;
+      case VoiceInputError.recognitionFailed:
+        return gloc.voice_input_error;
+    }
   }
 
   Future<void> _handleResult(String text) async {

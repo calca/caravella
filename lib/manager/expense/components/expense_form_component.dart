@@ -3,6 +3,7 @@ library;
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart' hide ImageSource;
@@ -145,6 +146,7 @@ class ExpenseFormComponent extends StatefulWidget {
     void Function(VoidCallback?)? onSaveCallbackChanged,
     void Function(VoidCallback?)? onVoiceCallbackChanged,
     void Function(VoidCallback?)? onScanReceiptCallbackChanged,
+    void Function(VoidCallback?)? onScanReceiptFromGalleryCallbackChanged,
   }) : config = ExpenseFormConfig(
          initialExpense: initialExpense,
          participants: participants,
@@ -170,6 +172,8 @@ class ExpenseFormComponent extends StatefulWidget {
          onSaveCallbackChanged: onSaveCallbackChanged,
          onVoiceCallbackChanged: onVoiceCallbackChanged,
          onScanReceiptCallbackChanged: onScanReceiptCallbackChanged,
+         onScanReceiptFromGalleryCallbackChanged:
+             onScanReceiptFromGalleryCallbackChanged,
          isReadOnly: isReadOnly,
        );
 
@@ -232,7 +236,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           _notifyVoiceCallback();
         }
 
-        if (widget.config.onScanReceiptCallbackChanged != null) {
+        if (widget.config.onScanReceiptCallbackChanged != null ||
+            widget.config.onScanReceiptFromGalleryCallbackChanged != null) {
           _notifyScanReceiptCallback();
         }
 
@@ -312,10 +317,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final isEdit =
         widget.config.initialExpense?.id != null &&
         widget.config.initialExpense!.id.isNotEmpty;
-    final callback = (!isEdit && !widget.config.isReadOnly)
-        ? _scanReceipt
-        : null;
-    widget.config.onScanReceiptCallbackChanged?.call(callback);
+    final canScan = !isEdit && !widget.config.isReadOnly;
+    widget.config.onScanReceiptCallbackChanged?.call(
+      canScan ? () => _scanReceipt(source: ImageSource.camera) : null,
+    );
+    widget.config.onScanReceiptFromGalleryCallbackChanged?.call(
+      canScan ? () => _scanReceipt(source: ImageSource.gallery) : null,
+    );
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -540,42 +548,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
   }
 
-  Future<void> _scanReceipt() async {
+  /// Scans a receipt with OCR. [source] is chosen by the caller — tapping
+  /// the scan button goes straight to the camera (the common case right
+  /// after paying), long-pressing it (or the "from gallery" accessibility
+  /// action) picks an existing photo instead. No intermediate chooser sheet.
+  Future<void> _scanReceipt({required ImageSource source}) async {
     final gloc = gen.AppLocalizations.of(context);
-
-    final source = await showModalBottomSheet<ImageSource>(
-      context: context,
-      isScrollControlled: true,
-      builder: (sheetContext) {
-        final bottomInset = MediaQuery.of(sheetContext).padding.bottom;
-        return GroupBottomSheetScaffold(
-          title: gloc.scan_receipt,
-          padding: EdgeInsets.fromLTRB(
-            20,
-            20,
-            20,
-            bottomInset > 0 ? bottomInset : 12,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: Text(gloc.from_camera),
-                onTap: () => Navigator.pop(sheetContext, ImageSource.camera),
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: Text(gloc.from_gallery),
-                onTap: () => Navigator.pop(sheetContext, ImageSource.gallery),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (source == null || !mounted) return;
 
     try {
       final pickedFile = await _imagePicker.pickImage(source: source);
@@ -626,6 +604,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           ),
         );
       }
+    } on PlatformException catch (e) {
+      if (!mounted) return;
+      final isPermissionDenied =
+          e.code == 'camera_access_denied' || e.code == 'photo_access_denied';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isPermissionDenied
+                ? gloc.receipt_scan_permission_denied
+                : gloc.receipt_scan_error,
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -669,7 +661,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           : null,
       showExpandButton: false,
       onExpand: null,
-      onScanReceipt: widget.config.initialExpense == null ? _scanReceipt : null,
+      onScanReceipt: widget.config.initialExpense == null
+          ? () => _scanReceipt(source: ImageSource.camera)
+          : null,
+      onScanReceiptFromGallery: widget.config.initialExpense == null
+          ? () => _scanReceipt(source: ImageSource.gallery)
+          : null,
       showVoiceButton: showVoice,
       onVoiceTap: showVoice ? () => _showVoiceCapture(context) : null,
     );
@@ -728,6 +725,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     }
     widget.config.onVoiceCallbackChanged?.call(null);
     widget.config.onScanReceiptCallbackChanged?.call(null);
+    widget.config.onScanReceiptFromGalleryCallbackChanged?.call(null);
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();

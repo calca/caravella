@@ -2322,6 +2322,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Riconoscimento vocale non disponibile';
 
   @override
+  String get voice_input_no_speech => 'Non ho sentito nulla. Riprova.';
+
+  @override
   String get voice_input_hint =>
       'Prova a dire: \'50 euro per cena al ristorante\'';
 
@@ -2364,6 +2367,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get receipt_scan_error => 'Errore nella scansione dello scontrino';
+
+  @override
+  String get receipt_scan_permission_denied =>
+      'Accesso a fotocamera o galleria disattivato. Attivalo nelle Impostazioni del telefono per scansionare uno scontrino.';
 
   @override
   String get no_text_found => 'Nessun testo trovato nell\'immagine';

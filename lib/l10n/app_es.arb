@@ -969,6 +969,8 @@
   ,"@voice_input_permission_denied": {"description": "Mensaje cuando el usuario deniega el permiso del micrófono"}
   ,"voice_input_not_available": "Reconocimiento de voz no disponible"
   ,"@voice_input_not_available": {"description": "Mensaje cuando el reconocimiento de voz no está disponible en el dispositivo"}
+  ,"voice_input_no_speech": "No he escuchado nada. Inténtalo de nuevo."
+  ,"@voice_input_no_speech": {"description": "Mensaje cuando el reconocimiento de voz no escucha nada o expira sin resultados"}
   ,"voice_input_hint": "Intenta decir: '50 euros para la cena en el restaurante'"
   ,"@voice_input_hint": {"description": "Sugerencia de ejemplo para usar la entrada de voz"}
   ,"voice_add_expense": "Añadir por voz"
@@ -997,6 +999,8 @@
   ,"@scanning_receipt": {"description": "Mensaje durante el escaneo OCR del recibo"}
   ,"receipt_scan_error": "Error al escanear el recibo"
   ,"@receipt_scan_error": {"description": "Mensaje de error cuando falla el escaneo OCR"}
+  ,"receipt_scan_permission_denied": "El acceso a la cámara o a las fotos está desactivado. Actívalo en los Ajustes del teléfono para escanear un recibo."
+  ,"@receipt_scan_permission_denied": {"description": "Mensaje de error cuando se deniega el permiso de cámara o galería"}
   ,"no_text_found": "No se encontró texto en la imagen"
   ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
   ,"receipt_scanned": "Recibo escaneado"
