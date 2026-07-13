@@ -101,12 +101,15 @@ class VoiceInputService {
     final t = text.toLowerCase().trim();
 
     // ── 1. AMOUNT ────────────────────────────────────────────────────────────
-    // Handles: "50", "25.50", "35,75", "€50", "$50", "50 euro", "50 dollars",
-    // "50 reais", "50 pesos", "50 yuan", "50元", etc.
+    // Handles: "50", "25.50", "35,75", "€50", "€ 50", "50€", "$50", "50 euro",
+    // "50 dollars", "50 reais", "50 pesos", "50 yuan", "50元", etc.
+    // The currency token is optional on either side of the digits, since
+    // speech-to-text engines may prefix ("€12") or suffix ("12 euro") it.
+    const currencyToken =
+        r'(?:euro|eur|€|dollar|dollaro|dollari|usd|\$|pound|£|'
+        r'real|reais|r\$|peso|pesos|yuan|rmb|元|¥|kr|chf|cad|aud)';
     final amountPattern = RegExp(
-      r'(\d+(?:[.,]\d{1,2})?)\s*'
-      r'(?:euro|eur|€|dollar|dollaro|dollari|usd|\$|pound|£|'
-      r'real|reais|r\$|peso|pesos|yuan|rmb|元|¥|kr|chf|cad|aud)?',
+      '$currencyToken?\\s*(\\d+(?:[.,]\\d{1,2})?)\\s*$currencyToken?',
       caseSensitive: false,
     );
     final amountMatch = amountPattern.firstMatch(t);

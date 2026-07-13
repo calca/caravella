@@ -140,6 +140,19 @@ void main() {
     test('empty text has no name', () {
       expect(parse('')['name'], isNull);
     });
+
+    test('leading currency symbol is not leaked into the description', () {
+      final r = parse('€12 dal panettiere');
+      expect(r['amount'], equals(12.0));
+      expect(r['name'], equals('Dal panettiere'));
+      expect((r['name'] as String).contains('€'), isFalse);
+    });
+
+    test('leading currency symbol with space is not leaked (IT)', () {
+      final r = parse('€ 12 dal panettiere');
+      expect(r['amount'], equals(12.0));
+      expect((r['name'] as String).contains('€'), isFalse);
+    });
   });
 
   // ── DATE ─────────────────────────────────────────────────────────────────────

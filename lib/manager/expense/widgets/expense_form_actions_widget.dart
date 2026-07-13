@@ -43,18 +43,6 @@ class ExpenseFormActionsWidget extends StatelessWidget {
 
     final leftButtons = <Widget>[];
 
-    // Add scan receipt button (only in add mode, not edit mode)
-    if (!isEdit && onScanReceipt != null) {
-      leftButtons.add(
-        IconButton(
-          tooltip: gloc.scan_receipt,
-          onPressed: onScanReceipt,
-          icon: const Icon(Icons.document_scanner_outlined, size: 24),
-          style: iconButtonStyle,
-        ),
-      );
-    }
-
     // Mic — leftmost
     if (showVoiceButton && onVoiceTap != null) {
       leftButtons.add(
@@ -62,6 +50,18 @@ class ExpenseFormActionsWidget extends StatelessWidget {
           tooltip: gloc.voice_input_button,
           onPressed: onVoiceTap,
           icon: const Icon(Icons.mic_none, size: 24),
+          style: iconButtonStyle,
+        ),
+      );
+    }
+
+    // Add scan receipt button (only in add mode, not edit mode)
+    if (!isEdit && onScanReceipt != null) {
+      leftButtons.add(
+        IconButton(
+          tooltip: gloc.scan_receipt,
+          onPressed: onScanReceipt,
+          icon: const Icon(Icons.document_scanner_outlined, size: 24),
           style: iconButtonStyle,
         ),
       );
