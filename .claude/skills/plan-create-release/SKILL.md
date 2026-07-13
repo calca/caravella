@@ -1,10 +1,15 @@
+---
+name: plan-create-release
+description: Checklist-driven prompt to prepare a full Caravella release (changelogs, store metadata, version bump, tag)
+---
+
 # Release Creation Prompt
 
 Prompt per creare una nuova release di Caravella con tutti i materiali necessari.
 
 ## Input Richiesto
-- **Versione**: (es. 1.0.46, 1.1.0)
-- **Data release**: (es. 2025-12-03)
+- **Versione**: (es. 1.0.46, 1.1.0) — se non specificata nella richiesta dell'utente, chiedila
+- **Data release**: (es. 2025-12-03) — se non specificata nella richiesta dell'utente, chiedila
 
 ## Checklist Attività
 

@@ -1,4 +1,5 @@
 ---
+name: create-changelog
 description: Update CHANGELOG.md [Unreleased] with recent user-facing changes from the current branch
 ---
 
