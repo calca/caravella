@@ -2,6 +2,7 @@ library;
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart' hide ImageSource;
@@ -353,9 +354,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       child: Semantics(
         customSemanticsActions: _canSwipeExpandToFullEdit
             ? {
-                CustomSemanticsAction(
-                  label: gloc.expand_form,
-                ): _orchestrator.expand,
+                CustomSemanticsAction(label: gloc.expand_form):
+                    _orchestrator.expand,
               }
             : const {},
         child: GestureDetector(
