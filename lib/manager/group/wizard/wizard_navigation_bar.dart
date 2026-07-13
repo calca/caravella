@@ -32,6 +32,18 @@ class WizardNavigationBar extends StatelessWidget {
               wizardState,
             );
 
+            final primaryButtonStyle = FilledButton.styleFrom(
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              minimumSize: const Size(48, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            );
+
             final primaryButton = Consumer2<GroupFormState, GroupFormController>(
               builder: (context, formState, controller, child) {
                 final isSecondToLastStep =
@@ -63,15 +75,7 @@ class WizardNavigationBar extends StatelessWidget {
                             }
                           }
                         : null,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    style: primaryButtonStyle,
                     child: Text(gloc.wizard_finish),
                   );
                 }
@@ -91,15 +95,7 @@ class WizardNavigationBar extends StatelessWidget {
                         }
                       : null,
                   label: Text(gloc.wizard_next),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  style: primaryButtonStyle,
                 );
               },
             );

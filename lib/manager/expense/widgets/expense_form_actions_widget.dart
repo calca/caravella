@@ -109,20 +109,21 @@ class ExpenseFormActionsWidget extends StatelessWidget {
         ...leftChildren,
         if (leftChildren.isNotEmpty) const SizedBox(width: 8),
         const Spacer(),
-        // Aggiungi / Save — green filled when valid, muted when invalid
-        TextButton(
+        // Aggiungi / Save — filled when valid, muted when invalid
+        FilledButton(
           onPressed: onSave,
-          style: TextButton.styleFrom(
+          style: FilledButton.styleFrom(
             backgroundColor: isFormValid
                 ? colorScheme.primary
                 : colorScheme.surfaceContainerHighest,
             foregroundColor: isFormValid
                 ? colorScheme.onPrimary
                 : colorScheme.onSurfaceVariant,
+            elevation: 0,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             minimumSize: const Size(48, 48),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(16),
             ),
           ),
           child: Text(

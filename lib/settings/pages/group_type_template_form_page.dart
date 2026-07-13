@@ -110,10 +110,10 @@ class _GroupTypeTemplateFormPageState
             children: [
               TextField(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: loc.settings_group_templates_name_label,
+                style: FormTheme.getFieldTextStyle(context),
+                decoration: FormTheme.getStandardDecoration(
                   hintText: loc.settings_group_templates_name_hint,
-                ),
+                ).copyWith(labelText: loc.settings_group_templates_name_label),
                 maxLength: 40,
               ),
               const SizedBox(height: 16),
@@ -177,26 +177,10 @@ class _GroupTypeTemplateFormPageState
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-          decoration: BoxDecoration(
-            color: scheme.surface,
-            border: Border(
-              top: BorderSide(
-                color: scheme.outlineVariant.withValues(alpha: 0.3),
-              ),
-            ),
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: _saving ? null : _save,
-              child: Text(loc.save),
-            ),
-          ),
-        ),
+      bottomNavigationBar: BottomActionBar(
+        onPressed: _save,
+        label: loc.save,
+        enabled: !_saving,
       ),
     );
   }

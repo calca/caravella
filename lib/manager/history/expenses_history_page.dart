@@ -140,7 +140,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
   }
 
-  Widget _buildAnimatedFab(ColorScheme scheme, gen.AppLocalizations gloc) {
+  Widget _buildAnimatedFab(gen.AppLocalizations gloc) {
     return AnimatedSlide(
       duration: const Duration(milliseconds: 260),
       curve: Curves.easeOut,
@@ -149,33 +149,17 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeInOut,
         opacity: _fabVisible ? 1 : 0,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: scheme.primary.withValues(alpha: 0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+        child: AddFab(
+          heroTag: 'add-group-fab',
+          onPressed: () async {
+            final result = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const GroupCreationWizardPage(),
               ),
-            ],
-          ),
-          child: FloatingActionButton(
-            heroTag: 'add-group-fab',
-            onPressed: () async {
-              final result = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const GroupCreationWizardPage(),
-                ),
-              );
-              if (result == true) await _loadTrips();
-            },
-            tooltip: gloc.add_trip,
-            backgroundColor: scheme.primary,
-            foregroundColor: scheme.onPrimary,
-            elevation: 0,
-            child: const Icon(Icons.add_rounded, size: 28),
-          ),
+            );
+            if (result == true) await _loadTrips();
+          },
+          tooltip: gloc.add_trip,
         ),
       ),
     );
@@ -251,11 +235,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
 
-    final colorScheme = Theme.of(context).colorScheme;
     return AppSystemUI.surface(
       child: Scaffold(
         appBar: const CaravellaAppBar(),
-        floatingActionButton: _buildAnimatedFab(colorScheme, gloc),
+        floatingActionButton: _buildAnimatedFab(gloc),
         body: Column(
           children: [
             Padding(
