@@ -664,7 +664,12 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                   ExpenseGroupStorageV2.forceReload();
                   try {
                     notifier?.notifyGroupUpdated(saved.id);
-                  } catch (_) {}
+                  } catch (e) {
+                    LoggerService.warning(
+                      'Failed to notify group updated after save: $e',
+                      name: 'manager.group',
+                    );
+                  }
 
                   // Handle notification state after save
                   if (saved.notificationEnabled && context.mounted) {
@@ -884,7 +889,12 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               ExpenseGroupStorageV2.forceReload();
                               try {
                                 notifier?.notifyGroupUpdated(saved.id);
-                              } catch (_) {}
+                              } catch (e) {
+                                LoggerService.warning(
+                                  'Failed to notify group updated after save: $e',
+                                  name: 'manager.group',
+                                );
+                              }
 
                               // Handle notification state after save
                               if (saved.notificationEnabled &&

@@ -330,7 +330,12 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                   ExpenseGroupStorageV2.forceReload();
                   try {
                     notifier?.notifyGroupUpdated(saved.id);
-                  } catch (_) {}
+                  } catch (e) {
+                    LoggerService.warning(
+                      'Failed to notify group updated after save: $e',
+                      name: 'manager.group',
+                    );
+                  }
 
                   if (saved.notificationEnabled && context.mounted) {
                     await NotificationManager().updateNotificationForGroup(
