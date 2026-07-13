@@ -20,16 +20,22 @@
 - **`lib/`**: App-specific UI, pages, managers, main app logic
 
 ## Data & Persistence
-- Use `ExpenseGroupStorageV2` (from `caravella_core`) as the façade for all trip/expense CRUD; it wraps `FileBasedExpenseGroupRepository` which performs caching, indexing, and integrity checks.
-- `FileBasedExpenseGroupRepository` saves to `${ApplicationDocumentsDirectory}/expense_group_storage.json`; it automatically enforces a single pinned group and prunes stale cache with `forceReload`.
+- Use `ExpenseGroupStorageV2` (from `caravella_core`) as the façade for all trip/expense CRUD; it delegates to whichever `IExpenseGroupRepository` `ExpenseGroupRepositoryFactory` hands back, and performs caching, indexing, and integrity checks on top.
+- **SQLite (`SqliteExpenseGroupRepository`) is the default backend** — normalized tables (`groups`, `participants`, `categories`, `expenses`) with FK constraints and indexes. `FileBasedExpenseGroupRepository` (JSON, saved to `${ApplicationDocumentsDirectory}/expense_group_storage.json`) is legacy, kept for the `--dart-define=USE_JSON_BACKEND=true` escape hatch and as the source for the one-time `StorageMigrationService` migration at first launch. Once migrated, the two backends are independent — don't assume switching the define resyncs data. See `docs/SQLITE_BACKEND.md`.
+- Never depend on either concrete repository directly; go through `ExpenseGroupStorageV2` / `IExpenseGroupRepository` so code works under both backends. `forceReload`/`clearCache` still apply to prune stale cache and it still enforces a single pinned group.
 - When editing groups, rely on helper APIs like `updateParticipantReferencesFromDiff`/`updateCategoryReferencesFromDiff` so embedded expense snapshots stay consistent.
 - Logger output flows through `packages/caravella_core/lib/services/logging/logger_service.dart`; prefer `LoggerService.warning` instead of `print`.
 
 ## UI & Interaction Patterns
-- Home experience (`lib/home/home_page.dart` + `home/cards`) listens to `ExpenseGroupNotifier.updatedGroupIds` (from `caravella_core`) and consumes `lastEvent` to show `AppToast` messages (from `caravella_core_ui`) via the global `rootScaffoldMessenger`.
+- **Before building any new screen, dialog, card, or chart, check `packages/caravella_core_ui/` first.** It's the shared design-system package and is intended to be reused, not reimplemented, from `lib/`. Import it as a whole via `import 'package:caravella_core_ui/caravella_core_ui.dart';` rather than deep-importing individual widget files.
+  - Layout/containers: `BaseCard`, `BottomSheetScaffold`, `SectionHeader`, `CaravellaAppBar`, `CaravellaTabBar`, `BottomActionBar`.
+  - Feedback: `AppToast` (toasts/snackbars — never call `ScaffoldMessenger.of` directly), `Material3Dialog` (dialogs), `SelectionBottomSheet` (pickers).
+  - Data display: `CurrencyDisplay`, `NoExpense` (empty states), the `charts/` widgets (`DateRangeExpenseChart`, `MonthlyExpenseChart`, `WeeklyExpenseChart`, `Last15DaysBarChart`, `ChartBadge`) and `map/` widgets.
+  - `AddFab`, `AppSystemUi`, `group_background_utils.dart`, `utils/debounce.dart` cover FAB, system UI styling, group background rendering, and debouncing respectively.
+  - Only build a bespoke widget in `lib/` when nothing in `caravella_core_ui` fits, and if a widget starts being useful in a second feature flow, promote it into `caravella_core_ui` instead of copy-pasting.
+  - Match the spacing/shape tokens and text styles from `themes/caravella_themes.dart`, `themes/app_text_styles.dart`, and `themes/form_theme.dart` instead of hardcoding values.
+- Home experience (`lib/home/home_page.dart` + `home/cards`) listens to `ExpenseGroupNotifier.updatedGroupIds` (from `caravella_core`) and consumes `lastEvent` to show `AppToast` messages via the global `rootScaffoldMessenger`.
 - Feature flows live under `lib/manager/**`; controllers (e.g., `group/group_form_controller.dart`) own form state, diff original models, and notify the global notifier after calling storage.
-- Reusable UI components live in `packages/caravella_core_ui/` (`base_card.dart`, `bottom_sheet_scaffold.dart`, `material3_dialog.dart`, `app_toast.dart`); match spacing/shape tokens instead of bespoke layouts.
-- For toasts or snackbars, always use `AppToast.show` (from `caravella_core_ui`) or the shared `ScaffoldMessenger` key—direct `ScaffoldMessenger.of` calls break when contexts unmount after async work.
 
 ## Localization, Theming, Platform
 - Strings come from the generated `io_caravella_egm` package (`gen.AppLocalizations`); never hardcode literals—inject locale via `LocaleNotifier` (from `caravella_core`).
