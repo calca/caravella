@@ -159,6 +159,9 @@ class ExpenseFormActionsWidget extends StatelessWidget {
           child: Text(
             isEdit ? gloc.save.toUpperCase() : gloc.add.toUpperCase(),
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: isFormValid
+                  ? colorScheme.onPrimary
+                  : colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
             ),
