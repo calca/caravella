@@ -1,0 +1,9 @@
+Versão 1.8.0 - Voz, Escaneamento e Busca Inteligente
+
+• Novo: adicione despesas por voz — fale e os detalhes são preenchidos sozinhos
+• Novo: escaneie recibos para extrair os detalhes da despesa
+• Novo: busca instantânea de despesas e grupos, com filtros
+• Novo: fundos do Unsplash e widget inicial com totais
+• Novo: modelos de grupo personalizados com suas categorias
+
+Suas despesas, mais rápidas do que nunca!

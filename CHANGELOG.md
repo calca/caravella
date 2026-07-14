@@ -7,16 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-07-14
+
 ### Added
+- **Voice input for expenses**: speak naturally to add an expense — amount, description, category, date, and payer are parsed automatically; available from the expense form and a home-screen quick-add CTA, in all 5 app languages (#228)
+- **Receipt OCR scanning**: photograph a receipt and have the amount and description extracted automatically via on-device ML Kit text recognition (#226)
+- **Unsplash image search** for expense group backgrounds, with in-app download and attribution (#422)
+- **Android home screen widget**: configurable widget showing today's and the group's total spending, with quick-add and open-group actions; resizable and reconfigurable after placement (#438, and follow-up refinements #445–#481)
+- **Dedicated expense search page**: full-text search with a calendar that highlights days with expenses, plus filters by category, participant, attachment, and location (#414)
+- **Gmail-style full-screen group search** from the groups/history page (#435)
 - Settings: new **Group templates** section to create/edit/delete custom group templates (name, icon, default categories), persisted via `PreferencesService`
 - Group creation: type selector now includes custom templates and applies their default categories when selected, while preserving built-in `ExpenseGroupType` behavior
 
 ### Changed
+- Expense group detail page redesigned to match the home card style: same background resolution, centered header, and reused `GroupCardHeader`/`GroupCardAmounts` widgets (#482)
+- Group creation wizard: refined layout and input presentation, name label hidden with left-aligned input, and accidental swipe navigation between steps disabled (#475, #483)
+- Unified primary button style across the app (expense form, wizard, group templates), replacing duplicated FAB/bottom-bar styling with the shared `AddFab`/`BottomActionBar` widgets
 - Group type templates: creating/editing a template now opens a dedicated full-screen page with the primary action pinned at the bottom, instead of a popup dialog; the categories list now uses the same editable list style found in the group form, and the icon selection highlights the selected icon more clearly
 - Group type templates: renamed "Group templates" to "Group type templates" throughout the app (settings section/page titles) to better reflect that templates apply to group types
 - Group type selector: custom templates are now shown (and selectable) when editing an existing group, not only when creating a new one; the selector list now only shows the template name, without the categories preview
 
 ### Fixed
+- Voice input no longer leaks a leading currency symbol (e.g. "€12") into the parsed expense description
+- Voice input now reliably surfaces recognition errors (permission denied, no speech detected, recognition failure) instead of silently failing after the first use — root cause was a singleton speech-recognition listener wired only once for the app's lifetime
+- Receipt scan: tapping the scan button now opens the camera directly, with gallery selection available via long-press; camera/photo permission denial shows a dedicated message instead of a generic "scan failed" one
+- Unsplash background picker no longer shows a stale thumbnail image when a grid cell is reused for a different photo (#433)
+- Unsplash image search now works correctly in F-Droid/GitHub release builds, where it was previously disabled (#429)
+- Duplicate participant/category name check no longer flags the item being edited against itself (e.g. a simple case change like "Mario" → "mario")
 - Add expense form: amount and description fields no longer show a reddish "invalid" background as soon as the sheet opens (the amount field autofocuses, which previously marked both fields as touched instantly); the fields are now only flagged as touched after the user leaves them
 - Add expense form: the description field's validation state is now tracked independently from the amount field, instead of incorrectly sharing the amount field's touched flag
 - Add expense form: the "Add"/"Save" button now correctly turns primary-colored as soon as all required fields become valid, instead of staying gray until an unrelated rebuild occurred
@@ -337,7 +354,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/calca/caravella/compare/v1.6.0...v1.8.0
 [1.6.0]: https://github.com/calca/caravella/compare/v1.4.0...v1.6.0
 [1.4.0]: https://github.com/calca/caravella/compare/v1.2.0...v1.4.0
 [1.2.0]: https://github.com/calca/caravella/compare/v1.0.45...v1.2.0

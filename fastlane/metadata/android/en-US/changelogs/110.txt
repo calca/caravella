@@ -1,0 +1,9 @@
+Version 1.8.0 - Voice, Scan & Smart Search
+
+• New: Add expenses by voice — just speak, details fill in automatically
+• New: Scan receipts to extract expense details automatically
+• New: Instant search for expenses and groups, with filters
+• New: Unsplash backgrounds and a home screen widget for totals
+• New: Custom group templates with your own categories
+
+Your expenses, faster than ever!

@@ -1,3 +1,22 @@
+## 1.8.0 (14.07.2026)
+
+- **New**: Voice input – speak naturally to add an expense, with amount, description, category, date, and payer parsed automatically, in all supported languages
+- **New**: Receipt OCR scanning – photograph a receipt and let on-device text recognition extract the amount and description for you
+- **New**: Unsplash image search for group backgrounds, with in-app download
+- **New**: Android home screen widget showing today's and the group's total spending, with quick-add and open-group actions
+- **New**: Dedicated expense search page with full-text search, a calendar highlighting days with expenses, and filters by category, participant, attachment, and location
+- **New**: Gmail-style full-screen group search from the groups page
+- **New**: Custom group templates – create, edit, and delete your own group types with a name, icon, and default categories from Settings
+- **Improvements**: Expense group detail page redesigned to match the home card style, with a centered header
+- **Improvements**: Group creation wizard refined with cleaner layout and input styling
+- **Improvements**: Group template editor moved to a dedicated full-screen page with clearer icon selection and an editable category list, and now usable when editing existing groups too
+- **Fixed**: Voice input no longer leaks a leading currency symbol into the description, and now reliably surfaces recognition errors instead of silently failing
+- **Fixed**: Receipt scan button opens the camera directly, with gallery available via long-press
+- **Fixed**: Unsplash background picker no longer shows a stale thumbnail, and now works correctly in all release builds
+- **Fixed**: Duplicate participant/category name check no longer flags the item being edited against itself
+- **Fixed**: Add expense form no longer flashes a red "invalid" background on open, and the Add/Save button now turns primary-colored as soon as the form becomes valid
+- **Fixed**: Quick-add expense sheet now opens full edit mode with a swipe-up gesture
+
 ## 1.6.0 (03.04.2026)
 
 - **New**: Android AI agent integration – Google Gemini can add expenses and check balances for you

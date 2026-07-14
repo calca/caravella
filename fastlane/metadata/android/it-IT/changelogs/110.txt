@@ -1,0 +1,9 @@
+Versione 1.8.0 - Voce, Scansione e Ricerca Smart
+
+• Novità: aggiungi spese a voce — parla e i dettagli si compilano da soli
+• Novità: scansiona scontrini per estrarre i dettagli della spesa
+• Novità: ricerca istantanea di spese e gruppi, con filtri
+• Novità: sfondi Unsplash e widget home per i totali
+• Novità: template gruppo personalizzati con le tue categorie
+
+Le tue spese, più veloci che mai!
