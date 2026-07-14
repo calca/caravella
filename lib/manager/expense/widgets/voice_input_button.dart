@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../services/voice_input_service.dart';
 
@@ -96,11 +97,11 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
           });
           _animationController.stop();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(_errorMessage(gloc, error)),
-              duration: const Duration(seconds: 3),
-            ),
+          AppToast.show(
+            context,
+            _errorMessage(gloc, error),
+            type: ToastType.error,
+            duration: const Duration(seconds: 3),
           );
         }
       },

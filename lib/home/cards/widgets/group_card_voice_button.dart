@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../services/voice_input_service.dart';
@@ -282,13 +283,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
 
   void _showSnack(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    AppToast.show(context, message, duration: const Duration(seconds: 3));
   }
 
   // ── Build ─────────────────────────────────────────────────────────────────

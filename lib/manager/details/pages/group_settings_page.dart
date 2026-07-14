@@ -330,8 +330,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
       context,
       listen: false,
     );
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-
     final newArchivedState = !_currentTrip.archived;
     await groupNotifier.updateGroupArchive(_currentTrip.id, newArchivedState);
 
@@ -347,17 +345,11 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
       });
     }
 
-    if (!mounted) return;
+    if (!context.mounted) return;
 
-    scaffoldMessenger.showSnackBar(
-      SnackBar(
-        content: Text(
-          newArchivedState
-              ? gloc.archived_with_undo
-              : gloc.unarchived_with_undo,
-        ),
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppToast.show(
+      context,
+      newArchivedState ? gloc.archived_with_undo : gloc.unarchived_with_undo,
     );
 
     widget.onGroupUpdated?.call();

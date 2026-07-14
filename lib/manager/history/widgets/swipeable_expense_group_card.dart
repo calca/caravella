@@ -28,9 +28,6 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
   void _showContextMenu(BuildContext context) {
     HapticFeedback.mediumImpact();
 
-    // Capture the scaffold messenger before showing the sheet
-    final messenger = ScaffoldMessenger.of(context);
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -39,26 +36,23 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
         onPinToggle: () async {
           final nav = Navigator.of(sheetCtx);
           nav.pop();
-          await _executePinAction(context, messenger);
+          await _executePinAction(context);
         },
         onArchiveToggle: () async {
           final nav = Navigator.of(sheetCtx);
           nav.pop();
-          await _executeArchiveAction(context, messenger);
+          await _executeArchiveAction(context);
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);
           nav.pop();
-          await _executeDeleteAction(context, messenger);
+          await _executeDeleteAction(context);
         },
       ),
     );
   }
 
-  Future<void> _executePinAction(
-    BuildContext context,
-    ScaffoldMessengerState messenger,
-  ) async {
+  Future<void> _executePinAction(BuildContext context) async {
     final isPinned = trip.pinned;
     final gloc = gen.AppLocalizations.of(context);
     final actionText = isPinned
@@ -81,10 +75,7 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     );
   }
 
-  Future<void> _executeArchiveAction(
-    BuildContext context,
-    ScaffoldMessengerState messenger,
-  ) async {
+  Future<void> _executeArchiveAction(BuildContext context) async {
     final isArchived = trip.archived;
     final gloc = gen.AppLocalizations.of(context);
     final actionText = isArchived
@@ -108,10 +99,7 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     }
   }
 
-  Future<void> _executeDeleteAction(
-    BuildContext context,
-    ScaffoldMessengerState messenger,
-  ) async {
+  Future<void> _executeDeleteAction(BuildContext context) async {
     final gloc = gen.AppLocalizations.of(context);
 
     // Show confirmation dialog

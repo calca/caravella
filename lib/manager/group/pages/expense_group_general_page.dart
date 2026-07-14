@@ -104,58 +104,6 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
     }
   }
 
-  Future<DateTime?> _pickDate(BuildContext context, bool isStart) async {
-    final gloc = gen.AppLocalizations.of(context);
-    final now = DateTime.now();
-    final firstDate = DateTime(now.year - 5);
-    final lastDate = DateTime(now.year + 5);
-    DateTime? initialDate = isStart
-        ? (_state.startDate ?? now)
-        : (_state.endDate ?? now);
-    bool isSelectable(DateTime d) {
-      if (isStart && _state.endDate != null) {
-        return !d.isAfter(_state.endDate!);
-      }
-      if (!isStart && _state.startDate != null) {
-        return !d.isBefore(_state.startDate!);
-      }
-      return true;
-    }
-
-    if (!isSelectable(initialDate)) {
-      DateTime candidate = isStart ? lastDate : firstDate;
-      while (!isSelectable(candidate)) {
-        candidate = isStart
-            ? candidate.subtract(const Duration(days: 1))
-            : candidate.add(const Duration(days: 1));
-        if (candidate.isBefore(firstDate) || candidate.isAfter(lastDate)) {
-          candidate = now;
-          break;
-        }
-      }
-      initialDate = candidate;
-    }
-
-    final picked = await showDatePicker(
-      context: context,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      initialDate: initialDate,
-      selectableDayPredicate: isSelectable,
-      helpText: isStart ? gloc.start_date_optional : gloc.end_date_optional,
-    );
-
-    if (picked != null) {
-      if (isStart) {
-        _state.setStartDate(picked);
-      } else {
-        _state.setEndDate(picked);
-      }
-      _validateDates();
-    }
-    return picked;
-  }
-
   void _clearDates() {
     _state.clearDates();
     _validateDates();
@@ -224,7 +172,6 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
           const SizedBox(height: 24),
           // Periodo
           PeriodSectionEditor(
-            onPickDate: (isStart) async => _pickDate(context, isStart),
             onClearDates: _clearDates,
             errorText: _dateError,
           ),

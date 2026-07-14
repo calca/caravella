@@ -1,4 +1,5 @@
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -247,11 +248,10 @@ class WizardNavigationBar extends StatelessWidget {
     } catch (e) {
       if (context.mounted) {
         final gloc = gen.AppLocalizations.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(gloc.error_saving_group(e.toString())),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AppToast.show(
+          context,
+          gloc.error_saving_group(e.toString()),
+          type: ToastType.error,
         );
       }
       return null;

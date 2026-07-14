@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Snackbar-style messages (receipt scanning, voice input errors, group save/archive errors) now consistently use the shared `AppToast` component instead of ad-hoc `ScaffoldMessenger` snackbars
+- Removed the legacy single-date-picker fallback in the group period editor (dead code kept for backwards compatibility since the range picker was introduced)
+
 ## [1.8.0] - 2026-07-14
 
 ### Added

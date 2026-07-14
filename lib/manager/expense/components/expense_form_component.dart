@@ -560,11 +560,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       if (pickedFile == null || !mounted) return;
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(gloc.scanning_receipt),
-            duration: const Duration(seconds: 2),
-          ),
+        AppToast.show(
+          context,
+          gloc.scanning_receipt,
+          duration: const Duration(seconds: 2),
         );
       }
 
@@ -578,11 +577,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
       if (amount == null && description == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(gloc.no_text_found),
-              duration: const Duration(seconds: 2),
-            ),
+          AppToast.show(
+            context,
+            gloc.no_text_found,
+            duration: const Duration(seconds: 2),
           );
         }
         return;
@@ -597,34 +595,32 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _controller.markDirty();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(gloc.receipt_scanned),
-            duration: const Duration(seconds: 2),
-          ),
+        AppToast.show(
+          context,
+          gloc.receipt_scanned,
+          type: ToastType.success,
+          duration: const Duration(seconds: 2),
         );
       }
     } on PlatformException catch (e) {
       if (!mounted) return;
       final isPermissionDenied =
           e.code == 'camera_access_denied' || e.code == 'photo_access_denied';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            isPermissionDenied
-                ? gloc.receipt_scan_permission_denied
-                : gloc.receipt_scan_error,
-          ),
-          duration: const Duration(seconds: 3),
-        ),
+      AppToast.show(
+        context,
+        isPermissionDenied
+            ? gloc.receipt_scan_permission_denied
+            : gloc.receipt_scan_error,
+        type: ToastType.error,
+        duration: const Duration(seconds: 3),
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(gloc.receipt_scan_error),
-            duration: const Duration(seconds: 2),
-          ),
+        AppToast.show(
+          context,
+          gloc.receipt_scan_error,
+          type: ToastType.error,
+          duration: const Duration(seconds: 2),
         );
       }
     }

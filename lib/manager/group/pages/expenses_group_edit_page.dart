@@ -172,59 +172,6 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
     }
   }
 
-  Future<DateTime?> _pickDate(BuildContext context, bool isStart) async {
-    final gloc = gen.AppLocalizations.of(context);
-    final now = DateTime.now();
-    final firstDate = DateTime(now.year - 5);
-    final lastDate = DateTime(now.year + 5);
-    DateTime? initialDate = isStart
-        ? (_state.startDate ?? now)
-        : (_state.endDate ?? now);
-    bool isSelectable(DateTime d) {
-      if (isStart && _state.endDate != null) {
-        return !d.isAfter(_state.endDate!);
-      }
-      if (!isStart && _state.startDate != null) {
-        return !d.isBefore(_state.startDate!);
-      }
-      return true;
-    }
-
-    if (!isSelectable(initialDate)) {
-      DateTime candidate = isStart ? lastDate : firstDate;
-      while (!isSelectable(candidate)) {
-        candidate = isStart
-            ? candidate.subtract(const Duration(days: 1))
-            : candidate.add(const Duration(days: 1));
-        if (candidate.isBefore(firstDate) || candidate.isAfter(lastDate)) {
-          candidate = now;
-          break;
-        }
-      }
-      initialDate = candidate;
-    }
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      helpText: isStart ? gloc.select_from_date : gloc.select_to_date,
-      cancelText: gloc.cancel,
-      confirmText: gloc.ok,
-      locale: Locale(Localizations.localeOf(context).languageCode),
-      selectableDayPredicate: isSelectable,
-    );
-    if (picked != null) {
-      if (isStart) {
-        _state.setDates(start: picked, end: _state.endDate);
-      } else {
-        _state.setDates(start: _state.startDate, end: picked);
-      }
-      _validateDates();
-    }
-    return picked;
-  }
-
   void _clearDates() {
     _state.clearDates();
     _validateDates();
@@ -333,7 +280,6 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
           const SizedBox(height: 24),
           // Periodo
           PeriodSectionEditor(
-            onPickDate: (isStart) async => _pickDate(context, isStart),
             onClearDates: _clearDates,
             errorText: _dateError,
           ),
