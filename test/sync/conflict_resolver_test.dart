@@ -9,6 +9,7 @@ ExpenseGroup _createGroup({
   String title = 'Test Group',
   String currency = 'EUR',
   DateTime? timestamp,
+  bool syncEnabled = false,
 }) {
   final participants = [
     ExpenseParticipant(name: 'Alice', id: '${id}_p0'),
@@ -35,6 +36,7 @@ ExpenseGroup _createGroup({
     categories: categories,
     expenses: expenses,
     timestamp: timestamp ?? DateTime.now(),
+    syncEnabled: syncEnabled,
   );
 }
 
@@ -322,5 +324,75 @@ void main() {
       expect(result.skipped, equals(1)); // old remote
       expect(result.errors, equals(0));
     });
+
+    test('sync_enabled is preserved when applying a new shared group', () async {
+      final db = await repository.database;
+      final syncDao = SyncDao(db);
+      final resolver = ConflictResolver(
+        syncDao: syncDao,
+        repository: repository,
+      );
+
+      final group = _createGroup(id: 'shared-new', syncEnabled: true);
+      final delta = _buildDelta(
+        deviceId: 'remote-1',
+        groups: [
+          _groupToDeltaEntry(group, updatedAt: SyncClock.nowMs()),
+        ],
+      );
+
+      final result = await resolver.applyDelta(db, delta, 'lan');
+      expect(result.applied, equals(1));
+
+      final stored = await repository.getGroupById('shared-new');
+      expect(stored.unwrap()?.syncEnabled, isTrue);
+    });
+
+    test(
+      'sync_enabled is not reset to false when a shared group is updated '
+      'by a peer',
+      () async {
+        // Local group already marked as shared.
+        await repository.saveGroup(
+          _createGroup(id: 'shared-update', title: 'Local', syncEnabled: true),
+        );
+
+        final db = await repository.database;
+        final syncDao = SyncDao(db);
+        final resolver = ConflictResolver(
+          syncDao: syncDao,
+          repository: repository,
+        );
+
+        final remoteGroup = _createGroup(
+          id: 'shared-update',
+          title: 'Remote Update',
+          syncEnabled: true,
+        );
+        final delta = _buildDelta(
+          deviceId: 'remote-1',
+          groups: [
+            _groupToDeltaEntry(
+              remoteGroup,
+              updatedAt: SyncClock.nowMs() + 10000,
+            ),
+          ],
+        );
+
+        final result = await resolver.applyDelta(db, delta, 'lan');
+        expect(result.applied, equals(1));
+
+        final stored = await repository.getGroupById('shared-update');
+        expect(stored.unwrap()?.title, equals('Remote Update'));
+        expect(
+          stored.unwrap()?.syncEnabled,
+          isTrue,
+          reason:
+              'sync_enabled must survive the REPLACE upsert, otherwise the '
+              'group silently stops being shared after the first inbound '
+              'sync',
+        );
+      },
+    );
   });
 }

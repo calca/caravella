@@ -2276,6 +2276,104 @@ class AppLocalizationsIt extends AppLocalizations {
   String get save_label => 'Salva';
 
   @override
+  String get sync_title => 'Sincronizzazione';
+
+  @override
+  String get sync_local_title => 'Sync locale';
+
+  @override
+  String get sync_local_description =>
+      'Sincronizzazione automatica sulla rete Wi-Fi';
+
+  @override
+  String get sync_cloud_title => 'Sync cloud';
+
+  @override
+  String get sync_cloud_description => 'Sincronizzazione via Google Drive';
+
+  @override
+  String get sync_cloud_enable => 'Abilita sync cloud';
+
+  @override
+  String get sync_cloud_privacy =>
+      'I tuoi dati vengono salvati nel tuo Google Drive personale, non su server di terzi.';
+
+  @override
+  String get sync_history_title => 'Cronologia sync';
+
+  @override
+  String get sync_status_synced => 'Sincronizzato';
+
+  @override
+  String get sync_status_syncing => 'Sincronizzazione...';
+
+  @override
+  String get sync_status_error => 'Errore sync';
+
+  @override
+  String get sync_status_never => 'Mai sincronizzato';
+
+  @override
+  String get sync_now => 'Sincronizza ora';
+
+  @override
+  String sync_last_sync(String time) {
+    return 'Ultimo sync: $time';
+  }
+
+  @override
+  String get sync_bt_title => 'Sync Bluetooth';
+
+  @override
+  String get sync_bt_searching => 'Ricerca dispositivi vicini...';
+
+  @override
+  String get sync_bt_sync_with => 'Sincronizza';
+
+  @override
+  String get sync_bt_completed => 'Sincronizzazione completata';
+
+  @override
+  String sync_bt_received_sent(int received, int sent) {
+    return 'Ricevuti $received, inviati $sent record';
+  }
+
+  @override
+  String get sync_bt_error => 'Sincronizzazione fallita';
+
+  @override
+  String get sync_bt_retry => 'Riprova';
+
+  @override
+  String get sync_history_empty => 'Nessuna cronologia sync';
+
+  @override
+  String get sync_channel_lan => 'LAN';
+
+  @override
+  String get sync_channel_bluetooth => 'Bluetooth';
+
+  @override
+  String get sync_channel_cloud => 'Cloud';
+
+  @override
+  String sync_records_exchanged(int sent, int received) {
+    return '$sent inviati, $received ricevuti';
+  }
+
+  @override
+  String get sync_group_shared => 'Gruppo condiviso';
+
+  @override
+  String get sync_group_synced => 'Tutte le modifiche sincronizzate';
+
+  @override
+  String get sync_group_pending => 'Modifiche non ancora sincronizzate';
+
+  @override
+  String get sync_group_enable => 'Abilita sincronizzazione';
+
+  @override
   String get search_expenses => 'Cerca spese';
 
   @override

@@ -250,6 +250,7 @@ class ConflictResolver {
         'notification_enabled': group.notificationEnabled ? 1 : 0,
         'group_type': group.groupType?.toJson(),
         'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
+        'sync_enabled': group.syncEnabled ? 1 : 0,
         'device_id': deviceId,
         'updated_at': updatedAt,
         'deleted': 0,

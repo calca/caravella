@@ -32,12 +32,12 @@ class SqliteGroupMapper {
     return groups;
   }
 
-  /// Load a single group by ID
+  /// Load a single group by ID (excludes soft-deleted groups)
   Future<ExpenseGroup?> loadGroupById(Database db, String groupId) async {
     final groupMaps = await db.query(
       kTableGroups,
-      where: 'id = ?',
-      whereArgs: [groupId],
+      where: 'id = ? AND deleted = ?',
+      whereArgs: [groupId, 0],
     );
 
     if (groupMaps.isEmpty) return null;

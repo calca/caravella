@@ -4373,6 +4373,186 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save_label;
 
+  /// Title for sync settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Synchronization'**
+  String get sync_title;
+
+  /// Title for local LAN sync section
+  ///
+  /// In en, this message translates to:
+  /// **'Local Sync'**
+  String get sync_local_title;
+
+  /// Description for LAN sync
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic sync on Wi-Fi network'**
+  String get sync_local_description;
+
+  /// Title for cloud sync section
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Sync'**
+  String get sync_cloud_title;
+
+  /// Description for cloud sync
+  ///
+  /// In en, this message translates to:
+  /// **'Sync via Google Drive'**
+  String get sync_cloud_description;
+
+  /// Label for cloud sync toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Enable cloud sync'**
+  String get sync_cloud_enable;
+
+  /// Privacy notice for cloud sync
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is saved in your personal Google Drive, not on third-party servers.'**
+  String get sync_cloud_privacy;
+
+  /// Title for sync history section
+  ///
+  /// In en, this message translates to:
+  /// **'Sync History'**
+  String get sync_history_title;
+
+  /// Status when sync is up to date
+  ///
+  /// In en, this message translates to:
+  /// **'Synced'**
+  String get sync_status_synced;
+
+  /// Status during active sync
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing...'**
+  String get sync_status_syncing;
+
+  /// Status on sync error
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error'**
+  String get sync_status_error;
+
+  /// Status when no sync has happened
+  ///
+  /// In en, this message translates to:
+  /// **'Never synced'**
+  String get sync_status_never;
+
+  /// Button to trigger manual sync
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get sync_now;
+
+  /// Shows last sync time
+  ///
+  /// In en, this message translates to:
+  /// **'Last sync: {time}'**
+  String sync_last_sync(String time);
+
+  /// Title for Bluetooth sync
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth Sync'**
+  String get sync_bt_title;
+
+  /// Status while searching for BT peers
+  ///
+  /// In en, this message translates to:
+  /// **'Searching for nearby devices...'**
+  String get sync_bt_searching;
+
+  /// Button to sync with a BT peer
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get sync_bt_sync_with;
+
+  /// Status when BT sync is done
+  ///
+  /// In en, this message translates to:
+  /// **'Sync completed'**
+  String get sync_bt_completed;
+
+  /// Summary after sync
+  ///
+  /// In en, this message translates to:
+  /// **'Received {received}, sent {sent} records'**
+  String sync_bt_received_sent(int received, int sent);
+
+  /// Status when BT sync fails
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed'**
+  String get sync_bt_error;
+
+  /// Button to retry BT sync
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get sync_bt_retry;
+
+  /// Empty state for sync history
+  ///
+  /// In en, this message translates to:
+  /// **'No sync history yet'**
+  String get sync_history_empty;
+
+  /// LAN channel name
+  ///
+  /// In en, this message translates to:
+  /// **'LAN'**
+  String get sync_channel_lan;
+
+  /// Bluetooth channel name
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth'**
+  String get sync_channel_bluetooth;
+
+  /// Cloud channel name
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud'**
+  String get sync_channel_cloud;
+
+  /// Records exchanged summary
+  ///
+  /// In en, this message translates to:
+  /// **'{sent} sent, {received} received'**
+  String sync_records_exchanged(int sent, int received);
+
+  /// Tooltip for shared group icon
+  ///
+  /// In en, this message translates to:
+  /// **'Shared group'**
+  String get sync_group_shared;
+
+  /// Tooltip for synced group status
+  ///
+  /// In en, this message translates to:
+  /// **'All changes synced'**
+  String get sync_group_synced;
+
+  /// Tooltip for unsynced group status
+  ///
+  /// In en, this message translates to:
+  /// **'Changes not yet synced'**
+  String get sync_group_pending;
+
+  /// Label for enabling sync on a group
+  ///
+  /// In en, this message translates to:
+  /// **'Enable sync'**
+  String get sync_group_enable;
+
   /// Title for the expense search page
   ///
   /// In en, this message translates to:

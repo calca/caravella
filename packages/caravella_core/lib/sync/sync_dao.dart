@@ -22,8 +22,12 @@ class SyncDao {
   // Group delta queries
   // ---------------------------------------------------------------------------
 
-  /// Returns non-deleted groups whose `updated_at` is strictly greater than
-  /// [timestampMs].
+  /// Returns non-deleted, sync-enabled groups whose `updated_at` is strictly
+  /// greater than [timestampMs].
+  ///
+  /// Only groups explicitly marked as shared (`sync_enabled = 1`) are
+  /// eligible to leave the device — this is the privacy boundary between
+  /// local-only and shared groups.
   ///
   /// Each entry is a raw row map from the `groups` table.
   Future<List<Map<String, dynamic>>> getGroupsDeltaSince(
@@ -31,7 +35,7 @@ class SyncDao {
   ) async {
     final rows = await db.query(
       SqliteExpenseGroupRepository.tableGroups,
-      where: 'updated_at > ? AND deleted = 0',
+      where: 'updated_at > ? AND deleted = 0 AND sync_enabled = 1',
       whereArgs: [timestampMs],
       orderBy: 'updated_at ASC',
     );
@@ -42,14 +46,17 @@ class SyncDao {
     return rows;
   }
 
-  /// Returns soft-deleted groups whose `updated_at` is strictly greater than
-  /// [timestampMs].
+  /// Returns soft-deleted, sync-enabled groups whose `updated_at` is
+  /// strictly greater than [timestampMs].
+  ///
+  /// Same `sync_enabled = 1` boundary as [getGroupsDeltaSince] — deletions
+  /// of groups that were never shared must not leak to peers either.
   Future<List<Map<String, dynamic>>> getDeletedGroupsSince(
     int timestampMs,
   ) async {
     final rows = await db.query(
       SqliteExpenseGroupRepository.tableGroups,
-      where: 'updated_at > ? AND deleted = 1',
+      where: 'updated_at > ? AND deleted = 1 AND sync_enabled = 1',
       whereArgs: [timestampMs],
       orderBy: 'updated_at ASC',
     );

@@ -2219,6 +2219,102 @@ class AppLocalizationsZh extends AppLocalizations {
   String get save_label => '保存';
 
   @override
+  String get sync_title => '同步';
+
+  @override
+  String get sync_local_title => '本地同步';
+
+  @override
+  String get sync_local_description => 'Wi-Fi网络自动同步';
+
+  @override
+  String get sync_cloud_title => '云同步';
+
+  @override
+  String get sync_cloud_description => '通过Google Drive同步';
+
+  @override
+  String get sync_cloud_enable => '启用云同步';
+
+  @override
+  String get sync_cloud_privacy => '您的数据保存在您的个人Google Drive中，而非第三方服务器。';
+
+  @override
+  String get sync_history_title => '同步历史';
+
+  @override
+  String get sync_status_synced => '已同步';
+
+  @override
+  String get sync_status_syncing => '同步中...';
+
+  @override
+  String get sync_status_error => '同步错误';
+
+  @override
+  String get sync_status_never => '从未同步';
+
+  @override
+  String get sync_now => '立即同步';
+
+  @override
+  String sync_last_sync(String time) {
+    return '上次同步：$time';
+  }
+
+  @override
+  String get sync_bt_title => '蓝牙同步';
+
+  @override
+  String get sync_bt_searching => '正在搜索附近设备...';
+
+  @override
+  String get sync_bt_sync_with => '同步';
+
+  @override
+  String get sync_bt_completed => '同步完成';
+
+  @override
+  String sync_bt_received_sent(int received, int sent) {
+    return '接收 $received 条，发送 $sent 条记录';
+  }
+
+  @override
+  String get sync_bt_error => '同步失败';
+
+  @override
+  String get sync_bt_retry => '重试';
+
+  @override
+  String get sync_history_empty => '暂无同步历史';
+
+  @override
+  String get sync_channel_lan => '局域网';
+
+  @override
+  String get sync_channel_bluetooth => '蓝牙';
+
+  @override
+  String get sync_channel_cloud => '云端';
+
+  @override
+  String sync_records_exchanged(int sent, int received) {
+    return '发送 $sent 条，接收 $received 条';
+  }
+
+  @override
+  String get sync_group_shared => '共享群组';
+
+  @override
+  String get sync_group_synced => '所有更改已同步';
+
+  @override
+  String get sync_group_pending => '更改尚未同步';
+
+  @override
+  String get sync_group_enable => '启用同步';
+
+  @override
   String get search_expenses => '搜索费用';
 
   @override
