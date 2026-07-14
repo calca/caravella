@@ -1,134 +1,70 @@
-# Build Configuration Guide
+# Build Variants & Flavors
 
-## Play Store Updates Package
+Caravella ships from one codebase as three **flavors** (dev/staging/prod) and, orthogonally, with or without Google Play–specific functionality (for F-Droid compatibility). Both axes are controlled by `--dart-define` flags plus a matching Android Gradle flavor. This page replaces the previous version, which described a `lib/updates/` folder that no longer exists — that logic now lives entirely in the `play_store_updates` package (see [package reference](PACKAGE_PLAY_STORE_UPDATES.md)).
 
-Il progetto ora supporta build con e senza funzionalità di aggiornamento Google Play Store, usando un package separato e flag di compilazione.
+## Flavors (`android/app/build.gradle.kts`)
 
-### Struttura
+Gradle flavor dimension `"environment"`, three flavors:
 
-```
-org_app_split/
-├── lib/
-│   └── updates/
-│       ├── update_service_interface.dart  # Interfaccia astratta
-│       ├── update_service_noop.dart       # Implementazione vuota (F-Droid)
-│       ├── update_service_playstore.dart  # Implementazione Play Store
-│       ├── update_service_factory.dart    # Factory per creare istanze
-│       ├── updates.dart                   # Export principale
-│       ├── update_check_widget.dart       # Widget UI
-│       └── update_check_helper.dart       # Helper functions
-└── packages/
-    └── play_store_updates/               # Package separato
-        ├── lib/
-        │   ├── src/
-        │   │   ├── app_update_service.dart
-        │   │   ├── app_update_notifier.dart
-        │   │   └── logger_adapter.dart
-        │   └── play_store_updates.dart
-        └── pubspec.yaml
-```
+| Flavor | `applicationId` suffix | App name | Icon |
+|---|---|---|---|
+| `dev` | `.dev` | "Caravella - Dev" | `@mipmap/ic_launcher_dev` |
+| `staging` | `.staging` | "Caravella - Staging" | `@mipmap/ic_launcher_staging` |
+| `prod` | (none) | "Caravella" | `@mipmap/ic_launcher` |
 
-### Build con Play Store Support (default per staging/prod)
+Always pass a matching pair: `--flavor <x> --dart-define=FLAVOR=<x>`. `FLAVOR` is read in `lib/main/app_initialization.dart`'s `configureEnvironment()` and sets `AppConfig.environment` (which drives log verbosity, app name/banner, `showDebugBanner`, etc. — see [caravella_core reference § AppConfig](PACKAGE_CARAVELLA_CORE.md#appconfig)).
 
 ```bash
-# Con flag esplicito
+flutter run --flavor dev --dart-define=FLAVOR=dev
+flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
+flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
+```
+
+## All dart-define flags
+
+This is the authoritative list — every `String.fromEnvironment`/`bool.fromEnvironment` call in the repo, found by grep, with its actual location:
+
+| Flag | Type / default | Where read | Effect |
+|---|---|---|---|
+| `FLAVOR` | String, default `'prod'` | `lib/main/app_initialization.dart` | Sets `AppConfig.environment` |
+| `USE_JSON_BACKEND` | String (`'true'`/`'false'`), default `'false'` | `lib/main/app_initialization.dart` | Selects the legacy JSON repository instead of SQLite — see [Storage Backend](STORAGE_BACKEND.md) |
+| `ENABLE_PLAY_UPDATES` | bool, default `false` | `packages/play_store_updates/lib/src/update_service_factory.dart` | Enables real Google Play in-app-update checks (`PlayStoreUpdateService`) instead of the no-op stub — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) |
+| `ENABLE_ANDROID_WIDGET` | bool, default `true` | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableAndroidWidget`), also read natively in `build.gradle.kts` | Enables/disables the Android home-screen widget, both on the Flutter side (`PlatformHomeWidgetManager`) and natively (disables the widget receiver/config activity in the manifest) |
+| `ENABLE_TALKER_SCREEN` | bool, default `false` | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableTalkerScreen`) | Shows the in-app "Debug Logs" (Talker) screen in Settings even outside debug builds |
+| `UNSPLASH_ACCESS_KEY` | String, default `''` | `lib/services/unsplash/unsplash_service.dart` | Enables the Unsplash background-photo search in group creation/editing (empty ⇒ feature silently disabled, returns no results) |
+
+If you add a new `--dart-define`, add a row here — this table is meant to be the single source of truth (see [Keeping This Documentation Current](MAINTAINING_DOCS.md)).
+
+## Google Play updates vs. F-Droid
+
+`ENABLE_PLAY_UPDATES` selects between `PlayStoreUpdateService` (real `in_app_update`-backed checks) and `NoOpUpdateService` (zero Google Play dependency) at the factory level in `play_store_updates` — see [package reference](PACKAGE_PLAY_STORE_UPDATES.md) for the mechanism. On web builds specifically, a conditional import forces the no-op implementation regardless of the flag.
+
+```bash
+# With Play Store update checks (staging/prod builds normally use this)
 flutter build apk --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=FLAVOR=prod --flavor prod --release
 
-# Oppure aggiungi ai launch configs in .vscode/launch.json
-```
-
-### Build senza Play Store Support (F-Droid)
-
-```bash
-# Senza il flag, usa implementazione no-op
+# Without (F-Droid-style build — no Google dependency reachable at runtime)
 flutter build apk --dart-define=FLAVOR=prod --flavor prod --release
 ```
 
-### Configurazione VS Code
+Note: `play_store_updates` is always a normal pubspec dependency of the root app — the "conditional" part is a runtime/compile-time code path, not conditional dependency resolution (see [Architecture Overview](ARCHITECTURE.md)).
 
-Aggiorna `.vscode/launch.json`:
+## Android home widget
 
-```json
-{
-  "name": "org_app_split (prod - Play Store)",
-  "request": "launch",
-  "type": "dart",
-  "args": [
-    "--dart-define=FLAVOR=prod",
-    "--dart-define=ENABLE_PLAY_UPDATES=true"
-  ]
-},
-{
-  "name": "org_app_split (prod - F-Droid)",
-  "request": "launch",
-  "type": "dart",
-  "args": [
-    "--dart-define=FLAVOR=prod"
-  ]
-}
-```
+`ENABLE_ANDROID_WIDGET` is read on both sides:
 
-### Come Funziona
-
-1. **UpdateServiceFactory** crea l'istanza appropriata basata sul flag `ENABLE_PLAY_UPDATES`
-2. Se `ENABLE_PLAY_UPDATES=true`:
-   - Usa `PlayStoreUpdateService` che wrappa il package `play_store_updates`
-   - Funzionalità completa di aggiornamento Google Play
-3. Se `ENABLE_PLAY_UPDATES=false` o non specificato:
-   - Usa `NoOpUpdateService` che non fa nulla
-   - Nessuna dipendenza da Google Play Services
-   - Ideale per F-Droid
-
-### Testing
+1. **Flutter**: `AppConfig.enableAndroidWidget` gates `PlatformHomeWidgetManager` (no-ops when `false`).
+2. **Native**: `android/app/build.gradle.kts` resolves the flag from (in order) the Gradle project property `enableAndroidWidget` → the `ENABLE_ANDROID_WIDGET` environment variable → default `true`, and emits it as `resValue("bool", "enable_android_widget", ...)`. `AndroidManifest.xml` uses `android:enabled="@bool/enable_android_widget"` on the widget's receiver and its configuration activity — when `false`, the widget doesn't even appear in Android's widget picker.
 
 ```bash
-# Test senza Play updates (dovrebbe compilare senza errori)
-flutter build apk --dart-define=FLAVOR=dev --flavor dev
-
-# Test con Play updates
-flutter build apk --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=FLAVOR=dev --flavor dev
-```
-
-### Vantaggi
-
-- ✅ Build F-Droid senza dipendenze Google
-- ✅ Stesso codice sorgente per entrambe le versioni
-- ✅ Nessun codice Play Store incluso nelle build F-Droid
-- ✅ Type-safe tramite interfacce comuni
-- ✅ Zero overhead quando disabilitato
-
-### Note Implementative
-
-- Il widget `UpdateCheckWidget` mostra sempre l'opzione ma è disabilitata quando non su Android
-- La funzione `checkAndShowUpdateIfNeeded()` viene chiamata all'avvio ma non fa nulla se gli updates sono disabilitati
-- Il logger adapter permette al package di usare il sistema di logging dell'app principale
-
-## Android Home Widget
-
-Il progetto supporta l'esclusione del widget Android tramite un flag di compilazione.
-
-### Build con Widget Android (default)
-
-```bash
-# Il widget è abilitato di default, non serve specificare il flag
-flutter build apk --dart-define=FLAVOR=prod --flavor prod --release
-```
-
-### Build senza Widget Android (CI/GitHub Workflows)
-
-```bash
-# Disabilita il widget Android
 flutter build apk --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=FLAVOR=prod --flavor prod --release
 ```
 
-### Come Funziona
+**Current CI always builds with `ENABLE_ANDROID_WIDGET=false`** (see [CI Pipelines](CI_PIPELINES.md)) — if you need to test the widget locally, build without that flag or explicitly pass `=true`.
 
-1. **AppConfig.enableAndroidWidget** legge il flag `ENABLE_ANDROID_WIDGET` (default: `true`)
-2. **PlatformHomeWidgetManager** controlla il flag prima di eseguire qualsiasi operazione widget
-3. **Android nativo**: il `build.gradle.kts` legge il flag dalla property Gradle o dalla variabile d'ambiente `ENABLE_ANDROID_WIDGET` e:
-   - Genera una risorsa booleana `@bool/enable_android_widget`
-   - Il `AndroidManifest.xml` usa `android:enabled="@bool/enable_android_widget"` su receiver e activity del widget
-4. Se `ENABLE_ANDROID_WIDGET=false`:
-   - Il widget non viene inizializzato lato Flutter
-   - Il receiver e l'activity nativa sono disabilitati nel manifest
-   - Il widget non appare nel picker di widget Android
+## See also
+
+- [Storage Backend § selecting a backend](STORAGE_BACKEND.md#selecting-a-backend-the-factory)
+- [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md)
+- [F-Droid Submission](FDROID_SUBMISSION.md)
+- [CI Pipelines](CI_PIPELINES.md)

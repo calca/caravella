@@ -116,6 +116,7 @@ For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Per
 - **GitHub Releases**: [Download APK](https://github.com/calca/caravella/releases)
 - **Google Play Store**: https://play.google.com/store/apps/details?id=io.caravella.egm
 - **F-Droid**: Coming soon (see [F-Droid Submission Guide](docs/FDROID_SUBMISSION.md) for details)
+- **Developer wiki**: see [docs/README.md](docs/README.md) for architecture and technical documentation
 - **Device Support**: Optimized for smartphones only (tablets not supported)
 
 ### iOS
