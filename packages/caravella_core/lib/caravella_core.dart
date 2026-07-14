@@ -22,7 +22,6 @@ export 'data/expense_group_repository_factory.dart';
 export 'data/expense_group_storage_v2.dart';
 export 'data/file_based_expense_group_repository.dart';
 export 'data/sqlite_expense_group_repository.dart';
-export 'data/storage_benchmark.dart';
 export 'data/storage_errors.dart';
 export 'data/storage_index.dart';
 export 'data/storage_migration_service.dart';

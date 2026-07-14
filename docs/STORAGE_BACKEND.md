@@ -38,7 +38,7 @@ attachments(id INTEGER PK AUTOINCREMENT, expense_id TEXT NOT NULL, file_path TEX
 
 Indexes: `idx_groups_timestamp(timestamp DESC)`, `idx_groups_pinned(pinned, archived)`, `idx_participants_group`, `idx_categories_group`, `idx_expenses_group`, `idx_expenses_date(date DESC)`.
 
-Views added in the v2 upgrade (`_upgradeDatabase`, `oldVersion < 2`): `v_group_totals`, `v_category_totals`, `v_participant_totals` — these exist in the schema but the current Dart code does **not** query them; the stat methods (`getTotalExpenses`, `getTodaySpending`, `getTotalExpenseCount`, `getRecentExpenses`) use raw SQL directly instead. If you add code that could use these views, verify they're still current with the schema before relying on them.
+The v2 upgrade previously created three aggregation views (`v_group_totals`, `v_category_totals`, `v_participant_totals`), but no Dart code ever queried them — the stat methods (`getTotalExpenses`, `getTodaySpending`, `getTotalExpenseCount`, `getRecentExpenses`) use raw SQL directly instead. They were removed from `_createDatabase`/`_upgradeDatabase` as dead schema; installs that already ran the v2 migration keep the (harmless, unused) views until they reinstall — `_databaseVersion` was not bumped since removing an unused view isn't a schema change existing installs need to react to.
 
 `saveGroup` runs inside a `db.transaction`: upserts the group row, then **deletes and re-inserts** all participants/categories/expenses/attachments for that group (no diffing). `updateGroupMetadata` instead diffs participant/category IDs (deletes only removed ones, `REPLACE`s the rest) while leaving expenses untouched — use `updateGroupMetadata` for metadata-only edits to avoid the expense-side churn of a full `saveGroup`.
 
@@ -105,7 +105,7 @@ flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=USE_JSON_BACKEND
 - **`storage_index.dart`** — `GroupIndex` (id map + pinned/archived/active sets, participant/category/currency/date-range lookups, title search, `validateConsistency()`) and `ExpenseIndex` (expenseId → `{groupId, expenseIndex}`); used only by the file-based repo.
 - **`storage_transaction.dart`** — `StorageTransaction`/`TransactionExecutor`/the `executeTransaction` extension: loads all groups, validates+applies a queued list of operations in memory (enforcing the single-pinned-group constraint), commits via one `saveAllGroups` (file backend) or a per-group `saveGroup` loop (fallback). Designed for the file backend; not exercised against SQLite's real transactions — be cautious extending this for SQLite-specific atomicity guarantees.
 - **`storage_performance.dart`** — `StoragePerformanceMonitor` (opt-in via `.enable()`, 1000-entry ring buffer) and the `PerformanceMonitoring` mixin (`measureOperation`/`measureSyncOperation`) both repositories use.
-- **`storage_benchmark.dart`** — `BenchmarkConfig`/`BenchmarkResult` (p50/p95/p99/stddev) for load-testing repositories; a dev/test utility, not used in production code paths.
+- **`test/storage_benchmark.dart`** — `BenchmarkConfig`/`BenchmarkResult` (p50/p95/p99/stddev) for load-testing repositories; lives under `packages/caravella_core/test/` (not `lib/`) since it's dev/test-only tooling, not part of the package's public API or production build.
 - **`storage_errors.dart`** — the `StorageError` hierarchy: `FileOperationError`, `SerializationError`, `ValidationError` (with a `fieldErrors` map), `EntityNotFoundError`, `DataIntegrityError`, `ConcurrentModificationError`, `MigrationError`, `NotFoundError`.
 
 ## Testing
