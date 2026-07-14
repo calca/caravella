@@ -74,6 +74,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     final all = List<Map<String, String>>.from(kCurrencies)
       ..sort((a, b) {
         final aName = localizedCurrencyName(l, a['code']!);
@@ -99,9 +100,10 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
               controller: _controller,
               autofocus: true,
               textInputAction: TextInputAction.search,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search_outlined),
+              decoration: FormTheme.getSearchPillDecoration(
+                backgroundColor: colorScheme.surface,
                 hintText: l.search_currency,
+                prefixIcon: const Icon(Icons.search_outlined),
                 suffixIcon: _query.isEmpty
                     ? null
                     : IconButton(
@@ -116,8 +118,6 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
                           });
                         },
                       ),
-                border: const OutlineInputBorder(),
-                isDense: true,
               ),
               onChanged: _onSearchChanged,
             ),

@@ -1,6 +1,6 @@
 # Privacy Policy for Caravella
 
-**Last updated: December 2024**
+**Last updated: July 2026**
 
 ## Overview
 
@@ -50,10 +50,18 @@ Caravella is a group expense management application that helps you track shared 
 
 ## Data Sharing
 
-### No Third-Party Sharing
-- We do not share, sell, or transfer your personal data to third parties
-- We do not use advertising networks or analytics services that track users
+### No Third-Party Sharing of Your Personal Data
+- We do not share, sell, or transfer your expense, participant, or group data to third parties
+- We do not use advertising networks or analytics/tracking services
 - We do not have access to your data as it remains on your device
+
+### Third-Party Services Used by Optional Features
+While your expense data itself is never transmitted anywhere, a small number of optional features make direct network requests from your device to third-party services. No account, expense, or participant data is included in these requests:
+- **OpenStreetMap (Nominatim)**: When you search for a location or use auto-location for an expense, the search text or GPS coordinates are sent to `nominatim.openstreetmap.org` to resolve place names/addresses. See the [Nominatim usage policy](https://operations.osmfoundation.org/policies/nominatim/).
+- **OpenStreetMap map tiles**: When you view the map, map tile images are fetched from `tile.openstreetmap.org`.
+- **Unsplash**: When you search for a background photo for a group, your search text is sent to `api.unsplash.com` to retrieve matching images. This feature is only available in builds configured with an Unsplash API key.
+
+These requests are only made when you actively use the corresponding feature (location search/auto-location, map view, or background photo search) and only contain the search text or coordinates needed to fulfill that request — never your expense records or participant names.
 
 ### User-Initiated Sharing
 - **Export Feature**: You can voluntarily export your data to share with others
@@ -110,7 +118,9 @@ For questions about this privacy policy or our data practices, please contact us
 - **Local Only**: No server-side data retention
 
 ### Third-Party Services
-- **Geocoding**: Google's geocoding service may be used for address resolution when location is enabled
+- **Geocoding & Place Search**: OpenStreetMap's Nominatim service is used for address resolution and place search when location features are used
+- **Map Tiles**: OpenStreetMap tile servers are used to render the in-app map
+- **Background Photos (optional)**: Unsplash's API is used for the optional group background photo search feature
 - **No Analytics**: No third-party analytics or tracking services are used
 
 This policy complies with GDPR, CCPA, and Google Play Store requirements for apps that collect personal data.

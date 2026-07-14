@@ -1029,6 +1029,8 @@
   ,"@voice_input_permission_denied": {"description": "Mensaje cuando el usuario deniega el permiso del micrófono"}
   ,"voice_input_not_available": "Reconocimiento de voz no disponible"
   ,"@voice_input_not_available": {"description": "Mensaje cuando el reconocimiento de voz no está disponible en el dispositivo"}
+  ,"voice_input_no_speech": "No he escuchado nada. Inténtalo de nuevo."
+  ,"@voice_input_no_speech": {"description": "Mensaje cuando el reconocimiento de voz no escucha nada o expira sin resultados"}
   ,"voice_input_hint": "Intenta decir: '50 euros para la cena en el restaurante'"
   ,"@voice_input_hint": {"description": "Sugerencia de ejemplo para usar la entrada de voz"}
   ,"voice_add_expense": "Añadir por voz"
@@ -1057,8 +1059,27 @@
   ,"@scanning_receipt": {"description": "Mensaje durante el escaneo OCR del recibo"}
   ,"receipt_scan_error": "Error al escanear el recibo"
   ,"@receipt_scan_error": {"description": "Mensaje de error cuando falla el escaneo OCR"}
+  ,"receipt_scan_permission_denied": "El acceso a la cámara o a las fotos está desactivado. Actívalo en los Ajustes del teléfono para escanear un recibo."
+  ,"@receipt_scan_permission_denied": {"description": "Mensaje de error cuando se deniega el permiso de cámara o galería"}
   ,"no_text_found": "No se encontró texto en la imagen"
   ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
   ,"receipt_scanned": "Recibo escaneado"
   ,"@receipt_scanned": {"description": "Mensaje de éxito después del escaneo OCR"}
+  ,"settings_group_templates_section_title": "Plantillas de tipo de grupo"
+  ,"settings_group_templates_section_desc": "Personaliza tus preajustes de tipo de grupo"
+  ,"settings_group_templates_manage_title": "Gestionar plantillas"
+  ,"settings_group_templates_manage_desc": "Crea, edita y elimina plantillas personalizadas"
+  ,"settings_group_templates_page_title": "Plantillas de tipo de grupo"
+  ,"settings_group_templates_empty_state": "Aún no hay plantillas"
+  ,"settings_group_templates_add_title": "Añadir plantilla"
+  ,"settings_group_templates_edit_title": "Editar plantilla"
+  ,"settings_group_templates_name_label": "Nombre de la plantilla"
+  ,"settings_group_templates_name_hint": "Introduce un nombre de plantilla"
+  ,"settings_group_templates_icon_label": "Icono"
+  ,"settings_group_templates_categories_label": "Categorías predeterminadas"
+  ,"settings_group_templates_category_hint": "Añadir una categoría"
+  ,"settings_group_templates_validation_error": "Se requiere nombre y al menos una categoría"
+  ,"settings_group_templates_delete_title": "Eliminar plantilla"
+  ,"settings_group_templates_delete_message": "¿Eliminar la plantilla \"{templateName}\"?"
+  ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
 }

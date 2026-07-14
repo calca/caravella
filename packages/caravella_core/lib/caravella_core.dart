@@ -11,6 +11,7 @@ export 'model/expense_details.dart';
 export 'model/expense_group.dart';
 export 'model/expense_group_color_palette.dart';
 export 'model/expense_group_type.dart';
+export 'model/group_type_template.dart';
 export 'model/expense_location.dart';
 export 'model/expense_participant.dart';
 export 'model/group_settlements.dart';
@@ -21,18 +22,17 @@ export 'data/expense_group_repository_factory.dart';
 export 'data/expense_group_storage_v2.dart';
 export 'data/file_based_expense_group_repository.dart';
 export 'data/sqlite_expense_group_repository.dart';
-export 'data/storage_benchmark.dart';
 export 'data/storage_errors.dart';
 export 'data/storage_index.dart';
 export 'data/storage_migration_service.dart';
 export 'data/storage_performance.dart';
-export 'data/storage_transaction.dart';
 
 // Services - Logging
 export 'services/logging/logger_service.dart';
 
 // Services - Storage
 export 'services/storage/preferences_service.dart';
+export 'services/storage/group_type_template_service.dart';
 export 'services/storage/attachments_storage_service.dart';
 
 // Services - User Feedback

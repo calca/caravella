@@ -98,7 +98,6 @@ class ExpenseFormFields extends StatelessWidget {
           },
           onSaved: (v) {},
           onSubmitted: onSaveExpense,
-          textStyle: style,
           enabled: !isReadOnly,
         ),
         controller.isAmountValid,
@@ -137,7 +136,7 @@ class ExpenseFormFields extends StatelessWidget {
           enabled: !isReadOnly,
         ),
         controller.isNameValid,
-        controller.amountTouched,
+        controller.nameTouched,
       ),
     );
   }

@@ -994,6 +994,8 @@
   ,"@voice_input_permission_denied": {"description": "Mensagem quando o usuário nega a permissão do microfone"}
   ,"voice_input_not_available": "Reconhecimento de voz não disponível"
   ,"@voice_input_not_available": {"description": "Mensagem quando o reconhecimento de voz não está disponível no dispositivo"}
+  ,"voice_input_no_speech": "Não ouvi nada. Tente novamente."
+  ,"@voice_input_no_speech": {"description": "Mensagem quando o reconhecimento de voz não ouve nada ou expira sem resultados"}
   ,"voice_input_hint": "Tente dizer: '50 reais para o jantar no restaurante'"
   ,"@voice_input_hint": {"description": "Dica de exemplo para usar a entrada de voz"}
   ,"voice_add_expense": "Adicionar por voz"
@@ -1022,8 +1024,27 @@
   ,"@scanning_receipt": {"description": "Mensagem durante o escaneamento OCR do recibo"}
   ,"receipt_scan_error": "Erro ao escanear recibo"
   ,"@receipt_scan_error": {"description": "Mensagem de erro quando o escaneamento OCR falha"}
+  ,"receipt_scan_permission_denied": "O acesso à câmera ou às fotos está desativado. Ative-o nas Configurações do telefone para escanear um recibo."
+  ,"@receipt_scan_permission_denied": {"description": "Mensagem de erro quando a permissão de câmera ou galeria é negada"}
   ,"no_text_found": "Nenhum texto encontrado na imagem"
   ,"@no_text_found": {"description": "Mensagem quando o OCR não encontra texto na imagem"}
   ,"receipt_scanned": "Recibo escaneado"
   ,"@receipt_scanned": {"description": "Mensagem de sucesso após o escaneamento OCR"}
+  ,"settings_group_templates_section_title": "Modelos de tipo de grupo"
+  ,"settings_group_templates_section_desc": "Personalize seus modelos de tipo de grupo"
+  ,"settings_group_templates_manage_title": "Gerenciar modelos"
+  ,"settings_group_templates_manage_desc": "Crie, edite e exclua modelos personalizados"
+  ,"settings_group_templates_page_title": "Modelos de tipo de grupo"
+  ,"settings_group_templates_empty_state": "Nenhum modelo ainda"
+  ,"settings_group_templates_add_title": "Adicionar modelo"
+  ,"settings_group_templates_edit_title": "Editar modelo"
+  ,"settings_group_templates_name_label": "Nome do modelo"
+  ,"settings_group_templates_name_hint": "Digite um nome para o modelo"
+  ,"settings_group_templates_icon_label": "Ícone"
+  ,"settings_group_templates_categories_label": "Categorias padrão"
+  ,"settings_group_templates_category_hint": "Adicionar uma categoria"
+  ,"settings_group_templates_validation_error": "Nome e pelo menos uma categoria são obrigatórios"
+  ,"settings_group_templates_delete_title": "Excluir modelo"
+  ,"settings_group_templates_delete_message": "Excluir o modelo \"{templateName}\"?"
+  ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
 }

@@ -9,6 +9,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
+import '../group_type/group_type_selector_sheet.dart';
 import '../widgets/group_name_with_icon_field.dart';
 import '../widgets/selection_tile.dart';
 import '../widgets/period_section_editor.dart';
@@ -103,58 +104,6 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
     }
   }
 
-  Future<DateTime?> _pickDate(BuildContext context, bool isStart) async {
-    final gloc = gen.AppLocalizations.of(context);
-    final now = DateTime.now();
-    final firstDate = DateTime(now.year - 5);
-    final lastDate = DateTime(now.year + 5);
-    DateTime? initialDate = isStart
-        ? (_state.startDate ?? now)
-        : (_state.endDate ?? now);
-    bool isSelectable(DateTime d) {
-      if (isStart && _state.endDate != null) {
-        return !d.isAfter(_state.endDate!);
-      }
-      if (!isStart && _state.startDate != null) {
-        return !d.isBefore(_state.startDate!);
-      }
-      return true;
-    }
-
-    if (!isSelectable(initialDate)) {
-      DateTime candidate = isStart ? lastDate : firstDate;
-      while (!isSelectable(candidate)) {
-        candidate = isStart
-            ? candidate.subtract(const Duration(days: 1))
-            : candidate.add(const Duration(days: 1));
-        if (candidate.isBefore(firstDate) || candidate.isAfter(lastDate)) {
-          candidate = now;
-          break;
-        }
-      }
-      initialDate = candidate;
-    }
-
-    final picked = await showDatePicker(
-      context: context,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      initialDate: initialDate,
-      selectableDayPredicate: isSelectable,
-      helpText: isStart ? gloc.start_date_optional : gloc.end_date_optional,
-    );
-
-    if (picked != null) {
-      if (isStart) {
-        _state.setStartDate(picked);
-      } else {
-        _state.setEndDate(picked);
-      }
-      _validateDates();
-    }
-    return picked;
-  }
-
   void _clearDates() {
     _state.clearDates();
     _validateDates();
@@ -184,110 +133,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
   }
 
   void _showGroupTypeSelector(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    final controller = context.read<GroupFormController>();
-    final currentType = context.read<GroupFormState>().groupType;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => GroupBottomSheetScaffold(
-        title: gloc.group_type,
-        scrollable: false,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ...ExpenseGroupType.values.map((type) {
-              final isSelected = currentType == type;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: SelectionTile(
-                  leading: Icon(
-                    type.icon,
-                    size: 24,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface,
-                  ),
-                  title: _getGroupTypeName(gloc, type),
-                  trailing: isSelected
-                      ? Icon(
-                          Icons.check_circle,
-                          size: 24,
-                          color: Theme.of(context).colorScheme.primary,
-                        )
-                      : null,
-                  onTap: () {
-                    controller.setGroupType(
-                      isSelected ? null : type,
-                      autoPopulateCategories: !isSelected,
-                      defaultCategoryNames: !isSelected
-                          ? _getLocalizedCategories(gloc, type)
-                          : null,
-                      previousTypeCategoryNames: currentType != null
-                          ? _getLocalizedCategories(gloc, currentType)
-                          : null,
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  borderRadius: 8,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 12,
-                  ),
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getGroupTypeName(gen.AppLocalizations gloc, ExpenseGroupType type) {
-    switch (type) {
-      case ExpenseGroupType.travel:
-        return gloc.group_type_travel;
-      case ExpenseGroupType.personal:
-        return gloc.group_type_personal;
-      case ExpenseGroupType.family:
-        return gloc.group_type_family;
-      case ExpenseGroupType.other:
-        return gloc.group_type_other;
-    }
-  }
-
-  List<String> _getLocalizedCategories(
-    gen.AppLocalizations gloc,
-    ExpenseGroupType type,
-  ) {
-    switch (type) {
-      case ExpenseGroupType.travel:
-        return [
-          gloc.category_travel_transport,
-          gloc.category_travel_accommodation,
-          gloc.category_travel_restaurants,
-        ];
-      case ExpenseGroupType.personal:
-        return [
-          gloc.category_personal_shopping,
-          gloc.category_personal_health,
-          gloc.category_personal_entertainment,
-        ];
-      case ExpenseGroupType.family:
-        return [
-          gloc.category_family_groceries,
-          gloc.category_family_home,
-          gloc.category_family_bills,
-        ];
-      case ExpenseGroupType.other:
-        return [
-          gloc.category_other_misc,
-          gloc.category_other_utilities,
-          gloc.category_other_services,
-        ];
-    }
+    showGroupTypeSelectorSheet(context);
   }
 
   Widget _buildGeneralContent(BuildContext context) {
@@ -326,7 +172,6 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
           const SizedBox(height: 24),
           // Periodo
           PeriodSectionEditor(
-            onPickDate: (isStart) async => _pickDate(context, isStart),
             onClearDates: _clearDates,
             errorText: _dateError,
           ),
@@ -432,7 +277,12 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                   ExpenseGroupStorageV2.forceReload();
                   try {
                     notifier?.notifyGroupUpdated(saved.id);
-                  } catch (_) {}
+                  } catch (e) {
+                    LoggerService.warning(
+                      'Failed to notify group updated after save: $e',
+                      name: 'manager.group',
+                    );
+                  }
 
                   if (saved.notificationEnabled && context.mounted) {
                     await NotificationManager().updateNotificationForGroup(

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'app_toast.dart';
+import '../themes/form_theme.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports inline add-item action shown within the sheet.
@@ -269,8 +270,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
                 controller: _inlineController,
                 focusNode: _inlineFocus,
                 autofocus: true,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
+                decoration: FormTheme.getBorderlessDecoration(
                   hintText: widget.addItemHint,
                 ),
                 textInputAction: TextInputAction.done,

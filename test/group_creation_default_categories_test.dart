@@ -132,5 +132,64 @@ void main() {
       expect(state.categories[1].name, 'Utilities');
       expect(state.categories[2].name, 'Services');
     });
+
+    test('applies custom template categories in CREATE mode', () {
+      final state = GroupFormState();
+      final controller = GroupFormController(state, GroupEditMode.create);
+      state.setGroupType(ExpenseGroupType.personal);
+      controller.initializeDefaultCategories(['Shopping', 'Health', 'Entertainment']);
+
+      controller.applyCustomTemplate(
+        templateId: 'custom-1',
+        iconCodePoint: 0xe3af,
+        templateCategoryNames: ['Fuel', 'Food'],
+        previousTypeCategoryNames: ['Shopping', 'Health', 'Entertainment'],
+      );
+
+      expect(state.groupType, isNull);
+      expect(state.customTemplateId, 'custom-1');
+      expect(state.categories.map((c) => c.name).toList(), ['Fuel', 'Food']);
+    });
+
+    test('does not change categories for custom template in EDIT mode', () {
+      final state = GroupFormState();
+      state.addCategory(ExpenseCategory(name: 'Existing'));
+      final controller = GroupFormController(state, GroupEditMode.edit);
+
+      controller.applyCustomTemplate(
+        templateId: 'custom-1',
+        iconCodePoint: 0xe3af,
+        templateCategoryNames: ['Fuel', 'Food'],
+      );
+
+      expect(state.groupType, isNull);
+      expect(state.customTemplateId, 'custom-1');
+      expect(state.categories.length, 1);
+      expect(state.categories.first.name, 'Existing');
+    });
+
+    test('replaces previous custom template categories when selecting built-in', () {
+      final state = GroupFormState();
+      final controller = GroupFormController(state, GroupEditMode.create);
+
+      controller.applyCustomTemplate(
+        templateId: 'custom-1',
+        iconCodePoint: 0xe3af,
+        templateCategoryNames: ['Fuel', 'Food'],
+      );
+
+      controller.setGroupType(
+        ExpenseGroupType.travel,
+        defaultCategoryNames: ['Transport', 'Accommodation', 'Restaurants'],
+        previousTypeCategoryNames: ['Fuel', 'Food'],
+      );
+
+      expect(state.groupType, ExpenseGroupType.travel);
+      expect(state.customTemplateId, isNull);
+      expect(
+        state.categories.map((category) => category.name).toList(),
+        ['Transport', 'Accommodation', 'Restaurants'],
+      );
+    });
   });
 }

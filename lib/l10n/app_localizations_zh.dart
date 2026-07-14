@@ -2263,6 +2263,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voice_input_not_available => '语音识别不可用';
 
   @override
+  String get voice_input_no_speech => '没有听到任何内容，请重试。';
+
+  @override
   String get voice_input_hint => '尝试说：\'50元晚餐\'';
 
   @override
@@ -2305,8 +2308,61 @@ class AppLocalizationsZh extends AppLocalizations {
   String get receipt_scan_error => '扫描收据时出错';
 
   @override
+  String get receipt_scan_permission_denied => '相机或照片访问权限已关闭。请在手机设置中启用它以扫描收据。';
+
+  @override
   String get no_text_found => '图像中未找到文本';
 
   @override
   String get receipt_scanned => '收据已扫描';
+
+  @override
+  String get settings_group_templates_section_title => '分组类型模板';
+
+  @override
+  String get settings_group_templates_section_desc => '自定义分组类型预设';
+
+  @override
+  String get settings_group_templates_manage_title => '管理模板';
+
+  @override
+  String get settings_group_templates_manage_desc => '创建、编辑和删除自定义模板';
+
+  @override
+  String get settings_group_templates_page_title => '分组类型模板';
+
+  @override
+  String get settings_group_templates_empty_state => '暂无模板';
+
+  @override
+  String get settings_group_templates_add_title => '新增模板';
+
+  @override
+  String get settings_group_templates_edit_title => '编辑模板';
+
+  @override
+  String get settings_group_templates_name_label => '模板名称';
+
+  @override
+  String get settings_group_templates_name_hint => '输入模板名称';
+
+  @override
+  String get settings_group_templates_icon_label => '图标';
+
+  @override
+  String get settings_group_templates_categories_label => '默认分类';
+
+  @override
+  String get settings_group_templates_category_hint => '添加分类';
+
+  @override
+  String get settings_group_templates_validation_error => '必须填写名称且至少添加一个分类';
+
+  @override
+  String get settings_group_templates_delete_title => '删除模板';
+
+  @override
+  String settings_group_templates_delete_message(String templateName) {
+    return '删除模板“$templateName”？';
+  }
 }

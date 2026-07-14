@@ -86,10 +86,14 @@ class _EditableNameListState extends State<EditableNameList> {
   void _saveEdit() {
     final val = _editController.text.trim();
     if (val.isEmpty || _editingIndex == null) return;
-    // Prevent duplicates (case-insensitive) except when unchanged
+    // Prevent duplicates (case-insensitive) against other items, excluding
+    // the item being edited itself (so re-saving with just a case change,
+    // e.g. "Mario" -> "mario", isn't flagged as colliding with itself).
     final lower = val.toLowerCase();
-    final unchanged = val == widget.items[_editingIndex!];
-    if (!unchanged && widget.items.any((e) => e.toLowerCase() == lower)) {
+    final duplicate = widget.items.asMap().entries.any(
+      (entry) => entry.key != _editingIndex && entry.value.toLowerCase() == lower,
+    );
+    if (duplicate) {
       AppToast.show(context, widget.duplicateError, type: ToastType.info);
       return;
     }
@@ -194,8 +198,7 @@ class _EditableNameListState extends State<EditableNameList> {
                   controller: _editController,
                   focusNode: _editFocus,
                   autofocus: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
+                  decoration: FormTheme.getBorderlessDecoration(
                     hintText: widget.hintLabel,
                   ),
                   textInputAction: TextInputAction.done,
@@ -236,8 +239,7 @@ class _EditableNameListState extends State<EditableNameList> {
                   controller: _addController,
                   focusNode: _addFocus,
                   autofocus: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
+                  decoration: FormTheme.getBorderlessDecoration(
                     hintText: widget.hintLabel,
                   ),
                   textInputAction: TextInputAction.done,

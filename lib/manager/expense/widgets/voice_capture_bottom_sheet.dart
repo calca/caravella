@@ -45,6 +45,7 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
   final VoiceInputService _voiceService = VoiceInputService();
   bool _isListening = false;
   bool _isProcessing = false;
+  VoiceInputError? _lastError;
   late final AnimationController _pulseController;
 
   @override
@@ -87,6 +88,7 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
     setState(() {
       _isListening = true;
       _isProcessing = false;
+      _lastError = null;
     });
     _pulseController.repeat(reverse: true);
 
@@ -117,6 +119,18 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
         setState(() {
           _isListening = false;
           _isProcessing = false;
+          _lastError = error;
+        });
+      },
+      onDone: () {
+        // Safety net: the session ended without ever calling onResult or
+        // onError (rare platform edge case). Return to idle instead of
+        // leaving the mic pulsing forever.
+        if (!mounted) return;
+        _pulseController.stop();
+        setState(() {
+          _isListening = false;
+          _isProcessing = false;
         });
       },
     );
@@ -127,10 +141,26 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
     if (mounted) Navigator.of(context).pop();
   }
 
+  String _statusText(gen.AppLocalizations gloc) {
+    switch (_lastError) {
+      case VoiceInputError.notAvailable:
+        return gloc.voice_input_not_available;
+      case VoiceInputError.permissionDenied:
+        return gloc.voice_input_permission_denied;
+      case VoiceInputError.noSpeech:
+        return gloc.voice_input_no_speech;
+      case VoiceInputError.recognitionFailed:
+        return gloc.voice_input_error;
+      case null:
+        return _isListening ? gloc.voice_input_listening : gloc.voice_input_hint;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
+    final hasError = _lastError != null;
 
     return GroupBottomSheetScaffold(
       title: gloc.voice_input_button,
@@ -138,16 +168,22 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 16),
-          Center(child: _buildMicButton(colorScheme)),
+          Center(child: _buildMicButton(colorScheme, gloc)),
           const SizedBox(height: 20),
           Center(
-            child: Text(
-              _isListening ? gloc.voice_input_listening : gloc.voice_input_hint,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontStyle: FontStyle.italic,
+            child: Semantics(
+              liveRegion: true,
+              child: Text(
+                _statusText(gloc),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: hasError
+                      ? colorScheme.error
+                      : colorScheme.onSurfaceVariant,
+                  fontStyle: hasError ? FontStyle.normal : FontStyle.italic,
+                  fontWeight: hasError ? FontWeight.w600 : FontWeight.normal,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 24),
@@ -162,57 +198,80 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
     );
   }
 
-  Widget _buildMicButton(ColorScheme colorScheme) {
+  Widget _buildMicButton(ColorScheme colorScheme, gen.AppLocalizations gloc) {
     if (_isProcessing) {
-      return SizedBox(
-        width: 72,
-        height: 72,
-        child: CircularProgressIndicator(
-          strokeWidth: 3,
-          valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+      return Semantics(
+        label: gloc.voice_input_processing,
+        child: SizedBox(
+          width: 72,
+          height: 72,
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+            valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+          ),
         ),
       );
     }
 
-    return AnimatedBuilder(
-      animation: _pulseController,
-      builder: (context, _) {
-        final scale = _isListening
-            ? (0.95 + _pulseController.value * 0.1)
-            : 1.0;
-        return GestureDetector(
-          onTap: _isProcessing ? null : _toggleListening,
-          child: Transform.scale(
-            scale: scale,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _isListening
-                    ? colorScheme.primaryContainer
-                    : colorScheme.surfaceContainerHighest,
-                boxShadow: _isListening
-                    ? [
-                        BoxShadow(
-                          color: colorScheme.primary.withValues(alpha: 0.3),
-                          blurRadius: 16 + _pulseController.value * 8,
-                          spreadRadius: 2 + _pulseController.value * 4,
-                        ),
-                      ]
-                    : null,
+    final hasError = _lastError != null;
+
+    return Semantics(
+      button: true,
+      label: gloc.voice_input_button,
+      value: _isListening ? gloc.voice_input_listening : gloc.voice_input_tap_to_speak,
+      onTap: _toggleListening,
+      child: ExcludeSemantics(
+        child: AnimatedBuilder(
+          animation: _pulseController,
+          builder: (context, _) {
+            final scale = _isListening
+                ? (0.95 + _pulseController.value * 0.1)
+                : 1.0;
+            return GestureDetector(
+              onTap: _toggleListening,
+              child: Transform.scale(
+                scale: scale,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _isListening
+                        ? colorScheme.primaryContainer
+                        : hasError
+                        ? colorScheme.errorContainer
+                        : colorScheme.surfaceContainerHighest,
+                    boxShadow: _isListening
+                        ? [
+                            BoxShadow(
+                              color: colorScheme.primary.withValues(
+                                alpha: 0.3,
+                              ),
+                              blurRadius: 16 + _pulseController.value * 8,
+                              spreadRadius: 2 + _pulseController.value * 4,
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Icon(
+                    _isListening
+                        ? Icons.mic
+                        : hasError
+                        ? Icons.mic_off_outlined
+                        : Icons.mic_none,
+                    size: 36,
+                    color: _isListening
+                        ? colorScheme.onPrimaryContainer
+                        : hasError
+                        ? colorScheme.onErrorContainer
+                        : colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
-              child: Icon(
-                _isListening ? Icons.mic : Icons.mic_none,
-                size: 36,
-                color: _isListening
-                    ? colorScheme.onPrimaryContainer
-                    : colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 }

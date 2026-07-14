@@ -4457,6 +4457,12 @@ abstract class AppLocalizations {
   /// **'Voice recognition not available'**
   String get voice_input_not_available;
 
+  /// Message when voice recognition heard nothing or timed out with no match
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t catch that. Try again.'**
+  String get voice_input_no_speech;
+
   /// Example hint for using voice input
   ///
   /// In en, this message translates to:
@@ -4541,6 +4547,12 @@ abstract class AppLocalizations {
   /// **'Error scanning receipt'**
   String get receipt_scan_error;
 
+  /// Error message when camera or photo library permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Camera or photo access is off. Enable it in your phone\'s Settings to scan a receipt.'**
+  String get receipt_scan_permission_denied;
+
   /// Message when OCR finds no text in the image
   ///
   /// In en, this message translates to:
@@ -4552,6 +4564,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Receipt scanned'**
   String get receipt_scanned;
+
+  /// No description provided for @settings_group_templates_section_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Group type templates'**
+  String get settings_group_templates_section_title;
+
+  /// No description provided for @settings_group_templates_section_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your group type presets'**
+  String get settings_group_templates_section_desc;
+
+  /// No description provided for @settings_group_templates_manage_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage templates'**
+  String get settings_group_templates_manage_title;
+
+  /// No description provided for @settings_group_templates_manage_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create, edit, and delete custom templates'**
+  String get settings_group_templates_manage_desc;
+
+  /// No description provided for @settings_group_templates_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Group type templates'**
+  String get settings_group_templates_page_title;
+
+  /// No description provided for @settings_group_templates_empty_state.
+  ///
+  /// In en, this message translates to:
+  /// **'No templates yet'**
+  String get settings_group_templates_empty_state;
+
+  /// No description provided for @settings_group_templates_add_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add template'**
+  String get settings_group_templates_add_title;
+
+  /// No description provided for @settings_group_templates_edit_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit template'**
+  String get settings_group_templates_edit_title;
+
+  /// No description provided for @settings_group_templates_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Template name'**
+  String get settings_group_templates_name_label;
+
+  /// No description provided for @settings_group_templates_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a template name'**
+  String get settings_group_templates_name_hint;
+
+  /// No description provided for @settings_group_templates_icon_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get settings_group_templates_icon_label;
+
+  /// No description provided for @settings_group_templates_categories_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Default categories'**
+  String get settings_group_templates_categories_label;
+
+  /// No description provided for @settings_group_templates_category_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a category'**
+  String get settings_group_templates_category_hint;
+
+  /// No description provided for @settings_group_templates_validation_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Name and at least one category are required'**
+  String get settings_group_templates_validation_error;
+
+  /// No description provided for @settings_group_templates_delete_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete template'**
+  String get settings_group_templates_delete_title;
+
+  /// No description provided for @settings_group_templates_delete_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete template \"{templateName}\"?'**
+  String settings_group_templates_delete_message(String templateName);
 }
 
 class _AppLocalizationsDelegate

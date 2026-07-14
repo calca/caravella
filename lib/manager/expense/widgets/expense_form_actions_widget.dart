@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class ExpenseFormActionsWidget extends StatelessWidget {
@@ -10,7 +11,9 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   final bool
   showExpandButton; // When true shows an expand button (only in add/compact mode)
   final VoidCallback? onExpand;
-  final VoidCallback? onScanReceipt; // Scan receipt with OCR
+  final VoidCallback? onScanReceipt; // Scan receipt with OCR — tap opens the camera directly
+  final VoidCallback?
+  onScanReceiptFromGallery; // Long-press (or the "from gallery" custom action) picks an existing photo instead
   final bool showVoiceButton;
   final VoidCallback? onVoiceTap;
 
@@ -24,6 +27,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     this.showExpandButton = false,
     this.onExpand,
     this.onScanReceipt,
+    this.onScanReceiptFromGallery,
     this.showVoiceButton = false,
     this.onVoiceTap,
   });
@@ -43,18 +47,6 @@ class ExpenseFormActionsWidget extends StatelessWidget {
 
     final leftButtons = <Widget>[];
 
-    // Add scan receipt button (only in add mode, not edit mode)
-    if (!isEdit && onScanReceipt != null) {
-      leftButtons.add(
-        IconButton(
-          tooltip: gloc.scan_receipt,
-          onPressed: onScanReceipt,
-          icon: const Icon(Icons.document_scanner_outlined, size: 24),
-          style: iconButtonStyle,
-        ),
-      );
-    }
-
     // Mic — leftmost
     if (showVoiceButton && onVoiceTap != null) {
       leftButtons.add(
@@ -63,6 +55,44 @@ class ExpenseFormActionsWidget extends StatelessWidget {
           onPressed: onVoiceTap,
           icon: const Icon(Icons.mic_none, size: 24),
           style: iconButtonStyle,
+        ),
+      );
+    }
+
+    // Add scan receipt button (only in add mode, not edit mode).
+    // Tap opens the camera directly (the common case, right after paying);
+    // long-press — or the equivalent screen-reader custom action — picks an
+    // existing photo instead, without going through an extra chooser sheet.
+    if (!isEdit && onScanReceipt != null) {
+      final scanFromGallery = onScanReceiptFromGallery;
+      leftButtons.add(
+        Semantics(
+          button: true,
+          label: gloc.scan_receipt,
+          customSemanticsActions: scanFromGallery != null
+              ? {CustomSemanticsAction(label: gloc.from_gallery): scanFromGallery}
+              : const {},
+          child: Tooltip(
+            message: gloc.scan_receipt,
+            child: Material(
+              color: colorScheme.surfaceContainerHighest,
+              shape: const CircleBorder(),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: onScanReceipt,
+                onLongPress: onScanReceiptFromGallery,
+                child: SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: Icon(
+                    Icons.document_scanner_outlined,
+                    size: 24,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       );
     }
@@ -109,26 +139,31 @@ class ExpenseFormActionsWidget extends StatelessWidget {
         ...leftChildren,
         if (leftChildren.isNotEmpty) const SizedBox(width: 8),
         const Spacer(),
-        // Aggiungi / Save — same background and height as icon buttons
-        TextButton(
+        // Aggiungi / Save — filled when valid, muted when invalid
+        FilledButton(
           onPressed: onSave,
-          style: TextButton.styleFrom(
-            backgroundColor: colorScheme.surfaceContainerHighest,
-            foregroundColor: colorScheme.onSurfaceVariant,
+          style: FilledButton.styleFrom(
+            backgroundColor: isFormValid
+                ? colorScheme.primary
+                : colorScheme.surfaceContainerHighest,
+            foregroundColor: isFormValid
+                ? colorScheme.onPrimary
+                : colorScheme.onSurfaceVariant,
+            elevation: 0,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             minimumSize: const Size(48, 48),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(16),
             ),
           ),
           child: Text(
             isEdit ? gloc.save.toUpperCase() : gloc.add.toUpperCase(),
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: isFormValid
+                  ? colorScheme.onPrimary
+                  : colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
-              color: isFormValid
-                  ? colorScheme.primary
-                  : colorScheme.onSurface.withValues(alpha: 0.8),
             ),
             overflow: TextOverflow.ellipsis,
           ),

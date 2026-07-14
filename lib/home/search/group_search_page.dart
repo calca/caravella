@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../manager/history/widgets/swipeable_expense_group_card.dart';
 
@@ -16,9 +17,9 @@ class GroupSearchPage extends StatefulWidget {
 
   /// Pushes [GroupSearchPage] on the navigator stack.
   static Future<void> show(BuildContext context) {
-    return Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const GroupSearchPage()),
-    );
+    return Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const GroupSearchPage()));
   }
 
   @override
@@ -80,9 +81,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
   List<ExpenseGroup> _applyFilter(List<ExpenseGroup> groups) {
     if (_searchQuery.isEmpty) return groups;
     final query = _searchQuery.toLowerCase();
-    return groups
-        .where((g) => g.title.toLowerCase().contains(query))
-        .toList();
+    return groups.where((g) => g.title.toLowerCase().contains(query)).toList();
   }
 
   void _onSearchChanged(String value) {
@@ -106,7 +105,8 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final appBarColor = colorScheme.surfaceContainerHighest;
+    final appBarColor = FormTheme.getGmailAppBarSearchBackground(colorScheme);
+    final searchBackgroundColor = appBarColor;
 
     return Scaffold(
       appBar: AppBar(
@@ -117,8 +117,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
         titleSpacing: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              isDark ? Brightness.light : Brightness.dark,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
           statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
         ),
         title: Padding(
@@ -128,7 +127,8 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
             focusNode: _searchFocusNode,
             autofocus: true,
             style: Theme.of(context).textTheme.bodyLarge,
-            decoration: InputDecoration(
+            decoration: FormTheme.getSearchPillDecoration(
+              backgroundColor: searchBackgroundColor,
               hintText: gloc.search_groups,
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
@@ -139,25 +139,6 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
                       },
                     )
                   : null,
-              filled: true,
-              fillColor: appBarColor,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 0,
-              ),
-              isDense: false,
             ),
             onChanged: _onSearchChanged,
             cursorColor: colorScheme.onSurface,
@@ -185,10 +166,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
     );
   }
 
-  Widget _buildEmptyState(
-    gen.AppLocalizations gloc,
-    ColorScheme colorScheme,
-  ) {
+  Widget _buildEmptyState(gen.AppLocalizations gloc, ColorScheme colorScheme) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),

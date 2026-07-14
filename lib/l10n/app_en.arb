@@ -1051,6 +1051,8 @@
   ,"@voice_input_permission_denied": {"description": "Message when user denies microphone permission"}
   ,"voice_input_not_available": "Voice recognition not available"
   ,"@voice_input_not_available": {"description": "Message when voice recognition is not available on the device"}
+  ,"voice_input_no_speech": "I didn't catch that. Try again."
+  ,"@voice_input_no_speech": {"description": "Message when voice recognition heard nothing or timed out with no match"}
   ,"voice_input_hint": "Try saying: '50 dollars for dinner at restaurant'"
   ,"@voice_input_hint": {"description": "Example hint for using voice input"}
   ,"voice_add_expense": "Add by voice"
@@ -1079,8 +1081,27 @@
   ,"@scanning_receipt": {"description": "Message during OCR receipt scanning"}
   ,"receipt_scan_error": "Error scanning receipt"
   ,"@receipt_scan_error": {"description": "Error message when OCR scanning fails"}
+  ,"receipt_scan_permission_denied": "Camera or photo access is off. Enable it in your phone's Settings to scan a receipt."
+  ,"@receipt_scan_permission_denied": {"description": "Error message when camera or photo library permission is denied"}
   ,"no_text_found": "No text found in image"
   ,"@no_text_found": {"description": "Message when OCR finds no text in the image"}
   ,"receipt_scanned": "Receipt scanned"
   ,"@receipt_scanned": {"description": "Success message after OCR scanning"}
+  ,"settings_group_templates_section_title": "Group type templates"
+  ,"settings_group_templates_section_desc": "Customize your group type presets"
+  ,"settings_group_templates_manage_title": "Manage templates"
+  ,"settings_group_templates_manage_desc": "Create, edit, and delete custom templates"
+  ,"settings_group_templates_page_title": "Group type templates"
+  ,"settings_group_templates_empty_state": "No templates yet"
+  ,"settings_group_templates_add_title": "Add template"
+  ,"settings_group_templates_edit_title": "Edit template"
+  ,"settings_group_templates_name_label": "Template name"
+  ,"settings_group_templates_name_hint": "Enter a template name"
+  ,"settings_group_templates_icon_label": "Icon"
+  ,"settings_group_templates_categories_label": "Default categories"
+  ,"settings_group_templates_category_hint": "Add a category"
+  ,"settings_group_templates_validation_error": "Name and at least one category are required"
+  ,"settings_group_templates_delete_title": "Delete template"
+  ,"settings_group_templates_delete_message": "Delete template \"{templateName}\"?"
+  ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
 }

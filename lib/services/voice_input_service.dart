@@ -1,22 +1,50 @@
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:caravella_core/caravella_core.dart';
+
+/// Reasons a voice-input session can fail to produce a result, surfaced to
+/// the UI so it can show an actionable, specific message instead of a
+/// generic "something went wrong".
+enum VoiceInputError {
+  /// The recognizer could not be initialized on this device at all.
+  notAvailable,
+
+  /// The OS denied microphone permission (or it was revoked mid-session).
+  permissionDenied,
+
+  /// The recognizer listened but heard nothing / timed out with no match.
+  noSpeech,
+
+  /// Any other recognition failure (network, server, client, etc.).
+  recognitionFailed,
+}
 
 /// Service to handle voice input and speech recognition.
 ///
 /// Supports all 5 app locales: IT, EN, ES, PT, ZH.
+///
+/// [stt.SpeechToText] is a singleton under the hood (its `initialize()` call
+/// only ever wires up `onError`/`onStatus` once, the first time it succeeds,
+/// regardless of which [VoiceInputService] instance triggered it). The error
+/// and completion callbacks below are therefore tracked as static state,
+/// always pointing at whichever call to [startListening] is currently in
+/// flight, so every screen that creates its own [VoiceInputService] still
+/// gets its own errors routed back correctly.
 class VoiceInputService {
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isInitialized = false;
   bool _isListening = false;
 
+  static void Function(VoiceInputError error)? _activeOnError;
+  static void Function()? _activeOnDone;
+  static bool _sessionResolved = true;
+
   /// Check if voice recognition is available
   Future<bool> isAvailable() async {
     if (!_isInitialized) {
       _isInitialized = await _speech.initialize(
-        onError: (error) => LoggerService.warning(
-          'Speech recognition error: $error',
-          name: 'voice_input',
-        ),
+        onError: _dispatchError,
+        onStatus: _dispatchStatus,
       );
     }
     return _isInitialized;
@@ -25,26 +53,42 @@ class VoiceInputService {
   /// Check if currently listening
   bool get isListening => _isListening;
 
-  /// Start listening for voice input
+  /// Start listening for voice input.
+  ///
+  /// [onError] is called with a specific [VoiceInputError] reason so the
+  /// caller can show a message that actually matches what happened
+  /// (permission denied vs. no speech detected vs. a real failure).
+  ///
+  /// [onDone] is an optional safety net: it fires if the recognizer session
+  /// ends without ever calling [onResult] or [onError] (a rare platform
+  /// edge case), so the UI never gets stuck showing "listening…" forever.
   Future<void> startListening({
     required Function(String) onResult,
-    required Function(String) onError,
+    required void Function(VoiceInputError error) onError,
+    void Function()? onDone,
     String? localeId,
   }) async {
     if (!_isInitialized) {
       final available = await isAvailable();
       if (!available) {
-        onError('Voice recognition not available');
+        onError(VoiceInputError.notAvailable);
         return;
       }
     }
 
     _isListening = true;
+    _sessionResolved = false;
+    _activeOnError = onError;
+    _activeOnDone = onDone;
+
     await _speech.listen(
       onResult: (result) {
         if (result.finalResult) {
-          onResult(result.recognizedWords);
+          _sessionResolved = true;
+          _activeOnError = null;
+          _activeOnDone = null;
           _isListening = false;
+          onResult(result.recognizedWords);
         }
       },
       listenOptions: stt.SpeechListenOptions(
@@ -56,15 +100,60 @@ class VoiceInputService {
     );
   }
 
+  static void _dispatchError(SpeechRecognitionError error) {
+    LoggerService.warning(
+      'Speech recognition error: ${error.errorMsg} (permanent: ${error.permanent})',
+      name: 'voice_input',
+    );
+    _sessionResolved = true;
+    final callback = _activeOnError;
+    _activeOnError = null;
+    _activeOnDone = null;
+    callback?.call(_categorize(error.errorMsg));
+  }
+
+  static void _dispatchStatus(String status) {
+    // 'done'/'notListening' fire at the end of every session, including
+    // ones already handled by onResult/onError above — only act on it when
+    // nothing has resolved the session yet, so the UI can quietly return to
+    // idle instead of hanging.
+    if ((status == 'done' || status == 'notListening') &&
+        !_sessionResolved) {
+      _sessionResolved = true;
+      final callback = _activeOnDone;
+      _activeOnError = null;
+      _activeOnDone = null;
+      callback?.call();
+    }
+  }
+
+  static VoiceInputError _categorize(String errorMsg) {
+    switch (errorMsg) {
+      case 'error_permission':
+        return VoiceInputError.permissionDenied;
+      case 'error_no_match':
+      case 'error_speech_timeout':
+        return VoiceInputError.noSpeech;
+      default:
+        return VoiceInputError.recognitionFailed;
+    }
+  }
+
   /// Stop listening
   Future<void> stopListening() async {
     _isListening = false;
+    _sessionResolved = true;
+    _activeOnError = null;
+    _activeOnDone = null;
     await _speech.stop();
   }
 
   /// Cancel listening
   Future<void> cancel() async {
     _isListening = false;
+    _sessionResolved = true;
+    _activeOnError = null;
+    _activeOnDone = null;
     await _speech.cancel();
   }
 
@@ -101,12 +190,15 @@ class VoiceInputService {
     final t = text.toLowerCase().trim();
 
     // ── 1. AMOUNT ────────────────────────────────────────────────────────────
-    // Handles: "50", "25.50", "35,75", "€50", "$50", "50 euro", "50 dollars",
-    // "50 reais", "50 pesos", "50 yuan", "50元", etc.
+    // Handles: "50", "25.50", "35,75", "€50", "€ 50", "50€", "$50", "50 euro",
+    // "50 dollars", "50 reais", "50 pesos", "50 yuan", "50元", etc.
+    // The currency token is optional on either side of the digits, since
+    // speech-to-text engines may prefix ("€12") or suffix ("12 euro") it.
+    const currencyToken =
+        r'(?:euro|eur|€|dollar|dollaro|dollari|usd|\$|pound|£|'
+        r'real|reais|r\$|peso|pesos|yuan|rmb|元|¥|kr|chf|cad|aud)';
     final amountPattern = RegExp(
-      r'(\d+(?:[.,]\d{1,2})?)\s*'
-      r'(?:euro|eur|€|dollar|dollaro|dollari|usd|\$|pound|£|'
-      r'real|reais|r\$|peso|pesos|yuan|rmb|元|¥|kr|chf|cad|aud)?',
+      '$currencyToken?\\s*(\\d+(?:[.,]\\d{1,2})?)\\s*$currencyToken?',
       caseSensitive: false,
     );
     final amountMatch = amountPattern.firstMatch(t);

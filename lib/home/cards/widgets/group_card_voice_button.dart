@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../services/voice_input_service.dart';
@@ -89,14 +90,30 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
           _showSnack(_getError(error));
         }
       },
+      onDone: () {
+        if (mounted) {
+          _pulseController.stop();
+          setState(() {
+            _isListening = false;
+            _isProcessing = false;
+          });
+        }
+      },
     );
   }
 
-  String _getError(String error) {
+  String _getError(VoiceInputError error) {
     final gloc = gen.AppLocalizations.of(context);
-    return error == 'Voice recognition not available'
-        ? gloc.voice_input_not_available
-        : gloc.voice_input_error;
+    switch (error) {
+      case VoiceInputError.notAvailable:
+        return gloc.voice_input_not_available;
+      case VoiceInputError.permissionDenied:
+        return gloc.voice_input_permission_denied;
+      case VoiceInputError.noSpeech:
+        return gloc.voice_input_no_speech;
+      case VoiceInputError.recognitionFailed:
+        return gloc.voice_input_error;
+    }
   }
 
   Future<void> _handleResult(String text) async {
@@ -266,13 +283,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
 
   void _showSnack(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    AppToast.show(context, message, duration: const Duration(seconds: 3));
   }
 
   // ── Build ─────────────────────────────────────────────────────────────────

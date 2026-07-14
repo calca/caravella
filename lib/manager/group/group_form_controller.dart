@@ -46,6 +46,8 @@ class GroupFormController {
     state.color = group.color;
     state.notificationEnabled = group.notificationEnabled;
     state.groupType = group.groupType;
+    state.customTemplateIconCodePoint = null;
+    state.customTemplateId = null;
     state.autoLocationEnabled = group.autoLocationEnabled;
     // Keep a snapshot in the state to avoid extra repository fetches
     state.setOriginalGroup(group.copyWith());
@@ -389,6 +391,42 @@ class GroupFormController {
 
       state.refresh();
     }
+  }
+
+  /// Applies a custom group template in CREATE mode.
+  ///
+  /// This keeps enum-based built-in behavior intact while allowing users to
+  /// prefill categories from a custom template.
+  void applyCustomTemplate({
+    required String templateId,
+    required int iconCodePoint,
+    required List<String> templateCategoryNames,
+    List<String>? previousTypeCategoryNames,
+  }) {
+    state.setCustomTemplateSelection(
+      templateId: templateId,
+      iconCodePoint: iconCodePoint,
+    );
+
+    if (mode == GroupEditMode.edit) return;
+
+    if (previousTypeCategoryNames != null) {
+      state.categories.removeWhere(
+        (category) => previousTypeCategoryNames.contains(category.name),
+      );
+    }
+
+    state.categories.removeWhere(
+      (category) => templateCategoryNames.contains(category.name),
+    );
+
+    for (final categoryName in templateCategoryNames) {
+      if (!state.categories.any((category) => category.name == categoryName)) {
+        state.addCategory(ExpenseCategory(name: categoryName));
+      }
+    }
+
+    state.refresh();
   }
 
   void dispose() {

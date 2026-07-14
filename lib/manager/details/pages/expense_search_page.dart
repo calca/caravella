@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../group/widgets/period_selection_bottom_sheet.dart';
 import '../widgets/expense_amount_card.dart';
+import '../widgets/expense_search_filter_chips.dart';
+import '../widgets/expense_search_empty_state.dart';
 
 /// Full-screen search page for expenses within a group.
 ///
@@ -61,8 +64,6 @@ class ExpenseSearchPage extends StatefulWidget {
   State<ExpenseSearchPage> createState() => _ExpenseSearchPageState();
 }
 
-enum _ExpenseSearchDateFilter { today, last7Days, thisMonth, range }
-
 class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   static const int _last7DaysCount = 7;
 
@@ -72,7 +73,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   String _searchQuery = '';
   String? _selectedCategoryId;
   String? _selectedParticipantId;
-  _ExpenseSearchDateFilter? _selectedDateFilter;
+  ExpenseSearchDateFilter? _selectedDateFilter;
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
   bool _filterHasAttachment = false;
@@ -106,7 +107,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   }
 
   void _setDateFilter(
-    _ExpenseSearchDateFilter? filter, {
+    ExpenseSearchDateFilter? filter, {
     DateTime? startDate,
     DateTime? endDate,
   }) {
@@ -117,8 +118,8 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     });
   }
 
-  void _togglePresetFilter(_ExpenseSearchDateFilter filter) {
-    if (filter == _ExpenseSearchDateFilter.range) {
+  void _togglePresetFilter(ExpenseSearchDateFilter filter) {
+    if (filter == ExpenseSearchDateFilter.range) {
       _openRangePicker();
       return;
     }
@@ -131,24 +132,24 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     final today = _normalizeDate(DateTime.now());
 
     switch (filter) {
-      case _ExpenseSearchDateFilter.today:
+      case ExpenseSearchDateFilter.today:
         _setDateFilter(filter, startDate: today, endDate: today);
         break;
-      case _ExpenseSearchDateFilter.last7Days:
+      case ExpenseSearchDateFilter.last7Days:
         _setDateFilter(
           filter,
           startDate: today.subtract(const Duration(days: _last7DaysCount - 1)),
           endDate: today,
         );
         break;
-      case _ExpenseSearchDateFilter.thisMonth:
+      case ExpenseSearchDateFilter.thisMonth:
         _setDateFilter(
           filter,
           startDate: DateTime(today.year, today.month, 1),
           endDate: _endOfMonth(today),
         );
         break;
-      case _ExpenseSearchDateFilter.range:
+      case ExpenseSearchDateFilter.range:
         break;
     }
   }
@@ -164,7 +165,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
           return;
         }
         _setDateFilter(
-          _ExpenseSearchDateFilter.range,
+          ExpenseSearchDateFilter.range,
           startDate: startDate,
           endDate: endDate,
         );
@@ -173,7 +174,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   }
 
   String _formatDateRangeLabel(BuildContext context) {
-    if (_selectedDateFilter != _ExpenseSearchDateFilter.range ||
+    if (_selectedDateFilter != ExpenseSearchDateFilter.range ||
         _selectedStartDate == null ||
         _selectedEndDate == null) {
       return gen.AppLocalizations.of(context).select_period;
@@ -284,7 +285,8 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     final filteredExpenses = _filteredExpenses;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final appBarColor = colorScheme.surfaceContainerHighest;
+    final appBarColor = FormTheme.getGmailAppBarSearchBackground(colorScheme);
+    final searchBackgroundColor = appBarColor;
 
     return Scaffold(
       appBar: AppBar(
@@ -305,7 +307,8 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
             focusNode: _searchFocusNode,
             autofocus: true,
             style: Theme.of(context).textTheme.bodyLarge,
-            decoration: InputDecoration(
+            decoration: FormTheme.getSearchPillDecoration(
+              backgroundColor: searchBackgroundColor,
               hintText: gloc.search_in_group(widget.groupName),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
@@ -322,25 +325,6 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
                       tooltip: gloc.clear_filters,
                     )
                   : null,
-              filled: true,
-              fillColor: appBarColor,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(28),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 0,
-              ),
-              isDense: false,
             ),
             onChanged: (value) => setState(() => _searchQuery = value),
             cursorColor: colorScheme.onSurface,
@@ -350,29 +334,29 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
       body: Column(
         children: [
           const SizedBox(height: 12),
-          _SearchFilterSectionLabel(label: gloc.dates),
+          SearchFilterSectionLabel(label: gloc.dates),
           const SizedBox(height: 6),
-          _DateFilterChipsSection(
+          DateFilterChipsSection(
             todayLabel: gloc.today,
             last7DaysLabel: gloc.last_7_days,
             thisMonthLabel: gloc.this_month,
             rangeLabel: _formatDateRangeLabel(context),
             selectedDateFilter: _selectedDateFilter,
             onTodaySelected: () =>
-                _togglePresetFilter(_ExpenseSearchDateFilter.today),
+                _togglePresetFilter(ExpenseSearchDateFilter.today),
             onLast7DaysSelected: () =>
-                _togglePresetFilter(_ExpenseSearchDateFilter.last7Days),
+                _togglePresetFilter(ExpenseSearchDateFilter.last7Days),
             onThisMonthSelected: () =>
-                _togglePresetFilter(_ExpenseSearchDateFilter.thisMonth),
+                _togglePresetFilter(ExpenseSearchDateFilter.thisMonth),
             onRangeSelected: () =>
-                _togglePresetFilter(_ExpenseSearchDateFilter.range),
+                _togglePresetFilter(ExpenseSearchDateFilter.range),
           ),
 
           // Filter chips
           const SizedBox(height: 12),
-          _SearchFilterSectionLabel(label: gloc.filters),
+          SearchFilterSectionLabel(label: gloc.filters),
           const SizedBox(height: 6),
-          _FilterChipsSection(
+          FilterChipsSection(
             categories: widget.categories,
             participants: widget.participants,
             selectedCategoryId: _selectedCategoryId,
@@ -408,7 +392,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
           // Results
           Expanded(
             child: filteredExpenses.isEmpty
-                ? _EmptySearchState(hasActiveFilters: _hasActiveFilters)
+                ? EmptySearchState(hasActiveFilters: _hasActiveFilters)
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 0),
                     itemCount: filteredExpenses.length,
@@ -434,307 +418,6 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
                   ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Date filter chips
-// ---------------------------------------------------------------------------
-
-class _DateFilterChipsSection extends StatelessWidget {
-  final String todayLabel;
-  final String last7DaysLabel;
-  final String thisMonthLabel;
-  final String rangeLabel;
-  final _ExpenseSearchDateFilter? selectedDateFilter;
-  final VoidCallback onTodaySelected;
-  final VoidCallback onLast7DaysSelected;
-  final VoidCallback onThisMonthSelected;
-  final VoidCallback onRangeSelected;
-
-  const _DateFilterChipsSection({
-    required this.todayLabel,
-    required this.last7DaysLabel,
-    required this.thisMonthLabel,
-    required this.rangeLabel,
-    required this.selectedDateFilter,
-    required this.onTodaySelected,
-    required this.onLast7DaysSelected,
-    required this.onThisMonthSelected,
-    required this.onRangeSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: _SearchFilterChip(
-                label: todayLabel,
-                selected: selectedDateFilter == _ExpenseSearchDateFilter.today,
-                onSelected: onTodaySelected,
-                icon: Icons.today_outlined,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: _SearchFilterChip(
-                label: last7DaysLabel,
-                selected:
-                    selectedDateFilter == _ExpenseSearchDateFilter.last7Days,
-                onSelected: onLast7DaysSelected,
-                icon: Icons.history_outlined,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: _SearchFilterChip(
-                label: thisMonthLabel,
-                selected:
-                    selectedDateFilter == _ExpenseSearchDateFilter.thisMonth,
-                onSelected: onThisMonthSelected,
-                icon: Icons.calendar_month_outlined,
-              ),
-            ),
-            _SearchFilterChip(
-              label: rangeLabel,
-              selected: selectedDateFilter == _ExpenseSearchDateFilter.range,
-              onSelected: onRangeSelected,
-              icon: Icons.date_range_outlined,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Filter chips section – categories, participants, attachment, location
-// ---------------------------------------------------------------------------
-
-class _FilterChipsSection extends StatelessWidget {
-  final List<ExpenseCategory> categories;
-  final List<ExpenseParticipant> participants;
-  final String? selectedCategoryId;
-  final String? selectedParticipantId;
-  final bool filterHasAttachment;
-  final bool filterHasLocation;
-  final ValueChanged<String> onCategorySelected;
-  final ValueChanged<String> onParticipantSelected;
-  final VoidCallback onHasAttachmentToggled;
-  final VoidCallback onHasLocationToggled;
-
-  const _FilterChipsSection({
-    required this.categories,
-    required this.participants,
-    required this.selectedCategoryId,
-    required this.selectedParticipantId,
-    required this.filterHasAttachment,
-    required this.filterHasLocation,
-    required this.onCategorySelected,
-    required this.onParticipantSelected,
-    required this.onHasAttachmentToggled,
-    required this.onHasLocationToggled,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        child: Row(
-          children: [
-            // Participant chips (paid by)
-            ...participants.map(
-              (p) => Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: _SearchFilterChip(
-                  label: p.name,
-                  selected: selectedParticipantId == p.id,
-                  onSelected: () => onParticipantSelected(p.id),
-                  icon: Icons.person_outline,
-                ),
-              ),
-            ),
-
-            // Category chips
-            ...categories.map(
-              (cat) => Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: _SearchFilterChip(
-                  label: cat.name,
-                  selected: selectedCategoryId == cat.id,
-                  onSelected: () => onCategorySelected(cat.id),
-                ),
-              ),
-            ),
-
-            // Has attachment chip
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: _SearchFilterChip(
-                label: gloc.has_attachment,
-                selected: filterHasAttachment,
-                onSelected: onHasAttachmentToggled,
-                icon: Icons.attach_file_outlined,
-              ),
-            ),
-
-            // Has location chip
-            _SearchFilterChip(
-              label: gloc.has_location,
-              selected: filterHasLocation,
-              onSelected: onHasLocationToggled,
-              icon: Icons.location_on_outlined,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SearchFilterSectionLabel extends StatelessWidget {
-  final String label;
-
-  const _SearchFilterSectionLabel({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          label,
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Reusable filter chip matching existing style
-// ---------------------------------------------------------------------------
-
-class _SearchFilterChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback onSelected;
-  final IconData? icon;
-
-  const _SearchFilterChip({
-    required this.label,
-    required this.selected,
-    required this.onSelected,
-    this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Theme(
-      data: Theme.of(context).copyWith(
-        splashColor: scheme.onSurface.withValues(alpha: 0.08),
-        highlightColor: Colors.transparent,
-      ),
-      child: FilterChip(
-        avatar: icon != null
-            ? Icon(
-                icon,
-                size: 16,
-                color: selected
-                    ? scheme.onPrimaryContainer
-                    : scheme.onSurfaceVariant,
-              )
-            : null,
-        label: Text(label),
-        selected: selected,
-        onSelected: (_) => onSelected(),
-        showCheckmark: false,
-        side: BorderSide(
-          color: selected
-              ? scheme.onSurfaceVariant.withValues(alpha: 0.2)
-              : scheme.outlineVariant.withValues(alpha: 0.4),
-        ),
-        backgroundColor: scheme.surfaceContainerHigh,
-        selectedColor: scheme.onSurfaceVariant.withValues(alpha: 0.15),
-        labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
-          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-          color: selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
-        ),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Empty search state
-// ---------------------------------------------------------------------------
-
-class _EmptySearchState extends StatelessWidget {
-  final bool hasActiveFilters;
-
-  const _EmptySearchState({required this.hasActiveFilters});
-
-  @override
-  Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              hasActiveFilters
-                  ? Icons.search_off_outlined
-                  : Icons.search_outlined,
-              size: 48,
-              color: colorScheme.onSurface.withValues(alpha: 0.4),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              hasActiveFilters ? gloc.search_no_results : gloc.search_expenses,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            if (hasActiveFilters) ...[
-              const SizedBox(height: 8),
-              Text(
-                gloc.search_no_results_hint,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.4),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ],
-        ),
       ),
     );
   }

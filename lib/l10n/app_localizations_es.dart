@@ -2324,6 +2324,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get voice_input_not_available => 'Reconocimiento de voz no disponible';
 
   @override
+  String get voice_input_no_speech =>
+      'No he escuchado nada. Inténtalo de nuevo.';
+
+  @override
   String get voice_input_hint =>
       'Intenta decir: \'50 euros para la cena en el restaurante\'';
 
@@ -2368,8 +2372,69 @@ class AppLocalizationsEs extends AppLocalizations {
   String get receipt_scan_error => 'Error al escanear el recibo';
 
   @override
+  String get receipt_scan_permission_denied =>
+      'El acceso a la cámara o a las fotos está desactivado. Actívalo en los Ajustes del teléfono para escanear un recibo.';
+
+  @override
   String get no_text_found => 'No se encontró texto en la imagen';
 
   @override
   String get receipt_scanned => 'Recibo escaneado';
+
+  @override
+  String get settings_group_templates_section_title =>
+      'Plantillas de tipo de grupo';
+
+  @override
+  String get settings_group_templates_section_desc =>
+      'Personaliza tus preajustes de tipo de grupo';
+
+  @override
+  String get settings_group_templates_manage_title => 'Gestionar plantillas';
+
+  @override
+  String get settings_group_templates_manage_desc =>
+      'Crea, edita y elimina plantillas personalizadas';
+
+  @override
+  String get settings_group_templates_page_title =>
+      'Plantillas de tipo de grupo';
+
+  @override
+  String get settings_group_templates_empty_state => 'Aún no hay plantillas';
+
+  @override
+  String get settings_group_templates_add_title => 'Añadir plantilla';
+
+  @override
+  String get settings_group_templates_edit_title => 'Editar plantilla';
+
+  @override
+  String get settings_group_templates_name_label => 'Nombre de la plantilla';
+
+  @override
+  String get settings_group_templates_name_hint =>
+      'Introduce un nombre de plantilla';
+
+  @override
+  String get settings_group_templates_icon_label => 'Icono';
+
+  @override
+  String get settings_group_templates_categories_label =>
+      'Categorías predeterminadas';
+
+  @override
+  String get settings_group_templates_category_hint => 'Añadir una categoría';
+
+  @override
+  String get settings_group_templates_validation_error =>
+      'Se requiere nombre y al menos una categoría';
+
+  @override
+  String get settings_group_templates_delete_title => 'Eliminar plantilla';
+
+  @override
+  String settings_group_templates_delete_message(String templateName) {
+    return '¿Eliminar la plantilla \"$templateName\"?';
+  }
 }

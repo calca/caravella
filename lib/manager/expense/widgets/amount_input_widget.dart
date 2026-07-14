@@ -48,24 +48,24 @@ class AmountInputWidget extends StatelessWidget {
         focusNode: focusNode,
         enabled: enabled,
         style: textStyle ?? FormTheme.getFieldTextStyle(context),
-        decoration: InputDecoration(
-          hintText: label != null ? '${label!} *' : null,
-          // rely on theme hintStyle
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          isDense: true,
-          suffixIcon: leading == null && trailing != null
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: trailing,
-                )
-              : null,
-          suffixIconConstraints: const BoxConstraints(
-            minHeight: 32,
-            minWidth: 32,
-          ),
-          contentPadding: FormTheme.standardContentPadding,
-          semanticCounterText: '',
-        ),
+        decoration:
+            FormTheme.getStandardDecoration(
+              hintText: label != null ? '${label!} *' : null,
+              isDense: true,
+              suffixIcon: leading == null && trailing != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: trailing,
+                    )
+                  : null,
+            ).copyWith(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              suffixIconConstraints: const BoxConstraints(
+                minHeight: 32,
+                minWidth: 32,
+              ),
+              semanticCounterText: '',
+            ),
         keyboardType: TextInputType.text,
         textInputAction: textInputAction ?? TextInputAction.next,
         validator: validator,
@@ -93,28 +93,38 @@ class AmountInputWidget extends StatelessWidget {
       );
     }
 
-    // Campo importo: valuta sempre visibile anche senza focus o testo
+    // Amount field: large bold number with smaller currency symbol.
     final currencySymbol = currency ?? '€';
-    // Style the currency symbol to visually match the 22px icon size used elsewhere
-    final currencyStyle = TextStyle(
-      fontSize: 20, // user requested slightly smaller than icon size
-      height: 1.0, // compact to center vertically inside padding
-      fontWeight: FontWeight.w600,
-      color: theme.colorScheme.onSurfaceVariant,
+    final baseFontSize = theme.textTheme.displayMedium?.fontSize ?? 45.0;
+    final decimalFontSize = baseFontSize * 0.40;
+    final color = theme.colorScheme.onSurface;
+
+    final amountStyle =
+        textStyle ??
+        theme.textTheme.displayMedium?.copyWith(
+          fontWeight: FontWeight.w400,
+          color: color,
+          height: 1.05,
+          letterSpacing: -0.5,
+        );
+    final currencyStyle = theme.textTheme.displaySmall?.copyWith(
+      fontSize: decimalFontSize,
+      fontWeight: FontWeight.w400,
+      color: color,
+      height: 1.05,
+      letterSpacing: 0,
     );
 
     final amountField = TextFormField(
       controller: controller,
       focusNode: focusNode,
       enabled: enabled,
-      style: textStyle ?? FormTheme.getAmountTextStyle(context),
-      decoration: InputDecoration(
-        hintText: label != null ? '${label!} *' : null,
-        // rely on theme hintStyle
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        isDense: true,
-        contentPadding: FormTheme.standardContentPadding,
-        semanticCounterText: '',
+      style: amountStyle,
+      textAlign: TextAlign.left,
+      maxLines: 1,
+      decoration: FormTheme.getBorderlessAmountDecoration(
+        hintText: '0.00',
+        hintStyle: amountStyle?.copyWith(color: color.withValues(alpha: 0.35)),
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       textInputAction: textInputAction ?? TextInputAction.next,
@@ -127,16 +137,25 @@ class AmountInputWidget extends StatelessWidget {
       ],
     );
 
-    return IconLeadingField(
-      icon: Text(currencySymbol, style: currencyStyle),
-      semanticsLabel: label,
-      tooltip: label,
-      child: Semantics(
-        textField: true,
-        label: label != null
-            ? '${label!.replaceAll(' *', '')} amount in $currencySymbol'
-            : 'Amount input',
-        child: amountField,
+    return Semantics(
+      textField: true,
+      label: label != null
+          ? '${label!.replaceAll(' *', '')} amount in $currencySymbol'
+          : 'Amount input',
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(currencySymbol, style: currencyStyle),
+            const SizedBox(width: 10),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 300),
+              child: IntrinsicWidth(child: amountField),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -28,6 +28,9 @@ abstract class _PreferenceKeys {
 
   // App Functions
   static const String appFunctionsEnabled = 'app_functions_enabled';
+
+  // Group type templates
+  static const String groupTypeTemplates = 'group_type_templates';
 }
 
 /// Default values for preferences
@@ -141,6 +144,14 @@ class PreferencesService {
 
   /// App Functions (AI agent integration) preferences management
   AppFunctionsPreferences get appFunctions => AppFunctionsPreferences._(_prefs);
+
+  // ============================================================================
+  // Group Type Templates Preferences
+  // ============================================================================
+
+  /// Group type templates preferences management
+  GroupTypeTemplatesPreferences get groupTypeTemplates =>
+      GroupTypeTemplatesPreferences._(_prefs);
 
   // ============================================================================
   // Utility Methods
@@ -391,5 +402,30 @@ class AppFunctionsPreferences {
   /// Set whether App Functions are enabled
   Future<void> setEnabled(bool value) async {
     await _prefs.setBool(_PreferenceKeys.appFunctionsEnabled, value);
+  }
+}
+
+// ==============================================================================
+// Group Type Templates Preferences
+// ==============================================================================
+
+/// Manages custom group type templates preferences
+class GroupTypeTemplatesPreferences {
+  GroupTypeTemplatesPreferences._(this._prefs);
+  final SharedPreferences _prefs;
+
+  /// Get persisted templates payload (JSON string)
+  String? getTemplatesJson() {
+    return _prefs.getString(_PreferenceKeys.groupTypeTemplates);
+  }
+
+  /// Persist templates payload (JSON string)
+  Future<void> setTemplatesJson(String value) async {
+    await _prefs.setString(_PreferenceKeys.groupTypeTemplates, value);
+  }
+
+  /// Remove persisted templates
+  Future<void> clearTemplates() async {
+    await _prefs.remove(_PreferenceKeys.groupTypeTemplates);
   }
 }

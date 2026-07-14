@@ -2322,6 +2322,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Riconoscimento vocale non disponibile';
 
   @override
+  String get voice_input_no_speech => 'Non ho sentito nulla. Riprova.';
+
+  @override
   String get voice_input_hint =>
       'Prova a dire: \'50 euro per cena al ristorante\'';
 
@@ -2366,8 +2369,68 @@ class AppLocalizationsIt extends AppLocalizations {
   String get receipt_scan_error => 'Errore nella scansione dello scontrino';
 
   @override
+  String get receipt_scan_permission_denied =>
+      'Accesso a fotocamera o galleria disattivato. Attivalo nelle Impostazioni del telefono per scansionare uno scontrino.';
+
+  @override
   String get no_text_found => 'Nessun testo trovato nell\'immagine';
 
   @override
   String get receipt_scanned => 'Scontrino scansionato';
+
+  @override
+  String get settings_group_templates_section_title =>
+      'Template tipologia gruppi';
+
+  @override
+  String get settings_group_templates_section_desc =>
+      'Personalizza i preset per i tipi di gruppo';
+
+  @override
+  String get settings_group_templates_manage_title => 'Gestisci template';
+
+  @override
+  String get settings_group_templates_manage_desc =>
+      'Crea, modifica ed elimina template personalizzati';
+
+  @override
+  String get settings_group_templates_page_title => 'Template tipologia gruppi';
+
+  @override
+  String get settings_group_templates_empty_state =>
+      'Nessun template disponibile';
+
+  @override
+  String get settings_group_templates_add_title => 'Nuovo template';
+
+  @override
+  String get settings_group_templates_edit_title => 'Modifica template';
+
+  @override
+  String get settings_group_templates_name_label => 'Nome template';
+
+  @override
+  String get settings_group_templates_name_hint => 'Inserisci un nome template';
+
+  @override
+  String get settings_group_templates_icon_label => 'Icona';
+
+  @override
+  String get settings_group_templates_categories_label =>
+      'Categorie predefinite';
+
+  @override
+  String get settings_group_templates_category_hint => 'Aggiungi una categoria';
+
+  @override
+  String get settings_group_templates_validation_error =>
+      'Nome e almeno una categoria sono obbligatori';
+
+  @override
+  String get settings_group_templates_delete_title => 'Elimina template';
+
+  @override
+  String settings_group_templates_delete_message(String templateName) {
+    return 'Eliminare il template \"$templateName\"?';
+  }
 }

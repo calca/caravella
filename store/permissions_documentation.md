@@ -102,7 +102,8 @@ if (permission == LocationPermission.denied) {
 - Photos and Videos: Yes (optional, when user chooses to add photos)
 
 **Is all of the user data collected by your app encrypted in transit?**
-- Not applicable (no network transmission of user data)
+- Expense, participant, and group data: not applicable (never transmitted over the network)
+- Location coordinates (only when the user searches for a place or uses reverse geocoding) are sent over HTTPS to OpenStreetMap's Nominatim service — see "Network Requests to Third-Party Services" below
 
 **Do you provide a way for users to request that their data is deleted?**
 - Yes (users can delete all data through app settings, or delete individual records)
@@ -142,7 +143,13 @@ if (permission == LocationPermission.denied) {
 ### Minimal Data Collection
 - Only collect data necessary for app functionality
 - No analytics or tracking beyond basic app functionality
-- No third-party data sharing
+- No third-party sharing of expense, participant, or group data
+
+### Network Requests to Third-Party Services
+A small number of optional features make direct network requests to third-party services. These requests never include expense, participant, or group data:
+- **OpenStreetMap Nominatim** (`nominatim.openstreetmap.org`): place search text and/or GPS coordinates, when the user searches for a location or uses auto-location on an expense
+- **OpenStreetMap tile servers** (`tile.openstreetmap.org`): fetched when the map view is displayed
+- **Unsplash API** (`api.unsplash.com`): background photo search text, when the user searches for a group background photo (optional, requires a build-time API key)
 
 ## Device Compatibility
 

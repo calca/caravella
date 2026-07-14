@@ -85,5 +85,95 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(TextField), findsNWidgets(3));
     });
+
+    testWidgets('FormTheme search pill decoration is configured correctly', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: CaravellaThemes.light,
+          home: Builder(
+            builder: (context) {
+              final color = Theme.of(context).colorScheme.surface;
+              final decoration = FormTheme.getSearchPillDecoration(
+                backgroundColor: color,
+                hintText: 'Search',
+                prefixIcon: const Icon(Icons.search_outlined),
+                suffixIcon: const Icon(Icons.clear),
+              );
+
+              expect(decoration.filled, isTrue);
+              expect(decoration.fillColor, equals(color));
+              expect(decoration.isDense, isFalse);
+              expect(
+                decoration.contentPadding,
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              );
+              expect(decoration.prefixIcon, isNotNull);
+              expect(decoration.suffixIcon, isNotNull);
+
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+    });
+
+    testWidgets(
+      'FormTheme borderless amount decoration is configured correctly',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: CaravellaThemes.light,
+            home: Builder(
+              builder: (context) {
+                final style = Theme.of(context).textTheme.bodyLarge;
+                final decoration = FormTheme.getBorderlessAmountDecoration(
+                  hintText: '123.45',
+                  hintStyle: style,
+                );
+
+                expect(decoration.border, equals(InputBorder.none));
+                expect(decoration.enabledBorder, equals(InputBorder.none));
+                expect(decoration.focusedBorder, equals(InputBorder.none));
+                expect(decoration.hintText, equals('123.45'));
+                expect(decoration.hintStyle, equals(style));
+                expect(decoration.isDense, isFalse);
+                expect(
+                  decoration.contentPadding,
+                  const EdgeInsets.symmetric(vertical: 4),
+                );
+
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
+      },
+    );
+
+    test('FormTheme Gmail app bar search background is darker than base', () {
+      final lightColor = FormTheme.getGmailAppBarSearchBackground(
+        CaravellaThemes.light.colorScheme,
+      );
+      final darkColor = FormTheme.getGmailAppBarSearchBackground(
+        CaravellaThemes.dark.colorScheme,
+      );
+
+      expect(
+        lightColor.computeLuminance(),
+        lessThan(
+          CaravellaThemes.light.colorScheme.surfaceContainerHighest
+              .computeLuminance(),
+        ),
+      );
+      expect(
+        darkColor.computeLuminance(),
+        lessThan(
+          CaravellaThemes.dark.colorScheme.surfaceContainerHighest
+              .computeLuminance(),
+        ),
+      );
+    });
   });
 }

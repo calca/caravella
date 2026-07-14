@@ -1,3 +1,4 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flag_secure/flag_secure.dart';
 
 class FlagSecureAndroid {
@@ -8,6 +9,11 @@ class FlagSecureAndroid {
       } else {
         await FlagSecure.unset();
       }
-    } catch (_) {}
+    } catch (e) {
+      LoggerService.warning(
+        'Failed to ${enabled ? 'enable' : 'disable'} FLAG_SECURE: $e',
+        name: 'settings.flag_secure',
+      );
+    }
   }
 }

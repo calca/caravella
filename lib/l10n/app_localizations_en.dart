@@ -2311,6 +2311,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voice_input_not_available => 'Voice recognition not available';
 
   @override
+  String get voice_input_no_speech => 'I didn\'t catch that. Try again.';
+
+  @override
   String get voice_input_hint =>
       'Try saying: \'50 dollars for dinner at restaurant\'';
 
@@ -2355,8 +2358,65 @@ class AppLocalizationsEn extends AppLocalizations {
   String get receipt_scan_error => 'Error scanning receipt';
 
   @override
+  String get receipt_scan_permission_denied =>
+      'Camera or photo access is off. Enable it in your phone\'s Settings to scan a receipt.';
+
+  @override
   String get no_text_found => 'No text found in image';
 
   @override
   String get receipt_scanned => 'Receipt scanned';
+
+  @override
+  String get settings_group_templates_section_title => 'Group type templates';
+
+  @override
+  String get settings_group_templates_section_desc =>
+      'Customize your group type presets';
+
+  @override
+  String get settings_group_templates_manage_title => 'Manage templates';
+
+  @override
+  String get settings_group_templates_manage_desc =>
+      'Create, edit, and delete custom templates';
+
+  @override
+  String get settings_group_templates_page_title => 'Group type templates';
+
+  @override
+  String get settings_group_templates_empty_state => 'No templates yet';
+
+  @override
+  String get settings_group_templates_add_title => 'Add template';
+
+  @override
+  String get settings_group_templates_edit_title => 'Edit template';
+
+  @override
+  String get settings_group_templates_name_label => 'Template name';
+
+  @override
+  String get settings_group_templates_name_hint => 'Enter a template name';
+
+  @override
+  String get settings_group_templates_icon_label => 'Icon';
+
+  @override
+  String get settings_group_templates_categories_label => 'Default categories';
+
+  @override
+  String get settings_group_templates_category_hint => 'Add a category';
+
+  @override
+  String get settings_group_templates_validation_error =>
+      'Name and at least one category are required';
+
+  @override
+  String get settings_group_templates_delete_title => 'Delete template';
+
+  @override
+  String settings_group_templates_delete_message(String templateName) {
+    return 'Delete template \"$templateName\"?';
+  }
 }

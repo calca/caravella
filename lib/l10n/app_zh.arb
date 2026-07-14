@@ -1524,6 +1524,10 @@
   "@voice_input_not_available": {
     "description": "设备上语音识别不可用时的消息"
   },
+  "voice_input_no_speech": "没有听到任何内容，请重试。",
+  "@voice_input_no_speech": {
+    "description": "语音识别未听到任何内容或超时无匹配结果时的消息"
+  },
   "voice_input_hint": "尝试说：'50元晚餐'",
   "@voice_input_hint": {
     "description": "使用语音输入的示例提示"
@@ -1574,8 +1578,27 @@
   ,"@scanning_receipt": {"description": "OCR扫描收据期间的消息"}
   ,"receipt_scan_error": "扫描收据时出错"
   ,"@receipt_scan_error": {"description": "OCR扫描失败时的错误消息"}
+  ,"receipt_scan_permission_denied": "相机或照片访问权限已关闭。请在手机设置中启用它以扫描收据。"
+  ,"@receipt_scan_permission_denied": {"description": "相机或相册权限被拒绝时的错误消息"}
   ,"no_text_found": "图像中未找到文本"
   ,"@no_text_found": {"description": "OCR在图像中未找到文本时的消息"}
   ,"receipt_scanned": "收据已扫描"
   ,"@receipt_scanned": {"description": "OCR扫描后的成功消息"}
+  ,"settings_group_templates_section_title": "分组类型模板"
+  ,"settings_group_templates_section_desc": "自定义分组类型预设"
+  ,"settings_group_templates_manage_title": "管理模板"
+  ,"settings_group_templates_manage_desc": "创建、编辑和删除自定义模板"
+  ,"settings_group_templates_page_title": "分组类型模板"
+  ,"settings_group_templates_empty_state": "暂无模板"
+  ,"settings_group_templates_add_title": "新增模板"
+  ,"settings_group_templates_edit_title": "编辑模板"
+  ,"settings_group_templates_name_label": "模板名称"
+  ,"settings_group_templates_name_hint": "输入模板名称"
+  ,"settings_group_templates_icon_label": "图标"
+  ,"settings_group_templates_categories_label": "默认分类"
+  ,"settings_group_templates_category_hint": "添加分类"
+  ,"settings_group_templates_validation_error": "必须填写名称且至少添加一个分类"
+  ,"settings_group_templates_delete_title": "删除模板"
+  ,"settings_group_templates_delete_message": "删除模板“{templateName}”？"
+  ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
 }

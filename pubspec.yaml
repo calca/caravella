@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.7.13+103
+version: 1.8.1+111
 
 environment:
   sdk: ">=3.9.0 <4.0.0"
@@ -45,11 +45,11 @@ dependencies:
   
   # External dependencies
   provider: ^6.1.5
-  file_picker: ^12.0.0-beta.5
+  file_picker: ^12.0.0-beta.7
   image_picker: ^1.2.1
   image_picker_android: ^0.8.13
   image: ^4.8.0
-  package_info_plus: ^10.1.0
+  package_info_plus: ^10.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -62,7 +62,7 @@ dependencies:
   archive: ^4.0.9
   flag_secure: ^2.0.2
   geolocator: ^14.0.2
-  geocoding: ^4.0.0
+  geocoding: ^5.0.0
   http: ^1.6.0
   path: ^1.9.1
   intl: ^0.20.2
@@ -70,9 +70,9 @@ dependencies:
   gpt_markdown: ^1.1.6
   image_picker_platform_interface: ^2.11.1
   speech_to_text: ^7.0.0
-  flutter_local_notifications: ^21.0.0
+  flutter_local_notifications: ^22.0.1
   flutter_map: ^8.3.0
-  latlong2: ^0.9.1
+  latlong2: ^0.10.1
   in_app_review: ^2.0.11
   dynamic_color: ^1.8.1
   pdfx: ^2.9.2
@@ -80,7 +80,7 @@ dependencies:
   chewie: ^1.14.0
   zentoast: ^0.2.2
   talker_flutter: ^5.1.17
-  google_mlkit_text_recognition: ^0.15.1
+  google_mlkit_text_recognition: ^0.16.0
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
     path: packages/play_store_updates
@@ -95,11 +95,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   path_provider_platform_interface: ^2.1.2
-  sqflite_common_ffi: ^2.4.0+3
-
-dependency_overrides:
-  # geolocator_linux has not widened its package_info_plus constraint yet.
-  package_info_plus: ^10.1.0
+  sqflite_common_ffi: ^2.4.1
 
 flutter_launcher_icons:
   android: true

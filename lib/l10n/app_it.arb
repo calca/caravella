@@ -1014,6 +1014,8 @@
   ,"@voice_input_permission_denied": {"description": "Messaggio quando l'utente nega il permesso del microfono"}
   ,"voice_input_not_available": "Riconoscimento vocale non disponibile"
   ,"@voice_input_not_available": {"description": "Messaggio quando il riconoscimento vocale non è disponibile sul dispositivo"}
+  ,"voice_input_no_speech": "Non ho sentito nulla. Riprova."
+  ,"@voice_input_no_speech": {"description": "Messaggio quando il riconoscimento vocale non sente nulla o va in timeout senza risultati"}
   ,"voice_input_hint": "Prova a dire: '50 euro per cena al ristorante'"
   ,"@voice_input_hint": {"description": "Suggerimento di esempio per l'uso dell'input vocale"}
   ,"voice_add_expense": "Aggiungi con la voce"
@@ -1042,8 +1044,27 @@
   ,"@scanning_receipt": {"description": "Messaggio durante la scansione OCR dello scontrino"}
   ,"receipt_scan_error": "Errore nella scansione dello scontrino"
   ,"@receipt_scan_error": {"description": "Messaggio di errore quando la scansione OCR fallisce"}
+  ,"receipt_scan_permission_denied": "Accesso a fotocamera o galleria disattivato. Attivalo nelle Impostazioni del telefono per scansionare uno scontrino."
+  ,"@receipt_scan_permission_denied": {"description": "Messaggio di errore quando il permesso di fotocamera o galleria viene negato"}
   ,"no_text_found": "Nessun testo trovato nell'immagine"
   ,"@no_text_found": {"description": "Messaggio quando l'OCR non trova testo nell'immagine"}
   ,"receipt_scanned": "Scontrino scansionato"
   ,"@receipt_scanned": {"description": "Messaggio di successo dopo la scansione OCR"}
+  ,"settings_group_templates_section_title": "Template tipologia gruppi"
+  ,"settings_group_templates_section_desc": "Personalizza i preset per i tipi di gruppo"
+  ,"settings_group_templates_manage_title": "Gestisci template"
+  ,"settings_group_templates_manage_desc": "Crea, modifica ed elimina template personalizzati"
+  ,"settings_group_templates_page_title": "Template tipologia gruppi"
+  ,"settings_group_templates_empty_state": "Nessun template disponibile"
+  ,"settings_group_templates_add_title": "Nuovo template"
+  ,"settings_group_templates_edit_title": "Modifica template"
+  ,"settings_group_templates_name_label": "Nome template"
+  ,"settings_group_templates_name_hint": "Inserisci un nome template"
+  ,"settings_group_templates_icon_label": "Icona"
+  ,"settings_group_templates_categories_label": "Categorie predefinite"
+  ,"settings_group_templates_category_hint": "Aggiungi una categoria"
+  ,"settings_group_templates_validation_error": "Nome e almeno una categoria sono obbligatori"
+  ,"settings_group_templates_delete_title": "Elimina template"
+  ,"settings_group_templates_delete_message": "Eliminare il template \"{templateName}\"?"
+  ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
 }

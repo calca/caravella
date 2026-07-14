@@ -6,26 +6,22 @@ import 'period_selection_bottom_sheet.dart';
 class SectionPeriod extends StatelessWidget {
   final DateTime? startDate;
   final DateTime? endDate;
-  final void Function(bool) onPickDate;
   final void Function() onClearDates;
   final String? description;
   final String? errorText;
   final bool isEndDateEnabled;
-
-  // New callback for setting both dates at once (optional for backwards compatibility)
-  final void Function(DateTime? startDate, DateTime? endDate)?
+  final void Function(DateTime? startDate, DateTime? endDate)
   onDateRangeChanged;
 
   const SectionPeriod({
     super.key,
     required this.startDate,
     required this.endDate,
-    required this.onPickDate,
     required this.onClearDates,
+    required this.onDateRangeChanged,
     this.description,
     this.errorText,
     this.isEndDateEnabled = true,
-    this.onDateRangeChanged,
   });
 
   @override
@@ -95,26 +91,7 @@ class SectionPeriod extends StatelessWidget {
       context: context,
       initialStartDate: startDate,
       initialEndDate: endDate,
-      onSelectionChanged: (newStartDate, newEndDate) {
-        // Use the new callback if available, otherwise fall back to the old approach
-        if (onDateRangeChanged != null) {
-          onDateRangeChanged!(newStartDate, newEndDate);
-        } else {
-          // Fallback to old approach - this is hacky but maintains compatibility
-          if (newStartDate == null && newEndDate == null) {
-            onClearDates();
-          } else {
-            // We can't directly set both dates with the old API
-            // This is a limitation of the backwards compatibility
-            if (newStartDate != startDate) {
-              onPickDate(true);
-            }
-            if (newEndDate != endDate) {
-              onPickDate(false);
-            }
-          }
-        }
-      },
+      onSelectionChanged: onDateRangeChanged,
     );
   }
 }

@@ -2322,6 +2322,9 @@ class AppLocalizationsPt extends AppLocalizations {
       'Reconhecimento de voz não disponível';
 
   @override
+  String get voice_input_no_speech => 'Não ouvi nada. Tente novamente.';
+
+  @override
   String get voice_input_hint =>
       'Tente dizer: \'50 reais para o jantar no restaurante\'';
 
@@ -2366,8 +2369,68 @@ class AppLocalizationsPt extends AppLocalizations {
   String get receipt_scan_error => 'Erro ao escanear recibo';
 
   @override
+  String get receipt_scan_permission_denied =>
+      'O acesso à câmera ou às fotos está desativado. Ative-o nas Configurações do telefone para escanear um recibo.';
+
+  @override
   String get no_text_found => 'Nenhum texto encontrado na imagem';
 
   @override
   String get receipt_scanned => 'Recibo escaneado';
+
+  @override
+  String get settings_group_templates_section_title =>
+      'Modelos de tipo de grupo';
+
+  @override
+  String get settings_group_templates_section_desc =>
+      'Personalize seus modelos de tipo de grupo';
+
+  @override
+  String get settings_group_templates_manage_title => 'Gerenciar modelos';
+
+  @override
+  String get settings_group_templates_manage_desc =>
+      'Crie, edite e exclua modelos personalizados';
+
+  @override
+  String get settings_group_templates_page_title => 'Modelos de tipo de grupo';
+
+  @override
+  String get settings_group_templates_empty_state => 'Nenhum modelo ainda';
+
+  @override
+  String get settings_group_templates_add_title => 'Adicionar modelo';
+
+  @override
+  String get settings_group_templates_edit_title => 'Editar modelo';
+
+  @override
+  String get settings_group_templates_name_label => 'Nome do modelo';
+
+  @override
+  String get settings_group_templates_name_hint =>
+      'Digite um nome para o modelo';
+
+  @override
+  String get settings_group_templates_icon_label => 'Ícone';
+
+  @override
+  String get settings_group_templates_categories_label => 'Categorias padrão';
+
+  @override
+  String get settings_group_templates_category_hint =>
+      'Adicionar uma categoria';
+
+  @override
+  String get settings_group_templates_validation_error =>
+      'Nome e pelo menos uma categoria são obrigatórios';
+
+  @override
+  String get settings_group_templates_delete_title => 'Excluir modelo';
+
+  @override
+  String settings_group_templates_delete_message(String templateName) {
+    return 'Excluir o modelo \"$templateName\"?';
+  }
 }

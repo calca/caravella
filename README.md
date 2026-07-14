@@ -75,13 +75,13 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
-## 🎉 What's New in v1.6.0
+## 🎉 What's New in v1.8.0
 
-- **AI-Powered Shortcuts**: Android AI agents like Google Gemini can now add expenses and check balances directly
-- **Guided Setup Wizard**: New 3-step group creation wizard makes getting started easier than ever
-- **Redesigned Home Page**: Featured card highlights your pinned group with beautiful animations and better layout
-- **Smarter Expense Lists**: Month separators, pagination for large groups, and smooth add animations
-- **Improved Notifications**: Persistent notifications now respect group date ranges and update from all entry points
+- **Voice Input**: Speak naturally to add an expense — amount, description, category, date, and payer are filled in automatically, in all supported languages
+- **Receipt Scanning**: Photograph a receipt and let on-device OCR extract the amount and description for you
+- **Unsplash Backgrounds**: Search and download beautiful photos from Unsplash to personalize your group backgrounds
+- **Smarter Search**: Find expenses instantly with full-text search, calendar highlights, and filters — plus Gmail-style search across all your groups
+- **Custom Group Templates**: Create your own group types with a name, icon, and default categories, now editable in a dedicated full-screen page and usable when editing existing groups too
 
 ## 🛠️ Tech Stack & Architecture
 
@@ -116,6 +116,7 @@ For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Per
 - **GitHub Releases**: [Download APK](https://github.com/calca/caravella/releases)
 - **Google Play Store**: https://play.google.com/store/apps/details?id=io.caravella.egm
 - **F-Droid**: Coming soon (see [F-Droid Submission Guide](docs/FDROID_SUBMISSION.md) for details)
+- **Developer wiki**: see [docs/README.md](docs/README.md) for architecture and technical documentation
 - **Device Support**: Optimized for smartphones only (tablets not supported)
 
 ### iOS

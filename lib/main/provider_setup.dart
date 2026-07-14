@@ -4,6 +4,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/notification_manager.dart';
+import '../settings/state/group_type_templates_notifier.dart';
 
 /// Sets up all global providers for the app.
 class ProviderSetup {
@@ -26,6 +27,7 @@ class ProviderSetup {
           },
         ),
         ChangeNotifierProvider(create: (_) => UserNameNotifier()),
+        ChangeNotifierProvider(create: (_) => GroupTypeTemplatesNotifier()),
       ],
       child: child,
     );

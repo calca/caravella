@@ -1,3 +1,22 @@
+## 1.8.0 (14.07.2026)
+
+- **Novità**: Input vocale – parla naturalmente per aggiungere una spesa, con importo, descrizione, categoria, data e chi ha pagato riconosciuti automaticamente, in tutte le lingue supportate
+- **Novità**: Scansione scontrini OCR – fotografa uno scontrino e lascia che il riconoscimento testo sul dispositivo estragga importo e descrizione per te
+- **Novità**: Ricerca immagini Unsplash per gli sfondi dei gruppi, con download diretto in app
+- **Novità**: Widget Android per la home che mostra il totale speso oggi e nel gruppo, con azioni di aggiunta rapida e apertura gruppo
+- **Novità**: Pagina di ricerca spese dedicata con ricerca full-text, calendario che evidenzia i giorni con spese e filtri per categoria, partecipante, allegato e posizione
+- **Novità**: Ricerca gruppi a schermo intero in stile Gmail dalla pagina gruppi
+- **Novità**: Template gruppo personalizzati – crea, modifica ed elimina i tuoi tipi di gruppo con nome, icona e categorie predefinite dalle Impostazioni
+- **Miglioramenti**: Pagina dettaglio gruppo ridisegnata per abbinarsi allo stile delle card home, con intestazione centrata
+- **Miglioramenti**: Procedura guidata di creazione gruppo con layout e campi di input più curati
+- **Miglioramenti**: L'editor dei template gruppo si apre ora in una pagina dedicata a schermo intero, con selezione icona più chiara e lista categorie modificabile, ora disponibile anche modificando un gruppo esistente
+- **Bug fix**: L'input vocale non lascia più un simbolo di valuta nella descrizione e ora segnala correttamente gli errori di riconoscimento invece di fallire silenziosamente
+- **Bug fix**: Il pulsante di scansione scontrino apre direttamente la fotocamera, con la galleria disponibile tramite pressione prolungata
+- **Bug fix**: Il selettore sfondi Unsplash non mostra più anteprime non aggiornate e ora funziona correttamente in tutte le build di rilascio
+- **Bug fix**: Il controllo dei nomi duplicati non segnala più l'elemento in modifica come duplicato di se stesso
+- **Bug fix**: Il form di aggiunta spesa non mostra più uno sfondo rosso "non valido" all'apertura, e il pulsante Aggiungi/Salva diventa del colore primario non appena il form diventa valido
+- **Bug fix**: Il foglio di aggiunta rapida spesa si apre ora in modalità modifica completa con un gesto di scorrimento verso l'alto
+
 ## 1.6.0 (03.04.2026)
 
 - **Novità**: Integrazione agenti AI Android – Google Gemini può aggiungere spese e controllare i saldi per te

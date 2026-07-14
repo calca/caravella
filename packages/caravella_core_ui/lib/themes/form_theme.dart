@@ -111,4 +111,68 @@ class FormTheme {
       contentPadding: standardContentPadding,
     );
   }
+
+  /// Returns decoration for large amount fields rendered without borders.
+  static InputDecoration getBorderlessAmountDecoration({
+    String hintText = '0.00',
+    TextStyle? hintStyle,
+    EdgeInsetsGeometry contentPadding = const EdgeInsets.symmetric(vertical: 4),
+  }) {
+    return InputDecoration(
+      border: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      disabledBorder: InputBorder.none,
+      errorBorder: InputBorder.none,
+      focusedErrorBorder: InputBorder.none,
+      hintText: hintText,
+      hintStyle: hintStyle,
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      isDense: false,
+      contentPadding: contentPadding,
+      semanticCounterText: '',
+    );
+  }
+
+  /// Returns decoration for AppBar/top search fields with pill shape.
+  ///
+  /// Use this for full-width search inputs where the field should visually
+  /// blend with the containing surface (page/sheet/app bar).
+  static InputDecoration getSearchPillDecoration({
+    required Color backgroundColor,
+    required String hintText,
+    Widget? suffixIcon,
+    Widget? prefixIcon,
+  }) {
+    const radius = Radius.circular(28);
+    const border = OutlineInputBorder(
+      borderRadius: BorderRadius.all(radius),
+      borderSide: BorderSide.none,
+    );
+
+    return InputDecoration(
+      hintText: hintText,
+      suffixIcon: suffixIcon,
+      prefixIcon: prefixIcon,
+      filled: true,
+      fillColor: backgroundColor,
+      border: border,
+      enabledBorder: border,
+      focusedBorder: border,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      isDense: false,
+    );
+  }
+
+  /// Returns a darker Gmail-like background color for AppBar search widgets.
+  ///
+  /// The color is darkened in both light and dark themes so the search field
+  /// stands out from the AppBar surface.
+  static Color getGmailAppBarSearchBackground(ColorScheme colorScheme) {
+    final base = colorScheme.surfaceContainerHighest;
+    final overlay = colorScheme.brightness == Brightness.dark
+        ? Colors.black.withValues(alpha: 0.24)
+        : Colors.black.withValues(alpha: 0.12);
+    return Color.alphaBlend(overlay, base);
+  }
 }

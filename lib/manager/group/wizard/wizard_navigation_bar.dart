@@ -1,4 +1,5 @@
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -32,6 +33,18 @@ class WizardNavigationBar extends StatelessWidget {
               wizardState,
             );
 
+            final primaryButtonStyle = FilledButton.styleFrom(
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              minimumSize: const Size(48, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            );
+
             final primaryButton = Consumer2<GroupFormState, GroupFormController>(
               builder: (context, formState, controller, child) {
                 final isSecondToLastStep =
@@ -63,15 +76,7 @@ class WizardNavigationBar extends StatelessWidget {
                             }
                           }
                         : null,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    style: primaryButtonStyle,
                     child: Text(gloc.wizard_finish),
                   );
                 }
@@ -91,15 +96,7 @@ class WizardNavigationBar extends StatelessWidget {
                         }
                       : null,
                   label: Text(gloc.wizard_next),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  style: primaryButtonStyle,
                 );
               },
             );
@@ -251,11 +248,10 @@ class WizardNavigationBar extends StatelessWidget {
     } catch (e) {
       if (context.mounted) {
         final gloc = gen.AppLocalizations.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(gloc.error_saving_group(e.toString())),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AppToast.show(
+          context,
+          gloc.error_saving_group(e.toString()),
+          type: ToastType.error,
         );
       }
       return null;

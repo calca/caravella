@@ -1,3 +1,22 @@
+## 1.8.0 (14.07.2026)
+
+- **Nuevo**: Entrada por voz – habla con naturalidad para agregar un gasto, con monto, descripción, categoría, fecha y quién pagó reconocidos automáticamente, en todos los idiomas admitidos
+- **Nuevo**: Escaneo de recibos por OCR – fotografía un recibo y deja que el reconocimiento de texto en el dispositivo extraiga el monto y la descripción por ti
+- **Nuevo**: Búsqueda de imágenes de Unsplash para los fondos de grupo, con descarga directa en la app
+- **Nuevo**: Widget de Android para la pantalla de inicio que muestra el total gastado hoy y en el grupo, con acciones de agregado rápido y apertura de grupo
+- **Nuevo**: Página de búsqueda de gastos dedicada con búsqueda de texto completo, calendario que resalta los días con gastos y filtros por categoría, participante, adjunto y ubicación
+- **Nuevo**: Búsqueda de grupos a pantalla completa estilo Gmail desde la página de grupos
+- **Nuevo**: Plantillas de grupo personalizadas – crea, edita y elimina tus propios tipos de grupo con nombre, icono y categorías predeterminadas desde Ajustes
+- **Mejoras**: Página de detalle de grupo rediseñada para coincidir con el estilo de las tarjetas de inicio, con encabezado centrado
+- **Mejoras**: Asistente de creación de grupo con diseño y campos de entrada más cuidados
+- **Mejoras**: El editor de plantillas de grupo ahora se abre en una página dedicada a pantalla completa, con selección de icono más clara y lista de categorías editable, disponible también al editar un grupo existente
+- **Correcciones**: La entrada por voz ya no deja un símbolo de moneda en la descripción y ahora informa correctamente los errores de reconocimiento en lugar de fallar en silencio
+- **Correcciones**: El botón de escaneo de recibo abre la cámara directamente, con la galería disponible mediante pulsación larga
+- **Correcciones**: El selector de fondos de Unsplash ya no muestra miniaturas desactualizadas y ahora funciona correctamente en todas las compilaciones de lanzamiento
+- **Correcciones**: La verificación de nombres duplicados ya no marca el elemento en edición como duplicado de sí mismo
+- **Correcciones**: El formulario de agregar gasto ya no muestra un fondo rojo "no válido" al abrirse, y el botón Agregar/Guardar se vuelve del color primario en cuanto el formulario es válido
+- **Correcciones**: La hoja de agregar gasto rápido ahora se abre en modo de edición completa con un gesto de deslizar hacia arriba
+
 ## 1.6.0 (03.04.2026)
 
 - **Nuevo**: Integración de agentes IA de Android – Google Gemini puede agregar gastos y verificar saldos por ti

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// - Material 3 styling with surface container
 /// - Border top with outline variant color
 /// - SafeArea padding
-/// - Right-aligned text-only button (TextButton)
+/// - Full-width filled button (FilledButton)
 /// - Disabled state when action is invalid
 class BottomActionBar extends StatelessWidget {
   /// The callback to execute when the button is pressed
@@ -43,29 +43,29 @@ class BottomActionBar extends StatelessWidget {
             ),
           ),
         ),
-        child: Row(
-          children: [
-            const Spacer(),
-            TextButton(
-              onPressed: enabled ? onPressed : null,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 12,
-                ),
+        child: SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: enabled ? onPressed : null,
+            style: FilledButton.styleFrom(
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
               ),
-              child: Text(
-                label.toUpperCase(),
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.2,
-                  color: enabled
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
-                ),
+              minimumSize: const Size(48, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
-          ],
+            child: Text(
+              label.toUpperCase(),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
         ),
       ),
     );

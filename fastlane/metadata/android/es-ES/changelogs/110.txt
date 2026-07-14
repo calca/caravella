@@ -1,0 +1,9 @@
+Versión 1.8.0 - Voz, Escaneo y Búsqueda Inteligente
+
+• Nuevo: agrega gastos por voz — habla y los detalles se completan solos
+• Nuevo: escanea recibos para extraer los detalles del gasto
+• Nuevo: búsqueda instantánea de gastos y grupos, con filtros
+• Nuevo: fondos de Unsplash y widget de inicio con totales
+• Nuevo: plantillas de grupo personalizadas con tus categorías
+
+¡Tus gastos, más rápido que nunca!

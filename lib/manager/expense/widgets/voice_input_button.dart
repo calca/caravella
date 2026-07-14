@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../services/voice_input_service.dart';
 
@@ -90,26 +91,35 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
           setState(() {
             _isListening = false;
             _isProcessing = false;
-            if (error == 'Voice recognition not available') {
+            if (error == VoiceInputError.notAvailable) {
               _isAvailable = false;
             }
           });
           _animationController.stop();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                error == 'Voice recognition not available'
-                    ? gloc.voice_input_not_available
-                    : gloc.voice_input_error,
-              ),
-              duration: const Duration(seconds: 3),
-            ),
+          AppToast.show(
+            context,
+            _errorMessage(gloc, error),
+            type: ToastType.error,
+            duration: const Duration(seconds: 3),
           );
         }
       },
       localeId: widget.localeId,
     );
+  }
+
+  String _errorMessage(gen.AppLocalizations gloc, VoiceInputError error) {
+    switch (error) {
+      case VoiceInputError.notAvailable:
+        return gloc.voice_input_not_available;
+      case VoiceInputError.permissionDenied:
+        return gloc.voice_input_permission_denied;
+      case VoiceInputError.noSpeech:
+        return gloc.voice_input_no_speech;
+      case VoiceInputError.recognitionFailed:
+        return gloc.voice_input_error;
+    }
   }
 
   Future<void> _stopListening() async {

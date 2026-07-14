@@ -1,3 +1,22 @@
+## 1.8.0 (14.07.2026)
+
+- **Novo**: Entrada por voz – fale naturalmente para adicionar uma despesa, com valor, descrição, categoria, data e quem pagou reconhecidos automaticamente, em todos os idiomas suportados
+- **Novo**: Escaneamento de recibos por OCR – fotografe um recibo e deixe o reconhecimento de texto no dispositivo extrair o valor e a descrição para você
+- **Novo**: Busca de imagens do Unsplash para os fundos de grupo, com download direto no app
+- **Novo**: Widget Android para a tela inicial mostrando o total gasto hoje e no grupo, com ações de adição rápida e abertura de grupo
+- **Novo**: Página de busca de despesas dedicada com busca de texto completo, calendário destacando dias com despesas e filtros por categoria, participante, anexo e localização
+- **Novo**: Busca de grupos em tela cheia estilo Gmail na página de grupos
+- **Novo**: Modelos de grupo personalizados – crie, edite e exclua seus próprios tipos de grupo com nome, ícone e categorias padrão nas Configurações
+- **Melhorias**: Página de detalhes do grupo redesenhada para combinar com o estilo dos cartões da tela inicial, com cabeçalho centralizado
+- **Melhorias**: Assistente de criação de grupo com layout e campos de entrada mais refinados
+- **Melhorias**: O editor de modelos de grupo agora abre em uma página dedicada em tela cheia, com seleção de ícone mais clara e lista de categorias editável, disponível também ao editar um grupo existente
+- **Correções**: A entrada por voz não deixa mais um símbolo de moeda na descrição e agora informa corretamente os erros de reconhecimento em vez de falhar silenciosamente
+- **Correções**: O botão de escaneamento de recibo abre a câmera diretamente, com a galeria disponível por toque longo
+- **Correções**: O seletor de fundos Unsplash não mostra mais miniaturas desatualizadas e agora funciona corretamente em todas as builds de lançamento
+- **Correções**: A verificação de nomes duplicados não marca mais o item em edição como duplicado de si mesmo
+- **Correções**: O formulário de adicionar despesa não exibe mais um fundo vermelho "inválido" ao abrir, e o botão Adicionar/Salvar fica com a cor primária assim que o formulário se torna válido
+- **Correções**: A folha de adição rápida de despesa agora abre o modo de edição completa com um gesto de deslizar para cima
+
 ## 1.6.0 (03.04.2026)
 
 - **Novo**: Integração com agentes IA do Android – Google Gemini pode adicionar despesas e verificar saldos por você

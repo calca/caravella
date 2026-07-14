@@ -4,6 +4,8 @@ import 'package:caravella_core/caravella_core.dart';
 
 /// Platform implementation of LocationServiceAbstraction using geolocator and geocoding packages
 class LocationServiceImpl implements LocationServiceAbstraction {
+  final geocoding.Geocoding _geocoding = geocoding.Geocoding();
+
   @override
   Future<bool> isLocationServiceEnabled() async {
     return await geo.Geolocator.isLocationServiceEnabled();
@@ -52,7 +54,7 @@ class LocationServiceImpl implements LocationServiceAbstraction {
     required double longitude,
   }) async {
     try {
-      final placemarks = await geocoding.placemarkFromCoordinates(
+      final placemarks = await _geocoding.placemarkFromCoordinates(
         latitude,
         longitude,
       );
