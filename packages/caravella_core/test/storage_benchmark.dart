@@ -1,13 +1,13 @@
 import 'dart:math';
-import '../services/logging/logger_service.dart';
-import '../model/expense_group.dart';
-import '../model/expense_participant.dart';
-import '../model/expense_category.dart';
-import '../model/expense_details.dart';
-import 'expense_group_repository.dart';
-import 'storage_performance.dart';
-import 'file_based_expense_group_repository.dart';
-import 'storage_transaction.dart';
+import 'package:caravella_core/services/logging/logger_service.dart';
+import 'package:caravella_core/model/expense_group.dart';
+import 'package:caravella_core/model/expense_participant.dart';
+import 'package:caravella_core/model/expense_category.dart';
+import 'package:caravella_core/model/expense_details.dart';
+import 'package:caravella_core/data/expense_group_repository.dart';
+import 'package:caravella_core/data/storage_performance.dart';
+import 'package:caravella_core/data/file_based_expense_group_repository.dart';
+import 'package:caravella_core/data/storage_transaction.dart';
 
 /// Benchmark configuration
 class BenchmarkConfig {

@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:caravella_core/caravella_core.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'package:caravella_core/data/file_based_expense_group_repository.dart';
+import 'package:caravella_core/data/storage_performance.dart';
+import 'storage_benchmark.dart';
 
 /// Fake path provider to avoid platform channel dependency in benchmarks
 class _FakePathProvider extends PathProviderPlatform {
