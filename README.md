@@ -80,7 +80,6 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Voice Input**: Speak naturally to add an expense — amount, description, category, date, and payer are filled in automatically, in all supported languages
 - **Receipt Scanning**: Photograph a receipt and let on-device OCR extract the amount and description for you
 - **Unsplash Backgrounds**: Search and download beautiful photos from Unsplash to personalize your group backgrounds
-- **Android Home Widget**: Track today's and your group's total spending, and quick-add expenses, right from your home screen
 - **Smarter Search**: Find expenses instantly with full-text search, calendar highlights, and filters — plus Gmail-style search across all your groups
 - **Custom Group Templates**: Create your own group types with a name, icon, and default categories, now editable in a dedicated full-screen page and usable when editing existing groups too
 
