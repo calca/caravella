@@ -7,7 +7,6 @@ import 'package:caravella_core/model/expense_details.dart';
 import 'package:caravella_core/data/expense_group_repository.dart';
 import 'package:caravella_core/data/storage_performance.dart';
 import 'package:caravella_core/data/file_based_expense_group_repository.dart';
-import 'package:caravella_core/data/storage_transaction.dart';
 
 /// Benchmark configuration
 class BenchmarkConfig {
@@ -185,9 +184,6 @@ class StorageBenchmark {
 
     // Benchmark: Search operations
     results.add(await _benchmarkSearchOperations(config));
-
-    // Benchmark: Transaction operations
-    results.add(await _benchmarkTransactionOperations(testGroups, config));
 
     return results;
   }
@@ -406,40 +402,6 @@ class StorageBenchmark {
       operation: 'dataIntegrityCheck',
       durations: durations,
       config: config,
-    );
-  }
-
-  /// Benchmarks transaction operations
-  Future<BenchmarkResult> _benchmarkTransactionOperations(
-    List<ExpenseGroup> groups,
-    BenchmarkConfig config,
-  ) async {
-    final durations = <Duration>[];
-    final testGroups = groups.take(3).toList();
-
-    for (int i = 0; i < config.iterations; i++) {
-      final stopwatch = Stopwatch()..start();
-
-      // Perform a complex transaction
-      await repository.executeTransaction((tx) {
-        for (final group in testGroups) {
-          tx.saveGroup(group.copyWith(title: '${group.title} - Updated $i'));
-        }
-        tx.setPinnedGroup(testGroups.first.id);
-        if (testGroups.length > 1) {
-          tx.archiveGroup(testGroups.last.id);
-        }
-      });
-
-      stopwatch.stop();
-      durations.add(stopwatch.elapsed);
-    }
-
-    return BenchmarkResult(
-      operation: 'transactionOperations',
-      durations: durations,
-      config: config,
-      metadata: {'operationsPerTransaction': testGroups.length + 2},
     );
   }
 

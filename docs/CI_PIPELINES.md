@@ -6,7 +6,7 @@ Two GitHub Actions workflows exist under `.github/workflows/`. They are **not id
 
 Triggers: push/PR to `main`, and `release: published`.
 
-- **`build` job** (runs unless the triggering event is a release): `flutter pub get` → `flutter analyze` → `flutter test` → build a **signed staging APK**:
+- **`build` job** (runs unless the triggering event is a release): `flutter pub get` → `flutter analyze` → `flutter test --coverage` (uploads `coverage/lcov.info` as the `coverage-report` artifact — visibility only, no minimum-coverage gate) → build a **signed staging APK**:
   ```bash
   flutter build apk --flavor staging --release \
     --dart-define=FLAVOR=staging \

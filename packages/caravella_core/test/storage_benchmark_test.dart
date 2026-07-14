@@ -219,26 +219,6 @@ void main() {
     test('should handle empty results gracefully', () {
       expect(() => StorageBenchmark.printResults([]), returnsNormally);
     });
-
-    test('should benchmark transaction operations', () async {
-      const config = BenchmarkConfig(
-        groupCount: 3,
-        iterations: 2,
-        enablePerformanceMonitoring: false,
-      );
-
-      final results = await benchmark.runBenchmarkSuite(config: config);
-      final transactionResult = results.firstWhere(
-        (r) => r.operation == 'transactionOperations',
-      );
-
-      expect(transactionResult.operation, equals('transactionOperations'));
-      expect(transactionResult.durations.length, equals(config.iterations));
-      expect(
-        transactionResult.metadata['operationsPerTransaction'],
-        greaterThan(0),
-      );
-    });
   });
 
   group('BenchmarkResult', () {

@@ -26,7 +26,6 @@ export 'data/storage_errors.dart';
 export 'data/storage_index.dart';
 export 'data/storage_migration_service.dart';
 export 'data/storage_performance.dart';
-export 'data/storage_transaction.dart';
 
 // Services - Logging
 export 'services/logging/logger_service.dart';
