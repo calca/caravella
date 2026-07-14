@@ -56,7 +56,6 @@ class SyncManager {
     );
     _conflictResolver = ConflictResolver(
       syncDao: _syncDao,
-      repository: _repository,
     );
 
     _started = true;

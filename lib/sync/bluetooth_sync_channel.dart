@@ -169,7 +169,7 @@ class BluetoothSyncChannel {
         serviceId: serviceId,
       );
 
-      if (started ?? false) {
+      if (started) {
         _advertising = true;
         LoggerService.info(
           'Started advertising as "${identity.deviceName}"',
@@ -204,7 +204,7 @@ class BluetoothSyncChannel {
         serviceId: serviceId,
       );
 
-      if (started ?? false) {
+      if (started) {
         _discovering = true;
         LoggerService.info('Started discovery', name: _tag);
       } else {

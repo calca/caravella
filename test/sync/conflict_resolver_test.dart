@@ -102,7 +102,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       final group = _createGroup(id: 'new-group');
@@ -133,7 +132,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       // Remote is newer (future timestamp)
@@ -163,7 +161,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       // Remote is older
@@ -201,7 +198,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       final remoteGroup = _createGroup(id: 'tie-id', title: 'Remote');
@@ -227,7 +223,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       final delta = _buildDelta(
@@ -250,7 +245,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       final delta = _buildDelta(
@@ -270,7 +264,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       final delta = _buildDelta(deviceId: 'remote-1');
@@ -294,7 +287,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       final futureTs = SyncClock.nowMs() + 20000;
@@ -330,7 +322,6 @@ void main() {
       final syncDao = SyncDao(db);
       final resolver = ConflictResolver(
         syncDao: syncDao,
-        repository: repository,
       );
 
       final group = _createGroup(id: 'shared-new', syncEnabled: true);
@@ -361,7 +352,6 @@ void main() {
         final syncDao = SyncDao(db);
         final resolver = ConflictResolver(
           syncDao: syncDao,
-          repository: repository,
         );
 
         final remoteGroup = _createGroup(

@@ -88,9 +88,9 @@ class SyncOrchestrator {
     // Start cloud channel if available and enabled
     if (_cloudChannel != null) {
       try {
-        final enabled = await _cloudChannel!.isEnabled();
+        final enabled = await _cloudChannel.isEnabled();
         if (enabled) {
-          await _cloudChannel!.start(
+          await _cloudChannel.start(
             onShards: (shards, channel) async {
               LoggerService.info(
                 'Received ${shards.length} shards from cloud',
@@ -130,7 +130,7 @@ class SyncOrchestrator {
     _lanChannel.dispose();
 
     if (_cloudChannel != null) {
-      await _cloudChannel!.stop();
+      await _cloudChannel.stop();
     }
 
     await _syncManager.stop();
@@ -192,7 +192,7 @@ class SyncOrchestrator {
             ),
           );
         }
-        return _cloudChannel!.syncNow();
+        return _cloudChannel.syncNow();
 
       default:
         LoggerService.warning(

@@ -156,7 +156,6 @@ void main() {
       final syncDaoB = SyncDao(dbB);
       final resolverB = ConflictResolver(
         syncDao: syncDaoB,
-        repository: repoB,
       );
       final resultAtoB = await resolverB.applyDelta(dbB, deltaAtoB, 'lan');
       expect(resultAtoB.errors, equals(0));
@@ -188,7 +187,6 @@ void main() {
       final syncDaoA = SyncDao(dbA);
       final resolverA = ConflictResolver(
         syncDao: syncDaoA,
-        repository: repoA,
       );
       final resultBtoA = await resolverA.applyDelta(dbA, deltaBtoA, 'lan');
       expect(resultBtoA.errors, equals(0));
@@ -196,8 +194,8 @@ void main() {
       // --- Verify convergence ---
       final finalA = await repoA.getAllGroups();
       final finalB = await repoB.getAllGroups();
-      final groupsA = finalA.unwrap() ?? [];
-      final groupsB = finalB.unwrap() ?? [];
+      final groupsA = finalA.unwrap();
+      final groupsB = finalB.unwrap();
 
       // 5 (A-only) + 3 (B-only) + 1 (shared) = 9
       expect(groupsA.length, equals(9));

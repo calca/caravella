@@ -21,15 +21,11 @@ class ConflictResolver {
   static const _tag = 'sync.conflict';
 
   final SyncDao _syncDao;
-  final SqliteExpenseGroupRepository _repository;
 
-  /// Creates a [ConflictResolver] backed by the given [syncDao] and
-  /// [repository].
+  /// Creates a [ConflictResolver] backed by the given [syncDao].
   const ConflictResolver({
     required SyncDao syncDao,
-    required SqliteExpenseGroupRepository repository,
-  })  : _syncDao = syncDao,
-        _repository = repository;
+  }) : _syncDao = syncDao;
 
   /// Processes an incoming [delta] received over [channel] and returns a
   /// [SyncResult] with counters of applied / skipped / errored groups.

@@ -5,7 +5,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('GroupSerializer', () {
-    ExpenseGroup _makeGroup({String id = 'g1'}) {
+    ExpenseGroup makeGroup({String id = 'g1'}) {
       final participants = [
         ExpenseParticipant(name: 'Alice', id: '${id}_p0'),
         ExpenseParticipant(name: 'Bob', id: '${id}_p1'),
@@ -38,7 +38,7 @@ void main() {
     }
 
     test('toJson includes _sync metadata', () {
-      final group = _makeGroup();
+      final group = makeGroup();
       final json = GroupSerializer.toJson(
         group,
         deviceId: 'dev-1',
@@ -55,7 +55,7 @@ void main() {
     });
 
     test('fromJson round-trip preserves core fields', () {
-      final original = _makeGroup();
+      final original = makeGroup();
       final json = GroupSerializer.toJson(
         original,
         deviceId: 'dev-1',
@@ -74,7 +74,7 @@ void main() {
     });
 
     test('serializePayload and deserializePayload round-trip', () {
-      final group = _makeGroup();
+      final group = makeGroup();
       final payload = GroupSerializer.serializePayload(
         groups: [group],
         deviceId: 'dev-1',
