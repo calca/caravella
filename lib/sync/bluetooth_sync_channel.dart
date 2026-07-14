@@ -234,6 +234,11 @@ class BluetoothSyncChannel {
         LoggerService.info('Stopped discovery', name: _tag);
       }
       _chunkBuffers.clear();
+      for (final completer in _pendingResponses.values) {
+        if (!completer.isCompleted) {
+          completer.complete(<String, dynamic>{});
+        }
+      }
       _pendingResponses.clear();
     } catch (e, st) {
       LoggerService.error(
@@ -276,11 +281,13 @@ class BluetoothSyncChannel {
         'timestamp': SyncClock.nowMs(),
       });
 
-      await _sendPayload(endpointId, payload);
-
-      // Wait for response from peer
+      // Register the completer before sending so a fast peer response can
+      // never race ahead of us — otherwise it would be misread as a new
+      // incoming sync request instead of our awaited reply.
       final completer = Completer<Map<String, dynamic>>();
       _pendingResponses[endpointId] = completer;
+
+      await _sendPayload(endpointId, payload);
 
       final remoteDelta = await completer.future.timeout(
         const Duration(seconds: 30),
@@ -289,6 +296,7 @@ class BluetoothSyncChannel {
             'Timeout waiting for sync response from $endpointId',
             name: _tag,
           );
+          _pendingResponses.remove(endpointId);
           return <String, dynamic>{};
         },
       );
@@ -317,6 +325,7 @@ class BluetoothSyncChannel {
       LoggerService.info('Sync with $endpointId completed: $result', name: _tag);
       return result;
     } catch (e, st) {
+      _pendingResponses.remove(endpointId);
       LoggerService.error(
         'Sync with $endpointId failed',
         name: _tag,
