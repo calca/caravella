@@ -373,7 +373,7 @@ class LanSyncChannel {
     );
 
     _broadcast = BonsoirBroadcast(service: service);
-    await _broadcast!.ready;
+    await _broadcast!.initialize();
     await _broadcast!.start();
 
     LoggerService.info(
@@ -396,7 +396,7 @@ class LanSyncChannel {
 
   Future<void> _startDiscovery() async {
     _discovery = BonsoirDiscovery(type: serviceType);
-    await _discovery!.ready;
+    await _discovery!.initialize();
     await _discovery!.start();
 
     _discovery!.eventStream?.listen(
@@ -412,25 +412,21 @@ class LanSyncChannel {
   Future<void> _onDiscoveryEvent(BonsoirDiscoveryEvent event) async {
     if (!_active) return;
 
-    final service = event.service;
-    if (service == null) return;
-
-    switch (event.type) {
-      case BonsoirDiscoveryEventType.discoveryServiceResolved:
-        await _onPeerResolved(service);
-      case BonsoirDiscoveryEventType.discoveryServiceLost:
-        _onPeerLost(service);
+    switch (event) {
+      case BonsoirDiscoveryServiceResolvedEvent():
+        await _onPeerResolved(event.service);
+      case BonsoirDiscoveryServiceLostEvent():
+        _onPeerLost(event.service);
       default:
         break;
     }
   }
 
   Future<void> _onPeerResolved(BonsoirService service) async {
-    final resolved = service as ResolvedBonsoirService;
-    final peerId = resolved.attributes['device_id'] ?? resolved.name;
-    final peerName = resolved.attributes['device_name'] ?? 'Unknown';
-    final host = resolved.host;
-    final port = resolved.port;
+    final peerId = service.attributes['device_id'] ?? service.name;
+    final peerName = service.attributes['device_name'] ?? 'Unknown';
+    final host = service.hostAddress;
+    final port = service.port;
 
     // Skip self
     if (DeviceIdentity.isInitialized &&

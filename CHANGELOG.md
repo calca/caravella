@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the legacy single-date-picker fallback in the group period editor (dead code kept for backwards compatibility since the range picker was introduced)
 - The Cloud Sync section in Settings → Sync is now hidden entirely on builds without Google Drive sync (the default), instead of showing a toggle that silently did nothing; fixed the toggle constructing a fresh, session-less channel on every rebuild instead of reusing the real one
 - Privacy policy and permissions documentation (`store/`) updated to reflect that sync (Wi-Fi/Bluetooth device sync, optional Google Drive relay) can now transmit expense/group/participant data — previously these documents stated the app never does this
+- Upgraded the `bonsoir` mDNS package (LAN sync discovery) from 5.1.11 to 7.1.4, migrating `lan_sync_channel.dart` to its new sealed discovery-event types and `hostAddress`/`initialize()` APIs
 
 ## [1.8.0] - 2026-07-14
 
