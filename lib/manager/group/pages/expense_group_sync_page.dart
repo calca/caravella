@@ -6,9 +6,15 @@ import 'package:provider/provider.dart';
 
 import '../../../settings/widgets/settings_section.dart';
 import '../../../settings/widgets/settings_card.dart';
+import '../../../sync/bluetooth_sync_factory.dart';
+import '../../../sync/multi_user_sync_page.dart';
 import '../../../sync/widgets/paired_devices_list.dart';
 
 /// Per-group sync settings sub-page, reached from [GroupSettingsPage].
+///
+/// Enabling sync for a group only takes effect once Wi-Fi or Bluetooth sync
+/// is turned on app-wide (Settings → Sync → [MultiUserSyncPage]) — pairing
+/// itself always happens there, not on this page.
 class ExpenseGroupSyncPage extends StatefulWidget {
   final ExpenseGroup trip;
 
@@ -22,10 +28,40 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
   late ExpenseGroup _currentTrip;
   bool _changed = false;
 
+  bool _channelsAvailable = false;
+  bool _checkingChannels = true;
+  SyncOrchestrator? _lastCheckedOrchestrator;
+
   @override
   void initState() {
     super.initState();
     _currentTrip = widget.trip;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final orchestrator = Provider.of<SyncOrchestrator?>(context, listen: false);
+    _ensureChannelsChecked(orchestrator);
+  }
+
+  Future<void> _ensureChannelsChecked(SyncOrchestrator? orchestrator) async {
+    if (orchestrator == null ||
+        identical(orchestrator, _lastCheckedOrchestrator)) {
+      return;
+    }
+    _lastCheckedOrchestrator = orchestrator;
+
+    final lan = await orchestrator.isLanSyncEnabled();
+    final bt = BluetoothSyncFactory.isEnabled &&
+        await BluetoothSyncFactory.isUserEnabled();
+
+    if (mounted) {
+      setState(() {
+        _channelsAvailable = lan || bt;
+        _checkingChannels = false;
+      });
+    }
   }
 
   Future<void> _handleSyncToggle(bool enabled) async {
@@ -45,12 +81,30 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     });
   }
 
+  Future<void> _openDevicePairing(
+    BuildContext context,
+    SyncOrchestrator orchestrator,
+  ) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MultiUserSyncPage(orchestrator: orchestrator),
+      ),
+    );
+    // Wi-Fi/Bluetooth sync may have been turned on (or off) while the user
+    // was in Settings — refresh so the toggle above reflects it immediately.
+    _lastCheckedOrchestrator = null;
+    await _ensureChannelsChecked(orchestrator);
+  }
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final orchestrator = context.watch<SyncOrchestrator?>();
+
+    final canToggleOn =
+        orchestrator != null && !_checkingChannels && _channelsAvailable;
 
     return PopScope(
       canPop: false,
@@ -83,39 +137,59 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                       style: textTheme.titleMedium,
                     ),
                     subtitle: Text(
-                      gloc.sync_group_enable_desc,
+                      canToggleOn || _currentTrip.syncEnabled
+                          ? gloc.sync_group_enable_desc
+                          : gloc.sync_group_needs_channel,
                       style: textTheme.bodySmall,
                     ),
                     value: _currentTrip.syncEnabled,
-                    onChanged: orchestrator == null
+                    onChanged: orchestrator == null ||
+                            (!canToggleOn && !_currentTrip.syncEnabled)
                         ? null
                         : (value) => _handleSyncToggle(value),
                   ),
                 ),
-                if (orchestrator != null && _currentTrip.syncEnabled) ...[
+                if (orchestrator != null) ...[
                   const SizedBox(height: 8),
+                  SettingsCard(
+                    context: context,
+                    color: colorScheme.surface,
+                    semanticsButton: true,
+                    semanticsLabel: gloc.sync_group_manage_pairing_title,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.devices_outlined,
+                        color: colorScheme.primary,
+                      ),
+                      title: Text(
+                        gloc.sync_group_manage_pairing_title,
+                        style: textTheme.titleMedium,
+                      ),
+                      subtitle: Text(gloc.sync_group_manage_pairing_desc),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => _openDevicePairing(context, orchestrator),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            if (orchestrator != null && _currentTrip.syncEnabled) ...[
+              SettingsSection(
+                title: gloc.sync_paired_devices_title,
+                description: '',
+                children: [
                   SettingsCard(
                     context: context,
                     color: colorScheme.surface,
                     semanticsLabel: gloc.sync_paired_devices_title,
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            gloc.sync_paired_devices_title,
-                            style: textTheme.labelLarge,
-                          ),
-                          const SizedBox(height: 4),
-                          PairedDevicesList(orchestrator: orchestrator),
-                        ],
-                      ),
+                      child: PairedDevicesList(orchestrator: orchestrator),
                     ),
                   ),
                 ],
-              ],
-            ),
+              ),
+            ],
           ],
         ),
       ),

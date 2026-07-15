@@ -1337,6 +1337,22 @@
   "@sync_settings_desc": {
     "description": "数据设置中同步入口的副标题"
   },
+  "sync_multiuser_title": "与他人同步",
+  "@sync_multiuser_title": {
+    "description": "Wi-Fi/蓝牙（他人设备）同步子页面入口标题"
+  },
+  "sync_multiuser_description": "通过Wi-Fi或蓝牙与附近的设备共享你的群组",
+  "@sync_multiuser_description": {
+    "description": "多用户同步入口描述"
+  },
+  "sync_multidevice_title": "同步你的设备",
+  "@sync_multidevice_title": {
+    "description": "云端（自己设备）同步子页面入口标题"
+  },
+  "sync_multidevice_description": "通过Google Drive让你的手机和其他设备保持最新",
+  "@sync_multidevice_description": {
+    "description": "多设备同步入口描述"
+  },
   "sync_local_title": "本地同步",
   "@sync_local_title": {
     "description": "本地局域网同步部分标题"
@@ -1352,6 +1368,10 @@
   "sync_cloud_description": "通过Google Drive同步",
   "@sync_cloud_description": {
     "description": "云同步描述"
+  },
+  "sync_cloud_scope_description": "启用后会同步你的所有群组——不能像Wi-Fi/蓝牙同步那样按群组单独选择",
+  "@sync_cloud_scope_description": {
+    "description": "说明云同步会一次性应用于所有群组的提示，显示在多设备同步页面"
   },
   "sync_cloud_enable": "启用云同步",
   "@sync_cloud_enable": {
@@ -1410,6 +1430,10 @@
   "sync_bt_title": "蓝牙同步",
   "@sync_bt_title": {
     "description": "蓝牙同步标题"
+  },
+  "sync_bt_description": "通过蓝牙与附近设备手动同步",
+  "@sync_bt_description": {
+    "description": "蓝牙同步描述"
   },
   "sync_bt_searching": "正在搜索附近设备...",
   "@sync_bt_searching": {
@@ -1487,13 +1511,25 @@
   "@sync_group_pending": {
     "description": "群组未同步状态的工具提示"
   },
-  "sync_group_enable": "启用同步",
+  "sync_group_enable": "共享此群组",
   "@sync_group_enable": {
     "description": "在群组上启用同步的标签"
   },
-  "sync_group_enable_desc": "通过 Wi-Fi 或蓝牙与其他设备共享此群组的支出",
+  "sync_group_enable_desc": "通过Wi-Fi或蓝牙将此群组的支出与其他已配对设备同步",
   "@sync_group_enable_desc": {
     "description": "群组同步开关的说明"
+  },
+  "sync_group_needs_channel": "请先在设置中开启Wi-Fi或蓝牙同步以启用此项",
+  "@sync_group_needs_channel": {
+    "description": "当应用范围内Wi-Fi和蓝牙同步都未开启时，显示此文本代替sync_group_enable_desc"
+  },
+  "sync_group_manage_pairing_title": "管理设备配对",
+  "@sync_group_manage_pairing_title": {
+    "description": "跳转到应用级多用户同步设置以配对设备的操作行"
+  },
+  "sync_group_manage_pairing_desc": "在设置中开启Wi-Fi或蓝牙同步并配对设备",
+  "@sync_group_manage_pairing_desc": {
+    "description": "管理配对操作行的说明"
   },
   "sync_qr_show_button": "显示二维码",
   "@sync_qr_show_button": {
@@ -1510,6 +1546,27 @@
   "sync_qr_show_description": "在同一 Wi-Fi 网络下的另一设备上扫描此码以配对同步",
   "@sync_qr_show_description": {
     "description": "配对二维码显示面板的说明"
+  },
+  "sync_qr_expires_in": "{time} 后过期",
+  "@sync_qr_expires_in": {
+    "description": "显示配对二维码剩余有效时间的倒计时",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "sync_qr_expired_title": "二维码已过期",
+  "@sync_qr_expired_title": {
+    "description": "配对二维码过期后显示的标题"
+  },
+  "sync_qr_expired_desc": "生成新的二维码以继续配对",
+  "@sync_qr_expired_desc": {
+    "description": "配对二维码过期后显示的说明"
+  },
+  "sync_qr_regenerate_button": "生成新二维码",
+  "@sync_qr_regenerate_button": {
+    "description": "上一个配对二维码过期后，用于生成新二维码的按钮"
   },
   "sync_qr_no_network": "请连接 Wi-Fi 以生成配对码",
   "@sync_qr_no_network": {
@@ -1535,6 +1592,18 @@
   "sync_qr_pair_failed": "配对失败 — 请确认两台设备在同一 Wi-Fi 网络下",
   "@sync_qr_pair_failed": {
     "description": "二维码配对失败的错误信息"
+  },
+  "sync_qr_pair_expired": "此配对码已过期 — 请让对方设备重新显示一个新的配对码",
+  "@sync_qr_pair_expired": {
+    "description": "扫描的配对二维码已超出有效期时的错误信息"
+  },
+  "sync_qr_pair_emulator_host": "此二维码是在Android模拟器上生成的，其他设备无法访问该地址 — 请使用同一Wi-Fi网络下的两台真实设备进行配对",
+  "@sync_qr_pair_emulator_host": {
+    "description": "扫描的配对二维码中的地址是Android模拟器不可达的NAT地址时的错误信息"
+  },
+  "sync_qr_emulator_warning": "此设备是Android模拟器 — 其地址通常无法被其他设备访问，配对可能会失败",
+  "@sync_qr_emulator_warning": {
+    "description": "当本设备自身地址为Android模拟器的NAT地址时，在二维码显示面板中展示的提示"
   },
   "sync_paired_devices_title": "已配对设备",
   "@sync_paired_devices_title": {

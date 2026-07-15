@@ -9,10 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Sync groups between your own devices over local Wi-Fi, Bluetooth, or an optional Google Drive relay is now reachable from the app: a **Sync** entry in Settings → Data (Wi-Fi status, Bluetooth pairing, cloud opt-in, history), a per-group **Enable sync** toggle in group settings, and a sync status indicator on the home screen (#416)
+- Local (Wi-Fi/LAN) sync is now off by default and must be turned on from Settings → Sync — it previously started automatically on every launch with no way to disable it; QR pairing and the paired-devices list are hidden while it's off, and the choice persists across restarts
+- Bluetooth sync now has the same enable/disable toggle in Settings → Sync (off by default) — the manual pairing entry point is hidden until turned on
 - **QR code pairing for Wi-Fi sync**: show a QR code on one device and scan it from another (Settings → Sync) to establish trust between them — automatic LAN sync now only exchanges data with devices that have completed this handshake, instead of any app install on the same network. Paired devices are listed in Settings → Sync (removable) and, for any group with sync enabled, in that group's settings
 - **Real Google Drive cloud sync**, in a new optional `google_drive_sync` package built only when compiled with `--dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true` (off by default, including all current release builds): sign in with your own Google account and sync data is relayed through a hidden, app-private folder in your own Drive — never a server we operate. See the new [setup guide](docs/GOOGLE_DRIVE_SYNC_SETUP.md) for the Google Cloud Console configuration this requires
 
 ### Security
+- Pairing QR codes now expire 5 minutes after being generated — scanning a stale/photographed code past that window is rejected instead of remaining usable indefinitely. The QR display sheet shows a live countdown and switches to a "generate new code" prompt once it expires
+- Pairing now detects when a code's address is an Android Emulator's private NAT address (`10.0.2.x`, unreachable from outside that one emulator instance) and shows a specific explanation instead of a raw connection error — both when scanning such a code and, as a heads-up, on the QR display sheet when the showing device is itself an emulator
 - LAN sync no longer auto-syncs with every device broadcasting the app's mDNS service on the same Wi-Fi network — only devices paired via QR code are trusted; unpaired peers are discovered but never exchanged data with, closing the "syncs with strangers on the same network" gap in the original LAN sync groundwork
 - Bluetooth sync is now gated behind `--dart-define=ENABLE_BLUETOOTH_SYNC` (default `true`, preserving current behavior) so F-Droid-style builds can exclude it and the Google Play Services dependency it reaches (`nearby_connections`) by passing `=false` — F-Droid's own build recipe (`metadata.yml`) now does this
 
@@ -21,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bluetooth pairing now requests the required Android 12+/13+ runtime permissions (scan/connect/advertise, nearby Wi-Fi devices) before starting discovery, with a localized error shown if denied, instead of silently failing to find any device; added the corresponding manifest entries and the iOS Bonjour/local-network declarations LAN sync needs
 
 ### Changed
+- Settings → Sync is now two entry tiles instead of one long stacked page: **Sync with other people** (Wi-Fi/Bluetooth pairing with other people's devices) and **Sync your devices** (Google Drive cloud relay across your own devices), each on its own sub-page — reflecting that these solve different problems (pairing with someone else vs. keeping your own devices in sync) and use unrelated trust models; the cloud sub-page now also explains that enabling it applies to all groups at once, unlike per-group Wi-Fi/Bluetooth sync
+- A group's **Share this group** sync toggle (in that group's own Sync sub-page) can only be turned on once Wi-Fi or Bluetooth sync is turned on app-wide — it now shows why it's disabled and a **Manage device pairing** row that jumps straight to Settings → Sync to turn a channel on and pair devices, instead of silently doing nothing; the paired-devices list there also gained a proper section header instead of a plain inline label
 - Per-group sync (enable toggle + paired devices list) moved out of the main group settings screen into its own **Synchronization** sub-page, matching the General/Participants/Categories/Other pattern instead of being inlined
 - Settings rows now render via the shared `BaseCard` (`caravella_core_ui`) instead of a bespoke `Card`-based reimplementation, and the "edit name" dialog uses the shared `Material3Dialog` instead of a raw `AlertDialog`
 - The new group Synchronization sub-page now uses the shared `CaravellaAppBar` instead of a bespoke `AppBar`, matching the General/Participants/Categories/Other sub-pages
@@ -29,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Cloud Sync section in Settings → Sync is now hidden entirely on builds without Google Drive sync (the default), instead of showing a toggle that silently did nothing; fixed the toggle constructing a fresh, session-less channel on every rebuild instead of reusing the real one
 - Privacy policy and permissions documentation (`store/`) updated to reflect that sync (Wi-Fi/Bluetooth device sync, optional Google Drive relay) can now transmit expense/group/participant data — previously these documents stated the app never does this
 - Upgraded the `bonsoir` mDNS package (LAN sync discovery) from 5.1.11 to 7.1.4, migrating `lan_sync_channel.dart` to its new sealed discovery-event types and `hostAddress`/`initialize()` APIs
+- The Cloud Sync privacy confirmation in Settings → Sync now uses the shared `Material3Dialog` (`Material3Dialogs.showConfirmation`) instead of a raw `AlertDialog`
 
 ## [1.8.0] - 2026-07-14
 

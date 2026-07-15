@@ -4385,6 +4385,30 @@ abstract class AppLocalizations {
   /// **'Share data between your devices via Wi-Fi or Bluetooth'**
   String get sync_settings_desc;
 
+  /// Title for the Wi-Fi/Bluetooth (other people's devices) sync sub-page entry
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with other people'**
+  String get sync_multiuser_title;
+
+  /// Description for the multi-user sync entry
+  ///
+  /// In en, this message translates to:
+  /// **'Share your groups with nearby devices via Wi-Fi or Bluetooth'**
+  String get sync_multiuser_description;
+
+  /// Title for the cloud (own devices) sync sub-page entry
+  ///
+  /// In en, this message translates to:
+  /// **'Sync your devices'**
+  String get sync_multidevice_title;
+
+  /// Description for the multi-device sync entry
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your own phone and other devices up to date via Google Drive'**
+  String get sync_multidevice_description;
+
   /// Title for local LAN sync section
   ///
   /// In en, this message translates to:
@@ -4408,6 +4432,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sync via Google Drive'**
   String get sync_cloud_description;
+
+  /// Notice explaining that cloud sync applies to all groups at once, shown on the multi-device sync page
+  ///
+  /// In en, this message translates to:
+  /// **'Once enabled, this syncs all of your groups — there\'s no per-group choice like with Wi-Fi/Bluetooth sync'**
+  String get sync_cloud_scope_description;
 
   /// Label for cloud sync toggle
   ///
@@ -4480,6 +4510,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bluetooth Sync'**
   String get sync_bt_title;
+
+  /// Description for Bluetooth sync
+  ///
+  /// In en, this message translates to:
+  /// **'Manual sync with nearby devices via Bluetooth'**
+  String get sync_bt_description;
 
   /// Status while searching for BT peers
   ///
@@ -4574,14 +4610,32 @@ abstract class AppLocalizations {
   /// Label for enabling sync on a group
   ///
   /// In en, this message translates to:
-  /// **'Enable sync'**
+  /// **'Share this group'**
   String get sync_group_enable;
 
   /// Description for the group sync toggle
   ///
   /// In en, this message translates to:
-  /// **'Share this group\'s expenses with other devices via Wi-Fi or Bluetooth'**
+  /// **'Sync this group\'s expenses with other paired devices over Wi-Fi or Bluetooth'**
   String get sync_group_enable_desc;
+
+  /// Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Wi-Fi or Bluetooth sync in Settings to enable this'**
+  String get sync_group_needs_channel;
+
+  /// CTA row leading to the app-wide multi-user sync settings to pair devices
+  ///
+  /// In en, this message translates to:
+  /// **'Manage device pairing'**
+  String get sync_group_manage_pairing_title;
+
+  /// Description for the manage-pairing CTA row
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Wi-Fi or Bluetooth sync and pair devices from Settings'**
+  String get sync_group_manage_pairing_desc;
 
   /// Button to show this device's pairing QR code
   ///
@@ -4606,6 +4660,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan this code from another device on the same Wi-Fi network to pair it for sync'**
   String get sync_qr_show_description;
+
+  /// Countdown showing how long the pairing QR code remains valid
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in {time}'**
+  String sync_qr_expires_in(String time);
+
+  /// Title shown when the pairing QR code has expired
+  ///
+  /// In en, this message translates to:
+  /// **'Code expired'**
+  String get sync_qr_expired_title;
+
+  /// Description shown when the pairing QR code has expired
+  ///
+  /// In en, this message translates to:
+  /// **'Generate a new code to keep pairing'**
+  String get sync_qr_expired_desc;
+
+  /// Button to generate a fresh pairing QR code after the previous one expired
+  ///
+  /// In en, this message translates to:
+  /// **'Generate new code'**
+  String get sync_qr_regenerate_button;
 
   /// Shown when no local network address is available for pairing
   ///
@@ -4636,6 +4714,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pairing failed — make sure both devices are on the same Wi-Fi network'**
   String get sync_qr_pair_failed;
+
+  /// Error message when a scanned pairing QR code is past its validity window
+  ///
+  /// In en, this message translates to:
+  /// **'This pairing code has expired — ask the other device to show a new one'**
+  String get sync_qr_pair_expired;
+
+  /// Error message when a scanned pairing QR code's host is an Android emulator's unreachable NAT address
+  ///
+  /// In en, this message translates to:
+  /// **'This code was generated on an Android emulator, which can\'t be reached from other devices — pair using two physical devices on the same Wi-Fi network instead'**
+  String get sync_qr_pair_emulator_host;
+
+  /// Inline warning on the QR display sheet when this device's own address is an Android emulator's NAT address
+  ///
+  /// In en, this message translates to:
+  /// **'This device is an Android emulator — its address usually isn\'t reachable from other devices, so pairing may fail'**
+  String get sync_qr_emulator_warning;
 
   /// Title for the list of devices paired for LAN sync
   ///

@@ -83,14 +83,20 @@ class SyncOrchestrator {
     _lanEventSub = _lanChannel.events.listen(_forwardEvent);
 
     // Start LAN channel — automatically discovers and syncs with peers
-    // that have completed the QR pairing handshake
+    // that have completed the QR pairing handshake — unless the user has
+    // opted out via the settings toggle.
     try {
-      await _lanChannel.start(
-        onDelta: _handleDelta,
-        isPeerAuthorized: _syncManager.isPeerPaired,
-        onPairingRequest: _syncManager.registerPairedDevice,
-      );
-      LoggerService.info('LAN channel started', name: _tag);
+      final lanEnabled = await _lanChannel.isEnabled();
+      if (lanEnabled) {
+        await _lanChannel.start(
+          onDelta: _handleDelta,
+          isPeerAuthorized: _syncManager.isPeerPaired,
+          onPairingRequest: _syncManager.registerPairedDevice,
+        );
+        LoggerService.info('LAN channel started', name: _tag);
+      } else {
+        LoggerService.info('LAN channel disabled — not starting', name: _tag);
+      }
     } catch (e, st) {
       LoggerService.error(
         'Failed to start LAN channel',
@@ -232,6 +238,38 @@ class SyncOrchestrator {
     }
   }
 
+  /// Whether the user has LAN sync enabled (persisted preference).
+  Future<bool> isLanSyncEnabled() => _lanChannel.isEnabled();
+
+  /// Enable or disable LAN sync, persisting the choice and immediately
+  /// starting or stopping the running channel to match.
+  Future<void> setLanSyncEnabled(bool enabled) async {
+    await _lanChannel.setEnabled(enabled);
+
+    if (enabled) {
+      if (_lanChannel.isActive) return;
+      try {
+        await _lanChannel.start(
+          onDelta: _handleDelta,
+          isPeerAuthorized: _syncManager.isPeerPaired,
+          onPairingRequest: _syncManager.registerPairedDevice,
+        );
+        LoggerService.info('LAN channel started', name: _tag);
+      } catch (e, st) {
+        LoggerService.error(
+          'Failed to start LAN channel',
+          name: _tag,
+          error: e,
+          stackTrace: st,
+        );
+      }
+    } else {
+      if (!_lanChannel.isActive) return;
+      await _lanChannel.stop();
+      LoggerService.info('LAN channel stopped', name: _tag);
+    }
+  }
+
   /// Get last N sync history entries.
   ///
   /// Each entry is a map with keys: `channel`, `peerId`, `applied`,
@@ -267,13 +305,26 @@ class SyncOrchestrator {
       platform: identity.platform.name,
       host: host,
       port: _lanChannel.port,
+      createdAtMs: SyncClock.nowMs(),
     );
   }
 
   /// Completes a pairing handshake with a device scanned from its QR code.
   /// Returns `true` if both devices now trust each other for LAN sync.
-  Future<bool> pairWithScannedPayload(PairingPayload payload) =>
-      _lanChannel.pairWithHost(payload.host, payload.port);
+  ///
+  /// Returns `false` without attempting the handshake if [payload] is past
+  /// its [PairingPayload.validityMs] window — a stale/expired code should
+  /// not still be usable to pair.
+  Future<bool> pairWithScannedPayload(PairingPayload payload) {
+    if (payload.isExpired) {
+      LoggerService.warning(
+        'Rejected pairing — QR code expired',
+        name: _tag,
+      );
+      return Future.value(false);
+    }
+    return _lanChannel.pairWithHost(payload.host, payload.port);
+  }
 
   /// Returns all devices paired for LAN sync, most recently paired first.
   Future<List<PairedDevice>> getPairedDevices() =>

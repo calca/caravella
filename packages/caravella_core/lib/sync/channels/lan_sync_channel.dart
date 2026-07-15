@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bonsoir/bonsoir.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart';
@@ -43,6 +44,7 @@ typedef PairingCallback = Future<void> Function(
 class LanSyncChannel {
   static const String _tag = 'sync.channel.lan';
   static const String _channel = 'lan';
+  static const String _prefKey = 'sync_lan_enabled';
 
   /// mDNS service type used for discovery and advertising.
   static const String serviceType = '_caravellasync._tcp';
@@ -141,6 +143,29 @@ class LanSyncChannel {
   /// Dispose the event stream. Call when the channel will no longer be used.
   void dispose() {
     _eventController.close();
+  }
+
+  /// Whether LAN sync is enabled (user opt-in).
+  ///
+  /// Reads the persisted preference. Defaults to `false` — automatic local
+  /// network sync stays off until the user explicitly enables it.
+  Future<bool> isEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_prefKey) ?? false;
+  }
+
+  /// Enable or disable LAN sync.
+  ///
+  /// Persists the preference and logs the change. Does not itself start or
+  /// stop the channel — callers (e.g. [SyncOrchestrator]) are responsible
+  /// for reflecting the change in the running channel's lifecycle.
+  Future<void> setEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_prefKey, enabled);
+    LoggerService.info(
+      'LAN sync ${enabled ? 'enabled' : 'disabled'}',
+      name: _tag,
+    );
   }
 
   // ---------------------------------------------------------------------------

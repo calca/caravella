@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 /// Gates Bluetooth (Nearby Connections) sync on the `ENABLE_BLUETOOTH_SYNC`
 /// build flag.
 ///
@@ -16,6 +18,22 @@
 /// dependency; see docs/BUILD_VARIANTS.md for why that's an accepted
 /// pattern in this codebase already.
 class BluetoothSyncFactory {
+  static const _prefKey = 'sync_bluetooth_enabled';
+
   static bool get isEnabled =>
       const bool.fromEnvironment('ENABLE_BLUETOOTH_SYNC', defaultValue: true);
+
+  /// Whether the user has enabled Bluetooth sync (opt-in preference,
+  /// separate from the [isEnabled] build-time flag). Defaults to `false` —
+  /// Bluetooth pairing stays hidden in Settings → Sync until turned on.
+  static Future<bool> isUserEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_prefKey) ?? false;
+  }
+
+  /// Persists the user's Bluetooth sync opt-in/opt-out choice.
+  static Future<void> setUserEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_prefKey, enabled);
+  }
 }

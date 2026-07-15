@@ -2225,6 +2225,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_settings_desc => '通过 Wi-Fi 或蓝牙在设备间共享数据';
 
   @override
+  String get sync_multiuser_title => '与他人同步';
+
+  @override
+  String get sync_multiuser_description => '通过Wi-Fi或蓝牙与附近的设备共享你的群组';
+
+  @override
+  String get sync_multidevice_title => '同步你的设备';
+
+  @override
+  String get sync_multidevice_description => '通过Google Drive让你的手机和其他设备保持最新';
+
+  @override
   String get sync_local_title => '本地同步';
 
   @override
@@ -2235,6 +2247,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_cloud_description => '通过Google Drive同步';
+
+  @override
+  String get sync_cloud_scope_description =>
+      '启用后会同步你的所有群组——不能像Wi-Fi/蓝牙同步那样按群组单独选择';
 
   @override
   String get sync_cloud_enable => '启用云同步';
@@ -2275,6 +2291,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_bt_title => '蓝牙同步';
+
+  @override
+  String get sync_bt_description => '通过蓝牙与附近设备手动同步';
 
   @override
   String get sync_bt_searching => '正在搜索附近设备...';
@@ -2326,10 +2345,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_group_pending => '更改尚未同步';
 
   @override
-  String get sync_group_enable => '启用同步';
+  String get sync_group_enable => '共享此群组';
 
   @override
-  String get sync_group_enable_desc => '通过 Wi-Fi 或蓝牙与其他设备共享此群组的支出';
+  String get sync_group_enable_desc => '通过Wi-Fi或蓝牙将此群组的支出与其他已配对设备同步';
+
+  @override
+  String get sync_group_needs_channel => '请先在设置中开启Wi-Fi或蓝牙同步以启用此项';
+
+  @override
+  String get sync_group_manage_pairing_title => '管理设备配对';
+
+  @override
+  String get sync_group_manage_pairing_desc => '在设置中开启Wi-Fi或蓝牙同步并配对设备';
 
   @override
   String get sync_qr_show_button => '显示二维码';
@@ -2342,6 +2370,20 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_qr_show_description => '在同一 Wi-Fi 网络下的另一设备上扫描此码以配对同步';
+
+  @override
+  String sync_qr_expires_in(String time) {
+    return '$time 后过期';
+  }
+
+  @override
+  String get sync_qr_expired_title => '二维码已过期';
+
+  @override
+  String get sync_qr_expired_desc => '生成新的二维码以继续配对';
+
+  @override
+  String get sync_qr_regenerate_button => '生成新二维码';
 
   @override
   String get sync_qr_no_network => '请连接 Wi-Fi 以生成配对码';
@@ -2359,6 +2401,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_qr_pair_failed => '配对失败 — 请确认两台设备在同一 Wi-Fi 网络下';
+
+  @override
+  String get sync_qr_pair_expired => '此配对码已过期 — 请让对方设备重新显示一个新的配对码';
+
+  @override
+  String get sync_qr_pair_emulator_host =>
+      '此二维码是在Android模拟器上生成的，其他设备无法访问该地址 — 请使用同一Wi-Fi网络下的两台真实设备进行配对';
+
+  @override
+  String get sync_qr_emulator_warning =>
+      '此设备是Android模拟器 — 其地址通常无法被其他设备访问，配对可能会失败';
 
   @override
   String get sync_paired_devices_title => '已配对设备';

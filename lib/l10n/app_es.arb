@@ -947,12 +947,22 @@
   ,"@sync_settings_desc": {"description": "Subtítulo para la entrada de sync en ajustes de Datos"}
   ,"sync_local_title": "Sync local"
   ,"@sync_local_title": {"description": "Título para la sección de sync LAN local"}
+  ,"sync_multiuser_title": "Sincronizar con otras personas"
+  ,"@sync_multiuser_title": {"description": "Título para la entrada a la subpágina de sync Wi-Fi/Bluetooth (dispositivos de otras personas)"}
+  ,"sync_multiuser_description": "Comparte tus grupos con dispositivos cercanos vía Wi-Fi o Bluetooth"
+  ,"@sync_multiuser_description": {"description": "Descripción para la entrada de sync multiusuario"}
+  ,"sync_multidevice_title": "Sincronizar tus dispositivos"
+  ,"@sync_multidevice_title": {"description": "Título para la entrada a la subpágina de sync en la nube (dispositivos propios)"}
+  ,"sync_multidevice_description": "Mantén actualizados tu teléfono y otros dispositivos vía Google Drive"
+  ,"@sync_multidevice_description": {"description": "Descripción para la entrada de sync multidispositivo"}
   ,"sync_local_description": "Sincronización automática en red Wi-Fi"
   ,"@sync_local_description": {"description": "Descripción para sync LAN"}
   ,"sync_cloud_title": "Sync en la nube"
   ,"@sync_cloud_title": {"description": "Título para la sección de sync en la nube"}
   ,"sync_cloud_description": "Sincronización vía Google Drive"
   ,"@sync_cloud_description": {"description": "Descripción para sync en la nube"}
+  ,"sync_cloud_scope_description": "Una vez activada, sincroniza todos tus grupos — no puedes elegirlo grupo por grupo como con la sync Wi-Fi/Bluetooth"
+  ,"@sync_cloud_scope_description": {"description": "Aviso que explica que la sync en la nube se aplica a todos los grupos a la vez, mostrado en la página de sync multidispositivo"}
   ,"sync_cloud_enable": "Activar sync en la nube"
   ,"@sync_cloud_enable": {"description": "Etiqueta para activar sync en la nube"}
   ,"sync_cloud_privacy": "Tus datos se guardan en tu Google Drive personal, no en servidores de terceros."
@@ -977,6 +987,8 @@
   ,"@sync_last_sync": {"description": "Muestra la hora del último sync","placeholders": {"time": {"type": "String"}}}
   ,"sync_bt_title": "Sync Bluetooth"
   ,"@sync_bt_title": {"description": "Título para sync Bluetooth"}
+  ,"sync_bt_description": "Sincronización manual con dispositivos cercanos vía Bluetooth"
+  ,"@sync_bt_description": {"description": "Descripción para sync Bluetooth"}
   ,"sync_bt_searching": "Buscando dispositivos cercanos..."
   ,"@sync_bt_searching": {"description": "Estado mientras busca peers BT"}
   ,"sync_bt_sync_with": "Sincronizar"
@@ -1007,10 +1019,16 @@
   ,"@sync_group_synced": {"description": "Tooltip para estado de grupo sincronizado"}
   ,"sync_group_pending": "Cambios aún no sincronizados"
   ,"@sync_group_pending": {"description": "Tooltip para estado de grupo no sincronizado"}
-  ,"sync_group_enable": "Habilitar sincronización"
+  ,"sync_group_enable": "Compartir este grupo"
   ,"@sync_group_enable": {"description": "Etiqueta para habilitar la sincronización en un grupo"}
-  ,"sync_group_enable_desc": "Comparte los gastos de este grupo con otros dispositivos por Wi-Fi o Bluetooth"
+  ,"sync_group_enable_desc": "Sincroniza los gastos de este grupo con otros dispositivos emparejados por Wi-Fi o Bluetooth"
   ,"@sync_group_enable_desc": {"description": "Descripción para el interruptor de sincronización del grupo"}
+  ,"sync_group_needs_channel": "Activa la sync de Wi-Fi o Bluetooth en Ajustes para habilitar esto"
+  ,"@sync_group_needs_channel": {"description": "Se muestra en lugar de sync_group_enable_desc cuando ni Wi-Fi ni Bluetooth sync están activos a nivel de app"}
+  ,"sync_group_manage_pairing_title": "Gestionar el emparejamiento de dispositivos"
+  ,"@sync_group_manage_pairing_title": {"description": "Fila CTA que lleva a los ajustes de sync multiusuario para emparejar dispositivos"}
+  ,"sync_group_manage_pairing_desc": "Activa la sync de Wi-Fi o Bluetooth y empareja dispositivos desde Ajustes"
+  ,"@sync_group_manage_pairing_desc": {"description": "Descripción para la fila CTA de gestión de emparejamiento"}
   ,"sync_qr_show_button": "Mostrar código QR"
   ,"@sync_qr_show_button": {"description": "Botón para mostrar el código QR de emparejamiento de este dispositivo"}
   ,"sync_qr_scan_button": "Escanear código QR"
@@ -1019,6 +1037,14 @@
   ,"@sync_qr_show_title": {"description": "Título para la hoja de visualización del QR de emparejamiento"}
   ,"sync_qr_show_description": "Escanea este código desde otro dispositivo en la misma red Wi-Fi para emparejarlo con la sincronización"
   ,"@sync_qr_show_description": {"description": "Instrucciones para la hoja de visualización del QR de emparejamiento"}
+  ,"sync_qr_expires_in": "Caduca en {time}"
+  ,"@sync_qr_expires_in": {"description": "Cuenta atrás que muestra cuánto tiempo sigue siendo válido el código QR de emparejamiento", "placeholders": {"time": {"type": "String"}}}
+  ,"sync_qr_expired_title": "Código caducado"
+  ,"@sync_qr_expired_title": {"description": "Título mostrado cuando el código QR de emparejamiento ha caducado"}
+  ,"sync_qr_expired_desc": "Genera un código nuevo para seguir emparejando"
+  ,"@sync_qr_expired_desc": {"description": "Descripción mostrada cuando el código QR de emparejamiento ha caducado"}
+  ,"sync_qr_regenerate_button": "Generar código nuevo"
+  ,"@sync_qr_regenerate_button": {"description": "Botón para generar un nuevo código QR de emparejamiento tras la caducidad del anterior"}
   ,"sync_qr_no_network": "Conéctate a Wi-Fi para generar un código de emparejamiento"
   ,"@sync_qr_no_network": {"description": "Se muestra cuando no hay una dirección de red local disponible para el emparejamiento"}
   ,"sync_qr_scan_title": "Escanear código de emparejamiento"
@@ -1029,6 +1055,12 @@
   ,"@sync_qr_pair_success": {"description": "Mensaje de éxito tras emparejar con un dispositivo escaneado", "placeholders": {"deviceName": {"type": "String"}}}
   ,"sync_qr_pair_failed": "Error al emparejar — asegúrate de que ambos dispositivos estén en la misma red Wi-Fi"
   ,"@sync_qr_pair_failed": {"description": "Mensaje de error cuando falla el emparejamiento por QR"}
+  ,"sync_qr_pair_expired": "Este código de emparejamiento ha caducado — pide al otro dispositivo que muestre uno nuevo"
+  ,"@sync_qr_pair_expired": {"description": "Mensaje de error cuando un código QR escaneado ha superado su ventana de validez"}
+  ,"sync_qr_pair_emulator_host": "Este código se generó en un emulador de Android, que no se puede alcanzar desde otros dispositivos — empareja usando dos dispositivos físicos en la misma red Wi-Fi"
+  ,"@sync_qr_pair_emulator_host": {"description": "Mensaje de error cuando el host de un código QR escaneado es la dirección NAT inalcanzable de un emulador de Android"}
+  ,"sync_qr_emulator_warning": "Este dispositivo es un emulador de Android — su dirección normalmente no es alcanzable desde otros dispositivos, por lo que el emparejamiento podría fallar"
+  ,"@sync_qr_emulator_warning": {"description": "Aviso en línea en la hoja de QR cuando la dirección de este dispositivo es la de NAT de un emulador de Android"}
   ,"sync_paired_devices_title": "Dispositivos emparejados"
   ,"@sync_paired_devices_title": {"description": "Título para la lista de dispositivos emparejados para sincronización LAN"}
   ,"sync_paired_devices_empty": "Aún no hay dispositivos emparejados"

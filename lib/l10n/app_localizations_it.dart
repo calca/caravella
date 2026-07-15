@@ -2283,6 +2283,20 @@ class AppLocalizationsIt extends AppLocalizations {
       'Condividi i dati tra i tuoi dispositivi via Wi-Fi o Bluetooth';
 
   @override
+  String get sync_multiuser_title => 'Sincronizza con altre persone';
+
+  @override
+  String get sync_multiuser_description =>
+      'Condividi i tuoi gruppi con dispositivi vicini via Wi-Fi o Bluetooth';
+
+  @override
+  String get sync_multidevice_title => 'Sincronizza i tuoi dispositivi';
+
+  @override
+  String get sync_multidevice_description =>
+      'Mantieni aggiornati il tuo telefono e gli altri dispositivi tramite Google Drive';
+
+  @override
   String get sync_local_title => 'Sync locale';
 
   @override
@@ -2294,6 +2308,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_cloud_description => 'Sincronizzazione via Google Drive';
+
+  @override
+  String get sync_cloud_scope_description =>
+      'Una volta attivata, sincronizza tutti i tuoi gruppi — non è possibile scegliere gruppo per gruppo come con la sync Wi-Fi/Bluetooth';
 
   @override
   String get sync_cloud_enable => 'Abilita sync cloud';
@@ -2336,6 +2354,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_bt_title => 'Sync Bluetooth';
+
+  @override
+  String get sync_bt_description =>
+      'Sincronizzazione manuale con dispositivi vicini via Bluetooth';
 
   @override
   String get sync_bt_searching => 'Ricerca dispositivi vicini...';
@@ -2388,11 +2410,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sync_group_pending => 'Modifiche non ancora sincronizzate';
 
   @override
-  String get sync_group_enable => 'Abilita sincronizzazione';
+  String get sync_group_enable => 'Condividi questo gruppo';
 
   @override
   String get sync_group_enable_desc =>
-      'Condividi le spese di questo gruppo con altri dispositivi via Wi-Fi o Bluetooth';
+      'Sincronizza le spese di questo gruppo con altri dispositivi accoppiati via Wi-Fi o Bluetooth';
+
+  @override
+  String get sync_group_needs_channel =>
+      'Attiva la sync Wi-Fi o Bluetooth nelle Impostazioni per abilitarlo';
+
+  @override
+  String get sync_group_manage_pairing_title =>
+      'Gestisci l\'associazione dei dispositivi';
+
+  @override
+  String get sync_group_manage_pairing_desc =>
+      'Attiva la sync Wi-Fi o Bluetooth e associa i dispositivi dalle Impostazioni';
 
   @override
   String get sync_qr_show_button => 'Mostra codice QR';
@@ -2406,6 +2440,21 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get sync_qr_show_description =>
       'Scansiona questo codice da un altro dispositivo sulla stessa rete Wi-Fi per abbinarlo alla sincronizzazione';
+
+  @override
+  String sync_qr_expires_in(String time) {
+    return 'Scade tra $time';
+  }
+
+  @override
+  String get sync_qr_expired_title => 'Codice scaduto';
+
+  @override
+  String get sync_qr_expired_desc =>
+      'Genera un nuovo codice per continuare l\'abbinamento';
+
+  @override
+  String get sync_qr_regenerate_button => 'Genera nuovo codice';
 
   @override
   String get sync_qr_no_network =>
@@ -2426,6 +2475,18 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get sync_qr_pair_failed =>
       'Abbinamento non riuscito — assicurati che entrambi i dispositivi siano sulla stessa rete Wi-Fi';
+
+  @override
+  String get sync_qr_pair_expired =>
+      'Questo codice di abbinamento è scaduto — chiedi all\'altro dispositivo di mostrarne uno nuovo';
+
+  @override
+  String get sync_qr_pair_emulator_host =>
+      'Questo codice è stato generato su un emulatore Android, non raggiungibile da altri dispositivi — usa due dispositivi fisici sulla stessa rete Wi-Fi';
+
+  @override
+  String get sync_qr_emulator_warning =>
+      'Questo dispositivo è un emulatore Android — il suo indirizzo di solito non è raggiungibile da altri dispositivi, quindi l\'abbinamento potrebbe fallire';
 
   @override
   String get sync_paired_devices_title => 'Dispositivi abbinati';

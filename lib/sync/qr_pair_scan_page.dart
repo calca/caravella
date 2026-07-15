@@ -38,11 +38,29 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
     setState(() => _handling = true);
     await _controller.stop();
 
+    if (!mounted) return;
+    final loc = gen.AppLocalizations.of(context);
+
+    if (payload.isExpired) {
+      AppToast.show(context, loc.sync_qr_pair_expired, type: ToastType.error);
+      Navigator.of(context).pop(false);
+      return;
+    }
+
+    if (payload.isLikelyUnreachableEmulatorHost) {
+      AppToast.show(
+        context,
+        loc.sync_qr_pair_emulator_host,
+        type: ToastType.error,
+      );
+      Navigator.of(context).pop(false);
+      return;
+    }
+
     final success = await widget.orchestrator.pairWithScannedPayload(payload);
 
     if (!mounted) return;
 
-    final loc = gen.AppLocalizations.of(context);
     AppToast.show(
       context,
       success

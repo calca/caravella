@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'utils/sync_clock.dart';
+
 /// Data exchanged via QR code to establish a mutual LAN sync pairing.
 ///
 /// Encodes enough for the scanning device to connect directly to the
@@ -8,11 +10,20 @@ import 'dart:convert';
 class PairingPayload {
   static const int _schemaVersion = 1;
 
+  /// How long a generated code stays valid before it must be regenerated —
+  /// keeps a QR code shown on screen (e.g. photographed, or left open) from
+  /// being usable indefinitely.
+  static const int validityMs = 5 * 60 * 1000;
+
   final String deviceId;
   final String deviceName;
   final String platform;
   final String host;
   final int port;
+
+  /// UTC-epoch ms when this payload was generated, used to enforce
+  /// [validityMs].
+  final int createdAtMs;
 
   const PairingPayload({
     required this.deviceId,
@@ -20,7 +31,23 @@ class PairingPayload {
     required this.platform,
     required this.host,
     required this.port,
+    required this.createdAtMs,
   });
+
+  /// UTC-epoch ms after which this payload is no longer valid for pairing.
+  int get expiresAtMs => createdAtMs + validityMs;
+
+  /// Whether this payload is past its [validityMs] window.
+  bool get isExpired => SyncClock.nowMs() >= expiresAtMs;
+
+  /// Whether [host] falls in `10.0.2.0/24` — the private NAT subnet the
+  /// Android Emulator assigns to each running instance (`10.0.2.15` for the
+  /// device itself, incrementing for additional instances). That address is
+  /// only reachable from inside that one emulator's VM, never from another
+  /// emulator instance or from the host's real network — pairing across it
+  /// always fails, so callers should surface a specific message instead of
+  /// a raw connection error.
+  bool get isLikelyUnreachableEmulatorHost => host.startsWith('10.0.2.');
 
   String toQrData() => jsonEncode({
         'v': _schemaVersion,
@@ -29,6 +56,7 @@ class PairingPayload {
         'platform': platform,
         'host': host,
         'port': port,
+        'created_at_ms': createdAtMs,
       });
 
   /// Parses QR-scanned data. Returns `null` if [data] isn't a valid pairing
@@ -39,6 +67,7 @@ class PairingPayload {
       final deviceId = json['device_id'] as String?;
       final host = json['host'] as String?;
       final port = json['port'] as int?;
+      final createdAtMs = json['created_at_ms'] as int?;
       if (deviceId == null || host == null || port == null) return null;
 
       return PairingPayload(
@@ -47,6 +76,9 @@ class PairingPayload {
         platform: json['platform'] as String? ?? 'unknown',
         host: host,
         port: port,
+        // Older payloads without a timestamp are treated as already expired
+        // rather than trusted indefinitely.
+        createdAtMs: createdAtMs ?? 0,
       );
     } catch (_) {
       return null;

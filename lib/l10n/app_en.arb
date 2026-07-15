@@ -967,6 +967,14 @@
   ,"@sync_title": {"description": "Title for sync settings page"}
   ,"sync_settings_desc": "Share data between your devices via Wi-Fi or Bluetooth"
   ,"@sync_settings_desc": {"description": "Subtitle for the sync entry point in Data settings"}
+  ,"sync_multiuser_title": "Sync with other people"
+  ,"@sync_multiuser_title": {"description": "Title for the Wi-Fi/Bluetooth (other people's devices) sync sub-page entry"}
+  ,"sync_multiuser_description": "Share your groups with nearby devices via Wi-Fi or Bluetooth"
+  ,"@sync_multiuser_description": {"description": "Description for the multi-user sync entry"}
+  ,"sync_multidevice_title": "Sync your devices"
+  ,"@sync_multidevice_title": {"description": "Title for the cloud (own devices) sync sub-page entry"}
+  ,"sync_multidevice_description": "Keep your own phone and other devices up to date via Google Drive"
+  ,"@sync_multidevice_description": {"description": "Description for the multi-device sync entry"}
   ,"sync_local_title": "Local Sync"
   ,"@sync_local_title": {"description": "Title for local LAN sync section"}
   ,"sync_local_description": "Automatic sync on Wi-Fi network"
@@ -975,6 +983,8 @@
   ,"@sync_cloud_title": {"description": "Title for cloud sync section"}
   ,"sync_cloud_description": "Sync via Google Drive"
   ,"@sync_cloud_description": {"description": "Description for cloud sync"}
+  ,"sync_cloud_scope_description": "Once enabled, this syncs all of your groups — there's no per-group choice like with Wi-Fi/Bluetooth sync"
+  ,"@sync_cloud_scope_description": {"description": "Notice explaining that cloud sync applies to all groups at once, shown on the multi-device sync page"}
   ,"sync_cloud_enable": "Enable cloud sync"
   ,"@sync_cloud_enable": {"description": "Label for cloud sync toggle"}
   ,"sync_cloud_privacy": "Your data is saved in your personal Google Drive, not on third-party servers."
@@ -999,6 +1009,8 @@
   ,"@sync_last_sync": {"description": "Shows last sync time","placeholders": {"time": {"type": "String"}}}
   ,"sync_bt_title": "Bluetooth Sync"
   ,"@sync_bt_title": {"description": "Title for Bluetooth sync"}
+  ,"sync_bt_description": "Manual sync with nearby devices via Bluetooth"
+  ,"@sync_bt_description": {"description": "Description for Bluetooth sync"}
   ,"sync_bt_searching": "Searching for nearby devices..."
   ,"@sync_bt_searching": {"description": "Status while searching for BT peers"}
   ,"sync_bt_sync_with": "Sync"
@@ -1029,10 +1041,16 @@
   ,"@sync_group_synced": {"description": "Tooltip for synced group status"}
   ,"sync_group_pending": "Changes not yet synced"
   ,"@sync_group_pending": {"description": "Tooltip for unsynced group status"}
-  ,"sync_group_enable": "Enable sync"
+  ,"sync_group_enable": "Share this group"
   ,"@sync_group_enable": {"description": "Label for enabling sync on a group"}
-  ,"sync_group_enable_desc": "Share this group's expenses with other devices via Wi-Fi or Bluetooth"
+  ,"sync_group_enable_desc": "Sync this group's expenses with other paired devices over Wi-Fi or Bluetooth"
   ,"@sync_group_enable_desc": {"description": "Description for the group sync toggle"}
+  ,"sync_group_needs_channel": "Turn on Wi-Fi or Bluetooth sync in Settings to enable this"
+  ,"@sync_group_needs_channel": {"description": "Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide"}
+  ,"sync_group_manage_pairing_title": "Manage device pairing"
+  ,"@sync_group_manage_pairing_title": {"description": "CTA row leading to the app-wide multi-user sync settings to pair devices"}
+  ,"sync_group_manage_pairing_desc": "Turn on Wi-Fi or Bluetooth sync and pair devices from Settings"
+  ,"@sync_group_manage_pairing_desc": {"description": "Description for the manage-pairing CTA row"}
   ,"sync_qr_show_button": "Show QR code"
   ,"@sync_qr_show_button": {"description": "Button to show this device's pairing QR code"}
   ,"sync_qr_scan_button": "Scan QR code"
@@ -1041,6 +1059,14 @@
   ,"@sync_qr_show_title": {"description": "Title for the QR pairing display sheet"}
   ,"sync_qr_show_description": "Scan this code from another device on the same Wi-Fi network to pair it for sync"
   ,"@sync_qr_show_description": {"description": "Instructions for the QR pairing display sheet"}
+  ,"sync_qr_expires_in": "Expires in {time}"
+  ,"@sync_qr_expires_in": {"description": "Countdown showing how long the pairing QR code remains valid", "placeholders": {"time": {"type": "String"}}}
+  ,"sync_qr_expired_title": "Code expired"
+  ,"@sync_qr_expired_title": {"description": "Title shown when the pairing QR code has expired"}
+  ,"sync_qr_expired_desc": "Generate a new code to keep pairing"
+  ,"@sync_qr_expired_desc": {"description": "Description shown when the pairing QR code has expired"}
+  ,"sync_qr_regenerate_button": "Generate new code"
+  ,"@sync_qr_regenerate_button": {"description": "Button to generate a fresh pairing QR code after the previous one expired"}
   ,"sync_qr_no_network": "Connect to Wi-Fi to generate a pairing code"
   ,"@sync_qr_no_network": {"description": "Shown when no local network address is available for pairing"}
   ,"sync_qr_scan_title": "Scan pairing code"
@@ -1051,6 +1077,12 @@
   ,"@sync_qr_pair_success": {"description": "Success message after pairing with a scanned device", "placeholders": {"deviceName": {"type": "String"}}}
   ,"sync_qr_pair_failed": "Pairing failed — make sure both devices are on the same Wi-Fi network"
   ,"@sync_qr_pair_failed": {"description": "Error message when QR pairing fails"}
+  ,"sync_qr_pair_expired": "This pairing code has expired — ask the other device to show a new one"
+  ,"@sync_qr_pair_expired": {"description": "Error message when a scanned pairing QR code is past its validity window"}
+  ,"sync_qr_pair_emulator_host": "This code was generated on an Android emulator, which can't be reached from other devices — pair using two physical devices on the same Wi-Fi network instead"
+  ,"@sync_qr_pair_emulator_host": {"description": "Error message when a scanned pairing QR code's host is an Android emulator's unreachable NAT address"}
+  ,"sync_qr_emulator_warning": "This device is an Android emulator — its address usually isn't reachable from other devices, so pairing may fail"
+  ,"@sync_qr_emulator_warning": {"description": "Inline warning on the QR display sheet when this device's own address is an Android emulator's NAT address"}
   ,"sync_paired_devices_title": "Paired devices"
   ,"@sync_paired_devices_title": {"description": "Title for the list of devices paired for LAN sync"}
   ,"sync_paired_devices_empty": "No paired devices yet"
