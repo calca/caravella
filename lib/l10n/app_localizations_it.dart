@@ -2279,6 +2279,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sync_title => 'Sincronizzazione';
 
   @override
+  String get sync_settings_desc =>
+      'Condividi i dati tra i tuoi dispositivi via Wi-Fi o Bluetooth';
+
+  @override
   String get sync_local_title => 'Sync locale';
 
   @override
@@ -2345,6 +2349,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sync_bt_retry => 'Riprova';
 
   @override
+  String get sync_bt_permission_denied =>
+      'Permesso Bluetooth negato — abilitalo nelle impostazioni di sistema per sincronizzare con i dispositivi vicini';
+
+  @override
   String get sync_history_empty => 'Nessuna cronologia sync';
 
   @override
@@ -2372,6 +2380,52 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_group_enable => 'Abilita sincronizzazione';
+
+  @override
+  String get sync_group_enable_desc =>
+      'Condividi le spese di questo gruppo con altri dispositivi via Wi-Fi o Bluetooth';
+
+  @override
+  String get sync_qr_show_button => 'Mostra codice QR';
+
+  @override
+  String get sync_qr_scan_button => 'Scansiona codice QR';
+
+  @override
+  String get sync_qr_show_title => 'Abbina un dispositivo';
+
+  @override
+  String get sync_qr_show_description =>
+      'Scansiona questo codice da un altro dispositivo sulla stessa rete Wi-Fi per abbinarlo alla sincronizzazione';
+
+  @override
+  String get sync_qr_no_network =>
+      'Connettiti al Wi-Fi per generare un codice di pairing';
+
+  @override
+  String get sync_qr_scan_title => 'Scansiona codice di pairing';
+
+  @override
+  String get sync_qr_scan_description =>
+      'Inquadra con la fotocamera il codice di pairing mostrato sull\'altro dispositivo';
+
+  @override
+  String sync_qr_pair_success(String deviceName) {
+    return 'Abbinato con $deviceName';
+  }
+
+  @override
+  String get sync_qr_pair_failed =>
+      'Abbinamento non riuscito — assicurati che entrambi i dispositivi siano sulla stessa rete Wi-Fi';
+
+  @override
+  String get sync_paired_devices_title => 'Dispositivi abbinati';
+
+  @override
+  String get sync_paired_devices_empty => 'Nessun dispositivo abbinato';
+
+  @override
+  String get sync_paired_devices_remove => 'Rimuovi abbinamento';
 
   @override
   String get search_expenses => 'Cerca spese';

@@ -908,6 +908,8 @@
   ,"@save_label": {"description": "Rótulo para o botão de salvar"}
   ,"sync_title": "Sincronização"
   ,"@sync_title": {"description": "Título para a página de configurações de sync"}
+  ,"sync_settings_desc": "Compartilhe dados entre seus dispositivos via Wi-Fi ou Bluetooth"
+  ,"@sync_settings_desc": {"description": "Subtítulo para a entrada de sync nas configurações de Dados"}
   ,"sync_local_title": "Sync local"
   ,"@sync_local_title": {"description": "Título para a seção de sync LAN local"}
   ,"sync_local_description": "Sincronização automática na rede Wi-Fi"
@@ -948,6 +950,8 @@
   ,"@sync_bt_error": {"description": "Estado quando sync BT falha"}
   ,"sync_bt_retry": "Tentar novamente"
   ,"@sync_bt_retry": {"description": "Botão para tentar novamente sync BT"}
+  ,"sync_bt_permission_denied": "Permissão de Bluetooth negada — ative-a nas configurações do sistema para sincronizar com dispositivos próximos"
+  ,"@sync_bt_permission_denied": {"description": "Erro exibido quando as permissões de Bluetooth/dispositivos próximos são negadas"}
   ,"sync_history_empty": "Sem histórico de sync"
   ,"@sync_history_empty": {"description": "Estado vazio para histórico de sync"}
   ,"sync_channel_lan": "LAN"
@@ -966,6 +970,32 @@
   ,"@sync_group_pending": {"description": "Tooltip para status de grupo não sincronizado"}
   ,"sync_group_enable": "Ativar sincronização"
   ,"@sync_group_enable": {"description": "Etiqueta para ativar a sincronização em um grupo"}
+  ,"sync_group_enable_desc": "Compartilhe as despesas deste grupo com outros dispositivos via Wi-Fi ou Bluetooth"
+  ,"@sync_group_enable_desc": {"description": "Descrição para o alternador de sincronização do grupo"}
+  ,"sync_qr_show_button": "Mostrar código QR"
+  ,"@sync_qr_show_button": {"description": "Botão para mostrar o código QR de pareamento deste dispositivo"}
+  ,"sync_qr_scan_button": "Escanear código QR"
+  ,"@sync_qr_scan_button": {"description": "Botão para escanear o código QR de pareamento de outro dispositivo"}
+  ,"sync_qr_show_title": "Parear um dispositivo"
+  ,"@sync_qr_show_title": {"description": "Título para a folha de exibição do QR de pareamento"}
+  ,"sync_qr_show_description": "Escaneie este código a partir de outro dispositivo na mesma rede Wi-Fi para pareá-lo com a sincronização"
+  ,"@sync_qr_show_description": {"description": "Instruções para a folha de exibição do QR de pareamento"}
+  ,"sync_qr_no_network": "Conecte-se ao Wi-Fi para gerar um código de pareamento"
+  ,"@sync_qr_no_network": {"description": "Exibido quando nenhum endereço de rede local está disponível para o pareamento"}
+  ,"sync_qr_scan_title": "Escanear código de pareamento"
+  ,"@sync_qr_scan_title": {"description": "Título para a página de escaneamento do QR de pareamento"}
+  ,"sync_qr_scan_description": "Aponte a câmera para o código de pareamento exibido no outro dispositivo"
+  ,"@sync_qr_scan_description": {"description": "Instruções para a página de escaneamento do QR de pareamento"}
+  ,"sync_qr_pair_success": "Pareado com {deviceName}"
+  ,"@sync_qr_pair_success": {"description": "Mensagem de sucesso após parear com um dispositivo escaneado", "placeholders": {"deviceName": {"type": "String"}}}
+  ,"sync_qr_pair_failed": "Falha no pareamento — verifique se ambos os dispositivos estão na mesma rede Wi-Fi"
+  ,"@sync_qr_pair_failed": {"description": "Mensagem de erro quando o pareamento por QR falha"}
+  ,"sync_paired_devices_title": "Dispositivos pareados"
+  ,"@sync_paired_devices_title": {"description": "Título para a lista de dispositivos pareados para sincronização LAN"}
+  ,"sync_paired_devices_empty": "Ainda não há dispositivos pareados"
+  ,"@sync_paired_devices_empty": {"description": "Estado vazio para a lista de dispositivos pareados"}
+  ,"sync_paired_devices_remove": "Remover pareamento"
+  ,"@sync_paired_devices_remove": {"description": "Botão para remover o pareamento de um dispositivo"}
   ,"search_expenses": "Pesquisar despesas"
   ,"@search_expenses": {"description": "Título da página de pesquisa de despesas"}
   ,"search_in_group": "Pesquisar em {groupName}"

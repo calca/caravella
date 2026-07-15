@@ -88,6 +88,9 @@ dependencies:
   google_sign_in: ^6.2.2
   nearby_connections: ^4.0.2
   home_widget: ^0.9.1
+  permission_handler: ^12.0.3
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.2.1
 
 dev_dependencies:
   flutter_test:

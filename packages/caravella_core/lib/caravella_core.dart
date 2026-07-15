@@ -55,8 +55,11 @@ export 'services/widgets/platform_home_widget_manager.dart';
 // Sync
 export 'sync/device_identity.dart';
 export 'sync/utils/sync_clock.dart';
+export 'sync/utils/local_network_info.dart';
 export 'sync/models/sync_result.dart';
 export 'sync/models/sync_status.dart';
+export 'sync/models/paired_device.dart';
+export 'sync/pairing_payload.dart';
 export 'sync/sync_dao.dart';
 export 'sync/delta_builder.dart';
 export 'sync/conflict_resolver.dart';

@@ -25,7 +25,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 3;
+  static const int _databaseVersion = 4;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -35,6 +35,7 @@ class SqliteExpenseGroupRepository
   static const String tableAttachments = kTableAttachments;
   static const String tableDeviceMeta = kTableDeviceMeta;
   static const String tableSyncLog = kTableSyncLog;
+  static const String tablePairedDevices = kTablePairedDevices;
 
   final SqliteGroupMapper _mapper = const SqliteGroupMapper();
 
@@ -159,6 +160,27 @@ class SqliteExpenseGroupRepository
 
       LoggerService.info(
         'Database migration to v3 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 4) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v4',
+        name: 'storage.sqlite',
+      );
+
+      await db.execute('''
+        CREATE TABLE $kTablePairedDevices (
+          device_id TEXT PRIMARY KEY,
+          device_name TEXT NOT NULL,
+          platform TEXT,
+          paired_at INTEGER NOT NULL
+        )
+      ''');
+
+      LoggerService.info(
+        'Database migration to v4 complete',
         name: 'storage.sqlite',
       );
     }

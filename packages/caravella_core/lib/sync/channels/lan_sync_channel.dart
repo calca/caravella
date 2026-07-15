@@ -20,6 +20,19 @@ typedef DeltaCallback = Future<Map<String, dynamic>> Function(
   String peerId,
 );
 
+/// Callback used to check whether [peerId] has completed the QR pairing
+/// handshake and is trusted for automatic sync.
+typedef PeerAuthCallback = Future<bool> Function(String peerId);
+
+/// Callback invoked when a peer completes a pairing handshake (either by
+/// sending us a `/pair` request, or by us receiving a confirmation after
+/// pairing with a scanned QR code). Should persist the pairing.
+typedef PairingCallback = Future<void> Function(
+  String deviceId,
+  String deviceName,
+  String platform,
+);
+
 /// LAN peer-to-peer sync channel using HTTP + mDNS (Bonsoir).
 ///
 /// When started:
@@ -43,6 +56,8 @@ class LanSyncChannel {
   BonsoirBroadcast? _broadcast;
   BonsoirDiscovery? _discovery;
   DeltaCallback? _onDelta;
+  PeerAuthCallback? _isPeerAuthorized;
+  PairingCallback? _onPairingRequest;
 
   final StreamController<SyncEvent> _eventController =
       StreamController<SyncEvent>.broadcast();
@@ -58,6 +73,9 @@ class LanSyncChannel {
   /// Whether the channel is currently active.
   bool get isActive => _active;
 
+  /// The port this channel's HTTP server listens on.
+  int get port => _port;
+
   /// Stream of sync events from this channel.
   Stream<SyncEvent> get events => _eventController.stream;
 
@@ -65,13 +83,27 @@ class LanSyncChannel {
   ///
   /// [onDelta] is called when a remote peer sends us a delta.
   /// The returned map is sent back as the response delta.
-  Future<void> start({required DeltaCallback onDelta}) async {
+  ///
+  /// [isPeerAuthorized], if provided, gates both inbound (`/sync/delta`
+  /// requests) and outbound (mDNS-triggered auto-sync) exchanges to only
+  /// peers that have completed the QR pairing handshake — unpaired peers on
+  /// the same network are discovered but never synced with.
+  ///
+  /// [onPairingRequest], if provided, is invoked when a peer completes a
+  /// pairing handshake via the `/pair` endpoint, and should persist it.
+  Future<void> start({
+    required DeltaCallback onDelta,
+    PeerAuthCallback? isPeerAuthorized,
+    PairingCallback? onPairingRequest,
+  }) async {
     if (_active) {
       LoggerService.debug('LAN channel already active — skipping start', name: _tag);
       return;
     }
 
     _onDelta = onDelta;
+    _isPeerAuthorized = isPeerAuthorized;
+    _onPairingRequest = onPairingRequest;
 
     try {
       await _startHttpServer();
@@ -95,6 +127,8 @@ class LanSyncChannel {
   Future<void> stop() async {
     _active = false;
     _onDelta = null;
+    _isPeerAuthorized = null;
+    _onPairingRequest = null;
     _peers.clear();
 
     await _stopDiscovery();
@@ -118,6 +152,7 @@ class LanSyncChannel {
 
     router.post('/sync/delta', _handleDelta);
     router.get('/sync/ping', _handlePing);
+    router.post('/pair', _handlePairRequest);
 
     final handler = const shelf.Pipeline()
         .addMiddleware(shelf.logRequests(
@@ -153,6 +188,17 @@ class LanSyncChannel {
       if (_onDelta == null) {
         return shelf.Response.internalServerError(
           body: jsonEncode({'error': 'Channel not ready'}),
+          headers: {'content-type': 'application/json'},
+        );
+      }
+
+      if (_isPeerAuthorized != null && !await _isPeerAuthorized!(peerId)) {
+        LoggerService.warning(
+          'Rejected delta from unpaired peer=$peerId',
+          name: _tag,
+        );
+        return shelf.Response.forbidden(
+          jsonEncode({'error': 'not_paired'}),
           headers: {'content-type': 'application/json'},
         );
       }
@@ -195,6 +241,111 @@ class LanSyncChannel {
       }),
       headers: {'content-type': 'application/json'},
     );
+  }
+
+  /// Handles an incoming pairing request from a device that scanned our QR
+  /// code: persists the peer as paired, and confirms with our own identity
+  /// so the caller can complete the mutual pairing on its side too.
+  Future<shelf.Response> _handlePairRequest(shelf.Request request) async {
+    try {
+      final body = await request.readAsString();
+      final payload = jsonDecode(body) as Map<String, dynamic>;
+      final peerDeviceId = payload['device_id'] as String?;
+      final peerDeviceName =
+          payload['device_name'] as String? ?? 'Unknown device';
+      final peerPlatform = payload['platform'] as String? ?? 'unknown';
+
+      if (peerDeviceId == null) {
+        return shelf.Response.badRequest(
+          body: jsonEncode({'error': 'missing device_id'}),
+          headers: {'content-type': 'application/json'},
+        );
+      }
+
+      await _onPairingRequest?.call(peerDeviceId, peerDeviceName, peerPlatform);
+      LoggerService.info(
+        'Paired with incoming device=$peerDeviceId ($peerDeviceName)',
+        name: _tag,
+      );
+
+      final identity = DeviceIdentity.instance;
+      return shelf.Response.ok(
+        jsonEncode({
+          'device_id': identity.deviceId,
+          'device_name': identity.deviceName,
+          'platform': identity.platform.name,
+        }),
+        headers: {'content-type': 'application/json'},
+      );
+    } catch (e, st) {
+      LoggerService.error(
+        'Error handling pair request',
+        name: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      return shelf.Response.internalServerError(
+        body: jsonEncode({'error': e.toString()}),
+        headers: {'content-type': 'application/json'},
+      );
+    }
+  }
+
+  /// Sends a pairing request to [host]:[port] — typically parsed from a
+  /// scanned QR code — registering this device as paired on both ends in a
+  /// single round trip. Returns `true` if the handshake succeeded.
+  Future<bool> pairWithHost(String host, int port) async {
+    final identity = DeviceIdentity.instance;
+    final client = HttpClient();
+    try {
+      final uri = Uri.parse('http://$host:$port/pair');
+      final request = await client.postUrl(uri);
+      request.headers.contentType = ContentType.json;
+      request.write(jsonEncode({
+        'device_id': identity.deviceId,
+        'device_name': identity.deviceName,
+        'platform': identity.platform.name,
+      }));
+      final response = await request.close();
+      final responseBody = await response.transform(utf8.decoder).join();
+
+      if (response.statusCode != 200) {
+        LoggerService.warning(
+          'Pairing with $host:$port failed: HTTP ${response.statusCode}',
+          name: _tag,
+        );
+        return false;
+      }
+
+      final json = jsonDecode(responseBody) as Map<String, dynamic>;
+      final remoteDeviceId = json['device_id'] as String?;
+      final remoteDeviceName =
+          json['device_name'] as String? ?? 'Unknown device';
+      final remotePlatform = json['platform'] as String? ?? 'unknown';
+
+      if (remoteDeviceId == null) return false;
+
+      await _onPairingRequest?.call(
+        remoteDeviceId,
+        remoteDeviceName,
+        remotePlatform,
+      );
+      LoggerService.info(
+        'Paired with $remoteDeviceId ($remoteDeviceName) at $host:$port',
+        name: _tag,
+      );
+      return true;
+    } catch (e, st) {
+      LoggerService.error(
+        'Error pairing with $host:$port',
+        name: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      return false;
+    } finally {
+      client.close();
+    }
   }
 
   Future<void> _stopHttpServer() async {
@@ -324,6 +475,14 @@ class LanSyncChannel {
 
   Future<void> _syncWithPeer(String peerId, String host, int port) async {
     if (!_active || _onDelta == null) return;
+
+    if (_isPeerAuthorized != null && !await _isPeerAuthorized!(peerId)) {
+      LoggerService.debug(
+        'Peer $peerId not paired — skipping automatic sync',
+        name: _tag,
+      );
+      return;
+    }
 
     _eventController.add(const SyncStarted(_channel));
 

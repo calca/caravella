@@ -1333,6 +1333,10 @@
   "@sync_title": {
     "description": "同步设置页面标题"
   },
+  "sync_settings_desc": "通过 Wi-Fi 或蓝牙在设备间共享数据",
+  "@sync_settings_desc": {
+    "description": "数据设置中同步入口的副标题"
+  },
   "sync_local_title": "本地同步",
   "@sync_local_title": {
     "description": "本地局域网同步部分标题"
@@ -1426,6 +1430,10 @@
   "@sync_bt_retry": {
     "description": "重试蓝牙同步按钮"
   },
+  "sync_bt_permission_denied": "蓝牙权限被拒绝 — 请在系统设置中启用它以与附近设备同步",
+  "@sync_bt_permission_denied": {
+    "description": "蓝牙/附近设备权限被拒绝时显示的错误"
+  },
   "sync_history_empty": "暂无同步历史",
   "@sync_history_empty": {
     "description": "同步历史为空状态"
@@ -1469,6 +1477,63 @@
   "sync_group_enable": "启用同步",
   "@sync_group_enable": {
     "description": "在群组上启用同步的标签"
+  },
+  "sync_group_enable_desc": "通过 Wi-Fi 或蓝牙与其他设备共享此群组的支出",
+  "@sync_group_enable_desc": {
+    "description": "群组同步开关的说明"
+  },
+  "sync_qr_show_button": "显示二维码",
+  "@sync_qr_show_button": {
+    "description": "显示本设备配对二维码的按钮"
+  },
+  "sync_qr_scan_button": "扫描二维码",
+  "@sync_qr_scan_button": {
+    "description": "扫描另一设备配对二维码的按钮"
+  },
+  "sync_qr_show_title": "配对设备",
+  "@sync_qr_show_title": {
+    "description": "配对二维码显示面板的标题"
+  },
+  "sync_qr_show_description": "在同一 Wi-Fi 网络下的另一设备上扫描此码以配对同步",
+  "@sync_qr_show_description": {
+    "description": "配对二维码显示面板的说明"
+  },
+  "sync_qr_no_network": "请连接 Wi-Fi 以生成配对码",
+  "@sync_qr_no_network": {
+    "description": "没有可用本地网络地址时显示"
+  },
+  "sync_qr_scan_title": "扫描配对码",
+  "@sync_qr_scan_title": {
+    "description": "配对二维码扫描页面的标题"
+  },
+  "sync_qr_scan_description": "将摄像头对准另一设备上显示的配对码",
+  "@sync_qr_scan_description": {
+    "description": "配对二维码扫描页面的说明"
+  },
+  "sync_qr_pair_success": "已与 {deviceName} 配对",
+  "@sync_qr_pair_success": {
+    "description": "与扫描设备配对成功的提示信息",
+    "placeholders": {
+      "deviceName": {
+        "type": "String"
+      }
+    }
+  },
+  "sync_qr_pair_failed": "配对失败 — 请确认两台设备在同一 Wi-Fi 网络下",
+  "@sync_qr_pair_failed": {
+    "description": "二维码配对失败的错误信息"
+  },
+  "sync_paired_devices_title": "已配对设备",
+  "@sync_paired_devices_title": {
+    "description": "局域网同步已配对设备列表的标题"
+  },
+  "sync_paired_devices_empty": "尚无已配对设备",
+  "@sync_paired_devices_empty": {
+    "description": "已配对设备列表的空状态"
+  },
+  "sync_paired_devices_remove": "取消配对",
+  "@sync_paired_devices_remove": {
+    "description": "取消设备配对的按钮"
   },
   "search_expenses": "搜索费用",
   "@search_expenses": {

@@ -2282,6 +2282,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_title => 'Sincronización';
 
   @override
+  String get sync_settings_desc =>
+      'Comparte datos entre tus dispositivos por Wi-Fi o Bluetooth';
+
+  @override
   String get sync_local_title => 'Sync local';
 
   @override
@@ -2347,6 +2351,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_bt_retry => 'Reintentar';
 
   @override
+  String get sync_bt_permission_denied =>
+      'Permiso de Bluetooth denegado — actívalo en los ajustes del sistema para sincronizar con dispositivos cercanos';
+
+  @override
   String get sync_history_empty => 'Sin historial de sync';
 
   @override
@@ -2374,6 +2382,52 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sync_group_enable => 'Habilitar sincronización';
+
+  @override
+  String get sync_group_enable_desc =>
+      'Comparte los gastos de este grupo con otros dispositivos por Wi-Fi o Bluetooth';
+
+  @override
+  String get sync_qr_show_button => 'Mostrar código QR';
+
+  @override
+  String get sync_qr_scan_button => 'Escanear código QR';
+
+  @override
+  String get sync_qr_show_title => 'Emparejar un dispositivo';
+
+  @override
+  String get sync_qr_show_description =>
+      'Escanea este código desde otro dispositivo en la misma red Wi-Fi para emparejarlo con la sincronización';
+
+  @override
+  String get sync_qr_no_network =>
+      'Conéctate a Wi-Fi para generar un código de emparejamiento';
+
+  @override
+  String get sync_qr_scan_title => 'Escanear código de emparejamiento';
+
+  @override
+  String get sync_qr_scan_description =>
+      'Apunta la cámara al código de emparejamiento mostrado en el otro dispositivo';
+
+  @override
+  String sync_qr_pair_success(String deviceName) {
+    return 'Emparejado con $deviceName';
+  }
+
+  @override
+  String get sync_qr_pair_failed =>
+      'Error al emparejar — asegúrate de que ambos dispositivos estén en la misma red Wi-Fi';
+
+  @override
+  String get sync_paired_devices_title => 'Dispositivos emparejados';
+
+  @override
+  String get sync_paired_devices_empty => 'Aún no hay dispositivos emparejados';
+
+  @override
+  String get sync_paired_devices_remove => 'Quitar emparejamiento';
 
   @override
   String get search_expenses => 'Buscar gastos';

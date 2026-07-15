@@ -965,6 +965,8 @@
   ,"@save_label": {"description": "Label for save action button"}
   ,"sync_title": "Synchronization"
   ,"@sync_title": {"description": "Title for sync settings page"}
+  ,"sync_settings_desc": "Share data between your devices via Wi-Fi or Bluetooth"
+  ,"@sync_settings_desc": {"description": "Subtitle for the sync entry point in Data settings"}
   ,"sync_local_title": "Local Sync"
   ,"@sync_local_title": {"description": "Title for local LAN sync section"}
   ,"sync_local_description": "Automatic sync on Wi-Fi network"
@@ -1005,6 +1007,8 @@
   ,"@sync_bt_error": {"description": "Status when BT sync fails"}
   ,"sync_bt_retry": "Retry"
   ,"@sync_bt_retry": {"description": "Button to retry BT sync"}
+  ,"sync_bt_permission_denied": "Bluetooth permission denied — enable it in system settings to sync with nearby devices"
+  ,"@sync_bt_permission_denied": {"description": "Error shown when Bluetooth/nearby-device permissions are denied"}
   ,"sync_history_empty": "No sync history yet"
   ,"@sync_history_empty": {"description": "Empty state for sync history"}
   ,"sync_channel_lan": "LAN"
@@ -1023,6 +1027,32 @@
   ,"@sync_group_pending": {"description": "Tooltip for unsynced group status"}
   ,"sync_group_enable": "Enable sync"
   ,"@sync_group_enable": {"description": "Label for enabling sync on a group"}
+  ,"sync_group_enable_desc": "Share this group's expenses with other devices via Wi-Fi or Bluetooth"
+  ,"@sync_group_enable_desc": {"description": "Description for the group sync toggle"}
+  ,"sync_qr_show_button": "Show QR code"
+  ,"@sync_qr_show_button": {"description": "Button to show this device's pairing QR code"}
+  ,"sync_qr_scan_button": "Scan QR code"
+  ,"@sync_qr_scan_button": {"description": "Button to scan another device's pairing QR code"}
+  ,"sync_qr_show_title": "Pair a device"
+  ,"@sync_qr_show_title": {"description": "Title for the QR pairing display sheet"}
+  ,"sync_qr_show_description": "Scan this code from another device on the same Wi-Fi network to pair it for sync"
+  ,"@sync_qr_show_description": {"description": "Instructions for the QR pairing display sheet"}
+  ,"sync_qr_no_network": "Connect to Wi-Fi to generate a pairing code"
+  ,"@sync_qr_no_network": {"description": "Shown when no local network address is available for pairing"}
+  ,"sync_qr_scan_title": "Scan pairing code"
+  ,"@sync_qr_scan_title": {"description": "Title for the QR pairing scan page"}
+  ,"sync_qr_scan_description": "Point your camera at the pairing code shown on the other device"
+  ,"@sync_qr_scan_description": {"description": "Instructions for the QR pairing scan page"}
+  ,"sync_qr_pair_success": "Paired with {deviceName}"
+  ,"@sync_qr_pair_success": {"description": "Success message after pairing with a scanned device", "placeholders": {"deviceName": {"type": "String"}}}
+  ,"sync_qr_pair_failed": "Pairing failed — make sure both devices are on the same Wi-Fi network"
+  ,"@sync_qr_pair_failed": {"description": "Error message when QR pairing fails"}
+  ,"sync_paired_devices_title": "Paired devices"
+  ,"@sync_paired_devices_title": {"description": "Title for the list of devices paired for LAN sync"}
+  ,"sync_paired_devices_empty": "No paired devices yet"
+  ,"@sync_paired_devices_empty": {"description": "Empty state for the paired devices list"}
+  ,"sync_paired_devices_remove": "Remove pairing"
+  ,"@sync_paired_devices_remove": {"description": "Button to remove a device pairing"}
   ,"search_expenses": "Search expenses"
   ,"@search_expenses": {"description": "Title for the expense search page"}
   ,"search_in_group": "Search in {groupName}"

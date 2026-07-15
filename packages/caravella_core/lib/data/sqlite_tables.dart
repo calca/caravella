@@ -9,3 +9,8 @@ const String kTableAttachments = 'attachments';
 /// infrastructure.
 const String kTableDeviceMeta = 'device_meta';
 const String kTableSyncLog = 'sync_log';
+
+/// Paired devices (schema v4) — devices this one has exchanged a QR pairing
+/// handshake with over LAN. Only paired devices are eligible for automatic
+/// LAN sync; see `LanSyncChannel`'s peer-authorization gating.
+const String kTablePairedDevices = 'paired_devices';

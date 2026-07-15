@@ -106,4 +106,73 @@ void main() {
       },
     );
   });
+
+  group('SyncDao — paired devices', () {
+    late SqliteExpenseGroupRepository repository;
+    late Directory tempDir;
+    late SyncDao syncDao;
+
+    setUp(() async {
+      tempDir = Directory.systemTemp.createTempSync(
+        'sync_dao_paired_test_${DateTime.now().millisecondsSinceEpoch}',
+      );
+      repository = SqliteExpenseGroupRepository(
+        databasePath: '${tempDir.path}/test.db',
+      );
+      await repository.getAllGroups();
+      final db = await repository.database;
+      syncDao = SyncDao(db);
+    });
+
+    tearDown(() async {
+      await repository.close();
+      if (tempDir.existsSync()) tempDir.deleteSync(recursive: true);
+    });
+
+    test('a device is not paired until addPairedDevice is called', () async {
+      expect(await syncDao.isPaired('device-a'), isFalse);
+    });
+
+    test('addPairedDevice makes isPaired return true', () async {
+      await syncDao.addPairedDevice(
+        deviceId: 'device-a',
+        deviceName: 'Pixel 9',
+        platform: 'android',
+      );
+
+      expect(await syncDao.isPaired('device-a'), isTrue);
+    });
+
+    test('getPairedDevices returns paired devices, most recent first', () async {
+      await syncDao.addPairedDevice(
+        deviceId: 'device-a',
+        deviceName: 'Pixel 9',
+        platform: 'android',
+      );
+      await syncDao.addPairedDevice(
+        deviceId: 'device-b',
+        deviceName: 'iPhone 16',
+        platform: 'ios',
+      );
+
+      final devices = await syncDao.getPairedDevices();
+
+      expect(devices, hasLength(2));
+      expect(devices.first.deviceId, equals('device-b'));
+      expect(devices.last.deviceId, equals('device-a'));
+    });
+
+    test('removePairedDevice revokes the pairing', () async {
+      await syncDao.addPairedDevice(
+        deviceId: 'device-a',
+        deviceName: 'Pixel 9',
+        platform: 'android',
+      );
+
+      await syncDao.removePairedDevice('device-a');
+
+      expect(await syncDao.isPaired('device-a'), isFalse);
+      expect(await syncDao.getPairedDevices(), isEmpty);
+    });
+  });
 }

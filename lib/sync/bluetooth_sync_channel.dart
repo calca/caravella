@@ -7,9 +7,24 @@ import 'package:caravella_core/sync/device_identity.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/utils/sync_clock.dart';
 import 'package:nearby_connections/nearby_connections.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// Maximum payload size before chunking is applied (32 KB).
 const int _maxChunkSize = 32 * 1024;
+
+/// Thrown by [BluetoothSyncChannel] when the user has not granted the
+/// Android runtime permissions required for Nearby Connections (Bluetooth
+/// scan/connect/advertise, and nearby Wi-Fi devices on Android 13+).
+///
+/// Callers with UI context (e.g. [BluetoothSyncSheet]) should catch this
+/// specifically to show an actionable, localized message instead of a raw
+/// plugin error.
+class BluetoothPermissionDeniedException implements Exception {
+  const BluetoothPermissionDeniedException();
+
+  @override
+  String toString() => 'Bluetooth/nearby-device permissions were denied';
+}
 
 // ---------------------------------------------------------------------------
 // Bluetooth peer events
@@ -151,11 +166,46 @@ class BluetoothSyncChannel {
   /// Whether currently discovering.
   bool get isDiscovering => _discovering;
 
+  /// Requests the Android runtime permissions required for Nearby
+  /// Connections: Bluetooth scan/connect/advertise (Android 12+) and nearby
+  /// Wi-Fi devices (Android 13+).
+  ///
+  /// These are declared in the manifest via the `nearby_connections` and
+  /// `permission_handler` plugins, but — being dangerous permissions on
+  /// modern Android — still need to be requested at runtime; the
+  /// `nearby_connections` plugin does not do this itself. No-ops (returns
+  /// `true`) on platforms/OS versions where a given permission doesn't
+  /// apply.
+  Future<bool> requestPermissions() async {
+    final statuses = await [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.bluetoothAdvertise,
+      Permission.nearbyWifiDevices,
+    ].request();
+
+    final allGranted = statuses.values.every((status) => status.isGranted);
+    if (!allGranted) {
+      LoggerService.warning(
+        'Bluetooth sync permissions not fully granted: $statuses',
+        name: _tag,
+      );
+    }
+    return allGranted;
+  }
+
   /// Start advertising this device for nearby connections.
+  ///
+  /// Throws [BluetoothPermissionDeniedException] if the required runtime
+  /// permissions are not granted.
   Future<void> startAdvertising() async {
     if (_advertising) {
       LoggerService.debug('Already advertising — skipping', name: _tag);
       return;
+    }
+
+    if (!await requestPermissions()) {
+      throw const BluetoothPermissionDeniedException();
     }
 
     try {
@@ -189,10 +239,17 @@ class BluetoothSyncChannel {
   }
 
   /// Start discovering nearby devices.
+  ///
+  /// Throws [BluetoothPermissionDeniedException] if the required runtime
+  /// permissions are not granted.
   Future<void> startDiscovery() async {
     if (_discovering) {
       LoggerService.debug('Already discovering — skipping', name: _tag);
       return;
+    }
+
+    if (!await requestPermissions()) {
+      throw const BluetoothPermissionDeniedException();
     }
 
     try {

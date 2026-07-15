@@ -4379,6 +4379,12 @@ abstract class AppLocalizations {
   /// **'Synchronization'**
   String get sync_title;
 
+  /// Subtitle for the sync entry point in Data settings
+  ///
+  /// In en, this message translates to:
+  /// **'Share data between your devices via Wi-Fi or Bluetooth'**
+  String get sync_settings_desc;
+
   /// Title for local LAN sync section
   ///
   /// In en, this message translates to:
@@ -4499,6 +4505,12 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get sync_bt_retry;
 
+  /// Error shown when Bluetooth/nearby-device permissions are denied
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth permission denied — enable it in system settings to sync with nearby devices'**
+  String get sync_bt_permission_denied;
+
   /// Empty state for sync history
   ///
   /// In en, this message translates to:
@@ -4552,6 +4564,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enable sync'**
   String get sync_group_enable;
+
+  /// Description for the group sync toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Share this group\'s expenses with other devices via Wi-Fi or Bluetooth'**
+  String get sync_group_enable_desc;
+
+  /// Button to show this device's pairing QR code
+  ///
+  /// In en, this message translates to:
+  /// **'Show QR code'**
+  String get sync_qr_show_button;
+
+  /// Button to scan another device's pairing QR code
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get sync_qr_scan_button;
+
+  /// Title for the QR pairing display sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Pair a device'**
+  String get sync_qr_show_title;
+
+  /// Instructions for the QR pairing display sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Scan this code from another device on the same Wi-Fi network to pair it for sync'**
+  String get sync_qr_show_description;
+
+  /// Shown when no local network address is available for pairing
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to Wi-Fi to generate a pairing code'**
+  String get sync_qr_no_network;
+
+  /// Title for the QR pairing scan page
+  ///
+  /// In en, this message translates to:
+  /// **'Scan pairing code'**
+  String get sync_qr_scan_title;
+
+  /// Instructions for the QR pairing scan page
+  ///
+  /// In en, this message translates to:
+  /// **'Point your camera at the pairing code shown on the other device'**
+  String get sync_qr_scan_description;
+
+  /// Success message after pairing with a scanned device
+  ///
+  /// In en, this message translates to:
+  /// **'Paired with {deviceName}'**
+  String sync_qr_pair_success(String deviceName);
+
+  /// Error message when QR pairing fails
+  ///
+  /// In en, this message translates to:
+  /// **'Pairing failed — make sure both devices are on the same Wi-Fi network'**
+  String get sync_qr_pair_failed;
+
+  /// Title for the list of devices paired for LAN sync
+  ///
+  /// In en, this message translates to:
+  /// **'Paired devices'**
+  String get sync_paired_devices_title;
+
+  /// Empty state for the paired devices list
+  ///
+  /// In en, this message translates to:
+  /// **'No paired devices yet'**
+  String get sync_paired_devices_empty;
+
+  /// Button to remove a device pairing
+  ///
+  /// In en, this message translates to:
+  /// **'Remove pairing'**
+  String get sync_paired_devices_remove;
 
   /// Title for the expense search page
   ///

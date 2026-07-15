@@ -3,9 +3,13 @@ import 'dart:async';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/channels/cloud_relay_channel.dart';
 import 'package:caravella_core/sync/channels/lan_sync_channel.dart';
+import 'package:caravella_core/sync/device_identity.dart';
+import 'package:caravella_core/sync/models/paired_device.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/models/sync_status.dart';
+import 'package:caravella_core/sync/pairing_payload.dart';
 import 'package:caravella_core/sync/sync_manager.dart';
+import 'package:caravella_core/sync/utils/local_network_info.dart';
 import 'package:caravella_core/sync/utils/sync_clock.dart';
 
 /// Unified entry point for all sync channels.
@@ -73,8 +77,13 @@ class SyncOrchestrator {
     _lanEventSub = _lanChannel.events.listen(_forwardEvent);
 
     // Start LAN channel — automatically discovers and syncs with peers
+    // that have completed the QR pairing handshake
     try {
-      await _lanChannel.start(onDelta: _handleLanDelta);
+      await _lanChannel.start(
+        onDelta: _handleDelta,
+        isPeerAuthorized: _syncManager.isPeerPaired,
+        onPairingRequest: _syncManager.registerPairedDevice,
+      );
       LoggerService.info('LAN channel started', name: _tag);
     } catch (e, st) {
       LoggerService.error(
@@ -159,7 +168,11 @@ class SyncOrchestrator {
         if (_lanChannel.isActive) {
           await _lanChannel.stop();
         }
-        await _lanChannel.start(onDelta: _handleLanDelta);
+        await _lanChannel.start(
+          onDelta: _handleDelta,
+          isPeerAuthorized: _syncManager.isPeerPaired,
+          onPairingRequest: _syncManager.registerPairedDevice,
+        );
         // LAN sync is event-driven; return an empty result since the actual
         // sync happens asynchronously when peers are discovered.
         return SyncResult(
@@ -223,11 +236,66 @@ class SyncOrchestrator {
   }
 
   // ---------------------------------------------------------------------------
+  // QR pairing
+  // ---------------------------------------------------------------------------
+
+  /// Builds this device's own pairing payload to render as a QR code for
+  /// another device to scan.
+  ///
+  /// Returns `null` if no local network address could be resolved (e.g. no
+  /// Wi-Fi connection) — pairing requires both devices on the same LAN.
+  Future<PairingPayload?> buildOwnPairingPayload() async {
+    final host = await LocalNetworkInfo.resolveLocalIPv4();
+    if (host == null) {
+      LoggerService.warning(
+        'Cannot build pairing payload — no local network address',
+        name: _tag,
+      );
+      return null;
+    }
+
+    final identity = DeviceIdentity.instance;
+    return PairingPayload(
+      deviceId: identity.deviceId,
+      deviceName: identity.deviceName,
+      platform: identity.platform.name,
+      host: host,
+      port: _lanChannel.port,
+    );
+  }
+
+  /// Completes a pairing handshake with a device scanned from its QR code.
+  /// Returns `true` if both devices now trust each other for LAN sync.
+  Future<bool> pairWithScannedPayload(PairingPayload payload) =>
+      _lanChannel.pairWithHost(payload.host, payload.port);
+
+  /// Returns all devices paired for LAN sync, most recently paired first.
+  Future<List<PairedDevice>> getPairedDevices() =>
+      _syncManager.getPairedDevices();
+
+  /// Revokes a pairing, removing [deviceId] from the trusted device list.
+  Future<void> removePairedDevice(String deviceId) =>
+      _syncManager.removePairedDevice(deviceId);
+
+  /// Handle an incoming delta from any transport (LAN, Bluetooth, ...),
+  /// routing it through [SyncManager] and returning the outgoing delta for
+  /// [peerId].
+  ///
+  /// Exposed publicly so that transports owned outside this class — e.g. a
+  /// [BluetoothSyncChannel] created per pairing session by the UI — can
+  /// share the same sync pipeline as the LAN channel.
+  Future<Map<String, dynamic>> handleIncomingDelta(
+    Map<String, dynamic> remoteDelta,
+    String peerId,
+  ) =>
+      _handleDelta(remoteDelta, peerId);
+
+  // ---------------------------------------------------------------------------
   // Internal
   // ---------------------------------------------------------------------------
 
-  /// Handle an incoming LAN delta by routing it through [SyncManager].
-  Future<Map<String, dynamic>> _handleLanDelta(
+  /// Handle an incoming delta by routing it through [SyncManager].
+  Future<Map<String, dynamic>> _handleDelta(
     Map<String, dynamic> remoteDelta,
     String peerId,
   ) async {

@@ -2279,6 +2279,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sync_title => 'Sincronização';
 
   @override
+  String get sync_settings_desc =>
+      'Compartilhe dados entre seus dispositivos via Wi-Fi ou Bluetooth';
+
+  @override
   String get sync_local_title => 'Sync local';
 
   @override
@@ -2344,6 +2348,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sync_bt_retry => 'Tentar novamente';
 
   @override
+  String get sync_bt_permission_denied =>
+      'Permissão de Bluetooth negada — ative-a nas configurações do sistema para sincronizar com dispositivos próximos';
+
+  @override
   String get sync_history_empty => 'Sem histórico de sync';
 
   @override
@@ -2371,6 +2379,52 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sync_group_enable => 'Ativar sincronização';
+
+  @override
+  String get sync_group_enable_desc =>
+      'Compartilhe as despesas deste grupo com outros dispositivos via Wi-Fi ou Bluetooth';
+
+  @override
+  String get sync_qr_show_button => 'Mostrar código QR';
+
+  @override
+  String get sync_qr_scan_button => 'Escanear código QR';
+
+  @override
+  String get sync_qr_show_title => 'Parear um dispositivo';
+
+  @override
+  String get sync_qr_show_description =>
+      'Escaneie este código a partir de outro dispositivo na mesma rede Wi-Fi para pareá-lo com a sincronização';
+
+  @override
+  String get sync_qr_no_network =>
+      'Conecte-se ao Wi-Fi para gerar um código de pareamento';
+
+  @override
+  String get sync_qr_scan_title => 'Escanear código de pareamento';
+
+  @override
+  String get sync_qr_scan_description =>
+      'Aponte a câmera para o código de pareamento exibido no outro dispositivo';
+
+  @override
+  String sync_qr_pair_success(String deviceName) {
+    return 'Pareado com $deviceName';
+  }
+
+  @override
+  String get sync_qr_pair_failed =>
+      'Falha no pareamento — verifique se ambos os dispositivos estão na mesma rede Wi-Fi';
+
+  @override
+  String get sync_paired_devices_title => 'Dispositivos pareados';
+
+  @override
+  String get sync_paired_devices_empty => 'Ainda não há dispositivos pareados';
+
+  @override
+  String get sync_paired_devices_remove => 'Remover pareamento';
 
   @override
   String get search_expenses => 'Pesquisar despesas';

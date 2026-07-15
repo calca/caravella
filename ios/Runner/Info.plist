@@ -55,5 +55,11 @@
 	<string>This app needs access to speech recognition for voice input of expenses.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to your location to tag expenses with their location context.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app uses your local network to sync expense groups directly with your other devices over Wi-Fi.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_caravellasync._tcp</string>
+	</array>
 </dict>
 </plist>

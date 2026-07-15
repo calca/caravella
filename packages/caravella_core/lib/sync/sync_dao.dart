@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:caravella_core/data/sqlite_expense_group_repository.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
+import 'package:caravella_core/sync/models/paired_device.dart';
 import 'package:caravella_core/sync/utils/sync_clock.dart';
 
 /// Data-access object for sync-specific queries against the SQLite database.
@@ -246,5 +247,64 @@ class SyncDao {
       result[groupId] = lastSync >= updatedAt;
     }
     return result;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Paired devices
+  // ---------------------------------------------------------------------------
+
+  /// Records (or refreshes) a mutual pairing with [deviceId], establishing
+  /// it as trusted for automatic LAN sync.
+  Future<void> addPairedDevice({
+    required String deviceId,
+    required String deviceName,
+    required String platform,
+  }) async {
+    await db.insert(
+      SqliteExpenseGroupRepository.tablePairedDevices,
+      {
+        'device_id': deviceId,
+        'device_name': deviceName,
+        'platform': platform,
+        'paired_at': SyncClock.nowMs(),
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    LoggerService.info(
+      'Paired with device $deviceId ($deviceName)',
+      name: _tag,
+    );
+  }
+
+  /// Whether [deviceId] has completed the pairing handshake and is trusted
+  /// for automatic LAN sync.
+  Future<bool> isPaired(String deviceId) async {
+    final rows = await db.query(
+      SqliteExpenseGroupRepository.tablePairedDevices,
+      columns: ['device_id'],
+      where: 'device_id = ?',
+      whereArgs: [deviceId],
+      limit: 1,
+    );
+    return rows.isNotEmpty;
+  }
+
+  /// Returns all paired devices, most recently paired first.
+  Future<List<PairedDevice>> getPairedDevices() async {
+    final rows = await db.query(
+      SqliteExpenseGroupRepository.tablePairedDevices,
+      orderBy: 'paired_at DESC',
+    );
+    return rows.map(PairedDevice.fromRow).toList();
+  }
+
+  /// Removes a pairing, revoking [deviceId]'s trust for automatic LAN sync.
+  Future<void> removePairedDevice(String deviceId) async {
+    await db.delete(
+      SqliteExpenseGroupRepository.tablePairedDevices,
+      where: 'device_id = ?',
+      whereArgs: [deviceId],
+    );
+    LoggerService.info('Removed pairing with device $deviceId', name: _tag);
   }
 }

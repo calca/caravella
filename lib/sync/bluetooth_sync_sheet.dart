@@ -65,7 +65,9 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
       if (mounted) {
         setState(() {
           _phase = _BtPhase.error;
-          _errorMessage = e.toString();
+          _errorMessage = e is BluetoothPermissionDeniedException
+              ? gen.AppLocalizations.of(context).sync_bt_permission_denied
+              : e.toString();
         });
       }
     });

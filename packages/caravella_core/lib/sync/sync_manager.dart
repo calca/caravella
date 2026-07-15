@@ -4,6 +4,7 @@ import 'package:caravella_core/data/sqlite_expense_group_repository.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/conflict_resolver.dart';
 import 'package:caravella_core/sync/delta_builder.dart';
+import 'package:caravella_core/sync/models/paired_device.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/models/sync_status.dart';
 import 'package:caravella_core/sync/sync_dao.dart';
@@ -131,6 +132,43 @@ class SyncManager {
     final ms = await _syncDao.getLastSyncTime(peerId);
     if (ms == null) return null;
     return DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true);
+  }
+
+  // -------------------------------------------------------------------------
+  // Paired devices
+  // -------------------------------------------------------------------------
+
+  /// Whether [deviceId] has completed the QR pairing handshake and is
+  /// trusted for automatic LAN sync.
+  Future<bool> isPeerPaired(String deviceId) {
+    _ensureStarted();
+    return _syncDao.isPaired(deviceId);
+  }
+
+  /// Records a mutual pairing with [deviceId].
+  Future<void> registerPairedDevice(
+    String deviceId,
+    String deviceName,
+    String platform,
+  ) {
+    _ensureStarted();
+    return _syncDao.addPairedDevice(
+      deviceId: deviceId,
+      deviceName: deviceName,
+      platform: platform,
+    );
+  }
+
+  /// Returns all paired devices, most recently paired first.
+  Future<List<PairedDevice>> getPairedDevices() {
+    _ensureStarted();
+    return _syncDao.getPairedDevices();
+  }
+
+  /// Revokes a pairing, removing [deviceId] from the trusted device list.
+  Future<void> removePairedDevice(String deviceId) {
+    _ensureStarted();
+    return _syncDao.removePairedDevice(deviceId);
   }
 
   // -------------------------------------------------------------------------

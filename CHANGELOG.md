@@ -8,10 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Preliminary groundwork for syncing expense groups between your own devices, over local Wi-Fi, Bluetooth, or an optional Google Drive relay — not yet reachable from the app; sharing a group and the sync settings screen will follow in an upcoming release (#416)
+- Sync groups between your own devices over local Wi-Fi, Bluetooth, or an optional Google Drive relay is now reachable from the app: a **Sync** entry in Settings → Data (Wi-Fi status, Bluetooth pairing, cloud opt-in, history), a per-group **Enable sync** toggle in group settings, and a sync status indicator on the home screen (#416)
+- **QR code pairing for Wi-Fi sync**: show a QR code on one device and scan it from another (Settings → Sync) to establish trust between them — automatic LAN sync now only exchanges data with devices that have completed this handshake, instead of any app install on the same network. Paired devices are listed in Settings → Sync (removable) and, for any group with sync enabled, in that group's settings
+
+### Security
+- LAN sync no longer auto-syncs with every device broadcasting the app's mDNS service on the same Wi-Fi network — only devices paired via QR code are trusted; unpaired peers are discovered but never exchanged data with, closing the "syncs with strangers on the same network" gap in the original LAN sync groundwork
 
 ### Fixed
 - Fixed the SQLite v2→v3 upgrade skipping the sync columns/tables for any pre-existing (real-world) database, which made every install upgrading from before the sync groundwork land fail to read its existing groups and fail to save new ones
+- Bluetooth pairing now requests the required Android 12+/13+ runtime permissions (scan/connect/advertise, nearby Wi-Fi devices) before starting discovery, with a localized error shown if denied, instead of silently failing to find any device; added the corresponding manifest entries and the iOS Bonjour/local-network declarations LAN sync needs
 
 ### Changed
 - Snackbar-style messages (receipt scanning, voice input errors, group save/archive errors) now consistently use the shared `AppToast` component instead of ad-hoc `ScaffoldMessenger` snackbars

@@ -2269,6 +2269,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sync_title => 'Synchronization';
 
   @override
+  String get sync_settings_desc =>
+      'Share data between your devices via Wi-Fi or Bluetooth';
+
+  @override
   String get sync_local_title => 'Local Sync';
 
   @override
@@ -2334,6 +2338,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sync_bt_retry => 'Retry';
 
   @override
+  String get sync_bt_permission_denied =>
+      'Bluetooth permission denied — enable it in system settings to sync with nearby devices';
+
+  @override
   String get sync_history_empty => 'No sync history yet';
 
   @override
@@ -2361,6 +2369,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_group_enable => 'Enable sync';
+
+  @override
+  String get sync_group_enable_desc =>
+      'Share this group\'s expenses with other devices via Wi-Fi or Bluetooth';
+
+  @override
+  String get sync_qr_show_button => 'Show QR code';
+
+  @override
+  String get sync_qr_scan_button => 'Scan QR code';
+
+  @override
+  String get sync_qr_show_title => 'Pair a device';
+
+  @override
+  String get sync_qr_show_description =>
+      'Scan this code from another device on the same Wi-Fi network to pair it for sync';
+
+  @override
+  String get sync_qr_no_network =>
+      'Connect to Wi-Fi to generate a pairing code';
+
+  @override
+  String get sync_qr_scan_title => 'Scan pairing code';
+
+  @override
+  String get sync_qr_scan_description =>
+      'Point your camera at the pairing code shown on the other device';
+
+  @override
+  String sync_qr_pair_success(String deviceName) {
+    return 'Paired with $deviceName';
+  }
+
+  @override
+  String get sync_qr_pair_failed =>
+      'Pairing failed — make sure both devices are on the same Wi-Fi network';
+
+  @override
+  String get sync_paired_devices_title => 'Paired devices';
+
+  @override
+  String get sync_paired_devices_empty => 'No paired devices yet';
+
+  @override
+  String get sync_paired_devices_remove => 'Remove pairing';
 
   @override
   String get search_expenses => 'Search expenses';

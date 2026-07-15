@@ -2222,6 +2222,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_title => '同步';
 
   @override
+  String get sync_settings_desc => '通过 Wi-Fi 或蓝牙在设备间共享数据';
+
+  @override
   String get sync_local_title => '本地同步';
 
   @override
@@ -2286,6 +2289,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_bt_retry => '重试';
 
   @override
+  String get sync_bt_permission_denied => '蓝牙权限被拒绝 — 请在系统设置中启用它以与附近设备同步';
+
+  @override
   String get sync_history_empty => '暂无同步历史';
 
   @override
@@ -2313,6 +2319,47 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_group_enable => '启用同步';
+
+  @override
+  String get sync_group_enable_desc => '通过 Wi-Fi 或蓝牙与其他设备共享此群组的支出';
+
+  @override
+  String get sync_qr_show_button => '显示二维码';
+
+  @override
+  String get sync_qr_scan_button => '扫描二维码';
+
+  @override
+  String get sync_qr_show_title => '配对设备';
+
+  @override
+  String get sync_qr_show_description => '在同一 Wi-Fi 网络下的另一设备上扫描此码以配对同步';
+
+  @override
+  String get sync_qr_no_network => '请连接 Wi-Fi 以生成配对码';
+
+  @override
+  String get sync_qr_scan_title => '扫描配对码';
+
+  @override
+  String get sync_qr_scan_description => '将摄像头对准另一设备上显示的配对码';
+
+  @override
+  String sync_qr_pair_success(String deviceName) {
+    return '已与 $deviceName 配对';
+  }
+
+  @override
+  String get sync_qr_pair_failed => '配对失败 — 请确认两台设备在同一 Wi-Fi 网络下';
+
+  @override
+  String get sync_paired_devices_title => '已配对设备';
+
+  @override
+  String get sync_paired_devices_empty => '尚无已配对设备';
+
+  @override
+  String get sync_paired_devices_remove => '取消配对';
 
   @override
   String get search_expenses => '搜索费用';

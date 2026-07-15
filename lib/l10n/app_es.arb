@@ -943,6 +943,8 @@
   ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
   ,"sync_title": "Sincronización"
   ,"@sync_title": {"description": "Título para la página de ajustes de sync"}
+  ,"sync_settings_desc": "Comparte datos entre tus dispositivos por Wi-Fi o Bluetooth"
+  ,"@sync_settings_desc": {"description": "Subtítulo para la entrada de sync en ajustes de Datos"}
   ,"sync_local_title": "Sync local"
   ,"@sync_local_title": {"description": "Título para la sección de sync LAN local"}
   ,"sync_local_description": "Sincronización automática en red Wi-Fi"
@@ -983,6 +985,8 @@
   ,"@sync_bt_error": {"description": "Estado cuando sync BT falla"}
   ,"sync_bt_retry": "Reintentar"
   ,"@sync_bt_retry": {"description": "Botón para reintentar sync BT"}
+  ,"sync_bt_permission_denied": "Permiso de Bluetooth denegado — actívalo en los ajustes del sistema para sincronizar con dispositivos cercanos"
+  ,"@sync_bt_permission_denied": {"description": "Error mostrado cuando se deniegan los permisos de Bluetooth/dispositivos cercanos"}
   ,"sync_history_empty": "Sin historial de sync"
   ,"@sync_history_empty": {"description": "Estado vacío para historial de sync"}
   ,"sync_channel_lan": "LAN"
@@ -1001,6 +1005,32 @@
   ,"@sync_group_pending": {"description": "Tooltip para estado de grupo no sincronizado"}
   ,"sync_group_enable": "Habilitar sincronización"
   ,"@sync_group_enable": {"description": "Etiqueta para habilitar la sincronización en un grupo"}
+  ,"sync_group_enable_desc": "Comparte los gastos de este grupo con otros dispositivos por Wi-Fi o Bluetooth"
+  ,"@sync_group_enable_desc": {"description": "Descripción para el interruptor de sincronización del grupo"}
+  ,"sync_qr_show_button": "Mostrar código QR"
+  ,"@sync_qr_show_button": {"description": "Botón para mostrar el código QR de emparejamiento de este dispositivo"}
+  ,"sync_qr_scan_button": "Escanear código QR"
+  ,"@sync_qr_scan_button": {"description": "Botón para escanear el código QR de emparejamiento de otro dispositivo"}
+  ,"sync_qr_show_title": "Emparejar un dispositivo"
+  ,"@sync_qr_show_title": {"description": "Título para la hoja de visualización del QR de emparejamiento"}
+  ,"sync_qr_show_description": "Escanea este código desde otro dispositivo en la misma red Wi-Fi para emparejarlo con la sincronización"
+  ,"@sync_qr_show_description": {"description": "Instrucciones para la hoja de visualización del QR de emparejamiento"}
+  ,"sync_qr_no_network": "Conéctate a Wi-Fi para generar un código de emparejamiento"
+  ,"@sync_qr_no_network": {"description": "Se muestra cuando no hay una dirección de red local disponible para el emparejamiento"}
+  ,"sync_qr_scan_title": "Escanear código de emparejamiento"
+  ,"@sync_qr_scan_title": {"description": "Título para la página de escaneo del QR de emparejamiento"}
+  ,"sync_qr_scan_description": "Apunta la cámara al código de emparejamiento mostrado en el otro dispositivo"
+  ,"@sync_qr_scan_description": {"description": "Instrucciones para la página de escaneo del QR de emparejamiento"}
+  ,"sync_qr_pair_success": "Emparejado con {deviceName}"
+  ,"@sync_qr_pair_success": {"description": "Mensaje de éxito tras emparejar con un dispositivo escaneado", "placeholders": {"deviceName": {"type": "String"}}}
+  ,"sync_qr_pair_failed": "Error al emparejar — asegúrate de que ambos dispositivos estén en la misma red Wi-Fi"
+  ,"@sync_qr_pair_failed": {"description": "Mensaje de error cuando falla el emparejamiento por QR"}
+  ,"sync_paired_devices_title": "Dispositivos emparejados"
+  ,"@sync_paired_devices_title": {"description": "Título para la lista de dispositivos emparejados para sincronización LAN"}
+  ,"sync_paired_devices_empty": "Aún no hay dispositivos emparejados"
+  ,"@sync_paired_devices_empty": {"description": "Estado vacío para la lista de dispositivos emparejados"}
+  ,"sync_paired_devices_remove": "Quitar emparejamiento"
+  ,"@sync_paired_devices_remove": {"description": "Botón para quitar el emparejamiento de un dispositivo"}
   ,"search_expenses": "Buscar gastos"
   ,"@search_expenses": {"description": "Título de la página de búsqueda de gastos"}
   ,"search_in_group": "Buscar en {groupName}"

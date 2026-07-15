@@ -11,6 +11,7 @@ import '../../group/pages/expense_group_other_page.dart';
 import '../../group/group_edit_mode.dart';
 import '../../../settings/widgets/settings_section.dart';
 import '../../../settings/widgets/settings_card.dart';
+import '../../../sync/widgets/paired_devices_list.dart';
 
 class GroupSettingsPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -128,6 +129,51 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                   onTap: () => _openOtherPage(context),
                 ),
               ),
+              if (context.watch<SyncOrchestrator?>() != null) ...[
+                const SizedBox(height: 8),
+                SettingsCard(
+                  context: context,
+                  color: colorScheme.surface,
+                  semanticsToggled: _currentTrip.syncEnabled,
+                  child: SwitchListTile(
+                    secondary: const Icon(Icons.sync_outlined),
+                    title: Text(
+                      gloc.sync_group_enable,
+                      style: textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                      gloc.sync_group_enable_desc,
+                      style: textTheme.bodySmall,
+                    ),
+                    value: _currentTrip.syncEnabled,
+                    onChanged: (value) => _handleSyncToggle(context, value),
+                  ),
+                ),
+                if (_currentTrip.syncEnabled) ...[
+                  const SizedBox(height: 8),
+                  SettingsCard(
+                    context: context,
+                    color: colorScheme.surface,
+                    semanticsLabel: gloc.sync_paired_devices_title,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            gloc.sync_paired_devices_title,
+                            style: textTheme.labelLarge,
+                          ),
+                          const SizedBox(height: 4),
+                          PairedDevicesList(
+                            orchestrator: context.watch<SyncOrchestrator?>()!,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ],
           ),
 
@@ -351,6 +397,24 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
       context,
       newArchivedState ? gloc.archived_with_undo : gloc.unarchived_with_undo,
     );
+
+    widget.onGroupUpdated?.call();
+  }
+
+  Future<void> _handleSyncToggle(BuildContext context, bool enabled) async {
+    final groupNotifier = Provider.of<ExpenseGroupNotifier>(
+      context,
+      listen: false,
+    );
+    await groupNotifier.updateGroupMetadata(
+      _currentTrip.copyWith(syncEnabled: enabled),
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _currentTrip = _currentTrip.copyWith(syncEnabled: enabled);
+    });
 
     widget.onGroupUpdated?.call();
   }
