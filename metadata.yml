@@ -81,7 +81,7 @@ Builds:
     build:
       - $$flutter$$/bin/flutter config --no-analytics
       - $$flutter$$/bin/flutter pub get
-      - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
+      - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_BLUETOOTH_SYNC=false
 
 # Auto-update configuration
 AutoUpdateMode: Version

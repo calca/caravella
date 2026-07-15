@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Sync groups between your own devices over local Wi-Fi, Bluetooth, or an optional Google Drive relay is now reachable from the app: a **Sync** entry in Settings → Data (Wi-Fi status, Bluetooth pairing, cloud opt-in, history), a per-group **Enable sync** toggle in group settings, and a sync status indicator on the home screen (#416)
 - **QR code pairing for Wi-Fi sync**: show a QR code on one device and scan it from another (Settings → Sync) to establish trust between them — automatic LAN sync now only exchanges data with devices that have completed this handshake, instead of any app install on the same network. Paired devices are listed in Settings → Sync (removable) and, for any group with sync enabled, in that group's settings
+- **Real Google Drive cloud sync**, in a new optional `google_drive_sync` package built only when compiled with `--dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true` (off by default, including all current release builds): sign in with your own Google account and sync data is relayed through a hidden, app-private folder in your own Drive — never a server we operate. See the new [setup guide](docs/GOOGLE_DRIVE_SYNC_SETUP.md) for the Google Cloud Console configuration this requires
 
 ### Security
 - LAN sync no longer auto-syncs with every device broadcasting the app's mDNS service on the same Wi-Fi network — only devices paired via QR code are trusted; unpaired peers are discovered but never exchanged data with, closing the "syncs with strangers on the same network" gap in the original LAN sync groundwork
+- Bluetooth sync is now gated behind `--dart-define=ENABLE_BLUETOOTH_SYNC` (default `true`, preserving current behavior) so F-Droid-style builds can exclude it and the Google Play Services dependency it reaches (`nearby_connections`) by passing `=false` — F-Droid's own build recipe (`metadata.yml`) now does this
 
 ### Fixed
 - Fixed the SQLite v2→v3 upgrade skipping the sync columns/tables for any pre-existing (real-world) database, which made every install upgrading from before the sync groundwork land fail to read its existing groups and fail to save new ones
@@ -21,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Snackbar-style messages (receipt scanning, voice input errors, group save/archive errors) now consistently use the shared `AppToast` component instead of ad-hoc `ScaffoldMessenger` snackbars
 - Removed the legacy single-date-picker fallback in the group period editor (dead code kept for backwards compatibility since the range picker was introduced)
+- The Cloud Sync section in Settings → Sync is now hidden entirely on builds without Google Drive sync (the default), instead of showing a toggle that silently did nothing; fixed the toggle constructing a fresh, session-less channel on every rebuild instead of reusing the real one
+- Privacy policy and permissions documentation (`store/`) updated to reflect that sync (Wi-Fi/Bluetooth device sync, optional Google Drive relay) can now transmit expense/group/participant data — previously these documents stated the app never does this
 
 ## [1.8.0] - 2026-07-14
 

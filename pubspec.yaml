@@ -84,8 +84,12 @@ dependencies:
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
     path: packages/play_store_updates
+  # Conditional dependency: only exercised when ENABLE_GOOGLE_DRIVE_SYNC=true
+  # (see GoogleDriveSyncFactory) — always a normal pubspec dependency, same
+  # pattern as play_store_updates above.
+  google_drive_sync:
+    path: packages/google_drive_sync
   android_nav_setting: ^0.0.2+2
-  google_sign_in: ^6.2.2
   nearby_connections: ^4.0.2
   home_widget: ^0.9.1
   permission_handler: ^12.0.3

@@ -4421,6 +4421,18 @@ abstract class AppLocalizations {
   /// **'Your data is saved in your personal Google Drive, not on third-party servers.'**
   String get sync_cloud_privacy;
 
+  /// Shows the linked Google account
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String sync_cloud_signed_in_as(String email);
+
+  /// Error shown when Google sign-in fails or is cancelled
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed or was cancelled'**
+  String get sync_cloud_sign_in_failed;
+
   /// Title for sync history section
   ///
   /// In en, this message translates to:

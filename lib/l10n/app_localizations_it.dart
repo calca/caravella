@@ -2303,6 +2303,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'I tuoi dati vengono salvati nel tuo Google Drive personale, non su server di terzi.';
 
   @override
+  String sync_cloud_signed_in_as(String email) {
+    return 'Accesso effettuato come $email';
+  }
+
+  @override
+  String get sync_cloud_sign_in_failed =>
+      'Accesso a Google non riuscito o annullato';
+
+  @override
   String get sync_history_title => 'Cronologia sync';
 
   @override

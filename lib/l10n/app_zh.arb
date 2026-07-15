@@ -1361,6 +1361,19 @@
   "@sync_cloud_privacy": {
     "description": "云同步隐私提示"
   },
+  "sync_cloud_signed_in_as": "已使用 {email} 登录",
+  "@sync_cloud_signed_in_as": {
+    "description": "显示已关联的 Google 账号",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "sync_cloud_sign_in_failed": "Google 登录失败或已取消",
+  "@sync_cloud_sign_in_failed": {
+    "description": "Google 登录失败或取消时显示的错误"
+  },
   "sync_history_title": "同步历史",
   "@sync_history_title": {
     "description": "同步历史部分标题"

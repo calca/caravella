@@ -53,6 +53,12 @@ class SyncOrchestrator {
   /// Whether cloud sync is enabled.
   bool get isCloudEnabled => _cloudChannel != null;
 
+  /// The concrete cloud channel instance, or `null` if cloud sync wasn't
+  /// built into this app (`ENABLE_GOOGLE_DRIVE_SYNC` not set). Exposed so
+  /// UI can operate on the same, stateful instance (auth session, etc.)
+  /// rather than constructing a throwaway one.
+  CloudRelayChannel? get cloudChannel => _cloudChannel;
+
   /// Unified stream of sync events from ALL channels.
   Stream<SyncEvent> get events => _eventController.stream;
 

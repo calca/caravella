@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
-import 'package:caravella_core/sync/utils/sync_clock.dart';
 
 /// Callback invoked when remote shards are downloaded from cloud storage.
 typedef DeltaJsonCallback = Future<void> Function(
@@ -12,27 +11,26 @@ typedef DeltaJsonCallback = Future<void> Function(
   String channel,
 );
 
-/// Cloud relay channel for syncing device shards via a cloud provider
-/// (e.g. Google Drive).
+/// Cloud relay channel for syncing device shards via a cloud provider.
 ///
-/// This is a **placeholder implementation**. The actual cloud storage backend
-/// (googleapis / Google Drive) has not been integrated yet. All upload /
-/// download methods log a "not implemented" warning and return empty results.
+/// This is an **interface** — `caravella_core` stays independent of any
+/// concrete cloud provider SDK (see the package boundary rules in
+/// `CLAUDE.md`). The real implementation lives in the separate
+/// `google_drive_sync` package (`GoogleDriveCloudChannel`), built only when
+/// the app is compiled with `--dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true` —
+/// see `SyncBootstrap` (`lib/sync/sync_bootstrap.dart`) for the wiring.
 ///
-/// The class is structured so the real implementation can be dropped in later
-/// by replacing the placeholder method bodies.
-///
-/// The user opt-in flag is persisted via [SharedPreferences] under the key
-/// `sync_cloud_enabled`.
-class CloudRelayChannel {
+/// [isEnabled]/[setEnabled] are shared, concrete implementations (the user
+/// opt-in flag is persisted via [SharedPreferences] under the key
+/// `sync_cloud_enabled`, regardless of provider) — subclasses only need to
+/// implement the actual transfer methods.
+abstract class CloudRelayChannel {
   static const _tag = 'sync.channel.cloud';
   static const _prefKey = 'sync_cloud_enabled';
-  static const _channel = 'cloud';
 
-  /// Default polling interval for periodic sync.
-  static const Duration defaultPollInterval = Duration(minutes: 15);
-
-  Timer? _pollTimer;
+  /// The sync-log channel name this implementation reports under (e.g.
+  /// `"cloud"`).
+  String get channelName;
 
   /// Whether cloud sync is enabled (user opt-in).
   ///
@@ -55,109 +53,19 @@ class CloudRelayChannel {
   }
 
   /// Upload a device shard to cloud storage.
-  ///
-  /// **Placeholder** — logs a warning and returns immediately.
-  Future<void> uploadShard(String deviceId, String jsonPayload) async {
-    LoggerService.warning(
-      'uploadShard not implemented — cloud backend not configured '
-      '(deviceId=$deviceId, payload=${jsonPayload.length} bytes)',
-      name: _tag,
-    );
-  }
+  Future<void> uploadShard(String deviceId, String jsonPayload);
 
   /// Download all shards from cloud storage.
-  ///
-  /// **Placeholder** — logs a warning and returns an empty list.
-  Future<List<String>> downloadAllShards() async {
-    LoggerService.warning(
-      'downloadAllShards not implemented — cloud backend not configured',
-      name: _tag,
-    );
-    return const [];
-  }
+  Future<List<String>> downloadAllShards();
 
-  /// Starts periodic sync by polling every [defaultPollInterval].
-  ///
-  /// If cloud sync is disabled, this is a no-op.
-  /// The [onShards] callback is invoked whenever new shards are downloaded.
-  ///
-  /// Uses manual rescheduling (not `Timer.periodic`) to ensure each sync
-  /// cycle completes before the next one starts.
-  ///
-  /// **Placeholder** — each tick only logs a warning since the actual
-  /// download is not implemented.
-  Future<void> start({required DeltaJsonCallback onShards}) async {
-    final enabled = await isEnabled();
-    if (!enabled) {
-      LoggerService.info(
-        'Cloud sync is disabled — skipping start',
-        name: _tag,
-      );
-      return;
-    }
-
-    // Avoid stacking timers
-    _pollTimer?.cancel();
-
-    void scheduleNext() {
-      _pollTimer = Timer(defaultPollInterval, () async {
-        try {
-          final shards = await downloadAllShards();
-          if (shards.isNotEmpty) {
-            await onShards(shards, _channel);
-          }
-        } catch (e, st) {
-          LoggerService.error(
-            'Periodic cloud sync failed',
-            name: _tag,
-            error: e,
-            stackTrace: st,
-          );
-        } finally {
-          // Reschedule only if stop() hasn't been called concurrently.
-          // stop() sets _pollTimer to null, signalling that polling should
-          // not continue.
-          if (_pollTimer != null) {
-            scheduleNext();
-          }
-        }
-      });
-    }
-
-    scheduleNext();
-
-    LoggerService.info(
-      'Cloud sync polling started '
-      '(interval=${defaultPollInterval.inMinutes}min)',
-      name: _tag,
-    );
-  }
+  /// Starts periodic sync. The [onShards] callback is invoked whenever new
+  /// shards are downloaded. Implementations should no-op if [isEnabled] is
+  /// `false`.
+  Future<void> start({required DeltaJsonCallback onShards});
 
   /// Stops periodic sync.
-  Future<void> stop() async {
-    _pollTimer?.cancel();
-    _pollTimer = null;
-    LoggerService.info('Cloud sync polling stopped', name: _tag);
-  }
+  Future<void> stop();
 
   /// Triggers an immediate sync cycle.
-  ///
-  /// **Placeholder** — logs a warning and returns an empty [SyncResult].
-  Future<SyncResult> syncNow() async {
-    LoggerService.warning(
-      'syncNow not implemented — cloud backend not configured',
-      name: _tag,
-    );
-    return SyncResult(
-      applied: 0,
-      skipped: 0,
-      errors: 0,
-      channel: _channel,
-      peerId: '',
-      syncedAt: DateTime.fromMillisecondsSinceEpoch(
-        SyncClock.nowMs(),
-        isUtc: true,
-      ),
-    );
-  }
+  Future<SyncResult> syncNow();
 }

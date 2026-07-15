@@ -29,6 +29,9 @@ This is the authoritative list — every `String.fromEnvironment`/`bool.fromEnvi
 | `FLAVOR` | String, default `'prod'` | `lib/main/app_initialization.dart` | Sets `AppConfig.environment` |
 | `USE_JSON_BACKEND` | String (`'true'`/`'false'`), default `'false'` | `lib/main/app_initialization.dart` | Selects the legacy JSON repository instead of SQLite — see [Storage Backend](STORAGE_BACKEND.md) |
 | `ENABLE_PLAY_UPDATES` | bool, default `false` | `packages/play_store_updates/lib/src/update_service_factory.dart` | Enables real Google Play in-app-update checks (`PlayStoreUpdateService`) instead of the no-op stub — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) |
+| `ENABLE_GOOGLE_DRIVE_SYNC` | bool, default `false` | `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart` | Builds a real `GoogleDriveCloudChannel` (Google Sign-In + Drive API) for the sync feature's Cloud Sync option instead of leaving it `null`/hidden — see [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md) and its [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md) |
+| `GOOGLE_DRIVE_IOS_CLIENT_ID` | String, default `''` | `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart` | iOS-only OAuth client ID for Google Drive sync; unused/unnecessary on Android — see [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md#step-5--optional-ios-oauth-client) |
+| `ENABLE_BLUETOOTH_SYNC` | bool, default **`true`** | `lib/sync/bluetooth_sync_factory.dart` | Hides the Bluetooth section of Settings → Sync when `false` — the only flag on this page that defaults *on*, since Bluetooth sync already ships; F-Droid-style builds pass `=false` explicitly to avoid the Google Play Services dependency `nearby_connections` pulls in — see [F-Droid Submission](FDROID_SUBMISSION.md) |
 | `ENABLE_ANDROID_WIDGET` | bool, default `true` | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableAndroidWidget`), also read natively in `build.gradle.kts` | Enables/disables the Android home-screen widget, both on the Flutter side (`PlatformHomeWidgetManager`) and natively (disables the widget receiver/config activity in the manifest) |
 | `ENABLE_TALKER_SCREEN` | bool, default `false` | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableTalkerScreen`) | Shows the in-app "Debug Logs" (Talker) screen in Settings even outside debug builds |
 | `UNSPLASH_ACCESS_KEY` | String, default `''` | `lib/services/unsplash/unsplash_service.dart` | Enables the Unsplash background-photo search in group creation/editing (empty ⇒ feature silently disabled, returns no results) |
@@ -49,6 +52,32 @@ flutter build apk --dart-define=FLAVOR=prod --flavor prod --release
 
 Note: `play_store_updates` is always a normal pubspec dependency of the root app — the "conditional" part is a runtime/compile-time code path, not conditional dependency resolution (see [Architecture Overview](ARCHITECTURE.md)).
 
+## Google Drive sync (optional)
+
+`ENABLE_GOOGLE_DRIVE_SYNC` selects between `GoogleDriveCloudChannel` (real Google Sign-In + Drive API) and `null` (Cloud Sync section hidden entirely) at the factory level in `google_drive_sync` — same pattern as `ENABLE_PLAY_UPDATES` above. See [package reference](PACKAGE_GOOGLE_DRIVE_SYNC.md) and the [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md) for the Google Cloud Console configuration this requires before the flag does anything useful.
+
+```bash
+# With Google Drive cloud sync
+flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true
+
+# Without (default — no Google Sign-In/Drive code reachable at runtime)
+flutter run --flavor dev --dart-define=FLAVOR=dev
+```
+
+## Bluetooth sync (on by default)
+
+`ENABLE_BLUETOOTH_SYNC` works the other way round from the two flags above: it **defaults to `true`**, because Bluetooth sync already ships in normal builds — flipping the default would silently remove a working feature from any build that doesn't know to ask for it. Only pass `=false` when you specifically want it gone, e.g. for an F-Droid build avoiding the Google Play Services dependency `nearby_connections` pulls in (Nearby Connections API) — see [F-Droid Submission](FDROID_SUBMISSION.md).
+
+```bash
+# Default — Bluetooth sync reachable, same as today
+flutter run --flavor dev --dart-define=FLAVOR=dev
+
+# Explicitly excluded (F-Droid-style)
+flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=ENABLE_BLUETOOTH_SYNC=false
+```
+
+As with every flag on this page, `nearby_connections` stays a normal, always-present pubspec dependency either way — the flag only gates whether `lib/sync/sync_settings_screen.dart` ever shows the Bluetooth section (and therefore whether `BluetoothSyncChannel` is ever constructed), not whether the dependency is compiled into the binary.
+
 ## Android home widget
 
 `ENABLE_ANDROID_WIDGET` is read on both sides:
@@ -66,5 +95,6 @@ flutter build apk --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=FLAVOR
 
 - [Storage Backend § selecting a backend](STORAGE_BACKEND.md#selecting-a-backend-the-factory)
 - [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md)
+- [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md) and its [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md)
 - [F-Droid Submission](FDROID_SUBMISSION.md)
 - [CI Pipelines](CI_PIPELINES.md)

@@ -979,6 +979,10 @@
   ,"@sync_cloud_enable": {"description": "Label for cloud sync toggle"}
   ,"sync_cloud_privacy": "Your data is saved in your personal Google Drive, not on third-party servers."
   ,"@sync_cloud_privacy": {"description": "Privacy notice for cloud sync"}
+  ,"sync_cloud_signed_in_as": "Signed in as {email}"
+  ,"@sync_cloud_signed_in_as": {"description": "Shows the linked Google account", "placeholders": {"email": {"type": "String"}}}
+  ,"sync_cloud_sign_in_failed": "Google sign-in failed or was cancelled"
+  ,"@sync_cloud_sign_in_failed": {"description": "Error shown when Google sign-in fails or is cancelled"}
   ,"sync_history_title": "Sync History"
   ,"@sync_history_title": {"description": "Title for sync history section"}
   ,"sync_status_synced": "Synced"

@@ -14,6 +14,10 @@
         "--dart-define",
         "ENABLE_PLAY_UPDATES=true",
         "--dart-define",
+        "ENABLE_BLUETOOTH_SYNC=true",
+        "--dart-define",
+        "ENABLE_GOOGLE_DRIVE_SYNC=true",
+        "--dart-define",
         "UNSPLASH_ACCESS_KEY=${config:caravella.unsplashAccessKey}"
       ]
     },
@@ -44,6 +48,10 @@
         "--dart-define",
         "ENABLE_PLAY_UPDATES=true",
         "--dart-define",
+        "ENABLE_BLUETOOTH_SYNC=true",
+        "--dart-define",
+        "ENABLE_GOOGLE_DRIVE_SYNC=true",
+        "--dart-define",
         "UNSPLASH_ACCESS_KEY=${config:caravella.unsplashAccessKey}"
       ]
     },
@@ -59,7 +67,11 @@
         "--dart-define",
         "FLAVOR=staging",
         "--dart-define",
-        "ENABLE_PLAY_UPDATES=true"
+        "ENABLE_PLAY_UPDATES=true",
+        "--dart-define",
+        "ENABLE_BLUETOOTH_SYNC=true",
+        "--dart-define",
+        "ENABLE_GOOGLE_DRIVE_SYNC=true"
       ]
     },
     {
@@ -71,7 +83,9 @@
         "--flavor",
         "staging",
         "--dart-define",
-        "FLAVOR=staging"
+        "FLAVOR=staging",
+        "--dart-define",
+        "ENABLE_BLUETOOTH_SYNC=false"
       ]
     },
     {
@@ -85,7 +99,11 @@
         "--dart-define",
         "FLAVOR=prod",
         "--dart-define",
-        "ENABLE_PLAY_UPDATES=true"
+        "ENABLE_PLAY_UPDATES=true",
+        "--dart-define",
+        "ENABLE_BLUETOOTH_SYNC=true",
+        "--dart-define",
+        "ENABLE_GOOGLE_DRIVE_SYNC=true"
       ]
     },
     {
@@ -97,7 +115,9 @@
         "--flavor",
         "prod",
         "--dart-define",
-        "FLAVOR=prod"
+        "FLAVOR=prod",
+        "--dart-define",
+        "ENABLE_BLUETOOTH_SYNC=false"
       ]
     }
   ]

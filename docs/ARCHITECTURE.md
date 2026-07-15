@@ -1,6 +1,6 @@
 # Architecture Overview
 
-Caravella is a multi-platform Flutter app (Material 3) for group expense tracking, split into four local packages plus the main app. All data is stored **locally on-device** — there is no backend server or user account system.
+Caravella is a multi-platform Flutter app (Material 3) for group expense tracking, split into five local packages plus the main app. There is no backend server or company-run account system, and all data is stored **locally on-device by default** — the optional sync feature lets a user exchange data directly between *their own* devices over LAN/Bluetooth, or (opt-in, separately gated) relay it through *their own* Google Drive; see [Storage Backend](STORAGE_BACKEND.md) and the [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md).
 
 ```
 lib/                        → app-specific UI, pages, controllers ("the app")
@@ -8,6 +8,7 @@ packages/caravella_core/    → business logic, data models, storage, cross-cutt
 packages/caravella_core_ui/ → shared design-system widgets and themes
 packages/android_app_functions/ → exposes app capabilities to Android AI agents/shortcuts
 packages/play_store_updates/    → Google Play in-app update integration (conditional)
+packages/google_drive_sync/     → Google Drive cloud relay for sync (conditional)
 ```
 
 ## Package dependency rules
@@ -19,9 +20,10 @@ These are enforced by convention, not by tooling — respect them when adding co
 - `caravella_core` is independent — it must not depend on any other local package.
 - `android_app_functions` depends on `caravella_core` only.
 - `play_store_updates` depends on `caravella_core` and `caravella_core_ui`.
-- `play_store_updates` is a normal pubspec dependency of the root app at all times; the "conditional" part is purely a runtime/compile-time switch (see [Build Variants & Flavors](BUILD_VARIANTS.md)), not conditional dependency resolution.
+- `google_drive_sync` depends on `caravella_core` only.
+- `play_store_updates` and `google_drive_sync` are normal pubspec dependencies of the root app at all times; the "conditional" part is purely a runtime/compile-time switch (see [Build Variants & Flavors](BUILD_VARIANTS.md)), not conditional dependency resolution.
 
-See [caravella_core reference](PACKAGE_CARAVELLA_CORE.md), [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md), [android_app_functions](PACKAGE_ANDROID_APP_FUNCTIONS.md), [play_store_updates](PACKAGE_PLAY_STORE_UPDATES.md) for what's inside each.
+See [caravella_core reference](PACKAGE_CARAVELLA_CORE.md), [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md), [android_app_functions](PACKAGE_ANDROID_APP_FUNCTIONS.md), [play_store_updates](PACKAGE_PLAY_STORE_UPDATES.md), [google_drive_sync](PACKAGE_GOOGLE_DRIVE_SYNC.md) for what's inside each.
 
 ## App startup sequence
 
@@ -70,6 +72,7 @@ The app uses `provider` for reactive state. The central piece is `ExpenseGroupNo
 | Persistent notifications | `lib/services/notification_*.dart` | [Notifications](NOTIFICATIONS.md) |
 | Maps & location search | `lib/manager/expense/location/**`, `caravella_core_ui/lib/map/**` | [Location & Maps](LOCATION_AND_MAPS.md) |
 | Flavors, dart-defines, F-Droid vs Play Store | `android/app/build.gradle.kts`, `packages/play_store_updates` | [Build Variants](BUILD_VARIANTS.md), [F-Droid Submission](FDROID_SUBMISSION.md) |
+| Peer-to-peer + Google Drive sync | `packages/caravella_core/lib/sync/**`, `lib/sync/**`, `packages/google_drive_sync` | [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md), [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md) |
 | CI pipelines | `.github/workflows/*.yml` | [CI Pipelines](CI_PIPELINES.md) |
 
 ## See also

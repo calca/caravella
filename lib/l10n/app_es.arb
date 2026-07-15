@@ -957,6 +957,10 @@
   ,"@sync_cloud_enable": {"description": "Etiqueta para activar sync en la nube"}
   ,"sync_cloud_privacy": "Tus datos se guardan en tu Google Drive personal, no en servidores de terceros."
   ,"@sync_cloud_privacy": {"description": "Aviso de privacidad para sync en la nube"}
+  ,"sync_cloud_signed_in_as": "Sesión iniciada como {email}"
+  ,"@sync_cloud_signed_in_as": {"description": "Muestra la cuenta de Google vinculada", "placeholders": {"email": {"type": "String"}}}
+  ,"sync_cloud_sign_in_failed": "El inicio de sesión de Google falló o fue cancelado"
+  ,"@sync_cloud_sign_in_failed": {"description": "Error mostrado cuando el inicio de sesión de Google falla o se cancela"}
   ,"sync_history_title": "Historial de sync"
   ,"@sync_history_title": {"description": "Título para la sección de historial de sync"}
   ,"sync_status_synced": "Sincronizado"

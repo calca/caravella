@@ -2243,6 +2243,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_cloud_privacy => '您的数据保存在您的个人Google Drive中，而非第三方服务器。';
 
   @override
+  String sync_cloud_signed_in_as(String email) {
+    return '已使用 $email 登录';
+  }
+
+  @override
+  String get sync_cloud_sign_in_failed => 'Google 登录失败或已取消';
+
+  @override
   String get sync_history_title => '同步历史';
 
   @override

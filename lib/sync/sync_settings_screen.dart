@@ -1,11 +1,13 @@
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:google_drive_sync/google_drive_sync.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import '../settings/widgets/settings_card.dart';
 import '../settings/widgets/settings_section.dart';
 import 'bluetooth_sync_channel.dart';
+import 'bluetooth_sync_factory.dart';
 import 'bluetooth_sync_sheet.dart';
 import 'qr_pair_scan_page.dart';
 import 'qr_pair_show_sheet.dart';
@@ -31,8 +33,16 @@ class SyncSettingsScreen extends StatelessWidget {
         body: ListView(
           children: [
             _buildLocalSection(context, loc),
-            _buildBluetoothSection(context, loc),
-            _buildCloudSection(context, loc),
+            // Hidden when built with --dart-define=ENABLE_BLUETOOTH_SYNC=false
+            // (F-Droid-style builds that want to exclude the Google Play
+            // Services dependency `nearby_connections` pulls in) — see
+            // docs/FDROID_SUBMISSION.md.
+            if (BluetoothSyncFactory.isEnabled)
+              _buildBluetoothSection(context, loc),
+            // Only built into the app when compiled with
+            // --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true — see
+            // docs/GOOGLE_DRIVE_SYNC_SETUP.md.
+            if (orchestrator.isCloudEnabled) _buildCloudSection(context, loc),
             _buildHistorySection(context, loc),
           ],
         ),
@@ -156,7 +166,18 @@ class _CloudSyncCard extends StatefulWidget {
 class _CloudSyncCardState extends State<_CloudSyncCard> {
   bool _enabled = false;
   bool _loading = true;
+  bool _busy = false;
   DateTime? _lastCloudSync;
+
+  // The orchestrator owns the real channel instance — reusing it (rather
+  // than constructing a new one) is what keeps the Google sign-in session
+  // alive across rebuilds.
+  CloudRelayChannel? get _cloudChannel => widget.orchestrator.cloudChannel;
+
+  GoogleDriveCloudChannel? get _driveChannel {
+    final channel = _cloudChannel;
+    return channel is GoogleDriveCloudChannel ? channel : null;
+  }
 
   @override
   void initState() {
@@ -171,6 +192,11 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
       return;
     }
     final enabled = await cloud.isEnabled();
+    if (enabled) {
+      // Restore a prior Google sign-in session so the linked account shows
+      // up without forcing the user to sign in again every app launch.
+      await _driveChannel?.restoreSession();
+    }
     if (mounted) {
       setState(() {
         _enabled = enabled;
@@ -179,22 +205,39 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
     }
   }
 
-  CloudRelayChannel? get _cloudChannel {
-    // The orchestrator exposes isCloudEnabled but not the channel directly.
-    // We check availability via the public API.
-    return widget.orchestrator.isCloudEnabled ? CloudRelayChannel() : null;
-  }
-
   Future<void> _toggleCloud(bool value) async {
+    final loc = gen.AppLocalizations.of(context);
+
     if (value && !_enabled) {
       final confirmed = await _showPrivacyDialog();
       if (confirmed != true) return;
+
+      final drive = _driveChannel;
+      if (drive != null) {
+        setState(() => _busy = true);
+        final signedIn = await drive.signIn();
+        if (mounted) setState(() => _busy = false);
+        if (!signedIn) {
+          if (mounted) {
+            AppToast.show(
+              context,
+              loc.sync_cloud_sign_in_failed,
+              type: ToastType.error,
+            );
+          }
+          return;
+        }
+      }
     }
 
     final cloud = _cloudChannel;
     if (cloud == null) return;
 
     await cloud.setEnabled(value);
+    if (!value) {
+      await _driveChannel?.signOut();
+    }
+
     if (mounted) {
       setState(() => _enabled = value);
     }
@@ -260,11 +303,23 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
           semanticsLabel: loc.sync_cloud_enable,
           semanticsToggled: _enabled,
           child: SwitchListTile(
-            secondary: Icon(Icons.cloud_outlined, color: colorScheme.primary),
+            secondary: _busy
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Icon(Icons.cloud_outlined, color: colorScheme.primary),
             title: Text(loc.sync_cloud_enable, style: textTheme.titleMedium),
-            subtitle: Text(loc.sync_cloud_description),
+            subtitle: Text(
+              _enabled && _driveChannel?.signedInAccountEmail != null
+                  ? loc.sync_cloud_signed_in_as(
+                      _driveChannel!.signedInAccountEmail!,
+                    )
+                  : loc.sync_cloud_description,
+            ),
             value: _enabled,
-            onChanged: _toggleCloud,
+            onChanged: _busy ? null : _toggleCloud,
           ),
         ),
         // Sync now button – visible only when cloud is enabled
