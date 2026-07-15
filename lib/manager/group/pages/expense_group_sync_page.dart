@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../../../settings/widgets/settings_section.dart';
@@ -51,71 +52,72 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     final textTheme = Theme.of(context).textTheme;
     final orchestrator = context.watch<SyncOrchestrator?>();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(gloc.sync_title),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => Navigator.of(context).pop(_changed),
-        ),
-      ),
-      body: ListView(
-        padding: EdgeInsets.fromLTRB(
-          0,
-          0,
-          0,
-          MediaQuery.of(context).padding.bottom + 24,
-        ),
-        children: [
-          SettingsSection(
-            title: gloc.sync_title,
-            description: gloc.sync_settings_desc,
-            children: [
-              SettingsCard(
-                context: context,
-                color: colorScheme.surface,
-                semanticsToggled: _currentTrip.syncEnabled,
-                child: SwitchListTile(
-                  secondary: const Icon(Icons.sync_outlined),
-                  title: Text(
-                    gloc.sync_group_enable,
-                    style: textTheme.titleMedium,
-                  ),
-                  subtitle: Text(
-                    gloc.sync_group_enable_desc,
-                    style: textTheme.bodySmall,
-                  ),
-                  value: _currentTrip.syncEnabled,
-                  onChanged: orchestrator == null
-                      ? null
-                      : (value) => _handleSyncToggle(value),
-                ),
-              ),
-              if (orchestrator != null && _currentTrip.syncEnabled) ...[
-                const SizedBox(height: 8),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Navigator.of(context).pop(_changed);
+      },
+      child: Scaffold(
+        appBar: CaravellaAppBar(actions: const []),
+        body: ListView(
+          padding: EdgeInsets.fromLTRB(
+            0,
+            0,
+            0,
+            MediaQuery.of(context).padding.bottom + 24,
+          ),
+          children: [
+            SettingsSection(
+              title: gloc.sync_title,
+              description: gloc.sync_settings_desc,
+              children: [
                 SettingsCard(
                   context: context,
                   color: colorScheme.surface,
-                  semanticsLabel: gloc.sync_paired_devices_title,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          gloc.sync_paired_devices_title,
-                          style: textTheme.labelLarge,
-                        ),
-                        const SizedBox(height: 4),
-                        PairedDevicesList(orchestrator: orchestrator),
-                      ],
+                  semanticsToggled: _currentTrip.syncEnabled,
+                  child: SwitchListTile(
+                    secondary: const Icon(Icons.sync_outlined),
+                    title: Text(
+                      gloc.sync_group_enable,
+                      style: textTheme.titleMedium,
                     ),
+                    subtitle: Text(
+                      gloc.sync_group_enable_desc,
+                      style: textTheme.bodySmall,
+                    ),
+                    value: _currentTrip.syncEnabled,
+                    onChanged: orchestrator == null
+                        ? null
+                        : (value) => _handleSyncToggle(value),
                   ),
                 ),
+                if (orchestrator != null && _currentTrip.syncEnabled) ...[
+                  const SizedBox(height: 8),
+                  SettingsCard(
+                    context: context,
+                    color: colorScheme.surface,
+                    semanticsLabel: gloc.sync_paired_devices_title,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            gloc.sync_paired_devices_title,
+                            style: textTheme.labelLarge,
+                          ),
+                          const SizedBox(height: 4),
+                          PairedDevicesList(orchestrator: orchestrator),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ],
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
