@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.caravella.egm">
 
     <!-- Internet permission required for loading map tiles from OpenStreetMap -->
@@ -34,7 +35,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:minSdkVersion="31" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:minSdkVersion="31" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:minSdkVersion="31" />
-    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:minSdkVersion="33" />
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:minSdkVersion="33"
+        tools:replace="android:minSdkVersion" />
 
     <!-- Declare that these permissions are not required for basic app functionality -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
