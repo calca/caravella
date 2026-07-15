@@ -84,14 +84,25 @@ class SqliteExpenseGroupRepository
   }
 
   /// Handle database upgrades
+  ///
+  /// Every database that existed before this sync feature landed is at
+  /// on-disk version 2 (bumped previously for aggregation views that were
+  /// later dropped without a version change) and has none of the sync
+  /// columns/tables below — there was never a real "v2 with sync columns"
+  /// database in the wild. So all sync additions are gated on `oldVersion < 3`
+  /// as a single step; gating part of them on `oldVersion < 2` (as a separate
+  /// step) skipped them entirely for real users, since their on-disk version
+  /// is already 2, leaving `deleted`/`device_id`/`updated_at`/`sync_version`
+  /// missing and breaking every read (`WHERE deleted = ?`) and write
+  /// (`INSERT` with those columns) against the groups table.
   Future<void> _upgradeDatabase(
     Database db,
     int oldVersion,
     int newVersion,
   ) async {
-    if (oldVersion < 2) {
+    if (oldVersion < 3) {
       LoggerService.info(
-        'Migrating database from v$oldVersion to v2',
+        'Migrating database from v$oldVersion to v3',
         name: 'storage.sqlite',
       );
 
@@ -107,6 +118,9 @@ class SqliteExpenseGroupRepository
       );
       await db.execute(
         'ALTER TABLE $kTableGroups ADD COLUMN sync_version INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableGroups ADD COLUMN sync_enabled INTEGER NOT NULL DEFAULT 0',
       );
 
       // Create new sync tables
@@ -141,22 +155,6 @@ class SqliteExpenseGroupRepository
       // Backfill: set updated_at = timestamp for all existing groups
       await db.execute(
         'UPDATE $kTableGroups SET updated_at = timestamp WHERE updated_at = 0',
-      );
-
-      LoggerService.info(
-        'Database migration to v2 complete',
-        name: 'storage.sqlite',
-      );
-    }
-
-    if (oldVersion < 3) {
-      LoggerService.info(
-        'Migrating database from v$oldVersion to v3',
-        name: 'storage.sqlite',
-      );
-
-      await db.execute(
-        'ALTER TABLE $kTableGroups ADD COLUMN sync_enabled INTEGER NOT NULL DEFAULT 0',
       );
 
       LoggerService.info(

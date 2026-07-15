@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Preliminary groundwork for syncing expense groups between your own devices, over local Wi-Fi, Bluetooth, or an optional Google Drive relay — not yet reachable from the app; sharing a group and the sync settings screen will follow in an upcoming release (#416)
 
+### Fixed
+- Fixed the SQLite v2→v3 upgrade skipping the sync columns/tables for any pre-existing (real-world) database, which made every install upgrading from before the sync groundwork land fail to read its existing groups and fail to save new ones
+
 ### Changed
 - Snackbar-style messages (receipt scanning, voice input errors, group save/archive errors) now consistently use the shared `AppToast` component instead of ad-hoc `ScaffoldMessenger` snackbars
 - Removed the legacy single-date-picker fallback in the group period editor (dead code kept for backwards compatibility since the range picker was introduced)
