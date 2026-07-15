@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bluetooth pairing now requests the required Android 12+/13+ runtime permissions (scan/connect/advertise, nearby Wi-Fi devices) before starting discovery, with a localized error shown if denied, instead of silently failing to find any device; added the corresponding manifest entries and the iOS Bonjour/local-network declarations LAN sync needs
 
 ### Changed
+- Per-group sync (enable toggle + paired devices list) moved out of the main group settings screen into its own **Synchronization** sub-page, matching the General/Participants/Categories/Other pattern instead of being inlined
 - Snackbar-style messages (receipt scanning, voice input errors, group save/archive errors) now consistently use the shared `AppToast` component instead of ad-hoc `ScaffoldMessenger` snackbars
 - Removed the legacy single-date-picker fallback in the group period editor (dead code kept for backwards compatibility since the range picker was introduced)
 - The Cloud Sync section in Settings → Sync is now hidden entirely on builds without Google Drive sync (the default), instead of showing a toggle that silently did nothing; fixed the toggle constructing a fresh, session-less channel on every rebuild instead of reusing the real one
