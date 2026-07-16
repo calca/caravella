@@ -455,7 +455,7 @@ abstract class AppLocalizations {
   /// No description provided for @export_share.
   ///
   /// In en, this message translates to:
-  /// **'Export & Share'**
+  /// **'Share & Export'**
   String get export_share;
 
   /// No description provided for @contribution_percentages.
@@ -1699,6 +1699,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Paid by'**
   String get paid_by;
+
+  /// No description provided for @added_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Added by'**
+  String get added_by;
+
+  /// No description provided for @edited_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited by'**
+  String get edited_by;
 
   /// No description provided for @expense_added_success.
   ///
@@ -4372,6 +4384,396 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save_label;
+
+  /// Title for sync settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Synchronization'**
+  String get sync_title;
+
+  /// Subtitle for the sync entry point in Data settings
+  ///
+  /// In en, this message translates to:
+  /// **'Share data between your devices via Wi-Fi or Bluetooth'**
+  String get sync_settings_desc;
+
+  /// Title for the Wi-Fi/Bluetooth (other people's devices) sync sub-page entry
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with other people'**
+  String get sync_multiuser_title;
+
+  /// Description for the multi-user sync entry
+  ///
+  /// In en, this message translates to:
+  /// **'Share your groups with nearby devices via Wi-Fi or Bluetooth'**
+  String get sync_multiuser_description;
+
+  /// Title for the cloud (own devices) sync sub-page entry
+  ///
+  /// In en, this message translates to:
+  /// **'Sync your devices'**
+  String get sync_multidevice_title;
+
+  /// Description for the multi-device sync entry
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your own phone and other devices up to date via Google Drive'**
+  String get sync_multidevice_description;
+
+  /// Title for local LAN sync section
+  ///
+  /// In en, this message translates to:
+  /// **'Local Sync'**
+  String get sync_local_title;
+
+  /// Description for LAN sync
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic sync on Wi-Fi network'**
+  String get sync_local_description;
+
+  /// Title for cloud sync section
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Sync'**
+  String get sync_cloud_title;
+
+  /// Description for cloud sync
+  ///
+  /// In en, this message translates to:
+  /// **'Sync via Google Drive'**
+  String get sync_cloud_description;
+
+  /// Notice explaining that cloud sync applies to all groups at once, shown on the multi-device sync page
+  ///
+  /// In en, this message translates to:
+  /// **'Once enabled, this syncs all of your groups — there\'s no per-group choice like with Wi-Fi/Bluetooth sync'**
+  String get sync_cloud_scope_description;
+
+  /// Label for cloud sync toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Enable cloud sync'**
+  String get sync_cloud_enable;
+
+  /// Privacy notice for cloud sync
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is saved in your personal Google Drive, not on third-party servers.'**
+  String get sync_cloud_privacy;
+
+  /// Shows the linked Google account
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String sync_cloud_signed_in_as(String email);
+
+  /// Error shown when Google sign-in fails or is cancelled
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed or was cancelled'**
+  String get sync_cloud_sign_in_failed;
+
+  /// Title for sync history section
+  ///
+  /// In en, this message translates to:
+  /// **'Sync History'**
+  String get sync_history_title;
+
+  /// Status when sync is up to date
+  ///
+  /// In en, this message translates to:
+  /// **'Synced'**
+  String get sync_status_synced;
+
+  /// Status during active sync
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing...'**
+  String get sync_status_syncing;
+
+  /// Status on sync error
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error'**
+  String get sync_status_error;
+
+  /// Status when no sync has happened
+  ///
+  /// In en, this message translates to:
+  /// **'Never synced'**
+  String get sync_status_never;
+
+  /// Button to trigger manual sync
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get sync_now;
+
+  /// Shows last sync time
+  ///
+  /// In en, this message translates to:
+  /// **'Last sync: {time}'**
+  String sync_last_sync(String time);
+
+  /// Title for Bluetooth sync
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth Sync'**
+  String get sync_bt_title;
+
+  /// Description for Bluetooth sync
+  ///
+  /// In en, this message translates to:
+  /// **'Manual sync with nearby devices via Bluetooth'**
+  String get sync_bt_description;
+
+  /// Status while searching for BT peers
+  ///
+  /// In en, this message translates to:
+  /// **'Searching for nearby devices...'**
+  String get sync_bt_searching;
+
+  /// Status while advertising this device for another to discover and connect to
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a nearby device to connect...'**
+  String get sync_bt_advertise_waiting;
+
+  /// Button to sync with a BT peer
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get sync_bt_sync_with;
+
+  /// Status when BT sync is done
+  ///
+  /// In en, this message translates to:
+  /// **'Sync completed'**
+  String get sync_bt_completed;
+
+  /// Summary after sync
+  ///
+  /// In en, this message translates to:
+  /// **'Received {received}, sent {sent} records'**
+  String sync_bt_received_sent(int received, int sent);
+
+  /// Status when BT sync fails
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed'**
+  String get sync_bt_error;
+
+  /// Button to retry BT sync
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get sync_bt_retry;
+
+  /// Error shown when Bluetooth/nearby-device permissions are denied
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth permission denied — enable it in system settings to sync with nearby devices'**
+  String get sync_bt_permission_denied;
+
+  /// Empty state for sync history
+  ///
+  /// In en, this message translates to:
+  /// **'No sync history yet'**
+  String get sync_history_empty;
+
+  /// LAN channel name
+  ///
+  /// In en, this message translates to:
+  /// **'LAN'**
+  String get sync_channel_lan;
+
+  /// Bluetooth channel name
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth'**
+  String get sync_channel_bluetooth;
+
+  /// Cloud channel name
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud'**
+  String get sync_channel_cloud;
+
+  /// Records exchanged summary
+  ///
+  /// In en, this message translates to:
+  /// **'{sent} sent, {received} received'**
+  String sync_records_exchanged(int sent, int received);
+
+  /// Tooltip for shared group icon
+  ///
+  /// In en, this message translates to:
+  /// **'Shared group'**
+  String get sync_group_shared;
+
+  /// Tooltip for synced group status
+  ///
+  /// In en, this message translates to:
+  /// **'All changes synced'**
+  String get sync_group_synced;
+
+  /// Tooltip for unsynced group status
+  ///
+  /// In en, this message translates to:
+  /// **'Changes not yet synced'**
+  String get sync_group_pending;
+
+  /// Label for enabling sync on a group
+  ///
+  /// In en, this message translates to:
+  /// **'Share this group'**
+  String get sync_group_enable;
+
+  /// Description for the group sync toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Sync this group\'s expenses with other paired devices over Wi-Fi or Bluetooth'**
+  String get sync_group_enable_desc;
+
+  /// Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Wi-Fi or Bluetooth sync in Settings to enable this'**
+  String get sync_group_needs_channel;
+
+  /// CTA row leading to the app-wide multi-user sync settings to pair devices
+  ///
+  /// In en, this message translates to:
+  /// **'Manage device pairing'**
+  String get sync_group_manage_pairing_title;
+
+  /// Description for the manage-pairing CTA row
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Wi-Fi or Bluetooth sync and pair devices from Settings'**
+  String get sync_group_manage_pairing_desc;
+
+  /// Button to show this device's pairing QR code
+  ///
+  /// In en, this message translates to:
+  /// **'Show QR code'**
+  String get sync_qr_show_button;
+
+  /// Button to scan another device's pairing QR code
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get sync_qr_scan_button;
+
+  /// Title for the QR pairing display sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Pair a device'**
+  String get sync_qr_show_title;
+
+  /// Instructions for the QR pairing display sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Scan this code from another device on the same Wi-Fi network to pair it for sync'**
+  String get sync_qr_show_description;
+
+  /// Shows which group this pairing code shares
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing «{groupTitle}»'**
+  String sync_qr_sharing_group(String groupTitle);
+
+  /// Countdown showing how long the pairing QR code remains valid
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in {time}'**
+  String sync_qr_expires_in(String time);
+
+  /// Title shown when the pairing QR code has expired
+  ///
+  /// In en, this message translates to:
+  /// **'Code expired'**
+  String get sync_qr_expired_title;
+
+  /// Description shown when the pairing QR code has expired
+  ///
+  /// In en, this message translates to:
+  /// **'Generate a new code to keep pairing'**
+  String get sync_qr_expired_desc;
+
+  /// Button to generate a fresh pairing QR code after the previous one expired
+  ///
+  /// In en, this message translates to:
+  /// **'Generate new code'**
+  String get sync_qr_regenerate_button;
+
+  /// Shown when no local network address is available for pairing
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to Wi-Fi to generate a pairing code'**
+  String get sync_qr_no_network;
+
+  /// Title for the QR pairing scan page
+  ///
+  /// In en, this message translates to:
+  /// **'Scan pairing code'**
+  String get sync_qr_scan_title;
+
+  /// Instructions for the QR pairing scan page
+  ///
+  /// In en, this message translates to:
+  /// **'Point your camera at the pairing code shown on the other device'**
+  String get sync_qr_scan_description;
+
+  /// Success message after pairing with a scanned device
+  ///
+  /// In en, this message translates to:
+  /// **'Paired with {deviceName}'**
+  String sync_qr_pair_success(String deviceName);
+
+  /// Error message when QR pairing fails
+  ///
+  /// In en, this message translates to:
+  /// **'Pairing failed — make sure both devices are on the same Wi-Fi network'**
+  String get sync_qr_pair_failed;
+
+  /// Error message when a scanned pairing QR code is past its validity window
+  ///
+  /// In en, this message translates to:
+  /// **'This pairing code has expired — ask the other device to show a new one'**
+  String get sync_qr_pair_expired;
+
+  /// Error message when a scanned pairing QR code's host is an Android emulator's unreachable NAT address
+  ///
+  /// In en, this message translates to:
+  /// **'This code was generated on an Android emulator, which can\'t be reached from other devices — pair using two physical devices on the same Wi-Fi network instead'**
+  String get sync_qr_pair_emulator_host;
+
+  /// Inline warning on the QR display sheet when this device's own address is an Android emulator's NAT address
+  ///
+  /// In en, this message translates to:
+  /// **'This device is an Android emulator — its address usually isn\'t reachable from other devices, so pairing may fail'**
+  String get sync_qr_emulator_warning;
+
+  /// Title for the list of devices paired for LAN sync
+  ///
+  /// In en, this message translates to:
+  /// **'Paired devices'**
+  String get sync_paired_devices_title;
+
+  /// Empty state for the paired devices list
+  ///
+  /// In en, this message translates to:
+  /// **'No paired devices yet'**
+  String get sync_paired_devices_empty;
+
+  /// Button to remove a device pairing
+  ///
+  /// In en, this message translates to:
+  /// **'Remove pairing'**
+  String get sync_paired_devices_remove;
 
   /// Title for the expense search page
   ///

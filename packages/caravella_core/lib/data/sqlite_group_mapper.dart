@@ -4,7 +4,11 @@ import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
 import '../model/expense_location.dart';
+import '../model/expense_author.dart';
 import '../model/expense_group_type.dart';
+import '../services/logging/logger_service.dart';
+import '../sync/device_identity.dart';
+import '../sync/utils/sync_clock.dart';
 import 'sqlite_tables.dart';
 
 /// Converts between [ExpenseGroup]/[ExpenseDetails] and the SQLite row
@@ -12,9 +16,13 @@ import 'sqlite_tables.dart';
 class SqliteGroupMapper {
   const SqliteGroupMapper();
 
-  /// Load all groups from database
+  /// Load all groups from database (excludes soft-deleted groups)
   Future<List<ExpenseGroup>> loadAllGroups(Database db) async {
-    final groupMaps = await db.query(kTableGroups);
+    final groupMaps = await db.query(
+      kTableGroups,
+      where: 'deleted = ?',
+      whereArgs: [0],
+    );
     final groups = <ExpenseGroup>[];
 
     for (final groupMap in groupMaps) {
@@ -25,12 +33,12 @@ class SqliteGroupMapper {
     return groups;
   }
 
-  /// Load a single group by ID
+  /// Load a single group by ID (excludes soft-deleted groups)
   Future<ExpenseGroup?> loadGroupById(Database db, String groupId) async {
     final groupMaps = await db.query(
       kTableGroups,
-      where: 'id = ?',
-      whereArgs: [groupId],
+      where: 'id = ? AND deleted = ?',
+      whereArgs: [groupId, 0],
     );
 
     if (groupMaps.isEmpty) return null;
@@ -115,11 +123,23 @@ class SqliteGroupMapper {
           ? ExpenseGroupType.fromJson(map['group_type'])
           : null,
       autoLocationEnabled: (map['auto_location_enabled'] as int) == 1,
+      syncEnabled: (map['sync_enabled'] as int?) == 1,
     );
   }
 
   /// Convert ExpenseGroup to database map
   Map<String, dynamic> groupToMap(ExpenseGroup group) {
+    final nowMs = SyncClock.nowMs();
+    String deviceId = '';
+    if (DeviceIdentity.isInitialized) {
+      deviceId = DeviceIdentity.instance.deviceId;
+    } else {
+      LoggerService.debug(
+        'DeviceIdentity not initialized — saving group with empty device_id',
+        name: 'storage.sqlite',
+      );
+    }
+
     return {
       'id': group.id,
       'title': group.title,
@@ -134,6 +154,11 @@ class SqliteGroupMapper {
       'notification_enabled': group.notificationEnabled ? 1 : 0,
       'group_type': group.groupType?.toJson(),
       'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
+      'sync_enabled': group.syncEnabled ? 1 : 0,
+      'device_id': deviceId,
+      'updated_at': nowMs,
+      'deleted': 0,
+      'sync_version': 0,
     };
   }
 
@@ -185,6 +210,20 @@ class SqliteGroupMapper {
             )
           : null,
       attachments: attachments,
+      createdBy: map['created_by_device_id'] != null
+          ? ExpenseAuthor(
+              deviceId: map['created_by_device_id'] as String,
+              deviceName: map['created_by_device_name'] as String?,
+              userName: map['created_by_user_name'] as String?,
+            )
+          : null,
+      updatedBy: map['updated_by_device_id'] != null
+          ? ExpenseAuthor(
+              deviceId: map['updated_by_device_id'] as String,
+              deviceName: map['updated_by_device_name'] as String?,
+              userName: map['updated_by_user_name'] as String?,
+            )
+          : null,
     );
   }
 
@@ -202,6 +241,12 @@ class SqliteGroupMapper {
       'location_latitude': expense.location?.latitude,
       'location_longitude': expense.location?.longitude,
       'location_name': expense.location?.name,
+      'created_by_device_id': expense.createdBy?.deviceId,
+      'created_by_device_name': expense.createdBy?.deviceName,
+      'created_by_user_name': expense.createdBy?.userName,
+      'updated_by_device_id': expense.updatedBy?.deviceId,
+      'updated_by_device_name': expense.updatedBy?.deviceName,
+      'updated_by_user_name': expense.updatedBy?.userName,
     };
   }
 }

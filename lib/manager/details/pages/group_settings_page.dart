@@ -8,6 +8,7 @@ import '../../group/pages/expense_group_general_page.dart';
 import '../../group/pages/expense_group_participants_page.dart';
 import '../../group/pages/expense_group_categories_page.dart';
 import '../../group/pages/expense_group_other_page.dart';
+import '../../group/pages/expense_group_sync_page.dart';
 import '../../group/group_edit_mode.dart';
 import '../../../settings/widgets/settings_section.dart';
 import '../../../settings/widgets/settings_card.dart';
@@ -136,6 +137,23 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
             title: gloc.export_share,
             description: gloc.export_options_desc,
             children: [
+              if (context.watch<SyncOrchestrator?>() != null) ...[
+                SettingsCard(
+                  context: context,
+                  color: colorScheme.surface,
+                  child: ListTile(
+                    leading: const Icon(Icons.sync_outlined),
+                    title: Text(gloc.sync_title, style: textTheme.titleMedium),
+                    subtitle: Text(
+                      gloc.sync_settings_desc,
+                      style: textTheme.bodySmall,
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () => _openSyncPage(context),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
@@ -301,6 +319,27 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
           trip: _currentTrip,
           mode: GroupEditMode.edit,
         ),
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      // Ricarica il gruppo aggiornato
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+        _currentTrip.id,
+      );
+      if (updatedGroup != null && mounted) {
+        setState(() {
+          _currentTrip = updatedGroup;
+        });
+      }
+      widget.onGroupUpdated?.call();
+    }
+  }
+
+  Future<void> _openSyncPage(BuildContext context) async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseGroupSyncPage(trip: _currentTrip),
       ),
     );
 

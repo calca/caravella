@@ -6,6 +6,7 @@ export 'config/app_config.dart';
 export 'config/app_icons.dart';
 
 // Data Models
+export 'model/expense_author.dart';
 export 'model/expense_category.dart';
 export 'model/expense_details.dart';
 export 'model/expense_group.dart';
@@ -51,6 +52,28 @@ export 'services/shortcuts/shortcuts_navigation_service.dart';
 // Services - Widgets
 export 'services/widgets/app_home_widget_service.dart';
 export 'services/widgets/platform_home_widget_manager.dart';
+
+// Sync
+export 'sync/device_identity.dart';
+export 'sync/crypto/device_key_manager.dart';
+export 'sync/crypto/sync_envelope.dart';
+export 'sync/crypto/peer_key_store.dart';
+export 'sync/utils/sync_clock.dart';
+export 'sync/utils/local_network_info.dart';
+export 'sync/models/sync_result.dart';
+export 'sync/models/sync_status.dart';
+export 'sync/models/paired_device.dart';
+export 'sync/pairing_payload.dart';
+export 'sync/sync_dao.dart';
+export 'sync/delta_builder.dart';
+export 'sync/conflict_resolver.dart';
+export 'sync/sync_manager.dart';
+export 'sync/json/group_serializer.dart';
+export 'sync/json/json_merger.dart';
+export 'sync/json/local_json_store.dart';
+export 'sync/channels/cloud_relay_channel.dart';
+export 'sync/channels/lan_sync_channel.dart';
+export 'sync/sync_orchestrator.dart';
 
 // State Management
 export 'state/app_functions_enabled_notifier.dart';

@@ -89,6 +89,9 @@ class PreferencesService {
     _instance = null;
   }
 
+  /// Whether the singleton has been initialized.
+  static bool get isInitialized => _instance != null;
+
   // ============================================================================
   // Locale Preferences
   // ============================================================================

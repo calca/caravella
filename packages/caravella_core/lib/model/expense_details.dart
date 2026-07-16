@@ -2,6 +2,7 @@ import 'package:uuid/uuid.dart';
 import 'expense_category.dart';
 import 'expense_participant.dart';
 import 'expense_location.dart';
+import 'expense_author.dart';
 
 class ExpenseDetails {
   final String id; // UDID per la spesa
@@ -13,6 +14,8 @@ class ExpenseDetails {
   final String? name;
   final ExpenseLocation? location;
   final List<String> attachments; // Percorsi relativi ai file allegati (max 5)
+  final ExpenseAuthor? createdBy;
+  final ExpenseAuthor? updatedBy;
 
   ExpenseDetails({
     required this.category,
@@ -24,6 +27,8 @@ class ExpenseDetails {
     this.location,
     List<String>? attachments,
     String? id, // opzionale, generato se mancante
+    this.createdBy,
+    this.updatedBy,
   }) : id = id ?? const Uuid().v4(),
        attachments = attachments != null ? List.from(attachments) : [];
 
@@ -44,6 +49,12 @@ class ExpenseDetails {
       attachments: json['attachments'] != null
           ? List<String>.from(json['attachments'])
           : null,
+      createdBy: json['createdBy'] != null
+          ? ExpenseAuthor.fromJson(json['createdBy'])
+          : null,
+      updatedBy: json['updatedBy'] != null
+          ? ExpenseAuthor.fromJson(json['updatedBy'])
+          : null,
     );
   }
 
@@ -57,6 +68,8 @@ class ExpenseDetails {
     if (name != null) 'name': name,
     if (location != null) 'location': location!.toJson(),
     if (attachments.isNotEmpty) 'attachments': attachments,
+    if (createdBy != null) 'createdBy': createdBy!.toJson(),
+    if (updatedBy != null) 'updatedBy': updatedBy!.toJson(),
   };
 
   ExpenseDetails copyWith({
@@ -69,6 +82,8 @@ class ExpenseDetails {
     String? name,
     ExpenseLocation? location,
     List<String>? attachments,
+    ExpenseAuthor? createdBy,
+    ExpenseAuthor? updatedBy,
   }) {
     return ExpenseDetails(
       id: id ?? this.id,
@@ -80,6 +95,8 @@ class ExpenseDetails {
       name: name ?? this.name,
       location: location ?? this.location,
       attachments: attachments ?? List.from(this.attachments),
+      createdBy: createdBy ?? this.createdBy,
+      updatedBy: updatedBy ?? this.updatedBy,
     );
   }
 }

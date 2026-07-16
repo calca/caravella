@@ -1,0 +1,21 @@
+name: google_drive_sync
+description: Google Drive cloud relay for Caravella's sync feature, built only when ENABLE_GOOGLE_DRIVE_SYNC=true
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_sign_in: ^7.2.0
+  googleapis: ^16.0.0
+  http: ^1.6.0
+  caravella_core:
+    path: ../caravella_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

@@ -66,7 +66,7 @@
   "share_label": "Condividi",
   "share_text_label": "Condividi testo",
   "share_image_label": "Condividi immagine",
-  "export_share": "Esporta e Condividi",
+  "export_share": "Condividi ed Esporta",
   "contribution_percentages": "Percentuali",
   "contribution_percentages_desc": "Quota del totale pagata da ciascun partecipante",
   "export_options": "Opzioni di Esportazione",
@@ -297,6 +297,8 @@
   "export_csv_error": "Errore nell'esportazione delle spese",
   "expense_name": "Descrizione",
   "paid_by": "Pagato da",
+  "added_by": "Aggiunto da",
+  "edited_by": "Modificato da",
   "expense_added_success": "Spesa aggiunta",
   "expense_updated_success": "Spesa aggiornata",
   "data_refreshing": "Aggiornamento…",
@@ -926,6 +928,136 @@
   ,"@export_markdown_description": {"description": "Breve descrizione per il formato di esportazione Markdown"}
   ,"save_label": "Salva"
   ,"@save_label": {"description": "Etichetta per il pulsante di salvataggio"}
+  ,"sync_title": "Sincronizzazione"
+  ,"@sync_title": {"description": "Titolo per la pagina impostazioni sync"}
+  ,"sync_settings_desc": "Condividi i dati tra i tuoi dispositivi via Wi-Fi o Bluetooth"
+  ,"@sync_settings_desc": {"description": "Sottotitolo per la voce sync nelle impostazioni Dati"}
+  ,"sync_local_title": "Sync locale"
+  ,"@sync_local_title": {"description": "Titolo per la sezione sync LAN locale"}
+  ,"sync_multiuser_title": "Sincronizza con altre persone"
+  ,"@sync_multiuser_title": {"description": "Titolo per l'ingresso alla sotto-pagina di sync Wi-Fi/Bluetooth (dispositivi di altre persone)"}
+  ,"sync_multiuser_description": "Condividi i tuoi gruppi con dispositivi vicini via Wi-Fi o Bluetooth"
+  ,"@sync_multiuser_description": {"description": "Descrizione per l'ingresso alla sync multi-utente"}
+  ,"sync_multidevice_title": "Sincronizza i tuoi dispositivi"
+  ,"@sync_multidevice_title": {"description": "Titolo per l'ingresso alla sotto-pagina di sync cloud (dispositivi propri)"}
+  ,"sync_multidevice_description": "Mantieni aggiornati il tuo telefono e gli altri dispositivi tramite Google Drive"
+  ,"@sync_multidevice_description": {"description": "Descrizione per l'ingresso alla sync multi-dispositivo"}
+  ,"sync_local_description": "Sincronizzazione automatica sulla rete Wi-Fi"
+  ,"@sync_local_description": {"description": "Descrizione per sync LAN"}
+  ,"sync_cloud_title": "Sync cloud"
+  ,"@sync_cloud_title": {"description": "Titolo per la sezione sync cloud"}
+  ,"sync_cloud_description": "Sincronizzazione via Google Drive"
+  ,"@sync_cloud_description": {"description": "Descrizione per sync cloud"}
+  ,"sync_cloud_scope_description": "Una volta attivata, sincronizza tutti i tuoi gruppi — non è possibile scegliere gruppo per gruppo come con la sync Wi-Fi/Bluetooth"
+  ,"@sync_cloud_scope_description": {"description": "Avviso che spiega che la sync cloud si applica a tutti i gruppi insieme, mostrato nella pagina di sync multi-dispositivo"}
+  ,"sync_cloud_enable": "Abilita sync cloud"
+  ,"@sync_cloud_enable": {"description": "Etichetta per attivare sync cloud"}
+  ,"sync_cloud_privacy": "I tuoi dati vengono salvati nel tuo Google Drive personale, non su server di terzi."
+  ,"@sync_cloud_privacy": {"description": "Avviso privacy per sync cloud"}
+  ,"sync_cloud_signed_in_as": "Accesso effettuato come {email}"
+  ,"@sync_cloud_signed_in_as": {"description": "Mostra l'account Google collegato", "placeholders": {"email": {"type": "String"}}}
+  ,"sync_cloud_sign_in_failed": "Accesso a Google non riuscito o annullato"
+  ,"@sync_cloud_sign_in_failed": {"description": "Errore mostrato quando l'accesso a Google fallisce o viene annullato"}
+  ,"sync_history_title": "Cronologia sync"
+  ,"@sync_history_title": {"description": "Titolo per la sezione cronologia sync"}
+  ,"sync_status_synced": "Sincronizzato"
+  ,"@sync_status_synced": {"description": "Stato quando sync aggiornato"}
+  ,"sync_status_syncing": "Sincronizzazione..."
+  ,"@sync_status_syncing": {"description": "Stato durante sync attivo"}
+  ,"sync_status_error": "Errore sync"
+  ,"@sync_status_error": {"description": "Stato in caso di errore sync"}
+  ,"sync_status_never": "Mai sincronizzato"
+  ,"@sync_status_never": {"description": "Stato quando nessun sync è avvenuto"}
+  ,"sync_now": "Sincronizza ora"
+  ,"@sync_now": {"description": "Pulsante per avviare sync manuale"}
+  ,"sync_last_sync": "Ultimo sync: {time}"
+  ,"@sync_last_sync": {"description": "Mostra l'ora dell'ultimo sync","placeholders": {"time": {"type": "String"}}}
+  ,"sync_bt_title": "Sync Bluetooth"
+  ,"@sync_bt_title": {"description": "Titolo per sync Bluetooth"}
+  ,"sync_bt_description": "Sincronizzazione manuale con dispositivi vicini via Bluetooth"
+  ,"@sync_bt_description": {"description": "Descrizione per sync Bluetooth"}
+  ,"sync_bt_searching": "Ricerca dispositivi vicini..."
+  ,"@sync_bt_searching": {"description": "Stato durante ricerca peer BT"}
+  ,"sync_bt_advertise_waiting": "In attesa che un dispositivo vicino si connetta..."
+  ,"@sync_bt_advertise_waiting": {"description": "Stato mentre questo dispositivo si annuncia in attesa che un altro lo scopra e si connetta"}
+  ,"sync_bt_sync_with": "Sincronizza"
+  ,"@sync_bt_sync_with": {"description": "Pulsante per sincronizzare con un peer BT"}
+  ,"sync_bt_completed": "Sincronizzazione completata"
+  ,"@sync_bt_completed": {"description": "Stato quando sync BT completato"}
+  ,"sync_bt_received_sent": "Ricevuti {received}, inviati {sent} record"
+  ,"@sync_bt_received_sent": {"description": "Riepilogo dopo sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
+  ,"sync_bt_error": "Sincronizzazione fallita"
+  ,"@sync_bt_error": {"description": "Stato quando sync BT fallisce"}
+  ,"sync_bt_retry": "Riprova"
+  ,"@sync_bt_retry": {"description": "Pulsante per riprovare sync BT"}
+  ,"sync_bt_permission_denied": "Permesso Bluetooth negato — abilitalo nelle impostazioni di sistema per sincronizzare con i dispositivi vicini"
+  ,"@sync_bt_permission_denied": {"description": "Errore mostrato quando i permessi Bluetooth/dispositivi vicini sono negati"}
+  ,"sync_history_empty": "Nessuna cronologia sync"
+  ,"@sync_history_empty": {"description": "Stato vuoto per cronologia sync"}
+  ,"sync_channel_lan": "LAN"
+  ,"@sync_channel_lan": {"description": "Nome canale LAN"}
+  ,"sync_channel_bluetooth": "Bluetooth"
+  ,"@sync_channel_bluetooth": {"description": "Nome canale Bluetooth"}
+  ,"sync_channel_cloud": "Cloud"
+  ,"@sync_channel_cloud": {"description": "Nome canale Cloud"}
+  ,"sync_records_exchanged": "{sent} inviati, {received} ricevuti"
+  ,"@sync_records_exchanged": {"description": "Riepilogo record scambiati","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
+  ,"sync_group_shared": "Gruppo condiviso"
+  ,"@sync_group_shared": {"description": "Tooltip per icona gruppo condiviso"}
+  ,"sync_group_synced": "Tutte le modifiche sincronizzate"
+  ,"@sync_group_synced": {"description": "Tooltip per stato gruppo sincronizzato"}
+  ,"sync_group_pending": "Modifiche non ancora sincronizzate"
+  ,"@sync_group_pending": {"description": "Tooltip per stato gruppo non sincronizzato"}
+  ,"sync_group_enable": "Condividi questo gruppo"
+  ,"@sync_group_enable": {"description": "Etichetta per abilitare la sincronizzazione su un gruppo"}
+  ,"sync_group_enable_desc": "Sincronizza le spese di questo gruppo con altri dispositivi accoppiati via Wi-Fi o Bluetooth"
+  ,"@sync_group_enable_desc": {"description": "Descrizione per il toggle di sincronizzazione del gruppo"}
+  ,"sync_group_needs_channel": "Attiva la sync Wi-Fi o Bluetooth nelle Impostazioni per abilitarlo"
+  ,"@sync_group_needs_channel": {"description": "Mostrato al posto di sync_group_enable_desc quando né Wi-Fi né Bluetooth sync sono attivi a livello di app"}
+  ,"sync_group_manage_pairing_title": "Gestisci l'associazione dei dispositivi"
+  ,"@sync_group_manage_pairing_title": {"description": "Riga CTA che porta alle impostazioni di sync multi-utente per associare i dispositivi"}
+  ,"sync_group_manage_pairing_desc": "Attiva la sync Wi-Fi o Bluetooth e associa i dispositivi dalle Impostazioni"
+  ,"@sync_group_manage_pairing_desc": {"description": "Descrizione per la riga CTA di gestione associazione"}
+  ,"sync_qr_show_button": "Mostra codice QR"
+  ,"@sync_qr_show_button": {"description": "Pulsante per mostrare il codice QR di pairing di questo dispositivo"}
+  ,"sync_qr_scan_button": "Scansiona codice QR"
+  ,"@sync_qr_scan_button": {"description": "Pulsante per scansionare il codice QR di pairing di un altro dispositivo"}
+  ,"sync_qr_show_title": "Abbina un dispositivo"
+  ,"@sync_qr_show_title": {"description": "Titolo per il foglio di visualizzazione QR di pairing"}
+  ,"sync_qr_show_description": "Scansiona questo codice da un altro dispositivo sulla stessa rete Wi-Fi per abbinarlo alla sincronizzazione"
+  ,"@sync_qr_show_description": {"description": "Istruzioni per il foglio di visualizzazione QR di pairing"}
+  ,"sync_qr_sharing_group": "Condividi «{groupTitle}»"
+  ,"@sync_qr_sharing_group": {"description": "Mostra quale gruppo condivide questo codice di abbinamento", "placeholders": {"groupTitle": {"type": "String"}}}
+  ,"sync_qr_expires_in": "Scade tra {time}"
+  ,"@sync_qr_expires_in": {"description": "Conto alla rovescia che mostra per quanto tempo il codice QR di pairing resta valido", "placeholders": {"time": {"type": "String"}}}
+  ,"sync_qr_expired_title": "Codice scaduto"
+  ,"@sync_qr_expired_title": {"description": "Titolo mostrato quando il codice QR di pairing è scaduto"}
+  ,"sync_qr_expired_desc": "Genera un nuovo codice per continuare l'abbinamento"
+  ,"@sync_qr_expired_desc": {"description": "Descrizione mostrata quando il codice QR di pairing è scaduto"}
+  ,"sync_qr_regenerate_button": "Genera nuovo codice"
+  ,"@sync_qr_regenerate_button": {"description": "Pulsante per generare un nuovo codice QR di pairing dopo la scadenza del precedente"}
+  ,"sync_qr_no_network": "Connettiti al Wi-Fi per generare un codice di pairing"
+  ,"@sync_qr_no_network": {"description": "Mostrato quando non è disponibile un indirizzo di rete locale per il pairing"}
+  ,"sync_qr_scan_title": "Scansiona codice di pairing"
+  ,"@sync_qr_scan_title": {"description": "Titolo per la pagina di scansione QR di pairing"}
+  ,"sync_qr_scan_description": "Inquadra con la fotocamera il codice di pairing mostrato sull'altro dispositivo"
+  ,"@sync_qr_scan_description": {"description": "Istruzioni per la pagina di scansione QR di pairing"}
+  ,"sync_qr_pair_success": "Abbinato con {deviceName}"
+  ,"@sync_qr_pair_success": {"description": "Messaggio di successo dopo l'abbinamento con un dispositivo scansionato", "placeholders": {"deviceName": {"type": "String"}}}
+  ,"sync_qr_pair_failed": "Abbinamento non riuscito — assicurati che entrambi i dispositivi siano sulla stessa rete Wi-Fi"
+  ,"@sync_qr_pair_failed": {"description": "Messaggio di errore quando l'abbinamento QR fallisce"}
+  ,"sync_qr_pair_expired": "Questo codice di abbinamento è scaduto — chiedi all'altro dispositivo di mostrarne uno nuovo"
+  ,"@sync_qr_pair_expired": {"description": "Messaggio di errore quando un codice QR scansionato ha superato la sua finestra di validità"}
+  ,"sync_qr_pair_emulator_host": "Questo codice è stato generato su un emulatore Android, non raggiungibile da altri dispositivi — usa due dispositivi fisici sulla stessa rete Wi-Fi"
+  ,"@sync_qr_pair_emulator_host": {"description": "Messaggio di errore quando l'host di un codice QR scansionato è l'indirizzo NAT non raggiungibile di un emulatore Android"}
+  ,"sync_qr_emulator_warning": "Questo dispositivo è un emulatore Android — il suo indirizzo di solito non è raggiungibile da altri dispositivi, quindi l'abbinamento potrebbe fallire"
+  ,"@sync_qr_emulator_warning": {"description": "Avviso mostrato nel foglio del QR quando l'indirizzo di questo dispositivo è quello NAT di un emulatore Android"}
+  ,"sync_paired_devices_title": "Dispositivi abbinati"
+  ,"@sync_paired_devices_title": {"description": "Titolo per l'elenco dei dispositivi abbinati per la sincronizzazione LAN"}
+  ,"sync_paired_devices_empty": "Nessun dispositivo abbinato"
+  ,"@sync_paired_devices_empty": {"description": "Stato vuoto per l'elenco dei dispositivi abbinati"}
+  ,"sync_paired_devices_remove": "Rimuovi abbinamento"
+  ,"@sync_paired_devices_remove": {"description": "Pulsante per rimuovere l'abbinamento di un dispositivo"}
   ,"search_expenses": "Cerca spese"
   ,"@search_expenses": {"description": "Titolo della pagina di ricerca spese"}
   ,"search_in_group": "Cerca in {groupName}"

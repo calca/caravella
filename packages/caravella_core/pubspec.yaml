@@ -13,14 +13,21 @@ dependencies:
   path: ^1.9.0
   path_provider: ^2.1.5
   shared_preferences: ^2.5.5
-  uuid: ^4.5.3
+  uuid: ^4.6.0
   intl: ^0.20.2
   archive: ^4.0.9
   in_app_review: ^2.0.10
   home_widget: ^0.9.1
   sqflite: ^2.4.3
-  talker: ^5.1.17
-  talker_flutter: ^5.1.17
+  talker: ^5.1.19
+  talker_flutter: ^5.1.19
+  device_info_plus: ^13.2.0
+  bonsoir: ^7.1.4
+  shelf: ^1.4.2
+  shelf_router: ^1.1.4
+  http: ^1.3.0
+  cryptography: ^2.7.0
+  flutter_secure_storage: ^10.3.1
 
 dev_dependencies:
   flutter_test:

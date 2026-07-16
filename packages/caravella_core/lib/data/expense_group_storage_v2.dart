@@ -1,9 +1,12 @@
 // Updated wrapper for ExpenseGroupStorage - removes print statements
 import '../services/logging/logger_service.dart';
+import '../services/storage/preferences_service.dart';
 import '../model/expense_group.dart';
 import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
+import '../model/expense_author.dart';
+import '../sync/device_identity.dart';
 import 'expense_group_repository.dart';
 import 'expense_group_repository_factory.dart';
 import 'file_based_expense_group_repository.dart';
@@ -17,6 +20,26 @@ class ExpenseGroupStorageV2 {
   // Get repository instance from factory
   static IExpenseGroupRepository get _repository =>
       ExpenseGroupRepositoryFactory.getRepository();
+
+  /// Snapshot of "who" is performing the current create/update, used to
+  /// stamp [ExpenseDetails.createdBy]/[ExpenseDetails.updatedBy].
+  ///
+  /// `deviceId` is empty when [DeviceIdentity] hasn't been initialized yet
+  /// (e.g. JSON backend, where sync — and therefore device identity — is
+  /// never set up), mirroring the same guard `SqliteGroupMapper.groupToMap`
+  /// uses for the group-level `device_id` column.
+  static ExpenseAuthor _currentAuthor() {
+    final deviceInitialized = DeviceIdentity.isInitialized;
+    return ExpenseAuthor(
+      deviceId: deviceInitialized ? DeviceIdentity.instance.deviceId : '',
+      deviceName: deviceInitialized
+          ? DeviceIdentity.instance.deviceName
+          : null,
+      userName: PreferencesService.isInitialized
+          ? PreferencesService.instance.user.getName()
+          : null,
+    );
+  }
 
   /// Gets a trip by ID
   static Future<ExpenseGroup?> getTripById(String id) async {
@@ -166,8 +189,13 @@ class ExpenseGroupStorageV2 {
       return;
     }
 
+    final author = _currentAuthor();
+    final stampedExpense = expense.copyWith(
+      createdBy: author,
+      updatedBy: author,
+    );
     final updatedExpenses = List<ExpenseDetails>.from(group.expenses)
-      ..add(expense);
+      ..add(stampedExpense);
     final updatedGroup = group.copyWith(expenses: updatedExpenses);
 
     final saveResult = await _repository.saveGroup(updatedGroup);
@@ -281,9 +309,17 @@ class ExpenseGroupStorageV2 {
       return;
     }
 
+    // Preserve the original creation attribution; only "last modified by"
+    // is re-stamped on an edit.
+    final oldExpense = group.expenses[expenseIndex];
+    final stampedExpense = updatedExpense.copyWith(
+      createdBy: oldExpense.createdBy,
+      updatedBy: _currentAuthor(),
+    );
+
     // Create updated expenses list with the modified expense
     final updatedExpenses = List<ExpenseDetails>.from(group.expenses);
-    updatedExpenses[expenseIndex] = updatedExpense;
+    updatedExpenses[expenseIndex] = stampedExpense;
 
     final updatedGroup = group.copyWith(expenses: updatedExpenses);
 

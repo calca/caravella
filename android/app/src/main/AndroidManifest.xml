@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.caravella.egm">
 
     <!-- Internet permission required for loading map tiles from OpenStreetMap -->
@@ -22,13 +23,29 @@
     
     <!-- Microphone permission for voice input of expenses (optional feature) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    
+
+    <!-- Wi-Fi permissions for local (LAN/mDNS) peer-to-peer group sync (optional feature) -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <!-- Bluetooth permissions for manual peer-to-peer group sync via Nearby Connections (optional feature) -->
+    <!-- Legacy permissions for API <= 30; requested at runtime via permission_handler on API 31+ -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:minSdkVersion="31" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:minSdkVersion="31" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:minSdkVersion="31" />
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:minSdkVersion="33"
+        tools:replace="android:minSdkVersion" />
+
     <!-- Declare that these permissions are not required for basic app functionality -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.location" android:required="false" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
     <uses-feature android:name="android.hardware.location.network" android:required="false" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
     
     <!-- Restrict installation to smartphones only (exclude tablets and other large-screen devices) -->
     <!-- This ensures the app is optimized for smartphone form factors -->

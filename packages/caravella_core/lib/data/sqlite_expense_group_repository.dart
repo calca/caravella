@@ -5,6 +5,7 @@ import '../model/expense_group.dart';
 import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
+import '../services/logging/logger_service.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
@@ -24,7 +25,18 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 2;
+  static const int _databaseVersion = 6;
+
+  // Table names — accessible for SyncDao and other sync infrastructure
+  static const String tableGroups = kTableGroups;
+  static const String tableParticipants = kTableParticipants;
+  static const String tableCategories = kTableCategories;
+  static const String tableExpenses = kTableExpenses;
+  static const String tableAttachments = kTableAttachments;
+  static const String tableDeviceMeta = kTableDeviceMeta;
+  static const String tableSyncLog = kTableSyncLog;
+  static const String tablePairedDevices = kTablePairedDevices;
+  static const String tablePairedDeviceGroups = kTablePairedDeviceGroups;
 
   final SqliteGroupMapper _mapper = const SqliteGroupMapper();
 
@@ -62,13 +74,179 @@ class SqliteExpenseGroupRepository
         path,
         version: _databaseVersion,
         onCreate: (db, version) => createSqliteSchema(db),
-        onUpgrade: (db, oldVersion, newVersion) async {},
+        onUpgrade: _upgradeDatabase,
       );
     } catch (e) {
       throw FileOperationError(
         'Failed to initialize database',
         details: e.toString(),
         cause: e is Exception ? e : Exception(e.toString()),
+      );
+    }
+  }
+
+  /// Handle database upgrades
+  ///
+  /// Every database that existed before this sync feature landed is at
+  /// on-disk version 2 (bumped previously for aggregation views that were
+  /// later dropped without a version change) and has none of the sync
+  /// columns/tables below — there was never a real "v2 with sync columns"
+  /// database in the wild. So all sync additions are gated on `oldVersion < 3`
+  /// as a single step; gating part of them on `oldVersion < 2` (as a separate
+  /// step) skipped them entirely for real users, since their on-disk version
+  /// is already 2, leaving `deleted`/`device_id`/`updated_at`/`sync_version`
+  /// missing and breaking every read (`WHERE deleted = ?`) and write
+  /// (`INSERT` with those columns) against the groups table.
+  Future<void> _upgradeDatabase(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    if (oldVersion < 3) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v3',
+        name: 'storage.sqlite',
+      );
+
+      // Add sync columns to groups table
+      await db.execute(
+        "ALTER TABLE $kTableGroups ADD COLUMN device_id TEXT NOT NULL DEFAULT ''",
+      );
+      await db.execute(
+        'ALTER TABLE $kTableGroups ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableGroups ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableGroups ADD COLUMN sync_version INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableGroups ADD COLUMN sync_enabled INTEGER NOT NULL DEFAULT 0',
+      );
+
+      // Create new sync tables
+      await db.execute('''
+        CREATE TABLE $kTableDeviceMeta (
+          device_id TEXT PRIMARY KEY,
+          device_name TEXT,
+          last_seen INTEGER,
+          vector_clock TEXT
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE $kTableSyncLog (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          peer_id TEXT NOT NULL,
+          channel TEXT NOT NULL,
+          synced_at INTEGER NOT NULL,
+          delta_sent INTEGER NOT NULL DEFAULT 0,
+          delta_recv INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
+
+      // Create indexes for sync columns
+      await db.execute(
+        'CREATE INDEX idx_groups_updated_at ON $kTableGroups(updated_at)',
+      );
+      await db.execute(
+        'CREATE INDEX idx_groups_deleted ON $kTableGroups(deleted)',
+      );
+
+      // Backfill: set updated_at = timestamp for all existing groups
+      await db.execute(
+        'UPDATE $kTableGroups SET updated_at = timestamp WHERE updated_at = 0',
+      );
+
+      LoggerService.info(
+        'Database migration to v3 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 4) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v4',
+        name: 'storage.sqlite',
+      );
+
+      await db.execute('''
+        CREATE TABLE $kTablePairedDevices (
+          device_id TEXT PRIMARY KEY,
+          device_name TEXT NOT NULL,
+          platform TEXT,
+          paired_at INTEGER NOT NULL
+        )
+      ''');
+
+      LoggerService.info(
+        'Database migration to v4 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 5) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v5',
+        name: 'storage.sqlite',
+      );
+
+      // Peer's X25519 public key (base64), captured during pairing —
+      // enables end-to-end encrypted sync. Existing pairings (created before
+      // this column existed) have no key and must be re-paired to sync
+      // again — encryption cannot be bolted onto a trust relationship
+      // established without it.
+      await db.execute(
+        'ALTER TABLE $kTablePairedDevices ADD COLUMN public_key TEXT',
+      );
+
+      await db.execute('''
+        CREATE TABLE $kTablePairedDeviceGroups (
+          device_id TEXT NOT NULL,
+          group_id TEXT NOT NULL,
+          granted_at INTEGER NOT NULL,
+          PRIMARY KEY (device_id, group_id)
+        )
+      ''');
+
+      LoggerService.info(
+        'Database migration to v5 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 6) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v6',
+        name: 'storage.sqlite',
+      );
+
+      // Per-expense authorship snapshots: which device/user created the
+      // expense, and which last modified it. Nullable — existing rows have
+      // no history to backfill.
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN created_by_device_id TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN created_by_device_name TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN created_by_user_name TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN updated_by_device_id TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN updated_by_device_name TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN updated_by_user_name TEXT',
+      );
+
+      LoggerService.info(
+        'Database migration to v6 complete',
+        name: 'storage.sqlite',
       );
     }
   }

@@ -23,6 +23,9 @@ class GroupCardContent extends StatefulWidget {
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
 
+  /// Whether this group's data is fully synced with peers.
+  final bool? isSynced;
+
   const GroupCardContent({
     super.key,
     required this.group,
@@ -30,6 +33,7 @@ class GroupCardContent extends StatefulWidget {
     required this.theme,
     required this.onExpenseAdded,
     this.onCategoryAdded,
+    this.isSynced,
   });
 
   @override
@@ -99,6 +103,7 @@ class _GroupCardContentState extends State<GroupCardContent> {
               group: _currentGroup,
               localizations: widget.localizations,
               theme: widget.theme,
+              isSynced: widget.isSynced,
             ),
             const Spacer(),
             // Show playful empty state or amounts based on expenses

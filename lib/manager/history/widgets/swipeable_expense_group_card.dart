@@ -190,6 +190,15 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(child: _buildHighlightedTitle(context)),
+                      if (trip.syncEnabled)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: Icon(
+                            Icons.people_outline,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
                     ],
                   ),
                   const SizedBox(height: 8),

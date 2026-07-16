@@ -187,7 +187,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get share_image_label => '分享图片';
 
   @override
-  String get export_share => '导出和分享';
+  String get export_share => '分享和导出';
 
   @override
   String get contribution_percentages => '百分比';
@@ -832,6 +832,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get paid_by => '付款人';
+
+  @override
+  String get added_by => '添加者';
+
+  @override
+  String get edited_by => '编辑者';
 
   @override
   String get expense_added_success => '已添加支出';
@@ -2217,6 +2223,218 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get save_label => '保存';
+
+  @override
+  String get sync_title => '同步';
+
+  @override
+  String get sync_settings_desc => '通过 Wi-Fi 或蓝牙在设备间共享数据';
+
+  @override
+  String get sync_multiuser_title => '与他人同步';
+
+  @override
+  String get sync_multiuser_description => '通过Wi-Fi或蓝牙与附近的设备共享你的群组';
+
+  @override
+  String get sync_multidevice_title => '同步你的设备';
+
+  @override
+  String get sync_multidevice_description => '通过Google Drive让你的手机和其他设备保持最新';
+
+  @override
+  String get sync_local_title => '本地同步';
+
+  @override
+  String get sync_local_description => 'Wi-Fi网络自动同步';
+
+  @override
+  String get sync_cloud_title => '云同步';
+
+  @override
+  String get sync_cloud_description => '通过Google Drive同步';
+
+  @override
+  String get sync_cloud_scope_description =>
+      '启用后会同步你的所有群组——不能像Wi-Fi/蓝牙同步那样按群组单独选择';
+
+  @override
+  String get sync_cloud_enable => '启用云同步';
+
+  @override
+  String get sync_cloud_privacy => '您的数据保存在您的个人Google Drive中，而非第三方服务器。';
+
+  @override
+  String sync_cloud_signed_in_as(String email) {
+    return '已使用 $email 登录';
+  }
+
+  @override
+  String get sync_cloud_sign_in_failed => 'Google 登录失败或已取消';
+
+  @override
+  String get sync_history_title => '同步历史';
+
+  @override
+  String get sync_status_synced => '已同步';
+
+  @override
+  String get sync_status_syncing => '同步中...';
+
+  @override
+  String get sync_status_error => '同步错误';
+
+  @override
+  String get sync_status_never => '从未同步';
+
+  @override
+  String get sync_now => '立即同步';
+
+  @override
+  String sync_last_sync(String time) {
+    return '上次同步：$time';
+  }
+
+  @override
+  String get sync_bt_title => '蓝牙同步';
+
+  @override
+  String get sync_bt_description => '通过蓝牙与附近设备手动同步';
+
+  @override
+  String get sync_bt_searching => '正在搜索附近设备...';
+
+  @override
+  String get sync_bt_advertise_waiting => '正在等待附近设备连接...';
+
+  @override
+  String get sync_bt_sync_with => '同步';
+
+  @override
+  String get sync_bt_completed => '同步完成';
+
+  @override
+  String sync_bt_received_sent(int received, int sent) {
+    return '接收 $received 条，发送 $sent 条记录';
+  }
+
+  @override
+  String get sync_bt_error => '同步失败';
+
+  @override
+  String get sync_bt_retry => '重试';
+
+  @override
+  String get sync_bt_permission_denied => '蓝牙权限被拒绝 — 请在系统设置中启用它以与附近设备同步';
+
+  @override
+  String get sync_history_empty => '暂无同步历史';
+
+  @override
+  String get sync_channel_lan => '局域网';
+
+  @override
+  String get sync_channel_bluetooth => '蓝牙';
+
+  @override
+  String get sync_channel_cloud => '云端';
+
+  @override
+  String sync_records_exchanged(int sent, int received) {
+    return '发送 $sent 条，接收 $received 条';
+  }
+
+  @override
+  String get sync_group_shared => '共享群组';
+
+  @override
+  String get sync_group_synced => '所有更改已同步';
+
+  @override
+  String get sync_group_pending => '更改尚未同步';
+
+  @override
+  String get sync_group_enable => '共享此群组';
+
+  @override
+  String get sync_group_enable_desc => '通过Wi-Fi或蓝牙将此群组的支出与其他已配对设备同步';
+
+  @override
+  String get sync_group_needs_channel => '请先在设置中开启Wi-Fi或蓝牙同步以启用此项';
+
+  @override
+  String get sync_group_manage_pairing_title => '管理设备配对';
+
+  @override
+  String get sync_group_manage_pairing_desc => '在设置中开启Wi-Fi或蓝牙同步并配对设备';
+
+  @override
+  String get sync_qr_show_button => '显示二维码';
+
+  @override
+  String get sync_qr_scan_button => '扫描二维码';
+
+  @override
+  String get sync_qr_show_title => '配对设备';
+
+  @override
+  String get sync_qr_show_description => '在同一 Wi-Fi 网络下的另一设备上扫描此码以配对同步';
+
+  @override
+  String sync_qr_sharing_group(String groupTitle) {
+    return '正在共享「$groupTitle」';
+  }
+
+  @override
+  String sync_qr_expires_in(String time) {
+    return '$time 后过期';
+  }
+
+  @override
+  String get sync_qr_expired_title => '二维码已过期';
+
+  @override
+  String get sync_qr_expired_desc => '生成新的二维码以继续配对';
+
+  @override
+  String get sync_qr_regenerate_button => '生成新二维码';
+
+  @override
+  String get sync_qr_no_network => '请连接 Wi-Fi 以生成配对码';
+
+  @override
+  String get sync_qr_scan_title => '扫描配对码';
+
+  @override
+  String get sync_qr_scan_description => '将摄像头对准另一设备上显示的配对码';
+
+  @override
+  String sync_qr_pair_success(String deviceName) {
+    return '已与 $deviceName 配对';
+  }
+
+  @override
+  String get sync_qr_pair_failed => '配对失败 — 请确认两台设备在同一 Wi-Fi 网络下';
+
+  @override
+  String get sync_qr_pair_expired => '此配对码已过期 — 请让对方设备重新显示一个新的配对码';
+
+  @override
+  String get sync_qr_pair_emulator_host =>
+      '此二维码是在Android模拟器上生成的，其他设备无法访问该地址 — 请使用同一Wi-Fi网络下的两台真实设备进行配对';
+
+  @override
+  String get sync_qr_emulator_warning =>
+      '此设备是Android模拟器 — 其地址通常无法被其他设备访问，配对可能会失败';
+
+  @override
+  String get sync_paired_devices_title => '已配对设备';
+
+  @override
+  String get sync_paired_devices_empty => '尚无已配对设备';
+
+  @override
+  String get sync_paired_devices_remove => '取消配对';
 
   @override
   String get search_expenses => '搜索费用';

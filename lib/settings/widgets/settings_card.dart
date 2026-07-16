@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
+/// Semantics-aware settings row card, built on the shared [BaseCard]
+/// instead of reimplementing a rounded surface container.
 class SettingsCard extends StatelessWidget {
   final Widget child;
   final bool? semanticsButton;
@@ -22,10 +25,11 @@ class SettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext ctx) {
-    final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
+    final card = BaseCard(
+      padding: EdgeInsets.zero,
+      backgroundColor: color,
+      child: child,
     );
-    final card = Card(elevation: 0, color: color, shape: shape, child: child);
     if (semanticsButton == true ||
         semanticsLabel != null ||
         semanticsHint != null ||

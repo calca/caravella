@@ -3,6 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../../../settings/pages/settings_page.dart';
+import '../../../sync/settings_sync_badge.dart';
 
 class HomeCardsHeader extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -131,14 +132,29 @@ class HomeCardsHeader extends StatelessWidget {
         ),
         const SizedBox(width: 8),
 
-        // CTA button: apre direttamente la pagina delle impostazioni
-        IconButton(
-          icon: Icon(Icons.settings, color: theme.colorScheme.onSurface),
-          tooltip: localizations.settings,
-          onPressed: () {
-            Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (ctx) => const SettingsPage()));
+        // CTA button: apre direttamente la pagina delle impostazioni, con un
+        // pallino di stato sync (verde = ok, ocra = problemi) una volta che
+        // il SyncOrchestrator (solo backend SQLite) ha finito l'init.
+        Consumer<SyncOrchestrator?>(
+          builder: (context, orchestrator, _) {
+            final settingsIcon = Icon(
+              Icons.settings,
+              color: theme.colorScheme.onSurface,
+            );
+            return IconButton(
+              icon: orchestrator == null
+                  ? settingsIcon
+                  : SettingsSyncBadge(
+                      orchestrator: orchestrator,
+                      child: settingsIcon,
+                    ),
+              tooltip: localizations.settings,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => const SettingsPage()),
+                );
+              },
+            );
           },
         ),
       ],

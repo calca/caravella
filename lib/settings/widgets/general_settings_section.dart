@@ -288,7 +288,7 @@ class GeneralSettingsSection extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
+        return Material3Dialog(
           title: Text(loc.settings_user_name_title),
           content: TextField(
             controller: controller,
@@ -298,16 +298,14 @@ class GeneralSettingsSection extends StatelessWidget {
             maxLength: 50,
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(loc.cancel),
-            ),
-            TextButton(
+            Material3DialogActions.cancel(context, loc.cancel),
+            Material3DialogActions.primary(
+              context,
+              loc.save,
               onPressed: () {
                 userNameNotifier.setName(controller.text);
                 Navigator.of(context).pop();
               },
-              child: Text(loc.save),
             ),
           ],
         );

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/notification_manager.dart';
 import '../settings/state/group_type_templates_notifier.dart';
+import '../sync/sync_bootstrap.dart';
 
 /// Sets up all global providers for the app.
 class ProviderSetup {
@@ -28,6 +29,13 @@ class ProviderSetup {
         ),
         ChangeNotifierProvider(create: (_) => UserNameNotifier()),
         ChangeNotifierProvider(create: (_) => GroupTypeTemplatesNotifier()),
+        // Built asynchronously so LAN/mDNS setup never blocks the first
+        // frame; consumers see null until initialization completes (or
+        // permanently, on the JSON backend where sync isn't available).
+        FutureProvider<SyncOrchestrator?>(
+          create: (_) => SyncBootstrap.initialize(),
+          initialData: null,
+        ),
       ],
       child: child,
     );

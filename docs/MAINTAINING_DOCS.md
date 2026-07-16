@@ -22,6 +22,8 @@ This applies to both directions:
 | `packages/caravella_core_ui/lib/**` (widgets, themes, map) | [PACKAGE_CARAVELLA_CORE_UI.md](PACKAGE_CARAVELLA_CORE_UI.md), and [LOCATION_AND_MAPS.md](LOCATION_AND_MAPS.md) for `map/` |
 | `packages/android_app_functions/lib/**` + native Kotlin under `android/.../appfunctions/` | [PACKAGE_ANDROID_APP_FUNCTIONS.md](PACKAGE_ANDROID_APP_FUNCTIONS.md) |
 | `packages/play_store_updates/lib/**` | [PACKAGE_PLAY_STORE_UPDATES.md](PACKAGE_PLAY_STORE_UPDATES.md) |
+| `packages/google_drive_sync/lib/**` | [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md), [GOOGLE_DRIVE_SYNC_SETUP.md](GOOGLE_DRIVE_SYNC_SETUP.md) |
+| `packages/caravella_core/lib/sync/**` | [PACKAGE_CARAVELLA_CORE.md](PACKAGE_CARAVELLA_CORE.md), [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md) |
 | `lib/main.dart`, `lib/main/**` | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | `lib/home/**` | [APP_HOME.md](APP_HOME.md) |
 | `lib/manager/group/**` | [APP_GROUP_MANAGEMENT.md](APP_GROUP_MANAGEMENT.md) |

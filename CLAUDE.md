@@ -42,6 +42,7 @@ CI (`.github/workflows/Development - Android.yml`) runs exactly: `flutter pub ge
 - `caravella_core_ui` → `caravella_core` only.
 - `caravella_core` → independent (no dependency on other local packages).
 - `android_app_functions` (exposes app capabilities to Android AI agents/shortcuts) and `play_store_updates` (conditional on `ENABLE_PLAY_UPDATES=true`) both depend on `caravella_core` (and `play_store_updates` also on `caravella_core_ui`).
+- `google_drive_sync` (Google Drive cloud relay for the sync feature, conditional on `ENABLE_GOOGLE_DRIVE_SYNC=true` — see [`docs/GOOGLE_DRIVE_SYNC_SETUP.md`](docs/GOOGLE_DRIVE_SYNC_SETUP.md)) depends on `caravella_core` only.
 - `lib/main.dart` is a thin entrypoint; actual startup sequencing (Talker logging init, `AppInitialization.initialize()`, shortcuts, Android App Functions, `runApp`) lives in `lib/main/app_initialization.dart` and `lib/main/caravella_app.dart`. Provider wiring is factored out into `lib/main/provider_setup.dart` (`ProviderSetup.createProviders` / `wrapWithNotifiers`) rather than inline in `main.dart`.
 
 ## Documentation
@@ -52,5 +53,6 @@ CI (`.github/workflows/Development - Android.yml`) runs exactly: `flutter pub ge
 - [`docs/BUILD_VARIANTS.md`](docs/BUILD_VARIANTS.md), [`docs/FDROID_SUBMISSION.md`](docs/FDROID_SUBMISSION.md), [`docs/CI_PIPELINES.md`](docs/CI_PIPELINES.md) — flavors, every dart-define flag, Play Store vs F-Droid, and what CI actually runs.
 - [`docs/RECEIPT_OCR.md`](docs/RECEIPT_OCR.md) — on-device receipt OCR flow.
 - [`docs/ANDROID_15_FIX.md`](docs/ANDROID_15_FIX.md) — system bar color handling, referenced from copilot-instructions.
+- [`docs/GOOGLE_DRIVE_SYNC_SETUP.md`](docs/GOOGLE_DRIVE_SYNC_SETUP.md) — Google Cloud Console setup for the optional Drive cloud relay (`ENABLE_GOOGLE_DRIVE_SYNC`); [`docs/PACKAGE_GOOGLE_DRIVE_SYNC.md`](docs/PACKAGE_GOOGLE_DRIVE_SYNC.md) for how the code fits together.
 
 **When you change code that a doc page describes, update that page in the same change** — see [`docs/MAINTAINING_DOCS.md`](docs/MAINTAINING_DOCS.md) for the code-area → doc-page map and the writing conventions that keep these pages from going stale.

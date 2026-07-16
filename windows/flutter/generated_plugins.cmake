@@ -3,10 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  bonsoir_windows
   dynamic_color
   file_selector_windows
+  flutter_secure_storage_windows
   geolocator_windows
   pdfx
+  permission_handler_windows
   share_plus
   speech_to_text_windows
   url_launcher_windows

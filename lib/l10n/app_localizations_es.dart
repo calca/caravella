@@ -190,7 +190,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get share_image_label => 'Compartir imagen';
 
   @override
-  String get export_share => 'Exportar y Compartir';
+  String get export_share => 'Compartir y Exportar';
 
   @override
   String get contribution_percentages => 'Porcentajes';
@@ -848,6 +848,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get paid_by => 'Pagado por';
+
+  @override
+  String get added_by => 'Añadido por';
+
+  @override
+  String get edited_by => 'Editado por';
 
   @override
   String get expense_added_success => 'Gasto agregado';
@@ -2277,6 +2283,236 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get save_label => 'Guardar';
+
+  @override
+  String get sync_title => 'Sincronización';
+
+  @override
+  String get sync_settings_desc =>
+      'Comparte datos entre tus dispositivos por Wi-Fi o Bluetooth';
+
+  @override
+  String get sync_multiuser_title => 'Sincronizar con otras personas';
+
+  @override
+  String get sync_multiuser_description =>
+      'Comparte tus grupos con dispositivos cercanos vía Wi-Fi o Bluetooth';
+
+  @override
+  String get sync_multidevice_title => 'Sincronizar tus dispositivos';
+
+  @override
+  String get sync_multidevice_description =>
+      'Mantén actualizados tu teléfono y otros dispositivos vía Google Drive';
+
+  @override
+  String get sync_local_title => 'Sync local';
+
+  @override
+  String get sync_local_description => 'Sincronización automática en red Wi-Fi';
+
+  @override
+  String get sync_cloud_title => 'Sync en la nube';
+
+  @override
+  String get sync_cloud_description => 'Sincronización vía Google Drive';
+
+  @override
+  String get sync_cloud_scope_description =>
+      'Una vez activada, sincroniza todos tus grupos — no puedes elegirlo grupo por grupo como con la sync Wi-Fi/Bluetooth';
+
+  @override
+  String get sync_cloud_enable => 'Activar sync en la nube';
+
+  @override
+  String get sync_cloud_privacy =>
+      'Tus datos se guardan en tu Google Drive personal, no en servidores de terceros.';
+
+  @override
+  String sync_cloud_signed_in_as(String email) {
+    return 'Sesión iniciada como $email';
+  }
+
+  @override
+  String get sync_cloud_sign_in_failed =>
+      'El inicio de sesión de Google falló o fue cancelado';
+
+  @override
+  String get sync_history_title => 'Historial de sync';
+
+  @override
+  String get sync_status_synced => 'Sincronizado';
+
+  @override
+  String get sync_status_syncing => 'Sincronizando...';
+
+  @override
+  String get sync_status_error => 'Error de sync';
+
+  @override
+  String get sync_status_never => 'Nunca sincronizado';
+
+  @override
+  String get sync_now => 'Sincronizar ahora';
+
+  @override
+  String sync_last_sync(String time) {
+    return 'Último sync: $time';
+  }
+
+  @override
+  String get sync_bt_title => 'Sync Bluetooth';
+
+  @override
+  String get sync_bt_description =>
+      'Sincronización manual con dispositivos cercanos vía Bluetooth';
+
+  @override
+  String get sync_bt_searching => 'Buscando dispositivos cercanos...';
+
+  @override
+  String get sync_bt_advertise_waiting =>
+      'Esperando a que un dispositivo cercano se conecte...';
+
+  @override
+  String get sync_bt_sync_with => 'Sincronizar';
+
+  @override
+  String get sync_bt_completed => 'Sincronización completada';
+
+  @override
+  String sync_bt_received_sent(int received, int sent) {
+    return 'Recibidos $received, enviados $sent registros';
+  }
+
+  @override
+  String get sync_bt_error => 'Sincronización fallida';
+
+  @override
+  String get sync_bt_retry => 'Reintentar';
+
+  @override
+  String get sync_bt_permission_denied =>
+      'Permiso de Bluetooth denegado — actívalo en los ajustes del sistema para sincronizar con dispositivos cercanos';
+
+  @override
+  String get sync_history_empty => 'Sin historial de sync';
+
+  @override
+  String get sync_channel_lan => 'LAN';
+
+  @override
+  String get sync_channel_bluetooth => 'Bluetooth';
+
+  @override
+  String get sync_channel_cloud => 'Nube';
+
+  @override
+  String sync_records_exchanged(int sent, int received) {
+    return '$sent enviados, $received recibidos';
+  }
+
+  @override
+  String get sync_group_shared => 'Grupo compartido';
+
+  @override
+  String get sync_group_synced => 'Todos los cambios sincronizados';
+
+  @override
+  String get sync_group_pending => 'Cambios aún no sincronizados';
+
+  @override
+  String get sync_group_enable => 'Compartir este grupo';
+
+  @override
+  String get sync_group_enable_desc =>
+      'Sincroniza los gastos de este grupo con otros dispositivos emparejados por Wi-Fi o Bluetooth';
+
+  @override
+  String get sync_group_needs_channel =>
+      'Activa la sync de Wi-Fi o Bluetooth en Ajustes para habilitar esto';
+
+  @override
+  String get sync_group_manage_pairing_title =>
+      'Gestionar el emparejamiento de dispositivos';
+
+  @override
+  String get sync_group_manage_pairing_desc =>
+      'Activa la sync de Wi-Fi o Bluetooth y empareja dispositivos desde Ajustes';
+
+  @override
+  String get sync_qr_show_button => 'Mostrar código QR';
+
+  @override
+  String get sync_qr_scan_button => 'Escanear código QR';
+
+  @override
+  String get sync_qr_show_title => 'Emparejar un dispositivo';
+
+  @override
+  String get sync_qr_show_description =>
+      'Escanea este código desde otro dispositivo en la misma red Wi-Fi para emparejarlo con la sincronización';
+
+  @override
+  String sync_qr_sharing_group(String groupTitle) {
+    return 'Compartiendo «$groupTitle»';
+  }
+
+  @override
+  String sync_qr_expires_in(String time) {
+    return 'Caduca en $time';
+  }
+
+  @override
+  String get sync_qr_expired_title => 'Código caducado';
+
+  @override
+  String get sync_qr_expired_desc =>
+      'Genera un código nuevo para seguir emparejando';
+
+  @override
+  String get sync_qr_regenerate_button => 'Generar código nuevo';
+
+  @override
+  String get sync_qr_no_network =>
+      'Conéctate a Wi-Fi para generar un código de emparejamiento';
+
+  @override
+  String get sync_qr_scan_title => 'Escanear código de emparejamiento';
+
+  @override
+  String get sync_qr_scan_description =>
+      'Apunta la cámara al código de emparejamiento mostrado en el otro dispositivo';
+
+  @override
+  String sync_qr_pair_success(String deviceName) {
+    return 'Emparejado con $deviceName';
+  }
+
+  @override
+  String get sync_qr_pair_failed =>
+      'Error al emparejar — asegúrate de que ambos dispositivos estén en la misma red Wi-Fi';
+
+  @override
+  String get sync_qr_pair_expired =>
+      'Este código de emparejamiento ha caducado — pide al otro dispositivo que muestre uno nuevo';
+
+  @override
+  String get sync_qr_pair_emulator_host =>
+      'Este código se generó en un emulador de Android, que no se puede alcanzar desde otros dispositivos — empareja usando dos dispositivos físicos en la misma red Wi-Fi';
+
+  @override
+  String get sync_qr_emulator_warning =>
+      'Este dispositivo es un emulador de Android — su dirección normalmente no es alcanzable desde otros dispositivos, por lo que el emparejamiento podría fallar';
+
+  @override
+  String get sync_paired_devices_title => 'Dispositivos emparejados';
+
+  @override
+  String get sync_paired_devices_empty => 'Aún no hay dispositivos emparejados';
+
+  @override
+  String get sync_paired_devices_remove => 'Quitar emparejamiento';
 
   @override
   String get search_expenses => 'Buscar gastos';

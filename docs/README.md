@@ -14,6 +14,7 @@ If you're about to change code and aren't sure which page(s) to update afterward
 - **[caravella_core_ui](PACKAGE_CARAVELLA_CORE_UI.md)** — shared widgets, themes, map building blocks
 - **[android_app_functions](PACKAGE_ANDROID_APP_FUNCTIONS.md)** — Android AI-agent/shortcut integration
 - **[play_store_updates](PACKAGE_PLAY_STORE_UPDATES.md)** — Google Play in-app update integration (conditional)
+- **[google_drive_sync](PACKAGE_GOOGLE_DRIVE_SYNC.md)** — Google Drive cloud relay for the sync feature (conditional), see also the [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md)
 
 ## App features (`lib/`)
 
