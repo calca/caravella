@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- New **Invite your friends** entry in Settings → Info: shares a friendly pre-written message with the Play Store link via the system share sheet (WhatsApp, etc.)
 - Sync groups between your own devices over local Wi-Fi, Bluetooth, or an optional Google Drive relay is now reachable from the app: a **Sync** entry in Settings → Data (Wi-Fi status, Bluetooth pairing, cloud opt-in, history), a per-group **Enable sync** toggle in group settings, and a sync status indicator on the home screen (#416)
 - Local (Wi-Fi/LAN) sync is now off by default and must be turned on from Settings → Sync — it previously started automatically on every launch with no way to disable it; QR pairing and the paired-devices list are hidden while it's off, and the choice persists across restarts
 - Bluetooth sync now has the same enable/disable toggle in Settings → Sync (off by default) — the manual pairing entry point is hidden until turned on

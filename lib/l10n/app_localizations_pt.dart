@@ -1049,6 +1049,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_info_card_desc => 'Desenvolvedor, código-fonte e licença';
 
   @override
+  String get settings_invite_friends => 'Convide seus amigos';
+
+  @override
+  String get settings_invite_friends_desc =>
+      'Compartilhe o Caravella com quem quiser';
+
+  @override
+  String get invite_friends_message =>
+      'Oi! Uso o Caravella para dividir as despesas em grupo com amigos, é super prático 🎒💸 Experimente também: https://play.google.com/store/apps/details?id=io.caravella.egm';
+
+  @override
   String get terms_github_title => 'Website: calca';
 
   @override

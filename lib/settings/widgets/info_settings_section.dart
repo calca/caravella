@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../pages/developer_page.dart';
 import '../pages/whats_new_page.dart';
@@ -25,6 +26,8 @@ class InfoSettingsSection extends StatelessWidget {
       title: loc.settings_info,
       description: loc.settings_info_desc,
       children: [
+        _buildInviteFriendsRow(context, loc),
+        const SizedBox(height: 8),
         _buildInfoCardRow(context, loc),
         const SizedBox(height: 8),
         _buildAppVersionRow(context, loc),
@@ -34,6 +37,41 @@ class InfoSettingsSection extends StatelessWidget {
         ],
       ],
     );
+  }
+
+  Widget _buildInviteFriendsRow(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return SettingsCard(
+      context: context,
+      color: colorScheme.surface,
+      child: ListTile(
+        leading: const Icon(Icons.share_outlined),
+        title: Text(loc.settings_invite_friends, style: textTheme.titleMedium),
+        subtitle: Text(
+          loc.settings_invite_friends_desc,
+          style: textTheme.bodySmall,
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => _shareInvite(context, loc),
+      ),
+    );
+  }
+
+  Future<void> _shareInvite(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) async {
+    try {
+      await SharePlus.instance.share(
+        ShareParams(text: loc.invite_friends_message),
+      );
+    } catch (e) {
+      LoggerService.warning('Error sharing invite', name: 'ui.share');
+    }
   }
 
   Widget _buildAppVersionRow(BuildContext context, gen.AppLocalizations loc) {

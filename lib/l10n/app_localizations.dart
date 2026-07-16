@@ -2084,6 +2084,24 @@ abstract class AppLocalizations {
   /// **'Developer, Source code and License'**
   String get settings_info_card_desc;
 
+  /// No description provided for @settings_invite_friends.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite your friends'**
+  String get settings_invite_friends;
+
+  /// No description provided for @settings_invite_friends_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Caravella with anyone'**
+  String get settings_invite_friends_desc;
+
+  /// No description provided for @invite_friends_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Hey! I use Caravella to split group expenses with friends, it\'s super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm'**
+  String get invite_friends_message;
+
   /// No description provided for @terms_github_title.
   ///
   /// In en, this message translates to:

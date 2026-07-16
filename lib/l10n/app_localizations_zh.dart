@@ -1030,6 +1030,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_info_card_desc => '查看应用信息和版本';
 
   @override
+  String get settings_invite_friends => '邀请好友';
+
+  @override
+  String get settings_invite_friends_desc => '把 Caravella 分享给你的朋友';
+
+  @override
+  String get invite_friends_message =>
+      '嗨！我在用 Caravella 和朋友们一起记账分摊费用，非常方便 🎒💸 你也来试试吧：https://play.google.com/store/apps/details?id=io.caravella.egm';
+
+  @override
   String get terms_github_title => '网站: calca';
 
   @override
