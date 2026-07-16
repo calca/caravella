@@ -34,6 +34,9 @@ class Material3Dialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       // Use M3 surface container high for elevation
       backgroundColor: colorScheme.surfaceContainerHigh,
+      // Disable the M3 surface-tint elevation overlay so the dialog stays
+      // neutral instead of taking on colorScheme.surfaceTint's hue.
+      surfaceTintColor: Colors.transparent,
       // Material 3 elevation for dialogs
       elevation: 6,
       // Standard M3 content padding
