@@ -25,6 +25,16 @@ class PairingPayload {
   /// [validityMs].
   final int createdAtMs;
 
+  /// The group this code is sharing — pairing now grants access to this
+  /// specific group only, not every synced group (see
+  /// `SyncManager.grantGroupAccess`).
+  final String groupId;
+
+  /// The shared group's title, for display on the scanning side only
+  /// ("Pairing to share «Vacanza a Roma»") — not used for anything
+  /// security-relevant.
+  final String groupTitle;
+
   const PairingPayload({
     required this.deviceId,
     required this.deviceName,
@@ -32,6 +42,8 @@ class PairingPayload {
     required this.host,
     required this.port,
     required this.createdAtMs,
+    required this.groupId,
+    required this.groupTitle,
   });
 
   /// UTC-epoch ms after which this payload is no longer valid for pairing.
@@ -57,6 +69,8 @@ class PairingPayload {
         'host': host,
         'port': port,
         'created_at_ms': createdAtMs,
+        'group_id': groupId,
+        'group_title': groupTitle,
       });
 
   /// Parses QR-scanned data. Returns `null` if [data] isn't a valid pairing
@@ -68,7 +82,10 @@ class PairingPayload {
       final host = json['host'] as String?;
       final port = json['port'] as int?;
       final createdAtMs = json['created_at_ms'] as int?;
-      if (deviceId == null || host == null || port == null) return null;
+      final groupId = json['group_id'] as String?;
+      if (deviceId == null || host == null || port == null || groupId == null) {
+        return null;
+      }
 
       return PairingPayload(
         deviceId: deviceId,
@@ -79,6 +96,8 @@ class PairingPayload {
         // Older payloads without a timestamp are treated as already expired
         // rather than trusted indefinitely.
         createdAtMs: createdAtMs ?? 0,
+        groupId: groupId,
+        groupTitle: json['group_title'] as String? ?? '',
       );
     } catch (_) {
       return null;

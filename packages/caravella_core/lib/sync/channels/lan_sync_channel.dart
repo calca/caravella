@@ -9,6 +9,9 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart';
 
 import 'package:caravella_core/services/logging/logger_service.dart';
+import 'package:caravella_core/sync/crypto/device_key_manager.dart';
+import 'package:caravella_core/sync/crypto/peer_key_store.dart';
+import 'package:caravella_core/sync/crypto/sync_envelope.dart';
 import 'package:caravella_core/sync/device_identity.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/models/sync_status.dart';
@@ -27,11 +30,14 @@ typedef PeerAuthCallback = Future<bool> Function(String peerId);
 
 /// Callback invoked when a peer completes a pairing handshake (either by
 /// sending us a `/pair` request, or by us receiving a confirmation after
-/// pairing with a scanned QR code). Should persist the pairing.
+/// pairing with a scanned QR code). Should persist the peer's identity and
+/// grant it access to [groupId] — pairing is scoped to the specific group
+/// it was initiated for, not every synced group.
 typedef PairingCallback = Future<void> Function(
   String deviceId,
   String deviceName,
   String platform,
+  String groupId,
 );
 
 /// LAN peer-to-peer sync channel using HTTP + mDNS (Bonsoir).
@@ -202,8 +208,8 @@ class LanSyncChannel {
     try {
       final body = await request.readAsString();
       final payload = jsonDecode(body) as Map<String, dynamic>;
-      final remoteDelta = payload['delta'] as Map<String, dynamic>? ?? {};
       final peerId = payload['device_id'] as String? ?? 'unknown';
+      final envelope = payload['envelope'] as String?;
 
       LoggerService.info(
         'Received delta from peer=$peerId (${body.length} bytes)',
@@ -228,14 +234,44 @@ class LanSyncChannel {
         );
       }
 
+      final peerKey = await PeerKeyStore.get(peerId);
+      if (peerKey == null || envelope == null) {
+        LoggerService.warning(
+          'Rejected delta from peer=$peerId — no encryption key on file '
+          '(re-pairing required)',
+          name: _tag,
+        );
+        return shelf.Response.forbidden(
+          jsonEncode({'error': 'no_encryption_key'}),
+          headers: {'content-type': 'application/json'},
+        );
+      }
+
+      final Map<String, dynamic> remoteDelta;
+      try {
+        remoteDelta = await SyncEnvelope.decrypt(peerKey, envelope);
+      } catch (e) {
+        LoggerService.warning(
+          'Failed to decrypt delta from peer=$peerId — wrong key or '
+          'tampered payload',
+          name: _tag,
+        );
+        return shelf.Response.forbidden(
+          jsonEncode({'error': 'decryption_failed'}),
+          headers: {'content-type': 'application/json'},
+        );
+      }
+
       final responseDelta = await _onDelta!(remoteDelta, peerId);
+      final responseEnvelope = await SyncEnvelope.encrypt(
+        peerKey,
+        responseDelta,
+      );
 
       final identity = DeviceIdentity.instance;
       final responseBody = jsonEncode({
-        'delta': responseDelta,
         'device_id': identity.deviceId,
-        'device_name': identity.deviceName,
-        'timestamp': SyncClock.nowMs(),
+        'envelope': responseEnvelope,
       });
 
       return shelf.Response.ok(
@@ -269,8 +305,10 @@ class LanSyncChannel {
   }
 
   /// Handles an incoming pairing request from a device that scanned our QR
-  /// code: persists the peer as paired, and confirms with our own identity
-  /// so the caller can complete the mutual pairing on its side too.
+  /// code: derives and persists the shared encryption key from the peer's
+  /// public key, grants it access to the group it's pairing for, and
+  /// confirms with our own identity/public key so the caller can complete
+  /// the mutual pairing on its side too.
   Future<shelf.Response> _handlePairRequest(shelf.Request request) async {
     try {
       final body = await request.readAsString();
@@ -279,26 +317,41 @@ class LanSyncChannel {
       final peerDeviceName =
           payload['device_name'] as String? ?? 'Unknown device';
       final peerPlatform = payload['platform'] as String? ?? 'unknown';
+      final peerPublicKey = payload['public_key'] as String?;
+      final groupId = payload['group_id'] as String?;
 
-      if (peerDeviceId == null) {
+      if (peerDeviceId == null || peerPublicKey == null || groupId == null) {
         return shelf.Response.badRequest(
-          body: jsonEncode({'error': 'missing device_id'}),
+          body: jsonEncode({
+            'error': 'missing device_id, public_key, or group_id',
+          }),
           headers: {'content-type': 'application/json'},
         );
       }
 
-      await _onPairingRequest?.call(peerDeviceId, peerDeviceName, peerPlatform);
+      final sharedKey = await DeviceKeyManager.deriveSharedKey(peerPublicKey);
+      await PeerKeyStore.save(peerDeviceId, sharedKey);
+
+      await _onPairingRequest?.call(
+        peerDeviceId,
+        peerDeviceName,
+        peerPlatform,
+        groupId,
+      );
       LoggerService.info(
-        'Paired with incoming device=$peerDeviceId ($peerDeviceName)',
+        'Paired with incoming device=$peerDeviceId ($peerDeviceName) '
+        'for group=$groupId',
         name: _tag,
       );
 
       final identity = DeviceIdentity.instance;
+      final myPublicKey = await DeviceKeyManager.publicKeyBase64();
       return shelf.Response.ok(
         jsonEncode({
           'device_id': identity.deviceId,
           'device_name': identity.deviceName,
           'platform': identity.platform.name,
+          'public_key': myPublicKey,
         }),
         headers: {'content-type': 'application/json'},
       );
@@ -317,10 +370,13 @@ class LanSyncChannel {
   }
 
   /// Sends a pairing request to [host]:[port] — typically parsed from a
-  /// scanned QR code — registering this device as paired on both ends in a
-  /// single round trip. Returns `true` if the handshake succeeded.
-  Future<bool> pairWithHost(String host, int port) async {
+  /// scanned QR code, for [groupId] — registering this device as paired on
+  /// both ends in a single round trip and deriving the shared encryption
+  /// key from the exchanged public keys. Returns `true` if the handshake
+  /// succeeded.
+  Future<bool> pairWithHost(String host, int port, {required String groupId}) async {
     final identity = DeviceIdentity.instance;
+    final myPublicKey = await DeviceKeyManager.publicKeyBase64();
     final client = HttpClient();
     try {
       final uri = Uri.parse('http://$host:$port/pair');
@@ -330,6 +386,8 @@ class LanSyncChannel {
         'device_id': identity.deviceId,
         'device_name': identity.deviceName,
         'platform': identity.platform.name,
+        'public_key': myPublicKey,
+        'group_id': groupId,
       }));
       final response = await request.close();
       final responseBody = await response.transform(utf8.decoder).join();
@@ -347,16 +405,24 @@ class LanSyncChannel {
       final remoteDeviceName =
           json['device_name'] as String? ?? 'Unknown device';
       final remotePlatform = json['platform'] as String? ?? 'unknown';
+      final remotePublicKey = json['public_key'] as String?;
 
-      if (remoteDeviceId == null) return false;
+      if (remoteDeviceId == null || remotePublicKey == null) return false;
+
+      final sharedKey = await DeviceKeyManager.deriveSharedKey(
+        remotePublicKey,
+      );
+      await PeerKeyStore.save(remoteDeviceId, sharedKey);
 
       await _onPairingRequest?.call(
         remoteDeviceId,
         remoteDeviceName,
         remotePlatform,
+        groupId,
       );
       LoggerService.info(
-        'Paired with $remoteDeviceId ($remoteDeviceName) at $host:$port',
+        'Paired with $remoteDeviceId ($remoteDeviceName) at $host:$port '
+        'for group=$groupId',
         name: _tag,
       );
       return true;
@@ -519,18 +585,32 @@ class LanSyncChannel {
         return;
       }
 
-      // 2. Build our outgoing delta via the callback with an empty remote delta
-      //    (the callback should return our local delta)
+      // 2. Look up the encryption key established during pairing — a peer
+      //    with no key on file was paired before end-to-end encryption
+      //    existed and must be re-paired to sync again.
+      final peerKey = await PeerKeyStore.get(peerId);
+      if (peerKey == null) {
+        LoggerService.warning(
+          'No encryption key on file for peer $peerId — re-pairing '
+          'required, skipping sync',
+          name: _tag,
+        );
+        _eventController.add(const SyncFailed('Peer not paired (no key)'));
+        return;
+      }
+
+      // 3. Build our outgoing delta via the callback with an empty remote
+      //    delta (the callback should return our local delta), then encrypt
+      //    it for this peer.
       final identity = DeviceIdentity.instance;
       final localDelta = await _onDelta!(<String, dynamic>{}, peerId);
+      final envelope = await SyncEnvelope.encrypt(peerKey, localDelta);
 
-      // 3. POST our delta to the peer
+      // 4. POST our encrypted delta to the peer
       final uri = Uri.parse('http://$host:$port/sync/delta');
       final requestBody = jsonEncode({
-        'delta': localDelta,
         'device_id': identity.deviceId,
-        'device_name': identity.deviceName,
-        'timestamp': SyncClock.nowMs(),
+        'envelope': envelope,
       });
 
       final client = HttpClient();
@@ -546,10 +626,12 @@ class LanSyncChannel {
         if (httpResponse.statusCode == 200) {
           final responseJson =
               jsonDecode(responseBody) as Map<String, dynamic>;
-          final remoteDelta =
-              responseJson['delta'] as Map<String, dynamic>? ?? {};
+          final responseEnvelope = responseJson['envelope'] as String?;
+          final remoteDelta = responseEnvelope == null
+              ? <String, dynamic>{}
+              : await SyncEnvelope.decrypt(peerKey, responseEnvelope);
 
-          // 4. Process the response delta
+          // 5. Process the response delta
           await _onDelta!(remoteDelta, peerId);
 
           final result = SyncResult(

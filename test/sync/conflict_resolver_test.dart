@@ -112,6 +112,7 @@ void main() {
         ],
       );
 
+      await syncDao.grantGroupAccess('remote-1', 'new-group');
       final result = await resolver.applyDelta(db, delta, 'lan');
       expect(result.applied, equals(1));
       expect(result.skipped, equals(0));
@@ -122,6 +123,64 @@ void main() {
       expect(stored.isSuccess, isTrue);
       expect(stored.unwrap()?.title, equals('Test Group'));
     });
+
+    test(
+      'remote group is rejected when the peer was never granted access to '
+      'it — even though pairing exists, being paired alone grants nothing',
+      () async {
+        final db = await repository.database;
+        final syncDao = SyncDao(db);
+        final resolver = ConflictResolver(syncDao: syncDao);
+
+        final group = _createGroup(id: 'ungranted-group');
+        final delta = _buildDelta(
+          deviceId: 'remote-1',
+          groups: [
+            _groupToDeltaEntry(group, updatedAt: SyncClock.nowMs()),
+          ],
+        );
+
+        // Deliberately no grantGroupAccess call.
+        final result = await resolver.applyDelta(db, delta, 'lan');
+        expect(result.applied, equals(0));
+        expect(result.errors, equals(1));
+
+        final stored = await repository.getGroupById('ungranted-group');
+        expect(stored.unwrap(), isNull);
+      },
+    );
+
+    test(
+      'remote deletion is rejected when the peer was never granted access',
+      () async {
+        final db = await repository.database;
+        final syncDao = SyncDao(db);
+        final resolver = ConflictResolver(syncDao: syncDao);
+
+        await repository.saveGroup(
+          _createGroup(id: 'ungranted-delete', syncEnabled: true),
+        );
+
+        final delta = _buildDelta(
+          deviceId: 'remote-1',
+          deletedGroups: [
+            {'id': 'ungranted-delete', 'updated_at': SyncClock.nowMs() + 5000},
+          ],
+        );
+
+        final result = await resolver.applyDelta(db, delta, 'lan');
+        expect(result.applied, equals(0));
+        expect(result.errors, equals(1));
+
+        final stored = await repository.getGroupById('ungranted-delete');
+        expect(
+          stored.unwrap(),
+          isNotNull,
+          reason: 'an ungranted peer must not be able to delete a group '
+              'just by claiming its ID in a delta',
+        );
+      },
+    );
 
     test('remote newer wins over local', () async {
       // Save a local group first
@@ -146,6 +205,7 @@ void main() {
         ],
       );
 
+      await syncDao.grantGroupAccess('remote-1', 'shared-id');
       final result = await resolver.applyDelta(db, delta, 'lan');
       expect(result.applied, equals(1));
 
@@ -172,6 +232,7 @@ void main() {
         ],
       );
 
+      await syncDao.grantGroupAccess('remote-1', 'shared-id');
       final result = await resolver.applyDelta(db, delta, 'lan');
       expect(result.skipped, equals(1));
       expect(result.applied, equals(0));
@@ -208,6 +269,7 @@ void main() {
         ],
       );
 
+      await syncDao.grantGroupAccess('remote-1', 'tie-id');
       final result = await resolver.applyDelta(db, delta, 'lan');
       expect(result.skipped, equals(1));
 
@@ -232,6 +294,7 @@ void main() {
         ],
       );
 
+      await syncDao.grantGroupAccess('remote-1', 'del-group');
       final result = await resolver.applyDelta(db, delta, 'lan');
       expect(result.applied, equals(1));
 
@@ -254,6 +317,7 @@ void main() {
         ],
       );
 
+      await syncDao.grantGroupAccess('remote-1', 'never-existed');
       final result = await resolver.applyDelta(db, delta, 'lan');
       expect(result.skipped, equals(1));
       expect(result.applied, equals(0));
@@ -311,6 +375,9 @@ void main() {
         ],
       );
 
+      await syncDao.grantGroupAccess('remote-1', 'brand-new');
+      await syncDao.grantGroupAccess('remote-1', 'existing-1');
+      await syncDao.grantGroupAccess('remote-1', 'existing-2');
       final result = await resolver.applyDelta(db, delta, 'lan');
       expect(result.applied, equals(2)); // new + updated
       expect(result.skipped, equals(1)); // old remote
@@ -332,6 +399,7 @@ void main() {
         ],
       );
 
+      await syncDao.grantGroupAccess('remote-1', 'shared-new');
       final result = await resolver.applyDelta(db, delta, 'lan');
       expect(result.applied, equals(1));
 
@@ -369,6 +437,7 @@ void main() {
           ],
         );
 
+        await syncDao.grantGroupAccess('remote-1', 'shared-update');
         final result = await resolver.applyDelta(db, delta, 'lan');
         expect(result.applied, equals(1));
 

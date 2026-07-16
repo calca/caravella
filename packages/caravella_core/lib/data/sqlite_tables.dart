@@ -14,3 +14,9 @@ const String kTableSyncLog = 'sync_log';
 /// handshake with over LAN. Only paired devices are eligible for automatic
 /// LAN sync; see `LanSyncChannel`'s peer-authorization gating.
 const String kTablePairedDevices = 'paired_devices';
+
+/// Per-group pairing grants (schema v5) — which paired device is authorized
+/// to sync which specific group. A device being in `paired_devices` only
+/// establishes its identity/encryption key; this table is what actually
+/// grants it access to a given group's data.
+const String kTablePairedDeviceGroups = 'paired_device_groups';

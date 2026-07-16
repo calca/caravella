@@ -6,15 +6,19 @@ import 'package:provider/provider.dart';
 
 import '../../../settings/widgets/settings_section.dart';
 import '../../../settings/widgets/settings_card.dart';
+import '../../../sync/bluetooth_advertise_sheet.dart';
+import '../../../sync/bluetooth_sync_channel.dart';
 import '../../../sync/bluetooth_sync_factory.dart';
-import '../../../sync/multi_user_sync_page.dart';
+import '../../../sync/qr_pair_show_sheet.dart';
 import '../../../sync/widgets/paired_devices_list.dart';
 
 /// Per-group sync settings sub-page, reached from [GroupSettingsPage].
 ///
-/// Enabling sync for a group only takes effect once Wi-Fi or Bluetooth sync
-/// is turned on app-wide (Settings → Sync → [MultiUserSyncPage]) — pairing
-/// itself always happens there, not on this page.
+/// Sharing this group only takes effect once Wi-Fi or Bluetooth sync is
+/// turned on app-wide (Settings → Sync) — this page shows why the "Share
+/// this group" toggle is disabled otherwise, and once it's on, hosts the
+/// actual QR code / Bluetooth advertising for whichever channel is
+/// available, scoped to this group specifically.
 class ExpenseGroupSyncPage extends StatefulWidget {
   final ExpenseGroup trip;
 
@@ -28,7 +32,8 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
   late ExpenseGroup _currentTrip;
   bool _changed = false;
 
-  bool _channelsAvailable = false;
+  bool _lanAvailable = false;
+  bool _btAvailable = false;
   bool _checkingChannels = true;
   SyncOrchestrator? _lastCheckedOrchestrator;
 
@@ -58,7 +63,8 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
 
     if (mounted) {
       setState(() {
-        _channelsAvailable = lan || bt;
+        _lanAvailable = lan;
+        _btAvailable = bt;
         _checkingChannels = false;
       });
     }
@@ -81,19 +87,37 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     });
   }
 
-  Future<void> _openDevicePairing(
-    BuildContext context,
-    SyncOrchestrator orchestrator,
-  ) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => MultiUserSyncPage(orchestrator: orchestrator),
+  void _showQr(BuildContext context, SyncOrchestrator orchestrator) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-    );
-    // Wi-Fi/Bluetooth sync may have been turned on (or off) while the user
-    // was in Settings — refresh so the toggle above reflects it immediately.
-    _lastCheckedOrchestrator = null;
-    await _ensureChannelsChecked(orchestrator);
+      builder: (_) => QrPairShowSheet(
+        orchestrator: orchestrator,
+        groupId: _currentTrip.id,
+        groupTitle: _currentTrip.title,
+      ),
+    ).whenComplete(() => setState(() {}));
+  }
+
+  void _shareViaBluetooth(BuildContext context, SyncOrchestrator orchestrator) {
+    final channel = BluetoothSyncChannel()
+      ..onDelta = orchestrator.handleIncomingDelta
+      ..onPairingRequest = orchestrator.handlePairingCompleted;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => BluetoothAdvertiseSheet(
+        channel: channel,
+        groupId: _currentTrip.id,
+        groupTitle: _currentTrip.title,
+      ),
+    ).whenComplete(() => setState(() {}));
   }
 
   @override
@@ -103,8 +127,9 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     final textTheme = Theme.of(context).textTheme;
     final orchestrator = context.watch<SyncOrchestrator?>();
 
+    final channelsAvailable = _lanAvailable || _btAvailable;
     final canToggleOn =
-        orchestrator != null && !_checkingChannels && _channelsAvailable;
+        orchestrator != null && !_checkingChannels && channelsAvailable;
 
     return PopScope(
       canPop: false,
@@ -149,28 +174,6 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                         : (value) => _handleSyncToggle(value),
                   ),
                 ),
-                if (orchestrator != null) ...[
-                  const SizedBox(height: 8),
-                  SettingsCard(
-                    context: context,
-                    color: colorScheme.surface,
-                    semanticsButton: true,
-                    semanticsLabel: gloc.sync_group_manage_pairing_title,
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.devices_outlined,
-                        color: colorScheme.primary,
-                      ),
-                      title: Text(
-                        gloc.sync_group_manage_pairing_title,
-                        style: textTheme.titleMedium,
-                      ),
-                      subtitle: Text(gloc.sync_group_manage_pairing_desc),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () => _openDevicePairing(context, orchestrator),
-                    ),
-                  ),
-                ],
               ],
             ),
             if (orchestrator != null && _currentTrip.syncEnabled) ...[
@@ -178,13 +181,54 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                 title: gloc.sync_paired_devices_title,
                 description: '',
                 children: [
+                  if (_lanAvailable) ...[
+                    SettingsCard(
+                      context: context,
+                      color: colorScheme.surface,
+                      semanticsButton: true,
+                      semanticsLabel: gloc.sync_qr_show_button,
+                      child: ListTile(
+                        leading: Icon(Icons.qr_code, color: colorScheme.primary),
+                        title: Text(
+                          gloc.sync_qr_show_button,
+                          style: textTheme.titleMedium,
+                        ),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => _showQr(context, orchestrator),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  if (_btAvailable) ...[
+                    SettingsCard(
+                      context: context,
+                      color: colorScheme.surface,
+                      semanticsButton: true,
+                      semanticsLabel: gloc.sync_bt_title,
+                      child: ListTile(
+                        leading:
+                            Icon(Icons.bluetooth, color: colorScheme.primary),
+                        title: Text(
+                          gloc.sync_bt_title,
+                          style: textTheme.titleMedium,
+                        ),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => _shareViaBluetooth(context, orchestrator),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                   SettingsCard(
                     context: context,
                     color: colorScheme.surface,
                     semanticsLabel: gloc.sync_paired_devices_title,
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: PairedDevicesList(orchestrator: orchestrator),
+                      child: PairedDevicesList(
+                        orchestrator: orchestrator,
+                        groupId: _currentTrip.id,
+                        showRemoveAction: true,
+                      ),
                     ),
                   ),
                 ],

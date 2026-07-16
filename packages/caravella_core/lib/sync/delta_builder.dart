@@ -48,9 +48,12 @@ class DeltaBuilder {
       name: _tag,
     );
 
-    // Fetch changed group rows (metadata only — we need the IDs)
-    final changedRows = await _syncDao.getGroupsDeltaSince(lastSync);
-    final deletedRows = await _syncDao.getDeletedGroupsSince(lastSync);
+    // Fetch changed group rows (metadata only — we need the IDs). Both
+    // queries are already scoped to groups [peerId] has been granted access
+    // to — see SyncDao.grantGroupAccess.
+    final changedRows = await _syncDao.getGroupsDeltaSince(lastSync, peerId);
+    final deletedRows =
+        await _syncDao.getDeletedGroupsSince(lastSync, peerId);
 
     // Load full group objects for each changed row
     final groups = <Map<String, dynamic>>[];

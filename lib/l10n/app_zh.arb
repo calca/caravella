@@ -1439,6 +1439,10 @@
   "@sync_bt_searching": {
     "description": "搜索蓝牙设备时的状态"
   },
+  "sync_bt_advertise_waiting": "正在等待附近设备连接...",
+  "@sync_bt_advertise_waiting": {
+    "description": "本设备正在广播、等待其他设备发现并连接时的状态"
+  },
   "sync_bt_sync_with": "同步",
   "@sync_bt_sync_with": {
     "description": "与蓝牙设备同步按钮"
@@ -1546,6 +1550,15 @@
   "sync_qr_show_description": "在同一 Wi-Fi 网络下的另一设备上扫描此码以配对同步",
   "@sync_qr_show_description": {
     "description": "配对二维码显示面板的说明"
+  },
+  "sync_qr_sharing_group": "正在共享「{groupTitle}」",
+  "@sync_qr_sharing_group": {
+    "description": "显示此配对码共享的群组",
+    "placeholders": {
+      "groupTitle": {
+        "type": "String"
+      }
+    }
   },
   "sync_qr_expires_in": "{time} 后过期",
   "@sync_qr_expires_in": {

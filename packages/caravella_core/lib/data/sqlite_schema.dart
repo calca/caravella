@@ -127,13 +127,24 @@ Future<void> createSqliteSchema(Database db) async {
     'CREATE INDEX idx_groups_deleted ON $kTableGroups(deleted)',
   );
 
-  // Paired devices (schema v4)
+  // Paired devices (schema v4; public_key added in v5)
   await db.execute('''
     CREATE TABLE $kTablePairedDevices (
       device_id TEXT PRIMARY KEY,
       device_name TEXT NOT NULL,
       platform TEXT,
-      paired_at INTEGER NOT NULL
+      paired_at INTEGER NOT NULL,
+      public_key TEXT
+    )
+  ''');
+
+  // Per-group pairing grants (schema v5)
+  await db.execute('''
+    CREATE TABLE $kTablePairedDeviceGroups (
+      device_id TEXT NOT NULL,
+      group_id TEXT NOT NULL,
+      granted_at INTEGER NOT NULL,
+      PRIMARY KEY (device_id, group_id)
     )
   ''');
 }

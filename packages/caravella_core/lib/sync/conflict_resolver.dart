@@ -75,6 +75,19 @@ class ConflictResolver {
             continue;
           }
 
+          // Defense in depth: independently verify *this* device granted
+          // the peer access to this group, rather than trusting that the
+          // sender only ever includes groups it was granted — a buggy or
+          // compromised peer could otherwise push arbitrary groups.
+          if (!await _isGrantedInTxn(txn, peerId, groupId)) {
+            LoggerService.warning(
+              'Rejecting group $groupId from peer=$peerId — not granted',
+              name: _tag,
+            );
+            errors++;
+            continue;
+          }
+
           // Check if we already have this group locally
           final localRows = await txn.query(
             SqliteExpenseGroupRepository.tableGroups,
@@ -131,6 +144,15 @@ class ConflictResolver {
           final remoteUpdatedAt = entry['updated_at'] as int? ?? 0;
 
           if (groupId == null) {
+            errors++;
+            continue;
+          }
+
+          if (!await _isGrantedInTxn(txn, peerId, groupId)) {
+            LoggerService.warning(
+              'Rejecting deletion of $groupId from peer=$peerId — not granted',
+              name: _tag,
+            );
             errors++;
             continue;
           }
@@ -213,6 +235,26 @@ class ConflictResolver {
   // -------------------------------------------------------------------------
   // Internal helpers
   // -------------------------------------------------------------------------
+
+  /// Whether [peerId] has been granted access to [groupId], queried through
+  /// the given [txn] rather than [_syncDao]'s own `Database` reference —
+  /// querying the outer `Database` from inside an active `db.transaction()`
+  /// callback on the same connection can deadlock, so every read/write in
+  /// here must go through [txn] (mirrors [_saveGroupInTransaction]).
+  Future<bool> _isGrantedInTxn(
+    Transaction txn,
+    String peerId,
+    String groupId,
+  ) async {
+    final rows = await txn.query(
+      SqliteExpenseGroupRepository.tablePairedDeviceGroups,
+      columns: ['device_id'],
+      where: 'device_id = ? AND group_id = ?',
+      whereArgs: [peerId, groupId],
+      limit: 1,
+    );
+    return rows.isNotEmpty;
+  }
 
   /// Saves a full [ExpenseGroup] inside an existing [txn].
   ///

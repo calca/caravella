@@ -2299,6 +2299,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_bt_searching => '正在搜索附近设备...';
 
   @override
+  String get sync_bt_advertise_waiting => '正在等待附近设备连接...';
+
+  @override
   String get sync_bt_sync_with => '同步';
 
   @override
@@ -2370,6 +2373,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_qr_show_description => '在同一 Wi-Fi 网络下的另一设备上扫描此码以配对同步';
+
+  @override
+  String sync_qr_sharing_group(String groupTitle) {
+    return '正在共享「$groupTitle」';
+  }
 
   @override
   String sync_qr_expires_in(String time) {

@@ -991,6 +991,8 @@
   ,"@sync_bt_description": {"description": "Descripción para sync Bluetooth"}
   ,"sync_bt_searching": "Buscando dispositivos cercanos..."
   ,"@sync_bt_searching": {"description": "Estado mientras busca peers BT"}
+  ,"sync_bt_advertise_waiting": "Esperando a que un dispositivo cercano se conecte..."
+  ,"@sync_bt_advertise_waiting": {"description": "Estado mientras este dispositivo se anuncia esperando que otro lo descubra y se conecte"}
   ,"sync_bt_sync_with": "Sincronizar"
   ,"@sync_bt_sync_with": {"description": "Botón para sincronizar con un peer BT"}
   ,"sync_bt_completed": "Sincronización completada"
@@ -1037,6 +1039,8 @@
   ,"@sync_qr_show_title": {"description": "Título para la hoja de visualización del QR de emparejamiento"}
   ,"sync_qr_show_description": "Escanea este código desde otro dispositivo en la misma red Wi-Fi para emparejarlo con la sincronización"
   ,"@sync_qr_show_description": {"description": "Instrucciones para la hoja de visualización del QR de emparejamiento"}
+  ,"sync_qr_sharing_group": "Compartiendo «{groupTitle}»"
+  ,"@sync_qr_sharing_group": {"description": "Muestra qué grupo comparte este código de emparejamiento", "placeholders": {"groupTitle": {"type": "String"}}}
   ,"sync_qr_expires_in": "Caduca en {time}"
   ,"@sync_qr_expires_in": {"description": "Cuenta atrás que muestra cuánto tiempo sigue siendo válido el código QR de emparejamiento", "placeholders": {"time": {"type": "String"}}}
   ,"sync_qr_expired_title": "Código caducado"

@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:caravella_core/services/logging/logger_service.dart';
+import 'package:caravella_core/sync/crypto/device_key_manager.dart';
+import 'package:caravella_core/sync/crypto/peer_key_store.dart';
+import 'package:caravella_core/sync/crypto/sync_envelope.dart';
 import 'package:caravella_core/sync/device_identity.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/utils/sync_clock.dart';
@@ -25,6 +28,17 @@ class BluetoothPermissionDeniedException implements Exception {
   @override
   String toString() => 'Bluetooth/nearby-device permissions were denied';
 }
+
+/// Callback invoked when a Bluetooth pairing handshake completes (on either
+/// side): should persist the peer's identity and grant it access to
+/// [groupId] — pairing is scoped to the specific group that was being
+/// advertised, not every synced group.
+typedef BluetoothPairingCallback = Future<void> Function(
+  String deviceId,
+  String deviceName,
+  String platform,
+  String groupId,
+);
 
 // ---------------------------------------------------------------------------
 // Bluetooth peer events
@@ -128,6 +142,15 @@ class _ChunkHeader {
 /// This channel is **manual** — only activated explicitly by the user.
 /// It uses the Google Nearby Connections API for peer-to-peer communication.
 ///
+/// **Trust & encryption:** the first message on any new connection is always
+/// an unencrypted `hello`/`hello_ack` handshake exchanging X25519 public
+/// keys (see [DeviceKeyManager]) and the group being shared — only after
+/// that does either side accept `sync` messages, which are encrypted with
+/// the resulting shared key (see [SyncEnvelope]). A connection that never
+/// completes the handshake has no key on file and its `sync` messages are
+/// rejected — this replaces the previous behavior of auto-accepting and
+/// syncing with any nearby device advertising the same service ID.
+///
 /// **Chunking:** If the payload exceeds 32 KB, it is split into chunks with
 /// a header `{index, total, data: base64}`. Chunks are reassembled on receive.
 class BluetoothSyncChannel {
@@ -148,14 +171,27 @@ class BluetoothSyncChannel {
   /// Completers for pending sync responses, keyed by endpoint ID.
   final Map<String, Completer<Map<String, dynamic>>> _pendingResponses = {};
 
+  /// Completers for a pending `hello_ack`, keyed by endpoint ID.
+  final Map<String, Completer<Map<String, dynamic>>> _handshakeCompleters = {};
+
   bool _advertising = false;
   bool _discovering = false;
+
+  /// The group this device is currently advertising to share, and its
+  /// title — set by [startAdvertising], used when responding to an
+  /// incoming `hello` to know which group to grant.
+  String? _advertisingGroupId;
+  String _advertisingGroupTitle = '';
 
   /// Callback for processing received deltas. Set before initiating sync.
   Future<Map<String, dynamic>> Function(
     Map<String, dynamic> remoteDelta,
     String peerId,
   )? onDelta;
+
+  /// Callback invoked when a pairing handshake completes. Should persist
+  /// the peer and grant it access to the group involved.
+  BluetoothPairingCallback? onPairingRequest;
 
   /// Stream of Bluetooth peer events.
   Stream<BluetoothPeerEvent> get events => _eventController.stream;
@@ -194,11 +230,15 @@ class BluetoothSyncChannel {
     return allGranted;
   }
 
-  /// Start advertising this device for nearby connections.
+  /// Start advertising this device for nearby connections, offering to
+  /// share [groupId] (titled [groupTitle]) with whoever connects.
   ///
   /// Throws [BluetoothPermissionDeniedException] if the required runtime
   /// permissions are not granted.
-  Future<void> startAdvertising() async {
+  Future<void> startAdvertising({
+    required String groupId,
+    String groupTitle = '',
+  }) async {
     if (_advertising) {
       LoggerService.debug('Already advertising — skipping', name: _tag);
       return;
@@ -207,6 +247,9 @@ class BluetoothSyncChannel {
     if (!await requestPermissions()) {
       throw const BluetoothPermissionDeniedException();
     }
+
+    _advertisingGroupId = groupId;
+    _advertisingGroupTitle = groupTitle;
 
     try {
       final identity = DeviceIdentity.instance;
@@ -222,7 +265,7 @@ class BluetoothSyncChannel {
       if (started) {
         _advertising = true;
         LoggerService.info(
-          'Started advertising as "${identity.deviceName}"',
+          'Started advertising as "${identity.deviceName}" for group=$groupId',
           name: _tag,
         );
       } else {
@@ -283,6 +326,8 @@ class BluetoothSyncChannel {
       if (_advertising) {
         await _nearby.stopAdvertising();
         _advertising = false;
+        _advertisingGroupId = null;
+        _advertisingGroupTitle = '';
         LoggerService.info('Stopped advertising', name: _tag);
       }
       if (_discovering) {
@@ -297,6 +342,12 @@ class BluetoothSyncChannel {
         }
       }
       _pendingResponses.clear();
+      for (final completer in _handshakeCompleters.values) {
+        if (!completer.isCompleted) {
+          completer.complete(<String, dynamic>{});
+        }
+      }
+      _handshakeCompleters.clear();
     } catch (e, st) {
       LoggerService.error(
         'Error stopping Bluetooth channel',
@@ -309,7 +360,8 @@ class BluetoothSyncChannel {
 
   /// Sync with a specific peer by endpoint ID.
   ///
-  /// Connects, exchanges deltas, and disconnects.
+  /// Connects, performs the `hello`/`hello_ack` key-exchange handshake,
+  /// then exchanges encrypted deltas, and disconnects.
   Future<SyncResult> syncWithPeer(String endpointId) async {
     _eventController.add(const BtSyncStarted());
 
@@ -325,18 +377,63 @@ class BluetoothSyncChannel {
         onDisconnected: _onDisconnected,
       );
 
-      // Build local delta via callback
-      final localDelta = onDelta != null
-          ? await onDelta!(<String, dynamic>{}, endpointId)
-          : <String, dynamic>{};
+      // 1. Handshake: exchange public keys, learn & grant the shared group.
+      final myPublicKey = await DeviceKeyManager.publicKeyBase64();
+      final handshakeCompleter = Completer<Map<String, dynamic>>();
+      _handshakeCompleters[endpointId] = handshakeCompleter;
 
-      // Serialize and send
-      final payload = jsonEncode({
-        'delta': localDelta,
-        'device_id': identity.deviceId,
-        'device_name': identity.deviceName,
-        'timestamp': SyncClock.nowMs(),
-      });
+      await _sendPayload(
+        endpointId,
+        jsonEncode({
+          'type': 'hello',
+          'device_id': identity.deviceId,
+          'device_name': identity.deviceName,
+          'platform': identity.platform.name,
+          'public_key': myPublicKey,
+        }),
+      );
+
+      final ack = await handshakeCompleter.future.timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          LoggerService.warning(
+            'Timeout waiting for handshake ack from $endpointId',
+            name: _tag,
+          );
+          _handshakeCompleters.remove(endpointId);
+          return <String, dynamic>{};
+        },
+      );
+
+      final remoteDeviceId = ack['device_id'] as String?;
+      final remoteDeviceName =
+          ack['device_name'] as String? ?? 'Unknown device';
+      final remotePlatform = ack['platform'] as String? ?? 'unknown';
+      final remotePublicKey = ack['public_key'] as String?;
+      final groupId = ack['group_id'] as String?;
+
+      if (remoteDeviceId == null ||
+          remotePublicKey == null ||
+          groupId == null) {
+        throw StateError('Bluetooth pairing handshake failed or timed out');
+      }
+
+      final sharedKey = await DeviceKeyManager.deriveSharedKey(
+        remotePublicKey,
+      );
+      await PeerKeyStore.save(remoteDeviceId, sharedKey);
+      await onPairingRequest?.call(
+        remoteDeviceId,
+        remoteDeviceName,
+        remotePlatform,
+        groupId,
+      );
+
+      // 2. Build our outgoing delta via the callback, then encrypt it.
+      final localDelta = onDelta != null
+          ? await onDelta!(<String, dynamic>{}, remoteDeviceId)
+          : <String, dynamic>{};
+      final envelope = await SyncEnvelope.encrypt(sharedKey, localDelta);
 
       // Register the completer before sending so a fast peer response can
       // never race ahead of us — otherwise it would be misread as a new
@@ -344,9 +441,16 @@ class BluetoothSyncChannel {
       final completer = Completer<Map<String, dynamic>>();
       _pendingResponses[endpointId] = completer;
 
-      await _sendPayload(endpointId, payload);
+      await _sendPayload(
+        endpointId,
+        jsonEncode({
+          'type': 'sync',
+          'device_id': identity.deviceId,
+          'envelope': envelope,
+        }),
+      );
 
-      final remoteDelta = await completer.future.timeout(
+      final responseJson = await completer.future.timeout(
         const Duration(seconds: 30),
         onTimeout: () {
           LoggerService.warning(
@@ -358,9 +462,14 @@ class BluetoothSyncChannel {
         },
       );
 
+      final responseEnvelope = responseJson['envelope'] as String?;
+      final remoteDelta = responseEnvelope == null
+          ? <String, dynamic>{}
+          : await SyncEnvelope.decrypt(sharedKey, responseEnvelope);
+
       // Process received delta
       if (onDelta != null && remoteDelta.isNotEmpty) {
-        await onDelta!(remoteDelta, endpointId);
+        await onDelta!(remoteDelta, remoteDeviceId);
       }
 
       // Disconnect
@@ -371,7 +480,7 @@ class BluetoothSyncChannel {
         skipped: 0,
         errors: 0,
         channel: _channel,
-        peerId: endpointId,
+        peerId: remoteDeviceId,
         syncedAt: DateTime.fromMillisecondsSinceEpoch(
           SyncClock.nowMs(),
           isUtc: true,
@@ -379,10 +488,14 @@ class BluetoothSyncChannel {
       );
 
       _eventController.add(BtSyncCompleted(result: result));
-      LoggerService.info('Sync with $endpointId completed: $result', name: _tag);
+      LoggerService.info(
+        'Sync with $remoteDeviceId completed: $result',
+        name: _tag,
+      );
       return result;
     } catch (e, st) {
       _pendingResponses.remove(endpointId);
+      _handshakeCompleters.remove(endpointId);
       LoggerService.error(
         'Sync with $endpointId failed',
         name: _tag,
@@ -418,7 +531,10 @@ class BluetoothSyncChannel {
       'Connection initiated with "$endpointId" (${info.endpointName})',
       name: _tag,
     );
-    // Auto-accept connections from same service
+    // Accepting the transport-level connection is not the trust boundary —
+    // it only lets us receive the `hello` handshake. Nothing is treated as
+    // an authorized sync until that handshake derives a shared key (see
+    // _handleHello/_handleIncomingSync).
     _nearby.acceptConnection(
       endpointId,
       onPayLoadRecieved: (endId, payload) =>
@@ -532,39 +648,148 @@ class BluetoothSyncChannel {
     String endpointId,
     Map<String, dynamic> json,
   ) {
-    final remoteDelta = json['delta'] as Map<String, dynamic>? ?? {};
-    final peerId = json['device_id'] as String? ?? endpointId;
+    final type = json['type'] as String?;
 
-    // If there's a pending completer for this endpoint, resolve it
-    final completer = _pendingResponses.remove(endpointId);
-    if (completer != null && !completer.isCompleted) {
-      completer.complete(remoteDelta);
+    if (type == 'hello') {
+      _handleHello(endpointId, json);
       return;
     }
 
-    // Otherwise this is an incoming sync request — respond with our delta
-    _handleIncomingSync(endpointId, remoteDelta, peerId);
+    if (type == 'hello_ack') {
+      final completer = _handshakeCompleters.remove(endpointId);
+      if (completer != null && !completer.isCompleted) {
+        completer.complete(json);
+      }
+      return;
+    }
+
+    // 'sync' request/response — encrypted delta exchange. If there's a
+    // pending completer for this endpoint, this is our awaited reply.
+    final completer = _pendingResponses.remove(endpointId);
+    if (completer != null && !completer.isCompleted) {
+      completer.complete(json);
+      return;
+    }
+
+    // Otherwise this is an incoming sync request — respond with our delta.
+    _handleIncomingSync(endpointId, json);
+  }
+
+  /// Handles an incoming `hello` from a device connecting to us while we're
+  /// advertising: derives and persists the shared encryption key, grants
+  /// the peer access to the group we're advertising, and replies with our
+  /// own identity/public key so the peer can complete pairing on its side.
+  Future<void> _handleHello(
+    String endpointId,
+    Map<String, dynamic> json,
+  ) async {
+    final peerDeviceId = json['device_id'] as String?;
+    final peerDeviceName = json['device_name'] as String? ?? 'Unknown device';
+    final peerPlatform = json['platform'] as String? ?? 'unknown';
+    final peerPublicKey = json['public_key'] as String?;
+    final groupId = _advertisingGroupId;
+
+    if (peerDeviceId == null || peerPublicKey == null || groupId == null) {
+      LoggerService.warning(
+        'Rejecting Bluetooth hello from $endpointId — missing fields or '
+        'not currently advertising a group',
+        name: _tag,
+      );
+      return;
+    }
+
+    final sharedKey = await DeviceKeyManager.deriveSharedKey(peerPublicKey);
+    await PeerKeyStore.save(peerDeviceId, sharedKey);
+    await onPairingRequest?.call(
+      peerDeviceId,
+      peerDeviceName,
+      peerPlatform,
+      groupId,
+    );
+    LoggerService.info(
+      'Paired with incoming device=$peerDeviceId ($peerDeviceName) '
+      'for group=$groupId',
+      name: _tag,
+    );
+
+    final identity = DeviceIdentity.instance;
+    final myPublicKey = await DeviceKeyManager.publicKeyBase64();
+    await _sendPayload(
+      endpointId,
+      jsonEncode({
+        'type': 'hello_ack',
+        'device_id': identity.deviceId,
+        'device_name': identity.deviceName,
+        'platform': identity.platform.name,
+        'public_key': myPublicKey,
+        'group_id': groupId,
+        'group_title': _advertisingGroupTitle,
+      }),
+    );
   }
 
   Future<void> _handleIncomingSync(
     String endpointId,
-    Map<String, dynamic> remoteDelta,
-    String peerId,
+    Map<String, dynamic> json,
   ) async {
     try {
+      final peerId = json['device_id'] as String? ?? endpointId;
+      final envelope = json['envelope'] as String?;
+
+      final peerKey = await PeerKeyStore.get(peerId);
+      if (peerKey == null || envelope == null) {
+        LoggerService.warning(
+          'Rejecting Bluetooth sync from $peerId — no encryption key on '
+          'file (pairing handshake required)',
+          name: _tag,
+        );
+        return;
+      }
+
+      final Map<String, dynamic> remoteDelta;
+      try {
+        remoteDelta = await SyncEnvelope.decrypt(peerKey, envelope);
+      } catch (e) {
+        LoggerService.warning(
+          'Failed to decrypt Bluetooth delta from $peerId — wrong key or '
+          'tampered payload',
+          name: _tag,
+        );
+        return;
+      }
+
       final localDelta = onDelta != null
           ? await onDelta!(remoteDelta, peerId)
           : <String, dynamic>{};
+      final responseEnvelope = await SyncEnvelope.encrypt(peerKey, localDelta);
 
       final identity = DeviceIdentity.instance;
       final response = jsonEncode({
-        'delta': localDelta,
+        'type': 'sync',
         'device_id': identity.deviceId,
-        'device_name': identity.deviceName,
-        'timestamp': SyncClock.nowMs(),
+        'envelope': responseEnvelope,
       });
 
       await _sendPayload(endpointId, response);
+
+      // Unlike syncWithPeer (the requesting side), this is the passive
+      // advertiser's side of the exchange — surface completion here too so
+      // a UI showing "waiting for a device to connect" can react.
+      _eventController.add(
+        BtSyncCompleted(
+          result: SyncResult(
+            applied: remoteDelta.length,
+            skipped: 0,
+            errors: 0,
+            channel: _channel,
+            peerId: peerId,
+            syncedAt: DateTime.fromMillisecondsSinceEpoch(
+              SyncClock.nowMs(),
+              isUtc: true,
+            ),
+          ),
+        ),
+      );
     } catch (e, st) {
       LoggerService.error(
         'Error handling incoming sync from $endpointId',

@@ -4523,6 +4523,12 @@ abstract class AppLocalizations {
   /// **'Searching for nearby devices...'**
   String get sync_bt_searching;
 
+  /// Status while advertising this device for another to discover and connect to
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a nearby device to connect...'**
+  String get sync_bt_advertise_waiting;
+
   /// Button to sync with a BT peer
   ///
   /// In en, this message translates to:
@@ -4660,6 +4666,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan this code from another device on the same Wi-Fi network to pair it for sync'**
   String get sync_qr_show_description;
+
+  /// Shows which group this pairing code shares
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing «{groupTitle}»'**
+  String sync_qr_sharing_group(String groupTitle);
 
   /// Countdown showing how long the pairing QR code remains valid
   ///

@@ -154,6 +154,12 @@ void main() {
       );
 
       final syncDaoB = SyncDao(dbB);
+      // Mirrors what a completed pairing handshake would have already
+      // granted before any delta exchange — without this, every group in
+      // A's delta is rejected by B's per-group grant boundary.
+      for (final entry in aEntries) {
+        await syncDaoB.grantGroupAccess('device-A', entry['id'] as String);
+      }
       final resolverB = ConflictResolver(
         syncDao: syncDaoB,
       );
@@ -185,6 +191,9 @@ void main() {
       );
 
       final syncDaoA = SyncDao(dbA);
+      for (final entry in bEntries) {
+        await syncDaoA.grantGroupAccess('device-B', entry['id'] as String);
+      }
       final resolverA = ConflictResolver(
         syncDao: syncDaoA,
       );

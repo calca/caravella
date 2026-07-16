@@ -2362,6 +2362,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sync_bt_searching => 'Procurando dispositivos próximos...';
 
   @override
+  String get sync_bt_advertise_waiting =>
+      'Aguardando um dispositivo próximo se conectar...';
+
+  @override
   String get sync_bt_sync_with => 'Sincronizar';
 
   @override
@@ -2439,6 +2443,11 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get sync_qr_show_description =>
       'Escaneie este código a partir de outro dispositivo na mesma rede Wi-Fi para pareá-lo com a sincronização';
+
+  @override
+  String sync_qr_sharing_group(String groupTitle) {
+    return 'Compartilhando «$groupTitle»';
+  }
 
   @override
   String sync_qr_expires_in(String time) {

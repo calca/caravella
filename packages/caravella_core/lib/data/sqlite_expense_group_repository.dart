@@ -25,7 +25,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 4;
+  static const int _databaseVersion = 5;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -36,6 +36,7 @@ class SqliteExpenseGroupRepository
   static const String tableDeviceMeta = kTableDeviceMeta;
   static const String tableSyncLog = kTableSyncLog;
   static const String tablePairedDevices = kTablePairedDevices;
+  static const String tablePairedDeviceGroups = kTablePairedDeviceGroups;
 
   final SqliteGroupMapper _mapper = const SqliteGroupMapper();
 
@@ -181,6 +182,36 @@ class SqliteExpenseGroupRepository
 
       LoggerService.info(
         'Database migration to v4 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 5) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v5',
+        name: 'storage.sqlite',
+      );
+
+      // Peer's X25519 public key (base64), captured during pairing —
+      // enables end-to-end encrypted sync. Existing pairings (created before
+      // this column existed) have no key and must be re-paired to sync
+      // again — encryption cannot be bolted onto a trust relationship
+      // established without it.
+      await db.execute(
+        'ALTER TABLE $kTablePairedDevices ADD COLUMN public_key TEXT',
+      );
+
+      await db.execute('''
+        CREATE TABLE $kTablePairedDeviceGroups (
+          device_id TEXT NOT NULL,
+          group_id TEXT NOT NULL,
+          granted_at INTEGER NOT NULL,
+          PRIMARY KEY (device_id, group_id)
+        )
+      ''');
+
+      LoggerService.info(
+        'Database migration to v5 complete',
         name: 'storage.sqlite',
       );
     }

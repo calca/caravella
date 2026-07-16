@@ -103,6 +103,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
   path_provider_platform_interface: ^2.1.2
   sqflite_common_ffi: ^2.4.1
+  cryptography: ^2.7.0
 
 flutter_launcher_icons:
   android: true

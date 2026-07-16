@@ -1013,6 +1013,8 @@
   ,"@sync_bt_description": {"description": "Description for Bluetooth sync"}
   ,"sync_bt_searching": "Searching for nearby devices..."
   ,"@sync_bt_searching": {"description": "Status while searching for BT peers"}
+  ,"sync_bt_advertise_waiting": "Waiting for a nearby device to connect..."
+  ,"@sync_bt_advertise_waiting": {"description": "Status while advertising this device for another to discover and connect to"}
   ,"sync_bt_sync_with": "Sync"
   ,"@sync_bt_sync_with": {"description": "Button to sync with a BT peer"}
   ,"sync_bt_completed": "Sync completed"
@@ -1059,6 +1061,8 @@
   ,"@sync_qr_show_title": {"description": "Title for the QR pairing display sheet"}
   ,"sync_qr_show_description": "Scan this code from another device on the same Wi-Fi network to pair it for sync"
   ,"@sync_qr_show_description": {"description": "Instructions for the QR pairing display sheet"}
+  ,"sync_qr_sharing_group": "Sharing «{groupTitle}»"
+  ,"@sync_qr_sharing_group": {"description": "Shows which group this pairing code shares", "placeholders": {"groupTitle": {"type": "String"}}}
   ,"sync_qr_expires_in": "Expires in {time}"
   ,"@sync_qr_expires_in": {"description": "Countdown showing how long the pairing QR code remains valid", "placeholders": {"time": {"type": "String"}}}
   ,"sync_qr_expired_title": "Code expired"

@@ -54,6 +54,9 @@ export 'services/widgets/platform_home_widget_manager.dart';
 
 // Sync
 export 'sync/device_identity.dart';
+export 'sync/crypto/device_key_manager.dart';
+export 'sync/crypto/sync_envelope.dart';
+export 'sync/crypto/peer_key_store.dart';
 export 'sync/utils/sync_clock.dart';
 export 'sync/utils/local_network_info.dart';
 export 'sync/models/sync_result.dart';

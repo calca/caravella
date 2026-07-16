@@ -9,8 +9,6 @@ import 'bluetooth_sync_channel.dart';
 import 'bluetooth_sync_factory.dart';
 import 'bluetooth_sync_sheet.dart';
 import 'qr_pair_scan_page.dart';
-import 'qr_pair_show_sheet.dart';
-import 'widgets/paired_devices_list.dart';
 
 /// Settings sub-page for syncing with **other people's** devices — Wi-Fi LAN
 /// auto-discovery and manual Bluetooth pairing.
@@ -19,6 +17,13 @@ import 'widgets/paired_devices_list.dart';
 /// which syncs a single user's *own* devices via the optional Google Drive
 /// relay — the two are separate pages because they solve different problems
 /// (pairing with someone else vs. keeping your own devices in sync).
+///
+/// Only holds the two on/off toggles plus the group-agnostic "receiving"
+/// actions (scan a code / discover a nearby device) — a device that hasn't
+/// seen a shared group yet has nowhere else to start from. *Showing* a code
+/// or *advertising* to share a specific group happens from that group's own
+/// Sync sub-page instead (`ExpenseGroupSyncPage`), since pairing now grants
+/// access to that one group, not every synced group.
 class MultiUserSyncPage extends StatelessWidget {
   final SyncOrchestrator orchestrator;
 
@@ -46,7 +51,7 @@ class MultiUserSyncPage extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Local sync section – Wi-Fi status, QR pairing, paired devices list
+// Local sync section – Wi-Fi status + scan-a-code entry point
 // ---------------------------------------------------------------------------
 
 class _LocalSyncSection extends StatefulWidget {
@@ -59,10 +64,6 @@ class _LocalSyncSection extends StatefulWidget {
 }
 
 class _LocalSyncSectionState extends State<_LocalSyncSection> {
-  // Bumped after a successful QR pairing to force PairedDevicesList to
-  // reload via a new key.
-  int _refreshTick = 0;
-
   bool _enabled = false;
   bool _loading = true;
   bool _busy = false;
@@ -98,26 +99,12 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
     );
   }
 
-  void _showQr(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (_) => QrPairShowSheet(orchestrator: widget.orchestrator),
-    );
-  }
-
   Future<void> _scanQr(BuildContext context) async {
-    final paired = await Navigator.of(context).push<bool>(
+    await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (ctx) => QrPairScanPage(orchestrator: widget.orchestrator),
       ),
     );
-    if (paired == true && mounted) {
-      setState(() => _refreshTick++);
-    }
   }
 
   @override
@@ -157,48 +144,14 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
           SettingsCard(
             context: context,
             color: colorScheme.surface,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _showQr(context),
-                      icon: const Icon(Icons.qr_code),
-                      label: Text(loc.sync_qr_show_button),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: FilledButton.tonalIcon(
-                      onPressed: () => _scanQr(context),
-                      icon: const Icon(Icons.qr_code_scanner),
-                      label: Text(loc.sync_qr_scan_button),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          SettingsCard(
-            context: context,
-            color: colorScheme.surface,
-            semanticsLabel: loc.sync_paired_devices_title,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(loc.sync_paired_devices_title, style: textTheme.labelLarge),
-                  const SizedBox(height: 4),
-                  PairedDevicesList(
-                    key: ValueKey(_refreshTick),
-                    orchestrator: widget.orchestrator,
-                    showRemoveAction: true,
-                  ),
-                ],
-              ),
+            semanticsButton: true,
+            semanticsLabel: loc.sync_qr_scan_button,
+            child: ListTile(
+              leading: Icon(Icons.qr_code_scanner, color: colorScheme.primary),
+              title: Text(loc.sync_qr_scan_button, style: textTheme.titleMedium),
+              subtitle: Text(loc.sync_qr_scan_description),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => _scanQr(context),
             ),
           ),
         ],
@@ -208,7 +161,7 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
 }
 
 // ---------------------------------------------------------------------------
-// Bluetooth sync section – enable toggle + manual pairing entry point
+// Bluetooth sync section – enable toggle + discover-a-device entry point
 // ---------------------------------------------------------------------------
 
 class _BluetoothSyncSection extends StatefulWidget {
@@ -251,9 +204,10 @@ class _BluetoothSyncSectionState extends State<_BluetoothSyncSection> {
     );
   }
 
-  void _openBluetoothPairing(BuildContext context) {
+  void _discoverDevices(BuildContext context) {
     final channel = BluetoothSyncChannel()
-      ..onDelta = widget.orchestrator.handleIncomingDelta;
+      ..onDelta = widget.orchestrator.handleIncomingDelta
+      ..onPairingRequest = widget.orchestrator.handlePairingCompleted;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -301,7 +255,7 @@ class _BluetoothSyncSectionState extends State<_BluetoothSyncSection> {
               leading: Icon(Icons.bluetooth, color: colorScheme.primary),
               title: Text(loc.sync_bt_title, style: textTheme.titleMedium),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => _openBluetoothPairing(context),
+              onTap: () => _discoverDevices(context),
             ),
           ),
         ],

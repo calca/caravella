@@ -145,17 +145,21 @@ class SyncManager {
     return _syncDao.isPaired(deviceId);
   }
 
-  /// Records a mutual pairing with [deviceId].
+  /// Records a mutual pairing with [deviceId]. This establishes identity and
+  /// encryption key material only — it does not grant access to any group;
+  /// call [grantGroupAccess] for that.
   Future<void> registerPairedDevice(
     String deviceId,
     String deviceName,
-    String platform,
-  ) {
+    String platform, {
+    String? publicKey,
+  }) {
     _ensureStarted();
     return _syncDao.addPairedDevice(
       deviceId: deviceId,
       deviceName: deviceName,
       platform: platform,
+      publicKey: publicKey,
     );
   }
 
@@ -165,10 +169,41 @@ class SyncManager {
     return _syncDao.getPairedDevices();
   }
 
-  /// Revokes a pairing, removing [deviceId] from the trusted device list.
+  /// Revokes a pairing entirely, removing [deviceId] from the trusted
+  /// device list along with every group it was granted.
   Future<void> removePairedDevice(String deviceId) {
     _ensureStarted();
     return _syncDao.removePairedDevice(deviceId);
+  }
+
+  // -------------------------------------------------------------------------
+  // Per-group pairing grants
+  // -------------------------------------------------------------------------
+
+  /// Grants [deviceId] access to sync [groupId].
+  Future<void> grantGroupAccess(String deviceId, String groupId) {
+    _ensureStarted();
+    return _syncDao.grantGroupAccess(deviceId, groupId);
+  }
+
+  /// Whether [deviceId] has been granted access to [groupId].
+  Future<bool> isGroupGranted(String deviceId, String groupId) {
+    _ensureStarted();
+    return _syncDao.isGroupGranted(deviceId, groupId);
+  }
+
+  /// Revokes [deviceId]'s access to [groupId] specifically, leaving its
+  /// other group grants (if any) and its overall pairing intact.
+  Future<void> revokeGroupAccess(String deviceId, String groupId) {
+    _ensureStarted();
+    return _syncDao.revokeGroupAccess(deviceId, groupId);
+  }
+
+  /// Returns the devices granted access to [groupId], most recently paired
+  /// first.
+  Future<List<PairedDevice>> getPairedDevicesForGroup(String groupId) {
+    _ensureStarted();
+    return _syncDao.getPairedDevicesForGroup(groupId);
   }
 
   // -------------------------------------------------------------------------

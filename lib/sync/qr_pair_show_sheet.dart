@@ -15,7 +15,17 @@ import 'package:qr_flutter/qr_flutter.dart';
 class QrPairShowSheet extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
-  const QrPairShowSheet({super.key, required this.orchestrator});
+  /// The group this code shares — pairing grants the scanning device
+  /// access to this group specifically, not every synced group.
+  final String groupId;
+  final String groupTitle;
+
+  const QrPairShowSheet({
+    super.key,
+    required this.orchestrator,
+    required this.groupId,
+    required this.groupTitle,
+  });
 
   @override
   State<QrPairShowSheet> createState() => _QrPairShowSheetState();
@@ -41,7 +51,12 @@ class _QrPairShowSheetState extends State<QrPairShowSheet> {
   void _generate() {
     _ticker?.cancel();
     setState(() {
-      _future = widget.orchestrator.buildOwnPairingPayload().then((payload) {
+      _future = widget.orchestrator
+          .buildOwnPairingPayload(
+            groupId: widget.groupId,
+            groupTitle: widget.groupTitle,
+          )
+          .then((payload) {
         _startCountdown(payload);
         return payload;
       });
@@ -155,6 +170,14 @@ class _QrPairShowSheetState extends State<QrPairShowSheet> {
                   color: colorScheme.outline,
                 ),
               ),
+              if (widget.groupTitle.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(
+                  loc.sync_qr_sharing_group(widget.groupTitle),
+                  textAlign: TextAlign.center,
+                  style: textTheme.titleSmall,
+                ),
+              ],
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(16),

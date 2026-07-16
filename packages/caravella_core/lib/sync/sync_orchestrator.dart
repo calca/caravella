@@ -91,7 +91,7 @@ class SyncOrchestrator {
         await _lanChannel.start(
           onDelta: _handleDelta,
           isPeerAuthorized: _syncManager.isPeerPaired,
-          onPairingRequest: _syncManager.registerPairedDevice,
+          onPairingRequest: handlePairingCompleted,
         );
         LoggerService.info('LAN channel started', name: _tag);
       } else {
@@ -183,7 +183,7 @@ class SyncOrchestrator {
         await _lanChannel.start(
           onDelta: _handleDelta,
           isPeerAuthorized: _syncManager.isPeerPaired,
-          onPairingRequest: _syncManager.registerPairedDevice,
+          onPairingRequest: handlePairingCompleted,
         );
         // LAN sync is event-driven; return an empty result since the actual
         // sync happens asynchronously when peers are discovered.
@@ -252,7 +252,7 @@ class SyncOrchestrator {
         await _lanChannel.start(
           onDelta: _handleDelta,
           isPeerAuthorized: _syncManager.isPeerPaired,
-          onPairingRequest: _syncManager.registerPairedDevice,
+          onPairingRequest: handlePairingCompleted,
         );
         LoggerService.info('LAN channel started', name: _tag);
       } catch (e, st) {
@@ -284,11 +284,15 @@ class SyncOrchestrator {
   // ---------------------------------------------------------------------------
 
   /// Builds this device's own pairing payload to render as a QR code for
-  /// another device to scan.
+  /// another device to scan — sharing [groupId] (titled [groupTitle])
+  /// specifically, not every synced group.
   ///
   /// Returns `null` if no local network address could be resolved (e.g. no
   /// Wi-Fi connection) — pairing requires both devices on the same LAN.
-  Future<PairingPayload?> buildOwnPairingPayload() async {
+  Future<PairingPayload?> buildOwnPairingPayload({
+    required String groupId,
+    required String groupTitle,
+  }) async {
     final host = await LocalNetworkInfo.resolveLocalIPv4();
     if (host == null) {
       LoggerService.warning(
@@ -306,11 +310,14 @@ class SyncOrchestrator {
       host: host,
       port: _lanChannel.port,
       createdAtMs: SyncClock.nowMs(),
+      groupId: groupId,
+      groupTitle: groupTitle,
     );
   }
 
-  /// Completes a pairing handshake with a device scanned from its QR code.
-  /// Returns `true` if both devices now trust each other for LAN sync.
+  /// Completes a pairing handshake with a device scanned from its QR code,
+  /// granting it access to [PairingPayload.groupId] specifically. Returns
+  /// `true` if both devices now trust each other for that group's sync.
   ///
   /// Returns `false` without attempting the handshake if [payload] is past
   /// its [PairingPayload.validityMs] window — a stale/expired code should
@@ -323,16 +330,49 @@ class SyncOrchestrator {
       );
       return Future.value(false);
     }
-    return _lanChannel.pairWithHost(payload.host, payload.port);
+    return _lanChannel.pairWithHost(
+      payload.host,
+      payload.port,
+      groupId: payload.groupId,
+    );
   }
 
   /// Returns all devices paired for LAN sync, most recently paired first.
   Future<List<PairedDevice>> getPairedDevices() =>
       _syncManager.getPairedDevices();
 
-  /// Revokes a pairing, removing [deviceId] from the trusted device list.
+  /// Revokes a pairing entirely, removing [deviceId] from the trusted
+  /// device list along with every group it was granted.
   Future<void> removePairedDevice(String deviceId) =>
       _syncManager.removePairedDevice(deviceId);
+
+  /// Returns the devices granted access to [groupId], most recently paired
+  /// first.
+  Future<List<PairedDevice>> getPairedDevicesForGroup(String groupId) =>
+      _syncManager.getPairedDevicesForGroup(groupId);
+
+  /// Revokes [deviceId]'s access to [groupId] specifically, leaving its
+  /// other group grants (if any) and its overall pairing intact.
+  Future<void> revokeGroupAccess(String deviceId, String groupId) =>
+      _syncManager.revokeGroupAccess(deviceId, groupId);
+
+  /// Invoked when a pairing handshake completes on any transport (LAN or
+  /// Bluetooth, from either side): persists the peer's identity and grants
+  /// it access to the specific group the handshake was for. The transport
+  /// itself already derived and stored the shared encryption key.
+  ///
+  /// Public so a [BluetoothSyncChannel] — constructed per pairing session
+  /// by the UI, outside this class — can wire its own handshake completion
+  /// into the same pipeline LAN pairing uses internally.
+  Future<void> handlePairingCompleted(
+    String deviceId,
+    String deviceName,
+    String platform,
+    String groupId,
+  ) async {
+    await _syncManager.registerPairedDevice(deviceId, deviceName, platform);
+    await _syncManager.grantGroupAccess(deviceId, groupId);
+  }
 
   /// Handle an incoming delta from any transport (LAN, Bluetooth, ...),
   /// routing it through [SyncManager] and returning the outgoing delta for

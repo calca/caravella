@@ -2,21 +2,26 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-/// Displays the list of devices paired for LAN sync.
+/// Displays the devices granted access to a specific group's sync.
 ///
 /// Self-loads via [orchestrator] on mount. Pass a new [key] (e.g. an
 /// incrementing counter) to force a reload after a pairing completes
-/// elsewhere (the QR scan flow).
+/// elsewhere (the QR scan / Bluetooth flow).
 class PairedDevicesList extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
-  /// Whether to show a trailing "remove" action per device. Only relevant
-  /// in the sync settings screen — the group page shows a read-only list.
+  /// The group whose granted devices this list shows — pairing is scoped
+  /// per group, so there is no "all paired devices" view anymore.
+  final String groupId;
+
+  /// Whether to show a trailing "remove" action per device. Removing here
+  /// revokes only this group's grant, not the device's overall pairing.
   final bool showRemoveAction;
 
   const PairedDevicesList({
     super.key,
     required this.orchestrator,
+    required this.groupId,
     this.showRemoveAction = false,
   });
 
@@ -30,7 +35,7 @@ class _PairedDevicesListState extends State<PairedDevicesList> {
   @override
   void initState() {
     super.initState();
-    _future = widget.orchestrator.getPairedDevices();
+    _future = widget.orchestrator.getPairedDevicesForGroup(widget.groupId);
   }
 
   IconData _iconFor(String platform) {
@@ -48,10 +53,10 @@ class _PairedDevicesListState extends State<PairedDevicesList> {
   }
 
   Future<void> _remove(PairedDevice device) async {
-    await widget.orchestrator.removePairedDevice(device.deviceId);
+    await widget.orchestrator.revokeGroupAccess(device.deviceId, widget.groupId);
     if (mounted) {
       setState(() {
-        _future = widget.orchestrator.getPairedDevices();
+        _future = widget.orchestrator.getPairedDevicesForGroup(widget.groupId);
       });
     }
   }
