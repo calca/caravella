@@ -190,7 +190,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share_image_label => 'Share image';
 
   @override
-  String get export_share => 'Export & Share';
+  String get export_share => 'Share & Export';
 
   @override
   String get contribution_percentages => 'Percentages';

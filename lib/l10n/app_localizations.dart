@@ -455,7 +455,7 @@ abstract class AppLocalizations {
   /// No description provided for @export_share.
   ///
   /// In en, this message translates to:
-  /// **'Export & Share'**
+  /// **'Share & Export'**
   String get export_share;
 
   /// No description provided for @contribution_percentages.

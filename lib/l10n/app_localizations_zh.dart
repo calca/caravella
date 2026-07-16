@@ -187,7 +187,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get share_image_label => '分享图片';
 
   @override
-  String get export_share => '导出和分享';
+  String get export_share => '分享和导出';
 
   @override
   String get contribution_percentages => '百分比';

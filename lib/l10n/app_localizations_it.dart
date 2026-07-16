@@ -192,7 +192,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get share_image_label => 'Condividi immagine';
 
   @override
-  String get export_share => 'Esporta e Condividi';
+  String get export_share => 'Condividi ed Esporta';
 
   @override
   String get contribution_percentages => 'Percentuali';

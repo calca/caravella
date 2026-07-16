@@ -129,8 +129,15 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                   onTap: () => _openOtherPage(context),
                 ),
               ),
+            ],
+          ),
+
+          // Export and Share section
+          SettingsSection(
+            title: gloc.export_share,
+            description: gloc.export_options_desc,
+            children: [
               if (context.watch<SyncOrchestrator?>() != null) ...[
-                const SizedBox(height: 8),
                 SettingsCard(
                   context: context,
                   color: colorScheme.surface,
@@ -145,15 +152,8 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     onTap: () => _openSyncPage(context),
                   ),
                 ),
+                const SizedBox(height: 8),
               ],
-            ],
-          ),
-
-          // Export and Share section
-          SettingsSection(
-            title: gloc.export_share,
-            description: gloc.export_options_desc,
-            children: [
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
