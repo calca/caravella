@@ -3,7 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../../../settings/pages/settings_page.dart';
-import '../../../sync/sync_status_widget.dart';
+import '../../../sync/settings_sync_badge.dart';
 
 class HomeCardsHeader extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -132,23 +132,29 @@ class HomeCardsHeader extends StatelessWidget {
         ),
         const SizedBox(width: 8),
 
-        // Sync status indicator — only shown once the app-wide
-        // SyncOrchestrator has finished initializing (SQLite backend only).
+        // CTA button: apre direttamente la pagina delle impostazioni, con un
+        // pallino di stato sync (verde = ok, ocra = problemi) una volta che
+        // il SyncOrchestrator (solo backend SQLite) ha finito l'init.
         Consumer<SyncOrchestrator?>(
           builder: (context, orchestrator, _) {
-            if (orchestrator == null) return const SizedBox.shrink();
-            return SyncStatusWidget(orchestrator: orchestrator);
-          },
-        ),
-
-        // CTA button: apre direttamente la pagina delle impostazioni
-        IconButton(
-          icon: Icon(Icons.settings, color: theme.colorScheme.onSurface),
-          tooltip: localizations.settings,
-          onPressed: () {
-            Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (ctx) => const SettingsPage()));
+            final settingsIcon = Icon(
+              Icons.settings,
+              color: theme.colorScheme.onSurface,
+            );
+            return IconButton(
+              icon: orchestrator == null
+                  ? settingsIcon
+                  : SettingsSyncBadge(
+                      orchestrator: orchestrator,
+                      child: settingsIcon,
+                    ),
+              tooltip: localizations.settings,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => const SettingsPage()),
+                );
+              },
+            );
           },
         ),
       ],

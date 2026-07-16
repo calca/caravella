@@ -93,7 +93,9 @@ class _QrPairShowSheetState extends State<QrPairShowSheet> {
     final textTheme = Theme.of(context).textTheme;
 
     return GroupBottomSheetScaffold(
-      title: loc.sync_qr_show_title,
+      title: widget.groupTitle.isNotEmpty
+          ? loc.sync_qr_sharing_group(widget.groupTitle)
+          : loc.sync_qr_show_title,
       child: FutureBuilder<PairingPayload?>(
         future: _future,
         builder: (context, snapshot) {
@@ -170,14 +172,6 @@ class _QrPairShowSheetState extends State<QrPairShowSheet> {
                   color: colorScheme.outline,
                 ),
               ),
-              if (widget.groupTitle.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Text(
-                  loc.sync_qr_sharing_group(widget.groupTitle),
-                  textAlign: TextAlign.center,
-                  style: textTheme.titleSmall,
-                ),
-              ],
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(16),

@@ -3,6 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:provider/provider.dart';
 import '../pages/data_backup_page.dart';
+import '../../sync/settings_sync_badge.dart';
 import '../../sync/sync_settings_screen.dart';
 import 'settings_card.dart';
 import 'settings_section.dart';
@@ -39,7 +40,10 @@ class DataSettingsSection extends StatelessWidget {
       context: context,
       color: colorScheme.surface,
       child: ListTile(
-        leading: const Icon(Icons.sync_outlined),
+        leading: SettingsSyncBadge(
+          orchestrator: orchestrator,
+          child: const Icon(Icons.sync_outlined),
+        ),
         title: Text(loc.sync_title, style: textTheme.titleMedium),
         subtitle: Text(loc.sync_settings_desc),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
