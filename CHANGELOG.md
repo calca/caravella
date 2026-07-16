@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Privacy policy and permissions documentation (`store/`) updated to reflect that sync (Wi-Fi/Bluetooth device sync, optional Google Drive relay) can now transmit expense/group/participant data — previously these documents stated the app never does this
 - Upgraded the `bonsoir` mDNS package (LAN sync discovery) from 5.1.11 to 7.1.4, migrating `lan_sync_channel.dart` to its new sealed discovery-event types and `hostAddress`/`initialize()` APIs
 - The Cloud Sync privacy confirmation in Settings → Sync now uses the shared `Material3Dialog` (`Material3Dialogs.showConfirmation`) instead of a raw `AlertDialog`
+- Upgraded `google_sign_in` 6.3.0 → 7.2.0 in `google_drive_sync` (Google Drive cloud sync), migrating `GoogleDriveAuthService` to the new singleton `GoogleSignIn.instance`/`initialize()`/`authenticate()`/`attemptLightweightAuthentication()` API and requesting the Drive scope per-authorization via `GoogleSignInAccount.authorizationClient` instead of the removed `signIn()`/`authHeaders`; also upgraded `googleapis` 14.0.0 → 16.0.0 (no code changes needed), `talker`/`talker_flutter` 5.1.17 → 5.1.19, `uuid` 4.5.3 → 4.6.0, `share_plus` → 13.2.1, and `package_info_plus` → 10.2.1
 
 ## [1.8.0] - 2026-07-14
 

@@ -7,6 +7,12 @@ import 'package:http/http.dart' as http;
 /// authenticated [GoogleSignInAccount] into an `http.Client` usable by
 /// `googleapis`'s generated [drive.DriveApi] client.
 ///
+/// Built against `google_sign_in` 7.x's authenticate/authorize API: there is
+/// a single [GoogleSignIn.instance], [initialize] must run once before any
+/// other call, and scopes are requested per-authorization (via
+/// [GoogleSignInAccount.authorizationClient]) rather than passed upfront —
+/// unlike the pre-7.0 `signIn()`/`authHeaders` API this replaces.
+///
 /// The iOS OAuth client ID is optional here: pass it via
 /// [GoogleDriveAuthService.new] when building for iOS (see
 /// `docs/GOOGLE_DRIVE_SYNC_SETUP.md`). Android needs no client ID in code —
@@ -20,22 +26,47 @@ class GoogleDriveAuthService {
   /// app-private sync data (see the setup guide's "Which scope" section).
   static const List<String> scopes = [drive.DriveApi.driveAppdataScope];
 
-  final GoogleSignIn _googleSignIn;
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  final String? _iosClientId;
 
-  GoogleDriveAuthService({String? iosClientId})
-      : _googleSignIn = GoogleSignIn(
-          scopes: scopes,
-          clientId: iosClientId,
-        );
+  bool _initialized = false;
+  GoogleSignInAccount? _currentUser;
+
+  GoogleDriveAuthService({String? iosClientId}) : _iosClientId = iosClientId;
+
+  /// [GoogleSignIn.initialize] must complete exactly once before any other
+  /// call — this makes every public method here safe to call repeatedly.
+  Future<void> _ensureInitialized() async {
+    if (_initialized) return;
+
+    await _googleSignIn.initialize(clientId: _iosClientId);
+    _googleSignIn.authenticationEvents.listen((event) {
+      switch (event) {
+        case GoogleSignInAuthenticationEventSignIn(:final user):
+          _currentUser = user;
+        case GoogleSignInAuthenticationEventSignOut():
+          _currentUser = null;
+      }
+    });
+
+    _initialized = true;
+  }
 
   /// The currently signed-in account, if any (in-memory only — call
   /// [signInSilently] after process restart to restore a prior session).
-  GoogleSignInAccount? get currentUser => _googleSignIn.currentUser;
+  GoogleSignInAccount? get currentUser => _currentUser;
 
   /// Attempts to restore a previous sign-in session without UI.
   Future<GoogleSignInAccount?> signInSilently() async {
+    await _ensureInitialized();
     try {
-      return await _googleSignIn.signInSilently();
+      // A null future (rather than a null account) means the platform will
+      // report the result via authenticationEvents instead — nothing more
+      // to await here.
+      final future = _googleSignIn.attemptLightweightAuthentication();
+      final account = future == null ? null : await future;
+      _currentUser = account;
+      return account;
     } catch (e, st) {
       LoggerService.warning(
         'Silent sign-in failed',
@@ -48,8 +79,11 @@ class GoogleDriveAuthService {
 
   /// Shows the Google sign-in UI. Returns `null` if the user cancels.
   Future<GoogleSignInAccount?> signIn() async {
+    await _ensureInitialized();
     try {
-      return await _googleSignIn.signIn();
+      final account = await _googleSignIn.authenticate(scopeHint: scopes);
+      _currentUser = account;
+      return account;
     } catch (e, st) {
       LoggerService.error(
         'Sign-in failed',
@@ -61,10 +95,11 @@ class GoogleDriveAuthService {
     }
   }
 
-  /// Signs out and revokes the local session (Drive access is not revoked
+  /// Signs out and clears the local session (Drive access is not revoked
   /// server-side — the user can do that from their Google Account settings).
   Future<void> signOut() async {
     await _googleSignIn.signOut();
+    _currentUser = null;
     LoggerService.info('Signed out of Google Drive sync', name: _tag);
   }
 
@@ -75,7 +110,11 @@ class GoogleDriveAuthService {
     final account = currentUser ?? await signInSilently();
     if (account == null) return null;
 
-    final headers = await account.authHeaders;
+    final headers = await account.authorizationClient.authorizationHeaders(
+      scopes,
+      promptIfNecessary: true,
+    );
+    if (headers == null) return null;
     return _GoogleAuthClient(headers);
   }
 }
