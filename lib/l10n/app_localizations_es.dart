@@ -850,6 +850,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paid_by => 'Pagado por';
 
   @override
+  String get added_by => 'Añadido por';
+
+  @override
+  String get edited_by => 'Editado por';
+
+  @override
   String get expense_added_success => 'Gasto agregado';
 
   @override

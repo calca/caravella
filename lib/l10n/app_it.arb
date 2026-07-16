@@ -297,6 +297,8 @@
   "export_csv_error": "Errore nell'esportazione delle spese",
   "expense_name": "Descrizione",
   "paid_by": "Pagato da",
+  "added_by": "Aggiunto da",
+  "edited_by": "Modificato da",
   "expense_added_success": "Spesa aggiunta",
   "expense_updated_success": "Spesa aggiornata",
   "data_refreshing": "Aggiornamento…",

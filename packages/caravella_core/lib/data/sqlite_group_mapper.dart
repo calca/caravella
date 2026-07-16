@@ -4,6 +4,7 @@ import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
 import '../model/expense_location.dart';
+import '../model/expense_author.dart';
 import '../model/expense_group_type.dart';
 import '../services/logging/logger_service.dart';
 import '../sync/device_identity.dart';
@@ -209,6 +210,20 @@ class SqliteGroupMapper {
             )
           : null,
       attachments: attachments,
+      createdBy: map['created_by_device_id'] != null
+          ? ExpenseAuthor(
+              deviceId: map['created_by_device_id'] as String,
+              deviceName: map['created_by_device_name'] as String?,
+              userName: map['created_by_user_name'] as String?,
+            )
+          : null,
+      updatedBy: map['updated_by_device_id'] != null
+          ? ExpenseAuthor(
+              deviceId: map['updated_by_device_id'] as String,
+              deviceName: map['updated_by_device_name'] as String?,
+              userName: map['updated_by_user_name'] as String?,
+            )
+          : null,
     );
   }
 
@@ -226,6 +241,12 @@ class SqliteGroupMapper {
       'location_latitude': expense.location?.latitude,
       'location_longitude': expense.location?.longitude,
       'location_name': expense.location?.name,
+      'created_by_device_id': expense.createdBy?.deviceId,
+      'created_by_device_name': expense.createdBy?.deviceName,
+      'created_by_user_name': expense.createdBy?.userName,
+      'updated_by_device_id': expense.updatedBy?.deviceId,
+      'updated_by_device_name': expense.updatedBy?.deviceName,
+      'updated_by_user_name': expense.updatedBy?.userName,
     };
   }
 }

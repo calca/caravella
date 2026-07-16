@@ -311,6 +311,8 @@
   "export_csv_error": "导出支出时出错",
   "expense_name": "描述",
   "paid_by": "付款人",
+  "added_by": "添加者",
+  "edited_by": "编辑者",
   "expense_added_success": "已添加支出",
   "expense_updated_success": "支出已更新",
   "data_refreshing": "刷新中...",

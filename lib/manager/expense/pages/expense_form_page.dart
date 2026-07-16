@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../components/expense_form_component.dart';
+import '../widgets/expense_authorship_info.dart';
 import '../widgets/expense_form_actions_widget.dart';
 
 /// Full-screen page for creating or editing an expense
@@ -140,6 +142,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
         widget.initialExpense?.id != null &&
         widget.initialExpense!.id.isNotEmpty;
     final viewInsetsBottom = MediaQuery.of(context).viewInsets.bottom;
+    final syncOrchestrator = context.watch<SyncOrchestrator?>();
 
     return Scaffold(
       appBar: AppBar(
@@ -183,6 +186,14 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                           : gloc.new_expense),
                 description: '${gloc.group} ${widget.group.title}',
               ),
+              if (isEdit &&
+                  syncOrchestrator != null &&
+                  widget.group.syncEnabled)
+                ExpenseAuthorshipInfo(
+                  orchestrator: syncOrchestrator,
+                  group: widget.group,
+                  expense: widget.initialExpense!,
+                ),
               const SizedBox(height: 24),
               ExpenseFormComponent.legacy(
                 initialExpense: widget.initialExpense,

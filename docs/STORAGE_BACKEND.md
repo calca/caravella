@@ -12,7 +12,7 @@ For where this fits in the wider codebase, see [caravella_core reference § Stor
 
 ## Backend 1: SQLite (default) — `SqliteExpenseGroupRepository`
 
-`packages/caravella_core/lib/data/sqlite_expense_group_repository.dart`. Uses `sqflite`, database file `expense_groups.db`, `_databaseVersion = 4`. Schema creation lives in `sqlite_schema.dart` (`createSqliteSchema`), table name constants in `sqlite_tables.dart`. No in-memory caching — every call reconstructs full `ExpenseGroup` objects via `_loadAllGroups`/`_loadGroupById`/`_mapToGroup`.
+`packages/caravella_core/lib/data/sqlite_expense_group_repository.dart`. Uses `sqflite`, database file `expense_groups.db`, `_databaseVersion = 6`. Schema creation lives in `sqlite_schema.dart` (`createSqliteSchema`), table name constants in `sqlite_tables.dart`. No in-memory caching — every call reconstructs full `ExpenseGroup` objects via `_loadAllGroups`/`_loadGroupById`/`_mapToGroup`.
 
 **Schema** (from `createSqliteSchema`):
 
@@ -32,6 +32,8 @@ categories(id TEXT PK, group_id TEXT NOT NULL, name TEXT NOT NULL,
 expenses(id TEXT PK, group_id TEXT NOT NULL, name TEXT NOT NULL, amount REAL, date INTEGER NOT NULL,
          category_id TEXT NOT NULL, paid_by_id TEXT NOT NULL,
          location_latitude REAL, location_longitude REAL, location_name TEXT, note TEXT,
+         created_by_device_id TEXT, created_by_device_name TEXT, created_by_user_name TEXT,
+         updated_by_device_id TEXT, updated_by_device_name TEXT, updated_by_user_name TEXT,
          FK group_id -> groups CASCADE, FK category_id -> categories, FK paid_by_id -> participants)
 
 attachments(id INTEGER PK AUTOINCREMENT, expense_id TEXT NOT NULL, file_path TEXT NOT NULL,
@@ -43,8 +45,15 @@ sync_log(id INTEGER PK AUTOINCREMENT, peer_id TEXT NOT NULL, channel TEXT NOT NU
          synced_at INTEGER NOT NULL, delta_sent INTEGER DEFAULT 0, delta_recv INTEGER DEFAULT 0)
 
 -- Paired devices (schema v4) — QR-paired devices trusted for automatic LAN sync
-paired_devices(device_id TEXT PK, device_name TEXT NOT NULL, platform TEXT, paired_at INTEGER NOT NULL)
+paired_devices(device_id TEXT PK, device_name TEXT NOT NULL, platform TEXT, paired_at INTEGER NOT NULL,
+               public_key TEXT)
+
+-- Per-group pairing grants (schema v5) — which paired device may sync which group
+paired_device_groups(device_id TEXT NOT NULL, group_id TEXT NOT NULL, granted_at INTEGER NOT NULL,
+                      PRIMARY KEY (device_id, group_id))
 ```
+
+**Schema v6** adds the six `created_by_*`/`updated_by_*` columns on `expenses` above — a snapshot (device id, device name, personal "name" setting) of who created the expense and who last modified it, taken at save time by `ExpenseGroupStorageV2.addExpenseToGroup`/`updateExpenseToGroup` (see `ExpenseAuthor`, `packages/caravella_core/lib/model/expense_author.dart`). Nullable and never backfilled — pre-v6 rows simply have no attribution history. `createdBy` is immutable once set (editing an expense preserves it and only re-stamps `updatedBy`).
 
 Indexes: `idx_groups_timestamp(timestamp DESC)`, `idx_groups_pinned(pinned, archived)`, `idx_participants_group`, `idx_categories_group`, `idx_expenses_group`, `idx_expenses_date(date DESC)`, `idx_groups_updated_at`, `idx_groups_deleted`.
 

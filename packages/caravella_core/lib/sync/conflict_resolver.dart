@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import 'package:caravella_core/data/sqlite_expense_group_repository.dart';
+import 'package:caravella_core/data/sqlite_group_mapper.dart';
 import 'package:caravella_core/model/expense_group.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/delta_builder.dart';
@@ -333,20 +334,12 @@ class ConflictResolver {
     }
 
     // Re-insert expenses + attachments
+    const mapper = SqliteGroupMapper();
     for (final expense in group.expenses) {
-      await txn.insert(SqliteExpenseGroupRepository.tableExpenses, {
-        'id': expense.id,
-        'group_id': group.id,
-        'name': expense.name,
-        'amount': expense.amount,
-        'date': expense.date.millisecondsSinceEpoch,
-        'category_id': expense.category.id,
-        'paid_by_id': expense.paidBy.id,
-        'note': expense.note,
-        'location_latitude': expense.location?.latitude,
-        'location_longitude': expense.location?.longitude,
-        'location_name': expense.location?.name,
-      });
+      await txn.insert(
+        SqliteExpenseGroupRepository.tableExpenses,
+        mapper.expenseToMap(expense, group.id),
+      );
 
       for (final attachment in expense.attachments) {
         await txn.insert(SqliteExpenseGroupRepository.tableAttachments, {

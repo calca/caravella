@@ -6,6 +6,7 @@ export 'config/app_config.dart';
 export 'config/app_icons.dart';
 
 // Data Models
+export 'model/expense_author.dart';
 export 'model/expense_category.dart';
 export 'model/expense_details.dart';
 export 'model/expense_group.dart';

@@ -62,6 +62,12 @@ Future<void> createSqliteSchema(Database db) async {
       location_longitude REAL,
       location_name TEXT,
       note TEXT,
+      created_by_device_id TEXT,
+      created_by_device_name TEXT,
+      created_by_user_name TEXT,
+      updated_by_device_id TEXT,
+      updated_by_device_name TEXT,
+      updated_by_user_name TEXT,
       FOREIGN KEY (group_id) REFERENCES $kTableGroups (id) ON DELETE CASCADE,
       FOREIGN KEY (category_id) REFERENCES $kTableCategories (id),
       FOREIGN KEY (paid_by_id) REFERENCES $kTableParticipants (id)

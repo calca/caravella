@@ -25,7 +25,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 5;
+  static const int _databaseVersion = 6;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -212,6 +212,40 @@ class SqliteExpenseGroupRepository
 
       LoggerService.info(
         'Database migration to v5 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 6) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v6',
+        name: 'storage.sqlite',
+      );
+
+      // Per-expense authorship snapshots: which device/user created the
+      // expense, and which last modified it. Nullable — existing rows have
+      // no history to backfill.
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN created_by_device_id TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN created_by_device_name TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN created_by_user_name TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN updated_by_device_id TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN updated_by_device_name TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN updated_by_user_name TEXT',
+      );
+
+      LoggerService.info(
+        'Database migration to v6 complete',
         name: 'storage.sqlite',
       );
     }

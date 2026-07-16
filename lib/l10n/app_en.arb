@@ -319,6 +319,8 @@
   "export_csv_error": "Error exporting expenses",
   "expense_name": "Description",
   "paid_by": "Paid by",
+  "added_by": "Added by",
+  "edited_by": "Edited by",
   "expense_added_success": "Expense added",
   "expense_updated_success": "Expense updated",
   "data_refreshing": "Refreshing…",

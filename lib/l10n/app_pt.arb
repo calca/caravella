@@ -678,6 +678,8 @@
   ,"ofx_saved_in": "OFX salvo em: {path}"
   ,"owes_to": " deve "
   ,"paid_by": "Pago por"
+  ,"added_by": "Adicionado por"
+  ,"edited_by": "Editado por"
   ,"participant_name_hint": "Insira o nome do participante"
   ,"participant_name_semantics": "Participante: {name}"
   ,"participants": "Participantes"

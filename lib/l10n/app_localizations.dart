@@ -1700,6 +1700,18 @@ abstract class AppLocalizations {
   /// **'Paid by'**
   String get paid_by;
 
+  /// No description provided for @added_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Added by'**
+  String get added_by;
+
+  /// No description provided for @edited_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited by'**
+  String get edited_by;
+
   /// No description provided for @expense_added_success.
   ///
   /// In en, this message translates to:

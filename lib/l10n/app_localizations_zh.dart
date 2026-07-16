@@ -834,6 +834,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paid_by => '付款人';
 
   @override
+  String get added_by => '添加者';
+
+  @override
+  String get edited_by => '编辑者';
+
+  @override
   String get expense_added_success => '已添加支出';
 
   @override

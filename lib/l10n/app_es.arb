@@ -299,6 +299,8 @@
   "export_csv_error": "Error exportando gastos",
   "expense_name": "Descripción",
   "paid_by": "Pagado por",
+  "added_by": "Añadido por",
+  "edited_by": "Editado por",
   "expense_added_success": "Gasto agregado",
   "expense_updated_success": "Gasto actualizado",
   "data_refreshing": "Actualizando…",

@@ -851,6 +851,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get paid_by => 'Pagato da';
 
   @override
+  String get added_by => 'Aggiunto da';
+
+  @override
+  String get edited_by => 'Modificato da';
+
+  @override
   String get expense_added_success => 'Spesa aggiunta';
 
   @override
