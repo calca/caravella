@@ -1,3 +1,4 @@
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -122,21 +123,11 @@ class PhotoPreviewSheet extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Padding(
+    return CaravellaBottomSheetScaffold(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Drag handle
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 16),
           // Photo preview
           ClipRRect(
             borderRadius: BorderRadius.circular(12),

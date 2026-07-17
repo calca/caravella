@@ -183,7 +183,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
 
     if (trips.isEmpty) {
-      return ExpsenseGroupEmptyStates(
+      return ExpenseGroupEmptyStates(
         searchQuery: '',
         periodFilter: tabType,
         onTripAdded: () async {

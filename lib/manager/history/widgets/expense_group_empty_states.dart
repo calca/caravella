@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-class ExpsenseGroupEmptyStates extends StatelessWidget {
+class ExpenseGroupEmptyStates extends StatelessWidget {
   final String searchQuery;
   final String periodFilter;
   final VoidCallback onTripAdded;
 
-  const ExpsenseGroupEmptyStates({
+  const ExpenseGroupEmptyStates({
     super.key,
     required this.searchQuery,
     required this.periodFilter,

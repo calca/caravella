@@ -1,3 +1,4 @@
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../navigation_helpers.dart';
@@ -18,44 +19,25 @@ class NewGroupCard extends StatelessWidget {
     this.selectionProgress = 0.0,
   });
 
-  Color _getSelectedColor(bool isDarkMode) {
-    return theme.colorScheme.surfaceDim;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = theme.brightness == Brightness.dark;
-    final selectedColor = _getSelectedColor(isDarkMode);
-    final defaultBackgroundColor = theme.colorScheme.surface;
-
     // Interpola tra il colore di default e quello selezionato
     final backgroundColor = Color.lerp(
-      defaultBackgroundColor,
-      selectedColor,
+      theme.colorScheme.surface,
+      theme.colorScheme.surfaceDim,
       selectionProgress * 0.3, // 30% di intensità massima
     );
 
-    return Container(
+    return BaseCard(
       margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
-      child: Material(
-        color: backgroundColor ?? theme.colorScheme.surfaceContainer,
-        child: InkWell(
-          onTap: () async {
-            await NavigationHelpers.openGroupCreationWithCallback(
-              context,
-              onGroupAdded: onGroupAdded,
-            );
-          },
-          splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-          highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: _buildNewGroupCardContent(),
-          ),
-        ),
-      ),
+      backgroundColor: backgroundColor,
+      onTap: () async {
+        await NavigationHelpers.openGroupCreationWithCallback(
+          context,
+          onGroupAdded: onGroupAdded,
+        );
+      },
+      child: _buildNewGroupCardContent(),
     );
   }
 

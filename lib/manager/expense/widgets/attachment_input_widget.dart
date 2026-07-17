@@ -226,7 +226,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
     return showDialog<CameraMediaType>(
       context: context,
       barrierDismissible: true,
-      builder: (ctx) => AlertDialog(
+      builder: (ctx) => Material3Dialog(
         title: Text(loc.attachment_source),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -244,9 +244,10 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
           ],
         ),
         actions: [
-          TextButton(
+          Material3DialogActions.cancel(
+            ctx,
+            loc.cancel,
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(loc.cancel),
           ),
         ],
       ),

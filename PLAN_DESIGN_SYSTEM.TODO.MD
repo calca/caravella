@@ -42,17 +42,17 @@ Nuovi componenti condivisi da creare (pattern oggi duplicati tra flow, vedi Fase
 
 ## Fase 2 — Eliminare duplicazioni / reimplementazioni
 
-- [ ] **2.1 Empty states**: unificare 5 implementazioni parallele sul nuovo `EmptyStateView` (Fase 1):
+- [ ] **2.1 Empty states**: unificare 5 implementazioni parallele sul nuovo `EmptyStateView` (Fase 1, non ancora creato — dipendenza bloccante, quindi l'unificazione resta qui in sospeso):
   - `lib/home/cards/widgets/group_card_empty_state.dart` → `GroupCardEmptyState`
   - `lib/manager/details/widgets/empty_expense_state.dart` → `EmptyExpenseState`
-  - `lib/manager/history/widgets/expense_group_empty_states.dart` → `ExpsenseGroupEmptyStates` (**nota**: typo nel nome classe, correggere in `ExpenseGroupEmptyStates` nella stessa modifica)
+  - [x] `lib/manager/history/widgets/expense_group_empty_states.dart` → **typo corretto**: `ExpsenseGroupEmptyStates` → `ExpenseGroupEmptyStates` (aggiornato anche l'unico call site, `lib/manager/history/expenses_history_page.dart:186`). L'unificazione su `EmptyStateView` resta da fare.
   - `lib/manager/details/widgets/expense_search_empty_state.dart` → `EmptySearchState`
   - `lib/home/search/group_search_page.dart:169` → `_buildEmptyState(...)` inline, quasi identico a `EmptySearchState` (stesso `Center > Padding(32) > Column > Icon(size:48, alpha 0.4) > Text(alpha 0.6)`) — copiato invece di riusato, priorità alta per la fix.
 - [ ] **2.2 Card che reimplementano lo stile `BaseCard`**:
-  - `lib/manager/details/widgets/stat_card.dart` (`StatCard`, `InfoCard`) — decorazione quasi identica a `BaseCard` (radius 16, outline alpha diverso: 0.2 vs 0.12). Rifattorizzare su `BaseCard` o estendere `BaseCard` con le varianti necessarie.
-  - `lib/home/cards/widgets/new_group_card.dart:38-59` (`NewGroupCard`) — reimplementa esattamente il ramo tappable di `BaseCard` (stessi `splashColor`/`highlightColor`). Sostituire con `BaseCard`.
-- [ ] **2.3 Bottom sheet**: `lib/manager/group/widgets/unsplash_photo_widgets.dart:115-138` (`PhotoPreviewSheet`) reinventa manualmente l'handle bar invece di usare `GroupBottomSheetScaffold(showHandle: true)`. È l'unico caso residuo su 21 bottom sheet — fix isolata e veloce.
-- [ ] **2.4 Dialog**: `lib/manager/expense/widgets/attachment_input_widget.dart:226-253` (`_showCameraMediaTypePicker`) usa `AlertDialog` raw invece di `Material3Dialog`/`Material3Dialogs`. Unico caso residuo su 10 — fix isolata.
+  - `lib/manager/details/widgets/stat_card.dart` (`StatCard`, `InfoCard`) — **non rifattorizzato**: hanno un bordo *sempre* presente ad alpha 0.2, mentre `BaseCard` di default non disegna bordo (lo fa solo con `isFlat: false`, e ad alpha 0.12). Migrarle su `BaseCard` oggi cambierebbe visibilmente lo stile (bordo più tenue) o richiederebbe estendere l'API di `BaseCard` con un parametro di alpha del bordo — rimandato a Fase 3 (dove si sceglie l'alpha canonico), per non introdurre un cambiamento visivo silenzioso. Sono comunque single-flow (solo `manager/details/pages/tabs/*`), priorità più bassa rispetto ai candidati di Fase 1.
+  - [x] `lib/home/cards/widgets/new_group_card.dart` (`NewGroupCard`) — rifattorizzato su `BaseCard` (stesso `backgroundColor` via `Color.lerp`, stesso `margin`, stesso `onTap`): comportamento verificato identico, nessun parametro nuovo servito. `flutter analyze` pulito.
+- [x] **2.3 Bottom sheet**: `lib/manager/group/widgets/unsplash_photo_widgets.dart` (`PhotoPreviewSheet`) migrato da handle-bar manuale a `CaravellaBottomSheetScaffold` (che ora fornisce anche l'handle). Era l'unico caso residuo su 21 bottom sheet.
+- [x] **2.4 Dialog**: `lib/manager/expense/widgets/attachment_input_widget.dart` (`_showCameraMediaTypePicker`) migrato da `AlertDialog` raw a `Material3Dialog` + `Material3DialogActions.cancel`. Era l'unico caso residuo su 10 — verificato anche da `validate_accessibility.sh`, che ora riporta zero occorrenze.
 - [ ] **2.5 AppBar**: dopo aver introdotto `SearchAppBar`/`FlatAppBar` (Fase 1), migrare i 16 file con `AppBar(` raw dove applicabile. Nota: `expense_group_detail_page.dart:499` usa `SliverAppBar`, legittimamente diverso — non forzare la migrazione lì.
 - [ ] **2.6 FAB**: `lib/manager/expense/pages/place_search_page.dart:132` è un FAB semanticamente diverso (icona `my_location`, non "add"). Non serve fix ora — monitorare se il pattern si ripete altrove prima di creare un secondo componente FAB condiviso.
 
