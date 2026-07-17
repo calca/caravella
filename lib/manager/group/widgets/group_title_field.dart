@@ -73,16 +73,22 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
       );
       _syncing = false;
     }
-    return TextField(
-      controller: _controller,
-      style: widget.style ?? FormTheme.getFieldTextStyle(context),
-      textAlign: widget.textAlign,
-      textInputAction: TextInputAction.next,
-      autofocus: false,
-      decoration:
-          widget.decoration ??
-          FormTheme.getBorderlessDecoration(hintText: widget.hintText),
-      onSubmitted: widget.onSubmitted != null ? (_) => widget.onSubmitted!() : null,
+    return Semantics(
+      textField: true,
+      label: widget.hintText,
+      child: TextField(
+        controller: _controller,
+        style: widget.style ?? FormTheme.getFieldTextStyle(context),
+        textAlign: widget.textAlign,
+        textInputAction: TextInputAction.next,
+        autofocus: false,
+        decoration:
+            widget.decoration ??
+            FormTheme.getBorderlessDecoration(hintText: widget.hintText),
+        onSubmitted: widget.onSubmitted != null
+            ? (_) => widget.onSubmitted!()
+            : null,
+      ),
     );
   }
 }

@@ -87,14 +87,13 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                   const SizedBox(height: 32),
 
                   // Group name input with type icon
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      GroupNameWithIconField(
+                  Consumer<GroupFormState>(
+                    builder: (context, state, child) {
+                      final showError = state.title.isEmpty;
+                      return GroupNameWithIconField(
                         onIconTap: () => _showGroupTypeSelector(context),
                         onSubmitted: () {
                           // Proceed to next step if title is valid
-                          final state = context.read<GroupFormState>();
                           if (state.title.trim().isNotEmpty) {
                             final wizardState = context.read<WizardState>();
                             wizardState.nextStep();
@@ -103,37 +102,12 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                         hintText: gloc.enter_title,
                         textAlign: TextAlign.start,
                         textStyle: titleFieldStyle,
-                        decoration: titleFieldDecoration,
-                      ),
-                      // Error message
-                      Consumer<GroupFormState>(
-                        builder: (context, state, child) {
-                          return state.title.isEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.info_outline,
-                                        size: 14,
-                                        color: theme.colorScheme.error,
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        gloc.enter_title,
-                                        style: theme.textTheme.bodySmall
-                                            ?.copyWith(
-                                              color: theme.colorScheme.error,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : const SizedBox.shrink();
-                        },
-                      ),
-                    ],
+                        decoration: titleFieldDecoration.copyWith(
+                          errorText: showError ? gloc.enter_title : null,
+                          errorMaxLines: 2,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

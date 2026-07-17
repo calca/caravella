@@ -88,27 +88,32 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
             // Input field
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
-              child: TextField(
-                controller: _controller,
-                decoration: InputDecoration(
-                  hintText: gloc.wizard_user_name_hint,
-                  isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12.0,
-                    horizontal: 16.0,
+              child: Semantics(
+                textField: true,
+                label: gloc.wizard_user_name_label,
+                child: TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    labelText: gloc.wizard_user_name_label,
+                    hintText: gloc.wizard_user_name_hint,
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12.0,
+                      horizontal: 16.0,
+                    ),
                   ),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textInputAction: TextInputAction.next,
+                  autofocus: false,
+                  textAlign: TextAlign.center,
+                  onSubmitted: (_) {
+                    // User name step is optional, always proceed to next step
+                    final wizardState = context.read<WizardState>();
+                    wizardState.nextStep();
+                  },
                 ),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w400,
-                ),
-                textInputAction: TextInputAction.next,
-                autofocus: false,
-                textAlign: TextAlign.center,
-                onSubmitted: (_) {
-                  // User name step is optional, always proceed to next step
-                  final wizardState = context.read<WizardState>();
-                  wizardState.nextStep();
-                },
               ),
             ),
 

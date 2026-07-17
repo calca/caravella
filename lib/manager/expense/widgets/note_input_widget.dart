@@ -24,18 +24,25 @@ class NoteInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final field = TextFormField(
-      controller: controller,
-      focusNode: focusNode,
-      enabled: enabled,
-      maxLines: null, // auto-grow illimitato
-      minLines: 6, // minimo 4 righe visibili
-      style: textStyle ?? FormTheme.getMultilineTextStyle(context),
-      decoration: FormTheme.getMultilineDecoration(hintText: gloc.note_hint),
-      textInputAction: textInputAction ?? TextInputAction.newline,
-      onFieldSubmitted: onFieldSubmitted != null
-          ? (_) => onFieldSubmitted!()
-          : null,
+    final field = Semantics(
+      textField: true,
+      label: gloc.note,
+      child: TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        enabled: enabled,
+        maxLines: null, // auto-grow illimitato
+        minLines: 6, // minimo 4 righe visibili
+        style: textStyle ?? FormTheme.getMultilineTextStyle(context),
+        decoration: FormTheme.getMultilineDecoration(
+          hintText: gloc.note_hint,
+          labelText: gloc.note,
+        ),
+        textInputAction: textInputAction ?? TextInputAction.newline,
+        onFieldSubmitted: onFieldSubmitted != null
+            ? (_) => onFieldSubmitted!()
+            : null,
+      ),
     );
 
     return IconLeadingField(
