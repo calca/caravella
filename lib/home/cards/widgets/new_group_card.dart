@@ -37,11 +37,11 @@ class NewGroupCard extends StatelessWidget {
           onGroupAdded: onGroupAdded,
         );
       },
-      child: _buildNewGroupCardContent(),
+      child: _buildNewGroupCardContent(context),
     );
   }
 
-  Widget _buildNewGroupCardContent() {
+  Widget _buildNewGroupCardContent(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,9 +64,7 @@ class NewGroupCard extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           localizations.tap_to_create,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          style: AppTextStyles.subtle(context),
           textAlign: TextAlign.center,
         ),
       ],

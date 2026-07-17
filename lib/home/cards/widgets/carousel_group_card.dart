@@ -83,8 +83,8 @@ class CarouselGroupCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isSynced == true
-                            ? Colors.green
-                            : Colors.amber,
+                            ? theme.colorScheme.success
+                            : theme.colorScheme.warning,
                         border: Border.all(
                           color: theme.colorScheme.surface,
                           width: 2,

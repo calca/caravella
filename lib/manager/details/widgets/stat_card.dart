@@ -1,4 +1,4 @@
-import 'package:caravella_core_ui/widgets/currency_display.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 
 /// Small KPI card consistent with app dark surfaces.
@@ -52,14 +52,9 @@ class StatCard extends StatelessWidget {
       label: semanticLabel,
       container: true,
       child: ExcludeSemantics(
-        child: Container(
-          decoration: BoxDecoration(
-            color: surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2),
-            ),
-          ),
+        child: BaseCard(
+          isFlat: false,
+          backgroundColor: surface,
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
           child: Align(
             alignment: Alignment.centerLeft,
@@ -83,9 +78,7 @@ class StatCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 title,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: AppTextStyles.listItemStrong(context),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -105,9 +98,7 @@ class StatCard extends StatelessWidget {
                       ] else ...[
                         Text(
                           title,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: AppTextStyles.listItemStrong(context),
                         ),
                         const SizedBox(height: 6),
                         CurrencyDisplay(
@@ -220,14 +211,9 @@ class InfoCard extends StatelessWidget {
       label: semanticLabel,
       container: true,
       child: ExcludeSemantics(
-        child: Container(
-          decoration: BoxDecoration(
-            color: surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2),
-            ),
-          ),
+        child: BaseCard(
+          isFlat: false,
+          backgroundColor: surface,
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -238,9 +224,7 @@ class InfoCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppTextStyles.listItemStrong(context),
                     ),
                   ),
                   if (icon != null)

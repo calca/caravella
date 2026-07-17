@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../pages/group_creation_wizard_page.dart';
 
 class WizardUserNameStep extends StatefulWidget {
@@ -78,9 +79,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
             // Step description
             Text(
               gloc.wizard_user_name_description,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              style: AppTextStyles.subtle(context),
               textAlign: TextAlign.center,
             ),
 

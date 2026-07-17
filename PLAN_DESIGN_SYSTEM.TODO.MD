@@ -48,8 +48,8 @@ Nuovi componenti condivisi (pattern oggi duplicati tra flow, vedi Fase 2):
   - [x] `lib/manager/history/widgets/expense_group_empty_states.dart` → **typo corretto**: `ExpsenseGroupEmptyStates` → `ExpenseGroupEmptyStates` (aggiornato anche l'unico call site, `lib/manager/history/expenses_history_page.dart:186`). **Non unificato** su `EmptyStateView`: il suo `_buildSimpleEmptyState` ha valori di stile diversi (icon size 64 senza alpha, non 48 con alpha 0.4) — vedi nota in Fase 1.
   - `lib/home/cards/widgets/group_card_empty_state.dart` (`GroupCardEmptyState`) — **non unificabile**: pattern animato con emoji casuale e bold-text parsing, non "icon+message+hint". Lasciato invariato.
   - `lib/manager/details/widgets/empty_expense_state.dart` (`EmptyExpenseState`) — wrappa `GroupCardEmptyState` + CTA, stesso motivo di sopra. Lasciato invariato.
-- [ ] **2.2 Card che reimplementano lo stile `BaseCard`**:
-  - `lib/manager/details/widgets/stat_card.dart` (`StatCard`, `InfoCard`) — **non rifattorizzato**: hanno un bordo *sempre* presente ad alpha 0.2, mentre `BaseCard` di default non disegna bordo (lo fa solo con `isFlat: false`, e ad alpha 0.12). Migrarle su `BaseCard` oggi cambierebbe visibilmente lo stile (bordo più tenue) o richiederebbe estendere l'API di `BaseCard` con un parametro di alpha del bordo — rimandato a Fase 3 (dove si sceglie l'alpha canonico), per non introdurre un cambiamento visivo silenzioso. Sono comunque single-flow (solo `manager/details/pages/tabs/*`), priorità più bassa rispetto ai candidati di Fase 1.
+- [x] **2.2 Card che reimplementano lo stile `BaseCard`**:
+  - [x] `lib/manager/details/widgets/stat_card.dart` (`StatCard`, `InfoCard`) — **rifattorizzate in Fase 3** (vedi 3.2bis sotto): l'alpha 0.2 del bordo era un'anomalia isolata (l'unico altro punto dell'app che disegna un bordo su `BaseCard`, `home/cards/widgets/group_card.dart`, usa già l'alpha 0.12 di default via `isFlat: false`). Deciso 0.12 come canonico e migrate entrambe le classi su `BaseCard(isFlat: false, backgroundColor: ..., padding: ...)`, eliminando la `Container`/`BoxDecoration` duplicata. Bordo leggermente più tenue rispetto a prima — cambiamento visivo intenzionale e minimo, per coerenza col resto dell'app.
   - [x] `lib/home/cards/widgets/new_group_card.dart` (`NewGroupCard`) — rifattorizzato su `BaseCard` (stesso `backgroundColor` via `Color.lerp`, stesso `margin`, stesso `onTap`): comportamento verificato identico, nessun parametro nuovo servito. `flutter analyze` pulito.
 - [x] **2.3 Bottom sheet**: `lib/manager/group/widgets/unsplash_photo_widgets.dart` (`PhotoPreviewSheet`) migrato da handle-bar manuale a `CaravellaBottomSheetScaffold` (che ora fornisce anche l'handle). Era l'unico caso residuo su 21 bottom sheet.
 - [x] **2.4 Dialog**: `lib/manager/expense/widgets/attachment_input_widget.dart` (`_showCameraMediaTypePicker`) migrato da `AlertDialog` raw a `Material3Dialog` + `Material3DialogActions.cancel`. Era l'unico caso residuo su 10 — verificato anche da `validate_accessibility.sh`, che ora riporta zero occorrenze.
@@ -60,12 +60,17 @@ Nuovi componenti condivisi (pattern oggi duplicati tra flow, vedi Fase 2):
 
 ## Fase 3 — Uniformità del Design System
 
-- [ ] **3.1 `AppTextStyles`**: solo 2 usi in tutto `lib/` a fronte di decine di `TextStyle(` inline sparsi nelle pagine. Fare un audit mirato delle pagine più visibili (home, dettaglio gruppo, form spesa) e sostituire gli stili inline con gli helper esistenti (`sectionTitle`, `listItem`, `listItemStrong`, `subtle`), estendendo il set di helper se emergono pattern ricorrenti non coperti.
-- [ ] **3.2 Colori semantici di stato**: unificare i due sistemi di colore per lo stato "sincronizzato/in attesa":
-  - `lib/sync/settings_sync_badge.dart:18-19` → `greenColor = Color(0xFF2E7D32)`, `ochreColor = Color(0xFFB8860B)` hardcoded, non theme-aware.
-  - `lib/home/cards/widgets/carousel_group_card.dart:86-87` → `Colors.green`/`Colors.amber` per lo stesso concetto.
-  - Sostituire entrambi con i colori semantici introdotti in Fase 0 (`CaravellaThemes.success`/`.warning`), verificati per contrasto in light e dark.
-- [ ] **3.3 `CaravellaAppBar` senza `title`**: la scelta di design attuale (header "senza titolo") è legittima per schermate home-like, ma non è documentata come tale — aggiungere un commento/doc nel widget e in `docs/` che chiarisca quando usare `CaravellaAppBar` vs le nuove `FlatAppBar`/`SearchAppBar` (Fase 1), per evitare che si ripeta la confusione vista nell'analisi.
+- [x] **3.1 `AppTextStyles`**: fatto un audit *esatto* (non euristico) su tutto `lib/`, cercando pattern multilinea byte-identici alle 4 definizioni di `AppTextStyles` con uno script perl, per azzerare il rischio di derive visive. Trovati e migrati:
+  - 3 occorrenze di `bodyMedium?.copyWith(fontWeight: FontWeight.w600)` in `lib/manager/details/widgets/stat_card.dart` → `AppTextStyles.listItemStrong(context)`.
+  - 6 occorrenze di `bodyMedium?.copyWith(color: ...onSurfaceVariant)` → `AppTextStyles.subtle(context)`, in `lib/manager/group/wizard/wizard_steps/wizard_user_name_step.dart`, `wizard_completion_step.dart`, `lib/manager/group/pages/unsplash_search_page.dart`, `lib/home/cards/widgets/new_group_card.dart` (richiesto passare `context` a `_buildNewGroupCardContent`, prima non lo prendeva), `lib/home/cards/widgets/empty_groups_state.dart`.
+  - **Escluso un falso positivo**: `lib/settings/pages/appearance_settings_page.dart:134-135` usa un colore condizionale (`selected ? onSurface : onSurfaceVariant`), non equivalente a `subtle` (sempre `onSurfaceVariant`) — lasciato invariato.
+  - **Non esteso il set di helper**: nessun pattern ricorrente-ma-non-coperto è emerso abbastanza spesso da giustificare un nuovo helper; l'audit sui match esatti tiene comunque la porta aperta per futuri pattern via analisi euristica (più lenta, più rischiosa, non fatta qui).
+- [x] **3.2 Colori semantici di stato**: entrambi i sistemi di colore migrati su `CaravellaThemes.success`/`.warning` (Fase 0):
+  - `lib/sync/settings_sync_badge.dart` → rimossi `greenColor`/`ochreColor` hardcoded dal mixin, sostituiti con `colorScheme.success`/`.warning` in entrambi i punti di utilizzo (`SettingsSyncBadge`, `SyncStatusIcon`).
+  - `lib/home/cards/widgets/carousel_group_card.dart:86-87` → `Colors.green`/`Colors.amber` sostituiti con `theme.colorScheme.success`/`.warning`.
+  - **Nota emersa, non risolta (fuori scope Fase 1-3)**: lo stesso file (`carousel_group_card.dart:78-79`) ha una stringa `Semantics(label: ...)` hardcoded in inglese (`'Shared group, synced'`/`'Shared group, not synced'`) invece di passare per `AppLocalizations` — è debito di Fase 4.6, aggiunto lì.
+- [x] **3.3 `CaravellaAppBar` senza `title`**: aggiunto un doc comment sulla classe (`packages/caravella_core_ui/lib/widgets/caravella_app_bar.dart`) che spiega l'intento di design e rimanda a `SearchAppBar` per i casi di ricerca. Aggiornato anche `docs/PACKAGE_CARAVELLA_CORE_UI.md` (era già stale su più fronti — nome vecchio `GroupBottomSheetScaffold`, mancavano tutti i widget promossi in Fase 1/2: `SettingsCard`, `SettingsSection`, `ParticipantAvatar`, `ExpenseGroupAvatar`, `ExpenseAmountCard`, `EmptyStateView`, `SearchAppBar`, `AppDimens`, `CaravellaSemanticColors`, il supporto `labelText` di `FormTheme` — tutti aggiunti alla tabella/descrizione).
+- [x] **3.4 `form_theme.dart`**: aggiunto `labelText` opzionale a `getStandardDecoration`, `getMultilineDecoration`, `getBorderlessDecoration` (le 3 factory general-purpose). **Non aggiunto** a `getBorderlessAmountDecoration` (pensata per un numero enorme senza bordo, un `labelText` persistente romperebbe il layout) né a `getSearchPillDecoration` (campo di ricerca compatto, stesso motivo) — per queste due l'hint-only resta una scelta di design, non un buco. La migrazione dei call site esistenti (Fase 4.4: `amount_input_widget.dart`, `note_input_widget.dart`, `group_title_field.dart`, i due step del wizard) non è stata fatta qui, resta pianificata in Fase 4.
 - [ ] **3.4 `form_theme.dart`**: nessuna delle 5 factory di `InputDecoration` (`getStandardDecoration`, `getMultilineDecoration`, `getBorderlessDecoration`, `getBorderlessAmountDecoration`, `getSearchPillDecoration`) accetta `labelText` — solo `hintText`. Estendere ciascuna factory con un parametro `labelText` opzionale (vedi anche Fase 4.4, è anche un requisito WCAG).
 
 ---
@@ -116,6 +121,7 @@ Nuovi componenti condivisi (pattern oggi duplicati tra flow, vedi Fase 2):
 ### 4.6 Localizzazione delle stringhe di accessibilità
 - [ ] `lib/manager/expense/widgets/category_dialog.dart:63,72` — sostituire `'${gloc.cancel} dialog'` / `'${gloc.add} category'` con chiavi `AppLocalizations` dedicate e completamente tradotte.
 - [ ] `lib/manager/expense/location/widgets/compact_location_indicator.dart:52` — spostare `'Double tap to cancel location retrieval'` (hardcoded EN) in `AppLocalizations`.
+- [ ] `lib/home/cards/widgets/carousel_group_card.dart:78-79` (emerso durante la Fase 3.2) — `Semantics(label: isSynced == true ? 'Shared group, synced' : 'Shared group, not synced')` hardcoded in inglese, mai passato da `AppLocalizations`.
 - [ ] Fare un secondo passaggio di ricerca su tutti i `label:`/`hint:`/`semanticLabel:` del repo per individuare eventuali altri casi non emersi nell'analisi iniziale (l'audit ha coperto i pattern più comuni ma non è exhaustive).
 
 ### 4.7 Test e gate CI
@@ -128,10 +134,12 @@ Nuovi componenti condivisi (pattern oggi duplicati tra flow, vedi Fase 2):
 
 ## Ordine di esecuzione consigliato
 
-1. **Fase 0** (fondamenta) — sblocca tutto il resto, basso rischio, alto valore.
-2. **Fase 2** (fix isolate a basso rischio: bottom sheet, dialog, empty-state duplicati, typo `ExpsenseGroupEmptyStates`) — quick win, nessuna nuova API.
-3. **Fase 1** (promozione componenti in core_ui) — richiede più coordinamento (import path, dipendenze da provider) ma sblocca la Fase 2 rimanente (AppBar) e riduce superficie per la Fase 4.
-4. **Fase 3** (uniformità DS: colori semantici, `AppTextStyles`, `form_theme` labelText) — propedeutica alla Fase 4.
-5. **Fase 4** (accessibilità WCAG 2.2) — la più corposa, va fatta widget condiviso per widget condiviso (core_ui) prima, poi a cascata sui call site in `lib/`.
+1. ~~**Fase 0** (fondamenta)~~ — **completata**.
+2. ~~**Fase 2** (fix isolate a basso rischio)~~ — **completata** (2.1 parzialmente: 2 empty-state su 5 unificate, le altre 3 deliberatamente escluse per pattern diverso; 2.6 nessuna azione necessaria).
+3. ~~**Fase 1** (promozione componenti in core_ui)~~ — **completata**, tranne `GroupCard` (valutato, non promosso: richiede inversione di controllo sulla navigazione, rimandato come task a sé).
+4. ~~**Fase 3** (uniformità DS)~~ — **completata**.
+5. **Fase 4** (accessibilità WCAG 2.2) — **prossimo passo**, non ancora iniziata. La più corposa, va fatta widget condiviso per widget condiviso (core_ui) prima, poi a cascata sui call site in `lib/`.
 
-Aggiornare `CHANGELOG.md [Unreleased]` per ogni cambiamento visibile, come da convenzione del progetto, e rieseguire `flutter analyze` + `flutter test` (inclusi i test di accessibilità mirati) dopo ogni fase.
+Verificato dopo ogni fase: `flutter analyze` pulito, `flutter test` (704 test, tutti verdi). Nessuna voce di cambiamento in `CHANGELOG.md`: tutte le modifiche fin qui sono interne (rename, promozione componenti, refactor a parità di comportamento) senza impatto user-visible.
+
+**Verifica visiva manuale**: tentata sull'emulatore Android (`flutter run --flavor dev`), confermata solo parzialmente. La home page si è renderizzata correttamente (card gruppo, pill "Condiviso", empty-state animato), ma la navigazione a Impostazioni/Ricerca — le schermate con più modifiche di questa sessione (`SearchAppBar`, `CaravellaAppBar`, `StatCard`) — è stata bloccata da ANR ricorrenti del servizio `GeolocatorLocationService`. Confermato **pre-esistente e non causato da queste modifiche**: file di trace ANR (`/data/anr/`) presenti anche da sessioni precedenti allo stesso giorno (09:49, 14:04), prima di qualunque modifica di questa conversazione. Verifica UI completa quindi non effettuata oltre la home; solo `flutter analyze`/`flutter test` fanno da rete di sicurezza per le schermate non raggiunte.

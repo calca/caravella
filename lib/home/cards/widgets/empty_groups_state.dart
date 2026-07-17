@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../navigation_helpers.dart';
 import '../../../manager/history/expenses_history_page.dart';
@@ -143,9 +144,7 @@ class _EmptyGroupsStateState extends State<EmptyGroupsState>
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Text(
                   widget.localizations.all_groups_archived_info,
-                  style: widget.theme.textTheme.bodyMedium?.copyWith(
-                    color: widget.theme.colorScheme.onSurfaceVariant,
-                  ),
+                  style: AppTextStyles.subtle(context),
                   textAlign: TextAlign.center,
                 ),
               ),

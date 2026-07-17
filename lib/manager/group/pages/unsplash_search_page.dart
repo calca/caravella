@@ -299,9 +299,7 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
           padding: const EdgeInsets.all(32),
           child: Text(
             loc.unsplash_search_hint,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
+            style: AppTextStyles.subtle(context),
             textAlign: TextAlign.center,
           ),
         ),

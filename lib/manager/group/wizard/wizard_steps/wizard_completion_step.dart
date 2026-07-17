@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../data/group_form_state.dart';
 import '../../../details/pages/expense_group_detail_page.dart';
 
@@ -65,9 +66,7 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
             // Success message
             Text(
               gloc.wizard_congratulations_message(groupName),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              style: AppTextStyles.subtle(context),
               textAlign: TextAlign.center,
             ),
 

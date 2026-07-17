@@ -61,14 +61,20 @@ class FormTheme {
   }
 
   /// Returns standard decoration for form fields that should use theme defaults
+  ///
+  /// [labelText], when provided, gives the field a persistent accessible
+  /// name (WCAG 3.3.2) that survives after the user starts typing, unlike
+  /// [hintText] alone which disappears once the field has content.
   static InputDecoration getStandardDecoration({
     String? hintText,
+    String? labelText,
     Widget? suffixIcon,
     Widget? prefixIcon,
     bool isDense = true,
   }) {
     return InputDecoration(
       hintText: hintText,
+      labelText: labelText,
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
       isDense: isDense,
@@ -78,13 +84,17 @@ class FormTheme {
   }
 
   /// Returns decoration for multiline fields (notes, descriptions)
+  ///
+  /// See [getStandardDecoration] re: [labelText] vs [hintText].
   static InputDecoration getMultilineDecoration({
     String? hintText,
+    String? labelText,
     Widget? suffixIcon,
     Widget? prefixIcon,
   }) {
     return InputDecoration(
       hintText: hintText,
+      labelText: labelText,
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
       isDense: true,
@@ -97,13 +107,17 @@ class FormTheme {
   }
 
   /// Returns decoration for borderless fields (like embedded in custom containers)
+  ///
+  /// See [getStandardDecoration] re: [labelText] vs [hintText].
   static InputDecoration getBorderlessDecoration({
     String? hintText,
+    String? labelText,
     Widget? suffixIcon,
     Widget? prefixIcon,
   }) {
     return InputDecoration(
       hintText: hintText,
+      labelText: labelText,
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
       border: InputBorder.none,

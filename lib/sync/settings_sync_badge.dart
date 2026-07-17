@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 
 import 'bluetooth_sync_factory.dart';
@@ -15,9 +16,6 @@ import 'bluetooth_sync_factory.dart';
 /// before this widget mounted, e.g. app restart, still surfaces) and then
 /// stays live via [SyncOrchestrator.events].
 mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
-  static const greenColor = Color(0xFF2E7D32);
-  static const ochreColor = Color(0xFFB8860B);
-
   SyncOrchestrator get orchestrator;
 
   StreamSubscription<SyncEvent>? _eventSub;
@@ -105,7 +103,8 @@ class _SettingsSyncBadgeState extends State<SettingsSyncBadge>
   Widget build(BuildContext context) {
     if (!loaded || !anyChannelEnabled) return widget.child;
 
-    final ringColor = Theme.of(context).colorScheme.outlineVariant;
+    final colorScheme = Theme.of(context).colorScheme;
+    final ringColor = colorScheme.outlineVariant;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -130,9 +129,7 @@ class _SettingsSyncBadgeState extends State<SettingsSyncBadge>
               height: 8,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: hasError
-                    ? _SyncStatusMixin.ochreColor
-                    : _SyncStatusMixin.greenColor,
+                color: hasError ? colorScheme.warning : colorScheme.success,
               ),
             ),
           ),
@@ -171,8 +168,9 @@ class _SyncStatusIconState extends State<SyncStatusIcon>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final color = loaded && anyChannelEnabled
-        ? (hasError ? _SyncStatusMixin.ochreColor : _SyncStatusMixin.greenColor)
+        ? (hasError ? colorScheme.warning : colorScheme.success)
         : widget.defaultColor;
     return Icon(widget.icon, size: widget.size, color: color);
   }

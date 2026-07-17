@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// Flat, borderless app bar with no title slot — for pages whose heading
+/// lives in the body below (home-like screens, settings pages) rather than
+/// in the app bar itself. `title` is intentionally not a parameter here.
+///
+/// If the page needs a visible title, use a plain `AppBar(title: ...)`
+/// instead. For an inline search field, use [SearchAppBar].
 class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Widget? leading;
