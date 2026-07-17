@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:intl/intl.dart';
@@ -280,55 +279,29 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
     final filteredExpenses = _filteredExpenses;
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final appBarColor = FormTheme.getGmailAppBarSearchBackground(colorScheme);
-    final searchBackgroundColor = appBarColor;
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: appBarColor,
-        foregroundColor: colorScheme.onSurface,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        titleSpacing: 0,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-        ),
-        title: Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: TextField(
-            controller: _searchController,
-            focusNode: _searchFocusNode,
-            autofocus: true,
-            style: Theme.of(context).textTheme.bodyLarge,
-            decoration: FormTheme.getSearchPillDecoration(
-              backgroundColor: searchBackgroundColor,
-              hintText: gloc.search_in_group(widget.groupName),
-              suffixIcon: _searchQuery.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.close_rounded, size: 20),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() => _searchQuery = '');
-                      },
-                    )
-                  : _hasActiveFilters
-                  ? IconButton(
-                      icon: const Icon(Icons.filter_list_off_rounded, size: 20),
-                      onPressed: _clearAllFilters,
-                      tooltip: gloc.clear_filters,
-                    )
-                  : null,
-            ),
-            onChanged: (value) => setState(() => _searchQuery = value),
-            cursorColor: colorScheme.onSurface,
-          ),
-        ),
+      appBar: SearchAppBar(
+        controller: _searchController,
+        focusNode: _searchFocusNode,
+        hintText: gloc.search_in_group(widget.groupName),
+        onChanged: (value) => setState(() => _searchQuery = value),
+        suffixIcon: _searchQuery.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.close_rounded, size: 20),
+                onPressed: () {
+                  _searchController.clear();
+                  setState(() => _searchQuery = '');
+                },
+              )
+            : _hasActiveFilters
+            ? IconButton(
+                icon: const Icon(Icons.filter_list_off_rounded, size: 20),
+                onPressed: _clearAllFilters,
+                tooltip: gloc.clear_filters,
+              )
+            : null,
       ),
       body: Column(
         children: [

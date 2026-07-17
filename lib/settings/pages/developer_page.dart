@@ -98,11 +98,7 @@ class DeveloperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
-        elevation: 0,
-      ),
+      appBar: const CaravellaAppBar(),
       body: ListView(
         padding: EdgeInsets.fromLTRB(
           0,

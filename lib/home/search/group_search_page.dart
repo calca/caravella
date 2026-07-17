@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -103,47 +102,22 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final appBarColor = FormTheme.getGmailAppBarSearchBackground(colorScheme);
-    final searchBackgroundColor = appBarColor;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: appBarColor,
-        foregroundColor: colorScheme.onSurface,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        titleSpacing: 0,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-        ),
-        title: Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: TextField(
-            controller: _searchController,
-            focusNode: _searchFocusNode,
-            autofocus: true,
-            style: Theme.of(context).textTheme.bodyLarge,
-            decoration: FormTheme.getSearchPillDecoration(
-              backgroundColor: searchBackgroundColor,
-              hintText: gloc.search_groups,
-              suffixIcon: _searchQuery.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.close_rounded, size: 20),
-                      onPressed: () {
-                        _searchController.clear();
-                        _onSearchChanged('');
-                      },
-                    )
-                  : null,
-            ),
-            onChanged: _onSearchChanged,
-            cursorColor: colorScheme.onSurface,
-          ),
-        ),
+      appBar: SearchAppBar(
+        controller: _searchController,
+        focusNode: _searchFocusNode,
+        hintText: gloc.search_groups,
+        onChanged: _onSearchChanged,
+        suffixIcon: _searchQuery.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.close_rounded, size: 20),
+                onPressed: () {
+                  _searchController.clear();
+                  _onSearchChanged('');
+                },
+              )
+            : null,
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator.adaptive())

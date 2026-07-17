@@ -22,11 +22,7 @@ class DataBackupPage extends StatelessWidget {
     return ChangeNotifierProvider<AutoBackupNotifier>(
       create: (_) => AutoBackupNotifier(),
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: colorScheme.surface,
-          foregroundColor: colorScheme.onSurface,
-          elevation: 0,
-        ),
+        appBar: const CaravellaAppBar(),
         body: ListView(
           padding: EdgeInsets.fromLTRB(
             0,

@@ -154,7 +154,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: const CaravellaAppBar(),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
