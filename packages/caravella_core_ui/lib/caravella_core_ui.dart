@@ -40,6 +40,7 @@ export 'widgets/charts/weekly_expense_chart.dart';
 export 'map/map.dart';
 
 // Utilities
+export 'utils/contrast.dart';
 export 'utils/debounce.dart';
 export 'widgets/group_background_utils.dart';
 

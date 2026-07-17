@@ -2558,6 +2558,18 @@ abstract class AppLocalizations {
   /// **'Information'**
   String get accessibility_toast_info;
 
+  /// Previous month button accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get accessibility_previous_month;
+
+  /// Next month button accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get accessibility_next_month;
+
   /// Title for the suggested colors section
   ///
   /// In en, this message translates to:

@@ -1274,6 +1274,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accessibility_toast_info => '信息';
 
   @override
+  String get accessibility_previous_month => '上个月';
+
+  @override
+  String get accessibility_next_month => '下个月';
+
+  @override
   String get color_suggested_title => '建议的颜色';
 
   @override

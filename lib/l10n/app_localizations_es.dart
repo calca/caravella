@@ -1306,6 +1306,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get accessibility_toast_info => 'Información';
 
   @override
+  String get accessibility_previous_month => 'Mes anterior';
+
+  @override
+  String get accessibility_next_month => 'Mes siguiente';
+
+  @override
   String get color_suggested_title => 'Colores sugeridos';
 
   @override

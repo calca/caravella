@@ -69,8 +69,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
         foregroundColor: theme.colorScheme.onSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        minimumSize: Size.zero,
+        minimumSize: const Size(0, AppDimens.minTouchTargetCompact),
       ),
       onPressed: canSelect ? openPicker : null,
       child: Row(

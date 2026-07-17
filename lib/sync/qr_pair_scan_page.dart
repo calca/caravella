@@ -83,6 +83,7 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
         foregroundColor: Colors.white,
         title: Text(loc.sync_qr_scan_title),
         leading: IconButton(
+          tooltip: loc.accessibility_back_button,
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
         ),

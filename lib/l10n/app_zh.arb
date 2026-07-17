@@ -471,6 +471,8 @@
   "accessibility_toast_success": "成功",
   "accessibility_toast_error": "错误",
   "accessibility_toast_info": "信息",
+  "accessibility_previous_month": "上个月",
+  "accessibility_next_month": "下个月",
   "color_suggested_title": "建议的颜色",
   "color_suggested_subtitle": "选择主题兼容的颜色之一",
   "color_random_subtitle": "让应用为您选择颜色",

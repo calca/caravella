@@ -177,6 +177,7 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
                       : _searchController.text.isNotEmpty
                       ? [
                           IconButton(
+                            tooltip: loc.clear,
                             icon: const Icon(Icons.clear_rounded),
                             onPressed: () {
                               _searchController.clear();

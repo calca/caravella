@@ -248,14 +248,16 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
             markers: _controller.state.searchResults.map((place) {
               return Marker(
                 point: LatLng(place.latitude, place.longitude),
-                width: 40,
-                height: 40,
+                width: AppDimens.minTouchTargetCompact,
+                height: AppDimens.minTouchTargetCompact,
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pop(place),
-                  child: Icon(
-                    Icons.location_on,
-                    color: colorScheme.error,
-                    size: 40,
+                  child: Center(
+                    child: Icon(
+                      Icons.location_on,
+                      color: colorScheme.error,
+                      size: 40,
+                    ),
                   ),
                 ),
               );

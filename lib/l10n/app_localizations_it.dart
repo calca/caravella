@@ -1304,6 +1304,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accessibility_toast_info => 'Informazione';
 
   @override
+  String get accessibility_previous_month => 'Mese precedente';
+
+  @override
+  String get accessibility_next_month => 'Mese successivo';
+
+  @override
   String get color_suggested_title => 'Colori suggeriti';
 
   @override

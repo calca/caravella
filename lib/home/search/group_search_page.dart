@@ -111,6 +111,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
         onChanged: _onSearchChanged,
         suffixIcon: _searchQuery.isNotEmpty
             ? IconButton(
+                tooltip: gloc.clear,
                 icon: const Icon(Icons.close_rounded, size: 20),
                 onPressed: () {
                   _searchController.clear();

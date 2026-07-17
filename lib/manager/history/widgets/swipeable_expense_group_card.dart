@@ -158,6 +158,13 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
   }
 
   Widget _buildCard(BuildContext context, double total) {
+    return Semantics(
+      button: true,
+      child: MergeSemantics(child: _buildCardInkWell(context, total)),
+    );
+  }
+
+  Widget _buildCardInkWell(BuildContext context, double total) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(

@@ -336,7 +336,10 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
             child: TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
-                minimumSize: const Size(0, 0),
+                minimumSize: const Size(
+                  AppDimens.minTouchTargetInline,
+                  AppDimens.minTouchTargetInline,
+                ),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               onPressed: () => setState(() => _expanded = true),
@@ -359,7 +362,10 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
             child: TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
-                minimumSize: const Size(0, 0),
+                minimumSize: const Size(
+                  AppDimens.minTouchTargetInline,
+                  AppDimens.minTouchTargetInline,
+                ),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               onPressed: () => setState(() => _expanded = false),

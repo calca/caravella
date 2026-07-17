@@ -89,6 +89,7 @@ class _PeriodSelectionBottomSheetState
 
   Widget _buildCalendarHeader() {
     final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -96,6 +97,7 @@ class _PeriodSelectionBottomSheetState
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
+            tooltip: gloc.accessibility_previous_month,
             onPressed: () {
               setState(() {
                 _displayedMonth = DateTime(
@@ -113,6 +115,7 @@ class _PeriodSelectionBottomSheetState
             ),
           ),
           IconButton(
+            tooltip: gloc.accessibility_next_month,
             onPressed: () {
               setState(() {
                 _displayedMonth = DateTime(

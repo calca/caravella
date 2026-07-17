@@ -474,6 +474,10 @@
   ,"@accessibility_toast_error": {"description": "Error toast type description"}
   ,"accessibility_toast_info": "Informazione"
   ,"@accessibility_toast_info": {"description": "Information toast type description"}
+  ,"accessibility_previous_month": "Mese precedente"
+  ,"@accessibility_previous_month": {"description": "Previous month button accessibility label"}
+  ,"accessibility_next_month": "Mese successivo"
+  ,"@accessibility_next_month": {"description": "Next month button accessibility label"}
   ,"color_suggested_title": "Colori suggeriti"
   ,"@color_suggested_title": {"description": "Titolo della sezione dei colori suggeriti"}
   ,"color_suggested_subtitle": "Scegli uno dei colori compatibili col tema"

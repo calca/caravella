@@ -1298,6 +1298,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accessibility_toast_info => 'Information';
 
   @override
+  String get accessibility_previous_month => 'Previous month';
+
+  @override
+  String get accessibility_next_month => 'Next month';
+
+  @override
   String get color_suggested_title => 'Suggested colors';
 
   @override

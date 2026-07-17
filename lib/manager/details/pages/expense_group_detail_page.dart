@@ -531,6 +531,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     ),
                   ),
                   leading: IconButton(
+                    tooltip: gloc.accessibility_back_button,
                     icon: Icon(
                       Icons.arrow_back_rounded,
                       color: appBarForegroundColor,

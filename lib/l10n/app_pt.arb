@@ -260,6 +260,8 @@
   "accessibility_toast_success": "Sucesso",
   "accessibility_toast_error": "Erro",
   "accessibility_toast_info": "Informação",
+  "accessibility_previous_month": "Mês anterior",
+  "accessibility_next_month": "Próximo mês",
   "color_suggested_title": "Cores sugeridas",
   "color_suggested_subtitle": "Escolha uma das cores compatíveis com o tema",
   "color_random_subtitle": "Deixe o app escolher uma cor",

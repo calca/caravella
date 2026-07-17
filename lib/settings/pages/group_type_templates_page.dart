@@ -49,6 +49,7 @@ class GroupTypeTemplatesPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
+                        tooltip: loc.settings_group_templates_edit_title,
                         onPressed: () => _openEditor(
                           context,
                           notifier,
@@ -57,6 +58,7 @@ class GroupTypeTemplatesPage extends StatelessWidget {
                         icon: const Icon(Icons.edit_outlined),
                       ),
                       IconButton(
+                        tooltip: loc.settings_group_templates_delete_title,
                         onPressed: () => _confirmDelete(
                           context,
                           notifier,

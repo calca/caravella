@@ -55,6 +55,87 @@ class ExpenseAmountCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
+    final row = InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: onTap,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Participant Avatar on the left
+          if (paidBy != null) ...[
+            ParticipantAvatar(participant: paidBy!, size: compact ? 32 : 52),
+            SizedBox(width: compact ? 8 : 12),
+          ],
+          // Main info (title, person, date)
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title with optional highlight
+                _buildHighlightedTitle(context, title, highlightQuery),
+                if ((paidBy != null) ||
+                    (category != null && category!.isNotEmpty)) ...[
+                  SizedBox(height: compact ? 4 : 6),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (category != null && category!.isNotEmpty) ...[
+                        //const SizedBox(width: 12),
+                        Icon(
+                          Icons.local_offer_outlined,
+                          size: compact ? 10 : 15,
+                          color: colorScheme.onSurface,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          category!,
+                          style: textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+                if (date != null && showDate) ...[
+                  SizedBox(height: compact ? 4 : 6),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.schedule_outlined,
+                        size: compact ? 11 : 13,
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                      SizedBox(width: compact ? 2 : 3),
+                      Text(
+                        _formatDateTime(context, date!),
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurface.withValues(alpha: 0.7),
+                          fontSize: compact ? 10 : 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+          // Amount
+          CurrencyDisplay(
+            value: amount,
+            currency: currency,
+            valueFontSize: compact ? 24.0 : 32.0,
+            currencyFontSize: compact ? 12.0 : 14.0,
+            alignment: MainAxisAlignment.end,
+            showDecimals: true,
+            fontWeight: FontWeight.w500,
+          ),
+        ],
+      ),
+    );
+
     return BaseCard(
       padding: fullWidth
           ? EdgeInsets.symmetric(horizontal: 0, vertical: compact ? 10 : 16)
@@ -63,86 +144,9 @@ class ExpenseAmountCard extends StatelessWidget {
                 : const EdgeInsets.symmetric(horizontal: 20, vertical: 16)),
       backgroundColor: Colors.transparent,
       noBorder: true,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Participant Avatar on the left
-            if (paidBy != null) ...[
-              ParticipantAvatar(participant: paidBy!, size: compact ? 32 : 52),
-              SizedBox(width: compact ? 8 : 12),
-            ],
-            // Main info (title, person, date)
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title with optional highlight
-                  _buildHighlightedTitle(context, title, highlightQuery),
-                  if ((paidBy != null) ||
-                      (category != null && category!.isNotEmpty)) ...[
-                    SizedBox(height: compact ? 4 : 6),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (category != null && category!.isNotEmpty) ...[
-                          //const SizedBox(width: 12),
-                          Icon(
-                            Icons.local_offer_outlined,
-                            size: compact ? 10 : 15,
-                            color: colorScheme.onSurface,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            category!,
-                            style: textTheme.labelSmall?.copyWith(
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
-                  if (date != null && showDate) ...[
-                    SizedBox(height: compact ? 4 : 6),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.schedule_outlined,
-                          size: compact ? 11 : 13,
-                          color: colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
-                        SizedBox(width: compact ? 2 : 3),
-                        Text(
-                          _formatDateTime(context, date!),
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withValues(alpha: 0.7),
-                            fontSize: compact ? 10 : 11,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            // Amount
-            CurrencyDisplay(
-              value: amount,
-              currency: currency,
-              valueFontSize: compact ? 24.0 : 32.0,
-              currencyFontSize: compact ? 12.0 : 14.0,
-              alignment: MainAxisAlignment.end,
-              showDecimals: true,
-              fontWeight: FontWeight.w500,
-            ),
-          ],
-        ),
-      ),
+      child: onTap != null
+          ? Semantics(button: true, child: MergeSemantics(child: row))
+          : row,
     );
   }
 }

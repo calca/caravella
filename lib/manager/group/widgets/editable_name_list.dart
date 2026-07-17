@@ -159,7 +159,10 @@ class _EditableNameListState extends State<EditableNameList> {
                   context,
                 ).colorScheme.surfaceContainerHigh,
                 foregroundColor: Theme.of(context).colorScheme.onSurface,
-                minimumSize: const Size(42, 42),
+                minimumSize: const Size(
+                  AppDimens.minTouchTargetCompact,
+                  AppDimens.minTouchTargetCompact,
+                ),
               ),
             ),
             const SizedBox(width: 4),
@@ -172,7 +175,10 @@ class _EditableNameListState extends State<EditableNameList> {
                   context,
                 ).colorScheme.surfaceContainerHigh,
                 foregroundColor: Theme.of(context).colorScheme.error,
-                minimumSize: const Size(42, 42),
+                minimumSize: const Size(
+                  AppDimens.minTouchTargetCompact,
+                  AppDimens.minTouchTargetCompact,
+                ),
               ),
             ),
           ],

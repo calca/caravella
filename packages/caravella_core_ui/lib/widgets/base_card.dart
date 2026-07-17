@@ -14,6 +14,13 @@ class BaseCard extends StatelessWidget {
   final bool noBorder;
   final Gradient? backgroundGradient;
 
+  /// Accessible name announced for the whole card when [onTap] is set. When
+  /// provided, the card's own text content is excluded from the semantics
+  /// tree in favor of this single label (avoids double-announcing);
+  /// otherwise the card's descendant text nodes are merged into one
+  /// button-role announcement via [MergeSemantics].
+  final String? semanticLabel;
+
   const BaseCard({
     super.key,
     required this.child,
@@ -27,7 +34,21 @@ class BaseCard extends StatelessWidget {
     this.backgroundImage,
     this.noBorder = false,
     this.backgroundGradient,
+    this.semanticLabel,
   });
+
+  /// Wraps a tappable card's content so it's announced as a single button
+  /// node instead of a loose collection of its child text nodes.
+  Widget _wrapTappable(Widget card) {
+    if (semanticLabel != null) {
+      return Semantics(
+        button: true,
+        label: semanticLabel,
+        child: ExcludeSemantics(child: card),
+      );
+    }
+    return Semantics(button: true, child: MergeSemantics(child: card));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,20 +122,24 @@ class BaseCard extends StatelessWidget {
     );
 
     if (onTap != null) {
-      return Container(
-        margin: margin,
-        child: ClipRRect(
-          borderRadius: effectiveBorderRadius,
-          child: Material(
-            color: backgroundColor ?? theme.colorScheme.surfaceContainer,
-            child: InkWell(
-              onTap: onTap,
-              splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-              highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
-              child: Container(
-                padding: padding ?? const EdgeInsets.all(20),
-                decoration: decoration.copyWith(color: Colors.transparent),
-                child: child,
+      return _wrapTappable(
+        Container(
+          margin: margin,
+          child: ClipRRect(
+            borderRadius: effectiveBorderRadius,
+            child: Material(
+              color: backgroundColor ?? theme.colorScheme.surfaceContainer,
+              child: InkWell(
+                onTap: onTap,
+                splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                highlightColor: theme.colorScheme.primary.withValues(
+                  alpha: 0.05,
+                ),
+                child: Container(
+                  padding: padding ?? const EdgeInsets.all(20),
+                  decoration: decoration.copyWith(color: Colors.transparent),
+                  child: child,
+                ),
               ),
             ),
           ),
@@ -144,7 +169,7 @@ class BaseCard extends StatelessWidget {
           )
         : Padding(padding: padding, child: child);
 
-    return Container(
+    final card = Container(
       margin: margin,
       child: ClipRRect(
         borderRadius: borderRadius,
@@ -171,6 +196,7 @@ class BaseCard extends StatelessWidget {
         ),
       ),
     );
+    return onTap != null ? _wrapTappable(card) : card;
   }
 
   /// Builds a card with a gradient background (no image).
@@ -180,21 +206,23 @@ class BaseCard extends StatelessWidget {
     EdgeInsetsGeometry padding,
   ) {
     if (onTap != null) {
-      return Container(
-        margin: margin,
-        child: ClipRRect(
-          borderRadius: borderRadius,
-          child: DecoratedBox(
-            decoration: BoxDecoration(gradient: backgroundGradient),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: onTap,
-                splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-                highlightColor: theme.colorScheme.primary.withValues(
-                  alpha: 0.05,
+      return _wrapTappable(
+        Container(
+          margin: margin,
+          child: ClipRRect(
+            borderRadius: borderRadius,
+            child: DecoratedBox(
+              decoration: BoxDecoration(gradient: backgroundGradient),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: onTap,
+                  splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  highlightColor: theme.colorScheme.primary.withValues(
+                    alpha: 0.05,
+                  ),
+                  child: Padding(padding: padding, child: child),
                 ),
-                child: Padding(padding: padding, child: child),
               ),
             ),
           ),
