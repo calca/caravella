@@ -28,10 +28,14 @@ class AppSystemUI extends StatelessWidget {
   /// Custom color for the status bar. If null, uses transparent
   final Color? statusBarColor;
 
-  /// Whether to force light status bar icons regardless of theme
+  /// Overrides status bar icon brightness regardless of theme: `true` forces
+  /// light (white) icons, `false` forces dark icons, `null` follows the
+  /// current theme's brightness.
   final bool? forceStatusBarLight;
 
-  /// Whether to force light navigation bar icons regardless of theme
+  /// Overrides navigation bar icon brightness regardless of theme: `true`
+  /// forces light (white) icons, `false` forces dark icons, `null` follows
+  /// the current theme's brightness.
   final bool? forceNavigationBarLight;
 
   const AppSystemUI({
@@ -76,31 +80,49 @@ class AppSystemUI extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  /// Computes the [SystemUiOverlayStyle] this widget would apply via its
+  /// [AnnotatedRegion], for reuse where a widget (e.g. an [AppBar]'s
+  /// `systemOverlayStyle`) needs to match it exactly instead of falling back
+  /// to that widget's own brightness auto-detection.
+  static SystemUiOverlayStyle resolveStyle(
+    BuildContext context, {
+    Color? navigationBarColor,
+    Color? statusBarColor,
+    bool? forceStatusBarLight,
+    bool? forceNavigationBarLight,
+  }) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    // Determine navigation bar color
     final effectiveNavBarColor =
         navigationBarColor ?? theme.colorScheme.surface;
 
-    // Determine icon brightness
-    final statusBarIconBrightness = forceStatusBarLight ?? false
-        ? Brightness.light
-        : (isDarkMode ? Brightness.light : Brightness.dark);
+    final statusBarIconBrightness = forceStatusBarLight == null
+        ? (isDarkMode ? Brightness.light : Brightness.dark)
+        : (forceStatusBarLight ? Brightness.light : Brightness.dark);
 
-    final navBarIconBrightness = forceNavigationBarLight ?? false
-        ? Brightness.light
-        : (isDarkMode ? Brightness.light : Brightness.dark);
+    final navBarIconBrightness = forceNavigationBarLight == null
+        ? (isDarkMode ? Brightness.light : Brightness.dark)
+        : (forceNavigationBarLight ? Brightness.light : Brightness.dark);
 
+    return SystemUiOverlayStyle(
+      statusBarColor: statusBarColor ?? Colors.transparent,
+      statusBarIconBrightness: statusBarIconBrightness,
+      statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
+      systemNavigationBarColor: effectiveNavBarColor,
+      systemNavigationBarIconBrightness: navBarIconBrightness,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: statusBarColor ?? Colors.transparent,
-        statusBarIconBrightness: statusBarIconBrightness,
-        statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: effectiveNavBarColor,
-        systemNavigationBarIconBrightness: navBarIconBrightness,
+      value: resolveStyle(
+        context,
+        navigationBarColor: navigationBarColor,
+        statusBarColor: statusBarColor,
+        forceStatusBarLight: forceStatusBarLight,
+        forceNavigationBarLight: forceNavigationBarLight,
       ),
       child: child,
     );

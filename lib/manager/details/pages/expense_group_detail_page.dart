@@ -146,8 +146,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               Navigator.of(context).pop(true); // Return to home
             }
           },
-          onExportOptions: () =>
-              showExpenseExportOptionsSheet(context, _trip),
+          onExportOptions: () => showExpenseExportOptionsSheet(context, _trip),
         ),
       ),
     );
@@ -428,6 +427,23 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final Color homeBackgroundColor = colorScheme.surfaceContainer;
     final LinearGradient? detailGradient = bg.gradient;
 
+    // The header behind the app bar can be a user-picked accent color that's
+    // independent of the app's light/dark theme (unlike the plain
+    // surfaceContainer fallback or a photo, both already theme-consistent),
+    // so compute app bar/status bar contrast from its actual color instead
+    // of blindly following colorScheme.onSurface — otherwise a light accent
+    // color in dark mode (or a dark one in light mode) can render icons
+    // invisible against it.
+    final Color? headerAccentTopColor = (!bg.hasImage && detailGradient != null)
+        ? detailGradient.colors.first
+        : null;
+    final Color appBarForegroundColor = headerAccentTopColor != null
+        ? ExpenseGroupColorPalette.getContrastingTextColor(headerAccentTopColor)
+        : colorScheme.onSurface;
+    final bool? forceStatusBarLight = headerAccentTopColor != null
+        ? !ExpenseGroupColorPalette.isLightColor(headerAccentTopColor)
+        : null;
+
     Widget buildHeaderBackground() {
       if (bg.hasImage) {
         return Stack(
@@ -457,7 +473,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       return ColoredBox(color: homeBackgroundColor);
     }
 
-    return AppSystemUI.surface(
+    return AppSystemUI(
+      forceStatusBarLight: forceStatusBarLight,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -477,7 +494,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   scrolledUnderElevation: 0,
                   surfaceTintColor: Colors.transparent,
                   backgroundColor: Colors.transparent,
-                  foregroundColor: colorScheme.onSurface,
+                  foregroundColor: appBarForegroundColor,
+                  // Without this, SliverAppBar computes its own system
+                  // overlay style from backgroundColor's estimated
+                  // brightness — and Colors.transparent reads as "dark"
+                  // (its RGB channels are 0,0,0), silently overriding
+                  // AppSystemUI's status bar icon brightness above.
+                  systemOverlayStyle: AppSystemUI.resolveStyle(
+                    context,
+                    forceStatusBarLight: forceStatusBarLight,
+                  ),
                   centerTitle: false,
                   title: AnimatedOpacity(
                     opacity: showCollapsedTitle ? 1.0 : 0.0,
@@ -485,7 +511,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     child: Text(
                       trip.title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onSurface,
+                        color: appBarForegroundColor,
                         fontWeight: FontWeight.w600,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -493,7 +519,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     ),
                   ),
                   leading: IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded),
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      color: appBarForegroundColor,
+                    ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   flexibleSpace: FlexibleSpaceBar(

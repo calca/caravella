@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -100,11 +99,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
             locale: _locale,
             onLocaleChange: _changeLocale,
             themeMode: _themeMode,
-            onThemeChange: (mode) {
-              _changeTheme(mode);
-              // Update system UI colors when theme changes
-              _updateSystemUIOverlay(mode);
-            },
+            onThemeChange: _changeTheme,
             dynamicColorEnabled: _dynamicColorEnabled,
             onDynamicColorChange: _changeDynamicColor,
             child: ToastProvider.create(
@@ -129,9 +124,6 @@ class _CaravellaAppState extends State<CaravellaApp> {
                 localizationsDelegates:
                     gen.AppLocalizations.localizationsDelegates,
                 builder: (context, child) {
-                  // Update system UI overlay based on current brightness
-                  _updateSystemUIOverlayFromContext(context);
-
                   return ToastThemeProvider(
                     data: const ToastTheme(
                       gap: 8,
@@ -160,45 +152,6 @@ class _CaravellaAppState extends State<CaravellaApp> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  void _updateSystemUIOverlay(ThemeMode mode) {
-    // Determine brightness based on theme mode
-    Brightness brightness;
-    if (mode == ThemeMode.light) {
-      brightness = Brightness.light;
-    } else if (mode == ThemeMode.dark) {
-      brightness = Brightness.dark;
-    } else {
-      // For system mode, use platform brightness
-      brightness =
-          WidgetsBinding.instance.platformDispatcher.platformBrightness;
-    }
-
-    _setSystemUIOverlayForBrightness(brightness);
-  }
-
-  void _updateSystemUIOverlayFromContext(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    _setSystemUIOverlayForBrightness(brightness);
-  }
-
-  void _setSystemUIOverlayForBrightness(Brightness brightness) {
-    // For light themes, use dark icons (dark text on light background)
-    // For dark themes, use light icons (light text on dark background)
-    final iconBrightness = brightness == Brightness.light
-        ? Brightness.dark
-        : Brightness.light;
-
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarDividerColor: Colors.transparent,
-        statusBarIconBrightness: iconBrightness,
-        systemNavigationBarIconBrightness: iconBrightness,
       ),
     );
   }

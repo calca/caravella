@@ -94,8 +94,8 @@ class AppInitialization {
   static void configureSystemUI() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-    // Android 15+ compatible: transparent system bars
-    // Icon brightness will be managed dynamically by CaravellaApp based on theme
+    // Android 15+ compatible: transparent system bars.
+    // Icon brightness is managed per-screen by AppSystemUI (caravella_core_ui).
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
