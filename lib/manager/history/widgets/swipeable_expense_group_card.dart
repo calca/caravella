@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:io_caravella_egm/manager/details/widgets/group_header.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../details/pages/expense_group_detail_page.dart';
 import 'history_options_sheet.dart';

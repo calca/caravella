@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'base_card.dart';
 
 /// Semantics-aware settings row card, built on the shared [BaseCard]
 /// instead of reimplementing a rounded surface container.

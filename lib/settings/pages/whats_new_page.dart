@@ -6,7 +6,6 @@ import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:play_store_updates/play_store_updates.dart';
 import '../update/app_update_localizations.dart';
-import '../widgets/settings_card.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});

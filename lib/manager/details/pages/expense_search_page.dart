@@ -5,7 +5,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../group/widgets/period_selection_bottom_sheet.dart';
-import '../widgets/expense_amount_card.dart';
 import '../widgets/expense_search_filter_chips.dart';
 import '../widgets/expense_search_empty_state.dart';
 

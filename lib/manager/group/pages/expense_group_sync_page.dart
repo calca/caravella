@@ -4,8 +4,6 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 
-import '../../../settings/widgets/settings_section.dart';
-import '../../../settings/widgets/settings_card.dart';
 import '../../../sync/bluetooth_advertise_sheet.dart';
 import '../../../sync/bluetooth_sync_channel.dart';
 import '../../../sync/bluetooth_sync_factory.dart';

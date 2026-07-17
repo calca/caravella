@@ -4,8 +4,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import '../pages/appearance_settings_page.dart';
-import 'settings_card.dart';
-import 'settings_section.dart';
 
 /// "General" settings section: user name and appearance entry point.
 class GeneralSettingsSection extends StatelessWidget {

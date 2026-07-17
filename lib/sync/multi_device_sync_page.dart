@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_drive_sync/google_drive_sync.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-import '../settings/widgets/settings_card.dart';
-import '../settings/widgets/settings_section.dart';
 
 /// Settings sub-page for syncing a single user's **own** devices via the
 /// optional Google Drive relay (`ENABLE_GOOGLE_DRIVE_SYNC`).

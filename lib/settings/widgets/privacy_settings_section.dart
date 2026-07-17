@@ -3,8 +3,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import '../../settings/flag_secure_android.dart';
-import 'settings_card.dart';
-import 'settings_section.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// "Privacy" settings section: FLAG_SECURE toggle and Android App Functions
 /// toggle. Both rows are Android-only.

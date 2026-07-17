@@ -3,8 +3,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-import '../settings/widgets/settings_card.dart';
-import '../settings/widgets/settings_section.dart';
 import 'multi_device_sync_page.dart';
 import 'multi_user_sync_page.dart';
 import 'sync_history_sheet.dart';

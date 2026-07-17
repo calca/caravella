@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:intl/intl.dart';
-import 'expense_amount_card.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'empty_expense_state.dart';
 
 class FilteredExpenseList extends StatefulWidget {

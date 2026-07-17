@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'group_total.dart';
 
+/// Circular avatar showing a participant's initials.
 class ParticipantAvatar extends StatelessWidget {
   final ExpenseParticipant participant;
   final double size;
@@ -52,6 +50,8 @@ class ParticipantAvatar extends StatelessWidget {
   }
 }
 
+/// Circular avatar showing an expense group's initials, colored from its
+/// palette index (or a legacy raw ARGB value).
 class ExpenseGroupAvatar extends StatelessWidget {
   final ExpenseGroup trip;
   final double size;
@@ -105,88 +105,6 @@ class ExpenseGroupAvatar extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class GroupHeader extends StatelessWidget {
-  final ExpenseGroup trip;
-  final double totalExpenses;
-  final double todaySpending;
-
-  const GroupHeader({
-    super.key,
-    required this.trip,
-    required this.totalExpenses,
-    required this.todaySpending,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final gloc = gen.AppLocalizations.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          trip.title,
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            color: colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-            fontSize: 28,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: GroupTotal(
-              total: totalExpenses,
-              currency: trip.currency,
-              alignment: CrossAxisAlignment.center,
-              valueFontSize: 34,
-              currencyFontSize: 22,
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              CurrencyDisplay(
-                value: todaySpending.abs(),
-                currency: trip.currency,
-                valueFontSize: 16,
-                currencyFontSize: 12,
-                alignment: MainAxisAlignment.start,
-                showDecimals: true,
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w700,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                gloc.spent_today.toLowerCase(),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-      ],
     );
   }
 }

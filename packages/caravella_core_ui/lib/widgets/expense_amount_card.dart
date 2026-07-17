@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'group_header.dart';
+import 'avatars.dart';
+import 'base_card.dart';
+import 'currency_display.dart';
 
 class ExpenseAmountCard extends StatelessWidget {
   final String title;

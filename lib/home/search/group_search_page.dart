@@ -148,7 +148,15 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
       body: _loading
           ? const Center(child: CircularProgressIndicator.adaptive())
           : _filteredGroups.isEmpty
-          ? _buildEmptyState(gloc, colorScheme)
+          ? EmptyStateView(
+              icon: _searchQuery.isEmpty
+                  ? Icons.search_outlined
+                  : Icons.search_off_outlined,
+              message: _searchQuery.isEmpty
+                  ? gloc.search_groups
+                  : '${gloc.no_search_results} "$_searchQuery"',
+              hint: _searchQuery.isEmpty ? null : gloc.try_different_search,
+            )
           : ListView.builder(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
               itemCount: _filteredGroups.length,
@@ -163,52 +171,6 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
                 );
               },
             ),
-    );
-  }
-
-  Widget _buildEmptyState(gen.AppLocalizations gloc, ColorScheme colorScheme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              _searchQuery.isEmpty
-                  ? Icons.search_outlined
-                  : Icons.search_off_outlined,
-              size: 48,
-              color: colorScheme.onSurface.withValues(alpha: 0.4),
-            ),
-            const SizedBox(height: 16),
-            if (_searchQuery.isEmpty)
-              Text(
-                gloc.search_groups,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
-                textAlign: TextAlign.center,
-              )
-            else ...[
-              Text(
-                '${gloc.no_search_results} "$_searchQuery"',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                gloc.try_different_search,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.4),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ],
-        ),
-      ),
     );
   }
 }

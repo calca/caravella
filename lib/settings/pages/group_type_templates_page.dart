@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../../manager/group/group_type/group_type_localization.dart';
 import '../state/group_type_templates_notifier.dart';
-import '../widgets/settings_card.dart';
 import 'group_type_template_form_page.dart';
 
 class GroupTypeTemplatesPage extends StatelessWidget {

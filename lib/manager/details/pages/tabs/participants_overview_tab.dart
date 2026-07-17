@@ -4,7 +4,6 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:share_plus/share_plus.dart';
 import '../../widgets/stat_card.dart';
-import '../../widgets/group_header.dart';
 
 /// Participants tab: per participant totals, contribution percentages and settlements.
 class ParticipantsOverviewTab extends StatelessWidget {

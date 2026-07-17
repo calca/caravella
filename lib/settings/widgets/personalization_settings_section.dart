@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../pages/group_type_templates_page.dart';
-import 'settings_card.dart';
-import 'settings_section.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// "Personalization" settings section: group type templates entry point.
 class PersonalizationSettingsSection extends StatelessWidget {

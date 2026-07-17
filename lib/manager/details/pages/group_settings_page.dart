@@ -10,8 +10,6 @@ import '../../group/pages/expense_group_categories_page.dart';
 import '../../group/pages/expense_group_other_page.dart';
 import '../../group/pages/expense_group_sync_page.dart';
 import '../../group/group_edit_mode.dart';
-import '../../../settings/widgets/settings_section.dart';
-import '../../../settings/widgets/settings_card.dart';
 import '../../../sync/settings_sync_badge.dart';
 
 class GroupSettingsPage extends StatefulWidget {

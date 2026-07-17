@@ -7,8 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../pages/developer_page.dart';
 import '../pages/whats_new_page.dart';
-import 'settings_card.dart';
-import 'settings_section.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// "Info" settings section: app info, version/changelog, and (in debug
 /// builds, or when enabled via the `ENABLE_TALKER_SCREEN` dart-define) the

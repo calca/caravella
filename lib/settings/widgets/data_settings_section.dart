@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import '../pages/data_backup_page.dart';
 import '../../sync/settings_sync_badge.dart';
 import '../../sync/sync_settings_screen.dart';
-import 'settings_card.dart';
-import 'settings_section.dart';
 
 /// "Data" settings section: backup/restore and sync entry points.
 class DataSettingsSection extends StatelessWidget {

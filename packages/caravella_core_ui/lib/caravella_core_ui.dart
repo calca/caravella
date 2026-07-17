@@ -11,16 +11,21 @@ export 'themes/form_theme.dart';
 export 'widgets/add_fab.dart';
 export 'widgets/app_system_ui.dart';
 export 'widgets/app_toast.dart' show AppToast, ToastType;
+export 'widgets/avatars.dart';
 export 'widgets/base_card.dart';
 export 'widgets/bottom_action_bar.dart';
 export 'widgets/caravella_app_bar.dart';
 export 'widgets/caravella_bottom_sheet_scaffold.dart';
 export 'widgets/caravella_tab_bar.dart';
 export 'widgets/currency_display.dart';
+export 'widgets/empty_state_view.dart';
+export 'widgets/expense_amount_card.dart';
 export 'widgets/material3_dialog.dart';
 export 'widgets/no_expense.dart';
 export 'widgets/section_header.dart';
 export 'widgets/selection_bottom_sheet.dart';
+export 'widgets/settings_card.dart';
+export 'widgets/settings_section.dart';
 
 // Chart widgets
 export 'widgets/charts/chart_badge.dart';
