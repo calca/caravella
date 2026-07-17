@@ -1280,6 +1280,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accessibility_next_month => '下个月';
 
   @override
+  String get accessibility_cancel_location_hint => '双击取消获取位置';
+
+  @override
   String get color_suggested_title => '建议的颜色';
 
   @override

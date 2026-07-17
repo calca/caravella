@@ -58,27 +58,19 @@ class _CategoryBottomSheet extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Semantics(
-                  button: true,
-                  label: '${gloc.cancel} dialog',
-                  child: TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(gloc.cancel),
-                  ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(gloc.cancel),
                 ),
                 const SizedBox(width: 8),
-                Semantics(
-                  button: true,
-                  label: '${gloc.add} category',
-                  child: FilledButton.tonal(
-                    onPressed: () {
-                      final val = controller.text.trim();
-                      if (val.isNotEmpty) {
-                        Navigator.of(context).pop(val);
-                      }
-                    },
-                    child: Text(gloc.add),
-                  ),
+                FilledButton.tonal(
+                  onPressed: () {
+                    final val = controller.text.trim();
+                    if (val.isNotEmpty) {
+                      Navigator.of(context).pop(val);
+                    }
+                  },
+                  child: Text(gloc.add),
                 ),
               ],
             ),

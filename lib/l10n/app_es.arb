@@ -484,6 +484,8 @@
   "@accessibility_previous_month": {"description": "Previous month button accessibility label"},
   "accessibility_next_month": "Mes siguiente",
   "@accessibility_next_month": {"description": "Next month button accessibility label"},
+  "accessibility_cancel_location_hint": "Doble toque para cancelar la obtención de ubicación",
+  "@accessibility_cancel_location_hint": {"description": "Accessibility hint for the cancel-location-retrieval button"},
   "color_suggested_title": "Colores sugeridos",
   "@color_suggested_title": {"description": "Título para la sección de colores sugeridos"},
   "color_suggested_subtitle": "Elige uno de los colores compatibles con el tema",

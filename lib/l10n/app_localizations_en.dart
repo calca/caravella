@@ -1304,6 +1304,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accessibility_next_month => 'Next month';
 
   @override
+  String get accessibility_cancel_location_hint =>
+      'Double tap to cancel location retrieval';
+
+  @override
   String get color_suggested_title => 'Suggested colors';
 
   @override

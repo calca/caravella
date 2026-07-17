@@ -2570,6 +2570,12 @@ abstract class AppLocalizations {
   /// **'Next month'**
   String get accessibility_next_month;
 
+  /// Accessibility hint for the cancel-location-retrieval button
+  ///
+  /// In en, this message translates to:
+  /// **'Double tap to cancel location retrieval'**
+  String get accessibility_cancel_location_hint;
+
   /// Title for the suggested colors section
   ///
   /// In en, this message translates to:

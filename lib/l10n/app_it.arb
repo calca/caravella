@@ -478,6 +478,8 @@
   ,"@accessibility_previous_month": {"description": "Previous month button accessibility label"}
   ,"accessibility_next_month": "Mese successivo"
   ,"@accessibility_next_month": {"description": "Next month button accessibility label"}
+  ,"accessibility_cancel_location_hint": "Doppio tap per annullare il rilevamento della posizione"
+  ,"@accessibility_cancel_location_hint": {"description": "Accessibility hint for the cancel-location-retrieval button"}
   ,"color_suggested_title": "Colori suggeriti"
   ,"@color_suggested_title": {"description": "Titolo della sezione dei colori suggeriti"}
   ,"color_suggested_subtitle": "Scegli uno dei colori compatibili col tema"

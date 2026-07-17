@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/manager/expense/widgets/amount_input_widget.dart';
 
 void main() {
@@ -12,6 +13,8 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: AmountInputWidget(
               controller: controller,

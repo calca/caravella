@@ -74,9 +74,9 @@ class CarouselGroupCard extends StatelessWidget {
                   top: -2,
                   right: -2,
                   child: Semantics(
-                    label: isSynced == true
-                        ? 'Shared group, synced'
-                        : 'Shared group, not synced',
+                    label:
+                        '${localizations.sync_group_shared}, '
+                        '${isSynced == true ? localizations.sync_group_synced : localizations.sync_group_pending}',
                     child: Container(
                       width: 12,
                       height: 12,

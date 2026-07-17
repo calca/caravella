@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import '../constants.dart';
@@ -49,11 +50,14 @@ class CompactLocationIndicator extends StatelessWidget {
     return Semantics(
       button: true,
       label: gloc.getting_location,
-      hint: onCancel != null ? 'Double tap to cancel location retrieval' : null,
+      hint: onCancel != null ? gloc.accessibility_cancel_location_hint : null,
       child: IconButton(
         style: IconButton.styleFrom(
           padding: const EdgeInsets.all(8),
-          minimumSize: const Size(40, 40),
+          minimumSize: const Size(
+            AppDimens.minTouchTargetCompact,
+            AppDimens.minTouchTargetCompact,
+          ),
         ),
         onPressed: onCancel,
         icon: SizedBox(

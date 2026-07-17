@@ -262,6 +262,7 @@
   "accessibility_toast_info": "Informação",
   "accessibility_previous_month": "Mês anterior",
   "accessibility_next_month": "Próximo mês",
+  "accessibility_cancel_location_hint": "Toque duas vezes para cancelar a obtenção de localização",
   "color_suggested_title": "Cores sugeridas",
   "color_suggested_subtitle": "Escolha uma das cores compatíveis com o tema",
   "color_random_subtitle": "Deixe o app escolher uma cor",

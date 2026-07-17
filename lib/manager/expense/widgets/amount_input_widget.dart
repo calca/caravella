@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/services.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
@@ -42,6 +43,7 @@ class AmountInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     if (isText) {
       final textField = TextFormField(
         controller: controller,
@@ -140,8 +142,8 @@ class AmountInputWidget extends StatelessWidget {
     return Semantics(
       textField: true,
       label: label != null
-          ? '${label!.replaceAll(' *', '')} amount in $currencySymbol'
-          : 'Amount input',
+          ? '${label!.replaceAll(' *', '')} ($currencySymbol)'
+          : '${gloc.amount} ($currencySymbol)',
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,

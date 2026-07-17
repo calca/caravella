@@ -1311,6 +1311,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get accessibility_next_month => 'Próximo mês';
 
   @override
+  String get accessibility_cancel_location_hint =>
+      'Toque duas vezes para cancelar a obtenção de localização';
+
+  @override
   String get color_suggested_title => 'Cores sugeridas';
 
   @override

@@ -296,7 +296,9 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
           child: Text(
             trip.participants.length <= 2
                 ? trip.participants.map((p) => p.name).join(', ')
-                : '${trip.participants.length} partecipanti',
+                : gen.AppLocalizations.of(
+                    context,
+                  ).participant_count(trip.participants.length),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(
                 context,
