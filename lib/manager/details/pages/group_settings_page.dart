@@ -12,6 +12,7 @@ import '../../group/pages/expense_group_sync_page.dart';
 import '../../group/group_edit_mode.dart';
 import '../../../settings/widgets/settings_section.dart';
 import '../../../settings/widgets/settings_card.dart';
+import '../../../sync/settings_sync_badge.dart';
 
 class GroupSettingsPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -137,12 +138,18 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
             title: gloc.export_share,
             description: gloc.export_options_desc,
             children: [
-              if (context.watch<SyncOrchestrator?>() != null) ...[
+              if (context.watch<SyncOrchestrator?>()
+                  case final orchestrator?) ...[
                 SettingsCard(
                   context: context,
                   color: colorScheme.surface,
                   child: ListTile(
-                    leading: const Icon(Icons.sync_outlined),
+                    leading: _currentTrip.syncEnabled
+                        ? SettingsSyncBadge(
+                            orchestrator: orchestrator,
+                            child: const Icon(Icons.sync_outlined),
+                          )
+                        : const Icon(Icons.sync_outlined),
                     title: Text(gloc.sync_title, style: textTheme.titleMedium),
                     subtitle: Text(
                       gloc.sync_settings_desc,
@@ -315,10 +322,8 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
   Future<void> _openOtherPage(BuildContext context) async {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (ctx) => ExpenseGroupOtherPage(
-          trip: _currentTrip,
-          mode: GroupEditMode.edit,
-        ),
+        builder: (ctx) =>
+            ExpenseGroupOtherPage(trip: _currentTrip, mode: GroupEditMode.edit),
       ),
     );
 

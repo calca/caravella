@@ -57,7 +57,8 @@ class _SettingsSyncBadgeState extends State<SettingsSyncBadge> {
 
   Future<void> _load() async {
     final lan = await widget.orchestrator.isLanSyncEnabled();
-    final bt = BluetoothSyncFactory.isEnabled &&
+    final bt =
+        BluetoothSyncFactory.isEnabled &&
         await BluetoothSyncFactory.isUserEnabled();
     final cloudChannel = widget.orchestrator.cloudChannel;
     final cloud = cloudChannel != null && await cloudChannel.isEnabled();
@@ -90,12 +91,37 @@ class _SettingsSyncBadgeState extends State<SettingsSyncBadge> {
   Widget build(BuildContext context) {
     if (!_loaded || !_anyChannelEnabled) return widget.child;
 
-    return Badge(
-      backgroundColor: _hasError ? _ochreDot : _greenDot,
-      smallSize: 8,
-      alignment: AlignmentDirectional.topEnd,
-      offset: const Offset(2, -2),
-      child: widget.child,
+    final ringColor = Theme.of(context).colorScheme.outlineVariant;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: ringColor),
+          ),
+          child: widget.child,
+        ),
+        // Alignment(cos45°, sin45°) lands the dot's center exactly on the
+        // ring's edge, whatever the wrapped icon's actual size — unlike a
+        // fixed pixel offset from the (square) bounding box's corner, which
+        // sits past the circle and leaves a gap.
+        Positioned.fill(
+          child: Align(
+            alignment: const Alignment(0.9071, 0.9071),
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _hasError ? _ochreDot : _greenDot,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
