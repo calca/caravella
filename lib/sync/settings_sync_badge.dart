@@ -5,6 +5,69 @@ import 'package:flutter/material.dart';
 
 import 'bluetooth_sync_factory.dart';
 
+/// Shared "overall sync health" polling behind both [SettingsSyncBadge] and
+/// [SyncStatusIcon]:
+/// - [anyChannelEnabled]: at least one sync channel (LAN, Bluetooth, cloud)
+///   is turned on
+/// - [hasError]: the last sync attempt failed
+///
+/// Seeds from [SyncOrchestrator.getHistory] on load (so a failure from
+/// before this widget mounted, e.g. app restart, still surfaces) and then
+/// stays live via [SyncOrchestrator.events].
+mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
+  static const greenColor = Color(0xFF2E7D32);
+  static const ochreColor = Color(0xFFB8860B);
+
+  SyncOrchestrator get orchestrator;
+
+  StreamSubscription<SyncEvent>? _eventSub;
+  bool anyChannelEnabled = false;
+  bool hasError = false;
+  bool loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+    _eventSub = orchestrator.events.listen(_onEvent);
+  }
+
+  @override
+  void dispose() {
+    _eventSub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _load() async {
+    final lan = await orchestrator.isLanSyncEnabled();
+    final bt =
+        BluetoothSyncFactory.isEnabled &&
+        await BluetoothSyncFactory.isUserEnabled();
+    final cloudChannel = orchestrator.cloudChannel;
+    final cloud = cloudChannel != null && await cloudChannel.isEnabled();
+
+    final history = await orchestrator.getHistory(limit: 1);
+    final lastHadError =
+        history.isNotEmpty && ((history.first['errors'] as int?) ?? 0) > 0;
+
+    if (mounted) {
+      setState(() {
+        anyChannelEnabled = lan || bt || cloud;
+        hasError = lastHadError;
+        loaded = true;
+      });
+    }
+  }
+
+  void _onEvent(SyncEvent event) {
+    if (!mounted) return;
+    setState(() {
+      if (event is SyncFailed) hasError = true;
+      if (event is SyncCompleted) hasError = event.result.errors > 0;
+    });
+  }
+}
+
 /// Small colored dot overlaid on [child] summarizing overall sync health at
 /// a glance, without a dedicated history button/row taking up space:
 /// - green: at least one sync channel is enabled and the last sync had no
@@ -33,63 +96,14 @@ class SettingsSyncBadge extends StatefulWidget {
   State<SettingsSyncBadge> createState() => _SettingsSyncBadgeState();
 }
 
-class _SettingsSyncBadgeState extends State<SettingsSyncBadge> {
-  static const _greenDot = Color(0xFF2E7D32);
-  static const _ochreDot = Color(0xFFB8860B);
-
-  StreamSubscription<SyncEvent>? _eventSub;
-  bool _anyChannelEnabled = false;
-  bool _hasError = false;
-  bool _loaded = false;
-
+class _SettingsSyncBadgeState extends State<SettingsSyncBadge>
+    with _SyncStatusMixin {
   @override
-  void initState() {
-    super.initState();
-    _load();
-    _eventSub = widget.orchestrator.events.listen(_onEvent);
-  }
-
-  @override
-  void dispose() {
-    _eventSub?.cancel();
-    super.dispose();
-  }
-
-  Future<void> _load() async {
-    final lan = await widget.orchestrator.isLanSyncEnabled();
-    final bt =
-        BluetoothSyncFactory.isEnabled &&
-        await BluetoothSyncFactory.isUserEnabled();
-    final cloudChannel = widget.orchestrator.cloudChannel;
-    final cloud = cloudChannel != null && await cloudChannel.isEnabled();
-
-    // Seed the initial error state from the last recorded sync, so a
-    // failure from before this widget mounted (e.g. app restart) still
-    // shows the ochre dot instead of resetting to green.
-    final history = await widget.orchestrator.getHistory(limit: 1);
-    final lastHadError =
-        history.isNotEmpty && ((history.first['errors'] as int?) ?? 0) > 0;
-
-    if (mounted) {
-      setState(() {
-        _anyChannelEnabled = lan || bt || cloud;
-        _hasError = lastHadError;
-        _loaded = true;
-      });
-    }
-  }
-
-  void _onEvent(SyncEvent event) {
-    if (!mounted) return;
-    setState(() {
-      if (event is SyncFailed) _hasError = true;
-      if (event is SyncCompleted) _hasError = event.result.errors > 0;
-    });
-  }
+  SyncOrchestrator get orchestrator => widget.orchestrator;
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded || !_anyChannelEnabled) return widget.child;
+    if (!loaded || !anyChannelEnabled) return widget.child;
 
     final ringColor = Theme.of(context).colorScheme.outlineVariant;
 
@@ -116,12 +130,50 @@ class _SettingsSyncBadgeState extends State<SettingsSyncBadge> {
               height: 8,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _hasError ? _ochreDot : _greenDot,
+                color: hasError
+                    ? _SyncStatusMixin.ochreColor
+                    : _SyncStatusMixin.greenColor,
               ),
             ),
           ),
         ),
       ],
     );
+  }
+}
+
+/// An [Icon] tinted to summarize overall sync health, in place of the
+/// neutral [defaultColor] when at least one sync channel is enabled:
+/// green when the last sync had no errors, ochre when it failed or a sync
+/// is still pending. See [_SyncStatusMixin] for how that state is tracked.
+class SyncStatusIcon extends StatefulWidget {
+  final SyncOrchestrator orchestrator;
+  final IconData icon;
+  final double? size;
+  final Color? defaultColor;
+
+  const SyncStatusIcon({
+    super.key,
+    required this.orchestrator,
+    required this.icon,
+    this.size,
+    this.defaultColor,
+  });
+
+  @override
+  State<SyncStatusIcon> createState() => _SyncStatusIconState();
+}
+
+class _SyncStatusIconState extends State<SyncStatusIcon>
+    with _SyncStatusMixin {
+  @override
+  SyncOrchestrator get orchestrator => widget.orchestrator;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = loaded && anyChannelEnabled
+        ? (hasError ? _SyncStatusMixin.ochreColor : _SyncStatusMixin.greenColor)
+        : widget.defaultColor;
+    return Icon(widget.icon, size: widget.size, color: color);
   }
 }

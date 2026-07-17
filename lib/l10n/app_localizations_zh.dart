@@ -2361,7 +2361,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get sync_group_shared => '共享群组';
+  String get sync_group_shared => '共享';
 
   @override
   String get sync_group_synced => '所有更改已同步';

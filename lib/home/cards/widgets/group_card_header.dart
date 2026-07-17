@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../home_constants.dart';
-import 'group_sync_indicator.dart';
 
 /// Displays the header section of a group card.
 ///
@@ -79,18 +78,34 @@ class GroupCardHeader extends StatelessWidget {
       return SizedBox(width: double.infinity, child: title);
     }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(child: title),
-        GroupSyncIndicator(group: group, isSynced: isSynced),
-      ],
+    return title;
+  }
+
+  Widget _buildPill(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(
+          HomeLayoutConstants.buttonBorderRadius,
+        ),
+      ),
+      child: Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 
   Widget _buildDateRange() {
-    // Show pin badge even if there are no dates
-    if (group.startDate == null && group.endDate == null && !group.pinned) {
+    // Show pin/shared badges even if there are no dates
+    if (group.startDate == null &&
+        group.endDate == null &&
+        !group.pinned &&
+        !group.syncEnabled) {
       return const SizedBox(height: HomeLayoutConstants.smallSpacing);
     }
 
@@ -117,25 +132,10 @@ class GroupCardHeader extends StatelessWidget {
               ),
             ] else
               const Spacer(),
-            if (group.pinned && showPinnedBadge)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.05,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    HomeLayoutConstants.buttonBorderRadius,
-                  ),
-                ),
-                child: Text(
-                  localizations.pin,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            if (group.pinned && showPinnedBadge) _buildPill(localizations.pin),
+            if (group.pinned && showPinnedBadge && group.syncEnabled)
+              const SizedBox(width: 4),
+            if (group.syncEnabled) _buildPill(localizations.sync_group_shared),
           ],
         ),
         const SizedBox(height: HomeLayoutConstants.smallSpacing),

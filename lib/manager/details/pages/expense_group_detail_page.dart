@@ -19,6 +19,7 @@ import '../../../services/notification_manager.dart';
 import 'unified_overview_page.dart';
 import 'group_settings_page.dart';
 import 'expense_search_page.dart';
+import '../../group/pages/expense_group_sync_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -152,6 +153,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
 
     // Refresh after returning from settings
+    await _refreshGroup();
+  }
+
+  void _showSyncPage() async {
+    if (_trip == null) return;
+
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (ctx) => ExpenseGroupSyncPage(trip: _trip!)),
+    );
+
+    // Refresh after returning from sync settings
     await _refreshGroup();
   }
 
@@ -562,6 +574,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 ? _openSearchPage
                                 : null,
                             onFavorite: trip.archived ? null : _handlePinToggle,
+                            syncEnabled: trip.syncEnabled,
+                            orchestrator: context.watch<SyncOrchestrator?>(),
+                            onSync: _showSyncPage,
                             onOptions: _showSettingsPage,
                           ),
                           const SizedBox(height: 0),

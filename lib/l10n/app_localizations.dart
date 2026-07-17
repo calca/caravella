@@ -4640,7 +4640,7 @@ abstract class AppLocalizations {
   /// Tooltip for shared group icon
   ///
   /// In en, this message translates to:
-  /// **'Shared group'**
+  /// **'Shared'**
   String get sync_group_shared;
 
   /// Tooltip for synced group status

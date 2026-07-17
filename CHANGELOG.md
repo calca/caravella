@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- New **Sync** CTA in the expense group detail page's action row, right before Settings — opens that group's sharing/sync settings directly. Its icon is tinted green when fully synced, ochre when sync is pending or a previous sync failed, matching the same sync-health signal already used in Settings → Sync
 - New **Invite your friends** entry in Settings → Info: shares a friendly pre-written message with the Play Store link via the system share sheet (WhatsApp, etc.)
 - Sync groups between your own devices over local Wi-Fi, Bluetooth, or an optional Google Drive relay is now reachable from the app: a **Sync** entry in Settings → Data (Wi-Fi status, Bluetooth pairing, cloud opt-in, history), a per-group **Enable sync** toggle in group settings, and a sync status indicator on the home screen (#416)
 - Local (Wi-Fi/LAN) sync is now off by default and must be turned on from Settings → Sync — it previously started automatically on every launch with no way to disable it; QR pairing and the paired-devices list are hidden while it's off, and the choice persists across restarts
@@ -31,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Sync row's green/ochre status dot (shown on the home screen and Settings → Data when sync is on) now also appears on the **Sync** row in a group's own settings, once that group's sync toggle is enabled — previously only a plain icon was shown there
 
 ### Changed
+- The shared-group indicator on home screen group cards is now a text pill ("Condiviso"/"Shared") matching the existing favorite pill's style, placed to its right, instead of a bare people icon + sync-status dot in the title row
+- Removed the shared-group people icon from the expense groups list (history/all-groups page) — redundant now that the home screen carries its own indicator
 - Settings reordering: **Template e tipologia gruppi** moved right before **Informazioni** (after Privacy and Dati), and **Lingua**, **Colore dinamico**, **Tema** moved out of the General section into a new **Aspetto** sub-page reachable from a single entry row, mirroring the Data/Group-templates sub-page pattern
 - Theme selection in Settings → Aspetto is now an inline "Sistema / Giorno / Notte" 3-card selector (tap to apply immediately) instead of a modal bottom sheet
 - Removed the separate sync-history icon button from the home screen header — the home screen now shows a single Settings button with a small status dot: green when at least one sync channel is enabled and the last sync had no errors, ochre when the last sync failed (to draw attention), and no dot when sync isn't configured at all. Sync history itself is still reachable from Settings → Sync. The same status dot now also appears on the **Synchronization** row in Settings → Data

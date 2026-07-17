@@ -1022,7 +1022,7 @@
   ,"@sync_channel_cloud": {"description": "Nombre del canal nube"}
   ,"sync_records_exchanged": "{sent} enviados, {received} recibidos"
   ,"@sync_records_exchanged": {"description": "Resumen de registros intercambiados","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
-  ,"sync_group_shared": "Grupo compartido"
+  ,"sync_group_shared": "Compartido"
   ,"@sync_group_shared": {"description": "Tooltip para icono de grupo compartido"}
   ,"sync_group_synced": "Todos los cambios sincronizados"
   ,"@sync_group_synced": {"description": "Tooltip para estado de grupo sincronizado"}

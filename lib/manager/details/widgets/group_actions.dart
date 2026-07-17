@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../sync/settings_sync_badge.dart';
 
 class GroupActions extends StatelessWidget {
   final bool hasExpenses;
   final bool isPinned;
+  final bool syncEnabled;
+  final SyncOrchestrator? orchestrator;
   final VoidCallback? onOverview;
   final VoidCallback? onSearch;
   final VoidCallback? onFavorite;
+  final VoidCallback? onSync;
   final VoidCallback? onOptions;
   const GroupActions({
     super.key,
     required this.hasExpenses,
     required this.isPinned,
+    this.syncEnabled = false,
+    this.orchestrator,
     this.onOverview,
     this.onSearch,
     this.onFavorite,
+    this.onSync,
     this.onOptions,
   });
 
@@ -75,6 +83,22 @@ class GroupActions extends StatelessWidget {
                     icon: const Icon(Icons.search_outlined),
                     iconSize: 24,
                     tooltip: gloc.search_expenses,
+                    style: ctaStyle(),
+                  ),
+                ),
+                Tooltip(
+                  message: gloc.sync_title,
+                  child: IconButton.filledTonal(
+                    onPressed: onSync,
+                    icon: syncEnabled && orchestrator != null
+                        ? SyncStatusIcon(
+                            orchestrator: orchestrator!,
+                            icon: Icons.sync_outlined,
+                            defaultColor: colorScheme.onSurface,
+                          )
+                        : const Icon(Icons.sync_outlined),
+                    iconSize: 24,
+                    tooltip: gloc.sync_title,
                     style: ctaStyle(),
                   ),
                 ),

@@ -1510,7 +1510,7 @@
       }
     }
   },
-  "sync_group_shared": "共享群组",
+  "sync_group_shared": "共享",
   "@sync_group_shared": {
     "description": "共享群组图标的工具提示"
   },

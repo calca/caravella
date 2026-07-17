@@ -2427,7 +2427,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get sync_group_shared => 'Grupo compartilhado';
+  String get sync_group_shared => 'Compartilhado';
 
   @override
   String get sync_group_synced => 'Todas as alterações sincronizadas';
