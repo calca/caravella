@@ -353,6 +353,8 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Claro, oscuro o sistema",
   "settings_select_theme": "Seleccionar tema",
+  "settings_appearance": "Apariencia",
+  "settings_appearance_desc": "Idioma, tema y color dinámico",
   "settings_dynamic_color": "Color dinámico",
   "settings_dynamic_color_desc": "Usar colores del fondo de pantalla",
   "settings_privacy": "Privacidad",

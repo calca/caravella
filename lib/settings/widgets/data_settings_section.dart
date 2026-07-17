@@ -20,11 +20,11 @@ class DataSettingsSection extends StatelessWidget {
       title: loc.settings_data,
       description: loc.settings_data_desc,
       children: [
-        _buildDataManageRow(context, loc),
         if (orchestrator != null) ...[
           const SizedBox(height: 8),
           _buildSyncRow(context, loc, orchestrator),
         ],
+        _buildDataManageRow(context, loc),
       ],
     );
   }

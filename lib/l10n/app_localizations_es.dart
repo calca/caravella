@@ -1016,6 +1016,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_select_theme => 'Seleccionar tema';
 
   @override
+  String get settings_appearance => 'Apariencia';
+
+  @override
+  String get settings_appearance_desc => 'Idioma, tema y color dinámico';
+
+  @override
   String get settings_dynamic_color => 'Color dinámico';
 
   @override

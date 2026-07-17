@@ -3,10 +3,11 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
+import '../pages/appearance_settings_page.dart';
 import 'settings_card.dart';
 import 'settings_section.dart';
 
-/// "General" settings section: user name, language, dynamic color, theme.
+/// "General" settings section: user name and appearance entry point.
 class GeneralSettingsSection extends StatelessWidget {
   final String locale;
   final void Function(String)? onLocaleChanged;
@@ -26,11 +27,7 @@ class GeneralSettingsSection extends StatelessWidget {
       children: [
         _buildUserNameRow(context, loc),
         const SizedBox(height: 8),
-        _buildLanguageRow(context, loc),
-        const SizedBox(height: 8),
-        _buildDynamicColorRow(context, loc),
-        const SizedBox(height: 8),
-        _buildThemeRow(context, loc),
+        _buildAppearanceRow(context, loc),
       ],
     );
   }
@@ -67,214 +64,24 @@ class GeneralSettingsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildLanguageRow(BuildContext context, gen.AppLocalizations loc) {
+  Widget _buildAppearanceRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    final label = _getLanguageLabel(locale, loc);
     return SettingsCard(
       context: context,
-      semanticsButton: true,
-      semanticsLabel: '${loc.settings_language} - Current: $label',
-      semanticsHint: 'Double tap to change language',
       color: colorScheme.surface,
       child: ListTile(
-        leading: const Icon(Icons.language),
-        title: Text(loc.settings_language, style: textTheme.titleMedium),
-        subtitle: Text(label),
-        trailing: const Icon(Icons.arrow_drop_down),
-        onTap: () => _showLanguagePicker(context, locale, loc),
-      ),
-    );
-  }
-
-  Widget _buildThemeRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    final currentMode =
-        ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
-    final label = switch (currentMode) {
-      ThemeMode.light => loc.theme_light,
-      ThemeMode.dark => loc.theme_dark,
-      ThemeMode.system => loc.theme_automatic,
-    };
-    return SettingsCard(
-      context: context,
-      semanticsButton: true,
-      semanticsLabel: '${loc.settings_theme} - Current: $label',
-      semanticsHint: 'Double tap to change theme',
-      color: colorScheme.surface,
-      child: ListTile(
-        leading: const Icon(Icons.brightness_6),
-        title: Text(loc.settings_theme, style: textTheme.titleMedium),
-        subtitle: Text(label),
-        trailing: const Icon(Icons.arrow_drop_down),
-        onTap: () => _showThemePicker(context, loc),
-      ),
-    );
-  }
-
-  Widget _buildDynamicColorRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    final dynamicColorNotifier = DynamicColorNotifier.of(context);
-    final enabled = dynamicColorNotifier?.dynamicColorEnabled ?? false;
-
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      child: Semantics(
-        toggled: enabled,
-        label:
-            '${loc.settings_dynamic_color} - ${enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
-        hint: enabled
-            ? loc.accessibility_double_tap_disable
-            : loc.accessibility_double_tap_enable,
-        child: ListTile(
-          leading: const Icon(Icons.palette_outlined),
-          title: Text(loc.settings_dynamic_color, style: textTheme.titleMedium),
-          subtitle: Text(
-            loc.settings_dynamic_color_desc,
-            style: textTheme.bodySmall,
-          ),
-          trailing: Semantics(
-            label: loc.accessibility_security_switch(
-              enabled
-                  ? loc.accessibility_switch_on
-                  : loc.accessibility_switch_off,
-            ),
-            child: Switch(
-              value: enabled,
-              onChanged: (val) {
-                dynamicColorNotifier?.changeDynamicColor(val);
-              },
-            ),
+        leading: const Icon(Icons.palette_outlined),
+        title: Text(loc.settings_appearance, style: textTheme.titleMedium),
+        subtitle: Text(loc.settings_appearance_desc),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (ctx) =>
+                AppearanceSettingsPage(onLocaleChanged: onLocaleChanged),
           ),
         ),
       ),
-    );
-  }
-
-  String _getLanguageLabel(String locale, gen.AppLocalizations genLoc) {
-    switch (locale) {
-      case 'it':
-        return genLoc.settings_language_it;
-      case 'pt':
-        return genLoc.settings_language_pt;
-      case 'es':
-        return genLoc.settings_language_es;
-      case 'zh':
-        return genLoc.settings_language_zh;
-      case 'en':
-      default:
-        return genLoc.settings_language_en;
-    }
-  }
-
-  void _showLanguagePicker(
-    BuildContext context,
-    String currentLocale,
-    gen.AppLocalizations loc,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        final entries = [
-          ('it', loc.settings_language_it),
-          ('en', loc.settings_language_en),
-          ('es', loc.settings_language_es),
-          ('pt', loc.settings_language_pt),
-          ('zh', loc.settings_language_zh),
-        ];
-        return GroupBottomSheetScaffold(
-          title: loc.settings_select_language,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...entries.map((e) {
-                final selected = e.$1 == currentLocale;
-                return ListTile(
-                  visualDensity: VisualDensity.compact,
-                  title: Text(e.$2),
-                  trailing: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 180),
-                    child: selected
-                        ? Icon(
-                            Icons.check,
-                            key: ValueKey(e.$1),
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  onTap: selected
-                      ? null
-                      : () {
-                          LocaleNotifier.of(context)?.changeLocale(e.$1);
-                          onLocaleChanged?.call(e.$1);
-                          Navigator.of(context).pop();
-                        },
-                );
-              }),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showThemePicker(BuildContext context, gen.AppLocalizations loc) {
-    final currentMode =
-        ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
-    final entries = <(ThemeMode, String, IconData)>[
-      (ThemeMode.system, loc.theme_automatic, Icons.settings_suggest_outlined),
-      (ThemeMode.light, loc.theme_light, Icons.light_mode_outlined),
-      (ThemeMode.dark, loc.theme_dark, Icons.dark_mode_outlined),
-    ];
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        return GroupBottomSheetScaffold(
-          title: loc.settings_select_theme,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...entries.map((e) {
-                final selected = e.$1 == currentMode;
-                return ListTile(
-                  leading: Icon(
-                    e.$3,
-                    color: selected
-                        ? Theme.of(context).colorScheme.primary
-                        : null,
-                  ),
-                  title: Text(e.$2),
-                  trailing: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 180),
-                    child: selected
-                        ? Icon(
-                            Icons.check,
-                            key: ValueKey(e.$1),
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  onTap: selected
-                      ? null
-                      : () {
-                          ThemeModeNotifier.of(context)?.changeTheme(e.$1);
-                          Navigator.of(context).pop();
-                        },
-                );
-              }),
-            ],
-          ),
-        );
-      },
     );
   }
 

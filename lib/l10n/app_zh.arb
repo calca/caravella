@@ -367,6 +367,8 @@
   "settings_theme": "主题",
   "settings_theme_desc": "选择应用主题",
   "settings_select_theme": "选择主题",
+  "settings_appearance": "外观",
+  "settings_appearance_desc": "语言、主题和动态颜色",
   "settings_dynamic_color": "动态颜色",
   "settings_dynamic_color_desc": "使用壁纸颜色",
   "settings_privacy_desc": "安全和隐私选项",

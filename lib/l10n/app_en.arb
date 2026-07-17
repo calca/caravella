@@ -373,6 +373,8 @@
   "settings_theme": "Theme",
   "settings_theme_desc": "Light, dark or system",
   "settings_select_theme": "Select theme",
+  "settings_appearance": "Appearance",
+  "settings_appearance_desc": "Language, theme and dynamic color",
   "settings_dynamic_color": "Dynamic color",
   "settings_dynamic_color_desc": "Use colors from your wallpaper",
   "settings_privacy": "Privacy",

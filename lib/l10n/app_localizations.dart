@@ -2018,6 +2018,18 @@ abstract class AppLocalizations {
   /// **'Select theme'**
   String get settings_select_theme;
 
+  /// No description provided for @settings_appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settings_appearance;
+
+  /// No description provided for @settings_appearance_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Language, theme and dynamic color'**
+  String get settings_appearance_desc;
+
   /// No description provided for @settings_dynamic_color.
   ///
   /// In en, this message translates to:
