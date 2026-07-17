@@ -147,6 +147,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          tooltip: gloc.accessibility_back_button,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -172,55 +173,57 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
       ),
       body: SafeArea(
         bottom: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SectionHeader(
-                title: isReadOnly
-                    ? gloc.expense
-                    : (widget.initialExpense?.id != null &&
-                              widget.initialExpense!.id.isNotEmpty
-                          ? gloc.edit_expense
-                          : gloc.new_expense),
-                description: '${gloc.group} ${widget.group.title}',
-              ),
-              if (isEdit &&
-                  syncOrchestrator != null &&
-                  widget.group.syncEnabled)
-                ExpenseAuthorshipInfo(
-                  orchestrator: syncOrchestrator,
-                  group: widget.group,
-                  expense: widget.initialExpense!,
+        child: FocusTraversalGroup(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SectionHeader(
+                  title: isReadOnly
+                      ? gloc.expense
+                      : (widget.initialExpense?.id != null &&
+                                widget.initialExpense!.id.isNotEmpty
+                            ? gloc.edit_expense
+                            : gloc.new_expense),
+                  description: '${gloc.group} ${widget.group.title}',
                 ),
-              const SizedBox(height: 24),
-              ExpenseFormComponent.legacy(
-                initialExpense: widget.initialExpense,
-                participants: widget.group.participants,
-                categories: widget.group.categories,
-                tripStartDate: widget.group.startDate,
-                tripEndDate: widget.group.endDate,
-                shouldAutoClose: true,
-                fullEdit: true,
-                showGroupHeader: false,
-                showActionsRow: false,
-                currency: widget.group.currency,
-                autoLocationEnabled: widget.group.autoLocationEnabled,
-                onExpenseAdded: widget.onExpenseSaved,
-                onCategoryAdded: widget.onCategoryAdded,
-                onParticipantAdded: widget.onParticipantAdded,
-                onDelete: widget.onDelete,
-                onFormValidityChanged: _updateFormValidity,
-                onSaveCallbackChanged: _updateSaveCallback,
-                onVoiceCallbackChanged: _updateVoiceCallback,
-                onScanReceiptCallbackChanged: _updateScanCallback,
-                onScanReceiptFromGalleryCallbackChanged:
-                    _updateScanFromGalleryCallback,
-                groupId: widget.group.id,
-                isReadOnly: isReadOnly,
-              ),
-            ],
+                if (isEdit &&
+                    syncOrchestrator != null &&
+                    widget.group.syncEnabled)
+                  ExpenseAuthorshipInfo(
+                    orchestrator: syncOrchestrator,
+                    group: widget.group,
+                    expense: widget.initialExpense!,
+                  ),
+                const SizedBox(height: 24),
+                ExpenseFormComponent.legacy(
+                  initialExpense: widget.initialExpense,
+                  participants: widget.group.participants,
+                  categories: widget.group.categories,
+                  tripStartDate: widget.group.startDate,
+                  tripEndDate: widget.group.endDate,
+                  shouldAutoClose: true,
+                  fullEdit: true,
+                  showGroupHeader: false,
+                  showActionsRow: false,
+                  currency: widget.group.currency,
+                  autoLocationEnabled: widget.group.autoLocationEnabled,
+                  onExpenseAdded: widget.onExpenseSaved,
+                  onCategoryAdded: widget.onCategoryAdded,
+                  onParticipantAdded: widget.onParticipantAdded,
+                  onDelete: widget.onDelete,
+                  onFormValidityChanged: _updateFormValidity,
+                  onSaveCallbackChanged: _updateSaveCallback,
+                  onVoiceCallbackChanged: _updateVoiceCallback,
+                  onScanReceiptCallbackChanged: _updateScanCallback,
+                  onScanReceiptFromGalleryCallbackChanged:
+                      _updateScanFromGalleryCallback,
+                  groupId: widget.group.id,
+                  isReadOnly: isReadOnly,
+                ),
+              ],
+            ),
           ),
         ),
       ),

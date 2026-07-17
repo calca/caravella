@@ -315,11 +315,23 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                       },
                       children: [
                         if (wizardState.includeUserNameStep)
-                          const WizardUserNameStep(),
-                        const WizardTypeAndNameStep(),
-                        WizardCompletionStep(
-                          groupId: wizardState.savedGroupId ?? '',
-                          fromWelcome: widget.fromWelcome,
+                          _wizardPage(
+                            wizardState,
+                            pageIndex: 0,
+                            child: const WizardUserNameStep(),
+                          ),
+                        _wizardPage(
+                          wizardState,
+                          pageIndex: wizardState.includeUserNameStep ? 1 : 0,
+                          child: const WizardTypeAndNameStep(),
+                        ),
+                        _wizardPage(
+                          wizardState,
+                          pageIndex: wizardState.includeUserNameStep ? 2 : 1,
+                          child: WizardCompletionStep(
+                            groupId: wizardState.savedGroupId ?? '',
+                            fromWelcome: widget.fromWelcome,
+                          ),
                         ),
                       ],
                     ),
@@ -333,6 +345,22 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
           ),
         );
       },
+    );
+  }
+
+  /// Scopes each wizard step to its own focus-traversal group and excludes
+  /// off-screen steps from focus. `PageView` (unlike `PageView.builder`)
+  /// builds every child eagerly, so without this a keyboard/desktop user
+  /// tabbing through the current step could tab straight into a hidden
+  /// step's fields.
+  Widget _wizardPage(
+    WizardState wizardState, {
+    required int pageIndex,
+    required Widget child,
+  }) {
+    return ExcludeFocus(
+      excluding: wizardState.currentStep != pageIndex,
+      child: FocusTraversalGroup(child: child),
     );
   }
 }
