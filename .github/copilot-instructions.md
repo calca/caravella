@@ -28,8 +28,8 @@
 
 ## UI & Interaction Patterns
 - **Before building any new screen, dialog, card, or chart, check `packages/caravella_core_ui/` first.** It's the shared design-system package and is intended to be reused, not reimplemented, from `lib/`. Import it as a whole via `import 'package:caravella_core_ui/caravella_core_ui.dart';` rather than deep-importing individual widget files.
-  - Layout/containers: `BaseCard`, `BottomSheetScaffold`, `SectionHeader`, `CaravellaAppBar`, `CaravellaTabBar`, `BottomActionBar`.
-  - Feedback: `AppToast` (toasts/snackbars — never call `ScaffoldMessenger.of` directly), `Material3Dialog` (dialogs), `SelectionBottomSheet` (pickers).
+  - Layout/containers: `BaseCard`, `CaravellaBottomSheetScaffold`, `SectionHeader`, `CaravellaAppBar`, `CaravellaTabBar`, `BottomActionBar`.
+  - Feedback: `AppToast` (toasts/snackbars — never call `ScaffoldMessenger.of` directly), `Material3Dialog` (dialogs), `showSelectionBottomSheet<T>()` (picker sheet, not a widget class).
   - Data display: `CurrencyDisplay`, `NoExpense` (empty states), the `charts/` widgets (`DateRangeExpenseChart`, `MonthlyExpenseChart`, `WeeklyExpenseChart`, `Last15DaysBarChart`, `ChartBadge`) and `map/` widgets.
   - `AddFab`, `AppSystemUi`, `group_background_utils.dart`, `utils/debounce.dart` cover FAB, system UI styling, group background rendering, and debouncing respectively.
   - Only build a bespoke widget in `lib/` when nothing in `caravella_core_ui` fits, and if a widget starts being useful in a second feature flow, promote it into `caravella_core_ui` instead of copy-pasting.

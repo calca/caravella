@@ -25,7 +25,7 @@ class ExportOptionsSheet extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final bottomInset = MediaQuery.of(context).padding.bottom;
 
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: gloc.export_options,
       scrollable: true,
       padding: EdgeInsets.fromLTRB(

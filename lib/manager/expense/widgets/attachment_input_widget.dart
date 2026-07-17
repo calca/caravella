@@ -161,7 +161,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
 
     final source = await showModalBottomSheet<AttachmentSource>(
       context: context,
-      builder: (context) => GroupBottomSheetScaffold(
+      builder: (context) => CaravellaBottomSheetScaffold(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

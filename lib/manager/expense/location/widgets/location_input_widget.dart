@@ -386,7 +386,7 @@ class _LocationDetailsSheet extends StatelessWidget {
         ? addressParts.join(', ')
         : location.address ?? location.name ?? gloc.location;
 
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: gloc.location,
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -63,7 +63,7 @@ void showGroupTypeSelectorSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    builder: (context) => GroupBottomSheetScaffold(
+    builder: (context) => CaravellaBottomSheetScaffold(
       title: gloc.group_type,
       scrollable: false,
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),

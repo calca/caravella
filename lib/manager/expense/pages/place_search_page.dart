@@ -313,7 +313,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
           }
         });
 
-        return GroupBottomSheetScaffold(
+        return CaravellaBottomSheetScaffold(
           title: gloc.location,
           scrollable: false,
           child: Column(

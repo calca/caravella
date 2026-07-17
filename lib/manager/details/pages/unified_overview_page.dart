@@ -38,7 +38,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
     if (!mounted) return;
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => GroupBottomSheetScaffold(
+      builder: (ctx) => CaravellaBottomSheetScaffold(
         title: gloc.share_label,
         child: Column(
           mainAxisSize: MainAxisSize.min,

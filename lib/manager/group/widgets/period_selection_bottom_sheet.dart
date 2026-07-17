@@ -1,4 +1,4 @@
-import 'package:caravella_core_ui/widgets/bottom_sheet_scaffold.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
@@ -339,7 +339,7 @@ class _PeriodSelectionBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       scrollable: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,

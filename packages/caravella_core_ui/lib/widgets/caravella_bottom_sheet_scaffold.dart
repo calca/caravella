@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Standard layout wrapper for bottom sheets in group manager section.
 /// Provides consistent horizontal padding, optional title, and vertical spacing.
-class GroupBottomSheetScaffold extends StatelessWidget {
+class CaravellaBottomSheetScaffold extends StatelessWidget {
   final String? title;
   final Widget child;
   final EdgeInsets padding;
@@ -10,7 +10,7 @@ class GroupBottomSheetScaffold extends StatelessWidget {
   final bool scrollable;
   final bool showHandle;
   final ScrollController? scrollController;
-  const GroupBottomSheetScaffold({
+  const CaravellaBottomSheetScaffold({
     super.key,
     this.title,
     required this.child,

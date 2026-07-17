@@ -28,7 +28,7 @@ class _CategoryBottomSheet extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final bottom = MediaQuery.of(context).viewInsets.bottom;
 
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: gloc.select_category,
       showHandle: true,
       scrollable: false,

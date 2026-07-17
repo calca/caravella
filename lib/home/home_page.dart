@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       context,
       AppUpdateLocalizations(loc),
       (context, {required title, required child}) =>
-          GroupBottomSheetScaffold(title: title, child: child),
+          CaravellaBottomSheetScaffold(title: title, child: child),
     );
   }
 

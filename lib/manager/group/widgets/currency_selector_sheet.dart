@@ -90,7 +90,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
             return name.contains(lower) || code.contains(lower);
           }).toList();
 
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: l.select_currency,
       child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.8,

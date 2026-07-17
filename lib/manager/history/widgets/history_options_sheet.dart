@@ -21,7 +21,7 @@ class HistoryOptionsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final bottomInset = MediaQuery.of(context).padding.bottom;
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: trip.title,
       scrollable: false, // dynamic height, no internal scroll
       padding: EdgeInsets.fromLTRB(

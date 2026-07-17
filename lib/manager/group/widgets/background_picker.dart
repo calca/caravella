@@ -298,7 +298,7 @@ class _BackgroundSheet extends StatelessWidget {
           },
         ),
     ];
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: loc.background,
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -109,6 +109,25 @@ const ColorScheme darkColorScheme = ColorScheme(
   surfaceTint: Color(0xFF80CBC4),
 );
 
+/// Semantic status colors not covered by the generated Material 3
+/// [ColorScheme]. Values are chosen for >=4.5:1 contrast against their
+/// paired `onX` color, verified against both [lightColorScheme].surface and
+/// [darkColorScheme].surface.
+extension CaravellaSemanticColors on ColorScheme {
+  Color get success => brightness == Brightness.dark
+      ? const Color(0xFF81C995)
+      : const Color(0xFF2E7D32);
+  Color get onSuccess => brightness == Brightness.dark
+      ? const Color(0xFF0B3818)
+      : const Color(0xFFFFFFFF);
+  Color get warning => brightness == Brightness.dark
+      ? const Color(0xFFFFCC80)
+      : const Color(0xFF9C6D00);
+  Color get onWarning => brightness == Brightness.dark
+      ? const Color(0xFF4A2F00)
+      : const Color(0xFFFFFFFF);
+}
+
 class CaravellaThemes {
   // TextTheme ottimizzato
   static TextTheme _createTextTheme(ColorScheme colorScheme) {

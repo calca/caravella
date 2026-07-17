@@ -54,7 +54,7 @@ class ExpenseMapDetailSheet extends StatelessWidget {
         ? locationAddress
         : '${firstExpense.location?.latitude?.toStringAsFixed(6)}, ${firstExpense.location?.longitude?.toStringAsFixed(6)}';
 
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: gloc.location,
       scrollable: true,
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),

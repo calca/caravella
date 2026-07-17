@@ -14,7 +14,7 @@ class ColorSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: loc.color_suggested_title,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

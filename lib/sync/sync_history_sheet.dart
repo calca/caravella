@@ -19,7 +19,7 @@ class SyncHistorySheet extends StatelessWidget {
       builder: (context, snapshot) {
         final history = snapshot.data ?? [];
 
-        return GroupBottomSheetScaffold(
+        return CaravellaBottomSheetScaffold(
           title: loc.sync_history_title,
           scrollable: true,
           child: history.isEmpty

@@ -142,7 +142,7 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
 
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: loc.sync_bt_title,
       scrollable: true,
       child: AnimatedSwitcher(

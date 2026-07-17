@@ -92,7 +92,7 @@ class _QrPairShowSheetState extends State<QrPairShowSheet> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: widget.groupTitle.isNotEmpty
           ? loc.sync_qr_sharing_group(widget.groupTitle)
           : loc.sync_qr_show_title,

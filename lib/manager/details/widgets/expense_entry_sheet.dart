@@ -61,7 +61,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
     // Avoid double bottom padding: we override scaffold padding bottom to 0 and manage internally.
     const baseExtra = 8.0; // uniform bottom extra spacing for all modes
     final internalBottom = bottomInset + baseExtra + keyboard;
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       scrollable: true,
       scrollController: _scrollController,
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),

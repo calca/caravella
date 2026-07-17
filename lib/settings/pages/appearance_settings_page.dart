@@ -218,7 +218,7 @@ class AppearanceSettingsPage extends StatelessWidget {
           ('pt', loc.settings_language_pt),
           ('zh', loc.settings_language_zh),
         ];
-        return GroupBottomSheetScaffold(
+        return CaravellaBottomSheetScaffold(
           title: loc.settings_select_language,
           child: Column(
             mainAxisSize: MainAxisSize.min,

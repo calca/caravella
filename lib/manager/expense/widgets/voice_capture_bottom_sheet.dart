@@ -162,7 +162,7 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
     final colorScheme = Theme.of(context).colorScheme;
     final hasError = _lastError != null;
 
-    return GroupBottomSheetScaffold(
+    return CaravellaBottomSheetScaffold(
       title: gloc.voice_input_button,
       child: Column(
         mainAxisSize: MainAxisSize.min,
