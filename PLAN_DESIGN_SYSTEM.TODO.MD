@@ -77,58 +77,58 @@ Nuovi componenti condivisi (pattern oggi duplicati tra flow, vedi Fase 2):
 
 ## Fase 4 — Accessibilità WCAG 2.2
 
-### 4.1 Semantics su elementi interattivi (SC 2.4.4, 4.1.2)
-- [ ] Aggiungere `tooltip`/`semanticLabel` ai 13 `IconButton` privi di label individuati, tra cui:
-  - `lib/settings/pages/group_type_templates_page.dart:52` (edit)
-  - `lib/home/search/group_search_page.dart:134-142` (clear)
-  - `lib/manager/group/pages/unsplash_search_page.dart:179` (clear)
-  - `lib/manager/group/widgets/period_selection_bottom_sheet.dart:98,115` (prev/next mese)
-  - `lib/manager/details/pages/expense_group_detail_page.dart:533` (back custom)
-  - `lib/sync/qr_pair_scan_page.dart:85` (back custom)
-  - Usare come riferimento il pattern già corretto in `lib/manager/expense/location/widgets/compact_location_indicator.dart:48-66` (`Semantics(button: true, label:...)` + `tooltip`).
-- [ ] **`BaseCard`** (`packages/caravella_core_ui/lib/widgets/base_card.dart`): aggiungere parametro `semanticLabel` opzionale e avvolgere il ramo tappable in `Semantics(button: true, label: ...)`/`MergeSemantics` così che titolo+saldo+immagine vengano annunciati come un unico nodo. Applicare a cascata ai call site principali (`group_card.dart`, `expense_amount_card.dart`, `settings_card.dart`, `swipeable_expense_group_card.dart`).
-- [ ] Introdurre uso di `MergeSemantics` (oggi 0 occorrenze) per le card composte da più `Text` (nome gruppo + saldo + participanti), così lo screen reader annuncia un blocco coerente invece di frammenti separati.
+### 4.1 Semantics su elementi interattivi (SC 2.4.4, 4.1.2) — ✅ completata
+- [x] Aggiunto `tooltip`/`semanticLabel` ai 6 `IconButton` individuati, più **un settimo trovato durante la Fase 4.5** (`expense_form_page.dart` back button):
+  - `group_type_templates_page.dart` (edit/delete) — chiavi l10n già esistenti (`settings_group_templates_edit_title`/`delete_title`).
+  - `group_search_page.dart` + `expense_search_page.dart` (clear) — `gloc.clear`.
+  - `unsplash_search_page.dart` (clear) — `loc.clear`.
+  - `period_selection_bottom_sheet.dart` (prev/next mese) — nuove chiavi `accessibility_previous_month`/`accessibility_next_month`, tradotte in tutte e 5 le lingue.
+  - `expense_group_detail_page.dart`, `qr_pair_scan_page.dart`, `expense_form_page.dart` (back custom, il terzo trovato in corsa) — riusano `accessibility_back_button` già esistente.
+- [x] **`BaseCard`**: aggiunto `semanticLabel` opzionale + wrapping del ramo tappable in `Semantics(button:true)`. Con `semanticLabel` → `ExcludeSemantics` (evita doppio annuncio); senza → `MergeSemantics` (unisce i `Text` figli in un unico annuncio, senza bisogno di una label duplicata da mantenere manualmente). Si applica automaticamente a ogni chiamante che già passa `onTap` a `BaseCard` (es. `group_card.dart`, zero modifiche al call site). `expense_amount_card.dart` e `swipeable_expense_group_card.dart` gestiscono il tap tramite un `InkWell` proprio (non il parametro `onTap` di `BaseCard`) — stesso pattern `Semantics`/`MergeSemantics` applicato manualmente lì.
+- [x] `MergeSemantics` introdotto (0 → 3 occorrenze), verificato dal regression report di `validate_accessibility.sh`.
 
-### 4.2 Target di tocco (SC 2.5.8)
-- [ ] `lib/manager/expense/widgets/category_selector_widget.dart:70` — rimuovere `minimumSize: Size.zero` / `tapTargetSize: MaterialTapTargetSize.shrinkWrap`, riportare al minimo condiviso (Fase 0).
-- [ ] `lib/manager/expense/widgets/participant_selector_widget.dart:73` — stesso fix.
-- [ ] `lib/manager/details/pages/tabs/participants_overview_tab.dart:340,363` — pulsanti "More"/"Less" inline, portare almeno a 24x24 (idealmente 44x44 con padding).
-- [ ] `lib/manager/group/widgets/editable_name_list.dart:162,175` — da 42x42 al target consigliato 44-48.
-- [ ] `lib/manager/expense/pages/place_search_page.dart:251-252` — da 40x40 al target consigliato.
-- [ ] Dopo i fix puntuali, sostituire ovunque i valori hardcoded con la costante condivisa introdotta in Fase 0, per evitare nuova deriva.
+### 4.2 Target di tocco (SC 2.5.8) — ✅ completata
+- [x] `category_selector_widget.dart` / `participant_selector_widget.dart` — rimosso `Size.zero`/`shrinkWrap`, sostituito con `AppDimens.minTouchTargetCompact`.
+- [x] `participants_overview_tab.dart` — pulsanti "More"/"Less" **inline in un `WidgetSpan`** (non possono prendere 44x44 senza rompere il paragrafo): introdotta una terza costante, `AppDimens.minTouchTargetInline = 24.0` (il floor WCAG), invece di `Size.zero`.
+- [x] `editable_name_list.dart` — 42x42 → `AppDimens.minTouchTargetCompact` (44x44).
+- [x] `place_search_page.dart` — marker mappa 40x40 → hit-box `AppDimens.minTouchTargetCompact`, icona visiva invariata (40, centrata).
+- [x] **Trovato durante la Fase 4.6**: `compact_location_indicator.dart` aveva anch'esso `minimumSize: Size(40,40)`, non nell'audit iniziale — corretto allo stesso modo.
+- [x] Tutti i fix usano le costanti condivise di Fase 0, nessun valore hardcoded residuo nei punti corretti.
 
-### 4.3 Contrasto colori (SC 1.4.3 / 1.4.11)
-- [ ] Costruire un piccolo tool/test di calcolo del rapporto di contrasto reale (luminanza relativa WCAG), da usare sia come test automatico sia come check manuale — oggi il test esistente (`test/accessibility_test.dart:205-212`) verifica solo `onSurface != surface`, non un rapporto numerico.
-- [ ] Verificare e correggere i cluster a rischio individuati:
-  - `lib/manager/expense/pages/viewers/video_player_page.dart:87,91,96` — `Colors.white54` su nero.
-  - `lib/manager/expense/pages/attachment_viewer_page.dart:119,124` — `Colors.white70`/`white54`.
-  - `lib/sync/qr_pair_scan_page.dart:96,104` — `Colors.black54` su overlay fotocamera.
-- [ ] Dopo la Fase 3.2, verificare il contrasto dei nuovi colori semantici `success`/`warning` in entrambi i temi.
+### 4.3 Contrasto colori (SC 1.4.3 / 1.4.11) — ✅ completata
+- [x] Creato `ContrastUtils` (`packages/caravella_core_ui/lib/utils/contrast.dart`): luminanza relativa + rapporto di contrasto secondo la formula WCAG, con alpha-compositing corretto per i colori traslucidi (prima versione ignorava l'alpha e restituiva sempre 21:1 — scoperto e corretto confrontando con calcoli manuali prima di fidarsene).
+- [x] Rimisurati i 3 cluster segnalati come "a rischio": **tutti falsi positivi**, già conformi sui loro sfondi reali — `white54`/`white70` su nero pieno: 6.1:1/10:1 (soglia AA normale 4.5); lo scrim `black54` di `qr_pair_scan_page.dart` è dietro testo bianco *opaco* (non è il testo stesso a essere traslucido) e supera 4.6:1 anche nel caso peggiore (fotogramma camera bianco). Nessuna modifica al codice sorgente per questi tre — solo il tool, che ora è anche collegato al nuovo test reale (Fase 4.7).
+- [x] Colori semantici `success`/`warning` di Fase 3.2 rimisurati con lo stesso tool: tutti conformi (5.1–11.8:1 a seconda del tema/ruolo).
+- [x] **Trovato durante il collegamento al test reale**: `onPrimary` su `primary` in tema chiaro è 3.67:1 — sotto la soglia 4.5 per testo normale, ma sopra 3.0 (testo grande/componente UI), che è la soglia corretta per questo caso (usato per icone come `AddFab` e per label di bottoni bold 14sp). Non è un bug del colore, era un limite troppo severo nel nuovo test — corretto lì, non nel tema.
 
-### 4.4 Form accessibili (SC 3.3.1, 3.3.2)
-- [ ] Estendere `form_theme.dart` con `labelText` (Fase 3.4), poi applicare ai campi oggi solo-hint:
-  - `lib/manager/expense/widgets/amount_input_widget.dart:53,126` (importo)
-  - `lib/manager/expense/widgets/note_input_widget.dart:34` (nota)
-  - `lib/manager/group/widgets/group_title_field.dart:84` (titolo gruppo)
-  - `lib/manager/group/wizard/wizard_steps/wizard_user_name_step.dart:94-95`, `wizard_type_and_name_step.dart:50,103` (wizard)
-  - Usare come riferimento il pattern già corretto in `lib/manager/expense/widgets/category_dialog.dart:41-49` (`Semantics(textField:true, label:...)` + `labelText`).
-- [ ] Estendere l'uso di `errorText` (oggi solo 2 occorrenze) ai form principali (importo, nome gruppo, note, categoria), collegato a `Semantics`/annuncio screen reader degli errori di validazione.
+### 4.4 Form accessibili (SC 3.3.1, 3.3.2) — ✅ completata
+- [x] `note_input_widget.dart` — il campo non aveva **alcun** nome accessibile (il `semanticsLabel` di `IconLeadingField` etichetta solo l'icona decorativa, non il `TextFormField`): aggiunto `Semantics(textField:true, label:...)` + `labelText` visibile.
+- [x] `group_title_field.dart` — stesso gap, stesso fix (widget condiviso da wizard e pagina impostazioni gruppo, un solo fix copre entrambi i call site).
+- [x] `wizard_user_name_step.dart` — trovata una chiave `wizard_user_name_label` ("Your name (optional)") già tradotta ma mai usata: agganciata come `labelText` + `Semantics label`, al posto del solo hint-esempio "e.g. Alex".
+- [x] `wizard_type_and_name_step.dart` — messaggio di validazione "inserisci un titolo" spostato da `Text` sibling (invisibile allo screen reader sul campo) a `errorText` nativo del field, stessa condizione di visibilità di prima.
+- [x] `amount_input_widget.dart` e `category_selector_widget.dart` **intenzionalmente non toccati** qui: il campo importo ha già un `Semantics(textField:true, label:...)` funzionante e il suo `validator` passa già per un vero `Form`/`GlobalKey<FormState>` (errori già accessibili di serie); categoria non ha alcuna regola di validazione oggi (selezione nullable, nessun vincolo) quindi non c'è uno stato di errore da collegare senza cambiare il comportamento del prodotto.
 
-### 4.5 Focus e navigazione da tastiera (SC 2.4.3, 2.1.1)
-- [ ] Introdurre `FocusTraversalGroup` con ordine esplicito nelle schermate complesse dove l'ordine implicito è più a rischio: wizard multi-step (`manager/group/wizard/`), form spesa con allegati/categoria/partecipanti (`manager/expense/pages/expense_form_page.dart`). Rilevante perché l'app supporta anche macOS/Windows/Web, non solo mobile.
-- [ ] Rivedere i 7 punti con `autofocus: true` per conflitti di focus-trapping quando combinati con un futuro `FocusTraversalGroup`.
+### 4.5 Focus e navigazione da tastiera (SC 2.4.3, 2.1.1) — ✅ completata
+- [x] `group_creation_wizard_page.dart` — il `PageView` (non `.builder`) costruisce tutti gli step eagerly anche se ne mostra uno solo: un utente da tastiera/desktop potrebbe tabbare dentro i campi di uno step nascosto. Ogni step ora è avvolto in `ExcludeFocus(excluding: <non è lo step corrente>)` + un proprio `FocusTraversalGroup`.
+- [x] `expense_form_page.dart` — corpo del form avvolto in `FocusTraversalGroup`, per rendere esplicito (invece che implicito) l'ordine di tab su allegati/categoria/partecipanti.
+- [x] Rivisti tutti i 7 punti `autofocus: true`: nessuno è discendente delle due aree appena delimitate (vivono in bottom sheet/pagine separate — `category_dialog`, sheet di selezione valuta/periodo, le pagine dedicate di editing partecipanti/categorie) — nessun conflitto di focus-trapping da risolvere.
 
-### 4.6 Localizzazione delle stringhe di accessibilità
-- [ ] `lib/manager/expense/widgets/category_dialog.dart:63,72` — sostituire `'${gloc.cancel} dialog'` / `'${gloc.add} category'` con chiavi `AppLocalizations` dedicate e completamente tradotte.
-- [ ] `lib/manager/expense/location/widgets/compact_location_indicator.dart:52` — spostare `'Double tap to cancel location retrieval'` (hardcoded EN) in `AppLocalizations`.
-- [ ] `lib/home/cards/widgets/carousel_group_card.dart:78-79` (emerso durante la Fase 3.2) — `Semantics(label: isSynced == true ? 'Shared group, synced' : 'Shared group, not synced')` hardcoded in inglese, mai passato da `AppLocalizations`.
-- [ ] Fare un secondo passaggio di ricerca su tutti i `label:`/`hint:`/`semanticLabel:` del repo per individuare eventuali altri casi non emersi nell'analisi iniziale (l'audit ha coperto i pattern più comuni ma non è exhaustive).
+### 4.6 Localizzazione delle stringhe di accessibilità (SC 3.1.2 di fatto) — ✅ completata
+- [x] `category_dialog.dart` — rimossi (non tradotti) i due `Semantics(label: '${gloc.cancel} dialog'/'${gloc.add} category')`: sovrascrivevano l'etichetta automatica e corretta del bottone (già il suo stesso `Text` localizzato) con una peggiore, mezza in inglese. Cancellarli è stato il fix giusto, non tradurli.
+- [x] `compact_location_indicator.dart` — hint hardcoded EN sostituito da una nuova chiave `accessibility_cancel_location_hint`, tradotta in tutte e 5 le lingue.
+- [x] `carousel_group_card.dart` — `'Shared group, synced'`/`'...not synced'` hardcoded sostituiti componendo chiavi **già esistenti** (`sync_group_shared` + `sync_group_synced`/`sync_group_pending`), usate altrove per lo stesso identico stato — non servivano chiavi nuove.
+- [x] `amount_input_widget.dart` (Fase 4.4) — label ridondante/parzialmente EN (`"$label amount in $currencySymbol"`, fallback `"Amount input"`) semplificata a `'$label ($currencySymbol)'`, riusando `gloc.amount` per il fallback.
+- [x] `swipeable_expense_group_card.dart` (Fase 4.1) — `'$count partecipanti'` hardcoded in italiano *a prescindere dalla lingua dell'app* sostituito dalla chiave pluralizzata già esistente `participant_count`.
+- [x] Secondo passaggio di ricerca su tutto `lib/` (`label:`/`hint:`/`tooltip:`/`semanticLabel:` con stringa letterale): nessun altro caso trovato — i restanti `tooltip:`/`hint:` inoltrano tutti un valore fornito dal chiamante, già verificato localizzato in un campione.
+- [x] **Effetto collaterale sistemato**: `test/amount_input_simplified_test.dart` montava `AmountInputWidget` senza `localizationsDelegates` (non ne aveva mai avuto bisogno prima) — aggiornato allo stesso pattern già usato dai test analoghi.
 
-### 4.7 Test e gate CI
-- [ ] Estendere `test/accessibility_localization_test.dart` oltre ai 3 widget attuali (`AddFab`, `CaravellaAppBar`, `AppToast`) per coprire almeno i nuovi/promossi componenti condivisi di core_ui.
-- [ ] Sostituire il test di "contrasto" fittizio in `test/accessibility_test.dart:205-212` con un test che usi il calcolo di rapporto di contrasto reale (Fase 4.3).
-- [ ] Aggiungere test di target di tocco per i componenti condivisi promossi in Fase 1/2.
-- [ ] Ricollegare lo script ricreato (Fase 0) al workflow CI (`.github/workflows/Development - Android.yml`) come step dopo `flutter analyze`.
+### 4.7 Test e gate CI — ✅ completata
+- [x] `test/accessibility_localization_test.dart`: aggiunte 2 nuove chiavi l10n (previous/next month, cancel-location-hint) ai 3 test EN/IT/ES di "Localization Key Validation" esistenti, più 2 nuovi test dedicati al comportamento semantico di `BaseCard` (con/senza `semanticLabel`).
+- [x] `test/accessibility_test.dart`: il test di "contrasto" fittizio (verificava solo `onSurface != surface`) sostituito con un test che usa `ContrastUtils` su entrambi i temi e 4 coppie colore reali — ha **trovato un vero problema di soglia** durante la scrittura (vedi 4.3).
+- [x] Aggiunti 2 test di target di tocco: uno di contratto sulle costanti `AppDimens` (48/44/24), uno che misura il bottone renderizzato di `BottomActionBar` (componente condiviso) contro `AppDimens.minTouchTarget`.
+- [x] `validate_accessibility.sh` collegato al workflow CI (`.github/workflows/Development - Android.yml`) come step `Accessibility regression guard` dopo `Analyze`, con `--skip-tests` per non duplicare `flutter test --coverage` che gira subito dopo. **Bug trovato e corretto nello script stesso** in questo passaggio: `report_count` passava due path come un'unica stringa a `grep -rl`, che quindi non trovava mai nulla in uno dei due (il conteggio "MergeSemantics in uso" risultava sempre 0 anche dopo averne aggiunte 3 occorrenze) — corretto a path multipli veri.
+
+Suite finale: `flutter analyze` pulito, `flutter test` **708 test** (704 + 4 nuovi), tutti verdi.
 
 ---
 
@@ -138,8 +138,8 @@ Nuovi componenti condivisi (pattern oggi duplicati tra flow, vedi Fase 2):
 2. ~~**Fase 2** (fix isolate a basso rischio)~~ — **completata** (2.1 parzialmente: 2 empty-state su 5 unificate, le altre 3 deliberatamente escluse per pattern diverso; 2.6 nessuna azione necessaria).
 3. ~~**Fase 1** (promozione componenti in core_ui)~~ — **completata**, tranne `GroupCard` (valutato, non promosso: richiede inversione di controllo sulla navigazione, rimandato come task a sé).
 4. ~~**Fase 3** (uniformità DS)~~ — **completata**.
-5. **Fase 4** (accessibilità WCAG 2.2) — **prossimo passo**, non ancora iniziata. La più corposa, va fatta widget condiviso per widget condiviso (core_ui) prima, poi a cascata sui call site in `lib/`.
+5. ~~**Fase 4** (accessibilità WCAG 2.2)~~ — **completata** (4.1–4.7 tutte chiuse). Trovati e corretti 4 problemi non presenti nell'audit iniziale mentre si lavorava sul resto (un terzo back-button senza tooltip, un target di tocco 40x40, un bug nello script di regressione, una soglia di contrasto del test troppo severa) — segnale che vale la pena tenere gli occhi aperti anche fuori dalla lista, non solo eseguirla meccanicamente.
 
-Verificato dopo ogni fase: `flutter analyze` pulito, `flutter test` (704 test, tutti verdi). Nessuna voce di cambiamento in `CHANGELOG.md`: tutte le modifiche fin qui sono interne (rename, promozione componenti, refactor a parità di comportamento) senza impatto user-visible.
+Verificato dopo ogni fase: `flutter analyze` pulito, `flutter test` (708 test, tutti verdi — 704 + 4 aggiunti in Fase 4.7). Nessuna voce di cambiamento in `CHANGELOG.md`: tutte le modifiche fin qui sono interne (rename, promozione componenti, refactor a parità di comportamento, fix di accessibilità senza impatto sul flusso prodotto) senza rilevanza per l'utente finale in termini di nuove funzionalità.
 
 **Verifica visiva manuale**: tentata sull'emulatore Android (`flutter run --flavor dev`), confermata solo parzialmente. La home page si è renderizzata correttamente (card gruppo, pill "Condiviso", empty-state animato), ma la navigazione a Impostazioni/Ricerca — le schermate con più modifiche di questa sessione (`SearchAppBar`, `CaravellaAppBar`, `StatCard`) — è stata bloccata da ANR ricorrenti del servizio `GeolocatorLocationService`. Confermato **pre-esistente e non causato da queste modifiche**: file di trace ANR (`/data/anr/`) presenti anche da sessioni precedenti allo stesso giorno (09:49, 14:04), prima di qualunque modifica di questa conversazione. Verifica UI completa quindi non effettuata oltre la home; solo `flutter analyze`/`flutter test` fanno da rete di sicurezza per le schermate non raggiunte.

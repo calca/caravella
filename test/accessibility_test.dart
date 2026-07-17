@@ -186,29 +186,63 @@ void main() {
       expect(fabRenderBox.size.height, greaterThanOrEqualTo(44.0));
     });
 
-    testWidgets('Contrast ratios are adequate in themes', (
+    test('AppDimens touch-target constants match their documented contract', () {
+      // Regression guard: these are the shared minimums every touch target
+      // in the app is meant to be migrated onto (Fase 4.2) — if someone
+      // changes them, this makes the intended values explicit.
+      expect(AppDimens.minTouchTarget, 48.0);
+      expect(AppDimens.minTouchTargetCompact, 44.0);
+      expect(AppDimens.minTouchTargetInline, 24.0);
+    });
+
+    testWidgets('BottomActionBar button meets the minimum touch target', (
       WidgetTester tester,
     ) async {
-      // Test both light and dark themes
-      for (final themeMode in [ThemeMode.light, ThemeMode.dark]) {
-        await tester.pumpWidget(
-          localizedApp(
-            mode: themeMode,
-            home: const Scaffold(body: Text('Test text')),
+      await tester.pumpWidget(
+        localizedApp(
+          home: Scaffold(
+            body: BottomActionBar(onPressed: () {}, label: 'Save'),
           ),
-        );
+        ),
+      );
 
-        final context = tester.element(find.byType(Text));
-        final theme = Theme.of(context);
+      final buttonRenderBox = tester.renderObject<RenderBox>(
+        find.byType(FilledButton),
+      );
+      expect(
+        buttonRenderBox.size.height,
+        greaterThanOrEqualTo(AppDimens.minTouchTarget),
+      );
+    });
 
-        // Verify that text color contrasts with background
+    test('Contrast ratios meet WCAG AA in both themes', () {
+      // Real WCAG relative-luminance contrast ratios (see ContrastUtils),
+      // not just a "colors differ" inequality check — a ratio just above
+      // 1.0 would pass the old check while still being unreadable.
+      for (final scheme in [lightColorScheme, darkColorScheme]) {
         expect(
-          theme.colorScheme.onSurface,
-          isNot(equals(theme.colorScheme.surface)),
+          ContrastUtils.contrastRatio(scheme.onSurface, scheme.surface),
+          greaterThanOrEqualTo(ContrastUtils.aaNormalText),
+          reason: '${scheme.brightness}: onSurface vs surface',
+        );
+        // onPrimary is used for icons (e.g. AddFab) and bold 14sp button
+        // labels (labelLarge is w600 in this theme) — both fall under the
+        // WCAG "large text / UI component" 3:1 threshold, not the 4.5
+        // normal-text one.
+        expect(
+          ContrastUtils.contrastRatio(scheme.onPrimary, scheme.primary),
+          greaterThanOrEqualTo(ContrastUtils.aaLargeTextOrUi),
+          reason: '${scheme.brightness}: onPrimary vs primary',
         );
         expect(
-          theme.colorScheme.onPrimary,
-          isNot(equals(theme.colorScheme.primary)),
+          ContrastUtils.contrastRatio(scheme.success, scheme.surface),
+          greaterThanOrEqualTo(ContrastUtils.aaLargeTextOrUi),
+          reason: '${scheme.brightness}: success vs surface',
+        );
+        expect(
+          ContrastUtils.contrastRatio(scheme.warning, scheme.surface),
+          greaterThanOrEqualTo(ContrastUtils.aaLargeTextOrUi),
+          reason: '${scheme.brightness}: warning vs surface',
         );
       }
     });

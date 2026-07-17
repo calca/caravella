@@ -41,6 +41,8 @@ jobs:
         run: flutter pub get
       - name: Analyze
         run: flutter analyze
+      - name: Accessibility regression guard
+        run: ./validate_accessibility.sh --skip-tests
       - name: Run tests
         run: flutter test --coverage
       - name: Upload coverage report

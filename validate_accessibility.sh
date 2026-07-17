@@ -57,16 +57,17 @@ echo
 echo "== Debito noto (report, non bloccante — vedi PLAN_DESIGN_SYSTEM.TODO.MD) =="
 
 report_count() {
-  local desc="$1" pattern="$2" path="$3"
+  local desc="$1" pattern="$2"
+  shift 2
   local count
-  count=$(grep -rl --include="*.dart" "$pattern" "$path" 2>/dev/null | wc -l | tr -d ' ')
+  count=$(grep -rl --include="*.dart" "$pattern" "$@" 2>/dev/null | wc -l | tr -d ' ')
   echo "  - $desc: $count file"
 }
 
-report_count "IconButton( presenti" 'IconButton(' "lib"
-report_count "TextField/TextFormField con hintText (verificare presenza labelText)" 'hintText:' "lib"
-report_count "FocusTraversalGroup in uso" 'FocusTraversalGroup' "lib"
-report_count "MergeSemantics in uso" 'MergeSemantics' "lib packages/caravella_core_ui/lib"
+report_count "IconButton( presenti" 'IconButton(' lib
+report_count "TextField/TextFormField con hintText (verificare presenza labelText)" 'hintText:' lib
+report_count "FocusTraversalGroup in uso" 'FocusTraversalGroup' lib
+report_count "MergeSemantics in uso" 'MergeSemantics' lib packages/caravella_core_ui/lib
 
 echo
 if [[ "$fail" -ne 0 ]]; then

@@ -109,6 +109,62 @@ void main() {
       expect(semanticsWithLabel, findsOneWidget);
     });
 
+    testWidgets('BaseCard with semanticLabel announces as a single node', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BaseCard(
+              onTap: () {},
+              semanticLabel: 'Group card label',
+              child: const Column(
+                children: [Text('Title'), Text('Balance')],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final cardSemantics = find.byWidgetPredicate(
+        (Widget widget) =>
+            widget is Semantics &&
+            widget.properties.button == true &&
+            widget.properties.label == 'Group card label',
+      );
+      expect(cardSemantics, findsOneWidget);
+
+      // The card's own text is excluded in favor of the explicit label —
+      // it shouldn't also be exposed as a separate semantics node.
+      expect(find.bySemanticsLabel('Title'), findsNothing);
+    });
+
+    testWidgets(
+      'BaseCard without semanticLabel merges its text into one button node',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: BaseCard(
+                onTap: () {},
+                child: const Column(
+                  children: [Text('Title'), Text('Balance')],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(find.byType(MergeSemantics), findsOneWidget);
+
+        final buttonSemantics = find.byWidgetPredicate(
+          (Widget widget) =>
+              widget is Semantics && widget.properties.button == true,
+        );
+        expect(buttonSemantics, findsOneWidget);
+      },
+    );
+
     testWidgets('CaravellaAppBar uses localized accessibility labels', (
       WidgetTester tester,
     ) async {
@@ -275,6 +331,9 @@ void main() {
         expect(localizations.accessibility_toast_success, isNotEmpty);
         expect(localizations.accessibility_toast_error, isNotEmpty);
         expect(localizations.accessibility_toast_info, isNotEmpty);
+        expect(localizations.accessibility_previous_month, isNotEmpty);
+        expect(localizations.accessibility_next_month, isNotEmpty);
+        expect(localizations.accessibility_cancel_location_hint, isNotEmpty);
       });
 
       test('Italian localizations contain all accessibility keys', () {
@@ -316,6 +375,18 @@ void main() {
         expect(localizations.accessibility_toast_success, equals('Successo'));
         expect(localizations.accessibility_toast_error, equals('Errore'));
         expect(localizations.accessibility_toast_info, equals('Informazione'));
+        expect(
+          localizations.accessibility_previous_month,
+          equals('Mese precedente'),
+        );
+        expect(
+          localizations.accessibility_next_month,
+          equals('Mese successivo'),
+        );
+        expect(
+          localizations.accessibility_cancel_location_hint,
+          equals('Doppio tap per annullare il rilevamento della posizione'),
+        );
       });
 
       test('Spanish localizations contain all accessibility keys', () {
@@ -357,6 +428,18 @@ void main() {
         expect(localizations.accessibility_toast_success, equals('Éxito'));
         expect(localizations.accessibility_toast_error, equals('Error'));
         expect(localizations.accessibility_toast_info, equals('Información'));
+        expect(
+          localizations.accessibility_previous_month,
+          equals('Mes anterior'),
+        );
+        expect(
+          localizations.accessibility_next_month,
+          equals('Mes siguiente'),
+        );
+        expect(
+          localizations.accessibility_cancel_location_hint,
+          equals('Doble toque para cancelar la obtención de ubicación'),
+        );
       });
 
       test('Parameterized accessibility methods work correctly', () {
