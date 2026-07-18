@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'app_spacing.dart';
 
 /// Centralized form styling constants and utilities to ensure consistency
 /// across all form components in the application.
 class FormTheme {
   FormTheme._();
 
-  // Standard spacing constants
-  static const double fieldVerticalPadding = 8.0;
+  // Standard spacing constants, aliased to the shared AppSpacing scale so
+  // form spacing stays in sync with the rest of the design system.
+  static const double fieldVerticalPadding = AppSpacing.xs;
   static const double fieldHorizontalPadding = 0.0;
+  // Icon-to-text gap fine-tuned for inline leading icons — doesn't map to
+  // a general-purpose AppSpacing step, kept as its own value.
   static const double iconSpacing = 6.0;
-  static const double fieldSpacing = 16.0; // Space between form fields
-  static const double sectionSpacing = 24.0; // Space between form sections
+  static const double fieldSpacing = AppSpacing.md; // Space between fields
+  static const double sectionSpacing = AppSpacing.xl; // Space between sections
 
   // Standard content padding for all form fields
   static const EdgeInsets standardContentPadding = EdgeInsets.symmetric(
@@ -100,7 +104,7 @@ class FormTheme {
       isDense: true,
       contentPadding: const EdgeInsets.symmetric(
         vertical: fieldVerticalPadding,
-        horizontal: 12.0, // Multiline fields need some horizontal padding
+        horizontal: AppSpacing.sm, // Multiline fields need some horizontal padding
       ),
       border: const OutlineInputBorder(),
     );
@@ -130,7 +134,9 @@ class FormTheme {
   static InputDecoration getBorderlessAmountDecoration({
     String hintText = '0.00',
     TextStyle? hintStyle,
-    EdgeInsetsGeometry contentPadding = const EdgeInsets.symmetric(vertical: 4),
+    EdgeInsetsGeometry contentPadding = const EdgeInsets.symmetric(
+      vertical: AppSpacing.xxs,
+    ),
   }) {
     return InputDecoration(
       border: InputBorder.none,
@@ -173,7 +179,10 @@ class FormTheme {
       border: border,
       enabledBorder: border,
       focusedBorder: border,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: 0,
+      ),
       isDense: false,
     );
   }

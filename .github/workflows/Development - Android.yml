@@ -45,6 +45,8 @@ jobs:
         run: ./validate_package_boundaries.sh
       - name: Accessibility regression guard
         run: ./validate_accessibility.sh --skip-tests
+      - name: Design token regression guard
+        run: ./validate_design_tokens.sh
       - name: Run tests
         run: flutter test --coverage
       - name: Test local packages

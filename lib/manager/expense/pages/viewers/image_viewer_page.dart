@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Standalone image viewer with pinch-to-zoom
 class ImageViewerPage extends StatelessWidget {
@@ -31,10 +32,7 @@ class ImageViewerPage extends StatelessWidget {
         children: [
           Icon(Icons.error_outline, size: 64, color: Colors.white54),
           SizedBox(height: 16),
-          Text(
-            'Error loading image',
-            style: TextStyle(color: Colors.white54, fontSize: 16),
-          ),
+          Text('Error loading image', style: AppTextStyles.mediaOverlayMessage),
         ],
       ),
     );

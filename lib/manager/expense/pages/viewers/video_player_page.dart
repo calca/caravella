@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:path/path.dart' as path;
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -86,14 +87,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         children: [
           const Icon(Icons.error_outline, size: 64, color: Colors.white54),
           const SizedBox(height: 16),
-          const Text(
-            'Error loading video',
-            style: TextStyle(color: Colors.white54, fontSize: 16),
-          ),
+          Text('Error loading video', style: AppTextStyles.mediaOverlayMessage),
           const SizedBox(height: 8),
           Text(
             path.basename(widget.filePath),
-            style: const TextStyle(color: Colors.white54, fontSize: 14),
+            style: AppTextStyles.mediaOverlayCaption,
             textAlign: TextAlign.center,
           ),
         ],

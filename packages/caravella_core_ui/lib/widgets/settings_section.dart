@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_spacing.dart';
 import 'section_header.dart';
 
 class SettingsSection extends StatelessWidget {
@@ -25,12 +26,22 @@ class SettingsSection extends StatelessWidget {
         SectionHeader(
           title: title,
           description: description,
-          padding: headerPadding ?? const EdgeInsets.fromLTRB(24, 24, 24, 0),
+          padding:
+              headerPadding ??
+              const EdgeInsets.fromLTRB(
+                AppSpacing.xl,
+                AppSpacing.xl,
+                AppSpacing.xl,
+                0,
+              ),
         ),
         Padding(
           padding:
               contentPadding ??
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.xs,
+              ),
           child: Column(children: children),
         ),
       ],

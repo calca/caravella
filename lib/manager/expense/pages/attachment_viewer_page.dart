@@ -121,7 +121,7 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
           const SizedBox(height: 8),
           Text(
             path.basename(filePath),
-            style: const TextStyle(color: Colors.white54, fontSize: 14),
+            style: AppTextStyles.mediaOverlayCaption,
             textAlign: TextAlign.center,
           ),
         ],

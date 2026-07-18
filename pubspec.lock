@@ -318,14 +318,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.7"
+  dart_xcodeproj:
+    dependency: transitive
+    description:
+      name: dart_xcodeproj
+      sha256: "538d0e6e94df351a5fa6cec8e8979374023066d782a16058b6889b4a7c6d96c4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   dbus:
     dependency: transitive
     description:
       name: dbus
-      sha256: "792974a4007974fbc5c1b5433eb2330a9db3e368c3f906253af4c007d0f49a91"
+      sha256: "0ce9b0a839e6dee59a37a623d2fc26a35bbbe6404213e419b0d6411023d62645"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.13"
+    version: "0.7.14"
   device_info_plus:
     dependency: transitive
     description:
@@ -467,6 +475,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_flavorizr:
+    dependency: "direct dev"
+    description:
+      name: flutter_flavorizr
+      sha256: eae954ce8f8678b5ae6899ad6b61731a336bc9b93578f277f119ca23c8e1128a
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -885,10 +901,10 @@ packages:
     dependency: "direct main"
     description:
       name: image
-      sha256: "6300175e00616bbc832e2fc91bfa4d776af5402c81c7151bee6905bb08473c52"
+      sha256: f9881ff4998044947ec38d098bc7c8316ae1186fa786eddffdb867b9bc94dfce
       url: "https://pub.dev"
     source: hosted
-    version: "4.9.1"
+    version: "4.8.0"
   image_picker:
     dependency: "direct main"
     description:
@@ -985,6 +1001,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.2"
+  io:
+    dependency: transitive
+    description:
+      name: io
+      sha256: dfd5a80599cf0165756e3181807ed3e77daf6dd4137caaad72d0b7931597650b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   jni:
     dependency: transitive
     description:
@@ -1057,6 +1081,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  mason_logger:
+    dependency: transitive
+    description:
+      name: mason_logger
+      sha256: "4f053e4e7e1716002b72cad133d81612be3550d40ed9d43c1878c9b03ba93069"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4"
   matcher:
     dependency: transitive
     description:
@@ -1360,6 +1392,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  propertylistserialization:
+    dependency: transitive
+    description:
+      name: propertylistserialization
+      sha256: "645aaac37e73735286087fc81b27c7eabaa81b6146881bdf84090ba56f4e15ad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
   provider:
     dependency: "direct main"
     description:
@@ -1533,6 +1573,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  sprintf:
+    dependency: transitive
+    description:
+      name: sprintf
+      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   sqflite:
     dependency: transitive
     description:
@@ -1937,10 +1985,10 @@ packages:
     dependency: transitive
     description:
       name: xml
-      sha256: "67f0aff7be013d107995e9b75bf4e7f2c3ef2dfdb2c8e68024bba0a7fd5756a4"
+      sha256: "971043b3a0d3da28727e40ed3e0b5d18b742fa5a68665cca88e74b7876d5e025"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.1"
+    version: "6.6.1"
   yaml:
     dependency: transitive
     description:
@@ -1957,6 +2005,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.4"
+  yaml_writer:
+    dependency: transitive
+    description:
+      name: yaml_writer
+      sha256: "69651cd7238411179ac32079937d4aa9a2970150d6b2ae2c6fe6de09402a5dc5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   zentoast:
     dependency: "direct main"
     description:

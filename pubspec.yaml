@@ -104,6 +104,7 @@ dev_dependencies:
   path_provider_platform_interface: ^2.1.2
   sqflite_common_ffi: ^2.4.1
   cryptography: ^2.7.0
+  flutter_flavorizr: ^2.5.0
 
 flutter_launcher_icons:
   android: true
@@ -132,6 +133,30 @@ flutter_launcher_icons_dev:
   adaptive_icon_background: "#FFC107"
   adaptive_icon_monochrome: "assets/icons/caravella-icon.png"
 
+
+# iOS flavor schemes/xcconfig generation (flutter pub run flutter_flavorizr).
+# Bundle IDs mirror the Android applicationId/applicationIdSuffix in
+# android/app/build.gradle.kts so dev/staging/prod stay in sync across
+# platforms. Only iOS processors are ever run against this config — Android
+# flavors are already hand-configured in build.gradle.kts and must not be
+# touched by the generator.
+flavorizr:
+  flavors:
+    dev:
+      app:
+        name: "Caravella - Dev"
+      ios:
+        bundleId: "io.caravella.egm.dev"
+    staging:
+      app:
+        name: "Caravella - Staging"
+      ios:
+        bundleId: "io.caravella.egm.staging"
+    prod:
+      app:
+        name: "Caravella"
+      ios:
+        bundleId: "io.caravella.egm"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

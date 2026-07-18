@@ -47,7 +47,7 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Celebration emoji
-            Text(_randomEmoji, style: const TextStyle(fontSize: 72)),
+            Text(_randomEmoji, style: AppTextStyles.emojiDisplay),
 
             const SizedBox(height: 24),
 

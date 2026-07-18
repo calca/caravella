@@ -36,6 +36,38 @@
       ]
     },
     {
+      "name": "Run (Dev - iOS Simulator)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "dev",
+        "--dart-define",
+        "FLAVOR=dev",
+        "--dart-define",
+        "ENABLE_BLUETOOTH_SYNC=false",
+        "--dart-define",
+        "UNSPLASH_ACCESS_KEY=${config:caravella.unsplashAccessKey}"
+      ]
+    },
+    {
+      "name": "Run (Dev - Web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "FLAVOR=dev",
+        "--dart-define",
+        "USE_JSON_BACKEND=true",
+        "--dart-define",
+        "ENABLE_BLUETOOTH_SYNC=false",
+        "--dart-define",
+        "UNSPLASH_ACCESS_KEY=${config:caravella.unsplashAccessKey}"
+      ]
+    },
+    {
       "name": "Run (Staging)",
       "request": "launch",
       "type": "dart",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../themes/app_radius.dart';
 
 /// A Material 3 styled dialog wrapper that provides consistent styling
 /// for all AlertDialogs in the app according to M3 design specifications.
@@ -31,7 +32,9 @@ class Material3Dialog extends StatelessWidget {
 
     return AlertDialog(
       // Material 3 dialog shape with 28dp radius
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.dialog),
+      ),
       // Use M3 surface container high for elevation
       backgroundColor: colorScheme.surfaceContainerHigh,
       // Disable the M3 surface-tint elevation overlay so the dialog stays

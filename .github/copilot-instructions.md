@@ -33,7 +33,7 @@
   - Data display: `CurrencyDisplay`, `NoExpense` (empty states), the `charts/` widgets (`DateRangeExpenseChart`, `MonthlyExpenseChart`, `WeeklyExpenseChart`, `Last15DaysBarChart`, `ChartBadge`) and `map/` widgets.
   - `AddFab`, `AppSystemUi`, `group_background_utils.dart`, `utils/debounce.dart` cover FAB, system UI styling, group background rendering, and debouncing respectively.
   - Only build a bespoke widget in `lib/` when nothing in `caravella_core_ui` fits, and if a widget starts being useful in a second feature flow, promote it into `caravella_core_ui` instead of copy-pasting.
-  - Match the spacing/shape tokens and text styles from `themes/caravella_themes.dart`, `themes/app_text_styles.dart`, and `themes/form_theme.dart` instead of hardcoding values.
+  - Match the spacing/shape tokens and text styles from `themes/caravella_themes.dart`, `themes/app_text_styles.dart` (typography, incl. `AppTypography.fontFamily`), `themes/app_spacing.dart` (`AppSpacing`), `themes/app_radius.dart` (`AppRadius`), and `themes/form_theme.dart` instead of hardcoding values. `./validate_design_tokens.sh` guards known regressions in CI — see `plan.todo.ds.md`.
 - Home experience (`lib/home/home_page.dart` + `home/cards`) listens to `ExpenseGroupNotifier.updatedGroupIds` (from `caravella_core`) and consumes `lastEvent` to show `AppToast` messages via the global `rootScaffoldMessenger`.
 - Feature flows live under `lib/manager/**`; controllers (e.g., `group/group_form_controller.dart`) own form state, diff original models, and notify the global notifier after calling storage.
 

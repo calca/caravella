@@ -20,6 +20,23 @@ flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
 flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
 ```
 
+## iOS flavors (`ios/Runner.xcodeproj`)
+
+Mirrors the Android setup: three Xcode schemes (`dev`/`staging`/`prod`), each with its own `Debug-<flavor>`/`Release-<flavor>`/`Profile-<flavor>` build configuration and `ios/Flutter/<flavor><Config>.xcconfig` (e.g. `devDebug.xcconfig`), setting `PRODUCT_BUNDLE_IDENTIFIER` and the `BUNDLE_NAME`/`BUNDLE_DISPLAY_NAME` consumed by `Info.plist`.
+
+| Flavor | Bundle ID | App name |
+|---|---|---|
+| `dev` | `io.caravella.egm.dev` | "Caravella - Dev" |
+| `staging` | `io.caravella.egm.staging` | "Caravella - Staging" |
+| `prod` | `io.caravella.egm` | "Caravella" |
+
+```bash
+flutter run --flavor dev --dart-define=FLAVOR=dev -d <ios-simulator-id>
+flutter build ios --flavor staging --dart-define=FLAVOR=staging
+```
+
+These were generated with `flutter_flavorizr` (dev dependency; config lives under the `flavorizr:` key in `pubspec.yaml`), scoped to the `ios:xcconfig,ios:buildTargets,ios:schema,ios:podfile,ios:plist` processors only — the `android:*`/`flutter:*` processors are never run against this config, since Android flavors are already hand-maintained in `build.gradle.kts` and the app has its own `FLAVOR` dart-define mechanism (not flavorizr's generated one). The original `Runner` scheme/configs (`Debug`/`Release`/`Profile`, no suffix) are left in place and still work for `RunnerTests` and any tooling that doesn't pass `--flavor`. Re-run `dart run flutter_flavorizr -p ios:xcconfig,ios:buildTargets,ios:schema,ios:podfile,ios:plist -f` followed by `pod install` (from `ios/`) after editing the `flavorizr:` block in `pubspec.yaml` — then re-check `ios/Runner/Info.plist`'s `CFBundleIdentifier` is still `$(PRODUCT_BUNDLE_IDENTIFIER)` and that the generated `.xcscheme` files still have `BuildActionEntries` under `BuildAction` (the generator omits both; hand-fix them, using the `Runner` scheme as the reference, before relying on the flavor schemes).
+
 ## All dart-define flags
 
 This is the authoritative list — every `String.fromEnvironment`/`bool.fromEnvironment` call in the repo, found by grep, with its actual location:

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import '../themes/app_radius.dart';
+import '../themes/app_spacing.dart';
 
 class BaseCard extends StatelessWidget {
   final Widget child;
@@ -53,7 +55,7 @@ class BaseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultBorderRadius = BorderRadius.circular(16);
+    final defaultBorderRadius = BorderRadius.circular(AppRadius.lg);
     final effectiveBorderRadius = borderRadius ?? defaultBorderRadius;
 
     // Check if there's a background image
@@ -67,7 +69,7 @@ class BaseCard extends StatelessWidget {
       return _buildImageGradientCard(
         theme,
         effectiveBorderRadius,
-        padding ?? const EdgeInsets.all(20),
+        padding ?? const EdgeInsets.all(AppSpacing.lg),
       );
     }
 
@@ -76,7 +78,7 @@ class BaseCard extends StatelessWidget {
       return _buildGradientCard(
         theme,
         effectiveBorderRadius,
-        padding ?? const EdgeInsets.all(20),
+        padding ?? const EdgeInsets.all(AppSpacing.lg),
       );
     }
 
@@ -116,7 +118,7 @@ class BaseCard extends StatelessWidget {
 
     Widget cardContent = Container(
       margin: margin,
-      padding: padding ?? const EdgeInsets.all(20),
+      padding: padding ?? const EdgeInsets.all(AppSpacing.lg),
       decoration: decoration,
       child: child,
     );
@@ -136,7 +138,7 @@ class BaseCard extends StatelessWidget {
                   alpha: 0.05,
                 ),
                 child: Container(
-                  padding: padding ?? const EdgeInsets.all(20),
+                  padding: padding ?? const EdgeInsets.all(AppSpacing.lg),
                   decoration: decoration.copyWith(color: Colors.transparent),
                   child: child,
                 ),

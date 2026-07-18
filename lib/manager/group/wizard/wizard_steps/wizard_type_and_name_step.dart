@@ -67,7 +67,7 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Friendly emoji icon (random selection)
-                  Text(_selectedEmoji, style: const TextStyle(fontSize: 72)),
+                  Text(_selectedEmoji, style: AppTextStyles.emojiDisplay),
 
                   const SizedBox(height: 24),
 

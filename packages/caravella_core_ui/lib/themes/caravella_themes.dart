@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'app_radius.dart';
+import 'app_text_styles.dart';
 import 'form_theme.dart';
 
 // https://rydmike.com/flexcolorscheme/themesplayground-latest/?config=H4sIAKZob2gA_3WRPWvDMBRF9_wKoTkY2cGk8VZKhw6BgEuHLkaNXlOBvpCe0piQ_15JtRNoqMZzLvcK3nlB0qNO8fHgbTRiEBw57Qh9_QINgeyuhmRD4OSsRxCkZhVbVw1rWsI2Xd12LaPLu7Yj-CCtyYUPVVNdI2Gf61-MgFNy65lKHRVH6x-dm1391z1Z7awBg-HfyJuE73drda5mbLKYF7dWQKLnggoW3OOAo8uYgol6KMFB5-TyljtyFUsmjAFB02Iuc7d1cl--82xEL8vG5s71mLYm20w2BthyBC-5WiX8yVWAm-rjx-8dZrW4_AALBabTsgEAAA==
@@ -199,7 +201,7 @@ class CaravellaThemes {
         color: colorScheme.onSurfaceVariant,
         fontSize: 11,
       ),
-    ).apply(fontFamily: 'Montserrat');
+    ).apply(fontFamily: AppTypography.fontFamily);
   }
 
   // Helper method to create theme with dynamic or fallback color scheme
@@ -232,7 +234,7 @@ class CaravellaThemes {
     );
     return ThemeData(
       colorScheme: scheme,
-      fontFamily: 'Montserrat',
+      fontFamily: AppTypography.fontFamily,
       textTheme: _createTextTheme(scheme),
       useMaterial3: true,
       scaffoldBackgroundColor: scheme.surface,
@@ -240,7 +242,9 @@ class CaravellaThemes {
         backgroundColor: scheme.surfaceContainerHigh,
         surfaceTintColor: scheme.surfaceTint,
         elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.dialog),
+        ),
         titleTextStyle: _createTextTheme(
           scheme,
         ).titleLarge?.copyWith(color: scheme.onSurface),
