@@ -185,6 +185,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                       color: colorScheme.surface,
                       semanticsButton: true,
                       semanticsLabel: gloc.sync_qr_show_button,
+                      onTap: () => _showQr(context, orchestrator),
                       child: ListTile(
                         leading: Icon(Icons.qr_code, color: colorScheme.primary),
                         title: Text(
@@ -192,7 +193,6 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                           style: textTheme.titleMedium,
                         ),
                         trailing: const Icon(Icons.chevron_right),
-                        onTap: () => _showQr(context, orchestrator),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -203,6 +203,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                       color: colorScheme.surface,
                       semanticsButton: true,
                       semanticsLabel: gloc.sync_bt_title,
+                      onTap: () => _shareViaBluetooth(context, orchestrator),
                       child: ListTile(
                         leading:
                             Icon(Icons.bluetooth, color: colorScheme.primary),
@@ -211,7 +212,6 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                           style: textTheme.titleMedium,
                         ),
                         trailing: const Icon(Icons.chevron_right),
-                        onTap: () => _shareViaBluetooth(context, orchestrator),
                       ),
                     ),
                     const SizedBox(height: 8),

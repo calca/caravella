@@ -47,6 +47,7 @@ class InfoSettingsSection extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => _shareInvite(context, loc),
       child: ListTile(
         leading: const Icon(Icons.share_outlined),
         title: Text(loc.settings_invite_friends, style: textTheme.titleMedium),
@@ -55,7 +56,6 @@ class InfoSettingsSection extends StatelessWidget {
           style: textTheme.bodySmall,
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => _shareInvite(context, loc),
       ),
     );
   }
@@ -79,6 +79,9 @@ class InfoSettingsSection extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (ctx) => const WhatsNewPage())),
       child: ListTile(
         leading: const Icon(Icons.info_outline),
         title: Text(loc.settings_app_version, style: textTheme.titleMedium),
@@ -87,9 +90,6 @@ class InfoSettingsSection extends StatelessWidget {
           builder: (context, snapshot) => Text(snapshot.data ?? '-'),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (ctx) => const WhatsNewPage())),
       ),
     );
   }
@@ -100,14 +100,14 @@ class InfoSettingsSection extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (ctx) => const DeveloperPage())),
       child: ListTile(
         leading: const Icon(Icons.info_outline),
         title: Text(loc.settings_info_card, style: textTheme.titleMedium),
         subtitle: Text(loc.settings_info_card_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (ctx) => const DeveloperPage())),
       ),
     );
   }
@@ -118,6 +118,13 @@ class InfoSettingsSection extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TalkerScreen(talker: LoggerService.instance),
+          ),
+        );
+      },
       child: ListTile(
         leading: const Icon(Icons.bug_report),
         title: Text('Debug Logs', style: textTheme.titleMedium),
@@ -126,14 +133,6 @@ class InfoSettingsSection extends StatelessWidget {
           style: textTheme.bodySmall,
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) =>
-                  TalkerScreen(talker: LoggerService.instance),
-            ),
-          );
-        },
       ),
     );
   }

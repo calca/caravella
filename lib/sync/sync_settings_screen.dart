@@ -61,16 +61,16 @@ class SyncSettingsScreen extends StatelessWidget {
       color: colorScheme.surface,
       semanticsButton: true,
       semanticsLabel: loc.sync_multiuser_title,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => MultiUserSyncPage(orchestrator: orchestrator),
+        ),
+      ),
       child: ListTile(
         leading: Icon(Icons.group_outlined, color: colorScheme.primary),
         title: Text(loc.sync_multiuser_title, style: textTheme.titleMedium),
         subtitle: Text(loc.sync_multiuser_description),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => MultiUserSyncPage(orchestrator: orchestrator),
-          ),
-        ),
       ),
     );
   }
@@ -87,16 +87,16 @@ class SyncSettingsScreen extends StatelessWidget {
       color: colorScheme.surface,
       semanticsButton: true,
       semanticsLabel: loc.sync_multidevice_title,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => MultiDeviceSyncPage(orchestrator: orchestrator),
+        ),
+      ),
       child: ListTile(
         leading: Icon(Icons.devices_outlined, color: colorScheme.primary),
         title: Text(loc.sync_multidevice_title, style: textTheme.titleMedium),
         subtitle: Text(loc.sync_multidevice_description),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => MultiDeviceSyncPage(orchestrator: orchestrator),
-          ),
-        ),
       ),
     );
   }
@@ -118,12 +118,12 @@ class SyncSettingsScreen extends StatelessWidget {
           color: colorScheme.surface,
           semanticsButton: true,
           semanticsLabel: loc.sync_history_title,
+          onTap: () => _openHistory(context),
           child: ListTile(
             leading: const Icon(Icons.history),
             title:
                 Text(loc.sync_history_title, style: textTheme.titleMedium),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _openHistory(context),
           ),
         ),
       ],

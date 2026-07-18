@@ -42,6 +42,7 @@ class GeneralSettingsSection extends StatelessWidget {
           semanticsLabel: loc.settings_user_name_title,
           semanticsHint: 'Double tap to enter your name',
           color: colorScheme.surface,
+          onTap: () => _showNameDialog(context, loc, userNameNotifier),
           child: ListTile(
             leading: const Icon(Icons.person_outline),
             title: Text(
@@ -55,7 +56,6 @@ class GeneralSettingsSection extends StatelessWidget {
               style: textTheme.bodySmall,
             ),
             trailing: const Icon(Icons.edit),
-            onTap: () => _showNameDialog(context, loc, userNameNotifier),
           ),
         );
       },
@@ -68,17 +68,17 @@ class GeneralSettingsSection extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) =>
+              AppearanceSettingsPage(onLocaleChanged: onLocaleChanged),
+        ),
+      ),
       child: ListTile(
         leading: const Icon(Icons.palette_outlined),
         title: Text(loc.settings_appearance, style: textTheme.titleMedium),
         subtitle: Text(loc.settings_appearance_desc),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (ctx) =>
-                AppearanceSettingsPage(onLocaleChanged: onLocaleChanged),
-          ),
-        ),
       ),
     );
   }

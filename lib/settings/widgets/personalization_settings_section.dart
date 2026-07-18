@@ -26,6 +26,9 @@ class PersonalizationSettingsSection extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const GroupTypeTemplatesPage()),
+      ),
       child: ListTile(
         leading: const Icon(Icons.category_outlined),
         title: Text(
@@ -37,9 +40,6 @@ class PersonalizationSettingsSection extends StatelessWidget {
           style: textTheme.bodySmall,
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const GroupTypeTemplatesPage()),
-        ),
       ),
     );
   }

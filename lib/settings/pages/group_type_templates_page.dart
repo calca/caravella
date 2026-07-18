@@ -32,6 +32,11 @@ class GroupTypeTemplatesPage extends StatelessWidget {
               return SettingsCard(
                 context: context,
                 color: Theme.of(context).colorScheme.surface,
+                onTap: () => _openEditor(
+                  context,
+                  notifier,
+                  template: template,
+                ),
                 child: ListTile(
                   leading: Icon(
                     GroupTypeLocalization.iconFromCodePoint(
@@ -40,11 +45,6 @@ class GroupTypeTemplatesPage extends StatelessWidget {
                   ),
                   title: Text(template.name),
                   subtitle: Text(template.defaultCategories.join(', ')),
-                  onTap: () => _openEditor(
-                    context,
-                    notifier,
-                    template: template,
-                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

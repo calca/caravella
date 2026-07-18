@@ -69,6 +69,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
+                onTap: () => _openGeneralPage(context),
                 child: ListTile(
                   leading: const Icon(Icons.settings_outlined),
                   title: Text(
@@ -80,13 +81,13 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _openGeneralPage(context),
                 ),
               ),
               const SizedBox(height: 8),
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
+                onTap: () => _openParticipantsPage(context),
                 child: ListTile(
                   leading: const Icon(Icons.people_outline),
                   title: Text(gloc.participants, style: textTheme.titleMedium),
@@ -95,13 +96,13 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _openParticipantsPage(context),
                 ),
               ),
               const SizedBox(height: 8),
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
+                onTap: () => _openCategoriesPage(context),
                 child: ListTile(
                   leading: const Icon(Icons.label_outline),
                   title: Text(gloc.categories, style: textTheme.titleMedium),
@@ -110,13 +111,13 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _openCategoriesPage(context),
                 ),
               ),
               const SizedBox(height: 8),
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
+                onTap: () => _openOtherPage(context),
                 child: ListTile(
                   leading: const Icon(Icons.tune_outlined),
                   title: Text(gloc.segment_other, style: textTheme.titleMedium),
@@ -125,7 +126,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _openOtherPage(context),
                 ),
               ),
             ],
@@ -141,6 +141,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                 SettingsCard(
                   context: context,
                   color: colorScheme.surface,
+                  onTap: () => _openSyncPage(context),
                   child: ListTile(
                     leading: _currentTrip.syncEnabled
                         ? SettingsSyncBadge(
@@ -154,7 +155,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                       style: textTheme.bodySmall,
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    onTap: () => _openSyncPage(context),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -162,6 +162,9 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
+                onTap: _currentTrip.expenses.isEmpty
+                    ? null
+                    : () => _openExportOptions(context),
                 child: ListTile(
                   leading: Icon(
                     Icons.ios_share_outlined,
@@ -192,9 +195,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                         ? colorScheme.outline.withValues(alpha: 0.38)
                         : null,
                   ),
-                  onTap: _currentTrip.expenses.isEmpty
-                      ? null
-                      : () => _openExportOptions(context),
                 ),
               ),
             ],
@@ -208,6 +208,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
+                onTap: () => _handleArchiveToggle(context),
                 child: ListTile(
                   leading: Icon(
                     _currentTrip.archived
@@ -219,13 +220,13 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.titleMedium,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _handleArchiveToggle(context),
                 ),
               ),
               const SizedBox(height: 8),
               SettingsCard(
                 context: context,
                 color: colorScheme.surface,
+                onTap: () => _handleDelete(context),
                 child: ListTile(
                   leading: Icon(Icons.delete_outline, color: colorScheme.error),
                   title: Text(
@@ -235,7 +236,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     ),
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _handleDelete(context),
                 ),
               ),
             ],

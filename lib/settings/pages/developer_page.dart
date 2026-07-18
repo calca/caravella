@@ -16,12 +16,12 @@ class DeveloperPage extends StatelessWidget {
       semanticsLabel: loc.support_developer_title,
       semanticsHint: 'Double tap to support the developer',
       color: colorScheme.surface,
+      onTap: () => _launchUrl(context, 'https://ko-fi.com/calca'),
       child: ListTile(
         leading: const Icon(Icons.coffee_outlined),
         title: Text(loc.support_developer_title, style: textTheme.titleMedium),
         subtitle: Text(loc.support_developer_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.launch, size: 16),
-        onTap: () => _launchUrl(context, 'https://ko-fi.com/calca'),
       ),
     );
   }
@@ -32,12 +32,12 @@ class DeveloperPage extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => _launchUrl(context, 'https://calca.github.io/'),
       child: ListTile(
         leading: Icon(Icons.person_outline),
         title: Text(loc.terms_github_title, style: textTheme.titleMedium),
         subtitle: Text(loc.terms_github_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.launch, size: 16),
-        onTap: () => _launchUrl(context, 'https://calca.github.io/'),
       ),
     );
   }
@@ -48,12 +48,12 @@ class DeveloperPage extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => _launchUrl(context, 'https://github.com/calca/caravella'),
       child: ListTile(
         leading: Icon(Icons.code_outlined),
         title: Text(loc.terms_repo_title, style: textTheme.titleMedium),
         subtitle: Text(loc.terms_repo_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.launch, size: 16),
-        onTap: () => _launchUrl(context, 'https://github.com/calca/caravella'),
       ),
     );
   }
@@ -64,13 +64,13 @@ class DeveloperPage extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () =>
+          _launchUrl(context, 'https://github.com/calca/caravella/issues'),
       child: ListTile(
         leading: Icon(Icons.bug_report_outlined),
         title: Text(loc.terms_issue_title, style: textTheme.titleMedium),
         subtitle: Text(loc.terms_issue_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.launch, size: 16),
-        onTap: () =>
-            _launchUrl(context, 'https://github.com/calca/caravella/issues'),
       ),
     );
   }
@@ -81,15 +81,15 @@ class DeveloperPage extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => _launchUrl(
+        context,
+        'https://github.com/calca/caravella/blob/main/LICENSE',
+      ),
       child: ListTile(
         leading: Icon(Icons.open_in_new),
         title: Text(loc.license_link, style: textTheme.titleMedium),
         subtitle: Text(loc.terms_license_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.launch, size: 16),
-        onTap: () => _launchUrl(
-          context,
-          'https://github.com/calca/caravella/blob/main/LICENSE',
-        ),
       ),
     );
   }

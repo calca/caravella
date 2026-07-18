@@ -38,6 +38,11 @@ class DataSettingsSection extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => SyncSettingsScreen(orchestrator: orchestrator),
+        ),
+      ),
       child: ListTile(
         leading: SettingsSyncBadge(
           orchestrator: orchestrator,
@@ -46,11 +51,6 @@ class DataSettingsSection extends StatelessWidget {
         title: Text(loc.sync_title, style: textTheme.titleMedium),
         subtitle: Text(loc.sync_settings_desc),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (ctx) => SyncSettingsScreen(orchestrator: orchestrator),
-          ),
-        ),
       ),
     );
   }
@@ -61,14 +61,14 @@ class DataSettingsSection extends StatelessWidget {
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
+      onTap: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (ctx) => const DataBackupPage())),
       child: ListTile(
         leading: const Icon(Icons.storage_outlined),
         title: Text(loc.settings_data_manage, style: textTheme.titleMedium),
         subtitle: Text(loc.settings_data_desc),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (ctx) => const DataBackupPage())),
       ),
     );
   }

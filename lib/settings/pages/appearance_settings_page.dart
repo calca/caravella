@@ -47,12 +47,12 @@ class AppearanceSettingsPage extends StatelessWidget {
       semanticsLabel: '${loc.settings_language} - Current: $label',
       semanticsHint: 'Double tap to change language',
       color: colorScheme.surface,
+      onTap: () => _showLanguagePicker(context, locale, loc),
       child: ListTile(
         leading: const Icon(Icons.language),
         title: Text(loc.settings_language, style: textTheme.titleMedium),
         subtitle: Text(label),
         trailing: const Icon(Icons.arrow_drop_down),
-        onTap: () => _showLanguagePicker(context, locale, loc),
       ),
     );
   }

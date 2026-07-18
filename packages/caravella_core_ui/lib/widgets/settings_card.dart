@@ -10,6 +10,7 @@ class SettingsCard extends StatelessWidget {
   final String? semanticsHint;
   final bool? semanticsToggled;
   final Color? color;
+  final VoidCallback? onTap;
   final BuildContext context;
 
   const SettingsCard({
@@ -21,6 +22,7 @@ class SettingsCard extends StatelessWidget {
     this.semanticsHint,
     this.semanticsToggled,
     this.color,
+    this.onTap,
   });
 
   @override
@@ -28,6 +30,7 @@ class SettingsCard extends StatelessWidget {
     final card = BaseCard(
       padding: EdgeInsets.zero,
       backgroundColor: color,
+      onTap: onTap,
       child: child,
     );
     if (semanticsButton == true ||

@@ -211,6 +211,7 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
             color: colorScheme.surface,
             semanticsButton: true,
             semanticsLabel: loc.sync_now,
+            onTap: _syncNow,
             child: ListTile(
               leading: Icon(Icons.sync, color: colorScheme.primary),
               title: Text(loc.sync_now, style: textTheme.titleMedium),
@@ -218,7 +219,6 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
                   ? Text(loc.sync_last_sync(_formatTime(_lastCloudSync!)))
                   : null,
               trailing: const Icon(Icons.chevron_right),
-              onTap: _syncNow,
             ),
           ),
         ],
