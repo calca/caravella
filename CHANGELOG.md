@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Sync row's green/ochre status dot (shown on the home screen and Settings → Data when sync is on) now also appears on the **Sync** row in a group's own settings, once that group's sync toggle is enabled — previously only a plain icon was shown there
 
 ### Changed
+- Sync History is now a dedicated full page (Settings → Sync → Sync History) instead of a modal bottom sheet, and is also reachable per-group from that group's own Sync sub-page, scoped to sync events that touched that group specifically
 - The shared-group indicator on home screen group cards is now a text pill ("Condiviso"/"Shared") matching the existing favorite pill's style, placed to its right, instead of a bare people icon + sync-status dot in the title row
 - Removed the shared-group people icon from the expense groups list (history/all-groups page) — redundant now that the home screen carries its own indicator
 - Settings reordering: **Template e tipologia gruppi** moved right before **Informazioni** (after Privacy and Dati), and **Lingua**, **Colore dinamico**, **Tema** moved out of the General section into a new **Aspetto** sub-page reachable from a single entry row, mirroring the Data/Group-templates sub-page pattern

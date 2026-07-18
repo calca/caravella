@@ -3,34 +3,76 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-/// Bottom sheet displaying the last 20 sync events from
+/// Full-page sync history, listing the last sync events from
 /// [SyncOrchestrator.getHistory].
-class SyncHistorySheet extends StatelessWidget {
+///
+/// Reached from Settings → Sync (all groups, [groupId] left `null`) and from
+/// a single group's sync page (scoped to [groupId]/[groupTitle], reusing the
+/// same page and entry rendering rather than a separate view).
+class SyncHistoryPage extends StatelessWidget {
   final SyncOrchestrator orchestrator;
 
-  const SyncHistorySheet({super.key, required this.orchestrator});
+  /// When set, only events that touched this group are shown.
+  final String? groupId;
+
+  /// Title of the group [groupId] belongs to, used in the page description.
+  final String? groupTitle;
+
+  const SyncHistoryPage({
+    super.key,
+    required this.orchestrator,
+    this.groupId,
+    this.groupTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: orchestrator.getHistory(limit: 20),
-      builder: (context, snapshot) {
-        final history = snapshot.data ?? [];
+    return AppSystemUI.surface(
+      child: Scaffold(
+        appBar: const CaravellaAppBar(),
+        body: ListView(
+          padding: EdgeInsets.fromLTRB(
+            0,
+            0,
+            0,
+            MediaQuery.of(context).padding.bottom + 24,
+          ),
+          children: [
+            SettingsSection(
+              title: loc.sync_history_title,
+              description: groupId != null
+                  ? loc.sync_history_group_desc(groupTitle ?? '')
+                  : '',
+              children: [
+                FutureBuilder<List<Map<String, dynamic>>>(
+                  future: orchestrator.getHistory(limit: 20, groupId: groupId),
+                  builder: (context, snapshot) {
+                    final history = snapshot.data ?? [];
 
-        return CaravellaBottomSheetScaffold(
-          title: loc.sync_history_title,
-          scrollable: true,
-          child: history.isEmpty
-              ? _buildEmptyState(context, loc)
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children:
-                      history.map((e) => _buildEntry(context, loc, e)).toList(),
+                    if (history.isEmpty) {
+                      return _buildEmptyState(context, loc);
+                    }
+
+                    return SettingsCard(
+                      context: context,
+                      color: colorScheme.surface,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: history
+                            .map((e) => _buildEntry(context, loc, e))
+                            .toList(),
+                      ),
+                    );
+                  },
                 ),
-        );
-      },
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -986,6 +986,8 @@
   ,"@sync_cloud_sign_in_failed": {"description": "Error mostrado cuando el inicio de sesión de Google falla o se cancela"}
   ,"sync_history_title": "Historial de sync"
   ,"@sync_history_title": {"description": "Título para la sección de historial de sync"}
+  ,"sync_history_group_desc": "Eventos de sync de «{groupTitle}»"
+  ,"@sync_history_group_desc": {"description": "Descripción en la página de historial de sync al filtrar por un grupo", "placeholders": {"groupTitle": {"type": "String"}}}
   ,"sync_status_synced": "Sincronizado"
   ,"@sync_status_synced": {"description": "Estado cuando sync está actualizado"}
   ,"sync_status_syncing": "Sincronizando..."

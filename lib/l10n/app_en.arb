@@ -1008,6 +1008,8 @@
   ,"@sync_cloud_sign_in_failed": {"description": "Error shown when Google sign-in fails or is cancelled"}
   ,"sync_history_title": "Sync History"
   ,"@sync_history_title": {"description": "Title for sync history section"}
+  ,"sync_history_group_desc": "Sync events for «{groupTitle}»"
+  ,"@sync_history_group_desc": {"description": "Description on the sync history page when scoped to a single group", "placeholders": {"groupTitle": {"type": "String"}}}
   ,"sync_status_synced": "Synced"
   ,"@sync_status_synced": {"description": "Status when sync is up to date"}
   ,"sync_status_syncing": "Syncing..."

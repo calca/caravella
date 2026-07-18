@@ -8,6 +8,7 @@ import '../../../sync/bluetooth_advertise_sheet.dart';
 import '../../../sync/bluetooth_sync_channel.dart';
 import '../../../sync/bluetooth_sync_factory.dart';
 import '../../../sync/qr_pair_show_sheet.dart';
+import '../../../sync/sync_history_page.dart';
 import '../../../sync/widgets/paired_devices_list.dart';
 
 /// Per-group sync settings sub-page, reached from [GroupSettingsPage].
@@ -98,6 +99,18 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
         groupTitle: _currentTrip.title,
       ),
     ).whenComplete(() => setState(() {}));
+  }
+
+  void _openHistory(BuildContext context, SyncOrchestrator orchestrator) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SyncHistoryPage(
+          orchestrator: orchestrator,
+          groupId: _currentTrip.id,
+          groupTitle: _currentTrip.title,
+        ),
+      ),
+    );
   }
 
   void _shareViaBluetooth(BuildContext context, SyncOrchestrator orchestrator) {
@@ -227,6 +240,29 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                         groupId: _currentTrip.id,
                         showRemoveAction: true,
                       ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            if (orchestrator != null) ...[
+              SettingsSection(
+                title: gloc.sync_history_title,
+                description: '',
+                children: [
+                  SettingsCard(
+                    context: context,
+                    color: colorScheme.surface,
+                    semanticsButton: true,
+                    semanticsLabel: gloc.sync_history_title,
+                    onTap: () => _openHistory(context, orchestrator),
+                    child: ListTile(
+                      leading: const Icon(Icons.history),
+                      title: Text(
+                        gloc.sync_history_title,
+                        style: textTheme.titleMedium,
+                      ),
+                      trailing: const Icon(Icons.chevron_right),
                     ),
                   ),
                 ],

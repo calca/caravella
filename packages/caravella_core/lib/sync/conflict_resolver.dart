@@ -48,6 +48,7 @@ class ConflictResolver {
     int applied = 0;
     int skipped = 0;
     int errors = 0;
+    final touchedGroupIds = <String>{};
 
     LoggerService.info(
       'Applying delta from peer=$peerId ($peerName): '
@@ -88,6 +89,8 @@ class ConflictResolver {
             errors++;
             continue;
           }
+
+          touchedGroupIds.add(groupId);
 
           // Check if we already have this group locally
           final localRows = await txn.query(
@@ -158,6 +161,8 @@ class ConflictResolver {
             continue;
           }
 
+          touchedGroupIds.add(groupId);
+
           final localRows = await txn.query(
             SqliteExpenseGroupRepository.tableGroups,
             columns: ['id', 'updated_at', 'deleted'],
@@ -226,6 +231,7 @@ class ConflictResolver {
         SyncClock.nowMs(),
         isUtc: true,
       ),
+      groupIds: touchedGroupIds,
     );
 
     LoggerService.info('Delta applied: $result', name: _tag);

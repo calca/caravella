@@ -273,10 +273,27 @@ class SyncOrchestrator {
   /// Get last N sync history entries.
   ///
   /// Each entry is a map with keys: `channel`, `peerId`, `applied`,
-  /// `skipped`, `errors`, `timestamp`.
-  Future<List<Map<String, dynamic>>> getHistory({int limit = 20}) async {
-    if (_history.length <= limit) return List.unmodifiable(_history);
-    return List.unmodifiable(_history.take(limit));
+  /// `skipped`, `errors`, `timestamp`, `groupIds`.
+  ///
+  /// When [groupId] is given, only entries whose `groupIds` contain it are
+  /// returned — a single peer exchange can carry several groups at once, so
+  /// this narrows the shared history down to the ones that touched that
+  /// specific group.
+  Future<List<Map<String, dynamic>>> getHistory({
+    int limit = 20,
+    String? groupId,
+  }) async {
+    final source = groupId == null
+        ? _history
+        : _history
+            .where(
+              (e) => (e['groupIds'] as List<String>? ?? const [])
+                  .contains(groupId),
+            )
+            .toList();
+
+    if (source.length <= limit) return List.unmodifiable(source);
+    return List.unmodifiable(source.take(limit));
   }
 
   // ---------------------------------------------------------------------------
@@ -445,6 +462,7 @@ class SyncOrchestrator {
       'skipped': result.skipped,
       'errors': result.errors,
       'timestamp': result.syncedAt.toIso8601String(),
+      'groupIds': result.groupIds.toList(),
     });
 
     // Cap history at 100 entries

@@ -2301,6 +2301,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_history_title => '同步历史';
 
   @override
+  String sync_history_group_desc(String groupTitle) {
+    return '「$groupTitle」的同步事件';
+  }
+
+  @override
   String get sync_status_synced => '已同步';
 
   @override

@@ -5,7 +5,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import 'multi_device_sync_page.dart';
 import 'multi_user_sync_page.dart';
-import 'sync_history_sheet.dart';
+import 'sync_history_page.dart';
 
 /// Entry point for Settings → Sync.
 ///
@@ -131,12 +131,10 @@ class SyncSettingsScreen extends StatelessWidget {
   }
 
   void _openHistory(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SyncHistoryPage(orchestrator: orchestrator),
       ),
-      builder: (_) => SyncHistorySheet(orchestrator: orchestrator),
     );
   }
 }

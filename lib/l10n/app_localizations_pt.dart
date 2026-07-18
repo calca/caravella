@@ -2365,6 +2365,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sync_history_title => 'Histórico de sync';
 
   @override
+  String sync_history_group_desc(String groupTitle) {
+    return 'Eventos de sync de «$groupTitle»';
+  }
+
+  @override
   String get sync_status_synced => 'Sincronizado';
 
   @override

@@ -20,6 +20,11 @@ class SyncResult {
   /// When the sync completed.
   final DateTime syncedAt;
 
+  /// IDs of the groups that were touched (upserted or evaluated) by this
+  /// exchange — a single peer exchange can carry deltas for several groups
+  /// at once, so this lets history be filtered down to one group.
+  final Set<String> groupIds;
+
   const SyncResult({
     required this.applied,
     required this.skipped,
@@ -27,6 +32,7 @@ class SyncResult {
     required this.channel,
     required this.peerId,
     required this.syncedAt,
+    this.groupIds = const {},
   });
 
   /// An empty result with zeroed counters and placeholder metadata.
@@ -49,6 +55,7 @@ class SyncResult {
     channel: a.channel,
     peerId: a.peerId,
     syncedAt: a.syncedAt.isAfter(b.syncedAt) ? a.syncedAt : b.syncedAt,
+    groupIds: {...a.groupIds, ...b.groupIds},
   );
 
   @override

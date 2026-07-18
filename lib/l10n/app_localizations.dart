@@ -4529,6 +4529,12 @@ abstract class AppLocalizations {
   /// **'Sync History'**
   String get sync_history_title;
 
+  /// Description on the sync history page when scoped to a single group
+  ///
+  /// In en, this message translates to:
+  /// **'Sync events for «{groupTitle}»'**
+  String sync_history_group_desc(String groupTitle);
+
   /// Status when sync is up to date
   ///
   /// In en, this message translates to:

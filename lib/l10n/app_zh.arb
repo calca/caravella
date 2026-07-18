@@ -1408,6 +1408,15 @@
   "@sync_history_title": {
     "description": "同步历史部分标题"
   },
+  "sync_history_group_desc": "「{groupTitle}」的同步事件",
+  "@sync_history_group_desc": {
+    "description": "按单个分组筛选时同步历史页面上的说明",
+    "placeholders": {
+      "groupTitle": {
+        "type": "String"
+      }
+    }
+  },
   "sync_status_synced": "已同步",
   "@sync_status_synced": {
     "description": "同步完成状态"
