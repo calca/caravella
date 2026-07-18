@@ -1036,6 +1036,8 @@
   ,"@sync_bt_received_sent": {"description": "Summary after sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
   ,"sync_bt_error": "Sync failed"
   ,"@sync_bt_error": {"description": "Status when BT sync fails"}
+  ,"sync_bt_error_detail": "Something went wrong during the connection. Please try again."
+  ,"@sync_bt_error_detail": {"description": "Generic explanation shown under sync_bt_error for connection/timeout/decryption failures — deliberately does not surface raw exception text to the user"}
   ,"sync_bt_retry": "Retry"
   ,"@sync_bt_retry": {"description": "Button to retry BT sync"}
   ,"sync_bt_permission_denied": "Bluetooth permission denied — enable it in system settings to sync with nearby devices"

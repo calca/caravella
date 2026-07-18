@@ -68,11 +68,11 @@ The app uses `provider` for reactive state. The central piece is `ExpenseGroupNo
 | Active/archived group list | `lib/manager/history/**` | [App: History & Search](APP_HISTORY_SEARCH.md) |
 | Settings, backup/restore, templates | `lib/settings/**` | [App: Settings](APP_SETTINGS.md) |
 | Storage backend & migration | `packages/caravella_core/lib/data/**` | [Storage Backend](STORAGE_BACKEND.md) |
-| Receipt OCR | `lib/data/services/receipt_scanner_service.dart` | [Receipt OCR](RECEIPT_OCR.md) |
+| Receipt OCR | `lib/services/receipt_scanner_service.dart` | [Receipt OCR](RECEIPT_OCR.md) |
 | Persistent notifications | `lib/services/notification_*.dart` | [Notifications](NOTIFICATIONS.md) |
 | Maps & location search | `lib/manager/expense/location/**`, `caravella_core_ui/lib/map/**` | [Location & Maps](LOCATION_AND_MAPS.md) |
 | Flavors, dart-defines, F-Droid vs Play Store | `android/app/build.gradle.kts`, `packages/play_store_updates` | [Build Variants](BUILD_VARIANTS.md), [F-Droid Submission](FDROID_SUBMISSION.md) |
-| Peer-to-peer + Google Drive sync | `packages/caravella_core/lib/sync/**`, `lib/sync/**`, `packages/google_drive_sync` | [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md), [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md) |
+| Peer-to-peer + Google Drive sync | `packages/caravella_core/lib/sync/**`, `lib/sync/**`, `packages/google_drive_sync` | [Sync Architecture](SYNC_ARCHITECTURE.md), [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md), [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md) |
 | CI pipelines | `.github/workflows/*.yml` | [CI Pipelines](CI_PIPELINES.md) |
 
 ## See also

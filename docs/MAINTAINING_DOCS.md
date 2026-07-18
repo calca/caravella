@@ -23,7 +23,7 @@ This applies to both directions:
 | `packages/android_app_functions/lib/**` + native Kotlin under `android/.../appfunctions/` | [PACKAGE_ANDROID_APP_FUNCTIONS.md](PACKAGE_ANDROID_APP_FUNCTIONS.md) |
 | `packages/play_store_updates/lib/**` | [PACKAGE_PLAY_STORE_UPDATES.md](PACKAGE_PLAY_STORE_UPDATES.md) |
 | `packages/google_drive_sync/lib/**` | [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md), [GOOGLE_DRIVE_SYNC_SETUP.md](GOOGLE_DRIVE_SYNC_SETUP.md) |
-| `packages/caravella_core/lib/sync/**` | [PACKAGE_CARAVELLA_CORE.md](PACKAGE_CARAVELLA_CORE.md), [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md) |
+| `packages/caravella_core/lib/sync/**`, `lib/sync/**` | [SYNC_ARCHITECTURE.md](SYNC_ARCHITECTURE.md), [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md) |
 | `lib/main.dart`, `lib/main/**` | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | `lib/home/**` | [APP_HOME.md](APP_HOME.md) |
 | `lib/manager/group/**` | [APP_GROUP_MANAGEMENT.md](APP_GROUP_MANAGEMENT.md) |
@@ -33,7 +33,7 @@ This applies to both directions:
 | `lib/manager/history/**` | [APP_HISTORY_SEARCH.md](APP_HISTORY_SEARCH.md) |
 | `lib/settings/**` | [APP_SETTINGS.md](APP_SETTINGS.md) |
 | `lib/services/notification_*.dart` | [NOTIFICATIONS.md](NOTIFICATIONS.md) |
-| `lib/data/services/receipt_scanner_service.dart` | [RECEIPT_OCR.md](RECEIPT_OCR.md) |
+| `lib/services/receipt_scanner_service.dart` | [RECEIPT_OCR.md](RECEIPT_OCR.md) |
 | Any new/changed `--dart-define` flag | [BUILD_VARIANTS.md](BUILD_VARIANTS.md) — add/update its table row |
 | `android/app/build.gradle.kts`, flavor config | [BUILD_VARIANTS.md](BUILD_VARIANTS.md) |
 | `.github/workflows/*.yml` | [CI_PIPELINES.md](CI_PIPELINES.md) |

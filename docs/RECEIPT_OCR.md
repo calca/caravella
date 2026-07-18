@@ -4,7 +4,7 @@ Lets users scan a receipt (camera or gallery) to auto-fill an expense's amount a
 
 ## Implementation
 
-`ReceiptScannerService` (`lib/data/services/receipt_scanner_service.dart`, singleton) uses **`google_mlkit_text_recognition`** (`TextRecognizer(script: TextRecognitionScript.latin)` — Latin script only, so it covers IT/EN/ES/PT but not the app's Chinese locale).
+`ReceiptScannerService` (`lib/services/receipt_scanner_service.dart`, singleton) uses **`google_mlkit_text_recognition`** (`TextRecognizer(script: TextRecognitionScript.latin)` — Latin script only, so it covers IT/EN/ES/PT but not the app's Chinese locale).
 
 `scanReceipt(File imageFile)`:
 1. `_textRecognizer.processImage(InputImage.fromFile(imageFile))` — runs OCR.

@@ -2416,6 +2416,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_bt_error => 'Sincronización fallida';
 
   @override
+  String get sync_bt_error_detail =>
+      'Algo salió mal durante la conexión. Inténtalo de nuevo.';
+
+  @override
   String get sync_bt_retry => 'Reintentar';
 
   @override

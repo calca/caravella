@@ -19,7 +19,7 @@ import 'expense_form_orchestrator.dart';
 import 'expense_form_fields.dart';
 import 'expense_form_extended_fields.dart';
 import 'expense_form_compact_header.dart';
-import '../../../data/services/receipt_scanner_service.dart';
+import '../../../services/receipt_scanner_service.dart';
 
 /// Main expense form component - refactored to use config object pattern
 ///

@@ -51,6 +51,10 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
   @override
   void dispose() {
     _eventSub?.cancel();
+    // The channel is created (and owned) by the caller, per-invocation of
+    // this sheet — without this, discovery/advertising keeps running after
+    // the sheet is closed.
+    unawaited(widget.channel.stopAll());
     super.dispose();
   }
 
@@ -63,11 +67,16 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
 
     widget.channel.startDiscovery().catchError((e) {
       if (mounted) {
+        final loc = gen.AppLocalizations.of(context);
         setState(() {
           _phase = _BtPhase.error;
+          // Only the permission-denied case has an actionable, specific
+          // message; anything else (plugin/transport errors) gets a
+          // generic explanation instead of the raw exception text — the
+          // full detail is still captured via LoggerService for debugging.
           _errorMessage = e is BluetoothPermissionDeniedException
-              ? gen.AppLocalizations.of(context).sync_bt_permission_denied
-              : e.toString();
+              ? loc.sync_bt_permission_denied
+              : loc.sync_bt_error_detail;
         });
       }
     });
@@ -103,9 +112,12 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
           _result = result;
         });
       case BtSyncError(:final error):
+        // `error` is the channel's internal (English, unlocalized)
+        // exception detail — logged there for debugging, never shown here.
+        LoggerService.debug('Bluetooth sync error detail: $error', name: 'ui.sync');
         setState(() {
           _phase = _BtPhase.error;
-          _errorMessage = error;
+          _errorMessage = gen.AppLocalizations.of(context).sync_bt_error_detail;
         });
     }
   }
@@ -122,9 +134,12 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
       }
     } catch (e) {
       if (mounted) {
+        // Detail is already logged by the channel itself; the UI only
+        // shows a generic, localized explanation — never the raw
+        // exception text.
         setState(() {
           _phase = _BtPhase.error;
-          _errorMessage = e.toString();
+          _errorMessage = gen.AppLocalizations.of(context).sync_bt_error_detail;
         });
       }
     }

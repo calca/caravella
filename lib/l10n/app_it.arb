@@ -999,6 +999,8 @@
   ,"@sync_bt_received_sent": {"description": "Riepilogo dopo sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
   ,"sync_bt_error": "Sincronizzazione fallita"
   ,"@sync_bt_error": {"description": "Stato quando sync BT fallisce"}
+  ,"sync_bt_error_detail": "Qualcosa è andato storto durante la connessione. Riprova."
+  ,"@sync_bt_error_detail": {"description": "Spiegazione generica mostrata sotto sync_bt_error per errori di connessione/timeout/decrittazione — non mostra intenzionalmente il testo grezzo dell'eccezione"}
   ,"sync_bt_retry": "Riprova"
   ,"@sync_bt_retry": {"description": "Pulsante per riprovare sync BT"}
   ,"sync_bt_permission_denied": "Permesso Bluetooth negato — abilitalo nelle impostazioni di sistema per sincronizzare con i dispositivi vicini"

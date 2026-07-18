@@ -49,7 +49,8 @@ Ties auth + API client together and implements the periodic-polling half of `Clo
 
 ## Known gaps
 
-- No unit tests beyond `GoogleDriveSyncFactory`'s default-flag behavior (`test/google_drive_sync_factory_test.dart`) — `GoogleDriveAuthService`/`GoogleDriveApiClient` wrap platform channels and live HTTP calls with no mocking infrastructure in this codebase yet. Verify changes here via the manual smoke test in the [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md#verifying-it-works).
+- **`uploadShard` has no runtime call site.** It's implemented here and exercised in isolation by `test/google_drive_api_client_test.dart`, but nothing in `SyncOrchestrator`, this package's own `start()`/`syncNow()`, or any UI page ever calls `GoogleDriveCloudChannel.uploadShard` — this device's own changes are never pushed to Drive today. Downloaded shards aren't merged into the local DB either (`SyncOrchestrator`'s `onShards` callback only logs a count). See [Sync Architecture § Known gaps](SYNC_ARCHITECTURE.md#known-gaps--todos) for the full picture across all three channels.
+- Beyond the `google_drive_api_client_test.dart` coverage added for `downloadAllShards`'s error handling, there's no test coverage for `GoogleDriveAuthService`/sign-in — it wraps platform channels and live HTTP calls with no mocking infrastructure in this codebase yet. Verify auth changes via the manual smoke test in the [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md#verifying-it-works).
 - iOS is supported in code (the `GOOGLE_DRIVE_IOS_CLIENT_ID` define, `GoogleDriveAuthService`'s `iosClientId` parameter) but untested — this repo's CI only builds Android (see [CI Pipelines](CI_PIPELINES.md)).
 
 ## See also

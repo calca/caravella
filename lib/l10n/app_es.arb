@@ -1014,6 +1014,8 @@
   ,"@sync_bt_received_sent": {"description": "Resumen después de sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
   ,"sync_bt_error": "Sincronización fallida"
   ,"@sync_bt_error": {"description": "Estado cuando sync BT falla"}
+  ,"sync_bt_error_detail": "Algo salió mal durante la conexión. Inténtalo de nuevo."
+  ,"@sync_bt_error_detail": {"description": "Explicación genérica mostrada bajo sync_bt_error para errores de conexión/tiempo de espera/descifrado — deliberadamente no muestra el texto sin procesar de la excepción"}
   ,"sync_bt_retry": "Reintentar"
   ,"@sync_bt_retry": {"description": "Botón para reintentar sync BT"}
   ,"sync_bt_permission_denied": "Permiso de Bluetooth denegado — actívalo en los ajustes del sistema para sincronizar con dispositivos cercanos"

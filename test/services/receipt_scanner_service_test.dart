@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/data/services/receipt_scanner_service.dart';
+import 'package:io_caravella_egm/services/receipt_scanner_service.dart';
 
 void main() {
   group('ReceiptScannerService', () {

@@ -59,8 +59,19 @@ jobs:
         run: flutter pub get
       - name: Analyze
         run: flutter analyze
+      - name: Package boundary guard
+        run: ./validate_package_boundaries.sh
       - name: Run tests
         run: flutter test
+      - name: Test local packages
+        run: |
+          set -e
+          for pkg in packages/*/; do
+            if [ -f "${pkg}pubspec.yaml" ]; then
+              echo "== flutter test: $pkg =="
+              (cd "$pkg" && flutter pub get && flutter test)
+            fi
+          done
       - name: Build prod App Bundle (signed)
         run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - name: Get app version

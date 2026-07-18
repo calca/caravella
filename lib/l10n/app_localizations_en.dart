@@ -2402,6 +2402,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sync_bt_error => 'Sync failed';
 
   @override
+  String get sync_bt_error_detail =>
+      'Something went wrong during the connection. Please try again.';
+
+  @override
   String get sync_bt_retry => 'Retry';
 
   @override

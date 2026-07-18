@@ -27,6 +27,7 @@ If you're about to change code and aren't sure which page(s) to update afterward
 
 ## Cross-cutting features
 
+- **[Sync Architecture](SYNC_ARCHITECTURE.md)** — P2P sync engine: LAN/Bluetooth/Cloud channels, pairing, conflict resolution, trust model
 - **[Storage Backend](STORAGE_BACKEND.md)** — SQLite vs. JSON, schema, migration
 - **[Receipt OCR](RECEIPT_OCR.md)** — on-device receipt scanning
 - **[Notifications](NOTIFICATIONS.md)** — persistent date-range-aware notifications

@@ -1477,6 +1477,10 @@
   "@sync_bt_error": {
     "description": "蓝牙同步失败状态"
   },
+  "sync_bt_error_detail": "连接过程中出现问题，请重试。",
+  "@sync_bt_error_detail": {
+    "description": "在 sync_bt_error 下显示的通用说明，用于连接/超时/解密失败——刻意不向用户显示原始异常文本"
+  },
   "sync_bt_retry": "重试",
   "@sync_bt_retry": {
     "description": "重试蓝牙同步按钮"

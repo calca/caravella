@@ -2347,6 +2347,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_bt_error => '同步失败';
 
   @override
+  String get sync_bt_error_detail => '连接过程中出现问题，请重试。';
+
+  @override
   String get sync_bt_retry => '重试';
 
   @override

@@ -13,7 +13,31 @@ import 'package:nearby_connections/nearby_connections.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// Maximum payload size before chunking is applied (32 KB).
+///
+/// Not exposed as user/build configuration: no real-world payload or
+/// network condition has yet required tuning it, and the Nearby Connections
+/// transport itself imposes its own limits well above this. Revisit only if
+/// that changes.
 const int _maxChunkSize = 32 * 1024;
+
+/// Defensive cap on the number of chunks a single reassembly may buffer
+/// (~128 MB at [_maxChunkSize] each) — guards against a malformed or
+/// malicious `total` value causing unbounded buffering while waiting for
+/// [_chunkReassemblyTimeout] to kick in.
+const int _maxChunkCount = 4096;
+
+/// How long a partial chunk reassembly may sit in [BluetoothSyncChannel]
+/// before being dropped, e.g. because the sending peer disconnected
+/// mid-transfer without the transport surfacing `onDisconnected`.
+const Duration _chunkReassemblyTimeout = Duration(seconds: 30);
+
+/// How long [BluetoothSyncChannel.syncWithPeer] waits for the peer's
+/// `hello_ack` before giving up.
+const Duration _handshakeTimeout = Duration(seconds: 15);
+
+/// How long [BluetoothSyncChannel.syncWithPeer] waits for the peer's sync
+/// response before giving up.
+const Duration _syncResponseTimeout = Duration(seconds: 30);
 
 /// Thrown by [BluetoothSyncChannel] when the user has not granted the
 /// Android runtime permissions required for Nearby Connections (Bluetooth
@@ -167,6 +191,11 @@ class BluetoothSyncChannel {
 
   /// Buffers for reassembling chunked payloads, keyed by endpoint ID.
   final Map<String, List<_ChunkHeader>> _chunkBuffers = {};
+
+  /// Per-endpoint timer that drops an incomplete [_chunkBuffers] entry after
+  /// [_chunkReassemblyTimeout] — guards against a peer that disconnects
+  /// mid-transfer without the transport ever calling [_onDisconnected].
+  final Map<String, Timer> _chunkBufferTimers = {};
 
   /// Completers for pending sync responses, keyed by endpoint ID.
   final Map<String, Completer<Map<String, dynamic>>> _pendingResponses = {};
@@ -336,6 +365,10 @@ class BluetoothSyncChannel {
         LoggerService.info('Stopped discovery', name: _tag);
       }
       _chunkBuffers.clear();
+      for (final timer in _chunkBufferTimers.values) {
+        timer.cancel();
+      }
+      _chunkBufferTimers.clear();
       for (final completer in _pendingResponses.values) {
         if (!completer.isCompleted) {
           completer.complete(<String, dynamic>{});
@@ -394,7 +427,7 @@ class BluetoothSyncChannel {
       );
 
       final ack = await handshakeCompleter.future.timeout(
-        const Duration(seconds: 15),
+        _handshakeTimeout,
         onTimeout: () {
           LoggerService.warning(
             'Timeout waiting for handshake ack from $endpointId',
@@ -451,7 +484,7 @@ class BluetoothSyncChannel {
       );
 
       final responseJson = await completer.future.timeout(
-        const Duration(seconds: 30),
+        _syncResponseTimeout,
         onTimeout: () {
           LoggerService.warning(
             'Timeout waiting for sync response from $endpointId',
@@ -517,8 +550,11 @@ class BluetoothSyncChannel {
     }
   }
 
-  /// Dispose the event stream. Call when the channel will no longer be used.
+  /// Dispose the channel: stops any active advertising/discovery (so Nearby
+  /// Connections doesn't keep running after the caller is done with this
+  /// instance) and closes the event stream.
   void dispose() {
+    unawaited(stopAll());
     _eventController.close();
   }
 
@@ -549,11 +585,39 @@ class BluetoothSyncChannel {
       'Connection result for $endpointId: ${status.toString()}',
       name: _tag,
     );
+
+    if (status != Status.CONNECTED) {
+      // The connection never reached a usable state (rejected by the peer,
+      // or a transport error) — fail any handshake/sync this endpoint was
+      // waiting on immediately instead of leaving it to hit the full
+      // timeout. syncWithPeer's own catch block turns this into a
+      // SyncResult/BtSyncError, so no event is emitted here directly.
+      LoggerService.warning(
+        'Connection to $endpointId did not succeed (status=$status)',
+        name: _tag,
+      );
+      _dropChunkBuffer(endpointId);
+      final handshake = _handshakeCompleters.remove(endpointId);
+      if (handshake != null && !handshake.isCompleted) {
+        handshake.completeError(StateError('Connection failed: $status'));
+      }
+      final response = _pendingResponses.remove(endpointId);
+      if (response != null && !response.isCompleted) {
+        response.completeError(StateError('Connection failed: $status'));
+      }
+    }
   }
 
   void _onDisconnected(String endpointId) {
     LoggerService.info('Disconnected from $endpointId', name: _tag);
+    _dropChunkBuffer(endpointId);
+  }
+
+  /// Drops any in-progress chunk reassembly for [endpointId] and cancels its
+  /// [_chunkReassemblyTimeout] timer, if any.
+  void _dropChunkBuffer(String endpointId) {
     _chunkBuffers.remove(endpointId);
+    _chunkBufferTimers.remove(endpointId)?.cancel();
   }
 
   void _onEndpointFound(String endpointId, String name, String serviceId) {
@@ -616,8 +680,32 @@ class BluetoothSyncChannel {
   }
 
   void _handleChunk(String endpointId, _ChunkHeader chunk) {
+    if (chunk.total <= 0 || chunk.total > _maxChunkCount) {
+      LoggerService.warning(
+        'Rejecting chunk from $endpointId — implausible total=${chunk.total}',
+        name: _tag,
+      );
+      return;
+    }
+
+    final isNewBuffer = !_chunkBuffers.containsKey(endpointId);
     _chunkBuffers.putIfAbsent(endpointId, () => []);
     _chunkBuffers[endpointId]!.add(chunk);
+
+    if (isNewBuffer) {
+      _chunkBufferTimers[endpointId]?.cancel();
+      _chunkBufferTimers[endpointId] = Timer(_chunkReassemblyTimeout, () {
+        final dropped = _chunkBuffers.remove(endpointId);
+        _chunkBufferTimers.remove(endpointId);
+        if (dropped != null) {
+          LoggerService.warning(
+            'Dropped ${dropped.length} orphaned chunk(s) from $endpointId — '
+            'reassembly did not complete within $_chunkReassemblyTimeout',
+            name: _tag,
+          );
+        }
+      });
+    }
 
     LoggerService.debug(
       'Received chunk ${chunk.index + 1}/${chunk.total} from $endpointId',
@@ -626,6 +714,7 @@ class BluetoothSyncChannel {
 
     if (_chunkBuffers[endpointId]!.length == chunk.total) {
       // All chunks received — reassemble
+      _chunkBufferTimers.remove(endpointId)?.cancel();
       final chunks = _chunkBuffers.remove(endpointId)!;
       chunks.sort((a, b) => a.index.compareTo(b.index));
 

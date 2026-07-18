@@ -976,6 +976,8 @@
   ,"@sync_bt_received_sent": {"description": "Resumo após sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
   ,"sync_bt_error": "Sincronização falhou"
   ,"@sync_bt_error": {"description": "Estado quando sync BT falha"}
+  ,"sync_bt_error_detail": "Algo deu errado durante a conexão. Tente novamente."
+  ,"@sync_bt_error_detail": {"description": "Explicação genérica mostrada abaixo de sync_bt_error para falhas de conexão/tempo limite/descriptografia — deliberadamente não exibe o texto bruto da exceção"}
   ,"sync_bt_retry": "Tentar novamente"
   ,"@sync_bt_retry": {"description": "Botão para tentar novamente sync BT"}
   ,"sync_bt_permission_denied": "Permissão de Bluetooth negada — ative-a nas configurações do sistema para sincronizar com dispositivos próximos"

@@ -4613,6 +4613,12 @@ abstract class AppLocalizations {
   /// **'Sync failed'**
   String get sync_bt_error;
 
+  /// Generic explanation shown under sync_bt_error for connection/timeout/decryption failures — deliberately does not surface raw exception text to the user
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong during the connection. Please try again.'**
+  String get sync_bt_error_detail;
+
   /// Button to retry BT sync
   ///
   /// In en, this message translates to:
