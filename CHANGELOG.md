@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the SQLite v2→v3 upgrade skipping the sync columns/tables for any pre-existing (real-world) database, which made every install upgrading from before the sync groundwork land fail to read its existing groups and fail to save new ones
 - Bluetooth pairing now requests the required Android 12+/13+ runtime permissions (scan/connect/advertise, nearby Wi-Fi devices) before starting discovery, with a localized error shown if denied, instead of silently failing to find any device; added the corresponding manifest entries and the iOS Bonjour/local-network declarations LAN sync needs
 - The Sync row's green/ochre status dot (shown on the home screen and Settings → Data when sync is on) now also appears on the **Sync** row in a group's own settings, once that group's sync toggle is enabled — previously only a plain icon was shown there
+- Fixed a group's **Share this group** toggle showing as ON and remaining tappable even when neither Wi-Fi nor Bluetooth sync is turned on app-wide — sharing can't actually be active without a channel, so the switch now only displays on and reacts to taps while at least one is enabled, and the "Manage device pairing" section beneath it (QR/Bluetooth/paired devices) stays hidden along with it
 
 ### Changed
 - Sync History is now a dedicated full page (Settings → Sync → Sync History) instead of a modal bottom sheet, and is also reachable per-group from that group's own Sync sub-page, scoped to sync events that touched that group specifically

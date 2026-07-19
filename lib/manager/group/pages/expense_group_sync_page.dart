@@ -69,9 +69,12 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     }
   }
 
+  // Sharing can only ever be truly active while a channel (Wi-Fi or
+  // Bluetooth sync) is turned on app-wide — without one, a group's stored
+  // `syncEnabled` flag is just a dormant preference, so the switch must
+  // neither display nor be toggleable as if it were live.
   bool _canToggleSync(SyncOrchestrator? orchestrator, bool canToggleOn) =>
-      orchestrator != null &&
-      (canToggleOn || _currentTrip.syncEnabled);
+      orchestrator != null && canToggleOn;
 
   Future<void> _handleSyncToggle(bool enabled) async {
     final groupNotifier = Provider.of<ExpenseGroupNotifier>(
@@ -169,7 +172,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                 SettingsCard(
                   context: context,
                   color: colorScheme.surface,
-                  semanticsToggled: _currentTrip.syncEnabled,
+                  semanticsToggled: _currentTrip.syncEnabled && canToggleOn,
                   onTap: !_canToggleSync(orchestrator, canToggleOn)
                       ? null
                       : () => _handleSyncToggle(!_currentTrip.syncEnabled),
@@ -181,13 +184,13 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                       style: textTheme.titleMedium,
                     ),
                     subtitle: Text(
-                      canToggleOn || _currentTrip.syncEnabled
+                      canToggleOn
                           ? gloc.sync_group_enable_desc
                           : gloc.sync_group_needs_channel,
                       style: textTheme.bodySmall,
                     ),
                     trailing: Switch(
-                      value: _currentTrip.syncEnabled,
+                      value: _currentTrip.syncEnabled && canToggleOn,
                       onChanged: !_canToggleSync(orchestrator, canToggleOn)
                           ? null
                           : (value) => _handleSyncToggle(value),
@@ -196,7 +199,9 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                 ),
               ],
             ),
-            if (orchestrator != null && _currentTrip.syncEnabled) ...[
+            if (orchestrator != null &&
+                _currentTrip.syncEnabled &&
+                canToggleOn) ...[
               SettingsSection(
                 title: gloc.sync_paired_devices_title,
                 description: '',
