@@ -39,47 +39,29 @@ class DataBackupPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Card(
-                elevation: 0,
-                color: colorScheme.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Consumer<AutoBackupNotifier>(
-                  builder: (context, notifier, _) => Semantics(
-                    toggled: notifier.enabled,
-                    label:
-                        '${gloc.auto_backup_title} - ${notifier.enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
-                    hint: notifier.enabled
-                        ? gloc.accessibility_double_tap_disable
-                        : gloc.accessibility_double_tap_enable,
-                    child: ListTile(
-                      leading: const Icon(Icons.backup_outlined),
-                      title: Text(
-                        gloc.auto_backup_title,
-                        style: textTheme.titleMedium,
-                      ),
-                      subtitle: Text(
-                        gloc.auto_backup_desc,
-                        style: textTheme.bodySmall,
-                      ),
-                      trailing: Semantics(
-                        label: gloc.accessibility_security_switch(
-                          notifier.enabled
-                              ? gloc.accessibility_switch_on
-                              : gloc.accessibility_switch_off,
-                        ),
-                        child: Switch(
-                          value: notifier.enabled,
-                          onChanged: (val) async {
-                            notifier.setEnabled(val);
-                          },
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 16,
-                      ),
+              child: Consumer<AutoBackupNotifier>(
+                builder: (context, notifier, _) => SettingsCard(
+                  context: context,
+                  color: colorScheme.surface,
+                  semanticsToggled: notifier.enabled,
+                  semanticsLabel: gloc.auto_backup_title,
+                  semanticsHint: notifier.enabled
+                      ? gloc.accessibility_double_tap_disable
+                      : gloc.accessibility_double_tap_enable,
+                  onTap: () => notifier.setEnabled(!notifier.enabled),
+                  child: ListTile(
+                    leading: const Icon(Icons.backup_outlined),
+                    title: Text(
+                      gloc.auto_backup_title,
+                      style: textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                      gloc.auto_backup_desc,
+                      style: textTheme.bodySmall,
+                    ),
+                    trailing: Switch(
+                      value: notifier.enabled,
+                      onChanged: notifier.setEnabled,
                     ),
                   ),
                 ),

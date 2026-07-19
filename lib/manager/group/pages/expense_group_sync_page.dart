@@ -69,6 +69,10 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     }
   }
 
+  bool _canToggleSync(SyncOrchestrator? orchestrator, bool canToggleOn) =>
+      orchestrator != null &&
+      (canToggleOn || _currentTrip.syncEnabled);
+
   Future<void> _handleSyncToggle(bool enabled) async {
     final groupNotifier = Provider.of<ExpenseGroupNotifier>(
       context,
@@ -166,8 +170,12 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                   context: context,
                   color: colorScheme.surface,
                   semanticsToggled: _currentTrip.syncEnabled,
-                  child: SwitchListTile(
-                    secondary: const Icon(Icons.sync_outlined),
+                  onTap: !_canToggleSync(orchestrator, canToggleOn)
+                      ? null
+                      : () => _handleSyncToggle(!_currentTrip.syncEnabled),
+                  child: ListTile(
+                    enabled: _canToggleSync(orchestrator, canToggleOn),
+                    leading: const Icon(Icons.sync_outlined),
                     title: Text(
                       gloc.sync_group_enable,
                       style: textTheme.titleMedium,
@@ -178,11 +186,12 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                           : gloc.sync_group_needs_channel,
                       style: textTheme.bodySmall,
                     ),
-                    value: _currentTrip.syncEnabled,
-                    onChanged: orchestrator == null ||
-                            (!canToggleOn && !_currentTrip.syncEnabled)
-                        ? null
-                        : (value) => _handleSyncToggle(value),
+                    trailing: Switch(
+                      value: _currentTrip.syncEnabled,
+                      onChanged: !_canToggleSync(orchestrator, canToggleOn)
+                          ? null
+                          : (value) => _handleSyncToggle(value),
+                    ),
                   ),
                 ),
               ],

@@ -148,36 +148,29 @@ class AppearanceSettingsPage extends StatelessWidget {
     final dynamicColorNotifier = DynamicColorNotifier.of(context);
     final enabled = dynamicColorNotifier?.dynamicColorEnabled ?? false;
 
+    void toggle(bool val) {
+      dynamicColorNotifier?.changeDynamicColor(val);
+    }
+
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
-      child: Semantics(
-        toggled: enabled,
-        label:
-            '${loc.settings_dynamic_color} - ${enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
-        hint: enabled
-            ? loc.accessibility_double_tap_disable
-            : loc.accessibility_double_tap_enable,
-        child: ListTile(
-          leading: const Icon(Icons.palette_outlined),
-          title: Text(loc.settings_dynamic_color, style: textTheme.titleMedium),
-          subtitle: Text(
-            loc.settings_dynamic_color_desc,
-            style: textTheme.bodySmall,
-          ),
-          trailing: Semantics(
-            label: loc.accessibility_security_switch(
-              enabled
-                  ? loc.accessibility_switch_on
-                  : loc.accessibility_switch_off,
-            ),
-            child: Switch(
-              value: enabled,
-              onChanged: (val) {
-                dynamicColorNotifier?.changeDynamicColor(val);
-              },
-            ),
-          ),
+      semanticsToggled: enabled,
+      semanticsLabel: loc.settings_dynamic_color,
+      semanticsHint: enabled
+          ? loc.accessibility_double_tap_disable
+          : loc.accessibility_double_tap_enable,
+      onTap: () => toggle(!enabled),
+      child: ListTile(
+        leading: const Icon(Icons.palette_outlined),
+        title: Text(loc.settings_dynamic_color, style: textTheme.titleMedium),
+        subtitle: Text(
+          loc.settings_dynamic_color_desc,
+          style: textTheme.bodySmall,
+        ),
+        trailing: Switch(
+          value: enabled,
+          onChanged: toggle,
         ),
       ),
     );

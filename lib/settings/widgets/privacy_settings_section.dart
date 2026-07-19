@@ -28,17 +28,22 @@ class PrivacySettingsSection extends StatelessWidget {
   Widget _buildFlagSecureRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      child: Consumer<FlagSecureNotifier>(
-        builder: (context, notifier, _) => Semantics(
-          toggled: notifier.enabled,
-          label:
-              '${loc.settings_flag_secure_title} - ${notifier.enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
-          hint: notifier.enabled
+    return Consumer<FlagSecureNotifier>(
+      builder: (context, notifier, _) {
+        Future<void> toggle(bool val) async {
+          notifier.setEnabled(val);
+          await FlagSecureAndroid.setFlagSecure(val);
+        }
+
+        return SettingsCard(
+          context: context,
+          color: colorScheme.surface,
+          semanticsToggled: notifier.enabled,
+          semanticsLabel: loc.settings_flag_secure_title,
+          semanticsHint: notifier.enabled
               ? loc.accessibility_double_tap_disable
               : loc.accessibility_double_tap_enable,
+          onTap: () => toggle(!notifier.enabled),
           child: ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
             title: Text(
@@ -49,40 +54,32 @@ class PrivacySettingsSection extends StatelessWidget {
               loc.settings_flag_secure_desc,
               style: textTheme.bodySmall,
             ),
-            trailing: Semantics(
-              label: loc.accessibility_security_switch(
-                notifier.enabled
-                    ? loc.accessibility_switch_on
-                    : loc.accessibility_switch_off,
-              ),
-              child: Switch(
-                value: notifier.enabled,
-                onChanged: (val) async {
-                  notifier.setEnabled(val);
-                  await FlagSecureAndroid.setFlagSecure(val);
-                },
-              ),
+            trailing: Switch(
+              value: notifier.enabled,
+              onChanged: toggle,
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _buildAppFunctionsRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      child: Consumer<AppFunctionsEnabledNotifier>(
-        builder: (context, notifier, _) => Semantics(
-          toggled: notifier.enabled,
-          label:
-              '${loc.settings_app_functions_title} - ${notifier.enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
-          hint: notifier.enabled
+    return Consumer<AppFunctionsEnabledNotifier>(
+      builder: (context, notifier, _) {
+        Future<void> toggle(bool val) => notifier.setEnabled(val);
+
+        return SettingsCard(
+          context: context,
+          color: colorScheme.surface,
+          semanticsToggled: notifier.enabled,
+          semanticsLabel: loc.settings_app_functions_title,
+          semanticsHint: notifier.enabled
               ? loc.accessibility_double_tap_disable
               : loc.accessibility_double_tap_enable,
+          onTap: () => toggle(!notifier.enabled),
           child: ListTile(
             leading: const Icon(Icons.smart_toy_outlined),
             title: Text(
@@ -93,22 +90,13 @@ class PrivacySettingsSection extends StatelessWidget {
               loc.settings_app_functions_desc,
               style: textTheme.bodySmall,
             ),
-            trailing: Semantics(
-              label: loc.accessibility_security_switch(
-                notifier.enabled
-                    ? loc.accessibility_switch_on
-                    : loc.accessibility_switch_off,
-              ),
-              child: Switch(
-                value: notifier.enabled,
-                onChanged: (val) async {
-                  await notifier.setEnabled(val);
-                },
-              ),
+            trailing: Switch(
+              value: notifier.enabled,
+              onChanged: toggle,
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -183,8 +183,10 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
           color: colorScheme.surface,
           semanticsLabel: loc.sync_cloud_enable,
           semanticsToggled: _enabled,
-          child: SwitchListTile(
-            secondary: _busy
+          onTap: _busy ? null : () => _toggleCloud(!_enabled),
+          child: ListTile(
+            enabled: !_busy,
+            leading: _busy
                 ? const SizedBox(
                     width: 20,
                     height: 20,
@@ -199,8 +201,10 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
                     )
                   : loc.sync_cloud_description,
             ),
-            value: _enabled,
-            onChanged: _busy ? null : _toggleCloud,
+            trailing: Switch(
+              value: _enabled,
+              onChanged: _busy ? null : _toggleCloud,
+            ),
           ),
         ),
         // Sync now button – visible only when cloud is enabled

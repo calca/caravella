@@ -120,8 +120,11 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
           color: colorScheme.surface,
           semanticsLabel: loc.sync_local_title,
           semanticsToggled: _enabled,
-          child: SwitchListTile(
-            secondary: _busy
+          onTap:
+              _loading || _busy ? null : () => _toggleLan(!_enabled),
+          child: ListTile(
+            enabled: !_loading && !_busy,
+            leading: _busy
                 ? const SizedBox(
                     width: 20,
                     height: 20,
@@ -133,8 +136,10 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
                   ),
             title: Text(loc.sync_local_title, style: textTheme.titleMedium),
             subtitle: Text(loc.sync_local_description),
-            value: _enabled,
-            onChanged: _loading || _busy ? null : _toggleLan,
+            trailing: Switch(
+              value: _enabled,
+              onChanged: _loading || _busy ? null : _toggleLan,
+            ),
           ),
         ),
         if (_enabled) ...[
@@ -231,15 +236,19 @@ class _BluetoothSyncSectionState extends State<_BluetoothSyncSection> {
           color: colorScheme.surface,
           semanticsLabel: loc.sync_bt_title,
           semanticsToggled: _enabled,
-          child: SwitchListTile(
-            secondary: Icon(
+          onTap: _loading ? null : () => _toggle(!_enabled),
+          child: ListTile(
+            enabled: !_loading,
+            leading: Icon(
               _enabled ? Icons.bluetooth : Icons.bluetooth_disabled,
               color: _enabled ? colorScheme.primary : colorScheme.outline,
             ),
             title: Text(loc.sync_bt_title, style: textTheme.titleMedium),
             subtitle: Text(loc.sync_bt_description),
-            value: _enabled,
-            onChanged: _loading ? null : _toggle,
+            trailing: Switch(
+              value: _enabled,
+              onChanged: _loading ? null : _toggle,
+            ),
           ),
         ),
         if (_enabled) ...[
