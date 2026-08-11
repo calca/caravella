@@ -132,35 +132,32 @@ class _SelectorChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    // Selected state follows the same primary-container treatment used for
+    // "chosen" state elsewhere in the app (e.g. group_type_selector_sheet's
+    // SelectionTile) rather than a neutral tint, so it reads clearly even
+    // where onSurfaceVariant/onPrimaryContainer happen to share a hue.
+    final foreground = selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant;
     return Theme(
       data: Theme.of(context).copyWith(
         splashColor: scheme.onSurface.withValues(alpha: 0.08),
         highlightColor: Colors.transparent,
       ),
       child: FilterChip(
-        avatar: icon != null
-            ? Icon(
-                icon,
-                size: 16,
-                color: selected
-                    ? scheme.onPrimaryContainer
-                    : scheme.onSurfaceVariant,
-              )
-            : null,
+        avatar: icon != null ? Icon(icon, size: 16, color: foreground) : null,
         label: Text(label),
         selected: selected,
         onSelected: enabled ? (_) => onTap() : null,
         showCheckmark: false,
         side: BorderSide(
           color: selected
-              ? scheme.onSurfaceVariant.withValues(alpha: 0.2)
+              ? scheme.primary.withValues(alpha: 0.4)
               : scheme.outlineVariant.withValues(alpha: 0.4),
         ),
         backgroundColor: scheme.surfaceContainerHigh,
-        selectedColor: scheme.onSurfaceVariant.withValues(alpha: 0.15),
+        selectedColor: scheme.primaryContainer,
         labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
           fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-          color: selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
+          color: foreground,
         ),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
