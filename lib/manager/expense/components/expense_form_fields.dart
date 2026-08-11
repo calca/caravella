@@ -66,7 +66,7 @@ class ExpenseFormFields extends StatelessWidget {
             SizedBox(height: FormTheme.fieldSpacing),
             _buildNameField(context, gloc, style),
             SizedBox(height: FormTheme.fieldSpacing),
-            _buildParticipantCategorySection(context, style),
+            _buildParticipantCategorySection(context),
           ],
         );
       },
@@ -141,85 +141,34 @@ class ExpenseFormFields extends StatelessWidget {
     );
   }
 
-  Widget _buildParticipantCategorySection(
-    BuildContext context,
-    TextStyle? style,
-  ) {
-    if (fullEdit || controller.isExpanded) {
-      return Column(
-        children: [
-          _buildFieldWithStatus(
-            context,
-            ParticipantSelectorWidget(
-              participants: participants.map((p) => p.name).toList(),
-              selectedParticipant: controller.state.paidBy?.name,
-              onParticipantSelected: (name) {
-                _selectParticipantByName(name);
-              },
-              onAddParticipantInline: onParticipantAdded != null
-                  ? (name) => _onAddParticipantInline(context, name)
-                  : null,
-              textStyle: style,
-              fullEdit: true,
-              enabled: !isReadOnly,
-            ),
-            controller.isPaidByValid,
-            controller.paidByTouched,
-          ),
-          SizedBox(height: FormTheme.fieldSpacing),
-          _buildFieldWithStatus(
-            context,
-            CategorySelectorWidget(
-              categories: categories,
-              selectedCategory: controller.state.category,
-              onCategorySelected: controller.updateCategory,
-              onAddCategory: () => _onAddCategory(context),
-              onAddCategoryInline: (name) =>
-                  _onAddCategoryInline(context, name),
-              textStyle: style,
-              fullEdit: true,
-              enabled: !isReadOnly,
-            ),
-            controller.isCategoryValid(categories.isEmpty),
-            controller.categoryTouched,
-          ),
-        ],
-      );
-    }
+  Widget _buildParticipantCategorySection(BuildContext context) {
+    // The compact location indicator only makes sense while the form is
+    // still collapsed; once expanded, ExpenseFormExtendedFields owns the
+    // full location field instead.
+    final showLocationIndicator =
+        !fullEdit &&
+        !controller.isExpanded &&
+        !isInitialExpense &&
+        autoLocationEnabled;
 
-    return _buildCompactParticipantCategory(context, style);
-  }
-
-  Widget _buildCompactParticipantCategory(
-    BuildContext context,
-    TextStyle? style,
-  ) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildFieldWithStatus(
           context,
           ParticipantSelectorWidget(
-            participants: participants.map((p) => p.name).toList(),
-            selectedParticipant: controller.state.paidBy?.name,
-            onParticipantSelected: (name) {
-              LoggerService.info(
-                'Participant selected from modal: "$name". Current participants count: ${participants.length}',
-                name: 'expense.participant',
-              );
-              _selectParticipantByName(name);
-            },
+            participants: participants,
+            selectedParticipant: controller.state.paidBy,
+            onParticipantSelected: controller.updatePaidBy,
             onAddParticipantInline: onParticipantAdded != null
                 ? (name) => _onAddParticipantInline(context, name)
                 : null,
-            textStyle: style,
-            fullEdit: false,
             enabled: !isReadOnly,
           ),
           controller.isPaidByValid,
           controller.paidByTouched,
         ),
-        const SizedBox(width: 12),
+        SizedBox(height: FormTheme.fieldSpacing),
         _buildFieldWithStatus(
           context,
           CategorySelectorWidget(
@@ -228,23 +177,19 @@ class ExpenseFormFields extends StatelessWidget {
             onCategorySelected: controller.updateCategory,
             onAddCategory: () => _onAddCategory(context),
             onAddCategoryInline: (name) => _onAddCategoryInline(context, name),
-            textStyle: style,
-            fullEdit: false,
             enabled: !isReadOnly,
+            trailing: showLocationIndicator
+                ? CompactLocationIndicator(
+                    isRetrieving: isRetrievingLocation,
+                    location: location,
+                    onCancel: onClearLocation,
+                    textStyle: Theme.of(context).textTheme.bodyMedium,
+                  )
+                : null,
           ),
           controller.isCategoryValid(categories.isEmpty),
           controller.categoryTouched,
         ),
-        // Show compact location indicator when auto-location is enabled
-        if (!isInitialExpense && autoLocationEnabled) ...[
-          const Spacer(),
-          CompactLocationIndicator(
-            isRetrieving: isRetrievingLocation,
-            location: location,
-            onCancel: onClearLocation,
-            textStyle: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
       ],
     );
   }
@@ -297,27 +242,5 @@ class ExpenseFormFields extends StatelessWidget {
     // Await the callback so the parent component (_onParticipantAdded) can update
     // the lifecycle manager and auto-select the participant before the sheet closes.
     await onParticipantAdded!(participantName);
-  }
-
-  /// Selects a participant by name from the current list.
-  /// For newly added participants the auto-selection is handled in the parent
-  /// component's _onParticipantAdded handler: once the notifier update
-  /// microtask completes, that handler calls _controller.updatePaidBy directly.
-  /// This method therefore only acts immediately when the participant is already
-  /// present in the list.
-  void _selectParticipantByName(String name) {
-    final found = participants.where((p) => p.name == name).firstOrNull;
-
-    if (found != null) {
-      controller.updatePaidBy(found);
-    } else {
-      // The participant was just added inline; _onParticipantAdded in
-      // ExpenseFormComponent calls _controller.updatePaidBy once the notifier
-      // update microtask has run, so no action is needed here.
-      LoggerService.debug(
-        'Participant "$name" not yet in list; selection will be handled by onParticipantAdded.',
-        name: 'expense.participant',
-      );
-    }
   }
 }

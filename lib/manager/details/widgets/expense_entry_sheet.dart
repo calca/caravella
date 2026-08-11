@@ -69,8 +69,8 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
         padding: EdgeInsets.only(bottom: internalBottom),
         child: ExpenseFormComponent.legacy(
           initialExpense: widget.initialExpense,
-          participants: widget.group.participants,
-          categories: widget.group.categories,
+          participants: widget.group.getParticipantsByLastUsed(),
+          categories: widget.group.getCategoriesByLastUsed(),
           tripStartDate: widget.group.startDate,
           tripEndDate: widget.group.endDate,
           shouldAutoClose: false,

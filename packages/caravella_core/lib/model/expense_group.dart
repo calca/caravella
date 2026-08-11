@@ -308,6 +308,59 @@ class ExpenseGroup {
     return items;
   }
 
+  /// Returns [participants] ordered by most-recently-used first, based on
+  /// the date of the most recent expense each one paid. Participants who
+  /// have never paid an expense are appended at the end, in their original
+  /// order.
+  List<ExpenseParticipant> getParticipantsByLastUsed() {
+    final lastUsed = <String, DateTime>{};
+    for (final e in expenses) {
+      final id = e.paidBy.id;
+      final current = lastUsed[id];
+      if (current == null || e.date.isAfter(current)) {
+        lastUsed[id] = e.date;
+      }
+    }
+    return _sortByLastUsed(participants, (p) => p.id, lastUsed);
+  }
+
+  /// Returns [categories] ordered by most-recently-used first, based on the
+  /// date of the most recent expense in that category. Categories never
+  /// used are appended at the end, in their original order.
+  List<ExpenseCategory> getCategoriesByLastUsed() {
+    final lastUsed = <String, DateTime>{};
+    for (final e in expenses) {
+      final id = e.category.id;
+      final current = lastUsed[id];
+      if (current == null || e.date.isAfter(current)) {
+        lastUsed[id] = e.date;
+      }
+    }
+    return _sortByLastUsed(categories, (c) => c.id, lastUsed);
+  }
+
+  /// Sorts [items] by descending [lastUsed] date, keeping never-used items
+  /// at the end in their original relative order.
+  static List<T> _sortByLastUsed<T>(
+    List<T> items,
+    String Function(T) idOf,
+    Map<String, DateTime> lastUsed,
+  ) {
+    final indexed = items.asMap().entries.toList();
+    indexed.sort((a, b) {
+      final aDate = lastUsed[idOf(a.value)];
+      final bDate = lastUsed[idOf(b.value)];
+      if (aDate != null && bDate != null) {
+        final cmp = bDate.compareTo(aDate);
+        return cmp != 0 ? cmp : a.key.compareTo(b.key);
+      }
+      if (aDate != null) return -1;
+      if (bDate != null) return 1;
+      return a.key.compareTo(b.key);
+    });
+    return indexed.map((e) => e.value).toList();
+  }
+
   static ExpenseGroup empty() {
     return ExpenseGroup(
       title: '',
