@@ -16,10 +16,6 @@ class CategorySelectorWidget extends StatelessWidget {
   final Future<void> Function(String)? onAddCategoryInline;
   final bool enabled;
 
-  /// Optional trailing widget shown after the chip row (e.g. the compact
-  /// auto-location indicator).
-  final Widget? trailing;
-
   const CategorySelectorWidget({
     super.key,
     required this.categories,
@@ -28,7 +24,6 @@ class CategorySelectorWidget extends StatelessWidget {
     required this.onAddCategory,
     this.onAddCategoryInline,
     this.enabled = true,
-    this.trailing,
   });
 
   @override
@@ -39,27 +34,19 @@ class CategorySelectorWidget extends StatelessWidget {
       icon: Icon(AppIcons.category),
       semanticsLabel: gloc.category,
       tooltip: gloc.category,
-      child: Row(
-        children: [
-          Expanded(
-            child: ChipSelectorRow<ExpenseCategory>(
-              items: categories,
-              selected: selectedCategory,
-              itemLabel: (c) => c.name,
-              onSelected: onCategorySelected,
-              enabled: enabled,
-              onAddItemInline: onAddCategoryInline,
-              addItemHint: gloc.category_name,
-              addLabel: gloc.add,
-              cancelLabel: gloc.cancel,
-              addCategoryLabel: gloc.add_category,
-              alreadyExistsMessage:
-                  '${gloc.category_name} ${gloc.already_exists}',
-              sheetTitle: gloc.category,
-            ),
-          ),
-          if (trailing != null) trailing!,
-        ],
+      child: ChipSelectorRow<ExpenseCategory>(
+        items: categories,
+        selected: selectedCategory,
+        itemLabel: (c) => c.name,
+        onSelected: onCategorySelected,
+        enabled: enabled,
+        onAddItemInline: onAddCategoryInline,
+        addItemHint: gloc.category_name,
+        addLabel: gloc.add,
+        cancelLabel: gloc.cancel,
+        addCategoryLabel: gloc.add_category,
+        alreadyExistsMessage: '${gloc.category_name} ${gloc.already_exists}',
+        sheetTitle: gloc.category,
       ),
     );
   }

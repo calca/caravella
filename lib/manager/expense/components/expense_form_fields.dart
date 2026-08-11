@@ -51,6 +51,15 @@ class ExpenseFormFields extends StatelessWidget {
     this.isReadOnly = false,
   });
 
+  // The compact location indicator only makes sense while the form is
+  // still collapsed; once expanded, ExpenseFormExtendedFields owns the
+  // full location field instead.
+  bool get _showLocationIndicator =>
+      !fullEdit &&
+      !controller.isExpanded &&
+      !isInitialExpense &&
+      autoLocationEnabled;
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
@@ -111,7 +120,7 @@ class ExpenseFormFields extends StatelessWidget {
     gen.AppLocalizations gloc,
     TextStyle? style,
   ) {
-    return KeyedSubtree(
+    final nameField = KeyedSubtree(
       key: controller.nameFieldKey,
       child: _buildFieldWithStatus(
         context,
@@ -139,18 +148,26 @@ class ExpenseFormFields extends StatelessWidget {
         controller.nameTouched,
       ),
     );
+
+    if (!_showLocationIndicator) return nameField;
+
+    // Auto-location activity is shown on the description line, pinned to
+    // the right, while the compact form is collapsed.
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(child: nameField),
+        CompactLocationIndicator(
+          isRetrieving: isRetrievingLocation,
+          location: location,
+          onCancel: onClearLocation,
+          textStyle: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
+    );
   }
 
   Widget _buildParticipantCategorySection(BuildContext context) {
-    // The compact location indicator only makes sense while the form is
-    // still collapsed; once expanded, ExpenseFormExtendedFields owns the
-    // full location field instead.
-    final showLocationIndicator =
-        !fullEdit &&
-        !controller.isExpanded &&
-        !isInitialExpense &&
-        autoLocationEnabled;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -178,14 +195,6 @@ class ExpenseFormFields extends StatelessWidget {
             onAddCategory: () => _onAddCategory(context),
             onAddCategoryInline: (name) => _onAddCategoryInline(context, name),
             enabled: !isReadOnly,
-            trailing: showLocationIndicator
-                ? CompactLocationIndicator(
-                    isRetrieving: isRetrievingLocation,
-                    location: location,
-                    onCancel: onClearLocation,
-                    textStyle: Theme.of(context).textTheme.bodyMedium,
-                  )
-                : null,
           ),
           controller.isCategoryValid(categories.isEmpty),
           controller.categoryTouched,
