@@ -199,8 +199,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                 const SizedBox(height: 24),
                 ExpenseFormComponent.legacy(
                   initialExpense: widget.initialExpense,
-                  participants: widget.group.participants,
-                  categories: widget.group.categories,
+                  participants: widget.group.getParticipantsByLastUsed(),
+                  categories: widget.group.getCategoriesByLastUsed(),
                   tripStartDate: widget.group.startDate,
                   tripEndDate: widget.group.endDate,
                   shouldAutoClose: true,

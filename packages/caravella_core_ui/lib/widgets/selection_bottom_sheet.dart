@@ -18,6 +18,7 @@ Future<T?> showSelectionBottomSheet<T>({
   String? cancelLabel,
   String? addCategoryLabel,
   String? alreadyExistsMessage,
+  bool autoStartAdd = false,
 }) async {
   return showModalBottomSheet<T>(
     context: context,
@@ -34,6 +35,7 @@ Future<T?> showSelectionBottomSheet<T>({
       cancelLabel: cancelLabel,
       addCategoryLabel: addCategoryLabel,
       alreadyExistsMessage: alreadyExistsMessage,
+      autoStartAdd: autoStartAdd,
     ),
   );
 }
@@ -49,6 +51,7 @@ class _SelectionSheet<T> extends StatefulWidget {
   final String? cancelLabel;
   final String? addCategoryLabel;
   final String? alreadyExistsMessage;
+  final bool autoStartAdd;
   const _SelectionSheet({
     required this.items,
     required this.selected,
@@ -60,6 +63,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     this.cancelLabel,
     this.addCategoryLabel,
     this.alreadyExistsMessage,
+    this.autoStartAdd = false,
   });
 
   @override
@@ -99,6 +103,12 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     super.initState();
     // Initialize local items list
     _currentItems = List<T>.from(widget.items);
+    if (widget.autoStartAdd && widget.onAddItemInline != null) {
+      _inlineAdding = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _inlineFocus.requestFocus();
+      });
+    }
     // Add focus listener to handle keyboard appearance and auto-scroll
     _inlineFocus.addListener(() {
       if (_inlineFocus.hasFocus) {
