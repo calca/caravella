@@ -14,7 +14,6 @@ void main() {
           selected: 'A',
           itemLabel: (v) => v,
           onSelected: (_) {},
-          moreLabel: 'More',
         ),
       ),
     );
@@ -22,10 +21,10 @@ void main() {
     for (final label in ['A', 'B', 'C', 'D', 'E']) {
       expect(find.widgetWithText(FilterChip, label), findsOneWidget);
     }
-    expect(find.byIcon(Icons.more_horiz), findsNothing);
+    expect(find.widgetWithText(FilterChip, '...'), findsNothing);
   });
 
-  testWidgets('collapses items beyond the 4th into a "more" chip', (
+  testWidgets('collapses items beyond the 4th into a "..." chip', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -35,7 +34,6 @@ void main() {
           selected: 'A',
           itemLabel: (v) => v,
           onSelected: (_) {},
-          moreLabel: 'More',
         ),
       ),
     );
@@ -46,10 +44,10 @@ void main() {
     expect(find.widgetWithText(FilterChip, 'E'), findsNothing);
     expect(find.widgetWithText(FilterChip, 'F'), findsNothing);
     expect(find.text('+2'), findsNothing);
-    expect(find.widgetWithText(FilterChip, 'More'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, '...'), findsOneWidget);
   });
 
-  testWidgets('shows the hidden selection label on the "more" chip', (
+  testWidgets('shows the hidden selection label on the "..." chip', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -59,13 +57,12 @@ void main() {
           selected: 'F',
           itemLabel: (v) => v,
           onSelected: (_) {},
-          moreLabel: 'More',
         ),
       ),
     );
 
     expect(find.text('+2'), findsNothing);
-    expect(find.widgetWithText(FilterChip, 'More'), findsNothing);
+    expect(find.widgetWithText(FilterChip, '...'), findsNothing);
     expect(find.widgetWithText(FilterChip, 'F'), findsOneWidget);
   });
 
@@ -79,7 +76,6 @@ void main() {
           selected: 'A',
           itemLabel: (v) => v,
           onSelected: (_) {},
-          moreLabel: 'More',
           onAddItemInline: (_) async {},
         ),
       ),
@@ -98,7 +94,6 @@ void main() {
           selected: null,
           itemLabel: (v) => v,
           onSelected: (_) {},
-          moreLabel: 'More',
         ),
       ),
     );
@@ -118,7 +113,6 @@ void main() {
               selected: selected,
               itemLabel: (v) => v,
               onSelected: (v) => setState(() => selected = v),
-              moreLabel: 'More',
             );
           },
         ),

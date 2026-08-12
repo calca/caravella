@@ -37,7 +37,6 @@ class ParticipantSelectorWidget extends StatelessWidget {
         selected: selectedParticipant,
         itemLabel: (p) => p.name,
         onSelected: onParticipantSelected,
-        moreLabel: gloc.more,
         enabled: enabled,
         onAddItemInline: onAddParticipantInline,
         addItemHint: gloc.participant_name,
