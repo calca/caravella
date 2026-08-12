@@ -8,11 +8,11 @@ import '../themes/app_spacing.dart';
 /// Shows up to [maxVisibleItems] items in the order given by [items] (the
 /// caller decides the order, e.g. last-used-first). When there are more
 /// than [maxVisibleItems] + 1 items, the row collapses the remainder behind
-/// a trailing "more" chip that opens [showSelectionBottomSheet] to browse
-/// the full list. If [selected] is hidden behind that overflow, the "more"
-/// chip shows its label instead of the item count, so the current
-/// selection always stays visible. An optional trailing "add" chip opens
-/// the same sheet in inline-add mode when [onAddItemInline] is provided.
+/// a trailing "more" chip ([moreLabel]) that opens [showSelectionBottomSheet]
+/// to browse the full list. If [selected] is hidden behind that overflow,
+/// the "more" chip shows its label instead, so the current selection always
+/// stays visible. An optional trailing "add" chip opens the same sheet in
+/// inline-add mode when [onAddItemInline] is provided.
 class ChipSelectorRow<T> extends StatelessWidget {
   static const int maxVisibleItems = 4;
   static const double _chipRowHeight = 38;
@@ -22,6 +22,10 @@ class ChipSelectorRow<T> extends StatelessWidget {
   final String Function(T) itemLabel;
   final ValueChanged<T> onSelected;
   final bool enabled;
+
+  /// Label for the trailing "more" chip when the current selection is one
+  /// of the collapsed items (so the chip just shows an overflow icon).
+  final String moreLabel;
 
   final Future<void> Function(String)? onAddItemInline;
   final String? addItemHint;
@@ -37,6 +41,7 @@ class ChipSelectorRow<T> extends StatelessWidget {
     required this.selected,
     required this.itemLabel,
     required this.onSelected,
+    required this.moreLabel,
     this.enabled = true,
     this.onAddItemInline,
     this.addItemHint,
@@ -52,7 +57,6 @@ class ChipSelectorRow<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final visible = _hasOverflow ? items.take(maxVisibleItems).toList() : items;
-    final overflowCount = _hasOverflow ? items.length - maxVisibleItems : 0;
     final selectedIsHidden =
         _hasOverflow && selected != null && !visible.contains(selected);
 
@@ -84,7 +88,7 @@ class ChipSelectorRow<T> extends StatelessWidget {
         ),
       if (_hasOverflow)
         _SelectorChip(
-          label: selectedIsHidden ? itemLabel(selected as T) : '+$overflowCount',
+          label: selectedIsHidden ? itemLabel(selected as T) : moreLabel,
           selected: selectedIsHidden,
           enabled: enabled,
           icon: Icons.more_horiz,
@@ -105,7 +109,6 @@ class ChipSelectorRow<T> extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        clipBehavior: Clip.none,
         itemCount: chips.length,
         separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.xs),
         itemBuilder: (context, index) => chips[index],

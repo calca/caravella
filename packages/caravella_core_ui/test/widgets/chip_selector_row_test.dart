@@ -14,6 +14,7 @@ void main() {
           selected: 'A',
           itemLabel: (v) => v,
           onSelected: (_) {},
+          moreLabel: 'More',
         ),
       ),
     );
@@ -34,6 +35,7 @@ void main() {
           selected: 'A',
           itemLabel: (v) => v,
           onSelected: (_) {},
+          moreLabel: 'More',
         ),
       ),
     );
@@ -43,7 +45,8 @@ void main() {
     }
     expect(find.widgetWithText(FilterChip, 'E'), findsNothing);
     expect(find.widgetWithText(FilterChip, 'F'), findsNothing);
-    expect(find.text('+2'), findsOneWidget);
+    expect(find.text('+2'), findsNothing);
+    expect(find.widgetWithText(FilterChip, 'More'), findsOneWidget);
   });
 
   testWidgets('shows the hidden selection label on the "more" chip', (
@@ -56,11 +59,13 @@ void main() {
           selected: 'F',
           itemLabel: (v) => v,
           onSelected: (_) {},
+          moreLabel: 'More',
         ),
       ),
     );
 
     expect(find.text('+2'), findsNothing);
+    expect(find.widgetWithText(FilterChip, 'More'), findsNothing);
     expect(find.widgetWithText(FilterChip, 'F'), findsOneWidget);
   });
 
@@ -74,6 +79,7 @@ void main() {
           selected: 'A',
           itemLabel: (v) => v,
           onSelected: (_) {},
+          moreLabel: 'More',
           onAddItemInline: (_) async {},
         ),
       ),
@@ -92,6 +98,7 @@ void main() {
           selected: null,
           itemLabel: (v) => v,
           onSelected: (_) {},
+          moreLabel: 'More',
         ),
       ),
     );
@@ -111,6 +118,7 @@ void main() {
               selected: selected,
               itemLabel: (v) => v,
               onSelected: (v) => setState(() => selected = v),
+              moreLabel: 'More',
             );
           },
         ),
