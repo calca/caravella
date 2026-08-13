@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../widgets/icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';

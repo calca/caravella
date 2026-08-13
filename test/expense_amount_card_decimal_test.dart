@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
+import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 
 /// Tests that ExpenseAmountCard correctly displays decimal places in amounts
 void main() {
   Widget app(Widget child) => MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(body: child),
   );

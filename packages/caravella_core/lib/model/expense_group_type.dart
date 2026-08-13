@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Enum representing the type/category of an expense group.
 /// Each type has associated default categories that are pre-populated

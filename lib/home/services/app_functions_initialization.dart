@@ -1,6 +1,6 @@
 import 'package:android_app_functions/android_app_functions.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../manager/details/pages/expense_group_detail_page.dart';
 

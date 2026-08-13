@@ -1,5 +1,5 @@
 import 'package:caravella_core/caravella_core.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class GroupTypeTemplatesNotifier extends ChangeNotifier {
   GroupTypeTemplatesNotifier({GroupTypeTemplateService? service})

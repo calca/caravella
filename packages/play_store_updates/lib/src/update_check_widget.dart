@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'update_service_factory.dart';

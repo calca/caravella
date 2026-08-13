@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'base_card.dart';
 
 /// Semantics-aware settings row card, built on the shared [BaseCard]

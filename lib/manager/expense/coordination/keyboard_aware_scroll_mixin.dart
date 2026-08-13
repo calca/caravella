@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Mixin for widgets that need keyboard-aware scroll behavior
 /// Automatically adjusts scroll position when keyboard appears/disappears

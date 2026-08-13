@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/manager/details/pages/expense_search_page.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
+import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 
 void main() {
   group('ExpenseSearchPage Tests', () {
@@ -60,7 +61,7 @@ void main() {
 
     Widget buildSearchPage({List<ExpenseDetails>? expenses}) {
       return MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
         home: ExpenseSearchPage(

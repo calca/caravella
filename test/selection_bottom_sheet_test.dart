@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 
 void main() {
   group('SelectionBottomSheet Tests', () {
@@ -14,7 +15,7 @@ void main() {
 
         await tester.pumpWidget(
           MaterialApp(
-            localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+            localizationsDelegates: appLocalizationsDelegates,
             supportedLocales: gen.AppLocalizations.supportedLocales,
             home: Builder(
               builder: (context) => Scaffold(
@@ -84,7 +85,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationsDelegates,
           supportedLocales: gen.AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => Scaffold(
@@ -126,7 +127,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationsDelegates,
           supportedLocales: gen.AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => Scaffold(
@@ -176,7 +177,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationsDelegates,
           supportedLocales: gen.AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => Scaffold(
@@ -222,7 +223,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationsDelegates,
           supportedLocales: gen.AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => Scaffold(
@@ -266,7 +267,7 @@ void main() {
 
         await tester.pumpWidget(
           MaterialApp(
-            localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+            localizationsDelegates: appLocalizationsDelegates,
             supportedLocales: gen.AppLocalizations.supportedLocales,
             home: Builder(
               builder: (context) => Scaffold(

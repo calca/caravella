@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../manager/group/pages/group_creation_wizard_page.dart';
 
 /// Centralized navigation helpers for the home module.

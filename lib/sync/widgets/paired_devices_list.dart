@@ -1,5 +1,5 @@
 import 'package:caravella_core/caravella_core.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 /// Displays the devices granted access to a specific group's sync.

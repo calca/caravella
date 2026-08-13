@@ -1,5 +1,5 @@
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';

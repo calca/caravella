@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// WCAG 2.x relative luminance / contrast ratio helpers, for verifying
 /// (in code or tests) that a color pairing meets accessibility contrast

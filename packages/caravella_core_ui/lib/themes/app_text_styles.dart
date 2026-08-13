@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Single source of truth for typography tokens shared across the app.
 class AppTypography {

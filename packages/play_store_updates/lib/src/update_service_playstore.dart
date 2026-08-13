@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'app_update_service.dart' as psu;
 import 'app_update_notifier.dart' as psu_notifier;

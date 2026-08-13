@@ -19,6 +19,7 @@ dependencies:
   latlong2: ^0.10.1
   timeago: ^3.7.1
   zentoast: ^0.2.2
+  material_ui: ^1.0.0
 
 dev_dependencies:
   flutter_test:

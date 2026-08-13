@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
