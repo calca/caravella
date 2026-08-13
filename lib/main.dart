@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:caravella_core/caravella_core.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'main/app_initialization.dart';
 import 'main/caravella_app.dart';

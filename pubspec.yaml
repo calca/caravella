@@ -95,6 +95,7 @@ dependencies:
   permission_handler: ^13.0.1
   qr_flutter: ^4.1.0
   mobile_scanner: ^7.2.1
+  material_ui: ^1.0.0
 
 dev_dependencies:
   flutter_test:

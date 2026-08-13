@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'update_service_interface.dart';
 
 /// No-op implementation of UpdateService for builds without Play Store support.

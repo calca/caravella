@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Constants for icons used throughout the app to ensure consistency
 class AppIcons {

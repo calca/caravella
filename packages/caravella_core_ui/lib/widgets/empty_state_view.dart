@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Generic "nothing to show" placeholder: a muted icon, a primary message,
 /// and an optional secondary hint. Centered with standard 32px padding.

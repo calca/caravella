@@ -1,5 +1,5 @@
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../services/unsplash/unsplash_photo.dart';

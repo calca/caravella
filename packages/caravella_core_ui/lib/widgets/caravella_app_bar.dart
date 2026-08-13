@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Flat, borderless app bar with no title slot — for pages whose heading
 /// lives in the body below (home-like screens, settings pages) rather than

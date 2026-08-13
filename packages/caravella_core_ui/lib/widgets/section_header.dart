@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Standard section header with title, optional description and trailing widget (e.g. action button).
 class SectionHeader extends StatelessWidget {
