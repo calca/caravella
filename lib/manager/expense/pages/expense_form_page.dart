@@ -149,7 +149,10 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
         leading: IconButton(
           tooltip: gloc.accessibility_back_button,
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          // maybePop (not pop) so this respects ExpenseFormComponent's
+          // PopScope/unsaved-changes guard, same as the system back
+          // button/gesture already does.
+          onPressed: () => Navigator.of(context).maybePop(),
         ),
         actions: [
           if (widget.initialExpense?.id != null &&
