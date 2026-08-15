@@ -1,8 +1,10 @@
 import 'update_service_interface.dart';
 import 'update_service_noop.dart';
 
-// Conditionally import play store implementation
-// This will only be imported when ENABLE_PLAY_UPDATES=true
+// Conditionally import the Play Store implementation.
+// This swaps to the no-op implementation on web builds specifically
+// (compile-time safety net); the ENABLE_PLAY_UPDATES dart-define is
+// evaluated separately below and decides which one actually gets used.
 import 'update_service_playstore.dart'
     if (dart.library.html) 'update_service_noop.dart';
 

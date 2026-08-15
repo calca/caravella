@@ -56,6 +56,37 @@ class AppUpdateService {
     }
   }
 
+  /// Stream of install status changes for a flexible update in progress
+  /// (downloading/downloaded/installing/installed/failed/canceled).
+  ///
+  /// Empty on non-Android platforms.
+  static Stream<InstallStatus> get installUpdateStream {
+    if (!Platform.isAndroid) {
+      return const Stream.empty();
+    }
+    return InAppUpdate.installUpdateListener;
+  }
+
+  /// Whether a flexible update started in a previous check has already
+  /// finished downloading and is waiting for [completeFlexibleUpdate] to
+  /// install it.
+  ///
+  /// This is checked independently of [checkForUpdate] (which only reports
+  /// *newly* available updates) so a download that finished in the
+  /// background — e.g. after the app was closed and reopened — isn't lost.
+  static Future<bool> isUpdateReadyToInstall() async {
+    if (!Platform.isAndroid) {
+      return false;
+    }
+
+    try {
+      final updateInfo = await InAppUpdate.checkForUpdate();
+      return updateInfo.installStatus == InstallStatus.downloaded;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// Check if an update is available from Google Play Store.
   ///
   /// Returns an [AppUpdateInfo] object if an update is available,

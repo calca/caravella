@@ -3806,6 +3806,18 @@ abstract class AppLocalizations {
   /// **'Downloading...'**
   String get update_downloading;
 
+  /// Title shown when a flexible update finished downloading and is ready to install
+  ///
+  /// In en, this message translates to:
+  /// **'Update ready to install'**
+  String get update_ready_to_install;
+
+  /// Description shown when a flexible update finished downloading and is ready to install
+  ///
+  /// In en, this message translates to:
+  /// **'The update finished downloading. Install it to finish updating.'**
+  String get update_ready_to_install_desc;
+
   /// Message while installing update
   ///
   /// In en, this message translates to:

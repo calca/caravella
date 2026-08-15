@@ -27,6 +27,10 @@ abstract class UpdateService {
 
   /// Get detailed update status.
   Future<Map<String, dynamic>> getUpdateStatus();
+
+  /// Whether a flexible update has already finished downloading and is
+  /// waiting for [completeFlexibleUpdate] to install it.
+  Future<bool> isUpdateReadyToInstall();
 }
 
 /// Abstract interface for update state notifier.
@@ -39,6 +43,10 @@ abstract class UpdateNotifier extends ChangeNotifier {
   bool get flexibleAllowed;
   bool get isDownloading;
   bool get isInstalling;
+
+  /// Whether a flexible update has finished downloading and is ready to be
+  /// installed via [completeFlexibleUpdate].
+  bool get updateDownloaded;
   String? get error;
 
   Future<void> checkForUpdate();

@@ -14,4 +14,13 @@ abstract class UpdateLocalizations {
   String get checkForUpdatesDesc;
   String get checkingForUpdates;
   String get noUpdateAvailable;
+
+  /// Button that installs a flexible update that has finished downloading.
+  String get updateInstall;
+
+  /// Title shown when a flexible update is downloaded and ready to install.
+  String get updateReadyToInstall;
+
+  /// Description shown alongside [updateReadyToInstall].
+  String get updateReadyToInstallDesc;
 }

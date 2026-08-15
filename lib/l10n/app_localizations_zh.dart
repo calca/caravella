@@ -1906,6 +1906,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get update_downloading => '正在下载...';
 
   @override
+  String get update_ready_to_install => '更新已就绪，可以安装';
+
+  @override
+  String get update_ready_to_install_desc => '更新已下载完成，安装以完成本次更新。';
+
+  @override
   String get update_installing => '正在安装...';
 
   @override

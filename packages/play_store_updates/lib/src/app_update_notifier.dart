@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'app_update_service.dart';
 
 /// State notifier for managing app update state.
@@ -16,7 +18,19 @@ class AppUpdateNotifier extends ChangeNotifier {
   bool _flexibleAllowed = false;
   bool _isDownloading = false;
   bool _isInstalling = false;
+  bool _updateDownloaded = false;
   String? _error;
+
+  StreamSubscription<InstallStatus>? _installStatusSub;
+
+  AppUpdateNotifier() {
+    _installStatusSub = AppUpdateService.installUpdateStream.listen(
+      _onInstallStatusChanged,
+    );
+    // A flexible update may have finished downloading while this notifier
+    // didn't exist yet (e.g. app was closed and reopened) — pick that up.
+    unawaited(_checkPendingInstall());
+  }
 
   bool get isChecking => _isChecking;
   bool get updateAvailable => _updateAvailable;
@@ -26,7 +40,46 @@ class AppUpdateNotifier extends ChangeNotifier {
   bool get flexibleAllowed => _flexibleAllowed;
   bool get isDownloading => _isDownloading;
   bool get isInstalling => _isInstalling;
+  bool get updateDownloaded => _updateDownloaded;
   String? get error => _error;
+
+  Future<void> _checkPendingInstall() async {
+    final ready = await AppUpdateService.isUpdateReadyToInstall();
+    if (ready && !_updateDownloaded) {
+      _updateDownloaded = true;
+      notifyListeners();
+    }
+  }
+
+  void _onInstallStatusChanged(InstallStatus status) {
+    switch (status) {
+      case InstallStatus.downloading:
+        _isDownloading = true;
+        break;
+      case InstallStatus.downloaded:
+        _isDownloading = false;
+        _updateDownloaded = true;
+        break;
+      case InstallStatus.installing:
+        _isInstalling = true;
+        break;
+      case InstallStatus.installed:
+        _isInstalling = false;
+        _updateDownloaded = false;
+        _updateAvailable = false;
+        break;
+      case InstallStatus.failed:
+      case InstallStatus.canceled:
+        _isDownloading = false;
+        _isInstalling = false;
+        _error = 'Update install failed';
+        break;
+      case InstallStatus.pending:
+      case InstallStatus.unknown:
+        break;
+    }
+    notifyListeners();
+  }
 
   /// Check for available updates.
   Future<void> checkForUpdate() async {
@@ -130,7 +183,14 @@ class AppUpdateNotifier extends ChangeNotifier {
     _flexibleAllowed = false;
     _isDownloading = false;
     _isInstalling = false;
+    _updateDownloaded = false;
     _error = null;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _installStatusSub?.cancel();
+    super.dispose();
   }
 }
