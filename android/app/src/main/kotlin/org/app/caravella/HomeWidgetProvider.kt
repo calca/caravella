@@ -6,6 +6,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -101,21 +104,26 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         val config = HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)
 
         val model = if (config == null) {
+            // Tapping anywhere on the unconfigured widget opens the group picker,
+            // not just the small CTA chip — matches the configured widget's
+            // full-body tap and avoids a dead area that looks unresponsive.
+            val configureAction = glanceActionStartActivity(
+                Intent(context, HomeWidgetConfigureActivity::class.java).apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                },
+            )
             WidgetUiModel(
                 title = context.getString(R.string.widget_unconfigured_title),
                 todayValue = "-",
+                weekValue = "-",
                 groupTotalValue = "-",
                 showGroupName = true,
                 ctaButton = WidgetButton(
                     label = context.getString(R.string.widget_select_group),
-                    action = glanceActionStartActivity(
-                        Intent(context, HomeWidgetConfigureActivity::class.java).apply {
-                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        },
-                    ),
+                    action = configureAction,
                 ),
-                tapAction = null,
+                tapAction = configureAction,
                 useGroupBackground = false,
                 backgroundTransparency = 0,
                 backgroundColor = null,
@@ -144,6 +152,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 // any expenses exist) so the widget always shows a formatted amount
                 // instead of a placeholder dash.
                 todayValue = formatAmount(totals?.todayTotal ?: 0.0, currency),
+                weekValue = formatAmount(totals?.weekTotal ?: 0.0, currency),
                 groupTotalValue = formatAmount(totals?.groupTotal ?: 0.0, currency),
                 showGroupName = config.showGroupName,
                 ctaButton = WidgetButton(
@@ -167,10 +176,13 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         } else {
             null
         }
+        val accentColors = widgetAccentColors(context)
 
         provideContent {
             val size = LocalSize.current
             val isCompact = size.width < 130.dp || size.height < 130.dp
+            // True 1x1 grid cells; only these skip the extra week-total caption line.
+            val isTiny = size.width < 90.dp || size.height < 90.dp
             val isWide = size.width >= 200.dp
 
             // Always use white as the base background color. Transparency setting
@@ -250,6 +262,16 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                 ),
                                 maxLines = 1,
                             )
+                            if (!isTiny) {
+                                Text(
+                                    text = "${context.getString(R.string.widget_week_label)} ${model.weekValue}",
+                                    style = TextStyle(
+                                        color = SecondaryTextColor,
+                                        fontSize = WidgetLabelTextSize,
+                                    ),
+                                    maxLines = 1,
+                                )
+                            }
                         }
                     }
                 } else {
@@ -279,7 +301,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                     modifier = GlanceModifier
                                         .padding(start = 8.dp)
                                         .cornerRadius(WidgetTodayPillRadius)
-                                        .background(WidgetTodayPillSurface)
+                                        .background(accentColors.pillSurface)
                                         .padding(
                                             start = WidgetTodayPillHorizontalPadding,
                                             top = WidgetTodayPillVerticalPadding,
@@ -290,7 +312,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                     Text(
                                         text = "${context.getString(R.string.widget_today_label)} ${model.todayValue}",
                                         style = TextStyle(
-                                            color = WidgetTodayPillTextColor,
+                                            color = accentColors.pillText,
                                             fontSize = WidgetLabelTextSize,
                                             fontWeight = FontWeight.Bold,
                                         ),
@@ -333,7 +355,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                 Box(
                                     modifier = GlanceModifier
                                         .cornerRadius(WidgetCtaButtonRadius)
-                                        .background(WidgetCtaButtonSurface)
+                                        .background(accentColors.ctaSurface)
                                         .padding(WidgetCtaButtonPadding)
                                         .clickable(model.ctaButton.action),
                                     contentAlignment = Alignment.Center,
@@ -341,7 +363,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                                     Text(
                                         text = model.ctaButton.label,
                                         style = TextStyle(
-                                            color = WidgetCtaButtonTextColor,
+                                            color = accentColors.ctaText,
                                             fontSize = WidgetCtaButtonTextSize,
                                             fontWeight = FontWeight.Bold,
                                         ),
@@ -497,29 +519,71 @@ private val SecondaryTextColor = ColorProvider(
     Color(0xFFC8C2D2), // Dark mode
 )
 
-private val WidgetTodayPillSurface = ColorProvider(
+// Static palette used when Material You dynamic color isn't available (API <31,
+// or the system theme can't be resolved for some reason) — same purple accent
+// the widget always used before dynamic color support was added.
+private val FallbackTodayPillSurface = ColorProvider(
     Color(0x80E1D8F8), // Light mode – 50% opacity
     Color(0x804D3B73), // Dark mode – 50% opacity
 )
 
-private val WidgetTodayPillTextColor = ColorProvider(
+private val FallbackTodayPillTextColor = ColorProvider(
     Color(0xFF2E1B52), // Light mode
     Color(0xFFF3ECFF), // Dark mode
 )
 
-private val WidgetCtaButtonSurface = ColorProvider(
+private val FallbackCtaButtonSurface = ColorProvider(
     Color(0xFF6750A4), // Light mode (Material primary)
     Color(0xFFD0BCFF), // Dark mode
 )
 
-private val WidgetCtaButtonTextColor = ColorProvider(
+private val FallbackCtaButtonTextColor = ColorProvider(
     Color(0xFFFFFFFF), // Light mode
     Color(0xFF381E72), // Dark mode
 )
 
+/** The widget's two branded accent surfaces (CTA button, "today" pill), themed together. */
+private data class WidgetAccentColors(
+    val ctaSurface: ColorProvider,
+    val ctaText: ColorProvider,
+    val pillSurface: ColorProvider,
+    val pillText: ColorProvider,
+)
+
+private val FallbackWidgetAccentColors = WidgetAccentColors(
+    ctaSurface = FallbackCtaButtonSurface,
+    ctaText = FallbackCtaButtonTextColor,
+    pillSurface = FallbackTodayPillSurface,
+    pillText = FallbackTodayPillTextColor,
+)
+
+/**
+ * Resolves the widget's accent colors from the device's Material You wallpaper
+ * palette (Android 12+), so the CTA button and "today" pill follow the user's
+ * chosen system theme instead of a fixed purple — matching the rest of the app,
+ * which already supports dynamic color. Falls back to the static purple palette
+ * on older Android versions, or if the system palette can't be resolved.
+ */
+private fun widgetAccentColors(context: Context): WidgetAccentColors {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return FallbackWidgetAccentColors
+    return try {
+        val light = dynamicLightColorScheme(context)
+        val dark = dynamicDarkColorScheme(context)
+        WidgetAccentColors(
+            ctaSurface = ColorProvider(day = light.primary, night = dark.primary),
+            ctaText = ColorProvider(day = light.onPrimary, night = dark.onPrimary),
+            pillSurface = ColorProvider(day = light.primaryContainer, night = dark.primaryContainer),
+            pillText = ColorProvider(day = light.onPrimaryContainer, night = dark.onPrimaryContainer),
+        )
+    } catch (_: Exception) {
+        FallbackWidgetAccentColors
+    }
+}
+
 private data class WidgetUiModel(
     val title: String,
     val todayValue: String,
+    val weekValue: String,
     val groupTotalValue: String,
     val showGroupName: Boolean,
     val ctaButton: WidgetButton?,

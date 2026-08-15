@@ -1,6 +1,7 @@
 <resources>
     <!-- Home widget -->
     <string name="widget_today_label">oggi:</string>
+    <string name="widget_week_label">sett.:</string>
     <string name="widget_total_spent_label">Spesa Totale</string>
     <string name="widget_group_total_label">Totale gruppo</string>
 </resources>

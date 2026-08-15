@@ -10,6 +10,7 @@
     <!-- Home widget -->
     <string name="widget_description">Track today and group totals</string>
     <string name="widget_today_label">today:</string>
+    <string name="widget_week_label">week:</string>
     <string name="widget_total_spent_label">Total Spent</string>
     <string name="widget_group_total_label">Group total</string>
     <string name="widget_quick_add">Quick add expense</string>
