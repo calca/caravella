@@ -9,9 +9,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val enableAndroidWidget: Boolean = (project.findProperty("enableAndroidWidget") as? String)?.toBoolean()
+// Explicit override (Gradle property or env var) forces the same value for every flavor.
+// Without one, the widget defaults on for dev/staging and off for prod (see per-flavor resValue below).
+val enableAndroidWidgetOverride: Boolean? = (project.findProperty("enableAndroidWidget") as? String)?.toBoolean()
     ?: System.getenv("ENABLE_ANDROID_WIDGET")?.toBoolean()
-    ?: true
 
 android {
     signingConfigs {
@@ -43,7 +44,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        resValue("bool", "enable_android_widget", enableAndroidWidget.toString())
     }
 
     buildFeatures {
@@ -59,6 +59,7 @@ android {
             versionNameSuffix = "-dev"
             resValue("string", "app_name", "Caravella - Dev")
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_dev"
+            resValue("bool", "enable_android_widget", (enableAndroidWidgetOverride ?: true).toString())
         }
         create("staging") {
             dimension = "environment"
@@ -66,11 +67,13 @@ android {
             versionNameSuffix = "-staging"
             resValue("string", "app_name", "Caravella - Staging")
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_staging"
+            resValue("bool", "enable_android_widget", (enableAndroidWidgetOverride ?: true).toString())
         }
         create("prod") {
             dimension = "environment"
             resValue("string", "app_name", "Caravella")
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
+            resValue("bool", "enable_android_widget", (enableAndroidWidgetOverride ?: false).toString())
         }
     }
 

@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-      ENABLE_ANDROID_WIDGET: "false"
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -64,7 +63,7 @@ jobs:
           name: coverage-report
           path: coverage/lcov.info
       - name: Build staging APK (signed)
-        run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+        run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - name: Get app version
         id: get_version
         run: |
@@ -89,7 +88,6 @@ jobs:
       contents: write
     env:
       UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-      ENABLE_ANDROID_WIDGET: "false"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -127,15 +125,17 @@ jobs:
             echo "APK_NAME=app-staging-release.apk" >> $GITHUB_ENV
             echo "FILE_PREFIX=io_caravella_egm-staging" >> $GITHUB_ENV
             echo "TALKER_FLAG=--dart-define=ENABLE_TALKER_SCREEN=true" >> $GITHUB_ENV
+            echo "WIDGET_FLAG=--dart-define=ENABLE_ANDROID_WIDGET=true" >> $GITHUB_ENV
           else
             echo "FLAVOR=prod" >> $GITHUB_ENV
             echo "BUILD_TYPE=production" >> $GITHUB_ENV
             echo "APK_NAME=app-prod-release.apk" >> $GITHUB_ENV
             echo "FILE_PREFIX=io_caravella_egm" >> $GITHUB_ENV
             echo "TALKER_FLAG=" >> $GITHUB_ENV
+            echo "WIDGET_FLAG=--dart-define=ENABLE_ANDROID_WIDGET=false" >> $GITHUB_ENV
           fi
       - name: Build APK (signed)
-        run: flutter build apk --flavor ${{ env.FLAVOR }} --release --dart-define=FLAVOR=${{ env.FLAVOR }} ${{ env.TALKER_FLAG }} --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+        run: flutter build apk --flavor ${{ env.FLAVOR }} --release --dart-define=FLAVOR=${{ env.FLAVOR }} ${{ env.TALKER_FLAG }} --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true ${{ env.WIDGET_FLAG }} --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - name: Get app version
         id: get_version
         run: |
