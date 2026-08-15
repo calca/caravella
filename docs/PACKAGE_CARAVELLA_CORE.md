@@ -49,7 +49,8 @@ Full details on both backends, the SQLite schema, the factory, `ExpenseGroupStor
 enum Environment { dev, staging, prod }   // set via AppConfig.setEnvironment(...)
 
 static const bool enableTalkerScreen  = bool.fromEnvironment('ENABLE_TALKER_SCREEN', defaultValue: false);
-static const bool enableAndroidWidget = bool.fromEnvironment('ENABLE_ANDROID_WIDGET', defaultValue: true);
+// Default mirrors the native per-flavor Gradle default (build.gradle.kts): true for dev/staging, false for prod.
+static const bool enableAndroidWidget = bool.fromEnvironment('ENABLE_ANDROID_WIDGET', defaultValue: _flavor != 'prod');
 ```
 
 `AppConfig` does **not** define `FLAVOR` or `USE_JSON_BACKEND` — those dart-defines are read directly in the app's `lib/main/app_initialization.dart`. `ENABLE_PLAY_UPDATES` lives entirely in the sibling package `play_store_updates`. See [Build Variants & Flavors](BUILD_VARIANTS.md) for the full flag list.

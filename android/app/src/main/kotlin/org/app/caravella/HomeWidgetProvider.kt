@@ -38,6 +38,7 @@ import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import es.antonborri.home_widget.actionStartActivity as homeWidgetActionStartActivity
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.io.File
 import java.io.IOException
@@ -56,11 +57,14 @@ class HomeWidgetProvider : GlanceAppWidgetReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
+        // super.onReceive() already routes ACTION_APPWIDGET_UPDATE into
+        // onUpdate()/provideGlance() for the delivered widget ids; only these
+        // custom broadcasts (not handled by AppWidgetProvider itself) need an
+        // explicit refresh here.
         when (intent.action) {
             Intent.ACTION_DATE_CHANGED,
             Intent.ACTION_TIME_CHANGED,
             Intent.ACTION_TIMEZONE_CHANGED,
-            AppWidgetManager.ACTION_APPWIDGET_UPDATE,
             -> updateAllWidgets(context)
         }
     }
@@ -121,12 +125,18 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             val totals = AppFunctionStorageReader.getWidgetTotals(context, config.groupId)
             val title = totals?.groupTitle ?: config.groupTitle
             val currency = totals?.currency ?: config.groupCurrency
-            val addExpenseAction = glanceActionStartActivity(
-                Intent(context, MainActivity::class.java).apply {
-                    action = "io.caravella.egm.ADD_EXPENSE"
-                    putExtra("groupId", config.groupId)
-                    putExtra("groupTitle", title)
-                },
+            // Both actions go through the home_widget plugin's own launch-intent
+            // mechanism (a caravella://home_widget/... deep link delivered via
+            // HomeWidget.initiallyLaunchedFromHomeWidget()/widgetClicked on the Dart
+            // side) so the CTA button genuinely opens the add-expense sheet, distinct
+            // from tapping the rest of the widget which just opens the group.
+            val addExpenseAction = homeWidgetActionStartActivity<MainActivity>(
+                context,
+                widgetTapUri("add_expense", config.groupId, title),
+            )
+            val openGroupAction = homeWidgetActionStartActivity<MainActivity>(
+                context,
+                widgetTapUri("open_group", config.groupId, title),
             )
             WidgetUiModel(
                 title = title,
@@ -140,7 +150,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     label = "+",
                     action = addExpenseAction,
                 ),
-                tapAction = addExpenseAction,
+                tapAction = openGroupAction,
                 useGroupBackground = config.useGroupBackground,
                 backgroundTransparency = config.backgroundTransparency,
                 backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
@@ -349,7 +359,16 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         return String.format(Locale.getDefault(), "%.2f %s", amount, currency)
     }
 
-    private fun toComposeColor(colorValue: Int): Color = Color(colorValue.toUInt().toULong())
+    private fun toComposeColor(colorValue: Int): Color = Color(colorValue)
+
+    private fun widgetTapUri(path: String, groupId: String, groupTitle: String): Uri =
+        Uri.Builder()
+            .scheme("caravella")
+            .authority("home_widget")
+            .appendPath(path)
+            .appendQueryParameter("groupId", groupId)
+            .appendQueryParameter("groupTitle", groupTitle)
+            .build()
 
     private fun loadImageProvider(context: Context, path: String?): ImageProvider? {
         if (path.isNullOrBlank()) return null
@@ -361,11 +380,27 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         }
     }
 
+    // Widget cells never exceed the largest Responsive breakpoint (WIDE, 200.dp);
+    // decoding a multi-megapixel background photo at full resolution just to crop
+    // it into that space wastes memory/CPU and risks an oversized RemoteViews
+    // transaction, so bound the decode to roughly that size via inSampleSize.
     private fun loadBitmap(context: Context, path: String): Bitmap? {
+        val maxDimensionPx = (WIDGET_MAX_IMAGE_DIMENSION_DP * context.resources.displayMetrics.density).toInt()
         return if (path.startsWith("content://")) {
             try {
-                context.contentResolver.openInputStream(Uri.parse(path)).use { input ->
-                    input?.let { BitmapFactory.decodeStream(it) }
+                val uri = Uri.parse(path)
+                val bounds = context.contentResolver.openInputStream(uri)?.use { input ->
+                    BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { options ->
+                        BitmapFactory.decodeStream(input, null, options)
+                    }
+                } ?: return null
+                val sampleSize = calculateInSampleSize(bounds, maxDimensionPx, maxDimensionPx)
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    BitmapFactory.decodeStream(
+                        input,
+                        null,
+                        BitmapFactory.Options().apply { inSampleSize = sampleSize },
+                    )
                 }
             } catch (_: IOException) {
                 null
@@ -373,21 +408,41 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         } else {
             val file = File(path)
             if (!file.exists()) return null
-            BitmapFactory.decodeFile(file.absolutePath)
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { options ->
+                BitmapFactory.decodeFile(file.absolutePath, options)
+            }
+            val sampleSize = calculateInSampleSize(bounds, maxDimensionPx, maxDimensionPx)
+            BitmapFactory.decodeFile(
+                file.absolutePath,
+                BitmapFactory.Options().apply { inSampleSize = sampleSize },
+            )
         }
+    }
+
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val height = options.outHeight
+        val width = options.outWidth
+        var inSampleSize = 1
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight = height / 2
+            val halfWidth = width / 2
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
     }
 }
 
-private val WidgetLayerSpacing = 10.dp
+private const val WIDGET_MAX_IMAGE_DIMENSION_DP = 200
+
 private val WidgetInnerPadding = 12.dp
 private val WidgetCompactPadding = 6.dp
 private val WidgetSectionSpacing = 10.dp
 private val WidgetMinimalSpacing = 2.dp
 private val WidgetOuterRadius = 24.dp
-private val WidgetInnerRadius = 20.dp
 private val WidgetBodyTextSize = 15.sp
 private val WidgetLabelTextSize = 12.sp
-private val WidgetTodayValueTextSize = 18.sp
 private val WidgetCompactValueTextSize = 16.sp
 private val WidgetGroupTotalValueTextSize = 22.sp
 private val WidgetTodayPillRadius = 16.dp

@@ -16,11 +16,19 @@ class AppConfig {
     defaultValue: false,
   );
 
+  static const String _flavor = String.fromEnvironment(
+    'FLAVOR',
+    defaultValue: 'prod',
+  );
+
   /// Enable Android home widget via build flag
   /// Usage: --dart-define=ENABLE_ANDROID_WIDGET=false (to disable)
+  /// Default mirrors the native per-flavor Gradle default in
+  /// android/app/build.gradle.kts: enabled for dev/staging, disabled for prod,
+  /// so a build without an explicit override stays consistent on both sides.
   static const bool enableAndroidWidget = bool.fromEnvironment(
     'ENABLE_ANDROID_WIDGET',
-    defaultValue: true,
+    defaultValue: _flavor != 'prod',
   );
 
   static String get appName {
