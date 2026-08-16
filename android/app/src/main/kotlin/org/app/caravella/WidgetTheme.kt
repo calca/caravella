@@ -30,16 +30,16 @@ internal val WidgetGroupTotalValueTextSize = 22.sp
 internal val WidgetTodayPillRadius = 16.dp
 internal val WidgetTodayPillHorizontalPadding = 8.dp
 internal val WidgetTodayPillVerticalPadding = 2.dp
-internal val WidgetCtaButtonRadius = 16.dp
-internal val WidgetCtaButtonPadding = 14.dp
-internal val WidgetCtaButtonTextSize = 24.sp
+internal val WidgetCtaButtonRadius = 18.dp
+internal val WidgetCtaButtonPadding = 18.dp
+internal val WidgetCtaButtonTextSize = 28.sp
 
 // Smaller CTA chip variant used by the 4x1 layout, whose ~51dp height can't fit
 // the full-size CTA button used by the taller layouts.
-internal val WidgetCtaButtonSmallRadius = 12.dp
-internal val WidgetCtaButtonSmallPadding = 6.dp
-internal val WidgetCtaButtonSmallTextSize = 16.sp
-internal val WidgetCtaButtonSmallReservedWidth = 40.dp
+internal val WidgetCtaButtonSmallRadius = 14.dp
+internal val WidgetCtaButtonSmallPadding = 8.dp
+internal val WidgetCtaButtonSmallTextSize = 18.sp
+internal val WidgetCtaButtonSmallReservedWidth = 46.dp
 
 /**
  * Creates a [ColorProvider] that resolves to [day] in light mode and [night] in dark mode.
