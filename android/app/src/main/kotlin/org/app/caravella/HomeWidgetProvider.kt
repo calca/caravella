@@ -170,11 +170,11 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             val isShort = size.height < 84.dp // 1x1 or 4x1 height
 
             // The tap target and the painted surface are deliberately two nested
-            // Boxes rather than one: background()+cornerRadius() on the true root
-            // element returned from provideContent() has been unreliable in
-            // practice (renders transparent on some API levels/launchers even
-            // with a fully opaque color), so the actual painted surface lives on
-            // an inner Box one level down, while the outer one only carries
+            // Boxes rather than one: background() on the true root element
+            // returned from provideContent() has been unreliable in practice
+            // (renders transparent on some API levels/launchers even with a
+            // fully opaque color), so the actual painted surface lives on an
+            // inner Box one level down, while the outer one only carries
             // sizing and the click target.
             val outerModifier = if (model.tapAction != null) {
                 GlanceModifier.fillMaxSize().clickable(model.tapAction)
@@ -186,7 +186,14 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 Box(
                     modifier = GlanceModifier
                         .fillMaxSize()
-                        .cornerRadius(WidgetOuterRadius)
+                        // TEMPORARILY DROPPED cornerRadius() here as a diagnostic:
+                        // on the reporting device (Samsung One UI 7 launcher) the
+                        // background rendered fully transparent while other apps'
+                        // widgets rendered fine, and cornerRadius()+background()
+                        // (translated by Glance to RemoteViews.setViewOutlinePreferredRadius
+                        // on API 31+) is the most non-standard modifier combo this
+                        // widget uses versus a typical hand-rolled RemoteViews widget.
+                        // Re-add once confirmed this was (or wasn't) the cause.
                         .background(WidgetSurfaceColor),
                 ) {
                     when {
