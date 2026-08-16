@@ -65,15 +65,24 @@ internal object AppFunctionStorageReader {
     private const val TABLE_PARTICIPANTS = "participants"
     private const val TABLE_CATEGORIES = "categories"
     private const val TABLE_EXPENSES = "expenses"
-    private const val VIEW_WIDGET_TOTALS = "widget_group_totals"
+
+    // All SQLite reads go through one of these two views instead of hand-rolled
+    // per-function JOINs/WHERE clauses, so "which groups count as active" and
+    // "how do expenses join to category/participant names" each live in one
+    // place. group_summary_view backs getActiveGroupsSqlite, getTotalBalanceSqlite
+    // and getWidgetTotalsSqlite; expense_details_view backs getRecentExpensesSqlite.
+    private const val VIEW_GROUP_SUMMARY = "group_summary_view"
+    private const val VIEW_EXPENSE_DETAILS = "expense_details_view"
     private const val DEFAULT_CURRENCY = "€"
 
     private const val TAG = "AppFunctionStorageReader"
     @Volatile
-    private var isWidgetTotalsViewEnsured = false
+    private var isGroupSummaryViewEnsured = false
     @Volatile
-    private var widgetTotalsViewFirstDay: Int? = null
-    private val widgetTotalsViewLock = Any()
+    private var groupSummaryViewFirstDay: Int? = null
+    @Volatile
+    private var isExpenseDetailsViewEnsured = false
+    private val viewsLock = Any()
 
     // ------------------------------------------------------------------
     // Backend detection
@@ -221,11 +230,10 @@ internal object AppFunctionStorageReader {
     // SQLite implementation
     // ------------------------------------------------------------------
 
-    private fun openDb(context: Context): SQLiteDatabase {
-        val path = context.getDatabasePath(SQLITE_DB_NAME).absolutePath
-        return SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY)
-    }
-
+    // Every read below goes through openDbReadWrite() rather than a
+    // read-only connection: the shared views (group_summary_view,
+    // expense_details_view) are created lazily on first access via
+    // CREATE VIEW IF NOT EXISTS, which needs write access.
     private fun openDbReadWrite(context: Context): SQLiteDatabase {
         val path = context.getDatabasePath(SQLITE_DB_NAME).absolutePath
         return SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE)
@@ -233,28 +241,31 @@ internal object AppFunctionStorageReader {
 
     private fun getActiveGroupsSqlite(context: Context): List<GroupSummary> {
         return try {
-            openDb(context).use { db ->
-                val cursor = db.query(
-                    TABLE_GROUPS,
-                    arrayOf("id", "title", "currency", "color", "file"),
-                    "archived = 0",
-                    null, null, null, "timestamp DESC",
+            openDbReadWrite(context).use { db ->
+                ensureGroupSummaryView(db, currentFirstDayOfWeekSqlite())
+                val cursor = db.rawQuery(
+                    """
+                    SELECT group_id, group_title, currency, group_color, group_background_image_path
+                    FROM $VIEW_GROUP_SUMMARY
+                    ORDER BY group_timestamp DESC
+                    """.trimIndent(),
+                    null,
                 )
                 val result = mutableListOf<GroupSummary>()
                 cursor.use {
                     while (it.moveToNext()) {
                         result.add(
                             GroupSummary(
-                                id = it.getString(it.getColumnIndexOrThrow("id")),
-                                title = it.getString(it.getColumnIndexOrThrow("title")),
+                                id = it.getString(it.getColumnIndexOrThrow("group_id")),
+                                title = it.getString(it.getColumnIndexOrThrow("group_title")),
                                 currency = it.getString(it.getColumnIndexOrThrow("currency")),
-                                color = if (it.isNull(it.getColumnIndexOrThrow("color"))) {
+                                color = if (it.isNull(it.getColumnIndexOrThrow("group_color"))) {
                                     null
                                 } else {
-                                    it.getInt(it.getColumnIndexOrThrow("color"))
+                                    it.getInt(it.getColumnIndexOrThrow("group_color"))
                                 },
                                 backgroundImagePath = it.getString(
-                                    it.getColumnIndexOrThrow("file"),
+                                    it.getColumnIndexOrThrow("group_background_image_path"),
                                 )?.takeIf { filePath -> filePath.isNotBlank() },
                             )
                         )
@@ -270,35 +281,25 @@ internal object AppFunctionStorageReader {
 
     private fun getTotalBalanceSqlite(context: Context, groupId: String): BalanceResult? {
         return try {
-            openDb(context).use { db ->
-                // Fetch group header
-                val groupCursor = db.query(
-                    TABLE_GROUPS,
-                    arrayOf("title", "currency"),
-                    "id = ? AND archived = 0",
-                    arrayOf(groupId), null, null, null,
-                )
-                val (title, currency) = groupCursor.use {
-                    if (!it.moveToFirst()) return null
-                    Pair(
-                        it.getString(it.getColumnIndexOrThrow("title")),
-                        it.getString(it.getColumnIndexOrThrow("currency")),
-                    )
-                }
-                // Sum all expense amounts
-                val sumCursor = db.rawQuery(
-                    "SELECT COALESCE(SUM(amount), 0) AS total FROM $TABLE_EXPENSES WHERE group_id = ?",
+            openDbReadWrite(context).use { db ->
+                ensureGroupSummaryView(db, currentFirstDayOfWeekSqlite())
+                val cursor = db.rawQuery(
+                    """
+                    SELECT group_title, currency, group_total
+                    FROM $VIEW_GROUP_SUMMARY
+                    WHERE group_id = ?
+                    """.trimIndent(),
                     arrayOf(groupId),
                 )
-                val total = sumCursor.use {
-                    if (it.moveToFirst()) it.getDouble(0) else 0.0
+                cursor.use {
+                    if (!it.moveToFirst()) return null
+                    BalanceResult(
+                        groupId = groupId,
+                        groupTitle = it.getString(it.getColumnIndexOrThrow("group_title")),
+                        totalBalance = it.getDouble(it.getColumnIndexOrThrow("group_total")),
+                        currency = it.getString(it.getColumnIndexOrThrow("currency")),
+                    )
                 }
-                BalanceResult(
-                    groupId = groupId,
-                    groupTitle = title,
-                    totalBalance = total,
-                    currency = currency,
-                )
             }
         } catch (e: Exception) {
             Log.e(TAG, "getTotalBalanceSqlite failed for group $groupId", e)
@@ -312,32 +313,30 @@ internal object AppFunctionStorageReader {
         count: Int,
     ): RecentExpensesResult? {
         return try {
-            openDb(context).use { db ->
+            openDbReadWrite(context).use { db ->
+                ensureGroupSummaryView(db, currentFirstDayOfWeekSqlite())
+                ensureExpenseDetailsView(db)
+
                 // Fetch group header
-                val groupCursor = db.query(
-                    TABLE_GROUPS,
-                    arrayOf("title", "currency"),
-                    "id = ? AND archived = 0",
-                    arrayOf(groupId), null, null, null,
+                val groupCursor = db.rawQuery(
+                    "SELECT group_title, currency FROM $VIEW_GROUP_SUMMARY WHERE group_id = ?",
+                    arrayOf(groupId),
                 )
                 val (title, currency) = groupCursor.use {
                     if (!it.moveToFirst()) return null
                     Pair(
-                        it.getString(it.getColumnIndexOrThrow("title")),
+                        it.getString(it.getColumnIndexOrThrow("group_title")),
                         it.getString(it.getColumnIndexOrThrow("currency")),
                     )
                 }
-                // Fetch recent expenses with JOIN for category and participant names
+                // Fetch recent expenses; category/participant names already
+                // joined in via expense_details_view.
                 val cursor = db.rawQuery(
                     """
-                    SELECT e.id, e.name, e.amount, e.date, e.note,
-                           c.name AS category_name,
-                           p.name AS paid_by_name
-                    FROM $TABLE_EXPENSES e
-                    LEFT JOIN $TABLE_CATEGORIES c ON e.category_id = c.id
-                    LEFT JOIN $TABLE_PARTICIPANTS p ON e.paid_by_id = p.id
-                    WHERE e.group_id = ?
-                    ORDER BY e.date DESC -- Sort by date descending (newest first)
+                    SELECT expense_id, expense_name, amount, date, note, category_name, paid_by_name
+                    FROM $VIEW_EXPENSE_DETAILS
+                    WHERE group_id = ?
+                    ORDER BY date DESC -- Sort by date descending (newest first)
                     LIMIT ?
                     """.trimIndent(),
                     arrayOf(groupId, count.toString()),
@@ -352,13 +351,13 @@ internal object AppFunctionStorageReader {
                         val amountCol = it.getColumnIndexOrThrow("amount")
                         expenses.add(
                             ExpenseSummary(
-                                id = it.getString(it.getColumnIndexOrThrow("id")),
+                                id = it.getString(it.getColumnIndexOrThrow("expense_id")),
                                 categoryName = it.getString(it.getColumnIndexOrThrow("category_name")) ?: "",
                                 amount = if (it.isNull(amountCol)) null else it.getDouble(amountCol),
                                 paidByName = it.getString(it.getColumnIndexOrThrow("paid_by_name")) ?: "",
                                 date = dateIso,
                                 note = it.getString(it.getColumnIndexOrThrow("note")),
-                                name = it.getString(it.getColumnIndexOrThrow("name")),
+                                name = it.getString(it.getColumnIndexOrThrow("expense_name")),
                             )
                         )
                     }
@@ -410,9 +409,7 @@ internal object AppFunctionStorageReader {
         return try {
             // Write access is required the first time to create/update the shared SQL view.
             openDbReadWrite(context).use { db ->
-                // Convert ISO-8601 DayOfWeek (1=Monday..7=Sunday) to SQLite %w (0=Sunday..6=Saturday).
-                val firstDayOfWeekSqlite = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value % 7
-                ensureWidgetTotalsView(db, firstDayOfWeekSqlite)
+                ensureGroupSummaryView(db, currentFirstDayOfWeekSqlite())
                 val cursor = db.rawQuery(
                     """
                     SELECT
@@ -424,7 +421,7 @@ internal object AppFunctionStorageReader {
                         group_total,
                         group_color,
                         group_background_image_path
-                    FROM $VIEW_WIDGET_TOTALS
+                    FROM $VIEW_GROUP_SUMMARY
                     WHERE group_id = ?
                     """.trimIndent(),
                     arrayOf(groupId),
@@ -455,18 +452,29 @@ internal object AppFunctionStorageReader {
         }
     }
 
-    private fun ensureWidgetTotalsView(db: SQLiteDatabase, firstDayOfWeekSqlite: Int) {
-        synchronized(widgetTotalsViewLock) {
-            if (isWidgetTotalsViewEnsured && widgetTotalsViewFirstDay == firstDayOfWeekSqlite) return
-            if (widgetTotalsViewFirstDay != null && widgetTotalsViewFirstDay != firstDayOfWeekSqlite) {
-                db.execSQL("DROP VIEW IF EXISTS $VIEW_WIDGET_TOTALS")
+    /** Converts ISO-8601 DayOfWeek (1=Monday..7=Sunday) to SQLite %w (0=Sunday..6=Saturday). */
+    private fun currentFirstDayOfWeekSqlite(): Int =
+        WeekFields.of(Locale.getDefault()).firstDayOfWeek.value % 7
+
+    /**
+     * Per-group summary used by every SQLite read except recent expenses:
+     * active groups' id/title/currency/color/background plus today/week/total
+     * spend. Centralizes the "archived = 0" filter and the today/week/group
+     * amount aggregation so callers never hand-roll their own JOIN for it.
+     */
+    private fun ensureGroupSummaryView(db: SQLiteDatabase, firstDayOfWeekSqlite: Int) {
+        synchronized(viewsLock) {
+            if (isGroupSummaryViewEnsured && groupSummaryViewFirstDay == firstDayOfWeekSqlite) return
+            if (groupSummaryViewFirstDay != null && groupSummaryViewFirstDay != firstDayOfWeekSqlite) {
+                db.execSQL("DROP VIEW IF EXISTS $VIEW_GROUP_SUMMARY")
             }
             db.execSQL(
                 """
-                CREATE VIEW IF NOT EXISTS $VIEW_WIDGET_TOTALS AS
+                CREATE VIEW IF NOT EXISTS $VIEW_GROUP_SUMMARY AS
                 SELECT
                     g.id AS group_id,
                     g.title AS group_title,
+                    g.timestamp AS group_timestamp,
                     COALESCE(NULLIF(g.currency, ''), '$DEFAULT_CURRENCY') AS currency,
                     g.color AS group_color,
                     g.file AS group_background_image_path,
@@ -508,11 +516,42 @@ internal object AppFunctionStorageReader {
                         ) AS week_start
                 ) d
                 WHERE g.archived = 0
-                GROUP BY g.id, g.title, g.currency, g.color, g.file
+                GROUP BY g.id, g.title, g.timestamp, g.currency, g.color, g.file
                 """.trimIndent(),
             )
-            isWidgetTotalsViewEnsured = true
-            widgetTotalsViewFirstDay = firstDayOfWeekSqlite
+            isGroupSummaryViewEnsured = true
+            groupSummaryViewFirstDay = firstDayOfWeekSqlite
+        }
+    }
+
+    /**
+     * Flat per-expense rows with category/participant names already joined
+     * in, so callers needing individual expenses (as opposed to per-group
+     * aggregates) never hand-roll that JOIN either. Not archived-filtered
+     * itself — callers only reach it after confirming the group exists via
+     * [VIEW_GROUP_SUMMARY], which already excludes archived groups.
+     */
+    private fun ensureExpenseDetailsView(db: SQLiteDatabase) {
+        synchronized(viewsLock) {
+            if (isExpenseDetailsViewEnsured) return
+            db.execSQL(
+                """
+                CREATE VIEW IF NOT EXISTS $VIEW_EXPENSE_DETAILS AS
+                SELECT
+                    e.id AS expense_id,
+                    e.group_id AS group_id,
+                    e.name AS expense_name,
+                    e.amount AS amount,
+                    e.date AS date,
+                    e.note AS note,
+                    c.name AS category_name,
+                    p.name AS paid_by_name
+                FROM $TABLE_EXPENSES e
+                LEFT JOIN $TABLE_CATEGORIES c ON e.category_id = c.id
+                LEFT JOIN $TABLE_PARTICIPANTS p ON e.paid_by_id = p.id
+                """.trimIndent(),
+            )
+            isExpenseDetailsViewEnsured = true
         }
     }
 
