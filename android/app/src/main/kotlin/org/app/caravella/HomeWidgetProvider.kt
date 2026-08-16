@@ -186,14 +186,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 Box(
                     modifier = GlanceModifier
                         .fillMaxSize()
-                        // TEMPORARILY DROPPED cornerRadius() here as a diagnostic:
-                        // on the reporting device (Samsung One UI 7 launcher) the
-                        // background rendered fully transparent while other apps'
-                        // widgets rendered fine, and cornerRadius()+background()
-                        // (translated by Glance to RemoteViews.setViewOutlinePreferredRadius
-                        // on API 31+) is the most non-standard modifier combo this
-                        // widget uses versus a typical hand-rolled RemoteViews widget.
-                        // Re-add once confirmed this was (or wasn't) the cause.
+                        .cornerRadius(WidgetOuterRadius)
                         .background(WidgetSurfaceColor),
                 ) {
                     when {
