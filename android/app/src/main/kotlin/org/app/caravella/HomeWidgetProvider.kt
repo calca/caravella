@@ -194,18 +194,32 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
 
     @Composable
     private fun OneByOneContent(model: WidgetUiModel) {
-        // Smallest grid cell: no room for anything but the number itself.
+        // Smallest grid cell: group name (when enabled) + today's value, both
+        // sized down from the 2x2 layout's since this cell is much narrower/shorter.
         val overlayModifier = GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
         Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
-            Text(
-                text = model.todayValue,
-                style = TextStyle(
-                    color = EmphasisTextColor,
-                    fontSize = WidgetCompactValueTextSize,
-                    fontWeight = FontWeight.Bold,
-                ),
-                maxLines = 1,
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                if (model.showGroupName) {
+                    Text(
+                        text = model.title,
+                        style = TextStyle(
+                            color = EmphasisTextColor,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = WidgetMicroLabelTextSize,
+                        ),
+                        maxLines = 1,
+                    )
+                }
+                Text(
+                    text = model.todayValue,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontSize = WidgetMicroValueTextSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    maxLines = 1,
+                )
+            }
         }
     }
 
