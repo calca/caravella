@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -90,13 +91,17 @@ class HomeWidgetProvider : GlanceAppWidgetReceiver() {
 }
 
 private object CaravellaHomeWidget : GlanceAppWidget() {
-    // Responsive size breakpoints for adaptive layout
-    private val SMALL = DpSize(57.dp, 57.dp)
-    private val MEDIUM = DpSize(130.dp, 130.dp)
-    private val WIDE = DpSize(200.dp, 130.dp)
+    // Responsive breakpoints for the four supported home-screen grid shapes.
+    // Values are Android's own per-cell-count guidance (portrait width column,
+    // landscape height column — the smaller, safer figure for each dimension):
+    // https://developer.android.com/develop/ui/views/appwidgets/layouts
+    private val SIZE_1X1 = DpSize(57.dp, 51.dp)
+    private val SIZE_2X2 = DpSize(130.dp, 117.dp)
+    private val SIZE_4X1 = DpSize(276.dp, 51.dp)
+    private val SIZE_4X2 = DpSize(276.dp, 117.dp)
 
     override val sizeMode = SizeMode.Responsive(
-        setOf(SMALL, MEDIUM, WIDE),
+        setOf(SIZE_1X1, SIZE_2X2, SIZE_4X1, SIZE_4X2),
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -180,10 +185,11 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
 
         provideContent {
             val size = LocalSize.current
-            val isCompact = size.width < 130.dp || size.height < 130.dp
-            // True 1x1 grid cells; only these skip the extra week-total caption line.
-            val isTiny = size.width < 90.dp || size.height < 90.dp
-            val isWide = size.width >= 200.dp
+            // Midpoints between the declared breakpoints (130/276 wide, 51/117 tall) —
+            // LocalSize.current always snaps to one of the four exactly, so any
+            // threshold strictly between two breakpoint values classifies correctly.
+            val isNarrow = size.width < 200.dp // 1x1 or 2x2 width
+            val isShort = size.height < 84.dp // 1x1 or 4x1 height
 
             // Always use white as the base background color. Transparency setting
             // controls how much of the white shows through (or how opaque the overlay is).
@@ -226,151 +232,247 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     ) {}
                 }
 
-                if (isCompact) {
-                    // Compact 1x1 layout: just today value centered
-                    val overlayModifier = if (model.backgroundTransparency >= 100) {
-                        GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
-                    } else {
-                        GlanceModifier
-                            .fillMaxSize()
-                            .cornerRadius(WidgetOuterRadius)
-                            .background(contentOverlaySurface(model.backgroundTransparency))
-                            .padding(WidgetCompactPadding)
-                    }
+                when {
+                    isNarrow && isShort -> OneByOneContent(model)
+                    isNarrow && !isShort -> TwoByTwoContent(context, model)
+                    !isNarrow && isShort -> FourByOneContent(context, model, accentColors)
+                    else -> FourByTwoContent(context, model, accentColors)
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun OneByOneContent(model: WidgetUiModel) {
+        // Smallest grid cell: no room for anything but the number itself.
+        val overlayModifier = if (model.backgroundTransparency >= 100) {
+            GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
+        } else {
+            GlanceModifier
+                .fillMaxSize()
+                .cornerRadius(WidgetOuterRadius)
+                .background(contentOverlaySurface(model.backgroundTransparency))
+                .padding(WidgetCompactPadding)
+        }
+        Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
+            Text(
+                text = model.todayValue,
+                style = TextStyle(
+                    color = EmphasisTextColor,
+                    fontSize = WidgetCompactValueTextSize,
+                    fontWeight = FontWeight.Bold,
+                ),
+                maxLines = 1,
+            )
+        }
+    }
+
+    @Composable
+    private fun TwoByTwoContent(context: Context, model: WidgetUiModel) {
+        val overlayModifier = if (model.backgroundTransparency >= 100) {
+            GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
+        } else {
+            GlanceModifier
+                .fillMaxSize()
+                .cornerRadius(WidgetOuterRadius)
+                .background(contentOverlaySurface(model.backgroundTransparency))
+                .padding(WidgetCompactPadding)
+        }
+        Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                if (model.showGroupName) {
+                    Text(
+                        text = model.title,
+                        style = TextStyle(
+                            color = EmphasisTextColor,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = WidgetLabelTextSize,
+                        ),
+                        maxLines = 1,
+                    )
+                }
+                Text(
+                    text = model.todayValue,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontSize = WidgetCompactValueTextSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    maxLines = 1,
+                )
+                Text(
+                    text = "${context.getString(R.string.widget_week_label)} ${model.weekValue}",
+                    style = TextStyle(
+                        color = SecondaryTextColor,
+                        fontSize = WidgetLabelTextSize,
+                    ),
+                    maxLines = 1,
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun FourByOneContent(
+        context: Context,
+        model: WidgetUiModel,
+        accentColors: WidgetAccentColors,
+    ) {
+        // A single short row: no vertical room to stack the group name, value and
+        // CTA the way the taller layouts do, so everything lives on one line.
+        // The CTA chip is only drawn when it's a genuinely different action from
+        // the whole-row tap (the configured state's "+"); in the unconfigured
+        // state both actions already open the same picker, so a second visual
+        // button would be redundant and — with its long "select group" label —
+        // wouldn't fit this row's height anyway.
+        val showsDistinctCta = model.ctaButton != null && model.ctaButton.action != model.tapAction
+        Box(
+            modifier = GlanceModifier.fillMaxSize().padding(horizontal = WidgetInnerPadding),
+        ) {
+            val line = if (model.showGroupName) {
+                "${model.title} · ${model.todayValue}"
+            } else {
+                model.todayValue
+            }
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .padding(end = if (showsDistinctCta) WidgetCtaButtonSmallReservedWidth else 0.dp),
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Text(
+                    text = line,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontSize = WidgetBodyTextSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    maxLines = 1,
+                )
+            }
+            if (showsDistinctCta) {
+                val ctaButton = model.ctaButton!!
+                Box(
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterEnd,
+                ) {
                     Box(
-                        modifier = overlayModifier,
+                        modifier = GlanceModifier
+                            .cornerRadius(WidgetCtaButtonSmallRadius)
+                            .background(accentColors.ctaSurface)
+                            .padding(WidgetCtaButtonSmallPadding)
+                            .clickable(ctaButton.action),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            if (model.showGroupName) {
-                                Text(
-                                    text = model.title,
-                                    style = TextStyle(
-                                        color = EmphasisTextColor,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = WidgetLabelTextSize,
-                                    ),
-                                    maxLines = 1,
-                                )
-                            }
-                            Text(
-                                text = model.todayValue,
-                                style = TextStyle(
-                                    color = EmphasisTextColor,
-                                    fontSize = WidgetCompactValueTextSize,
-                                    fontWeight = FontWeight.Bold,
-                                ),
-                                maxLines = 1,
-                            )
-                            if (!isTiny) {
-                                Text(
-                                    text = "${context.getString(R.string.widget_week_label)} ${model.weekValue}",
-                                    style = TextStyle(
-                                        color = SecondaryTextColor,
-                                        fontSize = WidgetLabelTextSize,
-                                    ),
-                                    maxLines = 1,
-                                )
-                            }
-                        }
+                        Text(
+                            text = ctaButton.label,
+                            style = TextStyle(
+                                color = accentColors.ctaText,
+                                fontSize = WidgetCtaButtonSmallTextSize,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
                     }
-                } else {
-                    // Standard layout: content overlays on top of background
-                    val overlayModifier = GlanceModifier
-                        .fillMaxSize()
-                        .padding(WidgetInnerPadding)
+                }
+            }
+        }
+    }
 
-                    Box(modifier = overlayModifier) {
-                        Column(
-                            modifier = GlanceModifier.fillMaxSize(),
-                        ) {
-                            // First row: "Total Spent" label + "today: $total" chip
-                            Row(
-                                modifier = GlanceModifier.fillMaxWidth(),
-                            ) {
-                                Text(
-                                    text = context.getString(R.string.widget_total_spent_label),
-                                    style = TextStyle(
-                                        color = EmphasisTextColor,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = WidgetBodyTextSize,
-                                    ),
-                                    maxLines = 1,
-                                )
-                                Box(
-                                    modifier = GlanceModifier
-                                        .padding(start = 8.dp)
-                                        .cornerRadius(WidgetTodayPillRadius)
-                                        .background(accentColors.pillSurface)
-                                        .padding(
-                                            start = WidgetTodayPillHorizontalPadding,
-                                            top = WidgetTodayPillVerticalPadding,
-                                            end = WidgetTodayPillHorizontalPadding,
-                                            bottom = WidgetTodayPillVerticalPadding,
-                                        ),
-                                ) {
-                                    Text(
-                                        text = "${context.getString(R.string.widget_today_label)} ${model.todayValue}",
-                                        style = TextStyle(
-                                            color = accentColors.pillText,
-                                            fontSize = WidgetLabelTextSize,
-                                            fontWeight = FontWeight.Bold,
-                                        ),
-                                    )
-                                }
-                            }
+    @Composable
+    private fun FourByTwoContent(
+        context: Context,
+        model: WidgetUiModel,
+        accentColors: WidgetAccentColors,
+    ) {
+        val overlayModifier = GlanceModifier
+            .fillMaxSize()
+            .padding(WidgetInnerPadding)
 
-                            if (model.showGroupName) {
-                                Text(
-                                    text = model.title,
-                                    style = TextStyle(
-                                        color = SecondaryTextColor,
-                                        fontSize = WidgetLabelTextSize,
-                                    ),
-                                    maxLines = 1,
-                                    modifier = GlanceModifier.padding(top = WidgetMinimalSpacing),
-                                )
-                            }
+        Box(modifier = overlayModifier) {
+            Column(
+                modifier = GlanceModifier.fillMaxSize(),
+            ) {
+                // First row: "Total Spent" label + "today: $total" chip
+                Row(
+                    modifier = GlanceModifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        text = context.getString(R.string.widget_total_spent_label),
+                        style = TextStyle(
+                            color = EmphasisTextColor,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = WidgetBodyTextSize,
+                        ),
+                        maxLines = 1,
+                    )
+                    Box(
+                        modifier = GlanceModifier
+                            .padding(start = 8.dp)
+                            .cornerRadius(WidgetTodayPillRadius)
+                            .background(accentColors.pillSurface)
+                            .padding(
+                                start = WidgetTodayPillHorizontalPadding,
+                                top = WidgetTodayPillVerticalPadding,
+                                end = WidgetTodayPillHorizontalPadding,
+                                bottom = WidgetTodayPillVerticalPadding,
+                            ),
+                    ) {
+                        Text(
+                            text = "${context.getString(R.string.widget_today_label)} ${model.todayValue}",
+                            style = TextStyle(
+                                color = accentColors.pillText,
+                                fontSize = WidgetLabelTextSize,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
+                    }
+                }
 
-                            if (isWide) {
-                                // Wide layout: group total displayed
-                                Text(
-                                    text = model.groupTotalValue,
-                                    style = TextStyle(
-                                        color = EmphasisTextColor,
-                                        fontSize = WidgetGroupTotalValueTextSize,
-                                        fontWeight = FontWeight.Bold,
-                                    ),
-                                    modifier = GlanceModifier.padding(top = WidgetSectionSpacing),
-                                )
-                            }
-                        }
+                if (model.showGroupName) {
+                    Text(
+                        text = model.title,
+                        style = TextStyle(
+                            color = SecondaryTextColor,
+                            fontSize = WidgetLabelTextSize,
+                        ),
+                        maxLines = 1,
+                        modifier = GlanceModifier.padding(top = WidgetMinimalSpacing),
+                    )
+                }
 
-                        // CTA + button: always bottom-right, square with rounded corners
-                        if (model.ctaButton != null) {
-                            Box(
-                                modifier = GlanceModifier.fillMaxSize(),
-                                contentAlignment = Alignment.BottomEnd,
-                            ) {
-                                Box(
-                                    modifier = GlanceModifier
-                                        .cornerRadius(WidgetCtaButtonRadius)
-                                        .background(accentColors.ctaSurface)
-                                        .padding(WidgetCtaButtonPadding)
-                                        .clickable(model.ctaButton.action),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Text(
-                                        text = model.ctaButton.label,
-                                        style = TextStyle(
-                                            color = accentColors.ctaText,
-                                            fontSize = WidgetCtaButtonTextSize,
-                                            fontWeight = FontWeight.Bold,
-                                        ),
-                                    )
-                                }
-                            }
-                        }
+                Text(
+                    text = model.groupTotalValue,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontSize = WidgetGroupTotalValueTextSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    modifier = GlanceModifier.padding(top = WidgetSectionSpacing),
+                )
+            }
+
+            // CTA + button: always bottom-right, square with rounded corners
+            if (model.ctaButton != null) {
+                Box(
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd,
+                ) {
+                    Box(
+                        modifier = GlanceModifier
+                            .cornerRadius(WidgetCtaButtonRadius)
+                            .background(accentColors.ctaSurface)
+                            .padding(WidgetCtaButtonPadding)
+                            .clickable(model.ctaButton.action),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = model.ctaButton.label,
+                            style = TextStyle(
+                                color = accentColors.ctaText,
+                                fontSize = WidgetCtaButtonTextSize,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
                     }
                 }
             }
@@ -402,7 +504,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         }
     }
 
-    // Widget cells never exceed the largest Responsive breakpoint (WIDE, 200.dp);
+    // Widget cells never exceed the largest Responsive breakpoint (SIZE_4X2, 276.dp);
     // decoding a multi-megapixel background photo at full resolution just to crop
     // it into that space wastes memory/CPU and risks an oversized RemoteViews
     // transaction, so bound the decode to roughly that size via inSampleSize.
@@ -456,7 +558,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
     }
 }
 
-private const val WIDGET_MAX_IMAGE_DIMENSION_DP = 200
+private const val WIDGET_MAX_IMAGE_DIMENSION_DP = 276
 
 private val WidgetInnerPadding = 12.dp
 private val WidgetCompactPadding = 6.dp
@@ -473,6 +575,13 @@ private val WidgetTodayPillVerticalPadding = 2.dp
 private val WidgetCtaButtonRadius = 16.dp
 private val WidgetCtaButtonPadding = 14.dp
 private val WidgetCtaButtonTextSize = 24.sp
+
+// Smaller CTA chip variant used by the 4x1 layout, whose ~51dp height can't fit
+// the full-size CTA button used by the taller layouts.
+private val WidgetCtaButtonSmallRadius = 12.dp
+private val WidgetCtaButtonSmallPadding = 6.dp
+private val WidgetCtaButtonSmallTextSize = 16.sp
+private val WidgetCtaButtonSmallReservedWidth = 40.dp
 
 /**
  * Creates a [ColorProvider] that resolves to [day] in light mode and [night] in dark mode.
