@@ -49,7 +49,7 @@ This is the authoritative list — every `String.fromEnvironment`/`bool.fromEnvi
 | `ENABLE_GOOGLE_DRIVE_SYNC` | bool, default `false` | `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart` | Builds a real `GoogleDriveCloudChannel` (Google Sign-In + Drive API) for the sync feature's Cloud Sync option instead of leaving it `null`/hidden — see [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md) and its [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md) |
 | `GOOGLE_DRIVE_IOS_CLIENT_ID` | String, default `''` | `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart` | iOS-only OAuth client ID for Google Drive sync; unused/unnecessary on Android — see [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md#step-5--optional-ios-oauth-client) |
 | `ENABLE_BLUETOOTH_SYNC` | bool, default **`true`** | `lib/sync/bluetooth_sync_factory.dart` | Hides the Bluetooth section of Settings → Sync when `false` — the only flag on this page that defaults *on*, since Bluetooth sync already ships; F-Droid-style builds pass `=false` explicitly to avoid the Google Play Services dependency `nearby_connections` pulls in — see [F-Droid Submission](FDROID_SUBMISSION.md) |
-| `ENABLE_ANDROID_WIDGET` | bool, default `true` | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableAndroidWidget`), also read natively in `build.gradle.kts` | Enables/disables the Android home-screen widget, both on the Flutter side (`PlatformHomeWidgetManager`) and natively (disables the widget receiver/config activity in the manifest) |
+| `ENABLE_ANDROID_WIDGET` | bool, default per-flavor (`true` for dev/staging, `false` for prod), see below | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableAndroidWidget`), also read natively in `build.gradle.kts` | Enables/disables the Android home-screen widget, both on the Flutter side (`PlatformHomeWidgetManager`) and natively (disables the widget receiver/config activity in the manifest) |
 | `ENABLE_TALKER_SCREEN` | bool, default `false` | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableTalkerScreen`) | Shows the in-app "Debug Logs" (Talker) screen in Settings even outside debug builds |
 | `UNSPLASH_ACCESS_KEY` | String, default `''` | `lib/services/unsplash/unsplash_service.dart` | Enables the Unsplash background-photo search in group creation/editing (empty ⇒ feature silently disabled, returns no results) |
 
@@ -97,16 +97,23 @@ As with every flag on this page, `nearby_connections` stays a normal, always-pre
 
 ## Android home widget
 
-`ENABLE_ANDROID_WIDGET` is read on both sides:
+`ENABLE_ANDROID_WIDGET` is read on both sides, with matching per-flavor defaults so a build without any explicit override behaves consistently:
 
-1. **Flutter**: `AppConfig.enableAndroidWidget` gates `PlatformHomeWidgetManager` (no-ops when `false`).
-2. **Native**: `android/app/build.gradle.kts` resolves the flag from (in order) the Gradle project property `enableAndroidWidget` → the `ENABLE_ANDROID_WIDGET` environment variable → default `true`, and emits it as `resValue("bool", "enable_android_widget", ...)`. `AndroidManifest.xml` uses `android:enabled="@bool/enable_android_widget"` on the widget's receiver and its configuration activity — when `false`, the widget doesn't even appear in Android's widget picker.
+1. **Flutter**: `AppConfig.enableAndroidWidget` gates `PlatformHomeWidgetManager` (no-ops when `false`). Its default isn't a flat `true`/`false` — it reads the `FLAVOR` dart-define itself (`defaultValue: _flavor != 'prod'`) so it lands on `true` for dev/staging and `false` for prod without needing `ENABLE_ANDROID_WIDGET` passed explicitly.
+2. **Native**: `android/app/build.gradle.kts` resolves an *override* from (in order) the Gradle project property `enableAndroidWidget` → the `ENABLE_ANDROID_WIDGET` environment variable → no override. When an override is set, it forces the same value for every flavor. Without one, each product flavor's `resValue("bool", "enable_android_widget", ...)` falls back to its own default: **`true` for `dev` and `staging`, `false` for `prod`** — matching the Flutter side. `AndroidManifest.xml` uses `android:enabled="@bool/enable_android_widget"` on the widget's receiver and its configuration activity — when `false`, the widget doesn't even appear in Android's widget picker.
 
 ```bash
-flutter build apk --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=FLAVOR=prod --flavor prod --release
+# dev/staging: widget enabled by default, no flag needed
+flutter build apk --dart-define=FLAVOR=staging --flavor staging --release
+
+# prod: widget disabled by default, no flag needed
+flutter build apk --dart-define=FLAVOR=prod --flavor prod --release
+
+# explicit override forces the same value on every flavor, both native and Flutter side
+flutter build apk --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=FLAVOR=staging --flavor staging --release
 ```
 
-**Current CI always builds with `ENABLE_ANDROID_WIDGET=false`** (see [CI Pipelines](CI_PIPELINES.md)) — if you need to test the widget locally, build without that flag or explicitly pass `=true`.
+**CI** (see [CI Pipelines](CI_PIPELINES.md)) builds `staging` with the widget explicitly enabled (`ENABLE_ANDROID_WIDGET=true`, matching the native default) and `prod` with it explicitly disabled (`ENABLE_ANDROID_WIDGET=false`, also matching the native default) — the dart-define is passed explicitly in both cases so the Flutter side stays in sync with the native per-flavor default rather than relying on its own separate `true` default.
 
 ## See also
 

@@ -127,9 +127,12 @@ class InfoSettingsSection extends StatelessWidget {
       },
       child: ListTile(
         leading: const Icon(Icons.bug_report),
-        title: Text('Debug Logs', style: textTheme.titleMedium),
+        title: Text(
+          loc.settings_debug_logs_title,
+          style: textTheme.titleMedium,
+        ),
         subtitle: Text(
-          'View application logs and error history',
+          loc.settings_debug_logs_desc,
           style: textTheme.bodySmall,
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),

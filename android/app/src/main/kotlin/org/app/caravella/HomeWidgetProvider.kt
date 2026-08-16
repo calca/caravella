@@ -6,10 +6,10 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
@@ -26,7 +26,6 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
-import androidx.glance.unit.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -38,10 +37,10 @@ import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import es.antonborri.home_widget.actionStartActivity as homeWidgetActionStartActivity
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.io.File
 import java.io.IOException
-import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,11 +55,14 @@ class HomeWidgetProvider : GlanceAppWidgetReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
+        // super.onReceive() already routes ACTION_APPWIDGET_UPDATE into
+        // onUpdate()/provideGlance() for the delivered widget ids; only these
+        // custom broadcasts (not handled by AppWidgetProvider itself) need an
+        // explicit refresh here.
         when (intent.action) {
             Intent.ACTION_DATE_CHANGED,
             Intent.ACTION_TIME_CHANGED,
             Intent.ACTION_TIMEZONE_CHANGED,
-            AppWidgetManager.ACTION_APPWIDGET_UPDATE,
             -> updateAllWidgets(context)
         }
     }
@@ -83,13 +85,17 @@ class HomeWidgetProvider : GlanceAppWidgetReceiver() {
 }
 
 private object CaravellaHomeWidget : GlanceAppWidget() {
-    // Responsive size breakpoints for adaptive layout
-    private val SMALL = DpSize(57.dp, 57.dp)
-    private val MEDIUM = DpSize(130.dp, 130.dp)
-    private val WIDE = DpSize(200.dp, 130.dp)
+    // Responsive breakpoints for the four supported home-screen grid shapes.
+    // Values are Android's own per-cell-count guidance (portrait width column,
+    // landscape height column — the smaller, safer figure for each dimension):
+    // https://developer.android.com/develop/ui/views/appwidgets/layouts
+    private val SIZE_1X1 = DpSize(57.dp, 51.dp)
+    private val SIZE_2X2 = DpSize(130.dp, 117.dp)
+    private val SIZE_4X1 = DpSize(276.dp, 51.dp)
+    private val SIZE_4X2 = DpSize(276.dp, 117.dp)
 
     override val sizeMode = SizeMode.Responsive(
-        setOf(SMALL, MEDIUM, WIDE),
+        setOf(SIZE_1X1, SIZE_2X2, SIZE_4X1, SIZE_4X2),
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -97,21 +103,26 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         val config = HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)
 
         val model = if (config == null) {
+            // Tapping anywhere on the unconfigured widget opens the group picker,
+            // not just the small CTA chip — matches the configured widget's
+            // full-body tap and avoids a dead area that looks unresponsive.
+            val configureAction = glanceActionStartActivity(
+                Intent(context, HomeWidgetConfigureActivity::class.java).apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                },
+            )
             WidgetUiModel(
                 title = context.getString(R.string.widget_unconfigured_title),
                 todayValue = "-",
+                weekValue = "-",
                 groupTotalValue = "-",
                 showGroupName = true,
                 ctaButton = WidgetButton(
                     label = context.getString(R.string.widget_select_group),
-                    action = glanceActionStartActivity(
-                        Intent(context, HomeWidgetConfigureActivity::class.java).apply {
-                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        },
-                    ),
+                    action = configureAction,
                 ),
-                tapAction = null,
+                tapAction = configureAction,
                 useGroupBackground = false,
                 backgroundTransparency = 0,
                 backgroundColor = null,
@@ -121,26 +132,33 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             val totals = AppFunctionStorageReader.getWidgetTotals(context, config.groupId)
             val title = totals?.groupTitle ?: config.groupTitle
             val currency = totals?.currency ?: config.groupCurrency
-            val addExpenseAction = glanceActionStartActivity(
-                Intent(context, MainActivity::class.java).apply {
-                    action = "io.caravella.egm.ADD_EXPENSE"
-                    putExtra("groupId", config.groupId)
-                    putExtra("groupTitle", title)
-                },
+            // Both actions go through the home_widget plugin's own launch-intent
+            // mechanism (a caravella://home_widget/... deep link delivered via
+            // HomeWidget.initiallyLaunchedFromHomeWidget()/widgetClicked on the Dart
+            // side) so the CTA button genuinely opens the add-expense sheet, distinct
+            // from tapping the rest of the widget which just opens the group.
+            val addExpenseAction = homeWidgetActionStartActivity<MainActivity>(
+                context,
+                widgetTapUri("add_expense", config.groupId, title),
+            )
+            val openGroupAction = homeWidgetActionStartActivity<MainActivity>(
+                context,
+                widgetTapUri("open_group", config.groupId, title),
             )
             WidgetUiModel(
                 title = title,
                 // Default to 0.0 when totals are unavailable (e.g. first load before
                 // any expenses exist) so the widget always shows a formatted amount
                 // instead of a placeholder dash.
-                todayValue = formatAmount(totals?.todayTotal ?: 0.0, currency),
-                groupTotalValue = formatAmount(totals?.groupTotal ?: 0.0, currency),
+                todayValue = formatWidgetAmount(totals?.todayTotal ?: 0.0, currency),
+                weekValue = formatWidgetAmount(totals?.weekTotal ?: 0.0, currency),
+                groupTotalValue = formatWidgetAmount(totals?.groupTotal ?: 0.0, currency),
                 showGroupName = config.showGroupName,
                 ctaButton = WidgetButton(
                     label = "+",
                     action = addExpenseAction,
                 ),
-                tapAction = addExpenseAction,
+                tapAction = openGroupAction,
                 useGroupBackground = config.useGroupBackground,
                 backgroundTransparency = config.backgroundTransparency,
                 backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
@@ -157,11 +175,15 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         } else {
             null
         }
+        val accentColors = widgetAccentColors(context)
 
         provideContent {
             val size = LocalSize.current
-            val isCompact = size.width < 130.dp || size.height < 130.dp
-            val isWide = size.width >= 200.dp
+            // Midpoints between the declared breakpoints (130/276 wide, 51/117 tall) —
+            // LocalSize.current always snaps to one of the four exactly, so any
+            // threshold strictly between two breakpoint values classifies correctly.
+            val isNarrow = size.width < 200.dp // 1x1 or 2x2 width
+            val isShort = size.height < 84.dp // 1x1 or 4x1 height
 
             // Always use white as the base background color. Transparency setting
             // controls how much of the white shows through (or how opaque the overlay is).
@@ -195,7 +217,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                             .background(contentOverlaySurface(model.backgroundTransparency)),
                     ) {}
                 } else if (model.useGroupBackground && model.backgroundColor != null) {
-                    val bgColor = toComposeColor(model.backgroundColor)
+                    val bgColor = widgetColor(model.backgroundColor)
                     Box(
                         modifier = GlanceModifier
                             .fillMaxSize()
@@ -204,152 +226,261 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     ) {}
                 }
 
-                if (isCompact) {
-                    // Compact 1x1 layout: just today value centered
-                    val overlayModifier = if (model.backgroundTransparency >= 100) {
-                        GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
-                    } else {
-                        GlanceModifier
-                            .fillMaxSize()
-                            .cornerRadius(WidgetOuterRadius)
-                            .background(contentOverlaySurface(model.backgroundTransparency))
-                            .padding(WidgetCompactPadding)
-                    }
+                when {
+                    isNarrow && isShort -> OneByOneContent(model)
+                    isNarrow && !isShort -> TwoByTwoContent(context, model)
+                    !isNarrow && isShort -> FourByOneContent(context, model, accentColors)
+                    else -> FourByTwoContent(context, model, accentColors)
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun OneByOneContent(model: WidgetUiModel) {
+        // Smallest grid cell: no room for anything but the number itself.
+        val overlayModifier = if (model.backgroundTransparency >= 100) {
+            GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
+        } else {
+            GlanceModifier
+                .fillMaxSize()
+                .cornerRadius(WidgetOuterRadius)
+                .background(contentOverlaySurface(model.backgroundTransparency))
+                .padding(WidgetCompactPadding)
+        }
+        Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
+            Text(
+                text = model.todayValue,
+                style = TextStyle(
+                    color = EmphasisTextColor,
+                    fontSize = WidgetCompactValueTextSize,
+                    fontWeight = FontWeight.Bold,
+                ),
+                maxLines = 1,
+            )
+        }
+    }
+
+    @Composable
+    private fun TwoByTwoContent(context: Context, model: WidgetUiModel) {
+        val overlayModifier = if (model.backgroundTransparency >= 100) {
+            GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
+        } else {
+            GlanceModifier
+                .fillMaxSize()
+                .cornerRadius(WidgetOuterRadius)
+                .background(contentOverlaySurface(model.backgroundTransparency))
+                .padding(WidgetCompactPadding)
+        }
+        Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                if (model.showGroupName) {
+                    Text(
+                        text = model.title,
+                        style = TextStyle(
+                            color = EmphasisTextColor,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = WidgetLabelTextSize,
+                        ),
+                        maxLines = 1,
+                    )
+                }
+                Text(
+                    text = model.todayValue,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontSize = WidgetCompactValueTextSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    maxLines = 1,
+                )
+                Text(
+                    text = "${context.getString(R.string.widget_week_label)} ${model.weekValue}",
+                    style = TextStyle(
+                        color = SecondaryTextColor,
+                        fontSize = WidgetLabelTextSize,
+                    ),
+                    maxLines = 1,
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun FourByOneContent(
+        context: Context,
+        model: WidgetUiModel,
+        accentColors: WidgetAccentColors,
+    ) {
+        // A single short row: no vertical room to stack the group name, value and
+        // CTA the way the taller layouts do, so everything lives on one line.
+        // The CTA chip is only drawn when it's a genuinely different action from
+        // the whole-row tap (the configured state's "+"); in the unconfigured
+        // state both actions already open the same picker, so a second visual
+        // button would be redundant and — with its long "select group" label —
+        // wouldn't fit this row's height anyway.
+        val showsDistinctCta = model.ctaButton != null && model.ctaButton.action != model.tapAction
+        Box(
+            modifier = GlanceModifier.fillMaxSize().padding(horizontal = WidgetInnerPadding),
+        ) {
+            val line = if (model.showGroupName) {
+                "${model.title} · ${model.todayValue}"
+            } else {
+                model.todayValue
+            }
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .padding(end = if (showsDistinctCta) WidgetCtaButtonSmallReservedWidth else 0.dp),
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Text(
+                    text = line,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontSize = WidgetBodyTextSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    maxLines = 1,
+                )
+            }
+            if (showsDistinctCta) {
+                val ctaButton = model.ctaButton!!
+                Box(
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterEnd,
+                ) {
                     Box(
-                        modifier = overlayModifier,
+                        modifier = GlanceModifier
+                            .cornerRadius(WidgetCtaButtonSmallRadius)
+                            .background(accentColors.ctaSurface)
+                            .padding(WidgetCtaButtonSmallPadding)
+                            .clickable(ctaButton.action),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            if (model.showGroupName) {
-                                Text(
-                                    text = model.title,
-                                    style = TextStyle(
-                                        color = EmphasisTextColor,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = WidgetLabelTextSize,
-                                    ),
-                                    maxLines = 1,
-                                )
-                            }
-                            Text(
-                                text = model.todayValue,
-                                style = TextStyle(
-                                    color = EmphasisTextColor,
-                                    fontSize = WidgetCompactValueTextSize,
-                                    fontWeight = FontWeight.Bold,
-                                ),
-                                maxLines = 1,
-                            )
-                        }
-                    }
-                } else {
-                    // Standard layout: content overlays on top of background
-                    val overlayModifier = GlanceModifier
-                        .fillMaxSize()
-                        .padding(WidgetInnerPadding)
-
-                    Box(modifier = overlayModifier) {
-                        Column(
-                            modifier = GlanceModifier.fillMaxSize(),
-                        ) {
-                            // First row: "Total Spent" label + "today: $total" chip
-                            Row(
-                                modifier = GlanceModifier.fillMaxWidth(),
-                            ) {
-                                Text(
-                                    text = context.getString(R.string.widget_total_spent_label),
-                                    style = TextStyle(
-                                        color = EmphasisTextColor,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = WidgetBodyTextSize,
-                                    ),
-                                    maxLines = 1,
-                                )
-                                Box(
-                                    modifier = GlanceModifier
-                                        .padding(start = 8.dp)
-                                        .cornerRadius(WidgetTodayPillRadius)
-                                        .background(WidgetTodayPillSurface)
-                                        .padding(
-                                            start = WidgetTodayPillHorizontalPadding,
-                                            top = WidgetTodayPillVerticalPadding,
-                                            end = WidgetTodayPillHorizontalPadding,
-                                            bottom = WidgetTodayPillVerticalPadding,
-                                        ),
-                                ) {
-                                    Text(
-                                        text = "${context.getString(R.string.widget_today_label)} ${model.todayValue}",
-                                        style = TextStyle(
-                                            color = WidgetTodayPillTextColor,
-                                            fontSize = WidgetLabelTextSize,
-                                            fontWeight = FontWeight.Bold,
-                                        ),
-                                    )
-                                }
-                            }
-
-                            if (model.showGroupName) {
-                                Text(
-                                    text = model.title,
-                                    style = TextStyle(
-                                        color = SecondaryTextColor,
-                                        fontSize = WidgetLabelTextSize,
-                                    ),
-                                    maxLines = 1,
-                                    modifier = GlanceModifier.padding(top = WidgetMinimalSpacing),
-                                )
-                            }
-
-                            if (isWide) {
-                                // Wide layout: group total displayed
-                                Text(
-                                    text = model.groupTotalValue,
-                                    style = TextStyle(
-                                        color = EmphasisTextColor,
-                                        fontSize = WidgetGroupTotalValueTextSize,
-                                        fontWeight = FontWeight.Bold,
-                                    ),
-                                    modifier = GlanceModifier.padding(top = WidgetSectionSpacing),
-                                )
-                            }
-                        }
-
-                        // CTA + button: always bottom-right, square with rounded corners
-                        if (model.ctaButton != null) {
-                            Box(
-                                modifier = GlanceModifier.fillMaxSize(),
-                                contentAlignment = Alignment.BottomEnd,
-                            ) {
-                                Box(
-                                    modifier = GlanceModifier
-                                        .cornerRadius(WidgetCtaButtonRadius)
-                                        .background(WidgetCtaButtonSurface)
-                                        .padding(WidgetCtaButtonPadding)
-                                        .clickable(model.ctaButton.action),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Text(
-                                        text = model.ctaButton.label,
-                                        style = TextStyle(
-                                            color = WidgetCtaButtonTextColor,
-                                            fontSize = WidgetCtaButtonTextSize,
-                                            fontWeight = FontWeight.Bold,
-                                        ),
-                                    )
-                                }
-                            }
-                        }
+                        Text(
+                            text = ctaButton.label,
+                            style = TextStyle(
+                                color = accentColors.ctaText,
+                                fontSize = WidgetCtaButtonSmallTextSize,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
                     }
                 }
             }
         }
     }
 
-    private fun formatAmount(amount: Double, currency: String): String {
-        return String.format(Locale.getDefault(), "%.2f %s", amount, currency)
+    @Composable
+    private fun FourByTwoContent(
+        context: Context,
+        model: WidgetUiModel,
+        accentColors: WidgetAccentColors,
+    ) {
+        val overlayModifier = GlanceModifier
+            .fillMaxSize()
+            .padding(WidgetInnerPadding)
+
+        Box(modifier = overlayModifier) {
+            Column(
+                modifier = GlanceModifier.fillMaxSize(),
+            ) {
+                // First row: "Total Spent" label + "today: $total" chip
+                Row(
+                    modifier = GlanceModifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        text = context.getString(R.string.widget_total_spent_label),
+                        style = TextStyle(
+                            color = EmphasisTextColor,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = WidgetBodyTextSize,
+                        ),
+                        maxLines = 1,
+                    )
+                    Box(
+                        modifier = GlanceModifier
+                            .padding(start = 8.dp)
+                            .cornerRadius(WidgetTodayPillRadius)
+                            .background(accentColors.pillSurface)
+                            .padding(
+                                start = WidgetTodayPillHorizontalPadding,
+                                top = WidgetTodayPillVerticalPadding,
+                                end = WidgetTodayPillHorizontalPadding,
+                                bottom = WidgetTodayPillVerticalPadding,
+                            ),
+                    ) {
+                        Text(
+                            text = "${context.getString(R.string.widget_today_label)} ${model.todayValue}",
+                            style = TextStyle(
+                                color = accentColors.pillText,
+                                fontSize = WidgetLabelTextSize,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
+                    }
+                }
+
+                if (model.showGroupName) {
+                    Text(
+                        text = model.title,
+                        style = TextStyle(
+                            color = SecondaryTextColor,
+                            fontSize = WidgetLabelTextSize,
+                        ),
+                        maxLines = 1,
+                        modifier = GlanceModifier.padding(top = WidgetMinimalSpacing),
+                    )
+                }
+
+                Text(
+                    text = model.groupTotalValue,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontSize = WidgetGroupTotalValueTextSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    modifier = GlanceModifier.padding(top = WidgetSectionSpacing),
+                )
+            }
+
+            // CTA + button: always bottom-right, square with rounded corners
+            if (model.ctaButton != null) {
+                Box(
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd,
+                ) {
+                    Box(
+                        modifier = GlanceModifier
+                            .cornerRadius(WidgetCtaButtonRadius)
+                            .background(accentColors.ctaSurface)
+                            .padding(WidgetCtaButtonPadding)
+                            .clickable(model.ctaButton.action),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = model.ctaButton.label,
+                            style = TextStyle(
+                                color = accentColors.ctaText,
+                                fontSize = WidgetCtaButtonTextSize,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
+                    }
+                }
+            }
+        }
     }
 
-    private fun toComposeColor(colorValue: Int): Color = Color(colorValue.toUInt().toULong())
+    private fun widgetTapUri(path: String, groupId: String, groupTitle: String): Uri =
+        Uri.Builder()
+            .scheme("caravella")
+            .authority("home_widget")
+            .appendPath(path)
+            .appendQueryParameter("groupId", groupId)
+            .appendQueryParameter("groupTitle", groupTitle)
+            .build()
 
     private fun loadImageProvider(context: Context, path: String?): ImageProvider? {
         if (path.isNullOrBlank()) return null
@@ -361,11 +492,27 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         }
     }
 
+    // Widget cells never exceed the largest Responsive breakpoint (SIZE_4X2, 276.dp);
+    // decoding a multi-megapixel background photo at full resolution just to crop
+    // it into that space wastes memory/CPU and risks an oversized RemoteViews
+    // transaction, so bound the decode to roughly that size via inSampleSize.
     private fun loadBitmap(context: Context, path: String): Bitmap? {
+        val maxDimensionPx = (WIDGET_MAX_IMAGE_DIMENSION_DP * context.resources.displayMetrics.density).toInt()
         return if (path.startsWith("content://")) {
             try {
-                context.contentResolver.openInputStream(Uri.parse(path)).use { input ->
-                    input?.let { BitmapFactory.decodeStream(it) }
+                val uri = Uri.parse(path)
+                val bounds = context.contentResolver.openInputStream(uri)?.use { input ->
+                    BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { options ->
+                        BitmapFactory.decodeStream(input, null, options)
+                    }
+                } ?: return null
+                val sampleSize = calculateBitmapSampleSize(bounds, maxDimensionPx, maxDimensionPx)
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    BitmapFactory.decodeStream(
+                        input,
+                        null,
+                        BitmapFactory.Options().apply { inSampleSize = sampleSize },
+                    )
                 }
             } catch (_: IOException) {
                 null
@@ -373,98 +520,24 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         } else {
             val file = File(path)
             if (!file.exists()) return null
-            BitmapFactory.decodeFile(file.absolutePath)
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { options ->
+                BitmapFactory.decodeFile(file.absolutePath, options)
+            }
+            val sampleSize = calculateBitmapSampleSize(bounds, maxDimensionPx, maxDimensionPx)
+            BitmapFactory.decodeFile(
+                file.absolutePath,
+                BitmapFactory.Options().apply { inSampleSize = sampleSize },
+            )
         }
     }
 }
 
-private val WidgetLayerSpacing = 10.dp
-private val WidgetInnerPadding = 12.dp
-private val WidgetCompactPadding = 6.dp
-private val WidgetSectionSpacing = 10.dp
-private val WidgetMinimalSpacing = 2.dp
-private val WidgetOuterRadius = 24.dp
-private val WidgetInnerRadius = 20.dp
-private val WidgetBodyTextSize = 15.sp
-private val WidgetLabelTextSize = 12.sp
-private val WidgetTodayValueTextSize = 18.sp
-private val WidgetCompactValueTextSize = 16.sp
-private val WidgetGroupTotalValueTextSize = 22.sp
-private val WidgetTodayPillRadius = 16.dp
-private val WidgetTodayPillHorizontalPadding = 8.dp
-private val WidgetTodayPillVerticalPadding = 2.dp
-private val WidgetCtaButtonRadius = 16.dp
-private val WidgetCtaButtonPadding = 14.dp
-private val WidgetCtaButtonTextSize = 24.sp
-
-/**
- * Creates a [ColorProvider] that resolves to [day] in light mode and [night] in dark mode.
- * Replaces the removed `androidx.glance.color.ColorProvider(day, night)` factory.
- */
-private fun ColorProvider(day: Color, night: Color): ColorProvider {
-    return DayNightColorProvider(day, night)
-}
-
-private data class DayNightColorProvider(val day: Color, val night: Color) : ColorProvider {
-    override fun getColor(context: Context): Color {
-        val nightMode = context.resources.configuration.uiMode and
-            android.content.res.Configuration.UI_MODE_NIGHT_MASK
-        return if (nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES) night else day
-    }
-}
-
-// Default widget container surface when group-based background is disabled.
-// Glass-like overlay above image/color backgrounds for better text readability.
-// Uses consistent ~80% opacity in both themes for predictable legibility.
-// This is layered on top of custom group image/color backgrounds.
-/**
- * Returns the content overlay surface color with alpha based on the transparency level.
- * transparency=0 → full overlay (0xCC alpha ≈ 80%), transparency=100 → no overlay (fully transparent).
- */
-private fun contentOverlaySurface(transparency: Int): ColorProvider {
-    // Base alpha is 0xCC (204) at transparency=0; linearly decreases to 0x00 at transparency=100.
-    val clampedTransparency = transparency.coerceIn(0, 100)
-    val alpha = ((100 - clampedTransparency) * 0xCC / 100.0).toInt()
-    val alphaHex = alpha.toLong()
-    return ColorProvider(
-        Color((alphaHex shl 24) or 0xFFFFFF),  // Light mode (white overlay)
-        Color((alphaHex shl 24) or 0x000000),  // Dark mode (black overlay)
-    )
-}
-
-private val EmphasisTextColor = ColorProvider(
-    Color(0xFF1D1A24), // Light mode
-    Color(0xFFF4EEFF), // Dark mode
-)
-
-private val SecondaryTextColor = ColorProvider(
-    Color(0xFF5F5A68), // Light mode
-    Color(0xFFC8C2D2), // Dark mode
-)
-
-private val WidgetTodayPillSurface = ColorProvider(
-    Color(0x80E1D8F8), // Light mode – 50% opacity
-    Color(0x804D3B73), // Dark mode – 50% opacity
-)
-
-private val WidgetTodayPillTextColor = ColorProvider(
-    Color(0xFF2E1B52), // Light mode
-    Color(0xFFF3ECFF), // Dark mode
-)
-
-private val WidgetCtaButtonSurface = ColorProvider(
-    Color(0xFF6750A4), // Light mode (Material primary)
-    Color(0xFFD0BCFF), // Dark mode
-)
-
-private val WidgetCtaButtonTextColor = ColorProvider(
-    Color(0xFFFFFFFF), // Light mode
-    Color(0xFF381E72), // Dark mode
-)
+private const val WIDGET_MAX_IMAGE_DIMENSION_DP = 276
 
 private data class WidgetUiModel(
     val title: String,
     val todayValue: String,
+    val weekValue: String,
     val groupTotalValue: String,
     val showGroupName: Boolean,
     val ctaButton: WidgetButton?,
@@ -480,89 +553,3 @@ private data class WidgetButton(
     val label: String,
     val action: Action,
 )
-
-internal data class WidgetGroupConfig(
-    val groupId: String,
-    val groupTitle: String,
-    val groupCurrency: String,
-    val useGroupBackground: Boolean,
-    val showGroupName: Boolean,
-    val backgroundTransparency: Int,
-)
-
-internal object HomeWidgetPrefs {
-    private const val PREFS_NAME = "caravella_widget_prefs"
-    private const val DEFAULT_CURRENCY = "€"
-    private const val DEFAULT_TRANSPARENCY = 25
-
-    private fun keyGroupId(appWidgetId: Int) = "widget_${appWidgetId}_group_id"
-    private fun keyGroupTitle(appWidgetId: Int) = "widget_${appWidgetId}_group_title"
-    private fun keyGroupCurrency(appWidgetId: Int) = "widget_${appWidgetId}_group_currency"
-    private fun keyUseGroupBackground(appWidgetId: Int) = "widget_${appWidgetId}_use_group_background"
-    private fun keyShowGroupName(appWidgetId: Int) = "widget_${appWidgetId}_show_group_name"
-    private fun keyBackgroundTransparency(appWidgetId: Int) = "widget_${appWidgetId}_background_transparency"
-
-    fun saveWidgetConfig(
-        context: Context,
-        appWidgetId: Int,
-        groupId: String,
-        groupTitle: String,
-        groupCurrency: String,
-        useGroupBackground: Boolean,
-        showGroupName: Boolean,
-        backgroundTransparency: Int,
-    ) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(keyGroupId(appWidgetId), groupId)
-            .putString(keyGroupTitle(appWidgetId), groupTitle)
-            .putString(keyGroupCurrency(appWidgetId), groupCurrency)
-            .putBoolean(keyUseGroupBackground(appWidgetId), useGroupBackground)
-            .putBoolean(keyShowGroupName(appWidgetId), showGroupName)
-            .putInt(keyBackgroundTransparency(appWidgetId), backgroundTransparency)
-            .apply()
-    }
-
-    fun getUseGroupBackground(context: Context, appWidgetId: Int): Boolean {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getBoolean(keyUseGroupBackground(appWidgetId), true)
-    }
-
-    fun getShowGroupName(context: Context, appWidgetId: Int): Boolean {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getBoolean(keyShowGroupName(appWidgetId), true)
-    }
-
-    fun getBackgroundTransparency(context: Context, appWidgetId: Int): Int {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getInt(keyBackgroundTransparency(appWidgetId), DEFAULT_TRANSPARENCY)
-    }
-
-    fun getWidgetConfig(context: Context, appWidgetId: Int): WidgetGroupConfig? {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val groupId = prefs.getString(keyGroupId(appWidgetId), null) ?: return null
-        val groupTitle = prefs.getString(keyGroupTitle(appWidgetId), null) ?: return null
-        val groupCurrency = prefs.getString(keyGroupCurrency(appWidgetId), DEFAULT_CURRENCY)
-            ?: DEFAULT_CURRENCY
-        return WidgetGroupConfig(
-            groupId = groupId,
-            groupTitle = groupTitle,
-            groupCurrency = groupCurrency,
-            useGroupBackground = getUseGroupBackground(context, appWidgetId),
-            showGroupName = getShowGroupName(context, appWidgetId),
-            backgroundTransparency = getBackgroundTransparency(context, appWidgetId),
-        )
-    }
-
-    fun clearWidgetConfig(context: Context, appWidgetId: Int) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .remove(keyGroupId(appWidgetId))
-            .remove(keyGroupTitle(appWidgetId))
-            .remove(keyGroupCurrency(appWidgetId))
-            .remove(keyUseGroupBackground(appWidgetId))
-            .remove(keyShowGroupName(appWidgetId))
-            .remove(keyBackgroundTransparency(appWidgetId))
-            .apply()
-    }
-}

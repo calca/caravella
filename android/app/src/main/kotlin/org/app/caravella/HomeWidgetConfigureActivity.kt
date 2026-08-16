@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -297,6 +298,18 @@ private fun HomeWidgetConfigureScreen(
             context.getString(R.string.widget_config_save)
         }
 
+        // Previously this reason was only exposed via contentDescription
+        // (screen readers only); sighted users saw a greyed-out button with
+        // no visible explanation, especially confusing when landing on the
+        // Options tab before ever picking a group.
+        if (selectedGroup == null) {
+            Text(
+                text = context.getString(R.string.widget_config_save_disabled),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+
         Button(
             onClick = {
                 selectedGroup?.let { group ->
@@ -328,16 +341,24 @@ private fun WidgetConfigToggleRow(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
 ) {
+    // Modifier.toggleable() (rather than a plain .clickable() on the Row plus
+    // the Checkbox's own onCheckedChange) merges the label into one
+    // accessible "label, checkbox, checked/unchecked" node instead of two
+    // disconnected ones, and gives TalkBack the correct checkbox role.
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onCheckedChange(!checked) }
+            .toggleable(
+                value = checked,
+                onValueChange = onCheckedChange,
+                role = Role.Checkbox,
+            )
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(
             checked = checked,
-            onCheckedChange = onCheckedChange,
+            onCheckedChange = null,
         )
         Text(
             text = label,

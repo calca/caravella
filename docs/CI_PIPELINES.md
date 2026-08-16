@@ -14,11 +14,11 @@ Triggers: push/PR to `main`, and `release: published`.
     --dart-define=ENABLE_PLAY_UPDATES=true \
     --dart-define=ENABLE_BLUETOOTH_SYNC=true \
     --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true \
-    --dart-define=ENABLE_ANDROID_WIDGET=false \
+    --dart-define=ENABLE_ANDROID_WIDGET=true \
     --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
   ```
   This is the sequence CLAUDE.md means by "match this locally before pushing" — reproduce it with `flutter pub get && flutter analyze && flutter test` before opening a PR.
-- **`release` job** (runs only on `release: published`): skips `analyze`/`test` entirely, builds `staging` (if prerelease) or `prod` (otherwise), uploads the APK, then **auto-bumps the patch version and versionCode in `pubspec.yaml` and pushes the bump to `main`**. Be aware of this when reasoning about `pubspec.yaml`'s version history — some bumps are bot-authored, not manual.
+- **`release` job** (runs only on `release: published`): skips `analyze`/`test` entirely, builds `staging` (if prerelease) or `prod` (otherwise), uploads the APK, then **auto-bumps the patch version and versionCode in `pubspec.yaml` and pushes the bump to `main`**. Be aware of this when reasoning about `pubspec.yaml`'s version history — some bumps are bot-authored, not manual. It passes `ENABLE_ANDROID_WIDGET=true` for the `staging` path and `=false` for the `prod` path (see `WIDGET_FLAG` in the "Determine build flavor" step), matching each flavor's native Gradle default.
 
 ## `Store - Android.yml` ("Android CI - Store")
 
@@ -39,7 +39,7 @@ flutter build appbundle --flavor prod --release \
 ## Things both workflows have in common
 
 - Flutter is pinned to a specific stable version (check the `flutter-version:` key in each workflow file for the current pin — it's bumped periodically and this page won't track it).
-- **`ENABLE_ANDROID_WIDGET` is always `"false"`** in CI (job-level env var), for every flavor and every build type. If you need to verify the Android home-screen widget still works, you must build locally without that flag — CI will never catch a widget regression.
+- **`ENABLE_ANDROID_WIDGET` follows the flavor in CI**: `true` for every `staging` build (`Development - Android.yml`'s `build` job, and its `release` job when the release is a prerelease), `false` for every `prod` build (`Development - Android.yml`'s `release` job for a non-prerelease, and `Store - Android.yml`'s prod App Bundle). This matches `android/app/build.gradle.kts`'s native per-flavor default (on for `dev`/`staging`, off for `prod`) — see [Build Variants § Android home widget](BUILD_VARIANTS.md#android-home-widget).
 - Neither workflow ever builds an F-Droid-style artifact (`ENABLE_PLAY_UPDATES` omitted). That build variant is only ever exercised by F-Droid's own build server — see [F-Droid Submission](FDROID_SUBMISSION.md).
 - Both workflows now also pass `ENABLE_BLUETOOTH_SYNC=true` (redundant with its default, kept explicit for parity with `ENABLE_PLAY_UPDATES`) and `ENABLE_GOOGLE_DRIVE_SYNC=true` — the staging APK and prod App Bundle CI produces both ship with the real Google Drive cloud channel reachable. This requires OAuth clients registered in Google Cloud Console for `io.caravella.egm.staging` and `io.caravella.egm` against the release keystore's SHA-1, or Google Sign-In will fail with `DEVELOPER_ERROR` in these builds — see the [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md).
 

@@ -1202,6 +1202,36 @@ abstract class AppLocalizations {
   /// **'Import failed. Check the file format.'**
   String get import_error;
 
+  /// No description provided for @settings_flag_secure_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn't change screen security'**
+  String get settings_flag_secure_error;
+
+  /// No description provided for @settings_debug_logs_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug Logs'**
+  String get settings_debug_logs_title;
+
+  /// No description provided for @settings_debug_logs_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'View application logs and error history'**
+  String get settings_debug_logs_desc;
+
+  /// No description provided for @developer_link_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn't open the link'**
+  String get developer_link_error;
+
+  /// No description provided for @whats_new_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load'**
+  String get whats_new_load_error;
+
   /// No description provided for @categories.
   ///
   /// In en, this message translates to:

@@ -45,7 +45,6 @@ class AppearanceSettingsPage extends StatelessWidget {
       context: context,
       semanticsButton: true,
       semanticsLabel: '${loc.settings_language} - Current: $label',
-      semanticsHint: 'Double tap to change language',
       color: colorScheme.surface,
       onTap: () => _showLanguagePicker(context, locale, loc),
       child: ListTile(
@@ -157,9 +156,6 @@ class AppearanceSettingsPage extends StatelessWidget {
       color: colorScheme.surface,
       semanticsToggled: enabled,
       semanticsLabel: loc.settings_dynamic_color,
-      semanticsHint: enabled
-          ? loc.accessibility_double_tap_disable
-          : loc.accessibility_double_tap_enable,
       onTap: () => toggle(!enabled),
       child: ListTile(
         leading: const Icon(Icons.palette_outlined),

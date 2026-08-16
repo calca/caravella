@@ -594,6 +594,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get import_error => 'Import fallito. Controlla il formato del file.';
 
   @override
+  String get settings_flag_secure_error =>
+      'Impossibile modificare la protezione schermo';
+
+  @override
+  String get settings_debug_logs_title => 'Log di debug';
+
+  @override
+  String get settings_debug_logs_desc =>
+      "Visualizza i log dell'app e la cronologia degli errori";
+
+  @override
+  String get developer_link_error => 'Impossibile aprire il link';
+
+  @override
+  String get whats_new_load_error => 'Errore nel caricamento';
+
+  @override
   String get categories => 'Categorie';
 
   @override
