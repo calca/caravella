@@ -31,8 +31,18 @@ class PrivacySettingsSection extends StatelessWidget {
     return Consumer<FlagSecureNotifier>(
       builder: (context, notifier, _) {
         Future<void> toggle(bool val) async {
-          notifier.setEnabled(val);
-          await FlagSecureAndroid.setFlagSecure(val);
+          final applied = await FlagSecureAndroid.setFlagSecure(val);
+          if (!applied) {
+            if (context.mounted) {
+              AppToast.show(
+                context,
+                loc.settings_flag_secure_error,
+                type: ToastType.error,
+              );
+            }
+            return;
+          }
+          await notifier.setEnabled(val);
         }
 
         return SettingsCard(
@@ -76,9 +86,6 @@ class PrivacySettingsSection extends StatelessWidget {
           color: colorScheme.surface,
           semanticsToggled: notifier.enabled,
           semanticsLabel: loc.settings_app_functions_title,
-          semanticsHint: notifier.enabled
-              ? loc.accessibility_double_tap_disable
-              : loc.accessibility_double_tap_enable,
           onTap: () => toggle(!notifier.enabled),
           child: ListTile(
             leading: const Icon(Icons.smart_toy_outlined),

@@ -40,7 +40,6 @@ class GeneralSettingsSection extends StatelessWidget {
           context: context,
           semanticsButton: true,
           semanticsLabel: loc.settings_user_name_title,
-          semanticsHint: 'Double tap to enter your name',
           color: colorScheme.surface,
           onTap: () => _showNameDialog(context, loc, userNameNotifier),
           child: ListTile(
@@ -83,14 +82,14 @@ class GeneralSettingsSection extends StatelessWidget {
     );
   }
 
-  void _showNameDialog(
+  Future<void> _showNameDialog(
     BuildContext context,
     gen.AppLocalizations loc,
     UserNameNotifier userNameNotifier,
-  ) {
+  ) async {
     final controller = TextEditingController(text: userNameNotifier.name);
 
-    showDialog(
+    await showDialog(
       context: context,
       builder: (context) {
         return Material3Dialog(
@@ -116,5 +115,6 @@ class GeneralSettingsSection extends StatelessWidget {
         );
       },
     );
+    controller.dispose();
   }
 }

@@ -78,50 +78,38 @@ class DataBackupPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 children: [
-                  Card(
-                    elevation: 0,
+                  SettingsCard(
+                    context: context,
+                    semanticsButton: true,
+                    semanticsLabel: gloc.backup,
                     color: colorScheme.surface,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                    onTap: () async {
+                      await _backupTrips(context, gloc);
+                    },
                     child: ListTile(
                       leading: const Icon(Icons.cloud_upload_outlined),
-                      minLeadingWidth: 0,
                       title: Text(gloc.backup, style: textTheme.titleMedium),
                       subtitle: Text(gloc.data_backup_desc),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                      onTap: () async {
-                        await _backupTrips(context, gloc);
-                      },
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 16,
-                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Card(
-                    elevation: 0,
+                  SettingsCard(
+                    context: context,
+                    semanticsButton: true,
+                    semanticsLabel: gloc.data_restore_title,
                     color: colorScheme.surface,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                    onTap: () async {
+                      await _importTrips(context, gloc);
+                    },
                     child: ListTile(
                       leading: const Icon(Icons.download_outlined),
-                      minLeadingWidth: 0,
                       title: Text(
                         gloc.data_restore_title,
                         style: textTheme.titleMedium,
                       ),
                       subtitle: Text(gloc.data_restore_desc),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                      onTap: () async {
-                        await _importTrips(context, gloc);
-                      },
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 16,
-                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     ),
                   ),
                 ],
@@ -181,11 +169,7 @@ class DataBackupPage extends StatelessWidget {
         stackTrace: st,
       );
       if (!context.mounted) return;
-      AppToast.show(
-        context,
-        '${loc.backup_error}: ${e.toString()}',
-        type: ToastType.error,
-      );
+      AppToast.show(context, loc.backup_error, type: ToastType.error);
     }
   }
 
@@ -238,12 +222,12 @@ class DataBackupPage extends StatelessWidget {
               }
             }
             if (!fileFound) {
-              throw Exception('File di backup non trovato nell\'archivio');
+              throw Exception('Backup file not found in archive');
             }
           } else if (filePath.endsWith('.json')) {
             jsonContent = await File(filePath).readAsString();
           } else {
-            throw Exception('Formato file non supportato');
+            throw Exception('Unsupported file format');
           }
 
           // Parse JSON and deserialize groups
@@ -255,28 +239,39 @@ class DataBackupPage extends StatelessWidget {
               .toList();
 
           if (groups.isEmpty) {
-            throw Exception('Nessun gruppo trovato nel backup');
+            throw Exception('No groups found in backup');
           }
 
-          // Use storage APIs to save each group
+          // Use storage APIs to save each group. Track which ones actually
+          // made it to disk so a failure partway through still gets
+          // reflected in the UI instead of leaving it silently stale.
           final repository = ExpenseGroupStorageV2.repository;
+          final savedGroups = <ExpenseGroup>[];
+          String? saveFailure;
           for (final group in groups) {
             final saveResult = await repository.saveGroup(group);
             if (!saveResult.isSuccess) {
-              throw Exception(
-                'Errore nel salvare il gruppo "${group.title}": ${saveResult.error?.message}',
-              );
+              saveFailure =
+                  'Failed to save group "${group.title}": '
+                  '${saveResult.error?.message}';
+              break;
+            }
+            savedGroups.add(group);
+          }
+
+          if (savedGroups.isNotEmpty && context.mounted) {
+            final notifier = context.read<ExpenseGroupNotifier>();
+            for (final group in savedGroups) {
+              notifier.notifyGroupUpdated(group.id);
             }
           }
 
-          // Notify that data has changed
-          if (context.mounted) {
-            final notifier = context.read<ExpenseGroupNotifier>();
-            for (final group in groups) {
-              notifier.notifyGroupUpdated(group.id);
-            }
+          if (saveFailure != null) {
+            throw Exception(saveFailure);
+          }
 
-            // Mark that user has groups (no longer first start)
+          // Mark that user has groups (no longer first start)
+          if (context.mounted) {
             try {
               await PreferencesService.instance.appState.setIsFirstStart(false);
             } catch (e, st) {
@@ -305,11 +300,7 @@ class DataBackupPage extends StatelessWidget {
             stackTrace: st,
           );
           if (context.mounted) {
-            AppToast.show(
-              context,
-              '${loc.import_error}: ${e.toString()}',
-              type: ToastType.error,
-            );
+            AppToast.show(context, loc.import_error, type: ToastType.error);
           }
         }
       }

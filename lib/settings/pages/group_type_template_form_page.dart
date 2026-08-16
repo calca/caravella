@@ -71,8 +71,25 @@ class _GroupTypeTemplateFormPageState
       defaultCategories: _categories,
     );
 
-    await widget.notifier.upsert(nextTemplate);
-    if (mounted) Navigator.of(context).pop();
+    try {
+      await widget.notifier.upsert(nextTemplate);
+      if (mounted) Navigator.of(context).pop();
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to save group type template',
+        name: 'settings.group_templates',
+        error: e,
+        stackTrace: st,
+      );
+      if (mounted) {
+        setState(() => _saving = false);
+        AppToast.show(
+          context,
+          loc.error_saving_group(e),
+          type: ToastType.error,
+        );
+      }
+    }
   }
 
   void _addCategory(String name) {

@@ -90,7 +90,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Errore nel caricamento',
+              loc.whats_new_load_error,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),

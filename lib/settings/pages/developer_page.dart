@@ -14,7 +14,6 @@ class DeveloperPage extends StatelessWidget {
       context: context,
       semanticsButton: true,
       semanticsLabel: loc.support_developer_title,
-      semanticsHint: 'Double tap to support the developer',
       color: colorScheme.surface,
       onTap: () => _launchUrl(context, 'https://ko-fi.com/calca'),
       child: ListTile(
@@ -142,7 +141,7 @@ class DeveloperPage extends StatelessWidget {
       if (!context.mounted) return;
       AppToast.show(
         context,
-        'Impossibile aprire il link: $url',
+        gen.AppLocalizations.of(context).developer_link_error,
         type: ToastType.error,
       );
       LoggerService.error('Could not launch $url', name: 'settings', error: e);
