@@ -39,8 +39,8 @@ class UpdateCheckWidget extends StatelessWidget {
       create: (_) => UpdateServiceFactory.createUpdateNotifier(),
       child: Consumer<UpdateNotifier>(
         builder: (context, notifier, _) {
-          // Show prominent card when update is available
-          if (notifier.updateAvailable) {
+          // Show prominent card when an update is available or ready to install
+          if (notifier.updateAvailable || notifier.updateDownloaded) {
             return _buildUpdateAvailableCard(
               context,
               notifier,
@@ -103,7 +103,9 @@ class UpdateCheckWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        localizations.updateAvailable,
+                        notifier.updateDownloaded
+                            ? localizations.updateReadyToInstall
+                            : localizations.updateAvailable,
                         style: textTheme.titleMedium?.copyWith(
                           color: colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.w600,
@@ -125,7 +127,9 @@ class UpdateCheckWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              localizations.updateAvailableDesc,
+              notifier.updateDownloaded
+                  ? localizations.updateReadyToInstallDesc
+                  : localizations.updateAvailableDesc,
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onPrimaryContainer,
               ),
@@ -134,30 +138,42 @@ class UpdateCheckWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (!notifier.isDownloading && !notifier.isInstalling)
+                if (!notifier.isDownloading &&
+                    !notifier.isInstalling &&
+                    !notifier.updateDownloaded)
                   TextButton(
                     onPressed: () => _handleUpdateCheck(context, notifier),
                     child: Text(localizations.updateLater),
                   ),
-                if (!notifier.isDownloading && !notifier.isInstalling)
+                if (!notifier.isDownloading &&
+                    !notifier.isInstalling &&
+                    !notifier.updateDownloaded)
                   const SizedBox(width: 8),
                 FilledButton.icon(
                   onPressed: notifier.isDownloading || notifier.isInstalling
                       ? null
-                      : () => _handleStartUpdate(context, notifier),
+                      : notifier.updateDownloaded
+                          ? () => _handleCompleteUpdate(context, notifier)
+                          : () => _handleStartUpdate(context, notifier),
                   icon: notifier.isDownloading || notifier.isInstalling
                       ? const SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Icon(Icons.download),
+                      : Icon(
+                          notifier.updateDownloaded
+                              ? Icons.restart_alt
+                              : Icons.download,
+                        ),
                   label: Text(
                     notifier.isDownloading
                         ? localizations.updateDownloading
                         : notifier.isInstalling
                             ? localizations.updateInstalling
-                            : localizations.updateNow,
+                            : notifier.updateDownloaded
+                                ? localizations.updateInstall
+                                : localizations.updateNow,
                   ),
                 ),
               ],
@@ -271,6 +287,23 @@ class UpdateCheckWidget extends StatelessWidget {
         icon: Icons.download,
       );
     } else if (notifier.error != null) {
+      AppToast.show(
+        context,
+        localizations.updateError,
+        type: ToastType.error,
+      );
+    }
+  }
+
+  Future<void> _handleCompleteUpdate(
+    BuildContext context,
+    UpdateNotifier notifier,
+  ) async {
+    final success = await notifier.completeFlexibleUpdate();
+
+    if (!context.mounted) return;
+
+    if (!success && notifier.error != null) {
       AppToast.show(
         context,
         localizations.updateError,

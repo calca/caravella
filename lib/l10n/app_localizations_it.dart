@@ -1944,6 +1944,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get update_downloading => 'Download in corso...';
 
   @override
+  String get update_ready_to_install => 'Aggiornamento pronto per l\'installazione';
+
+  @override
+  String get update_ready_to_install_desc =>
+      'Il download è stato completato. Installalo per completare l\'aggiornamento.';
+
+  @override
   String get update_installing => 'Installazione in corso...';
 
   @override

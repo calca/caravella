@@ -1935,6 +1935,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get update_downloading => 'Downloading...';
 
   @override
+  String get update_ready_to_install => 'Update ready to install';
+
+  @override
+  String get update_ready_to_install_desc =>
+      'The update finished downloading. Install it to finish updating.';
+
+  @override
   String get update_installing => 'Installing...';
 
   @override

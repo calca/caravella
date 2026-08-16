@@ -34,6 +34,9 @@ class NoOpUpdateService implements UpdateService {
     'immediateAllowed': false,
     'flexibleAllowed': false,
   };
+
+  @override
+  Future<bool> isUpdateReadyToInstall() async => false;
 }
 
 /// No-op implementation of UpdateNotifier for builds without Play Store support.
@@ -61,6 +64,9 @@ class NoOpUpdateNotifier extends ChangeNotifier implements UpdateNotifier {
 
   @override
   bool get isInstalling => false;
+
+  @override
+  bool get updateDownloaded => false;
 
   @override
   String? get error => null;

@@ -39,4 +39,13 @@ class AppUpdateLocalizations implements UpdateLocalizations {
 
   @override
   String get noUpdateAvailable => _loc.no_update_available;
+
+  @override
+  String get updateInstall => _loc.update_install;
+
+  @override
+  String get updateReadyToInstall => _loc.update_ready_to_install;
+
+  @override
+  String get updateReadyToInstallDesc => _loc.update_ready_to_install_desc;
 }
