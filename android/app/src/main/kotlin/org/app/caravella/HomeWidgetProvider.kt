@@ -120,7 +120,6 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 todayValue = "-",
                 weekValue = "-",
                 groupTotalValue = "-",
-                showGroupName = true,
                 ctaButton = WidgetButton(
                     label = context.getString(R.string.widget_select_group),
                     action = configureAction,
@@ -152,7 +151,6 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 todayValue = formatWidgetAmount(totals?.todayTotal ?: 0.0, currency),
                 weekValue = formatWidgetAmount(totals?.weekTotal ?: 0.0, currency),
                 groupTotalValue = formatWidgetAmount(totals?.groupTotal ?: 0.0, currency),
-                showGroupName = config.showGroupName,
                 ctaButton = WidgetButton(
                     label = "+",
                     action = addExpenseAction,
@@ -194,18 +192,30 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
 
     @Composable
     private fun OneByOneContent(model: WidgetUiModel) {
-        // Smallest grid cell: no room for anything but the number itself.
+        // Smallest grid cell: group name + today's value, both sized down from
+        // the 2x2 layout's since this cell is much narrower/shorter.
         val overlayModifier = GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
         Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
-            Text(
-                text = model.todayValue,
-                style = TextStyle(
-                    color = EmphasisTextColor,
-                    fontSize = WidgetCompactValueTextSize,
-                    fontWeight = FontWeight.Bold,
-                ),
-                maxLines = 1,
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = model.title,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = WidgetMicroLabelTextSize,
+                    ),
+                    maxLines = 1,
+                )
+                Text(
+                    text = model.todayValue,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontSize = WidgetMicroValueTextSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    maxLines = 1,
+                )
+            }
         }
     }
 
@@ -214,17 +224,15 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         val overlayModifier = GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
         Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                if (model.showGroupName) {
-                    Text(
-                        text = model.title,
-                        style = TextStyle(
-                            color = EmphasisTextColor,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = WidgetLabelTextSize,
-                        ),
-                        maxLines = 1,
-                    )
-                }
+                Text(
+                    text = model.title,
+                    style = TextStyle(
+                        color = EmphasisTextColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = WidgetLabelTextSize,
+                    ),
+                    maxLines = 1,
+                )
                 Text(
                     text = model.todayValue,
                     style = TextStyle(
@@ -263,11 +271,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         Box(
             modifier = GlanceModifier.fillMaxSize().padding(horizontal = WidgetInnerPadding),
         ) {
-            val line = if (model.showGroupName) {
-                "${model.title} · ${model.todayValue}"
-            } else {
-                model.todayValue
-            }
+            val line = "${model.title} · ${model.todayValue}"
             Box(
                 modifier = GlanceModifier
                     .fillMaxSize()
@@ -362,17 +366,15 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     }
                 }
 
-                if (model.showGroupName) {
-                    Text(
-                        text = model.title,
-                        style = TextStyle(
-                            color = SecondaryTextColor,
-                            fontSize = WidgetLabelTextSize,
-                        ),
-                        maxLines = 1,
-                        modifier = GlanceModifier.padding(top = WidgetMinimalSpacing),
-                    )
-                }
+                Text(
+                    text = model.title,
+                    style = TextStyle(
+                        color = SecondaryTextColor,
+                        fontSize = WidgetLabelTextSize,
+                    ),
+                    maxLines = 1,
+                    modifier = GlanceModifier.padding(top = WidgetMinimalSpacing),
+                )
 
                 Text(
                     text = model.groupTotalValue,
@@ -428,7 +430,6 @@ private data class WidgetUiModel(
     val todayValue: String,
     val weekValue: String,
     val groupTotalValue: String,
-    val showGroupName: Boolean,
     val ctaButton: WidgetButton?,
     val tapAction: Action?,
 )

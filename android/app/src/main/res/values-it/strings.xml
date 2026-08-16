@@ -9,9 +9,6 @@
     <string name="widget_unconfigured_title">Widget non configurato</string>
     <string name="widget_config_title">Seleziona il gruppo spese per questo widget</string>
     <string name="widget_config_empty">Nessun gruppo spese attivo disponibile</string>
-    <string name="widget_config_show_group_name">Mostra nome del gruppo</string>
-    <string name="widget_config_tab_group">Gruppo spese</string>
-    <string name="widget_config_tab_options">Opzioni widget</string>
     <string name="widget_config_save">Salva</string>
     <string name="widget_config_save_disabled">Seleziona un gruppo per salvare</string>
     <string name="widget_config_select_group_a11y">Seleziona gruppo %1$s con valuta %2$s</string>
