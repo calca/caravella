@@ -3,17 +3,12 @@ package io.caravella.egm
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
-import androidx.glance.Image
-import androidx.glance.ImageProvider
 import androidx.glance.LocalSize
 import androidx.glance.action.Action
 import androidx.glance.action.clickable
@@ -29,7 +24,6 @@ import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
-import androidx.glance.layout.ContentScale
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
@@ -39,11 +33,10 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import es.antonborri.home_widget.actionStartActivity as homeWidgetActionStartActivity
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
-import java.io.File
-import java.io.IOException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeWidgetProvider : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = CaravellaHomeWidget
@@ -79,6 +72,16 @@ class HomeWidgetProvider : GlanceAppWidgetReceiver() {
             val applicationContext = context.applicationContext
             CoroutineScope(Dispatchers.IO).launch {
                 CaravellaHomeWidget.updateAll(applicationContext)
+            }
+        }
+
+        // Awaited variant for callers that must not proceed (e.g. finish() an
+        // Activity) until the widget has actually been refreshed — the
+        // fire-and-forget updateAllWidgets() above can otherwise race against
+        // process teardown when there's no OS-guaranteed refresh to fall back on.
+        suspend fun updateAllWidgetsAndAwait(context: Context) {
+            withContext(Dispatchers.IO) {
+                CaravellaHomeWidget.updateAll(context.applicationContext)
             }
         }
     }
@@ -123,10 +126,6 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     action = configureAction,
                 ),
                 tapAction = configureAction,
-                useGroupBackground = false,
-                backgroundTransparency = 0,
-                backgroundColor = null,
-                backgroundImagePath = null,
             )
         } else {
             val totals = AppFunctionStorageReader.getWidgetTotals(context, config.groupId)
@@ -159,22 +158,9 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     action = addExpenseAction,
                 ),
                 tapAction = openGroupAction,
-                useGroupBackground = config.useGroupBackground,
-                backgroundTransparency = config.backgroundTransparency,
-                backgroundColor = if (config.useGroupBackground) totals?.groupColor else null,
-                backgroundImagePath = if (config.useGroupBackground) {
-                    totals?.groupBackgroundImagePath
-                } else {
-                    null
-                },
             )
         }
 
-        val backgroundImageProvider = if (model.useGroupBackground) {
-            loadImageProvider(context, model.backgroundImagePath)
-        } else {
-            null
-        }
         val accentColors = widgetAccentColors(context)
 
         provideContent {
@@ -185,12 +171,10 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             val isNarrow = size.width < 200.dp // 1x1 or 2x2 width
             val isShort = size.height < 84.dp // 1x1 or 4x1 height
 
-            // Always use white as the base background color. Transparency setting
-            // controls how much of the white shows through (or how opaque the overlay is).
             val baseModifier = GlanceModifier
                 .fillMaxSize()
                 .cornerRadius(WidgetOuterRadius)
-                .background(ColorProvider(Color.White, Color.White))
+                .background(WidgetSurfaceColor)
             val clickableContainerModifier = if (model.tapAction != null) {
                 baseModifier.clickable(model.tapAction)
             } else {
@@ -198,34 +182,6 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             }
 
             Box(modifier = clickableContainerModifier) {
-                if (backgroundImageProvider != null) {
-                    // Image positioned above white base; the overlay on top
-                    // provides readability by making the image semi-transparent.
-                    Image(
-                        provider = backgroundImageProvider,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = GlanceModifier
-                            .fillMaxSize()
-                            .cornerRadius(WidgetOuterRadius),
-                    )
-                    // Semi-transparent white overlay above image for text readability.
-                    Box(
-                        modifier = GlanceModifier
-                            .fillMaxSize()
-                            .cornerRadius(WidgetOuterRadius)
-                            .background(contentOverlaySurface(model.backgroundTransparency)),
-                    ) {}
-                } else if (model.useGroupBackground && model.backgroundColor != null) {
-                    val bgColor = widgetColor(model.backgroundColor)
-                    Box(
-                        modifier = GlanceModifier
-                            .fillMaxSize()
-                            .cornerRadius(WidgetOuterRadius)
-                            .background(ColorProvider(day = bgColor, night = bgColor)),
-                    ) {}
-                }
-
                 when {
                     isNarrow && isShort -> OneByOneContent(model)
                     isNarrow && !isShort -> TwoByTwoContent(context, model)
@@ -239,15 +195,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
     @Composable
     private fun OneByOneContent(model: WidgetUiModel) {
         // Smallest grid cell: no room for anything but the number itself.
-        val overlayModifier = if (model.backgroundTransparency >= 100) {
-            GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
-        } else {
-            GlanceModifier
-                .fillMaxSize()
-                .cornerRadius(WidgetOuterRadius)
-                .background(contentOverlaySurface(model.backgroundTransparency))
-                .padding(WidgetCompactPadding)
-        }
+        val overlayModifier = GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
         Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
             Text(
                 text = model.todayValue,
@@ -263,15 +211,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
 
     @Composable
     private fun TwoByTwoContent(context: Context, model: WidgetUiModel) {
-        val overlayModifier = if (model.backgroundTransparency >= 100) {
-            GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
-        } else {
-            GlanceModifier
-                .fillMaxSize()
-                .cornerRadius(WidgetOuterRadius)
-                .background(contentOverlaySurface(model.backgroundTransparency))
-                .padding(WidgetCompactPadding)
-        }
+        val overlayModifier = GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
         Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 if (model.showGroupName) {
@@ -481,58 +421,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             .appendQueryParameter("groupId", groupId)
             .appendQueryParameter("groupTitle", groupTitle)
             .build()
-
-    private fun loadImageProvider(context: Context, path: String?): ImageProvider? {
-        if (path.isNullOrBlank()) return null
-        return try {
-            val bitmap = loadBitmap(context, path) ?: return null
-            ImageProvider(bitmap)
-        } catch (_: Exception) {
-            null
-        }
-    }
-
-    // Widget cells never exceed the largest Responsive breakpoint (SIZE_4X2, 276.dp);
-    // decoding a multi-megapixel background photo at full resolution just to crop
-    // it into that space wastes memory/CPU and risks an oversized RemoteViews
-    // transaction, so bound the decode to roughly that size via inSampleSize.
-    private fun loadBitmap(context: Context, path: String): Bitmap? {
-        val maxDimensionPx = (WIDGET_MAX_IMAGE_DIMENSION_DP * context.resources.displayMetrics.density).toInt()
-        return if (path.startsWith("content://")) {
-            try {
-                val uri = Uri.parse(path)
-                val bounds = context.contentResolver.openInputStream(uri)?.use { input ->
-                    BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { options ->
-                        BitmapFactory.decodeStream(input, null, options)
-                    }
-                } ?: return null
-                val sampleSize = calculateBitmapSampleSize(bounds, maxDimensionPx, maxDimensionPx)
-                context.contentResolver.openInputStream(uri)?.use { input ->
-                    BitmapFactory.decodeStream(
-                        input,
-                        null,
-                        BitmapFactory.Options().apply { inSampleSize = sampleSize },
-                    )
-                }
-            } catch (_: IOException) {
-                null
-            }
-        } else {
-            val file = File(path)
-            if (!file.exists()) return null
-            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { options ->
-                BitmapFactory.decodeFile(file.absolutePath, options)
-            }
-            val sampleSize = calculateBitmapSampleSize(bounds, maxDimensionPx, maxDimensionPx)
-            BitmapFactory.decodeFile(
-                file.absolutePath,
-                BitmapFactory.Options().apply { inSampleSize = sampleSize },
-            )
-        }
-    }
 }
-
-private const val WIDGET_MAX_IMAGE_DIMENSION_DP = 276
 
 private data class WidgetUiModel(
     val title: String,
@@ -542,10 +431,6 @@ private data class WidgetUiModel(
     val showGroupName: Boolean,
     val ctaButton: WidgetButton?,
     val tapAction: Action?,
-    val useGroupBackground: Boolean,
-    val backgroundTransparency: Int,
-    val backgroundColor: Int?,
-    val backgroundImagePath: String?,
 )
 
 // Label + action pair used by widget primary/secondary buttons.

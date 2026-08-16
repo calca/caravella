@@ -3,12 +3,14 @@ package io.caravella.egm
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,22 +28,28 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -50,7 +58,43 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+// The app's own teal brand colors (packages/caravella_core_ui/lib/themes/caravella_themes.dart),
+// used as a fallback ColorScheme when Material You dynamic color isn't available
+// (API <31), so the widget's config screen matches the rest of the app instead of
+// falling back to Compose Material3's generic purple baseline.
+private val CaravellaLightColorScheme = lightColorScheme(
+    primary = Color(0xFF009688),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFB2DFDB),
+    onPrimaryContainer = Color(0xFF000000),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF000000),
+)
+
+private val CaravellaDarkColorScheme = darkColorScheme(
+    primary = Color(0xFF80CBC4),
+    onPrimary = Color(0xFF003D36),
+    primaryContainer = Color(0xFF00695C),
+    onPrimaryContainer = Color(0xFFFFFFFF),
+    surface = Color(0xFF181A1B),
+    onSurface = Color(0xFFEAEAEA),
+)
+
+@Composable
+private fun caravellaColorScheme(darkTheme: Boolean): ColorScheme {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+        return if (darkTheme) CaravellaDarkColorScheme else CaravellaLightColorScheme
+    }
+    val context = LocalContext.current
+    return try {
+        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } catch (_: Exception) {
+        if (darkTheme) CaravellaDarkColorScheme else CaravellaLightColorScheme
+    }
+}
 
 class HomeWidgetConfigureActivity : ComponentActivity() {
     private var appWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
@@ -72,24 +116,27 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
         }
 
         setContent {
-            MaterialTheme {
+            MaterialTheme(colorScheme = caravellaColorScheme(darkTheme = isSystemInDarkTheme())) {
                 Scaffold { innerPadding ->
                     HomeWidgetConfigureScreen(
                         appWidgetId = appWidgetId,
                         modifier = Modifier.padding(innerPadding),
-                        onConfigSaved = { groupId, groupTitle, groupCurrency, useGroupBackground, showGroupName, backgroundTransparency ->
+                        onConfigSaved = { groupId, groupTitle, groupCurrency, showGroupName ->
                             HomeWidgetPrefs.saveWidgetConfig(
                                 context = this,
                                 appWidgetId = appWidgetId,
                                 groupId = groupId,
                                 groupTitle = groupTitle,
                                 groupCurrency = groupCurrency,
-                                useGroupBackground = useGroupBackground,
                                 showGroupName = showGroupName,
-                                backgroundTransparency = backgroundTransparency,
                             )
 
-                            HomeWidgetProvider.updateAllWidgets(this)
+                            // Awaited so the widget is guaranteed refreshed before finish() —
+                            // the fire-and-forget variant used elsewhere can otherwise lose
+                            // the race when this screen was reached via the widget's own
+                            // in-app CTA rather than the system's configure contract, which
+                            // has no automatic post-configure refresh to fall back on.
+                            HomeWidgetProvider.updateAllWidgetsAndAwait(this)
 
                             val resultIntent = Intent().putExtra(
                                 AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -119,23 +166,19 @@ private enum class HomeWidgetConfigureTab {
 private fun HomeWidgetConfigureScreen(
     appWidgetId: Int,
     modifier: Modifier = Modifier,
-    onConfigSaved: (String, String, String, Boolean, Boolean, Int) -> Unit,
+    onConfigSaved: suspend (String, String, String, Boolean) -> Unit,
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     var uiState by remember { mutableStateOf<HomeWidgetConfigureUiState>(HomeWidgetConfigureUiState.Loading) }
     var selectedTab by remember { mutableStateOf(HomeWidgetConfigureTab.Group) }
     var selectedGroupId by remember {
         mutableStateOf(HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)?.groupId)
     }
-    var useGroupBackground by remember {
-        mutableStateOf(HomeWidgetPrefs.getUseGroupBackground(context, appWidgetId))
-    }
     var showGroupName by remember {
         mutableStateOf(HomeWidgetPrefs.getShowGroupName(context, appWidgetId))
     }
-    var backgroundTransparency by remember {
-        mutableStateOf(HomeWidgetPrefs.getBackgroundTransparency(context, appWidgetId))
-    }
+    var isSaving by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val groups = withContext(Dispatchers.IO) { AppFunctionStorageReader.getActiveGroups(context) }
@@ -272,21 +315,9 @@ private fun HomeWidgetConfigureScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     WidgetConfigToggleRow(
-                        label = context.getString(R.string.widget_config_use_group_background),
-                        checked = useGroupBackground,
-                        onCheckedChange = { useGroupBackground = it },
-                    )
-
-                    WidgetConfigToggleRow(
                         label = context.getString(R.string.widget_config_show_group_name),
                         checked = showGroupName,
                         onCheckedChange = { showGroupName = it },
-                    )
-
-                    WidgetConfigSliderRow(
-                        label = context.getString(R.string.widget_config_background_transparency),
-                        value = backgroundTransparency,
-                        onValueChange = { backgroundTransparency = it },
                     )
                 }
             }
@@ -313,17 +344,18 @@ private fun HomeWidgetConfigureScreen(
         Button(
             onClick = {
                 selectedGroup?.let { group ->
-                    onConfigSaved(
-                        group.id,
-                        group.title,
-                        group.currency,
-                        useGroupBackground,
-                        showGroupName,
-                        backgroundTransparency,
-                    )
+                    isSaving = true
+                    coroutineScope.launch {
+                        onConfigSaved(
+                            group.id,
+                            group.title,
+                            group.currency,
+                            showGroupName,
+                        )
+                    }
                 }
             },
-            enabled = selectedGroup != null,
+            enabled = selectedGroup != null && !isSaving,
             modifier = Modifier
                 .fillMaxWidth()
                 .semantics {
@@ -364,31 +396,6 @@ private fun WidgetConfigToggleRow(
             text = label,
             modifier = Modifier.padding(start = 8.dp),
             style = MaterialTheme.typography.bodyMedium,
-        )
-    }
-}
-
-@Composable
-private fun WidgetConfigSliderRow(
-    label: String,
-    value: Int,
-    onValueChange: (Int) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-    ) {
-        Text(
-            text = "$label: $value%",
-            style = MaterialTheme.typography.bodyMedium,
-        )
-        Slider(
-            value = value.toFloat(),
-            onValueChange = { onValueChange(it.toInt()) },
-            valueRange = 0f..100f,
-            steps = 3,
-            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

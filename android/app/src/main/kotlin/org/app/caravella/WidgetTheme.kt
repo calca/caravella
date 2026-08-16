@@ -52,24 +52,12 @@ private data class DayNightColorProvider(val day: Color, val night: Color) : Col
     }
 }
 
-// Default widget container surface when group-based background is disabled.
-// Glass-like overlay above image/color backgrounds for better text readability.
-// Uses consistent ~80% opacity in both themes for predictable legibility.
-// This is layered on top of custom group image/color backgrounds.
-/**
- * Returns the content overlay surface color with alpha based on the transparency level.
- * transparency=0 → full overlay (0xCC alpha ≈ 80%), transparency=100 → no overlay (fully transparent).
- */
-internal fun contentOverlaySurface(transparency: Int): ColorProvider {
-    // Base alpha is 0xCC (204) at transparency=0; linearly decreases to 0x00 at transparency=100.
-    val clampedTransparency = transparency.coerceIn(0, 100)
-    val alpha = ((100 - clampedTransparency) * 0xCC / 100.0).toInt()
-    val alphaHex = alpha.toLong()
-    return ColorProvider(
-        Color((alphaHex shl 24) or 0xFFFFFF),  // Light mode (white overlay)
-        Color((alphaHex shl 24) or 0x000000),  // Dark mode (black overlay)
-    )
-}
+// Base widget container surface, matching the app's own brand surface tones
+// (packages/caravella_core_ui/lib/themes/caravella_themes.dart).
+internal val WidgetSurfaceColor = ColorProvider(
+    Color(0xFFFFFFFF), // Light mode
+    Color(0xFF181A1B), // Dark mode
+)
 
 internal val EmphasisTextColor = ColorProvider(
     Color(0xFF1D1A24), // Light mode
@@ -82,26 +70,27 @@ internal val SecondaryTextColor = ColorProvider(
 )
 
 // Static palette used when Material You dynamic color isn't available (API <31,
-// or the system theme can't be resolved for some reason) — same purple accent
-// the widget always used before dynamic color support was added.
+// or the system theme can't be resolved for some reason) — the app's own teal
+// brand colors (packages/caravella_core_ui/lib/themes/caravella_themes.dart),
+// so the widget matches the rest of the app instead of a generic Material purple.
 private val FallbackTodayPillSurface = ColorProvider(
-    Color(0x80E1D8F8), // Light mode – 50% opacity
-    Color(0x804D3B73), // Dark mode – 50% opacity
+    Color(0xFFB2DFDB), // Light mode (primaryContainer)
+    Color(0xFF00695C), // Dark mode (primaryContainer)
 )
 
 private val FallbackTodayPillTextColor = ColorProvider(
-    Color(0xFF2E1B52), // Light mode
-    Color(0xFFF3ECFF), // Dark mode
+    Color(0xFF000000), // Light mode (onPrimaryContainer)
+    Color(0xFFFFFFFF), // Dark mode (onPrimaryContainer)
 )
 
 private val FallbackCtaButtonSurface = ColorProvider(
-    Color(0xFF6750A4), // Light mode (Material primary)
-    Color(0xFFD0BCFF), // Dark mode
+    Color(0xFF009688), // Light mode (primary)
+    Color(0xFF80CBC4), // Dark mode (primary)
 )
 
 private val FallbackCtaButtonTextColor = ColorProvider(
-    Color(0xFFFFFFFF), // Light mode
-    Color(0xFF381E72), // Dark mode
+    Color(0xFFFFFFFF), // Light mode (onPrimary)
+    Color(0xFF003D36), // Dark mode (onPrimary)
 )
 
 /** The widget's two branded accent surfaces (CTA button, "today" pill), themed together. */
@@ -122,8 +111,8 @@ private val FallbackWidgetAccentColors = WidgetAccentColors(
 /**
  * Resolves the widget's accent colors from the device's Material You wallpaper
  * palette (Android 12+), so the CTA button and "today" pill follow the user's
- * chosen system theme instead of a fixed purple — matching the rest of the app,
- * which already supports dynamic color. Falls back to the static purple palette
+ * chosen system theme instead of a fixed color — matching the rest of the app,
+ * which already supports dynamic color. Falls back to the static teal palette
  * on older Android versions, or if the system palette can't be resolved.
  */
 internal fun widgetAccentColors(context: Context): WidgetAccentColors {
