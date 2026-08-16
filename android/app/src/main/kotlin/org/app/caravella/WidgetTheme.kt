@@ -18,15 +18,15 @@ internal val WidgetCompactPadding = 6.dp
 internal val WidgetSectionSpacing = 10.dp
 internal val WidgetMinimalSpacing = 2.dp
 internal val WidgetOuterRadius = 24.dp
-internal val WidgetBodyTextSize = 15.sp
-internal val WidgetLabelTextSize = 12.sp
-internal val WidgetCompactValueTextSize = 16.sp
+internal val WidgetBodyTextSize = 16.sp
+internal val WidgetLabelTextSize = 13.sp
+internal val WidgetCompactValueTextSize = 18.sp
 
 // 1x1 is much narrower/shorter than 2x2 (57x51dp vs 130x117dp), so its group
 // name label and value share the cell at smaller sizes than the 2x2 variants.
-internal val WidgetMicroLabelTextSize = 9.sp
-internal val WidgetMicroValueTextSize = 14.sp
-internal val WidgetGroupTotalValueTextSize = 22.sp
+internal val WidgetMicroLabelTextSize = 10.sp
+internal val WidgetMicroValueTextSize = 15.sp
+internal val WidgetGroupTotalValueTextSize = 24.sp
 internal val WidgetTodayPillRadius = 16.dp
 internal val WidgetTodayPillHorizontalPadding = 8.dp
 internal val WidgetTodayPillVerticalPadding = 2.dp
