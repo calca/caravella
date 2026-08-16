@@ -170,8 +170,18 @@ class CaravellaAppFunctionService : Service() {
             ?: throw AppFunctionInvalidArgumentException(
                 "'$PARAM_GROUP_ID' is required for addExpense",
             )
+        // Distinguish "not provided" (fine, opens the app for manual entry
+        // below) from "provided but invalid" — a non-positive amount used to
+        // fall through to the same "open the app" path with no indication to
+        // the caller that the value was rejected.
         val amount: Double? = if (params.containsKey(PARAM_AMOUNT)) {
-            params.getDouble(PARAM_AMOUNT).takeIf { it > 0.0 }
+            val rawAmount = params.getDouble(PARAM_AMOUNT)
+            if (rawAmount <= 0.0) {
+                throw AppFunctionInvalidArgumentException(
+                    "'$PARAM_AMOUNT' must be greater than 0",
+                )
+            }
+            rawAmount
         } else {
             null
         }
@@ -200,14 +210,18 @@ class CaravellaAppFunctionService : Service() {
             }
         }
 
-        // Amount not provided – open the app so the user can complete the entry
-        val groups = AppFunctionStorageReader.getActiveGroups(this)
-        val groupTitle = groups.firstOrNull { it.id == groupId }?.title ?: groupId
+        // Amount not provided – open the app so the user can complete the
+        // entry. Validate the group exists first, same as every other
+        // handler in this file, instead of launching MainActivity with a
+        // groupId that resolves to nothing.
+        val group = AppFunctionStorageReader.getActiveGroups(this)
+            .firstOrNull { it.id == groupId }
+            ?: throw AppFunctionElementNotFoundException("Group not found: $groupId")
 
         val intent = Intent(this, MainActivity::class.java).apply {
             action = "io.caravella.egm.ADD_EXPENSE"
             putExtra("groupId", groupId)
-            putExtra("groupTitle", groupTitle)
+            putExtra("groupTitle", group.title)
             categoryName?.let { putExtra("categoryName", it) }
             note?.let { putExtra("note", it) }
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
