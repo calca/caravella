@@ -101,8 +101,24 @@ class GroupTypeTemplatesPage extends StatelessWidget {
       ),
     );
 
-    if (shouldDelete == true) {
+    if (shouldDelete != true) return;
+
+    try {
       await notifier.delete(template.id);
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to delete group type template',
+        name: 'settings.group_templates',
+        error: e,
+        stackTrace: st,
+      );
+      if (context.mounted) {
+        AppToast.show(
+          context,
+          loc.error_saving_group(e),
+          type: ToastType.error,
+        );
+      }
     }
   }
 
