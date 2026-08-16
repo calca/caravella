@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'update_service_factory.dart';
+import 'update_service_interface.dart';
 import 'update_localizations.dart';
 
 /// Shows a bottom sheet recommending the user to update the app.
@@ -49,9 +50,60 @@ Future<bool?> showUpdateRecommendationSheet(
   );
 }
 
+/// Shows a bottom sheet prompting the user to install a flexible update
+/// that already finished downloading (e.g. from a previous session).
+Future<void> _promptInstallReadyUpdate(
+  BuildContext context,
+  UpdateService updateService,
+  UpdateLocalizations localizations,
+  Widget Function(BuildContext, {required String title, required Widget child})
+      bottomSheetBuilder,
+) async {
+  final shouldInstall = await showModalBottomSheet<bool>(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) => bottomSheetBuilder(
+      context,
+      title: localizations.updateReadyToInstall,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            localizations.updateReadyToInstallDesc,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(localizations.updateLater),
+              ),
+              const SizedBox(width: 8),
+              FilledButton.icon(
+                onPressed: () => Navigator.of(context).pop(true),
+                icon: const Icon(Icons.restart_alt),
+                label: Text(localizations.updateInstall),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+
+  if (shouldInstall == true) {
+    await updateService.completeFlexibleUpdate();
+  }
+}
+
 /// Performs an automatic update check and shows recommendation sheet if needed.
 ///
 /// This should be called when the app starts. It will:
+/// 0. If a previously started flexible update already finished downloading,
+///    prompt to install it (regardless of the check interval below)
 /// 1. Check if enough time has passed since last check (7 days)
 /// 2. If yes, check for updates
 /// 3. If update available, show recommendation sheet
@@ -64,6 +116,17 @@ Future<void> checkAndShowUpdateIfNeeded(
       bottomSheetBuilder,
 ) async {
   final updateService = UpdateServiceFactory.createUpdateService();
+
+  if (await updateService.isUpdateReadyToInstall()) {
+    if (!context.mounted) return;
+    await _promptInstallReadyUpdate(
+      context,
+      updateService,
+      localizations,
+      bottomSheetBuilder,
+    );
+    return;
+  }
 
   // Check if we should perform an update check
   final shouldCheck = await updateService.shouldCheckForUpdate();

@@ -47,6 +47,10 @@ class PlayStoreUpdateService implements UpdateService {
   @override
   Future<Map<String, dynamic>> getUpdateStatus() =>
       psu.AppUpdateService.getUpdateStatus();
+
+  @override
+  Future<bool> isUpdateReadyToInstall() =>
+      psu.AppUpdateService.isUpdateReadyToInstall();
 }
 
 /// Play Store implementation of UpdateNotifier.
@@ -81,6 +85,9 @@ class PlayStoreUpdateNotifier extends ChangeNotifier implements UpdateNotifier {
 
   @override
   bool get isInstalling => _notifier.isInstalling;
+
+  @override
+  bool get updateDownloaded => _notifier.updateDownloaded;
 
   @override
   String? get error => _notifier.error;

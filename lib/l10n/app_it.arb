@@ -726,6 +726,10 @@
   ,"@update_error": {"description": "Messaggio di errore durante verifica aggiornamenti"}
   ,"update_downloading": "Download in corso..."
   ,"@update_downloading": {"description": "Messaggio durante download aggiornamento"}
+  ,"update_ready_to_install": "Aggiornamento pronto per l'installazione"
+  ,"@update_ready_to_install": {"description": "Titolo mostrato quando un aggiornamento flessibile ha terminato il download ed è pronto per l'installazione"}
+  ,"update_ready_to_install_desc": "Il download è stato completato. Installalo per completare l'aggiornamento."
+  ,"@update_ready_to_install_desc": {"description": "Descrizione mostrata quando un aggiornamento flessibile ha terminato il download ed è pronto per l'installazione"}
   ,"update_installing": "Installazione in corso..."
   ,"@update_installing": {"description": "Messaggio durante installazione aggiornamento"}
   ,"update_feature_android_only": "Funzione disponibile solo su Android con Google Play Store"

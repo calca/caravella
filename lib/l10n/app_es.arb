@@ -736,6 +736,10 @@
   ,"@update_error": {"description": "Mensaje de error durante verificación de actualizaciones"}
   ,"update_downloading": "Descargando..."
   ,"@update_downloading": {"description": "Mensaje durante descarga de actualización"}
+  ,"update_ready_to_install": "Actualización lista para instalar"
+  ,"@update_ready_to_install": {"description": "Título mostrado cuando una actualización flexible terminó de descargarse y está lista para instalar"}
+  ,"update_ready_to_install_desc": "La descarga ha finalizado. Instálala para completar la actualización."
+  ,"@update_ready_to_install_desc": {"description": "Descripción mostrada cuando una actualización flexible terminó de descargarse y está lista para instalar"}
   ,"update_installing": "Instalando..."
   ,"@update_installing": {"description": "Mensaje durante instalación de actualización"}
   ,"update_feature_android_only": "Función disponible solo en Android con Google Play Store"

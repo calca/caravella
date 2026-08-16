@@ -1962,6 +1962,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get update_downloading => 'Baixando...';
 
   @override
+  String get update_ready_to_install => 'Atualização pronta para instalar';
+
+  @override
+  String get update_ready_to_install_desc =>
+      'O download foi concluído. Instale para concluir a atualização.';
+
+  @override
   String get update_installing => 'Instalando...';
 
   @override

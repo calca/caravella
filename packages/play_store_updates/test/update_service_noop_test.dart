@@ -34,6 +34,10 @@ void main() {
         'flexibleAllowed': false,
       });
     });
+
+    test('isUpdateReadyToInstall is always false', () async {
+      expect(await service.isUpdateReadyToInstall(), isFalse);
+    });
   });
 
   group('NoOpUpdateNotifier', () {
@@ -48,6 +52,7 @@ void main() {
       expect(notifier.flexibleAllowed, isFalse);
       expect(notifier.isDownloading, isFalse);
       expect(notifier.isInstalling, isFalse);
+      expect(notifier.updateDownloaded, isFalse);
       expect(notifier.error, isNull);
     });
 

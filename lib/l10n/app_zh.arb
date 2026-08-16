@@ -834,6 +834,10 @@
   ,"@update_error": {"description": "更新检查期间的错误消息"}
   ,"update_downloading": "正在下载..."
   ,"@update_downloading": {"description": "下载更新时的消息"}
+  ,"update_ready_to_install": "更新已就绪，可以安装"
+  ,"@update_ready_to_install": {"description": "灵活更新下载完成、可以安装时显示的标题"}
+  ,"update_ready_to_install_desc": "更新已下载完成，安装以完成本次更新。"
+  ,"@update_ready_to_install_desc": {"description": "灵活更新下载完成、可以安装时显示的说明"}
   ,"update_installing": "正在安装..."
   ,"@update_installing": {"description": "安装更新时的消息"}
   ,"update_feature_android_only": "此功能仅适用于带有Google Play商店的Android设备"
