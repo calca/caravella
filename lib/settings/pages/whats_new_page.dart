@@ -1,3 +1,4 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +18,7 @@ class WhatsNewPage extends StatefulWidget {
 class _WhatsNewPageState extends State<WhatsNewPage> {
   String _markdownContent = '';
   bool _isLoading = true;
-  String? _error;
+  bool _hasError = false;
 
   @override
   void initState() {
@@ -56,10 +57,16 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
           _isLoading = false;
         });
       }
-    } catch (e) {
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to load changelog',
+        name: 'settings.whats_new',
+        error: e,
+        stackTrace: st,
+      );
       if (mounted) {
         setState(() {
-          _error = e.toString();
+          _hasError = true;
           _isLoading = false;
         });
       }
@@ -78,7 +85,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (_error != null) {
+    if (_hasError) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -92,12 +99,6 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
             Text(
               loc.whats_new_load_error,
               style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _error!,
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
             ),
           ],
         ),

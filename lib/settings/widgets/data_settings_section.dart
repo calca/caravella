@@ -67,7 +67,7 @@ class DataSettingsSection extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.storage_outlined),
         title: Text(loc.settings_data_manage, style: textTheme.titleMedium),
-        subtitle: Text(loc.settings_data_desc),
+        subtitle: Text(loc.data_title),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       ),
     );
