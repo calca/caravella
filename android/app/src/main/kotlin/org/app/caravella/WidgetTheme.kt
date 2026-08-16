@@ -58,15 +58,10 @@ private data class DayNightColorProvider(val day: Color, val night: Color) : Col
 }
 
 // Base widget container surface, matching the app's own brand surface tones
-// (packages/caravella_core_ui/lib/themes/caravella_themes.dart). Semi-transparent
-// ("frosted glass" look) rather than fully opaque — Android widgets can't blur
-// what's behind them (that's a launcher-level capability, not exposed to apps),
-// so a soft alpha over the wallpaper is the closest achievable approximation.
-// Alpha is high enough (0xE6 ≈ 90%) to keep EmphasisTextColor/SecondaryTextColor
-// legible against arbitrary wallpapers.
+// (packages/caravella_core_ui/lib/themes/caravella_themes.dart).
 internal val WidgetSurfaceColor = ColorProvider(
-    Color(0xE6FFFFFF), // Light mode
-    Color(0xE6181A1B), // Dark mode
+    Color(0xFFFFFFFF), // Light mode
+    Color(0xFF181A1B), // Dark mode
 )
 
 internal val EmphasisTextColor = ColorProvider(
