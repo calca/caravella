@@ -6,14 +6,10 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
@@ -30,7 +26,6 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
-import androidx.glance.unit.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -46,7 +41,6 @@ import es.antonborri.home_widget.actionStartActivity as homeWidgetActionStartAct
 import io.caravella.egm.appfunctions.AppFunctionStorageReader
 import java.io.File
 import java.io.IOException
-import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -156,9 +150,9 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 // Default to 0.0 when totals are unavailable (e.g. first load before
                 // any expenses exist) so the widget always shows a formatted amount
                 // instead of a placeholder dash.
-                todayValue = formatAmount(totals?.todayTotal ?: 0.0, currency),
-                weekValue = formatAmount(totals?.weekTotal ?: 0.0, currency),
-                groupTotalValue = formatAmount(totals?.groupTotal ?: 0.0, currency),
+                todayValue = formatWidgetAmount(totals?.todayTotal ?: 0.0, currency),
+                weekValue = formatWidgetAmount(totals?.weekTotal ?: 0.0, currency),
+                groupTotalValue = formatWidgetAmount(totals?.groupTotal ?: 0.0, currency),
                 showGroupName = config.showGroupName,
                 ctaButton = WidgetButton(
                     label = "+",
@@ -223,7 +217,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                             .background(contentOverlaySurface(model.backgroundTransparency)),
                     ) {}
                 } else if (model.useGroupBackground && model.backgroundColor != null) {
-                    val bgColor = toComposeColor(model.backgroundColor)
+                    val bgColor = widgetColor(model.backgroundColor)
                     Box(
                         modifier = GlanceModifier
                             .fillMaxSize()
@@ -479,12 +473,6 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
         }
     }
 
-    private fun formatAmount(amount: Double, currency: String): String {
-        return String.format(Locale.getDefault(), "%.2f %s", amount, currency)
-    }
-
-    private fun toComposeColor(colorValue: Int): Color = Color(colorValue)
-
     private fun widgetTapUri(path: String, groupId: String, groupTitle: String): Uri =
         Uri.Builder()
             .scheme("caravella")
@@ -518,7 +506,7 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                         BitmapFactory.decodeStream(input, null, options)
                     }
                 } ?: return null
-                val sampleSize = calculateInSampleSize(bounds, maxDimensionPx, maxDimensionPx)
+                val sampleSize = calculateBitmapSampleSize(bounds, maxDimensionPx, maxDimensionPx)
                 context.contentResolver.openInputStream(uri)?.use { input ->
                     BitmapFactory.decodeStream(
                         input,
@@ -535,159 +523,16 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
             val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }.also { options ->
                 BitmapFactory.decodeFile(file.absolutePath, options)
             }
-            val sampleSize = calculateInSampleSize(bounds, maxDimensionPx, maxDimensionPx)
+            val sampleSize = calculateBitmapSampleSize(bounds, maxDimensionPx, maxDimensionPx)
             BitmapFactory.decodeFile(
                 file.absolutePath,
                 BitmapFactory.Options().apply { inSampleSize = sampleSize },
             )
         }
     }
-
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-        val height = options.outHeight
-        val width = options.outWidth
-        var inSampleSize = 1
-        if (height > reqHeight || width > reqWidth) {
-            val halfHeight = height / 2
-            val halfWidth = width / 2
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-        return inSampleSize
-    }
 }
 
 private const val WIDGET_MAX_IMAGE_DIMENSION_DP = 276
-
-private val WidgetInnerPadding = 12.dp
-private val WidgetCompactPadding = 6.dp
-private val WidgetSectionSpacing = 10.dp
-private val WidgetMinimalSpacing = 2.dp
-private val WidgetOuterRadius = 24.dp
-private val WidgetBodyTextSize = 15.sp
-private val WidgetLabelTextSize = 12.sp
-private val WidgetCompactValueTextSize = 16.sp
-private val WidgetGroupTotalValueTextSize = 22.sp
-private val WidgetTodayPillRadius = 16.dp
-private val WidgetTodayPillHorizontalPadding = 8.dp
-private val WidgetTodayPillVerticalPadding = 2.dp
-private val WidgetCtaButtonRadius = 16.dp
-private val WidgetCtaButtonPadding = 14.dp
-private val WidgetCtaButtonTextSize = 24.sp
-
-// Smaller CTA chip variant used by the 4x1 layout, whose ~51dp height can't fit
-// the full-size CTA button used by the taller layouts.
-private val WidgetCtaButtonSmallRadius = 12.dp
-private val WidgetCtaButtonSmallPadding = 6.dp
-private val WidgetCtaButtonSmallTextSize = 16.sp
-private val WidgetCtaButtonSmallReservedWidth = 40.dp
-
-/**
- * Creates a [ColorProvider] that resolves to [day] in light mode and [night] in dark mode.
- * Replaces the removed `androidx.glance.color.ColorProvider(day, night)` factory.
- */
-private fun ColorProvider(day: Color, night: Color): ColorProvider {
-    return DayNightColorProvider(day, night)
-}
-
-private data class DayNightColorProvider(val day: Color, val night: Color) : ColorProvider {
-    override fun getColor(context: Context): Color {
-        val nightMode = context.resources.configuration.uiMode and
-            android.content.res.Configuration.UI_MODE_NIGHT_MASK
-        return if (nightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES) night else day
-    }
-}
-
-// Default widget container surface when group-based background is disabled.
-// Glass-like overlay above image/color backgrounds for better text readability.
-// Uses consistent ~80% opacity in both themes for predictable legibility.
-// This is layered on top of custom group image/color backgrounds.
-/**
- * Returns the content overlay surface color with alpha based on the transparency level.
- * transparency=0 → full overlay (0xCC alpha ≈ 80%), transparency=100 → no overlay (fully transparent).
- */
-private fun contentOverlaySurface(transparency: Int): ColorProvider {
-    // Base alpha is 0xCC (204) at transparency=0; linearly decreases to 0x00 at transparency=100.
-    val clampedTransparency = transparency.coerceIn(0, 100)
-    val alpha = ((100 - clampedTransparency) * 0xCC / 100.0).toInt()
-    val alphaHex = alpha.toLong()
-    return ColorProvider(
-        Color((alphaHex shl 24) or 0xFFFFFF),  // Light mode (white overlay)
-        Color((alphaHex shl 24) or 0x000000),  // Dark mode (black overlay)
-    )
-}
-
-private val EmphasisTextColor = ColorProvider(
-    Color(0xFF1D1A24), // Light mode
-    Color(0xFFF4EEFF), // Dark mode
-)
-
-private val SecondaryTextColor = ColorProvider(
-    Color(0xFF5F5A68), // Light mode
-    Color(0xFFC8C2D2), // Dark mode
-)
-
-// Static palette used when Material You dynamic color isn't available (API <31,
-// or the system theme can't be resolved for some reason) — same purple accent
-// the widget always used before dynamic color support was added.
-private val FallbackTodayPillSurface = ColorProvider(
-    Color(0x80E1D8F8), // Light mode – 50% opacity
-    Color(0x804D3B73), // Dark mode – 50% opacity
-)
-
-private val FallbackTodayPillTextColor = ColorProvider(
-    Color(0xFF2E1B52), // Light mode
-    Color(0xFFF3ECFF), // Dark mode
-)
-
-private val FallbackCtaButtonSurface = ColorProvider(
-    Color(0xFF6750A4), // Light mode (Material primary)
-    Color(0xFFD0BCFF), // Dark mode
-)
-
-private val FallbackCtaButtonTextColor = ColorProvider(
-    Color(0xFFFFFFFF), // Light mode
-    Color(0xFF381E72), // Dark mode
-)
-
-/** The widget's two branded accent surfaces (CTA button, "today" pill), themed together. */
-private data class WidgetAccentColors(
-    val ctaSurface: ColorProvider,
-    val ctaText: ColorProvider,
-    val pillSurface: ColorProvider,
-    val pillText: ColorProvider,
-)
-
-private val FallbackWidgetAccentColors = WidgetAccentColors(
-    ctaSurface = FallbackCtaButtonSurface,
-    ctaText = FallbackCtaButtonTextColor,
-    pillSurface = FallbackTodayPillSurface,
-    pillText = FallbackTodayPillTextColor,
-)
-
-/**
- * Resolves the widget's accent colors from the device's Material You wallpaper
- * palette (Android 12+), so the CTA button and "today" pill follow the user's
- * chosen system theme instead of a fixed purple — matching the rest of the app,
- * which already supports dynamic color. Falls back to the static purple palette
- * on older Android versions, or if the system palette can't be resolved.
- */
-private fun widgetAccentColors(context: Context): WidgetAccentColors {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return FallbackWidgetAccentColors
-    return try {
-        val light = dynamicLightColorScheme(context)
-        val dark = dynamicDarkColorScheme(context)
-        WidgetAccentColors(
-            ctaSurface = ColorProvider(day = light.primary, night = dark.primary),
-            ctaText = ColorProvider(day = light.onPrimary, night = dark.onPrimary),
-            pillSurface = ColorProvider(day = light.primaryContainer, night = dark.primaryContainer),
-            pillText = ColorProvider(day = light.onPrimaryContainer, night = dark.onPrimaryContainer),
-        )
-    } catch (_: Exception) {
-        FallbackWidgetAccentColors
-    }
-}
 
 private data class WidgetUiModel(
     val title: String,
@@ -708,89 +553,3 @@ private data class WidgetButton(
     val label: String,
     val action: Action,
 )
-
-internal data class WidgetGroupConfig(
-    val groupId: String,
-    val groupTitle: String,
-    val groupCurrency: String,
-    val useGroupBackground: Boolean,
-    val showGroupName: Boolean,
-    val backgroundTransparency: Int,
-)
-
-internal object HomeWidgetPrefs {
-    private const val PREFS_NAME = "caravella_widget_prefs"
-    private const val DEFAULT_CURRENCY = "€"
-    private const val DEFAULT_TRANSPARENCY = 25
-
-    private fun keyGroupId(appWidgetId: Int) = "widget_${appWidgetId}_group_id"
-    private fun keyGroupTitle(appWidgetId: Int) = "widget_${appWidgetId}_group_title"
-    private fun keyGroupCurrency(appWidgetId: Int) = "widget_${appWidgetId}_group_currency"
-    private fun keyUseGroupBackground(appWidgetId: Int) = "widget_${appWidgetId}_use_group_background"
-    private fun keyShowGroupName(appWidgetId: Int) = "widget_${appWidgetId}_show_group_name"
-    private fun keyBackgroundTransparency(appWidgetId: Int) = "widget_${appWidgetId}_background_transparency"
-
-    fun saveWidgetConfig(
-        context: Context,
-        appWidgetId: Int,
-        groupId: String,
-        groupTitle: String,
-        groupCurrency: String,
-        useGroupBackground: Boolean,
-        showGroupName: Boolean,
-        backgroundTransparency: Int,
-    ) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(keyGroupId(appWidgetId), groupId)
-            .putString(keyGroupTitle(appWidgetId), groupTitle)
-            .putString(keyGroupCurrency(appWidgetId), groupCurrency)
-            .putBoolean(keyUseGroupBackground(appWidgetId), useGroupBackground)
-            .putBoolean(keyShowGroupName(appWidgetId), showGroupName)
-            .putInt(keyBackgroundTransparency(appWidgetId), backgroundTransparency)
-            .apply()
-    }
-
-    fun getUseGroupBackground(context: Context, appWidgetId: Int): Boolean {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getBoolean(keyUseGroupBackground(appWidgetId), true)
-    }
-
-    fun getShowGroupName(context: Context, appWidgetId: Int): Boolean {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getBoolean(keyShowGroupName(appWidgetId), true)
-    }
-
-    fun getBackgroundTransparency(context: Context, appWidgetId: Int): Int {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getInt(keyBackgroundTransparency(appWidgetId), DEFAULT_TRANSPARENCY)
-    }
-
-    fun getWidgetConfig(context: Context, appWidgetId: Int): WidgetGroupConfig? {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val groupId = prefs.getString(keyGroupId(appWidgetId), null) ?: return null
-        val groupTitle = prefs.getString(keyGroupTitle(appWidgetId), null) ?: return null
-        val groupCurrency = prefs.getString(keyGroupCurrency(appWidgetId), DEFAULT_CURRENCY)
-            ?: DEFAULT_CURRENCY
-        return WidgetGroupConfig(
-            groupId = groupId,
-            groupTitle = groupTitle,
-            groupCurrency = groupCurrency,
-            useGroupBackground = getUseGroupBackground(context, appWidgetId),
-            showGroupName = getShowGroupName(context, appWidgetId),
-            backgroundTransparency = getBackgroundTransparency(context, appWidgetId),
-        )
-    }
-
-    fun clearWidgetConfig(context: Context, appWidgetId: Int) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .remove(keyGroupId(appWidgetId))
-            .remove(keyGroupTitle(appWidgetId))
-            .remove(keyGroupCurrency(appWidgetId))
-            .remove(keyUseGroupBackground(appWidgetId))
-            .remove(keyShowGroupName(appWidgetId))
-            .remove(keyBackgroundTransparency(appWidgetId))
-            .apply()
-    }
-}

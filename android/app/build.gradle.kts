@@ -107,4 +107,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
     implementation("androidx.compose.material3:material3:1.4.0")
+
+    // Plain-JVM unit tests (android/app/src/test) for pure Kotlin logic that
+    // doesn't touch the Android framework — see WidgetFormattingTest.
+    testImplementation("junit:junit:4.13.2")
 }
