@@ -21,20 +21,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -121,14 +117,13 @@ class HomeWidgetConfigureActivity : ComponentActivity() {
                     HomeWidgetConfigureScreen(
                         appWidgetId = appWidgetId,
                         modifier = Modifier.padding(innerPadding),
-                        onConfigSaved = { groupId, groupTitle, groupCurrency, showGroupName ->
+                        onConfigSaved = { groupId, groupTitle, groupCurrency ->
                             HomeWidgetPrefs.saveWidgetConfig(
                                 context = this,
                                 appWidgetId = appWidgetId,
                                 groupId = groupId,
                                 groupTitle = groupTitle,
                                 groupCurrency = groupCurrency,
-                                showGroupName = showGroupName,
                             )
 
                             // Awaited so the widget is guaranteed refreshed before finish() —
@@ -157,26 +152,17 @@ private sealed interface HomeWidgetConfigureUiState {
     data class Loaded(val groups: List<AppFunctionStorageReader.GroupSummary>) : HomeWidgetConfigureUiState
 }
 
-private enum class HomeWidgetConfigureTab {
-    Group,
-    Options,
-}
-
 @Composable
 private fun HomeWidgetConfigureScreen(
     appWidgetId: Int,
     modifier: Modifier = Modifier,
-    onConfigSaved: suspend (String, String, String, Boolean) -> Unit,
+    onConfigSaved: suspend (String, String, String) -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var uiState by remember { mutableStateOf<HomeWidgetConfigureUiState>(HomeWidgetConfigureUiState.Loading) }
-    var selectedTab by remember { mutableStateOf(HomeWidgetConfigureTab.Group) }
     var selectedGroupId by remember {
         mutableStateOf(HomeWidgetPrefs.getWidgetConfig(context, appWidgetId)?.groupId)
-    }
-    var showGroupName by remember {
-        mutableStateOf(HomeWidgetPrefs.getShowGroupName(context, appWidgetId))
     }
     var isSaving by remember { mutableStateOf(false) }
 
@@ -200,125 +186,93 @@ private fun HomeWidgetConfigureScreen(
             style = MaterialTheme.typography.titleMedium,
         )
 
-        TabRow(selectedTabIndex = selectedTab.ordinal) {
-            Tab(
-                selected = selectedTab == HomeWidgetConfigureTab.Group,
-                onClick = { selectedTab = HomeWidgetConfigureTab.Group },
-                text = { Text(text = context.getString(R.string.widget_config_tab_group)) },
-            )
-            Tab(
-                selected = selectedTab == HomeWidgetConfigureTab.Options,
-                onClick = { selectedTab = HomeWidgetConfigureTab.Options },
-                text = { Text(text = context.getString(R.string.widget_config_tab_options)) },
-            )
-        }
-
-        when (selectedTab) {
-            HomeWidgetConfigureTab.Group -> {
-                when (val state = uiState) {
-                    HomeWidgetConfigureUiState.Loading -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-
-                    is HomeWidgetConfigureUiState.Loaded -> {
-                        if (state.groups.isEmpty()) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(text = context.getString(R.string.widget_config_empty))
-                            }
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                            ) {
-                                itemsIndexed(state.groups, key = { _, group -> group.id }) { index, group ->
-                                    val isSelected = selectedGroupId == group.id
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .then(
-                                                if (isSelected) {
-                                                    Modifier.background(
-                                                        MaterialTheme.colorScheme.primaryContainer,
-                                                        RoundedCornerShape(12.dp),
-                                                    )
-                                                } else {
-                                                    Modifier
-                                                },
-                                            )
-                                            .semantics {
-                                                role = Role.Button
-                                                contentDescription = context.getString(
-                                                    R.string.widget_config_select_group_a11y,
-                                                    group.title,
-                                                    group.currency,
-                                                )
-                                            }
-                                            .clickable { selectedGroupId = group.id }
-                                            .padding(vertical = 12.dp, horizontal = 12.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(
-                                                text = group.title,
-                                                style = MaterialTheme.typography.bodyLarge,
-                                                color = if (isSelected) {
-                                                    MaterialTheme.colorScheme.onPrimaryContainer
-                                                } else {
-                                                    MaterialTheme.colorScheme.onSurface
-                                                },
-                                            )
-                                            Text(
-                                                text = context.getString(
-                                                    R.string.widget_config_currency_label,
-                                                    group.currency,
-                                                ),
-                                                style = MaterialTheme.typography.bodyMedium,
-                                            )
-                                        }
-                                        if (isSelected) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Check,
-                                                contentDescription = null,
-                                                tint = MaterialTheme.colorScheme.primary,
-                                                modifier = Modifier.size(24.dp),
-                                            )
-                                        }
-                                    }
-                                    if (index < state.groups.lastIndex) {
-                                        HorizontalDivider()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            HomeWidgetConfigureTab.Options -> {
-                Column(
+        when (val state = uiState) {
+            HomeWidgetConfigureUiState.Loading -> {
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    WidgetConfigToggleRow(
-                        label = context.getString(R.string.widget_config_show_group_name),
-                        checked = showGroupName,
-                        onCheckedChange = { showGroupName = it },
-                    )
+                    CircularProgressIndicator()
+                }
+            }
+
+            is HomeWidgetConfigureUiState.Loaded -> {
+                if (state.groups.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(text = context.getString(R.string.widget_config_empty))
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                    ) {
+                        itemsIndexed(state.groups, key = { _, group -> group.id }) { index, group ->
+                            val isSelected = selectedGroupId == group.id
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .then(
+                                        if (isSelected) {
+                                            Modifier.background(
+                                                MaterialTheme.colorScheme.primaryContainer,
+                                                RoundedCornerShape(12.dp),
+                                            )
+                                        } else {
+                                            Modifier
+                                        },
+                                    )
+                                    .semantics {
+                                        role = Role.Button
+                                        contentDescription = context.getString(
+                                            R.string.widget_config_select_group_a11y,
+                                            group.title,
+                                            group.currency,
+                                        )
+                                    }
+                                    .clickable { selectedGroupId = group.id }
+                                    .padding(vertical = 12.dp, horizontal = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = group.title,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = if (isSelected) {
+                                            MaterialTheme.colorScheme.onPrimaryContainer
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurface
+                                        },
+                                    )
+                                    Text(
+                                        text = context.getString(
+                                            R.string.widget_config_currency_label,
+                                            group.currency,
+                                        ),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                    )
+                                }
+                                if (isSelected) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(24.dp),
+                                    )
+                                }
+                            }
+                            if (index < state.groups.lastIndex) {
+                                HorizontalDivider()
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -331,8 +285,7 @@ private fun HomeWidgetConfigureScreen(
 
         // Previously this reason was only exposed via contentDescription
         // (screen readers only); sighted users saw a greyed-out button with
-        // no visible explanation, especially confusing when landing on the
-        // Options tab before ever picking a group.
+        // no visible explanation.
         if (selectedGroup == null) {
             Text(
                 text = context.getString(R.string.widget_config_save_disabled),
@@ -350,7 +303,6 @@ private fun HomeWidgetConfigureScreen(
                             group.id,
                             group.title,
                             group.currency,
-                            showGroupName,
                         )
                     }
                 }
@@ -364,38 +316,5 @@ private fun HomeWidgetConfigureScreen(
         ) {
             Text(text = context.getString(R.string.widget_config_save))
         }
-    }
-}
-
-@Composable
-private fun WidgetConfigToggleRow(
-    label: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-) {
-    // Modifier.toggleable() (rather than a plain .clickable() on the Row plus
-    // the Checkbox's own onCheckedChange) merges the label into one
-    // accessible "label, checkbox, checked/unchecked" node instead of two
-    // disconnected ones, and gives TalkBack the correct checkbox role.
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .toggleable(
-                value = checked,
-                onValueChange = onCheckedChange,
-                role = Role.Checkbox,
-            )
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = null,
-        )
-        Text(
-            text = label,
-            modifier = Modifier.padding(start = 8.dp),
-            style = MaterialTheme.typography.bodyMedium,
-        )
     }
 }
