@@ -32,7 +32,7 @@ Card widgets (`lib/home/cards/widgets/`): `GroupCard` (wraps `BaseCard`, backgro
 
 ## Android integration bootstrapping
 
-- `lib/home/services/shortcuts_initialization.dart` (`ShortcutsInitialization.initialize()`) — configures `ShortcutsNavigationService` with navigate/error callbacks, initializes `PlatformShortcutsManager` and `PlatformHomeWidgetManager`'s tap handling, and immediately refreshes shortcuts. Home-widget taps dispatch to `NotificationManager.handleAddExpenseAction` (add-expense action) or `ShortcutsNavigationService.handleShortcutTap` (open-group action).
+- `lib/home/services/shortcuts_initialization.dart` (`ShortcutsInitialization.initialize()`) — configures `ShortcutsNavigationService` with navigate/error callbacks, initializes `PlatformShortcutsManager` and `PlatformHomeWidgetManager`'s tap handling, and immediately refreshes shortcuts. Home-widget taps dispatch to `NotificationManager.handleAddExpenseAction` (add-expense action) or `ShortcutsNavigationService.handleShortcutTap` (open-group action). This runs before `runApp()`, so a cold-start tap can be dispatched before `navigatorKey` has a mounted context; both handlers await `ShortcutsNavigationService.waitForNavigatorContext()` (short poll, several-second timeout) before touching the context instead of dropping the action.
 - `lib/home/services/app_functions_initialization.dart` (`AppFunctionsInitialization.initialize()`) — registers the Android App Functions "add expense" handler. See [android_app_functions package](PACKAGE_ANDROID_APP_FUNCTIONS.md).
 
 Both are invoked from `AppInitialization`/`main.dart` at startup — see [Architecture Overview § startup sequence](ARCHITECTURE.md#app-startup-sequence).

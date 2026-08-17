@@ -150,8 +150,11 @@ class NotificationManager {
   /// Navigates to home page and opens the add expense bottom sheet for the group
   static Future<void> handleAddExpenseAction(String groupId) async {
     try {
-      // Get the navigation key from the app
-      final context = navigatorKey.currentContext;
+      // Get the navigation key from the app. Cold-start taps (e.g. from the
+      // home-screen widget, before `runApp()` has attached the widget tree)
+      // can arrive before a context exists yet, so wait briefly for one
+      // instead of dropping the action.
+      final context = await ShortcutsNavigationService.waitForNavigatorContext();
       if (context == null || !context.mounted) {
         LoggerService.warning(
           'Cannot navigate: context not available',
