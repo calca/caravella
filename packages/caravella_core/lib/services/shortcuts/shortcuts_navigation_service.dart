@@ -28,12 +28,30 @@ class ShortcutsNavigationService {
     _showErrorCallback = onShowError;
   }
 
+  /// Waits for [navigatorKey] to have a mounted context, polling briefly.
+  ///
+  /// Cold-start deep links (home-widget taps, shortcut taps) can be
+  /// dispatched during app startup, before `runApp()` has attached the
+  /// widget tree — at that point `navigatorKey.currentContext` is still
+  /// null. Polling here bridges that gap instead of silently dropping the
+  /// action. Returns null if no context becomes available within [timeout].
+  static Future<BuildContext?> waitForNavigatorContext({
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
+    final deadline = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(deadline)) {
+      final context = navigatorKey.currentContext;
+      if (context != null && context.mounted) {
+        return context;
+      }
+      await Future.delayed(const Duration(milliseconds: 50));
+    }
+    return null;
+  }
+
   /// Handle shortcut tap by loading the group and invoking the navigation callback
   /// This method is synchronous and triggers async operations internally
   static void handleShortcutTap(String groupId, String groupTitle) {
-    final context = navigatorKey.currentContext;
-    if (context == null) return;
-
     if (_navigateToGroupCallback == null || _showErrorCallback == null) {
       throw StateError(
         'ShortcutsNavigationService not configured. Call configure() first.',
@@ -41,15 +59,16 @@ class ShortcutsNavigationService {
     }
 
     // Trigger async operation without blocking
-    _handleShortcutTapAsync(context, groupId, groupTitle);
+    _handleShortcutTapAsync(groupId, groupTitle);
   }
 
   /// Internal async handler for shortcut tap
   static Future<void> _handleShortcutTapAsync(
-    BuildContext context,
     String groupId,
     String groupTitle,
   ) async {
+    final context = await waitForNavigatorContext();
+    if (context == null || !context.mounted) return;
     try {
       // Load the group from storage
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
