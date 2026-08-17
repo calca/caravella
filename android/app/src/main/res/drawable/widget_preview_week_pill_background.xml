@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Preview-only approximation of the live widget's "week" chip
+     (WidgetWeekPillRadius in WidgetTheme.kt). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/widget_preview_week_pill_background" />
+    <corners android:radius="10dp" />
+</shape>

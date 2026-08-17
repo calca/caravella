@@ -10,4 +10,17 @@
 
     <!-- Widget colors -->
     <color name="widget_primary">#6750A4</color>
+
+    <!-- Static preview (widget picker thumbnail) only — Glance's live rendering
+         uses Material You dynamic color when available (see widgetAccentColors()
+         in WidgetTheme.kt); the preview can't reflect that, so it matches the
+         same static fallback palette the live widget falls back to on API <31. -->
+    <color name="widget_preview_cta_background">#009688</color>
+    <color name="widget_preview_week_pill_background">#B2DFDB</color>
+
+    <!-- Widget initialLayout placeholder background (shown by the launcher process
+         before Glance's provideGlance() replaces it) - matches WidgetTheme.kt's
+         WidgetSurfaceColor light value. Hardcoded rather than ?android:attr/colorBackground,
+         which resolves against the widget host's (launcher's) theme, not the app's. -->
+    <color name="widget_placeholder_background">#FFFFFFFF</color>
 </resources>

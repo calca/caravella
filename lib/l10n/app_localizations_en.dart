@@ -591,7 +591,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get import_error => 'Import failed. Check the file format.';
 
   @override
-  String get settings_flag_secure_error => "Couldn't change screen security";
+  String get settings_flag_secure_error => 'Couldn\'t change screen security';
 
   @override
   String get settings_debug_logs_title => 'Debug Logs';
@@ -601,7 +601,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'View application logs and error history';
 
   @override
-  String get developer_link_error => "Couldn't open the link";
+  String get developer_link_error => 'Couldn\'t open the link';
 
   @override
   String get whats_new_load_error => 'Failed to load';

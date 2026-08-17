@@ -1,10 +1,7 @@
 <resources>
     <!-- Home widget -->
     <string name="widget_description">Monitora il totale di oggi e del gruppo</string>
-    <string name="widget_today_label">oggi:</string>
     <string name="widget_week_label">sett.:</string>
-    <string name="widget_total_spent_label">Spesa Totale</string>
-    <string name="widget_group_total_label">Totale gruppo</string>
     <string name="widget_select_group">Seleziona gruppo spese</string>
     <string name="widget_unconfigured_title">Widget non configurato</string>
     <string name="widget_config_title">Seleziona il gruppo spese per questo widget</string>
@@ -16,5 +13,6 @@
 
     <!-- Widget preview (shown in widget picker) -->
     <string name="widget_preview_group_name">Il mio viaggio</string>
-    <string name="widget_preview_today_chip">oggi: 12,50 €</string>
+    <string name="widget_preview_today_value">12,50 €</string>
+    <string name="widget_preview_week_value">sett.: 40,00 €</string>
 </resources>

@@ -24,10 +24,10 @@ import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
-import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
@@ -88,17 +88,14 @@ class HomeWidgetProvider : GlanceAppWidgetReceiver() {
 }
 
 private object CaravellaHomeWidget : GlanceAppWidget() {
-    // Responsive breakpoints for the four supported home-screen grid shapes.
-    // Values are Android's own per-cell-count guidance (portrait width column,
-    // landscape height column — the smaller, safer figure for each dimension):
+    // Responsive breakpoints for the two supported home-screen grid shapes —
+    // square only. Values are Android's own per-cell-count guidance:
     // https://developer.android.com/develop/ui/views/appwidgets/layouts
     private val SIZE_1X1 = DpSize(57.dp, 51.dp)
     private val SIZE_2X2 = DpSize(130.dp, 117.dp)
-    private val SIZE_4X1 = DpSize(276.dp, 51.dp)
-    private val SIZE_4X2 = DpSize(276.dp, 117.dp)
 
     override val sizeMode = SizeMode.Responsive(
-        setOf(SIZE_1X1, SIZE_2X2, SIZE_4X1, SIZE_4X2),
+        setOf(SIZE_1X1, SIZE_2X2),
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -119,7 +116,6 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 title = context.getString(R.string.widget_unconfigured_title),
                 todayValue = "-",
                 weekValue = "-",
-                groupTotalValue = "-",
                 ctaButton = WidgetButton(
                     label = context.getString(R.string.widget_select_group),
                     action = configureAction,
@@ -150,7 +146,6 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                 // instead of a placeholder dash.
                 todayValue = formatWidgetAmount(totals?.todayTotal ?: 0.0, currency),
                 weekValue = formatWidgetAmount(totals?.weekTotal ?: 0.0, currency),
-                groupTotalValue = formatWidgetAmount(totals?.groupTotal ?: 0.0, currency),
                 ctaButton = WidgetButton(
                     label = "+",
                     action = addExpenseAction,
@@ -163,11 +158,10 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
 
         provideContent {
             val size = LocalSize.current
-            // Midpoints between the declared breakpoints (130/276 wide, 51/117 tall) —
-            // LocalSize.current always snaps to one of the four exactly, so any
-            // threshold strictly between two breakpoint values classifies correctly.
-            val isNarrow = size.width < 200.dp // 1x1 or 2x2 width
-            val isShort = size.height < 84.dp // 1x1 or 4x1 height
+            // Midpoint between the two declared breakpoints (57dp vs 130dp wide) —
+            // LocalSize.current always snaps to one of the two exactly, so any
+            // threshold strictly between them classifies correctly.
+            val isOneByOne = size.width < 100.dp
 
             // The tap target and the painted surface are deliberately two nested
             // Boxes rather than one: background() on the true root element
@@ -189,11 +183,10 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                         .cornerRadius(WidgetOuterRadius)
                         .background(WidgetSurfaceColor),
                 ) {
-                    when {
-                        isNarrow && isShort -> OneByOneContent(model)
-                        isNarrow && !isShort -> TwoByTwoContent(context, model)
-                        !isNarrow && isShort -> FourByOneContent(context, model, accentColors)
-                        else -> FourByTwoContent(context, model, accentColors)
+                    if (isOneByOne) {
+                        OneByOneContent(model)
+                    } else {
+                        TwoByTwoContent(context, model, accentColors)
                     }
                 }
             }
@@ -230,10 +223,22 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun TwoByTwoContent(context: Context, model: WidgetUiModel) {
-        val overlayModifier = GlanceModifier.fillMaxSize().padding(WidgetCompactPadding)
-        Box(modifier = overlayModifier, contentAlignment = Alignment.Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    private fun TwoByTwoContent(
+        context: Context,
+        model: WidgetUiModel,
+        accentColors: WidgetAccentColors,
+    ) {
+        // Same "only show when genuinely different from the whole-cell tap" rule as
+        // the 4x1 chip: in the unconfigured state the CTA and the tap-anywhere action
+        // are identical, so a redundant floating button would just add visual noise.
+        val showsDistinctCta = model.ctaButton != null && model.ctaButton.action != model.tapAction
+        Box(modifier = GlanceModifier.fillMaxSize()) {
+            // Two zones stacked in a Column: the group name pinned top-start (its own
+            // row, natural height), then a second row that fills whatever vertical
+            // space is left and centers today's value + the week chip inside it —
+            // so the header stays put while the hero number gets the visual weight
+            // of true centering, rather than the whole block sitting off-center.
+            Column(modifier = GlanceModifier.fillMaxSize().padding(WidgetCellPadding)) {
                 Text(
                     text = model.title,
                     style = TextStyle(
@@ -243,176 +248,67 @@ private object CaravellaHomeWidget : GlanceAppWidget() {
                     ),
                     maxLines = 1,
                 )
-                Text(
-                    text = model.todayValue,
-                    style = TextStyle(
-                        color = EmphasisTextColor,
-                        fontSize = WidgetCompactValueTextSize,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                    maxLines = 1,
-                )
-                Text(
-                    text = "${context.getString(R.string.widget_week_label)} ${model.weekValue}",
-                    style = TextStyle(
-                        color = SecondaryTextColor,
-                        fontSize = WidgetLabelTextSize,
-                    ),
-                    maxLines = 1,
-                )
-            }
-        }
-    }
-
-    @Composable
-    private fun FourByOneContent(
-        context: Context,
-        model: WidgetUiModel,
-        accentColors: WidgetAccentColors,
-    ) {
-        // A single short row: no vertical room to stack the group name, value and
-        // CTA the way the taller layouts do, so everything lives on one line.
-        // The CTA chip is only drawn when it's a genuinely different action from
-        // the whole-row tap (the configured state's "+"); in the unconfigured
-        // state both actions already open the same picker, so a second visual
-        // button would be redundant and — with its long "select group" label —
-        // wouldn't fit this row's height anyway.
-        val showsDistinctCta = model.ctaButton != null && model.ctaButton.action != model.tapAction
-        Box(
-            modifier = GlanceModifier.fillMaxSize().padding(horizontal = WidgetInnerPadding),
-        ) {
-            val line = "${model.title} · ${model.todayValue}"
-            Box(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .padding(end = if (showsDistinctCta) WidgetCtaButtonSmallReservedWidth else 0.dp),
-                contentAlignment = Alignment.CenterStart,
-            ) {
-                Text(
-                    text = line,
-                    style = TextStyle(
-                        color = EmphasisTextColor,
-                        fontSize = WidgetBodyTextSize,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                    maxLines = 1,
-                )
+                Box(
+                    // Bottom padding equal to the CTA button's own footprint: the
+                    // button is a sibling overlay, not part of this Column's layout,
+                    // so without this the centered content below would center against
+                    // the cell's true bottom edge instead of the button's top edge.
+                    modifier = GlanceModifier.fillMaxWidth().defaultWeight()
+                        .padding(bottom = WidgetCtaButtonSize),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = model.todayValue,
+                            style = TextStyle(
+                                color = EmphasisTextColor,
+                                fontSize = WidgetCompactValueTextSize,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                            maxLines = 1,
+                        )
+                        Box(
+                            modifier = GlanceModifier
+                                .padding(top = WidgetMinimalSpacing)
+                                .cornerRadius(WidgetWeekPillRadius)
+                                .background(accentColors.weekPillSurface)
+                                .padding(
+                                    start = WidgetWeekPillHorizontalPadding,
+                                    end = WidgetWeekPillHorizontalPadding,
+                                    top = WidgetWeekPillTopPadding,
+                                    bottom = WidgetWeekPillBottomPadding,
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "${context.getString(R.string.widget_week_label)} ${model.weekValue}",
+                                style = TextStyle(
+                                    color = accentColors.weekPillText,
+                                    fontSize = WidgetWeekPillTextSize,
+                                    fontWeight = FontWeight.Bold,
+                                ),
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                }
             }
             if (showsDistinctCta) {
                 val ctaButton = model.ctaButton!!
                 Box(
-                    modifier = GlanceModifier.fillMaxSize(),
-                    contentAlignment = Alignment.CenterEnd,
+                    modifier = GlanceModifier.fillMaxSize().padding(WidgetCellPadding),
+                    contentAlignment = Alignment.BottomEnd,
                 ) {
                     Box(
                         modifier = GlanceModifier
-                            .cornerRadius(WidgetCtaButtonSmallRadius)
+                            .size(WidgetCtaButtonSize)
+                            .cornerRadius(WidgetCtaButtonRadius)
                             .background(accentColors.ctaSurface)
-                            .padding(WidgetCtaButtonSmallPadding)
                             .clickable(ctaButton.action),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = ctaButton.label,
-                            style = TextStyle(
-                                color = accentColors.ctaText,
-                                fontSize = WidgetCtaButtonSmallTextSize,
-                                fontWeight = FontWeight.Bold,
-                            ),
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun FourByTwoContent(
-        context: Context,
-        model: WidgetUiModel,
-        accentColors: WidgetAccentColors,
-    ) {
-        val overlayModifier = GlanceModifier
-            .fillMaxSize()
-            .padding(WidgetInnerPadding)
-
-        Box(modifier = overlayModifier) {
-            Column(
-                modifier = GlanceModifier.fillMaxSize(),
-            ) {
-                // First row: "Total Spent" label + "today: $total" chip
-                Row(
-                    modifier = GlanceModifier.fillMaxWidth(),
-                ) {
-                    Text(
-                        text = context.getString(R.string.widget_total_spent_label),
-                        style = TextStyle(
-                            color = EmphasisTextColor,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = WidgetBodyTextSize,
-                        ),
-                        maxLines = 1,
-                    )
-                    Box(
-                        modifier = GlanceModifier
-                            .padding(start = 8.dp)
-                            .cornerRadius(WidgetTodayPillRadius)
-                            .background(accentColors.pillSurface)
-                            .padding(
-                                start = WidgetTodayPillHorizontalPadding,
-                                top = WidgetTodayPillVerticalPadding,
-                                end = WidgetTodayPillHorizontalPadding,
-                                bottom = WidgetTodayPillVerticalPadding,
-                            ),
-                    ) {
-                        Text(
-                            text = "${context.getString(R.string.widget_today_label)} ${model.todayValue}",
-                            style = TextStyle(
-                                color = accentColors.pillText,
-                                fontSize = WidgetLabelTextSize,
-                                fontWeight = FontWeight.Bold,
-                            ),
-                        )
-                    }
-                }
-
-                Text(
-                    text = model.title,
-                    style = TextStyle(
-                        color = SecondaryTextColor,
-                        fontSize = WidgetLabelTextSize,
-                    ),
-                    maxLines = 1,
-                    modifier = GlanceModifier.padding(top = WidgetMinimalSpacing),
-                )
-
-                Text(
-                    text = model.groupTotalValue,
-                    style = TextStyle(
-                        color = EmphasisTextColor,
-                        fontSize = WidgetGroupTotalValueTextSize,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                    modifier = GlanceModifier.padding(top = WidgetSectionSpacing),
-                )
-            }
-
-            // CTA + button: always bottom-right, square with rounded corners
-            if (model.ctaButton != null) {
-                Box(
-                    modifier = GlanceModifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomEnd,
-                ) {
-                    Box(
-                        modifier = GlanceModifier
-                            .cornerRadius(WidgetCtaButtonRadius)
-                            .background(accentColors.ctaSurface)
-                            .padding(WidgetCtaButtonPadding)
-                            .clickable(model.ctaButton.action),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = model.ctaButton.label,
                             style = TextStyle(
                                 color = accentColors.ctaText,
                                 fontSize = WidgetCtaButtonTextSize,
@@ -439,7 +335,6 @@ private data class WidgetUiModel(
     val title: String,
     val todayValue: String,
     val weekValue: String,
-    val groupTotalValue: String,
     val ctaButton: WidgetButton?,
     val tapAction: Action?,
 )

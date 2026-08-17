@@ -602,7 +602,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settings_debug_logs_desc =>
-      "Visualizza i log dell'app e la cronologia degli errori";
+      'Visualizza i log dell\'app e la cronologia degli errori';
 
   @override
   String get developer_link_error => 'Impossibile aprire il link';
@@ -1961,7 +1961,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get update_downloading => 'Download in corso...';
 
   @override
-  String get update_ready_to_install => 'Aggiornamento pronto per l\'installazione';
+  String get update_ready_to_install =>
+      'Aggiornamento pronto per l\'installazione';
 
   @override
   String get update_ready_to_install_desc =>
