@@ -1,65 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Static preview shown in the widget picker — mirrors the live 2x2 layout
+     (TwoByTwoContent in HomeWidgetProvider.kt / tokens in WidgetTheme.kt) as
+     closely as a plain View-based layout can: rounded translucent card, group
+     name pinned top-start, today's total + "week" chip centered in the space
+     below it, square CTA button bottom-end. Kept in sync by hand since Glance
+     content can't be reused directly for a previewLayout. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="12dp">
+    android:background="@drawable/widget_preview_card_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="12dp">
 
-        <!-- First row: Total Spent label + today chip -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/widget_total_spent_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@color/widget_primary"
-                android:paddingStart="8dp"
-                android:paddingTop="2dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="2dp"
-                android:text="@string/widget_preview_today_chip"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- Group name -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/widget_preview_group_name"
-            android:textAppearance="@android:style/TextAppearance.Material.Small" />
+            android:textColor="#1D1A24"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/widget_preview_today_value"
+                android:textColor="#1D1A24"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/widget_preview_week_pill_background"
+                android:paddingStart="7dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="7dp"
+                android:paddingBottom="6dp"
+                android:text="@string/widget_preview_week_value"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- CTA button bottom-right -->
     <TextView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_gravity="bottom|end"
-        android:background="@color/widget_primary"
+        android:layout_margin="12dp"
+        android:background="@drawable/widget_preview_cta_background"
         android:gravity="center"
         android:text="+"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
 </FrameLayout>
