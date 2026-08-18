@@ -1,3 +1,14 @@
+## 1.10.0 (27.08.2026)
+
+- **Novidades**: Sincronize seus grupos entre dispositivos via Wi-Fi, Bluetooth ou seu próprio Google Drive — o pareamento é por dispositivo e por grupo, e cada troca é criptografada de ponta a ponta
+- **Novidades**: Convide seus amigos para o Caravella diretamente em Configurações → Informações
+- **Melhorias**: Seletores de pagador e categoria redesenhados como linhas de chips deslizáveis, tanto no formulário rápido quanto no completo
+- **Melhorias**: O widget da tela inicial no Android agora segue a cor dinâmica do Material You, com texto maior e layouts mais claros em cada tamanho
+- **Melhorias**: Configurações reorganizadas — Sincronização, Aparência e Dados agora têm páginas dedicadas
+- **Corrigido**: As atualizações no app da Google Play agora são instaladas corretamente em vez de travarem após o download
+- **Corrigido**: Vários problemas de acessibilidade e tradução em Configurações, na tela de configuração do widget e nas mensagens de erro
+- **Corrigido**: Um problema de atualização do banco de dados que podia impedir o carregamento de grupos existentes após atualizar de uma versão anterior
+
 ## 1.8.0 (14.07.2026)
 
 - **Novo**: Entrada por voz – fale naturalmente para adicionar uma despesa, com valor, descrição, categoria, data e quem pagou reconhecidos automaticamente, em todos os idiomas suportados

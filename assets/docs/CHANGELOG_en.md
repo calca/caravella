@@ -1,3 +1,14 @@
+## 1.10.0 (27.08.2026)
+
+- **New**: Sync your groups across devices over Wi-Fi, Bluetooth, or your own Google Drive — pairing is per-device and per-group, and every exchange is end-to-end encrypted
+- **New**: Invite your friends to Caravella directly from Settings → Info
+- **Improvements**: Payer and category pickers redesigned as scrollable chip rows, in both the quick-add and full expense forms
+- **Improvements**: Android home-screen widget now follows Material You dynamic color, with larger text and clearer layouts at every size
+- **Improvements**: Settings reorganized — Sync, Appearance, and Data now have their own dedicated pages
+- **Fixed**: Google Play in-app updates now actually finish installing instead of getting stuck after downloading
+- **Fixed**: Several accessibility and translation issues across Settings, the widget configuration screen, and error messages
+- **Fixed**: A database upgrade issue that could prevent existing groups from loading after updating from an older version
+
 ## 1.8.0 (14.07.2026)
 
 - **New**: Voice input – speak naturally to add an expense, with amount, description, category, date, and payer parsed automatically, in all supported languages

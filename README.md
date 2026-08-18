@@ -75,13 +75,13 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
-## 🎉 What's New in v1.8.0
+## 🎉 What's New in v1.10.0
 
-- **Voice Input**: Speak naturally to add an expense — amount, description, category, date, and payer are filled in automatically, in all supported languages
-- **Receipt Scanning**: Photograph a receipt and let on-device OCR extract the amount and description for you
-- **Unsplash Backgrounds**: Search and download beautiful photos from Unsplash to personalize your group backgrounds
-- **Smarter Search**: Find expenses instantly with full-text search, calendar highlights, and filters — plus Gmail-style search across all your groups
-- **Custom Group Templates**: Create your own group types with a name, icon, and default categories, now editable in a dedicated full-screen page and usable when editing existing groups too
+- **Sync Your Devices**: Keep groups in sync across your devices over Wi-Fi, Bluetooth, or your own Google Drive — every exchange is end-to-end encrypted, and pairing is per-device and per-group so you control exactly what's shared
+- **Redesigned Expense Entry**: Payer and category pickers are now scrollable chip rows in both the quick-add and full expense forms, showing your most-used options first
+- **Refreshed Home Widget**: The Android home-screen widget now follows Material You dynamic color, with clearer layouts at every size
+- **Reorganized Settings**: Sync, appearance, and data settings moved into dedicated sub-pages for easier navigation
+- **Smoother Play Store Updates**: In-app updates now install reliably instead of getting stuck after downloading
 
 ## 🛠️ Tech Stack & Architecture
 
