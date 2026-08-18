@@ -1,0 +1,9 @@
+Versão 1.10.0 - Sincronização e novo design
+
+• Novidades: Sincronize grupos entre dispositivos via Wi-Fi ou Bluetooth, criptografia ponta a ponta
+• Novidades: Convide amigos para o Caravella pelas Configurações
+• Novidades: Seletores de pagador e categoria como chips deslizáveis
+• Novidades: Widget da tela inicial com cor dinâmica Material You
+• Corrigido: Problema de atualização do banco de dados ao vir de versões anteriores
+
+Suas despesas, mais sincronizadas do que nunca!

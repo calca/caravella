@@ -1,3 +1,14 @@
+## 1.10.0 (18.08.2026)
+
+- **Novità**: Sincronizza i tuoi gruppi tra dispositivi via Wi-Fi, Bluetooth o il tuo Google Drive — l'abbinamento è per dispositivo e per gruppo, e ogni scambio è crittografato end-to-end
+- **Novità**: Invita i tuoi amici a Caravella direttamente da Impostazioni → Info
+- **Miglioramenti**: Selettori di pagante e categoria ridisegnati come righe di chip scorrevoli, sia nel form rapido che in quello completo
+- **Miglioramenti**: Il widget home per Android ora segue il colore dinamico Material You, con testo più grande e layout più chiari a ogni dimensione
+- **Miglioramenti**: Impostazioni riorganizzate — Sincronizzazione, Aspetto e Dati hanno ora pagine dedicate
+- **Corretto**: Gli aggiornamenti in-app di Google Play ora si installano correttamente invece di bloccarsi dopo il download
+- **Corretto**: Diversi problemi di accessibilità e traduzione in Impostazioni, nella schermata di configurazione del widget e nei messaggi di errore
+- **Corretto**: Un problema di aggiornamento del database che poteva impedire il caricamento dei gruppi esistenti dopo l'aggiornamento da una versione precedente
+
 ## 1.8.0 (14.07.2026)
 
 - **Novità**: Input vocale – parla naturalmente per aggiungere una spesa, con importo, descrizione, categoria, data e chi ha pagato riconosciuti automaticamente, in tutte le lingue supportate

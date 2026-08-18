@@ -1,0 +1,9 @@
+Version 1.10.0 - Device Sync & Fresh Design
+
+• New: Sync your groups across devices over Wi-Fi or Bluetooth, end-to-end encrypted and paired per device
+• New: Invite your friends to Caravella from Settings
+• New: Payer and category pickers redesigned as scrollable chip rows
+• New: Home screen widget now follows Material You dynamic color
+• Fixed: A database upgrade issue that could affect groups when updating from an older version
+
+Your expenses, better synced than ever!

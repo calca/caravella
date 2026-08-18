@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-08-18
+
 ### Added
 - **Android home-screen widget is now square-only — 1×1 and 2×2** — the wider 4×1/4×2 shapes explored earlier this cycle were dropped again in favor of a simpler, purpose-built pair: 1×1 shows just today's total, 2×2 shows group name/today/week plus a "+" CTA. The native widget provider's min/resize bounds are capped accordingly (`maxResizeWidth`/`maxResizeHeight` match the 2×2 size, so launchers can't offer a wider or taller shape there's no layout for)
 - **Android home-screen widget now follows Material You dynamic color** on Android 12+: the "+" button and the "today" pill take their color from the device's wallpaper-derived theme instead of a fixed purple, matching the rest of the app; falls back to the previous static purple on older Android versions
@@ -441,7 +443,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/calca/caravella/compare/v1.8.0...v1.10.0
 [1.8.0]: https://github.com/calca/caravella/compare/v1.6.0...v1.8.0
 [1.6.0]: https://github.com/calca/caravella/compare/v1.4.0...v1.6.0
 [1.4.0]: https://github.com/calca/caravella/compare/v1.2.0...v1.4.0
