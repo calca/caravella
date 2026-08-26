@@ -177,14 +177,14 @@ class DataBackupPage extends StatelessWidget {
     BuildContext context,
     gen.AppLocalizations loc,
   ) async {
-    final result = await FilePicker.pickFiles(
+    final result = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['zip', 'json'],
     );
     if (!context.mounted) return;
-    if (result != null && result.files.single.path != null) {
-      final filePath = result.files.single.path!;
-      final fileName = result.files.single.name;
+    if (result != null && result.path != null) {
+      final filePath = result.path!;
+      final fileName = result.name;
       final confirm = await showDialog<bool>(
         context: context,
         builder: (context) => Material3Dialog(
