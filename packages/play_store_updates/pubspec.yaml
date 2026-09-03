@@ -16,6 +16,7 @@ dependencies:
     path: ../caravella_core
   caravella_core_ui:
     path: ../caravella_core_ui
+  material_ui: ^1.0.0
 
 dev_dependencies:
   flutter_test:

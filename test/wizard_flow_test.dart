@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
@@ -22,9 +21,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: const [
               gen.AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
             ],
             supportedLocales: gen.AppLocalizations.supportedLocales,
             home: const GroupCreationWizardPage(fromWelcome: true),
@@ -72,9 +69,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: const [
               gen.AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
             ],
             supportedLocales: gen.AppLocalizations.supportedLocales,
             home: const GroupCreationWizardPage(fromWelcome: false),
@@ -113,9 +108,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: const [
               gen.AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
             ],
             supportedLocales: gen.AppLocalizations.supportedLocales,
             home: const GroupCreationWizardPage(fromWelcome: false),
@@ -150,9 +143,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: const [
               gen.AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
             ],
             supportedLocales: gen.AppLocalizations.supportedLocales,
             home: const GroupCreationWizardPage(fromWelcome: true),
@@ -191,9 +182,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: const [
               gen.AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
             ],
             supportedLocales: gen.AppLocalizations.supportedLocales,
             home: const GroupCreationWizardPage(fromWelcome: true),

@@ -1,7 +1,7 @@
 library;
 
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../widgets/date_selector_widget.dart';
 import '../widgets/note_input_widget.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A standardized bottom action bar with a primary action button.
 /// Used across the app for consistent save/create/add actions.

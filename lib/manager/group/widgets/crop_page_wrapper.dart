@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../pages/image_crop_page.dart';
 
 /// Wrapper per mostrare loader finché la pagina di crop non ha renderizzato il primo frame.

@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
+import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:caravella_core/caravella_core.dart';
 
@@ -26,7 +27,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: locale,
           home: const SizedBox.shrink(),

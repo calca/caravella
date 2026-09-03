@@ -1,5 +1,5 @@
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Small KPI card consistent with app dark surfaces.
 class StatCard extends StatelessWidget {

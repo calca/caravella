@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Standard layout wrapper for bottom sheets in group manager section.
 /// Provides consistent horizontal padding, optional title, and vertical spacing.

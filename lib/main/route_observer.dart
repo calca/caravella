@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Global route observer for tracking navigation events.
 /// Used by pages like HomePage to refresh when popping back.

@@ -199,7 +199,7 @@ class NominatimSearchService {
 
           if (searchQuery.isNotEmpty) {
             // Directly call searchPlaces with proper error handling
-            return searchPlaces(searchQuery, limit: limit);
+            return await searchPlaces(searchQuery, limit: limit);
           }
         }
       }

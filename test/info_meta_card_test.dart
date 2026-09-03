@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/details/pages/tabs/general_overview_tab.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
+import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 
 ExpenseGroup _group({DateTime? start, DateTime? end, int participants = 2}) {
@@ -29,7 +30,7 @@ ExpenseGroup _group({DateTime? start, DateTime? end, int participants = 2}) {
 }
 
 Widget _app(Widget child, Locale locale) => MaterialApp(
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  localizationsDelegates: appLocalizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   locale: locale,
   home: Scaffold(body: child),

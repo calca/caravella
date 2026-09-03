@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../../expense/components/expense_form_component.dart';
 import '../../expense/state/expense_form_state.dart';

@@ -1,6 +1,5 @@
 import 'package:caravella_core/caravella_core.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/manager/expense/components/expense_form_component.dart';
@@ -19,9 +18,7 @@ void main() {
         MaterialApp(
           localizationsDelegates: const [
             gen.AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: const [Locale('it'), Locale('en')],
           home: Scaffold(

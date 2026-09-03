@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:zentoast/zentoast.dart';
@@ -119,10 +120,9 @@ class _CaravellaAppState extends State<CaravellaApp> {
                 themeMode: _themeMode,
                 navigatorKey: navigatorKey,
                 locale: Locale(_locale),
-                // Use generated locales & delegates to avoid divergence and ensure pt is enabled
+                // Use generated locales to avoid divergence and ensure pt is enabled
                 supportedLocales: gen.AppLocalizations.supportedLocales,
-                localizationsDelegates:
-                    gen.AppLocalizations.localizationsDelegates,
+                localizationsDelegates: appLocalizationsDelegates,
                 builder: (context, child) {
                   return ToastThemeProvider(
                     data: const ToastTheme(
