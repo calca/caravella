@@ -29,7 +29,9 @@ android {
         }
     }
     namespace = "io.caravella.egm"
-    compileSdk = flutter.compileSdkVersion
+    // permission_handler_android 14.0.0 requires compileSdk 37 (its own
+    // breaking-change note); Flutter 3.47.2's own default is still 36.
+    compileSdk = 37
     ndkVersion = "28.2.13676358"
 
     compileOptions {
