@@ -1,6 +1,6 @@
 Caravella è un'applicazione Flutter moderna e multipiattaforma progettata per semplificare la gestione delle spese per gruppi, viaggi ed eventi. Costruita con Material 3, offre un'esperienza utente intuitiva e pulita per tracciare i costi condivisi, gestire i partecipanti e regolare i debiti.
 
-Che tu sia in un viaggio di gruppo, condivida un appartamento con coinquilini o organizzi un evento, Caravella ti aiuta a mantenere tutto organizzato e trasparente. Tutti i dati sono memorizzati localmente sul tuo dispositivo, garantendo privacy e disponibilità offline.
+Che tu sia in un viaggio di gruppo, condivida un appartamento con coinquilini o organizzi un evento, Caravella ti aiuta a mantenere tutto organizzato e trasparente. Per impostazione predefinita tutti i dati restano sul tuo dispositivo, garantendo privacy e disponibilità offline, con sincronizzazione opzionale e crittografata end-to-end tra i tuoi dispositivi.
 
 <b>Caratteristiche principali:</b>
 
@@ -20,6 +20,8 @@ Che tu sia in un viaggio di gruppo, condivida un appartamento con coinquilini o 
 
 • <b>Backup e Ripristino</b>: Esporta in modo sicuro tutti i dati dell'app in un singolo file e importali in seguito, perfetto per backup o migrazione su un nuovo dispositivo.
 
+• <b>Sincronizzazione Dispositivi</b>: Mantieni facoltativamente i tuoi gruppi sincronizzati tra i tuoi dispositivi via Wi-Fi, Bluetooth o una cartella privata su Google Drive. L'abbinamento è per dispositivo e per gruppo, e ogni scambio è crittografato end-to-end.
+
 • <b>Esportazione CSV</b>: Esporta l'elenco delle spese per qualsiasi gruppo in un file CSV, che può essere facilmente condiviso o utilizzato in altre applicazioni.
 
 • <b>Supporto Multilingua</b>: L'app è localizzata in inglese, italiano e spagnolo.
@@ -28,8 +30,9 @@ Che tu sia in un viaggio di gruppo, condivida un appartamento con coinquilini o 
 
 <b>Privacy e Sicurezza:</b>
 
-• Tutti i dati memorizzati localmente sul tuo dispositivo
-• Non sono richiesti account utente o servizi online
+• Tutti i dati memorizzati localmente sul tuo dispositivo per impostazione predefinita
+• Nessun account richiesto per iniziare; la sincronizzazione opzionale con Google Drive usa il tuo account e una cartella privata dell'app
+• La sincronizzazione opzionale dei dispositivi (Wi-Fi, Bluetooth, Google Drive) è disattivata finché non la abiliti ed è sempre crittografata end-to-end
 • Permessi opzionali per funzionalità avanzate (fotocamera per foto, posizione per contesto spese)
 • Pieno controllo sull'esportazione ed eliminazione dei dati
 • Conforme a GDPR e privacy
