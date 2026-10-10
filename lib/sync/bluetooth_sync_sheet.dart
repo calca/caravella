@@ -160,9 +160,15 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
     return CaravellaBottomSheetScaffold(
       title: loc.sync_bt_title,
       scrollable: true,
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        child: _buildPhase(context, loc),
+      // Full width: the scaffold lays its child out start-aligned with loose
+      // constraints, so without this the switcher shrinks to its phase's
+      // content and the centered columns end up hugging the left edge.
+      child: SizedBox(
+        width: double.infinity,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          child: _buildPhase(context, loc),
+        ),
       ),
     );
   }
