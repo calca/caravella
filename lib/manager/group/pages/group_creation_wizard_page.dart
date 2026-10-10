@@ -192,15 +192,6 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
     });
   }
 
-  bool _canPop(WizardState wizardState) {
-    // Cannot go back from completion step - back gesture triggers CTA action
-    if (wizardState.currentStep == wizardState.totalSteps - 1) {
-      return false;
-    }
-    final controller = context.read<GroupFormController>();
-    return !controller.hasChanges;
-  }
-
   Future<void> _handleCompletionBackAction(WizardState wizardState) async {
     // When on completion step, back gesture acts like the CTA button
     final groupId = wizardState.savedGroupId;
@@ -276,8 +267,13 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
             wizardState.currentStep == wizardState.totalSteps - 1;
 
         return AppSystemUI.surface(
+          // Always intercept back and decide in the handler: this Consumer
+          // only rebuilds on WizardState changes, so a canPop derived from
+          // GroupFormController.hasChanges here would go stale as soon as the
+          // user typed a group name (the guard never fired and the input was
+          // silently lost). _onWillPop reads hasChanges live instead.
           child: PopScope(
-            canPop: _canPop(wizardState),
+            canPop: false,
             onPopInvokedWithResult: (didPop, _) async {
               if (!didPop) {
                 if (isCompletionStep) {

@@ -91,9 +91,11 @@ class GroupFormController {
 
   bool get hasChanges {
     if (mode == GroupEditMode.create) {
-      return state.title.isNotEmpty ||
-          state.participants.isNotEmpty ||
-          state.categories.isNotEmpty ||
+      // Participants and categories are left out on purpose: the creation
+      // wizard pre-fills them (the user as first participant, the group
+      // type's default categories) without any user input, so counting them
+      // would flag a freshly opened, untouched wizard as modified.
+      return state.title.trim().isNotEmpty ||
           state.startDate != null ||
           state.endDate != null ||
           state.imagePath != null ||
