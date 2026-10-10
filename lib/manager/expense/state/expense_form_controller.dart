@@ -88,19 +88,24 @@ class ExpenseFormController extends ChangeNotifier {
     nameFocus.addListener(_onNameFocusChanged);
   }
 
+  // TextEditingController also notifies on selection/composing-only changes
+  // (e.g. the cursor placed by autofocus, or IME composing updates), so each
+  // listener only reacts when the field's value actually differs from state —
+  // otherwise just opening an existing expense would mark the form dirty.
   void _onNameChanged() {
-    if (_isInitializing) return;
+    if (_isInitializing || nameController.text == _state.name) return;
     _updateState(_state.copyWith(name: nameController.text, isDirty: true));
   }
 
   void _onAmountChanged() {
     if (_isInitializing) return;
     final amount = ExpenseValidationService.parseAmount(amountController.text);
+    if (amount == _state.amount) return;
     _updateState(_state.copyWith(amount: amount, isDirty: true));
   }
 
   void _onNoteChanged() {
-    if (_isInitializing) return;
+    if (_isInitializing || noteController.text == _state.note) return;
     _updateState(_state.copyWith(note: noteController.text, isDirty: true));
   }
 
