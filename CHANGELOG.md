@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-10-10
+
+> The Android home-screen widget changes below ship in `dev`/`staging` builds only — the `prod` build (Google Play, GitHub Release, F-Droid) is compiled with `ENABLE_ANDROID_WIDGET=false`, so the widget is not part of this release for end users.
+
 ### Added
 - **Android home-screen widget is now square-only — 1×1 and 2×2** — the wider 4×1/4×2 shapes explored earlier this cycle were dropped again in favor of a simpler, purpose-built pair: 1×1 shows just today's total, 2×2 shows group name/today/week plus a "+" CTA. The native widget provider's min/resize bounds are capped accordingly (`maxResizeWidth`/`maxResizeHeight` match the 2×2 size, so launchers can't offer a wider or taller shape there's no layout for)
 - **Android home-screen widget now follows Material You dynamic color** on Android 12+: the "+" button and the "today" pill take their color from the device's wallpaper-derived theme instead of a fixed purple, matching the rest of the app; falls back to the previous static purple on older Android versions
@@ -19,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Local (Wi-Fi/LAN) sync is now off by default and must be turned on from Settings → Sync — it previously started automatically on every launch with no way to disable it; QR pairing and the paired-devices list are hidden while it's off, and the choice persists across restarts
 - Bluetooth sync now has the same enable/disable toggle in Settings → Sync (off by default) — the manual pairing entry point is hidden until turned on
 - **QR code pairing for Wi-Fi sync**: show a QR code on one device and scan it from another (Settings → Sync) to establish trust between them — automatic LAN sync now only exchanges data with devices that have completed this handshake, instead of any app install on the same network. Paired devices are listed in Settings → Sync (removable) and, for any group with sync enabled, in that group's settings
-- **Real Google Drive cloud sync**, in a new optional `google_drive_sync` package built only when compiled with `--dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true` (off by default, including all current release builds): sign in with your own Google account and sync data is relayed through a hidden, app-private folder in your own Drive — never a server we operate. See the new [setup guide](docs/GOOGLE_DRIVE_SYNC_SETUP.md) for the Google Cloud Console configuration this requires
+- **Real Google Drive cloud sync**, in a new optional `google_drive_sync` package built only when compiled with `--dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true` (the flag defaults to off — F-Droid builds never set it — but the CI staging APK and the Play Store / GitHub Release prod builds pass it, so Google Drive sync ships in those): sign in with your own Google account and sync data is relayed through a hidden, app-private folder in your own Drive — never a server we operate. See the new [setup guide](docs/GOOGLE_DRIVE_SYNC_SETUP.md) for the Google Cloud Console configuration this requires
 
 ### Security
 - **LAN and Bluetooth sync payloads are now end-to-end encrypted.** Pairing (QR code or Bluetooth) exchanges each device's X25519 public key — never a shared secret — and both sides derive an identical AES-256-GCM key via ECDH + HKDF-SHA256; every subsequent delta exchange is encrypted and authenticated with that key instead of being sent as plain JSON over plain HTTP (LAN) or plain Nearby Connections payloads (Bluetooth). A device that never completed the handshake has no key on file and its sync requests are rejected outright, whatever transport it uses
@@ -450,7 +454,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/calca/caravella/compare/v1.8.0...v2.0.0
 [1.8.0]: https://github.com/calca/caravella/compare/v1.6.0...v1.8.0
 [1.6.0]: https://github.com/calca/caravella/compare/v1.4.0...v1.6.0
 [1.4.0]: https://github.com/calca/caravella/compare/v1.2.0...v1.4.0

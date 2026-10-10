@@ -1,0 +1,9 @@
+Version 2.0.0 - Sync Your Groups
+
+• New: sync groups across devices via Wi-Fi, Bluetooth or your own Google Drive
+• New: secure QR pairing with end-to-end encryption
+• New: faster expense entry with payer and category chips
+• New: Appearance settings and an "Invite your friends" option
+• Many fixes, including in-app updates
+
+Your groups, always in sync!

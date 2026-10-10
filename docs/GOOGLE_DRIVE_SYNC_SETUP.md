@@ -54,6 +54,7 @@ Each **(applicationId, signing certificate)** pair needs its own OAuth client. T
 And two signing certificates in play:
 - **Debug** — the shared Android debug keystore, used by plain `flutter run`/`flutter build apk` (no `--release`).
 - **Release** — `android/app/build.gradle.kts`'s `signingConfigs.release`, sourced from `android/key.properties` (not committed — see whoever manages release signing for this project if you don't have it). Used for every flavor's `--release` build, including CI's staging APK build (see [CI Pipelines](CI_PIPELINES.md)).
+- **Play App Signing** — for the copy users install from **Google Play**. Play re-signs the uploaded App Bundle with Google's own app signing key, so the APK on users' devices is *not* signed with the release (upload) keystore above. The prod `io.caravella.egm` client therefore needs this key's SHA-1 too, or sign-in fails for every Play Store install.
 
 You only need to register the combinations you'll actually use. For most local development, that's just `io.caravella.egm.dev` + your debug keystore.
 
@@ -74,6 +75,8 @@ keytool -list -v -keystore <storeFile from key.properties> -alias <keyAlias from
 ```
 
 Either command prints a `SHA1:` line like `AA:BB:CC:...` — copy it.
+
+**Play App Signing key** (prod, Play Store installs): no keystore to run `keytool` on — Google holds it. Copy the SHA-1 from **Play Console → (the app) → Test and release → App integrity → App signing → App signing key certificate**. Register it as its own Android OAuth client for `io.caravella.egm`, in addition to the release (upload) keystore's — the latter is still what signs the prod APK attached to GitHub Releases.
 
 ### 4b. Register the OAuth client
 

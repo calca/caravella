@@ -22,6 +22,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Participant Management**: Easy addition and management of group members
 - **Data Export**: Export your data to CSV or JSON formats for external analysis
 - **Backup & Restore**: Complete data backup and restore functionality
+- **Device Sync (optional)**: Share a group with other people's devices over Wi-Fi or Bluetooth (QR pairing, end-to-end encrypted), or keep your own devices in sync through your personal Google Drive — off by default, enabled per group
 
 ### Location & Maps
 - **Interactive Maps**: Visualize all expenses with locations on an OpenStreetMap view
@@ -43,7 +44,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Context Menus**: Long-press actions for quick group management (pin, archive, delete)
 
 ### Privacy & Localization
-- **Privacy First**: All data stored locally on your device - no cloud sync required
+- **Privacy First**: All data stored locally on your device — sync is optional and never goes through a server we operate
 - **Multi-language**: Available in English, Italian, Spanish, Portuguese, and Chinese
 - **GDPR Compliant**: Full compliance with privacy regulations
 - **Cross-Platform**: Built with Flutter, designed to run smoothly on Android smartphones, iOS, Web, and Desktop
@@ -75,13 +76,13 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
-## 🎉 What's New in v1.8.0
+## 🎉 What's New in v2.0.0
 
-- **Voice Input**: Speak naturally to add an expense — amount, description, category, date, and payer are filled in automatically, in all supported languages
-- **Receipt Scanning**: Photograph a receipt and let on-device OCR extract the amount and description for you
-- **Unsplash Backgrounds**: Search and download beautiful photos from Unsplash to personalize your group backgrounds
-- **Smarter Search**: Find expenses instantly with full-text search, calendar highlights, and filters — plus Gmail-style search across all your groups
-- **Custom Group Templates**: Create your own group types with a name, icon, and default categories, now editable in a dedicated full-screen page and usable when editing existing groups too
+- **Sync Your Groups**: Share a group with friends' phones over Wi-Fi or Bluetooth, or keep your own devices in step through your personal Google Drive — off by default and enabled group by group
+- **Secure Pairing**: Connect devices with a short-lived QR code or over Bluetooth; synced data is end-to-end encrypted and each pairing only unlocks the group it was made for
+- **Faster Expense Entry**: Payer and category are now quick-tap chip rows, most recently used first, with a "+" chip to add a new one on the spot
+- **Fresh Settings**: A new Appearance page for language, dynamic color and theme, plus an "Invite your friends" shortcut
+- **Smoother Everyday Use**: In-app updates now install reliably, and unsaved-changes warnings show up exactly when they should
 
 ## 🛠️ Tech Stack & Architecture
 

@@ -1,3 +1,19 @@
+## 2.0.0 (10.10.2026)
+
+- **Novo**: Sincronize seus grupos entre dispositivos – compartilhe um grupo com os celulares de outras pessoas por Wi-Fi ou Bluetooth, ou mantenha seus próprios dispositivos em dia pelo seu Google Drive pessoal. Desativada por padrão e ativada grupo a grupo
+- **Novo**: Pareamento seguro – conecte dispositivos lendo um código QR (válido por 5 minutos) ou por Bluetooth; os dados sincronizados têm criptografia de ponta a ponta, e cada pareamento só dá acesso ao grupo para o qual foi feito
+- **Novo**: Botão Sync na página do grupo e selo "Compartilhado" nos cartões da tela inicial, com um indicador que mostra se está tudo atualizado
+- **Novo**: Histórico de sincronização, para todos os grupos ou para um só
+- **Novo**: "Convide seus amigos" em Configurações → Informações para compartilhar o Caravella com uma mensagem pronta
+- **Melhorias**: Registro de despesas mais rápido – quem pagou e a categoria agora são linhas de chips roláveis, os usados recentemente primeiro, com um chip "+" para adicionar um novo na hora
+- **Melhorias**: Nova página Aparência nas Configurações para idioma, cor dinâmica e tema, com seletor Sistema / Claro / Escuro com um toque
+- **Melhorias**: Configurações reorganizadas, com efeito de toque que ocupa a linha inteira
+- **Correções**: As atualizações do Google Play dentro do app agora são instaladas corretamente após o download
+- **Correções**: Abrir uma despesa e voltar sem alterações não pede mais para descartar alterações, e a página de despesa e o assistente de novo grupo agora sempre avisam antes de perder dados não salvos
+- **Correções**: Restaurar um backup com vários grupos agora informa corretamente falhas parciais e atualiza a tela inicial
+- **Correções**: Várias mensagens que apareciam em italiano independentemente do idioma do app agora estão traduzidas
+- **Correções**: Os ícones da barra de status voltaram a aparecer nas páginas de grupo sem imagem de fundo
+
 ## 1.8.0 (14.07.2026)
 
 - **Novo**: Entrada por voz – fale naturalmente para adicionar uma despesa, com valor, descrição, categoria, data e quem pagou reconhecidos automaticamente, em todos os idiomas suportados

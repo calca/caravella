@@ -122,8 +122,8 @@ if (permission == LocationPermission.denied) {
 
 **Is all of the user data collected by your app encrypted in transit?**
 - Expense, participant, and group data is not transmitted at all unless the user enables sync for a group. When it is:
-  - **Wi-Fi (LAN) sync**: exchanged over plain HTTP within the local network (not TLS) — the local network itself is the trust boundary here, same as most LAN file-sharing tools; not exposed beyond it
-  - **Bluetooth sync**: uses the Nearby Connections API's own authenticated, encrypted channel
+  - **Wi-Fi (LAN) sync**: the HTTP transport itself is plain (not TLS), but every payload is end-to-end encrypted and authenticated (AES-256-GCM, key derived per paired device via X25519 ECDH + HKDF-SHA256 during QR pairing) — devices that never completed pairing have no key and are rejected
+  - **Bluetooth sync**: the same end-to-end AES-256-GCM encryption as Wi-Fi, on top of the Nearby Connections channel, after the same public-key pairing handshake
   - **Google Drive sync (optional)**: sent over HTTPS to the Drive API, into the signed-in user's own account
 - Location coordinates (only when the user searches for a place or uses reverse geocoding) are sent over HTTPS to OpenStreetMap's Nominatim service — see "Network Requests to Third-Party Services" below
 

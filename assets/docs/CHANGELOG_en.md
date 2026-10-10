@@ -1,3 +1,19 @@
+## 2.0.0 (10.10.2026)
+
+- **New**: Sync your groups across devices – share a group with other people's phones over Wi-Fi or Bluetooth, or keep your own devices in step through your personal Google Drive. Off by default and enabled group by group
+- **New**: Secure pairing – connect devices by scanning a QR code (valid for 5 minutes) or over Bluetooth; synced data is end-to-end encrypted, and each pairing only grants access to the group it was made for
+- **New**: Sync button on the group page and a "Shared" badge on home cards, with a status dot that shows whether everything is up to date
+- **New**: Sync history, for all groups or for a single group
+- **New**: "Invite your friends" in Settings → Info to share Caravella with a ready-made message
+- **Improvements**: Faster expense entry – payer and category are now scrollable chip rows, most recently used first, with a "+" chip to add a new one on the spot
+- **Improvements**: New Appearance page in Settings for language, dynamic color and theme, with a one-tap System / Light / Dark selector
+- **Improvements**: Reorganized Settings, with tap feedback that fills every row
+- **Fixed**: In-app updates from Google Play now install correctly once downloaded
+- **Fixed**: Opening an expense and going back without changes no longer asks to discard changes, while the expense page and the new-group wizard now always warn before unsaved input is lost
+- **Fixed**: Restoring a backup with several groups now reports partial failures correctly and refreshes the home screen
+- **Fixed**: Several messages that appeared in Italian regardless of the app language are now translated
+- **Fixed**: Status bar icons are visible again on group pages without a background image
+
 ## 1.8.0 (14.07.2026)
 
 - **New**: Voice input – speak naturally to add an expense, with amount, description, category, date, and payer parsed automatically, in all supported languages

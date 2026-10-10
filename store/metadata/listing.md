@@ -19,6 +19,7 @@ Key features:
 - Custom categories, notes, and descriptions
 - Export to CSV and JSON
 - Full backup and restore
+- Optional sync across devices (Wi-Fi, Bluetooth, your own Google Drive)
 - Works offline, no account required
 - English and Italian language support
 - Modern Material 3 design with light/dark theme
@@ -31,7 +32,7 @@ Perfect for:
 
 Privacy & security:
 - Data stored locally on your device
-- No cloud sync or tracking
+- No tracking; sync is optional and never goes through our servers
 - Optional permissions only for extra features
 - Easy data export and deletion
 - GDPR-friendly

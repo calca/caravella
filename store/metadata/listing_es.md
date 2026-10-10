@@ -19,6 +19,7 @@ Características principales:
 - Categorías personalizadas, notas y descripciones
 - Exportar a CSV y JSON
 - Copia de seguridad y restauración completa
+- Sincronización opcional entre dispositivos (Wi-Fi, Bluetooth, tu propio Google Drive)
 - Funciona sin conexión, sin cuenta requerida
 - Soporte multilingüe (Inglés, Italiano, Español, Portugués, Chino)
 - Diseño moderno Material 3 con tema claro/oscuro
@@ -31,7 +32,7 @@ Perfecto para:
 
 Privacidad y seguridad:
 - Datos almacenados localmente en tu dispositivo
-- Sin sincronización en la nube ni seguimiento
+- Sin seguimiento; la sincronización es opcional y nunca pasa por nuestros servidores
 - Permisos opcionales solo para funciones adicionales
 - Fácil exportación y eliminación de datos
 - Compatible con GDPR

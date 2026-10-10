@@ -44,7 +44,7 @@ Caravella fornisce valore attraverso diversi benefici chiave:
 ### 3. **Privacy e Sicurezza**
 - Tutti i dati archiviati localmente sul dispositivo
 - Nessun account utente o registrazione richiesta
-- Nessuna sincronizzazione cloud significa nessuna violazione dei dati
+- La sincronizzazione facoltativa resta tra i tuoi dispositivi o nel tuo Google Drive — mai sui nostri server
 - Controllo completo su esportazione ed eliminazione dei dati
 - Conforme al GDPR
 
@@ -54,6 +54,7 @@ Caravella fornisce valore attraverso diversi benefici chiave:
 - Interfaccia multilingue (Inglese, Italiano, Spagnolo, Portoghese, Cinese)
 - Allegati fotografici per ricevute e ricordi
 - Geolocalizzazione per ricordare il contesto della spesa
+- Sincronizzazione facoltativa tra dispositivi via Wi-Fi, Bluetooth o il tuo Google Drive, cifrata end-to-end tra dispositivi
 
 ### 5. **Tranquillità**
 - Funzionalità completa di backup e ripristino
@@ -83,7 +84,7 @@ L'app rimuove gli attriti dalle finanze condivise, permettendo agli utenti di co
 
 ### Vantaggio Privacy-First:
 
-A differenza delle alternative basate su cloud, l'archiviazione solo locale di Caravella garantisce:
+A differenza delle alternative basate su cloud, l'archiviazione local-first di Caravella garantisce:
 - Nessun abbonamento mensile
 - Nessun data mining o pubblicità
 - Nessuna dipendenza da server esterni

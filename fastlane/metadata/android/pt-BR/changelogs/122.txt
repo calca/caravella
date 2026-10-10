@@ -1,0 +1,9 @@
+Versão 2.0.0 - Grupos Sincronizados
+
+• Novo: sincronize grupos entre dispositivos por Wi-Fi, Bluetooth ou seu próprio Google Drive
+• Novo: pareamento seguro por QR com criptografia de ponta a ponta
+• Novo: registro de despesas mais rápido com chips de pagador e categoria
+• Novo: configurações de Aparência e "Convide seus amigos"
+• Muitas correções, incluindo as atualizações no app
+
+Seus grupos, sempre sincronizados!

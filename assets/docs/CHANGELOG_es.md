@@ -1,3 +1,19 @@
+## 2.0.0 (10.10.2026)
+
+- **Nuevo**: Sincroniza tus grupos entre dispositivos – comparte un grupo con los teléfonos de otras personas por Wi-Fi o Bluetooth, o mantén al día tus propios dispositivos a través de tu Google Drive personal. Desactivada por defecto y activable grupo por grupo
+- **Nuevo**: Emparejamiento seguro – conecta dispositivos escaneando un código QR (válido 5 minutos) o por Bluetooth; los datos sincronizados están cifrados de extremo a extremo y cada emparejamiento solo da acceso al grupo para el que se hizo
+- **Nuevo**: Botón Sync en la página del grupo e insignia "Compartido" en las tarjetas de inicio, con un indicador que muestra si todo está al día
+- **Nuevo**: Historial de sincronización, para todos los grupos o para uno solo
+- **Nuevo**: "Invita a tus amigos" en Ajustes → Información para compartir Caravella con un mensaje ya preparado
+- **Mejoras**: Registro de gastos más rápido – quién pagó y la categoría ahora son filas de chips desplazables, primero los usados recientemente, con un chip "+" para añadir uno nuevo al momento
+- **Mejoras**: Nueva página Apariencia en Ajustes para idioma, color dinámico y tema, con selector Sistema / Claro / Oscuro de un toque
+- **Mejoras**: Ajustes reorganizados, con un efecto al tocar que ocupa toda la fila
+- **Correcciones**: Las actualizaciones desde Google Play dentro de la app ahora se instalan correctamente tras la descarga
+- **Correcciones**: Abrir un gasto y volver sin cambios ya no pide descartar cambios, y la página de gasto y el asistente de nuevo grupo ahora siempre avisan antes de perder datos sin guardar
+- **Correcciones**: Restaurar una copia de seguridad con varios grupos ahora informa correctamente de los errores parciales y actualiza la pantalla de inicio
+- **Correcciones**: Varios mensajes que aparecían en italiano sin importar el idioma de la app ahora están traducidos
+- **Correcciones**: Los iconos de la barra de estado vuelven a verse en las páginas de grupo sin imagen de fondo
+
 ## 1.8.0 (14.07.2026)
 
 - **Nuevo**: Entrada por voz – habla con naturalidad para agregar un gasto, con monto, descripción, categoría, fecha y quién pagó reconocidos automáticamente, en todos los idiomas admitidos

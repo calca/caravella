@@ -1,3 +1,19 @@
+## 2.0.0 (10.10.2026)
+
+- **Novità**: Sincronizza i gruppi tra dispositivi – condividi un gruppo con i telefoni di altre persone via Wi-Fi o Bluetooth, oppure tieni allineati i tuoi dispositivi tramite il tuo Google Drive personale. Disattivata di default e attivabile gruppo per gruppo
+- **Novità**: Abbinamento sicuro – collega i dispositivi scansionando un codice QR (valido 5 minuti) o via Bluetooth; i dati sincronizzati sono cifrati end-to-end e ogni abbinamento dà accesso solo al gruppo per cui è stato fatto
+- **Novità**: Pulsante Sync nella pagina del gruppo e badge "Condiviso" sulle card della home, con un indicatore che mostra se è tutto aggiornato
+- **Novità**: Cronologia delle sincronizzazioni, per tutti i gruppi o per un singolo gruppo
+- **Novità**: "Invita i tuoi amici" in Impostazioni → Informazioni per condividere Caravella con un messaggio già pronto
+- **Miglioramenti**: Inserimento spese più rapido – chi ha pagato e la categoria sono ora righe di chip scorrevoli, dalle più usate di recente, con un chip "+" per aggiungerne di nuovi al volo
+- **Miglioramenti**: Nuova pagina Aspetto nelle Impostazioni per lingua, colore dinamico e tema, con selettore Sistema / Giorno / Notte a un tocco
+- **Miglioramenti**: Impostazioni riorganizzate, con un effetto al tocco che riempie tutta la riga
+- **Bug fix**: Gli aggiornamenti in-app da Google Play ora vengono installati correttamente dopo il download
+- **Bug fix**: Aprire una spesa e tornare indietro senza modifiche non chiede più di scartare le modifiche, mentre la pagina spesa e la procedura di creazione gruppo ora avvisano sempre prima di perdere dati non salvati
+- **Bug fix**: Il ripristino di un backup con più gruppi ora segnala correttamente gli errori parziali e aggiorna la home
+- **Bug fix**: Diversi messaggi che apparivano in italiano indipendentemente dalla lingua dell'app ora sono tradotti
+- **Bug fix**: Le icone della barra di stato sono di nuovo visibili nelle pagine dei gruppi senza immagine di sfondo
+
 ## 1.8.0 (14.07.2026)
 
 - **Novità**: Input vocale – parla naturalmente per aggiungere una spesa, con importo, descrizione, categoria, data e chi ha pagato riconosciuti automaticamente, in tutte le lingue supportate

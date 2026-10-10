@@ -83,8 +83,28 @@ Builds:
       - $$flutter$$/bin/flutter pub get
       - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_BLUETOOTH_SYNC=false
 
+  - versionName: '2.0.0'
+    versionCode: 122
+    commit: v2.0.0
+    output: build/app/outputs/flutter-apk/app-prod-release.apk
+    srclibs:
+      - flutter@stable
+    rm:
+      - ios
+      - macos
+      - windows
+      - linux
+      - web
+    prebuild:
+      - echo "sdk.dir=$ANDROID_HOME" > local.properties
+      - echo "flutter.sdk=$$flutter$$" > local.properties
+    build:
+      - $$flutter$$/bin/flutter config --no-analytics
+      - $$flutter$$/bin/flutter pub get
+      - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_BLUETOOTH_SYNC=false
+
 # Auto-update configuration
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.0.46
-CurrentVersionCode: 46
+CurrentVersion: 2.0.0
+CurrentVersionCode: 122
