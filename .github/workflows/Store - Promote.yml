@@ -25,7 +25,7 @@ on:
         type: boolean
         default: true
       update_listing:
-        description: 'Update store listing full descriptions'
+        description: 'Update store listing (short + full description, feature graphic)'
         type: boolean
         default: true
       dry_run:

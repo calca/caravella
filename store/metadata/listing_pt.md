@@ -2,43 +2,38 @@
 Caravella: um Gestor de Despesas
 
 ## Descrição Breve
-Aplicativo moderno de gerenciamento de despesas de grupo para viagens, custos compartilhados e participantes.
+Divida despesas em grupo, veja quem deve a quem e sincronize com amigos.
 
 ## Descrição Completa
 
-O Caravella torna o rastreamento de despesas de grupo simples para viagens, colegas de quarto e eventos. Crie grupos, adicione despesas e deixe o aplicativo calcular quem deve o quê — rápido e preciso.
+O Caravella é o jeito mais simples de dividir despesas com amigos, família e colegas de casa. Crie um grupo para uma viagem, uma casa compartilhada ou um evento, adicione o que cada um gasta e o Caravella mostra quem deve a quem — sem planilhas e sem discussões.
 
-Recursos principais:
-- Múltiplos grupos para viagens, lares e atividades
-- Adicione, edite e categorize despesas
-- Atribua pagadores e participantes com divisões flexíveis
-- Cálculos automáticos de acerto
-- Gerenciamento de participantes com saldos por pessoa
-- Marcação de localização opcional para despesas
-- Fotos em despesas e fundos de grupo
-- Categorias personalizadas, notas e descrições
-- Exportar para CSV e JSON
-- Backup e restauração completos
-- Sincronização opcional entre dispositivos (Wi-Fi, Bluetooth, seu próprio Google Drive)
-- Funciona offline, sem necessidade de conta
-- Suporte multilíngue (Inglês, Italiano, Espanhol, Português, Chinês)
-- Design moderno Material 3 com tema claro/escuro
+NOVO NA 2.0: SINCRONIZE COM AMIGOS
+• Compartilhe um grupo com quem viaja com você por Wi-Fi ou Bluetooth
+• Pareie os dispositivos uma única vez com um QR code — tudo com criptografia de ponta a ponta
+• Mantenha seus celulares e tablets sincronizados pelo seu Google Drive
+• A sincronização é opcional e nunca passa pelos nossos servidores
 
-Perfeito para:
-- Viagens e férias em grupo
-- Despesas domésticas compartilhadas e colegas de quarto
-- Eventos, jantares e atividades
-- Viagens de negócios e despesas de equipe
+ADICIONE DESPESAS EM SEGUNDOS
+• Escolha quem pagou e a categoria com um toque
+• Fale em voz alta: valor, descrição, categoria e pagador são preenchidos para você
+• Escaneie um recibo e deixe o reconhecimento de texto no dispositivo lê-lo
+• Adicione fotos, notas e o local da despesa
 
-Privacidade e segurança:
-- Dados armazenados localmente no seu dispositivo
-- Sem rastreamento; a sincronização é opcional e nunca passa pelos nossos servidores
-- Permissões opcionais apenas para recursos extras
-- Fácil exportação e exclusão de dados
-- Compatível com GDPR
+SAIBA QUEM DEVE A QUEM
+• Saldos e acertos calculados automaticamente
+• Gráficos semanais e mensais para cada grupo
+• Detalhamento por participante e categoria
+• Busca rápida com filtros e visualização em calendário
 
-Primeiro offline:
-Os recursos principais funcionam sem internet para que você mantenha o controle de seus dados o tempo todo.
+FEITO PARA VIAGENS, CASAS E EVENTOS
+• Vários grupos com categorias personalizadas e modelos de grupo
+• Fundos para os grupos, inclusive com fotos do Unsplash
+• Design Material You com tema claro e escuro
+• Disponível em português, inglês, italiano, espanhol e chinês
 
-Código aberto:
-Desenvolvimento transparente e impulsionado pela comunidade.
+SEUS DADOS, SUAS REGRAS
+• Funciona offline, sem conta
+• Seus dados ficam no seu dispositivo
+• Backup, restauração e exportação CSV quando quiser
+• Código aberto (licença MIT)

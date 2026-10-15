@@ -4,9 +4,11 @@ Uses the Google Play Developer API (androidpublisher v3) with the same
 service account as the "Android CI - Store" upload step. In one edit it:
   * sets the target track to the given version code with release notes
     parsed from store/changelog/release-notes-<version>.xml;
-  * updates the full description of every existing store listing from
-    store/metadata/listing_<lang>.md (title and short description are left
-    untouched: Play enforces 30/80 char limits the repo files don't respect).
+  * updates the short and full description of every existing store listing
+    from store/metadata/listing_<lang>.md (the title is left untouched: the
+    repo titles exceed Play's 30-char limit in some languages);
+  * replaces each listing's feature graphic with
+    store/assets/feature-graphic/<lang>.png (1024x500) when present.
 
 Only languages that already have a Play store listing are touched, since
 Play rejects release notes for languages without one.
@@ -22,10 +24,12 @@ import sys
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
 PACKAGE = "io.caravella.egm"
 SCOPES = ["https://www.googleapis.com/auth/androidpublisher"]
 MAX_NOTES = 500
+MAX_SHORT_DESCRIPTION = 80
 MAX_FULL_DESCRIPTION = 4000
 
 
@@ -38,15 +42,26 @@ def parse_release_notes(path):
     }
 
 
-def parse_full_description(path):
+def parse_listing(path):
     # Files have three "## " sections: name, short description, full description.
     with open(path, encoding="utf-8") as f:
         sections = re.split(r"^## .*$", f.read(), flags=re.M)
-    return sections[3].strip() if len(sections) > 3 else None
+    if len(sections) != 4:
+        sys.exit(f"{path}: expected 3 '## ' sections, found {len(sections) - 1}")
+    short, full = sections[2].strip(), sections[3].strip()
+    if not short or len(short) > MAX_SHORT_DESCRIPTION:
+        sys.exit(f"{path}: short description is {len(short)} chars (max {MAX_SHORT_DESCRIPTION})")
+    if not full or len(full) > MAX_FULL_DESCRIPTION:
+        sys.exit(f"{path}: full description is {len(full)} chars (max {MAX_FULL_DESCRIPTION})")
+    return short, full
 
 
 def listing_file_for(language):
     return os.path.join("store", "metadata", f"listing_{language.split('-')[0]}.md")
+
+
+def feature_graphic_for(language):
+    return os.path.join("store", "assets", "feature-graphic", f"{language.split('-')[0]}.png")
 
 
 def main():
@@ -73,33 +88,31 @@ def main():
     languages = [l["language"] for l in listings.get("listings", [])]
     print(f"Store listing languages: {', '.join(languages)}")
 
-    notes_path = os.path.join("store", "changelog", f"release-notes-{args.version_name}.xml")
-    all_notes = parse_release_notes(notes_path)
-    release_notes = []
-    for language in languages:
-        note = all_notes.get(language) or all_notes.get(language.split("-")[0])
-        if not note:
-            print(f"  no release notes for {language}, skipping")
-            continue
-        if len(note) > MAX_NOTES:
-            sys.exit(f"Release notes for {language} are {len(note)} chars (max {MAX_NOTES})")
-        release_notes.append({"language": language, "text": note})
-    print(f"Release notes: {', '.join(n['language'] for n in release_notes)}")
-
-    if args.skip_release:
-        release_notes = None
-    release = {
-        "name": args.version_name,
-        "versionCodes": [str(args.version_code)],
-        "releaseNotes": release_notes,
-    }
-    if args.rollout < 1.0:
-        release.update(status="inProgress", userFraction=args.rollout)
-    else:
-        release["status"] = "completed"
     if args.skip_release:
         print(f"Track {args.track}: left untouched")
     else:
+        notes_path = os.path.join("store", "changelog", f"release-notes-{args.version_name}.xml")
+        all_notes = parse_release_notes(notes_path)
+        release_notes = []
+        for language in languages:
+            note = all_notes.get(language) or all_notes.get(language.split("-")[0])
+            if not note:
+                print(f"  no release notes for {language}, skipping")
+                continue
+            if len(note) > MAX_NOTES:
+                sys.exit(f"Release notes for {language} are {len(note)} chars (max {MAX_NOTES})")
+            release_notes.append({"language": language, "text": note})
+        print(f"Release notes: {', '.join(n['language'] for n in release_notes)}")
+
+        release = {
+            "name": args.version_name,
+            "versionCodes": [str(args.version_code)],
+            "releaseNotes": release_notes,
+        }
+        if args.rollout < 1.0:
+            release.update(status="inProgress", userFraction=args.rollout)
+        else:
+            release["status"] = "completed"
         edits.tracks().update(packageName=PACKAGE, editId=edit_id, track=args.track,
                               body={"track": args.track, "releases": [release]}).execute()
         print(f"Track {args.track}: {args.version_name} ({args.version_code}), status {release['status']}")
@@ -110,13 +123,23 @@ def main():
             if not os.path.exists(path):
                 print(f"  no {path}, keeping {listing['language']} listing as is")
                 continue
-            full = parse_full_description(path)
-            if not full or len(full) > MAX_FULL_DESCRIPTION:
-                sys.exit(f"Invalid full description in {path}")
+            short, full = parse_listing(path)
             edits.listings().patch(packageName=PACKAGE, editId=edit_id,
                                    language=listing["language"],
-                                   body={"fullDescription": full}).execute()
-            print(f"  listing {listing['language']}: full description from {path}")
+                                   body={"shortDescription": short,
+                                         "fullDescription": full}).execute()
+            print(f"  listing {listing['language']}: descriptions from {path}")
+
+            graphic = feature_graphic_for(listing["language"])
+            if os.path.exists(graphic):
+                edits.images().deleteall(packageName=PACKAGE, editId=edit_id,
+                                         language=listing["language"],
+                                         imageType="featureGraphic").execute()
+                edits.images().upload(packageName=PACKAGE, editId=edit_id,
+                                      language=listing["language"],
+                                      imageType="featureGraphic",
+                                      media_body=MediaFileUpload(graphic, mimetype="image/png")).execute()
+                print(f"  listing {listing['language']}: feature graphic from {graphic}")
 
     if args.dry_run:
         edits.validate(packageName=PACKAGE, editId=edit_id).execute()

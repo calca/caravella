@@ -2,43 +2,38 @@
 Caravella: an Expense Tracker
 
 ## Short Description
-Modern group expense management app for trips, shared costs, and participants.
+Split group expenses, see who owes whom and sync with friends. No account.
 
 ## Full Description
 
-Caravella makes group expense tracking simple for trips, roommates, and events. Create groups, add expenses, and let the app calculate who owes what — fast and accurate.
+Caravella is the simple way to split expenses with friends, family and roommates. Create a group for a trip, a shared flat or an event, add what everyone spends, and Caravella tells you who owes whom — no spreadsheets, no arguments.
 
-Key features:
-- Multiple groups for trips, households, and activities
-- Add, edit, and categorize expenses
-- Assign payers and participants with flexible splits
-- Automatic settle-up calculations
-- Participant management with balances per person
-- Optional location tagging for expenses
-- Photos on expenses and group backgrounds
-- Custom categories, notes, and descriptions
-- Export to CSV and JSON
-- Full backup and restore
-- Optional sync across devices (Wi-Fi, Bluetooth, your own Google Drive)
-- Works offline, no account required
-- Multi-language support (English, Italian, Spanish, Portuguese, Chinese)
-- Modern Material 3 design with light/dark theme
+NEW IN 2.0: SYNC WITH FRIENDS
+• Share a group with the people you travel with over Wi-Fi or Bluetooth
+• Pair once with a QR code — everything is end-to-end encrypted
+• Keep your own phones and tablets in sync through your Google Drive
+• Sync is optional and never goes through our servers
 
-Perfect for:
-- Group trips and vacations
-- Shared household expenses and roommates
-- Events, dinners, and activities
-- Business travel and team expenses
+ADD EXPENSES IN SECONDS
+• Pick who paid and the category with a single tap
+• Say it out loud: amount, description, category and payer are filled in for you
+• Scan a receipt and let on-device text recognition read it
+• Add photos, notes and the place where you spent
 
-Privacy & security:
-- Data stored locally on your device
-- No tracking; sync is optional and never goes through our servers
-- Optional permissions only for extra features
-- Easy data export and deletion
-- GDPR-friendly
+KNOW WHO OWES WHOM
+• Automatic balances and settle-up calculations
+• Weekly and monthly charts for every group
+• Breakdown by participant and category
+• Fast search with filters and a calendar view
 
-Offline first:
-Core features work without internet so you stay in control of your data at all times.
+MADE FOR TRIPS, HOMES AND EVENTS
+• Multiple groups with custom categories and group templates
+• Beautiful group backgrounds, including Unsplash photos
+• Material You design with light and dark theme
+• Available in English, Italian, Spanish, Portuguese and Chinese
 
-Open source:
-Transparent and community-driven development.
+YOUR DATA, YOUR RULES
+• Works offline, no account required
+• Your data stays on your device
+• Backup, restore and CSV export at any time
+• Open source (MIT license)

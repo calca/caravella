@@ -2,43 +2,38 @@
 Caravella: un Gestionale Spese
 
 ## Descrizione Breve
-App moderna per la gestione delle spese di gruppo per viaggi, costi condivisi e partecipanti.
+Dividi le spese di gruppo, scopri chi deve a chi e sincronizza con gli amici.
 
 ## Descrizione Completa
 
-Caravella rende semplice il tracciamento delle spese di gruppo per viaggi, coinquilini ed eventi. Crea gruppi, aggiungi spese e lascia che l'app calcoli chi deve cosa — veloce e preciso.
+Caravella è il modo più semplice per dividere le spese con amici, famiglia e coinquilini. Crea un gruppo per un viaggio, una casa condivisa o un evento, aggiungi quello che spende ognuno e Caravella ti dice chi deve a chi — senza fogli di calcolo e senza discussioni.
 
-Caratteristiche principali:
-- Gruppi multipli per viaggi, abitazioni e attività
-- Aggiungi, modifica e categorizza le spese
-- Assegna pagatori e partecipanti con divisioni flessibili
-- Calcoli automatici dei saldi
-- Gestione partecipanti con bilanci per persona
-- Geolocalizzazione opzionale per le spese
-- Foto sulle spese e sfondi dei gruppi
-- Categorie personalizzate, note e descrizioni
-- Esporta in CSV e JSON
-- Backup e ripristino completo
-- Sincronizzazione facoltativa tra dispositivi (Wi-Fi, Bluetooth, il tuo Google Drive)
-- Funziona offline, nessun account richiesto
-- Supporto multilingue (Inglese, Italiano, Spagnolo, Portoghese, Cinese)
-- Design moderno Material 3 con tema chiaro/scuro
+NOVITÀ 2.0: SINCRONIZZA CON GLI AMICI
+• Condividi un gruppo con chi viaggia con te via Wi-Fi o Bluetooth
+• Abbina i dispositivi una sola volta con un QR code — tutto è crittografato end-to-end
+• Tieni sincronizzati i tuoi telefoni e tablet tramite il tuo Google Drive
+• La sincronizzazione è facoltativa e non passa mai dai nostri server
 
-Perfetto per:
-- Viaggi e vacanze di gruppo
-- Spese domestiche condivise e coinquilini
-- Eventi, cene e attività
-- Viaggi di lavoro e spese di team
+AGGIUNGI SPESE IN UN ATTIMO
+• Scegli chi ha pagato e la categoria con un tocco
+• Dettala a voce: importo, descrizione, categoria e chi ha pagato si compilano da soli
+• Scansiona uno scontrino e lascia che il riconoscimento testo sul dispositivo lo legga
+• Aggiungi foto, note e il luogo della spesa
 
-Privacy e sicurezza:
-- Dati archiviati localmente sul tuo dispositivo
-- Nessun tracciamento; la sincronizzazione è facoltativa e non passa mai dai nostri server
-- Permessi opzionali solo per funzionalità extra
-- Facile esportazione ed eliminazione dei dati
-- Conforme al GDPR
+SAPPI CHI DEVE A CHI
+• Saldi e conguagli calcolati automaticamente
+• Grafici settimanali e mensili per ogni gruppo
+• Ripartizione per partecipante e categoria
+• Ricerca veloce con filtri e vista calendario
 
-Offline first:
-Le funzionalità principali funzionano senza internet così mantieni sempre il controllo dei tuoi dati.
+PENSATA PER VIAGGI, CASE ED EVENTI
+• Più gruppi con categorie personalizzate e modelli di gruppo
+• Sfondi per i gruppi, anche con foto da Unsplash
+• Design Material You con tema chiaro e scuro
+• Disponibile in italiano, inglese, spagnolo, portoghese e cinese
 
-Open source:
-Sviluppo trasparente e guidato dalla comunità.
+I TUOI DATI, LE TUE REGOLE
+• Funziona offline, senza account
+• I tuoi dati restano sul tuo dispositivo
+• Backup, ripristino ed esportazione CSV quando vuoi
+• Open source (licenza MIT)

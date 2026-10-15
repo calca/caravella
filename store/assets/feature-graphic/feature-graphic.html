@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: Montserrat; src: url(../../../assets/fonts/Montserrat-Regular.ttf); font-weight: 400; }
+  @font-face { font-family: Montserrat; src: url(../../../assets/fonts/Montserrat-Bold.ttf); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1024px; height: 500px; overflow: hidden; }
+  body {
+    font-family: Montserrat, "PingFang SC", "Hiragino Sans GB", sans-serif;
+    color: #fff;
+    background:
+      radial-gradient(circle at 78% 30%, rgba(178, 223, 219, .35), transparent 55%),
+      linear-gradient(135deg, #00a493 0%, #009688 45%, #00695c 100%);
+    position: relative;
+  }
+  .waves {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 120px;
+    background:
+      radial-gradient(120px 40px at 60px 120px, rgba(255,255,255,.08) 98%, transparent) repeat-x,
+      radial-gradient(160px 50px at 120px 140px, rgba(255,255,255,.06) 98%, transparent) repeat-x;
+    background-size: 240px 120px, 320px 120px;
+  }
+  .copy { position: absolute; left: 64px; top: 0; bottom: 0; width: 520px;
+          display: flex; flex-direction: column; justify-content: center; }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand img { width: 72px; height: 72px; }
+  .brand h1 { font-size: 56px; font-weight: 700; letter-spacing: -1px; }
+  .tagline { margin-top: 22px; font-size: 30px; font-weight: 700; line-height: 1.22; }
+  .tagline span { display: block; }
+  .tagline .soft { font-weight: 400; color: #e0f2f1; }
+  .chips { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { font-size: 15px; font-weight: 700; padding: 8px 14px; border-radius: 999px;
+          background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28); }
+  .chip.accent { background: #ff4f58; border-color: #ff4f58; }
+  .phone { position: absolute; width: 214px; height: 440px; border-radius: 34px; padding: 9px;
+           background: #102a2e; box-shadow: 0 24px 48px rgba(0,0,0,.35); }
+  .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 26px; display: block; }
+  .p1 { left: 640px; top: 40px; transform: rotate(-6deg); }
+  .p2 { left: 790px; top: 78px; transform: rotate(5deg); }
+</style>
+</head>
+<body>
+  <div class="copy">
+    <div class="brand"><img src="../../../assets/icons/caravella-icon-logo.svg" alt=""><h1>Caravella</h1></div>
+    <p class="tagline"><span id="t1"></span><span class="soft" id="t2"></span></p>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="phone p1"><img src="../../screenshot/08 - Group - Stats.png" alt=""></div>
+  <div class="phone p2"><img src="../../screenshot/02 - HomePage.png" alt=""></div>
+<script>
+  const texts = {
+    en: ["Split group expenses.", "Sync with friends.", ["New: Sync", "No account", "Works offline"]],
+    it: ["Dividi le spese di gruppo.", "Sincronizza con gli amici.", ["Novità: Sync", "Senza account", "Funziona offline"]],
+    es: ["Divide los gastos del grupo.", "Sincroniza con tus amigos.", ["Nuevo: Sync", "Sin cuenta", "Funciona sin conexión"]],
+    pt: ["Divida despesas em grupo.", "Sincronize com amigos.", ["Novo: Sync", "Sem conta", "Funciona offline"]],
+    zh: ["轻松分摊群组费用。", "与朋友同步。", ["新功能：同步", "无需账户", "离线可用"]],
+  };
+  const lang = new URLSearchParams(location.search).get("lang") || "en";
+  const [a, b, chips] = texts[lang];
+  document.getElementById("t1").textContent = a;
+  document.getElementById("t2").textContent = b;
+  document.documentElement.lang = lang;
+  document.getElementById("chips").innerHTML =
+    chips.map((c, i) => `<span class="chip${i === 0 ? " accent" : ""}">${c}</span>`).join("");
+</script>
+</body>
+</html>
