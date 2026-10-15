@@ -49,68 +49,54 @@ class GroupActions extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
+              // Each IconButton carries its own tooltip, which is also its
+              // semantics label — wrapping it in another Tooltip made screen
+              // readers stop on every action twice.
               children: [
-                Tooltip(
-                  message: isPinned ? gloc.unpin_group : gloc.pin_group,
-                  child: IconButton.filledTonal(
-                    onPressed: onFavorite,
-                    icon: Icon(
-                      isPinned ? Icons.favorite : Icons.favorite_border,
-                    ),
-                    iconSize: 24,
-                    tooltip: isPinned ? gloc.unpin_group : gloc.pin_group,
-                    style: ctaStyle(),
-                  ),
+                IconButton.filledTonal(
+                  onPressed: onFavorite,
+                  icon: Icon(isPinned ? Icons.favorite : Icons.favorite_border),
+                  iconSize: 24,
+                  tooltip: isPinned ? gloc.unpin_group : gloc.pin_group,
+                  style: ctaStyle(),
                 ),
-                Tooltip(
-                  message: hasExpenses
+                IconButton.filledTonal(
+                  onPressed: hasExpenses ? onOverview : null,
+                  icon: const Icon(Icons.analytics_outlined),
+                  iconSize: 24,
+                  tooltip: hasExpenses
                       ? gloc.overview_and_statistics
                       : gloc.no_expenses_to_display,
-                  child: IconButton.filledTonal(
-                    onPressed: hasExpenses ? onOverview : null,
-                    icon: const Icon(Icons.analytics_outlined),
-                    iconSize: 24,
-                    tooltip: gloc.overview,
-                    style: ctaStyle(),
-                  ),
+                  style: ctaStyle(),
                 ),
-                Tooltip(
-                  message: hasExpenses
+                IconButton.filledTonal(
+                  onPressed: hasExpenses ? onSearch : null,
+                  icon: const Icon(Icons.search_outlined),
+                  iconSize: 24,
+                  tooltip: hasExpenses
                       ? gloc.search_expenses
                       : gloc.no_expenses_to_display,
-                  child: IconButton.filledTonal(
-                    onPressed: hasExpenses ? onSearch : null,
-                    icon: const Icon(Icons.search_outlined),
-                    iconSize: 24,
-                    tooltip: gloc.search_expenses,
-                    style: ctaStyle(),
-                  ),
+                  style: ctaStyle(),
                 ),
-                Tooltip(
-                  message: gloc.sync_title,
-                  child: IconButton.filledTonal(
-                    onPressed: onSync,
-                    icon: syncEnabled && orchestrator != null
-                        ? SyncStatusIcon(
-                            orchestrator: orchestrator!,
-                            icon: Icons.sync_outlined,
-                            defaultColor: colorScheme.onSurface,
-                          )
-                        : const Icon(Icons.sync_outlined),
-                    iconSize: 24,
-                    tooltip: gloc.sync_title,
-                    style: ctaStyle(),
-                  ),
+                IconButton.filledTonal(
+                  onPressed: onSync,
+                  icon: syncEnabled && orchestrator != null
+                      ? SyncStatusIcon(
+                          orchestrator: orchestrator!,
+                          icon: Icons.sync_outlined,
+                          defaultColor: colorScheme.onSurface,
+                        )
+                      : const Icon(Icons.sync_outlined),
+                  iconSize: 24,
+                  tooltip: gloc.sync_title,
+                  style: ctaStyle(),
                 ),
-                Tooltip(
-                  message: gloc.options,
-                  child: IconButton.filledTonal(
-                    onPressed: onOptions,
-                    icon: const Icon(Icons.settings_outlined),
-                    iconSize: 24,
-                    tooltip: gloc.options,
-                    style: ctaStyle(),
-                  ),
+                IconButton.filledTonal(
+                  onPressed: onOptions,
+                  icon: const Icon(Icons.settings_outlined),
+                  iconSize: 24,
+                  tooltip: gloc.options,
+                  style: ctaStyle(),
                 ),
               ],
             ),

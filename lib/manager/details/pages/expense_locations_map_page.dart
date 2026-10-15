@@ -137,6 +137,7 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
     if (_groupedExpenses.isEmpty) return [];
 
     final colorScheme = Theme.of(context).colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
 
     return _groupedExpenses.entries.map((entry) {
       final expenses = entry.value;
@@ -146,49 +147,73 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
         firstExpense.location!.longitude!,
       );
       final count = expenses.length;
+      final place =
+          firstExpense.location!.name ??
+          firstExpense.location!.locality ??
+          firstExpense.location!.address ??
+          '';
+      final markerLabel = count > 1
+          ? gloc.accessibility_map_marker_group(count, place)
+          : gloc.accessibility_map_marker_expense(
+              firstExpense.name ?? '',
+              CurrencyDisplay.formatCurrencyText(
+                firstExpense.amount ?? 0,
+                widget.group.currency,
+              ),
+            );
 
       return Marker(
         point: location,
-        width: count > 1 ? 60 : 40,
-        height: count > 1 ? 60 : 40,
-        child: GestureDetector(
-          onTap: () => _showExpenseDetails(expenses),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Icon(
-                Icons.location_on,
-                size: count > 1 ? 44 : 40,
-                color: colorScheme.primary,
-              ),
-              if (count > 1)
-                Positioned(
-                  top: 2,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: colorScheme.surface, width: 2),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 24,
-                      minHeight: 24,
-                    ),
-                    child: Center(
-                      child: Text(
-                        count.toString(),
-                        style: TextStyle(
-                          color: colorScheme.onPrimaryContainer,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
+        // At least 48dp so the pin is a comfortable touch target.
+        width: count > 1 ? 60 : 48,
+        height: count > 1 ? 60 : 48,
+        child: Semantics(
+          button: true,
+          label: markerLabel,
+          excludeSemantics: true,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => _showExpenseDetails(expenses),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(
+                  Icons.location_on,
+                  size: count > 1 ? 44 : 40,
+                  color: colorScheme.primary,
+                ),
+                if (count > 1)
+                  Positioned(
+                    top: 2,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primaryContainer,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: colorScheme.surface,
+                          width: 2,
+                        ),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 24,
+                        minHeight: 24,
+                      ),
+                      child: Center(
+                        child: Text(
+                          count.toString(),
+                          style: TextStyle(
+                            color: colorScheme.onPrimaryContainer,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       );

@@ -251,7 +251,7 @@ class SearchFilterChip extends StatelessWidget {
           fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
           color: selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
         ),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        materialTapTargetSize: MaterialTapTargetSize.padded,
       ),
     );
   }

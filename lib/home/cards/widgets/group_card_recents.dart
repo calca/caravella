@@ -95,9 +95,8 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
         Text(
           widget.localizations.recent_expenses.toUpperCase(),
           style: widget.theme.textTheme.labelSmall?.copyWith(
-            color: widget.theme.colorScheme.onSurfaceVariant.withValues(
-              alpha: 0.5,
-            ),
+            // outline is the AA-compliant secondary text color in both themes.
+            color: widget.theme.colorScheme.outline,
             fontWeight: FontWeight.w400,
           ),
         ),

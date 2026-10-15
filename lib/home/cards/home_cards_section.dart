@@ -352,8 +352,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                   );
                 },
                 style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  minimumSize: const Size(48, 48),
+                  tapTargetSize: MaterialTapTargetSize.padded,
                 ),
                 child: Row(
                   children: [

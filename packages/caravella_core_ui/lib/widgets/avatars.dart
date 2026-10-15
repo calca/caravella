@@ -5,10 +5,15 @@ import 'package:caravella_core/caravella_core.dart';
 class ParticipantAvatar extends StatelessWidget {
   final ExpenseParticipant participant;
   final double size;
+
+  /// Set when the participant's name is already shown next to the avatar, so
+  /// screen readers don't announce it twice.
+  final bool decorative;
   const ParticipantAvatar({
     super.key,
     required this.participant,
     required this.size,
+    this.decorative = false,
   });
 
   @override
@@ -34,16 +39,21 @@ class ParticipantAvatar extends StatelessWidget {
     }
     initials = initials.toUpperCase();
 
-    return CircleAvatar(
-      radius: size / 2,
-      backgroundColor: colorScheme.surfaceContainer,
-      foregroundColor: colorScheme.onPrimaryContainer,
-      child: Text(
-        initials,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: colorScheme.onPrimaryContainer,
-          fontWeight: FontWeight.bold,
-          fontSize: size * 0.4,
+    // Screen readers announce the participant's name, not the initials.
+    return Semantics(
+      label: decorative ? null : participant.name,
+      excludeSemantics: true,
+      child: CircleAvatar(
+        radius: size / 2,
+        backgroundColor: colorScheme.surfaceContainer,
+        foregroundColor: colorScheme.onPrimaryContainer,
+        child: Text(
+          initials,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onPrimaryContainer,
+            fontWeight: FontWeight.bold,
+            fontSize: size * 0.4,
+          ),
         ),
       ),
     );
@@ -95,13 +105,17 @@ class ExpenseGroupAvatar extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: Center(
-        child: Text(
-          initials,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            color: colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-            fontSize: size * 0.4,
+      // Decorative: every caller shows the group title next to the avatar,
+      // so the initials would only be read as stray letters.
+      child: ExcludeSemantics(
+        child: Center(
+          child: Text(
+            initials,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
+              fontSize: size * 0.4,
+            ),
           ),
         ),
       ),

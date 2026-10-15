@@ -1140,4 +1140,7 @@
   ,"settings_group_templates_delete_title": "Excluir modelo"
   ,"settings_group_templates_delete_message": "Excluir o modelo \"{templateName}\"?"
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
+  ,"clear_dates": "Limpar datas"
+  ,"accessibility_map_marker_expense": "{name}, {amount}"
+  ,"accessibility_map_marker_group": "{count} despesas, {place}"
 }

@@ -47,7 +47,22 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
   String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
   static const double _expandedHeaderHeight = 300.0;
-  static const double _collapsedTitleThreshold = _expandedHeaderHeight - 56.0;
+
+  /// Height of the text-driven part of the header (title + amounts) at 1x;
+  /// the header grows by this much per extra unit of text scale so large
+  /// accessibility font sizes don't push the title under the back button.
+  static const double _scalableHeaderContent = 150.0;
+
+  /// Expanded header height for the current text scale.
+  double _expandedHeight(BuildContext context) {
+    final scale = MediaQuery.textScalerOf(context).scale(1.0);
+    return _expandedHeaderHeight +
+        _scalableHeaderContent * (scale - 1.0).clamp(0.0, 2.0);
+  }
+
+  /// Scroll offset past which the collapsed title is shown.
+  double _collapsedTitleThreshold(BuildContext context) =>
+      _expandedHeight(context) - 56.0;
 
   @override
   void initState() {
@@ -372,7 +387,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
 
     // Mostra titolo nella appbar quando la flexible space è quasi collassata
-    final shouldShow = _scrollController.offset > _collapsedTitleThreshold;
+    final shouldShow =
+        _scrollController.offset > _collapsedTitleThreshold(context);
     if (shouldShow != _collapsedTitleVisible && mounted) {
       setState(() => _collapsedTitleVisible = shouldShow);
     }
@@ -429,7 +445,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final contentOverlayColor = colorScheme.surface.withValues(alpha: 0.95);
 
     const double toolbarH = 56.0;
-    const double expandedH = _expandedHeaderHeight;
+    final double expandedH = _expandedHeight(context);
 
     final bg = GroupBackgroundUtils.resolve(
       trip,

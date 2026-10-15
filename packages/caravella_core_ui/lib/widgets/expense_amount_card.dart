@@ -164,11 +164,14 @@ extension on ExpenseAmountCard {
       fontWeight: FontWeight.w600,
       height: 1.1,
     );
+    // Let titles wrap to a second line at large accessibility text sizes
+    // instead of truncating after a couple of words.
+    final maxLines = MediaQuery.textScalerOf(context).scale(1.0) > 1.3 ? 2 : 1;
     if (query == null || query.trim().isEmpty) {
       return Text(
         text,
         style: style,
-        maxLines: 1,
+        maxLines: maxLines,
         overflow: TextOverflow.ellipsis,
       );
     }
@@ -196,10 +199,10 @@ extension on ExpenseAmountCard {
       );
       start = index + q.length;
     }
-    return RichText(
-      maxLines: 1,
+    return Text.rich(
+      TextSpan(style: style, children: spans),
+      maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
-      text: TextSpan(style: style, children: spans),
     );
   }
 }

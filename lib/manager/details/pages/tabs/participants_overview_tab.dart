@@ -388,17 +388,28 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
     // Only show long-press gesture if participant has debts
     final hasDebts = owes.isNotEmpty;
 
-    return GestureDetector(
-      onLongPress: hasDebts ? _showReminderBottomSheet : null,
-      child: StatCard(
-        title: widget.participant.name,
-        value: widget.total,
-        currency: widget.currency,
-        subtitleSpans: subtitleSpans,
-        subtitleMaxLines: _expanded ? 100 : 3,
-        leading: ParticipantAvatar(participant: widget.participant, size: 48),
-        percent: widget.percent,
-        inlineHeader: true,
+    // Merge the long-press target with the card content so screen readers
+    // announce the participant and amounts on the actionable node itself.
+    return MergeSemantics(
+      child: Semantics(
+        onLongPressHint: hasDebts ? loc.send_reminder : null,
+        child: GestureDetector(
+          onLongPress: hasDebts ? _showReminderBottomSheet : null,
+          child: StatCard(
+            title: widget.participant.name,
+            value: widget.total,
+            currency: widget.currency,
+            subtitleSpans: subtitleSpans,
+            subtitleMaxLines: _expanded ? 100 : 3,
+            leading: ParticipantAvatar(
+              participant: widget.participant,
+              size: 48,
+              decorative: true,
+            ),
+            percent: widget.percent,
+            inlineHeader: true,
+          ),
+        ),
       ),
     );
   }

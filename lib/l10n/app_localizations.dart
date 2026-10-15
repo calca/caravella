@@ -5164,6 +5164,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete template \"{templateName}\"?'**
   String settings_group_templates_delete_message(String templateName);
+
+  /// Tooltip/semantics label of the button that clears a group's start and end dates
+  ///
+  /// In en, this message translates to:
+  /// **'Clear dates'**
+  String get clear_dates;
+
+  /// Screen reader label of an expenses-map pin for a single expense
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {amount}'**
+  String accessibility_map_marker_expense(String name, String amount);
+
+  /// Screen reader label of an expenses-map pin grouping several expenses at one place
+  ///
+  /// In en, this message translates to:
+  /// **'{count} expenses, {place}'**
+  String accessibility_map_marker_group(int count, String place);
 }
 
 class _AppLocalizationsDelegate

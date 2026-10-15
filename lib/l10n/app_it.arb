@@ -1163,4 +1163,7 @@
   ,"settings_group_templates_delete_title": "Elimina template"
   ,"settings_group_templates_delete_message": "Eliminare il template \"{templateName}\"?"
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
+  ,"clear_dates": "Cancella date"
+  ,"accessibility_map_marker_expense": "{name}, {amount}"
+  ,"accessibility_map_marker_group": "{count} spese, {place}"
 }

@@ -172,6 +172,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
           ? [
               IconButton(
                 icon: const Icon(Icons.clear_rounded),
+                tooltip: gen.AppLocalizations.of(context).clear,
                 onPressed: _controller.clearSearch,
               ),
             ]
@@ -248,15 +249,21 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
             markers: _controller.state.searchResults.map((place) {
               return Marker(
                 point: LatLng(place.latitude, place.longitude),
-                width: AppDimens.minTouchTargetCompact,
-                height: AppDimens.minTouchTargetCompact,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(place),
-                  child: Center(
-                    child: Icon(
-                      Icons.location_on,
-                      color: colorScheme.error,
-                      size: 40,
+                width: AppDimens.minTouchTarget,
+                height: AppDimens.minTouchTarget,
+                child: Semantics(
+                  button: true,
+                  label: place.displayName,
+                  excludeSemantics: true,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Navigator.of(context).pop(place),
+                    child: Center(
+                      child: Icon(
+                        Icons.location_on,
+                        color: colorScheme.error,
+                        size: 40,
+                      ),
                     ),
                   ),
                 ),

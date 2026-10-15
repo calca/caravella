@@ -33,6 +33,17 @@ class GroupCard extends StatelessWidget {
     return theme.colorScheme.surface;
   }
 
+  Future<void> _openGroup(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ExpenseGroupDetailPage(trip: group),
+      ),
+    );
+    if (result == true) {
+      onGroupUpdated();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = theme.brightness == Brightness.dark;
@@ -61,17 +72,12 @@ class GroupCard extends StatelessWidget {
         backgroundColor: bg.color,
         backgroundImage: bg.imagePath,
         backgroundGradient: bg.gradient,
-        onTap: () async {
-          final result = await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ExpenseGroupDetailPage(trip: group),
-            ),
-          );
-          if (result == true) {
-            onGroupUpdated();
-          }
-        },
+        onTap: () => _openGroup(context),
+        // The card hosts its own buttons and tappable rows, so it is not
+        // collapsed into one node; the header carries the "open group" action.
+        mergeSemantics: false,
         child: GroupCardContent(
+          onOpen: () => _openGroup(context),
           group: group,
           localizations: localizations,
           theme: theme,

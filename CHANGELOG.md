@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Accessibility pass (TalkBack, contrast, touch targets, large text)**, from an audit of the 2.0 build:
+  - Screen readers now announce the previously unnamed controls: the Back button in group Settings, the "clear dates" button of the group period, the clear button of place search, the group-type icon next to the group name, and every pin on the expenses map and place-search map (expense name + amount, or "N expenses, place")
+  - The home group card is no longer one giant button: its header opens the group, while the recent-expense rows and "Add expense" are separately reachable
+  - Participant avatars read the person's name instead of their initials ("Anna" rather than "A N"); group-initial avatars are silent next to the group title
+  - Group actions (favorite, overview, search, sync, options) are announced once instead of twice (a nested `Tooltip` duplicated each button)
+  - Participant rows in Overview → Participants are a single node with their totals and debts, with a "Send reminder" long-press hint, instead of an empty actionable node
+  - Light theme secondary text (`outline`, used for subtitles, inactive tabs and hints) darkened from #919191 (3.2:1) to #666666 (≥4.6:1 on every light surface); the "Recent expenses" label and empty-state hints no longer use half-transparent text
+  - Chips (payer, category, search filters), the "+" chips, form fields, "See all" and map pins now have 48dp touch targets
+  - Amounts and other mixed-style texts (`CurrencyDisplay`, section headers, stat cards, search highlights) now follow the system font size (they used `RichText`, which ignores it); the group page header grows with large text instead of sliding under the Back button; expense titles wrap to two lines at large text sizes
 - Fixed the "Automatic backup" toggle (Settings → Data management) announcing "double tap to enable/disable **screen security**" to screen readers — it reused the FLAG_SECURE hint, the same bug already fixed on the Dynamic color and App Functions toggles. It now relies on its label + toggle-state semantics like those
 
 ## [2.0.0] - 2026-10-15

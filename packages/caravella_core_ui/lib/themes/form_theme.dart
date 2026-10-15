@@ -64,6 +64,9 @@ class FormTheme {
     ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400);
   }
 
+  /// Minimum height of form fields: the 48dp Android/Material touch target.
+  static const double minFieldHeight = 48;
+
   /// Returns standard decoration for form fields that should use theme defaults
   ///
   /// [labelText], when provided, gives the field a persistent accessible
@@ -77,6 +80,8 @@ class FormTheme {
     bool isDense = true,
   }) {
     return InputDecoration(
+      // 48dp minimum touch target even when isDense.
+      constraints: const BoxConstraints(minHeight: minFieldHeight),
       hintText: hintText,
       labelText: labelText,
       suffixIcon: suffixIcon,
@@ -97,6 +102,8 @@ class FormTheme {
     Widget? prefixIcon,
   }) {
     return InputDecoration(
+      // 48dp minimum touch target even when isDense.
+      constraints: const BoxConstraints(minHeight: minFieldHeight),
       hintText: hintText,
       labelText: labelText,
       suffixIcon: suffixIcon,
@@ -104,7 +111,8 @@ class FormTheme {
       isDense: true,
       contentPadding: const EdgeInsets.symmetric(
         vertical: fieldVerticalPadding,
-        horizontal: AppSpacing.sm, // Multiline fields need some horizontal padding
+        horizontal:
+            AppSpacing.sm, // Multiline fields need some horizontal padding
       ),
       border: const OutlineInputBorder(),
     );
@@ -120,6 +128,8 @@ class FormTheme {
     Widget? prefixIcon,
   }) {
     return InputDecoration(
+      // 48dp minimum touch target even when isDense.
+      constraints: const BoxConstraints(minHeight: minFieldHeight),
       hintText: hintText,
       labelText: labelText,
       suffixIcon: suffixIcon,

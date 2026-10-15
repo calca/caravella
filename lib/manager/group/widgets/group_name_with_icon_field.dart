@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../data/group_form_state.dart';
 import 'group_title_field.dart';
 import '../group_type/group_type_localization.dart';
@@ -11,6 +12,7 @@ import '../group_type/group_type_localization.dart';
 class GroupNameWithIconField extends StatelessWidget {
   final VoidCallback onIconTap;
   final VoidCallback? onSubmitted;
+
   /// Optional localized hint forwarded to the embedded title field.
   final String? hintText;
   final TextAlign textAlign;
@@ -34,24 +36,30 @@ class GroupNameWithIconField extends StatelessWidget {
       builder: (context, value, child) => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: onIconTap,
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              width: 42,
-              height: 42,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.outlineVariant,
-                  width: 1,
+          Semantics(
+            button: true,
+            label: gen.AppLocalizations.of(context).group_type_description,
+            excludeSemantics: true,
+            child: InkWell(
+              onTap: onIconTap,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                // 48dp: minimum touch target, and the height of the name field.
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                value.$1?.icon ??
-                    GroupTypeLocalization.iconFromCodePoint(value.$2 ?? 0),
-                size: 24,
-                color: Theme.of(context).colorScheme.onSurface,
+                child: Icon(
+                  value.$1?.icon ??
+                      GroupTypeLocalization.iconFromCodePoint(value.$2 ?? 0),
+                  size: 24,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
             ),
           ),

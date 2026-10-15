@@ -140,8 +140,8 @@ class StatCard extends StatelessWidget {
                           subtitle != null) ...[
                         const SizedBox(height: 8),
                         if (subtitleSpans != null && subtitleSpans!.isNotEmpty)
-                          RichText(
-                            text: TextSpan(
+                          Text.rich(
+                            TextSpan(
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),

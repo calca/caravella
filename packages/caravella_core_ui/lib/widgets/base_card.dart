@@ -23,6 +23,13 @@ class BaseCard extends StatelessWidget {
   /// button-role announcement via [MergeSemantics].
   final String? semanticLabel;
 
+  /// When false, a tappable card keeps its children as separate semantics
+  /// nodes and its own tap is hidden from screen readers. Use it when the card
+  /// hosts other interactive children (buttons, tappable rows) that must stay
+  /// individually reachable; the caller then exposes the card's main action on
+  /// a child (e.g. its header) instead.
+  final bool mergeSemantics;
+
   const BaseCard({
     super.key,
     required this.child,
@@ -37,11 +44,13 @@ class BaseCard extends StatelessWidget {
     this.noBorder = false,
     this.backgroundGradient,
     this.semanticLabel,
+    this.mergeSemantics = true,
   });
 
   /// Wraps a tappable card's content so it's announced as a single button
   /// node instead of a loose collection of its child text nodes.
   Widget _wrapTappable(Widget card) {
+    if (!mergeSemantics) return card;
     if (semanticLabel != null) {
       return Semantics(
         button: true,
@@ -133,6 +142,7 @@ class BaseCard extends StatelessWidget {
               color: backgroundColor ?? theme.colorScheme.surfaceContainer,
               child: InkWell(
                 onTap: onTap,
+                excludeFromSemantics: !mergeSemantics,
                 splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
                 highlightColor: theme.colorScheme.primary.withValues(
                   alpha: 0.05,
@@ -164,6 +174,7 @@ class BaseCard extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: onTap,
+              excludeFromSemantics: !mergeSemantics,
               splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
               highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
               child: Padding(padding: padding, child: child),
@@ -219,6 +230,7 @@ class BaseCard extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: onTap,
+                  excludeFromSemantics: !mergeSemantics,
                   splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
                   highlightColor: theme.colorScheme.primary.withValues(
                     alpha: 0.05,
