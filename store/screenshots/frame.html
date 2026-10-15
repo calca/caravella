@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: Montserrat; src: url(../../assets/fonts/Montserrat-Regular.ttf); font-weight: 400; }
+  @font-face { font-family: Montserrat; src: url(../../assets/fonts/Montserrat-Bold.ttf); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  body {
+    font-family: Montserrat, "PingFang SC", "Hiragino Sans GB", sans-serif;
+    color: #fff; position: relative;
+    background:
+      radial-gradient(900px 700px at 85% 8%, rgba(178, 223, 219, .38), transparent 60%),
+      radial-gradient(700px 700px at 0% 100%, rgba(0, 77, 64, .55), transparent 65%),
+      linear-gradient(160deg, #00a493 0%, #009688 45%, #00695c 100%);
+  }
+  body.alt {
+    background:
+      radial-gradient(900px 700px at 15% 8%, rgba(255, 255, 255, .22), transparent 60%),
+      radial-gradient(700px 700px at 100% 100%, rgba(0, 77, 64, .5), transparent 65%),
+      linear-gradient(200deg, #26a69a 0%, #00897b 50%, #00695c 100%);
+  }
+  .caption { position: absolute; top: 118px; left: 80px; right: 80px; text-align: center; }
+  .badge { display: inline-block; font-size: 30px; font-weight: 700; letter-spacing: 1px;
+           padding: 10px 26px; border-radius: 999px; background: #ff4f58; margin-bottom: 26px; }
+  h1 { font-size: 74px; line-height: 1.08; font-weight: 700; letter-spacing: -1.5px; }
+  p { margin-top: 24px; font-size: 38px; line-height: 1.3; color: #e0f2f1; }
+  .phone { position: absolute; left: 50%; top: 560px; width: 880px; margin-left: -440px;
+           border-radius: 96px; padding: 24px; background: #0e2a2d;
+           box-shadow: 0 50px 90px rgba(0, 30, 28, .45), inset 0 0 0 3px rgba(255,255,255,.08); }
+  body.has-badge .phone { top: 640px; }
+  .badge[hidden] { display: none; }
+  body.flip .caption { top: auto; bottom: 110px; }
+  body.flip .phone { top: auto; bottom: 470px; }
+  body.flip.has-badge .phone { bottom: 470px; }
+  canvas { display: block; width: 832px; border-radius: 74px; }
+</style>
+</head>
+<body>
+  <div class="caption">
+    <div class="badge" id="badge" hidden></div>
+    <h1 id="title"></h1>
+    <p id="sub"></p>
+  </div>
+  <div class="phone"><canvas id="screen" width="1280" height="2856"></canvas></div>
+<script>
+const SHOTS = [
+  { file: "raw/01-home.png", key: "home" },
+  { file: "raw/02-add.png", key: "add" },
+  { file: "raw/03-participants.png", key: "owes" },
+  { file: "raw/04-qr.png", key: "sync", badge: true, fixQr: true, flip: true },
+  { file: "raw/05-group.png", key: "group" },
+  { file: "raw/06-map.png", key: "map" },
+  { file: "raw/07-categories.png", key: "stats" },
+  { file: "raw/08-dark.png", key: "dark" },
+];
+const T = {
+  en: { badge: "NEW IN 2.0", device: "Anna's Pixel",
+    home: ["Split trip costs with friends", "Every group and every euro in one place"],
+    add: ["Add an expense in seconds", "Tap who paid and the category — or just say it"],
+    owes: ["Know who owes whom", "Balances and settle-ups, calculated for you"],
+    sync: ["Sync with friends", "Pair with a QR code. End-to-end encrypted."],
+    group: ["Every expense, neatly organised", "Photos, places and categories for each trip"],
+    map: ["See where you spent", "All your expenses on a map"],
+    stats: ["Understand your spending", "Breakdowns by category and per day"],
+    dark: ["Light or dark, your style", "A clean Material You design"] },
+  it: { badge: "NOVITÀ 2.0", device: "Pixel di Anna",
+    home: ["Dividi le spese di viaggio con gli amici", "Ogni gruppo e ogni euro in un solo posto"],
+    add: ["Aggiungi una spesa in pochi secondi", "Tocca chi ha pagato e la categoria — o dettala a voce"],
+    owes: ["Scopri chi deve a chi", "Saldi e conguagli calcolati per te"],
+    sync: ["Sincronizza con gli amici", "Abbina con un QR code. Crittografia end-to-end."],
+    group: ["Ogni spesa, in ordine", "Foto, luoghi e categorie per ogni viaggio"],
+    map: ["Guarda dove hai speso", "Tutte le tue spese sulla mappa"],
+    stats: ["Capisci come spendi", "Ripartizione per categoria e al giorno"],
+    dark: ["Chiaro o scuro, a tuo gusto", "Un design Material You pulito"] },
+  es: { badge: "NUEVO EN 2.0", device: "Pixel de Anna",
+    home: ["Divide los gastos del viaje con amigos", "Cada grupo y cada euro en un solo lugar"],
+    add: ["Añade un gasto en segundos", "Toca quién pagó y la categoría — o díctalo"],
+    owes: ["Sabe quién debe a quién", "Saldos y liquidaciones calculados por ti"],
+    sync: ["Sincroniza con tus amigos", "Vincula con un código QR. Cifrado de extremo a extremo."],
+    group: ["Cada gasto, bien organizado", "Fotos, lugares y categorías para cada viaje"],
+    map: ["Mira dónde gastaste", "Todos tus gastos en un mapa"],
+    stats: ["Entiende tus gastos", "Desglose por categoría y por día"],
+    dark: ["Claro u oscuro, a tu estilo", "Un diseño Material You limpio"] },
+  pt: { badge: "NOVO NA 2.0", device: "Pixel da Anna",
+    home: ["Divida os custos da viagem com amigos", "Cada grupo e cada euro em um só lugar"],
+    add: ["Adicione uma despesa em segundos", "Toque em quem pagou e na categoria — ou fale"],
+    owes: ["Saiba quem deve a quem", "Saldos e acertos calculados para você"],
+    sync: ["Sincronize com amigos", "Pareie com um QR code. Criptografia de ponta a ponta."],
+    group: ["Cada despesa, bem organizada", "Fotos, lugares e categorias para cada viagem"],
+    map: ["Veja onde você gastou", "Todas as suas despesas no mapa"],
+    stats: ["Entenda seus gastos", "Detalhamento por categoria e por dia"],
+    dark: ["Claro ou escuro, do seu jeito", "Um design Material You limpo"] },
+  zh: { badge: "2.0 新功能", device: "Anna 的 Pixel",
+    home: ["和朋友轻松分摊旅行费用", "所有群组和每一笔钱，一目了然"],
+    add: ["几秒钟记一笔", "点选付款人和类别，或者直接说出来"],
+    owes: ["清楚谁欠谁", "余额和结算自动计算"],
+    sync: ["与朋友同步", "扫码配对，端到端加密"],
+    group: ["每笔费用，井井有条", "每次旅行都有照片、地点和类别"],
+    map: ["看看钱花在了哪里", "所有费用都在地图上"],
+    stats: ["了解你的消费", "按类别和每日查看明细"],
+    dark: ["浅色深色，随你喜欢", "简洁的 Material You 设计"] },
+};
+
+const q = new URLSearchParams(location.search);
+const lang = q.get("lang") || "en";
+const idx = +(q.get("i") || 0);
+const shot = SHOTS[idx], t = T[lang], [title, sub] = t[shot.key];
+document.documentElement.lang = lang;
+document.getElementById("title").textContent = title;
+document.getElementById("sub").textContent = sub;
+if (idx % 2) document.body.classList.add("alt");
+if (shot.flip) document.body.classList.add("flip");
+if (shot.badge) {
+  const b = document.getElementById("badge");
+  b.hidden = false; b.textContent = t.badge;
+  document.body.classList.add("has-badge");
+}
+
+const img = new Image();
+img.onload = async () => {
+  await document.fonts.ready;
+  const c = document.getElementById("screen").getContext("2d");
+  c.drawImage(img, 0, 0);
+  // Cover another app's status-bar notification icon with the background just right of it.
+  c.drawImage(img, 205, 50, 50, 55, 145, 50, 50, 55);
+  if (shot.fixQr) {
+    // Emulator-only text: replace the hardware model with a device name, drop the emulator warning.
+    c.fillStyle = "#f8f8f8";
+    c.fillRect(200, 2450, 880, 80);
+    c.fillRect(30, 2600, 1220, 160);
+    c.fillStyle = "#111";
+    c.font = "400 46px Montserrat, 'PingFang SC'";
+    c.textAlign = "center";
+    c.fillText(t.device, 640, 2505);
+  }
+  document.body.dataset.ready = "1";
+};
+img.src = shot.file;
+</script>
+</body>
+</html>
