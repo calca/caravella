@@ -57,6 +57,8 @@ def main():
     parser.add_argument("--rollout", type=float, default=1.0,
                         help="User fraction (0-1]; below 1 creates a staged rollout")
     parser.add_argument("--skip-listing", action="store_true")
+    parser.add_argument("--skip-release", action="store_true",
+                        help="Leave the track untouched (listing-only update)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Validate the edit without committing it")
     args = parser.parse_args()
@@ -84,6 +86,8 @@ def main():
         release_notes.append({"language": language, "text": note})
     print(f"Release notes: {', '.join(n['language'] for n in release_notes)}")
 
+    if args.skip_release:
+        release_notes = None
     release = {
         "name": args.version_name,
         "versionCodes": [str(args.version_code)],
@@ -93,9 +97,12 @@ def main():
         release.update(status="inProgress", userFraction=args.rollout)
     else:
         release["status"] = "completed"
-    edits.tracks().update(packageName=PACKAGE, editId=edit_id, track=args.track,
-                          body={"track": args.track, "releases": [release]}).execute()
-    print(f"Track {args.track}: {args.version_name} ({args.version_code}), status {release['status']}")
+    if args.skip_release:
+        print(f"Track {args.track}: left untouched")
+    else:
+        edits.tracks().update(packageName=PACKAGE, editId=edit_id, track=args.track,
+                              body={"track": args.track, "releases": [release]}).execute()
+        print(f"Track {args.track}: {args.version_name} ({args.version_code}), status {release['status']}")
 
     if not args.skip_listing:
         for listing in listings.get("listings", []):

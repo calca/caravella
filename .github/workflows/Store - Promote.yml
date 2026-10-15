@@ -20,6 +20,10 @@ on:
         description: 'User fraction 0-1 (1 = full rollout)'
         required: true
         default: '1'
+      promote_release:
+        description: 'Set the track release (off = listing-only update)'
+        type: boolean
+        default: true
       update_listing:
         description: 'Update store listing full descriptions'
         type: boolean
@@ -56,5 +60,6 @@ jobs:
             --version-code "$VERSION_CODE" \
             --track "${{ github.event.inputs.track }}" \
             --rollout "${{ github.event.inputs.rollout }}" \
+            ${{ github.event.inputs.promote_release == 'false' && '--skip-release' || '' }} \
             ${{ github.event.inputs.update_listing == 'false' && '--skip-listing' || '' }} \
             ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}

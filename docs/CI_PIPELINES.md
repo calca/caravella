@@ -40,11 +40,11 @@ The upload authenticates as the service account in the `GOOGLE_PLAY_SERVICE_ACCO
 
 ## `Store - Promote.yml` ("Android CI - Store Promote")
 
-Manually triggered with inputs `target_branch`, `track` (default `production`), `rollout` (user fraction, `1` = full), `update_listing` and `dry_run`. It builds nothing: it promotes the version code already uploaded by `Store - Android.yml` (read from `pubspec.yaml` on `target_branch`), in one Play edit via [`.github/scripts/play_publish.py`](../.github/scripts/play_publish.py):
+Manually triggered with inputs `target_branch`, `track` (default `production`), `rollout` (user fraction, `1` = full), `promote_release` (off = listing-only update, track untouched), `update_listing` and `dry_run`. It builds nothing: it promotes the version code already uploaded by `Store - Android.yml` (read from `pubspec.yaml` on `target_branch`), in one Play edit via [`.github/scripts/play_publish.py`](../.github/scripts/play_publish.py):
 - sets the track's release to that version code, with release notes from `store/changelog/release-notes-<version>.xml` (one `<locale>` block per language, ≤500 chars each);
 - replaces each existing store listing's **full description** with the "Full Description" section of `store/metadata/listing_<lang>.md`. Title and short description stay as they are on Play, because the repo files exceed Play's 30/80-char limits in some languages.
 
-Only languages that already have a Play store listing are touched. `dry_run` validates the edit and discards it.
+Only languages that already have a Play store listing are touched. `dry_run` validates the edit and discards it. Updating the listing additionally needs the service account's **Manage store presence** app permission in Play Console; with release permissions only, `validate`/`commit` fail with `The caller does not have permission`.
 
 Typical release: run `Store - Android.yml` with `track=internal`, test, then run this workflow with `track=production`.
 
