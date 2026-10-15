@@ -45,9 +45,6 @@ class DataBackupPage extends StatelessWidget {
                   color: colorScheme.surface,
                   semanticsToggled: notifier.enabled,
                   semanticsLabel: gloc.auto_backup_title,
-                  semanticsHint: notifier.enabled
-                      ? gloc.accessibility_double_tap_disable
-                      : gloc.accessibility_double_tap_enable,
                   onTap: () => notifier.setEnabled(!notifier.enabled),
                   child: ListTile(
                     leading: const Icon(Icons.backup_outlined),
