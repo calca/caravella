@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fixed the "Automatic backup" toggle (Settings → Data management) announcing "double tap to enable/disable **screen security**" to screen readers — it reused the FLAG_SECURE hint, the same bug already fixed on the Dynamic color and App Functions toggles. It now relies on its label + toggle-state semantics like those
+
 ## [2.0.0] - 2026-10-15
 
 > The Android home-screen widget changes below ship in `dev`/`staging` builds only — the `prod` build (Google Play, GitHub Release, F-Droid) is compiled with `ENABLE_ANDROID_WIDGET=false`, so the widget is not part of this release for end users.
