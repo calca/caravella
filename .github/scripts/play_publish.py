@@ -8,7 +8,9 @@ service account as the "Android CI - Store" upload step. In one edit it:
     from store/metadata/listing_<lang>.md (the title is left untouched: the
     repo titles exceed Play's 30-char limit in some languages);
   * replaces each listing's feature graphic with
-    store/assets/feature-graphic/<lang>.png (1024x500) when present.
+    store/assets/feature-graphic/<lang>.png (1024x500) and its phone
+    screenshots with store/screenshots/<lang>/*.jpg|png (sorted by name),
+    when present.
 
 Only languages that already have a Play store listing are touched, since
 Play rejects release notes for languages without one.
@@ -62,6 +64,24 @@ def listing_file_for(language):
 
 def feature_graphic_for(language):
     return os.path.join("store", "assets", "feature-graphic", f"{language.split('-')[0]}.png")
+
+
+def screenshots_for(language):
+    folder = os.path.join("store", "screenshots", language.split("-")[0])
+    if not os.path.isdir(folder):
+        return []
+    return [os.path.join(folder, f) for f in sorted(os.listdir(folder))
+            if f.lower().endswith((".jpg", ".jpeg", ".png"))]
+
+
+def replace_images(edits, edit_id, language, image_type, paths):
+    edits.images().deleteall(packageName=PACKAGE, editId=edit_id,
+                             language=language, imageType=image_type).execute()
+    for path in paths:
+        mime = "image/png" if path.lower().endswith(".png") else "image/jpeg"
+        edits.images().upload(packageName=PACKAGE, editId=edit_id, language=language,
+                              imageType=image_type,
+                              media_body=MediaFileUpload(path, mimetype=mime)).execute()
 
 
 def main():
@@ -132,14 +152,16 @@ def main():
 
             graphic = feature_graphic_for(listing["language"])
             if os.path.exists(graphic):
-                edits.images().deleteall(packageName=PACKAGE, editId=edit_id,
-                                         language=listing["language"],
-                                         imageType="featureGraphic").execute()
-                edits.images().upload(packageName=PACKAGE, editId=edit_id,
-                                      language=listing["language"],
-                                      imageType="featureGraphic",
-                                      media_body=MediaFileUpload(graphic, mimetype="image/png")).execute()
+                replace_images(edits, edit_id, listing["language"], "featureGraphic", [graphic])
                 print(f"  listing {listing['language']}: feature graphic from {graphic}")
+
+            shots = screenshots_for(listing["language"])
+            if shots:
+                if len(shots) > 8:
+                    sys.exit(f"{len(shots)} screenshots for {listing['language']} (Play max 8)")
+                replace_images(edits, edit_id, listing["language"], "phoneScreenshots", shots)
+                print(f"  listing {listing['language']}: {len(shots)} phone screenshots "
+                      f"from {os.path.dirname(shots[0])}")
 
     if args.dry_run:
         edits.validate(packageName=PACKAGE, editId=edit_id).execute()
