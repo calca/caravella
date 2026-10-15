@@ -36,6 +36,18 @@ flutter build appbundle --flavor prod --release \
 ```
 → generates a SHA256 checksum → uploads the artifact → **uploads directly to Google Play** via `r0adkll/upload-google-play@v1`.
 
+The upload authenticates as the service account in the `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` secret (`play-deploy@elegant-obelisk-472510-g8.iam.gserviceaccount.com`, Google Play Android Developer API enabled in its Cloud project). That account must be a Play Console user (**Users and permissions**) with app permissions on *Caravella* to release to testing tracks and production; without them the step fails with `The caller does not have permission`, which is why every run before 2.0.0 stopped at the upload.
+
+## `Store - Promote.yml` ("Android CI - Store Promote")
+
+Manually triggered with inputs `target_branch`, `track` (default `production`), `rollout` (user fraction, `1` = full), `update_listing` and `dry_run`. It builds nothing: it promotes the version code already uploaded by `Store - Android.yml` (read from `pubspec.yaml` on `target_branch`), in one Play edit via [`.github/scripts/play_publish.py`](../.github/scripts/play_publish.py):
+- sets the track's release to that version code, with release notes from `store/changelog/release-notes-<version>.xml` (one `<locale>` block per language, ≤500 chars each);
+- replaces each existing store listing's **full description** with the "Full Description" section of `store/metadata/listing_<lang>.md`. Title and short description stay as they are on Play, because the repo files exceed Play's 30/80-char limits in some languages.
+
+Only languages that already have a Play store listing are touched. `dry_run` validates the edit and discards it.
+
+Typical release: run `Store - Android.yml` with `track=internal`, test, then run this workflow with `track=production`.
+
 ## Things both workflows have in common
 
 - Flutter is pinned to a specific stable version (check the `flutter-version:` key in each workflow file for the current pin — it's bumped periodically and this page won't track it).

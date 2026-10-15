@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.0.0] - 2026-10-10
+## [2.0.0] - 2026-10-15
 
 > The Android home-screen widget changes below ship in `dev`/`staging` builds only — the `prod` build (Google Play, GitHub Release, F-Droid) is compiled with `ENABLE_ANDROID_WIDGET=false`, so the widget is not part of this release for end users.
 

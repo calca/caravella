@@ -1,0 +1,60 @@
+name: Android CI - Store Promote
+
+# Promotes a bundle already uploaded by "Android CI - Store" (e.g. on the
+# internal track) to another track, with release notes from
+# store/changelog/release-notes-<version>.xml, and syncs the store listing
+# full descriptions from store/metadata/listing_<lang>.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch to read version, release notes and listings from'
+        required: true
+        default: 'main'
+      track:
+        description: 'Destination Play track (alpha|beta|production)'
+        required: true
+        default: 'production'
+      rollout:
+        description: 'User fraction 0-1 (1 = full rollout)'
+        required: true
+        default: '1'
+      update_listing:
+        description: 'Update store listing full descriptions'
+        type: boolean
+        default: true
+      dry_run:
+        description: 'Validate only, do not commit the edit'
+        type: boolean
+        default: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Play API client
+        run: pip install google-api-python-client==2.160.0 google-auth==2.38.0
+      - name: Read version from pubspec
+        run: |
+          VERSION_LINE=$(grep '^version:' pubspec.yaml | sed 's/version: //')
+          echo "VERSION_NAME=${VERSION_LINE%%+*}" >> $GITHUB_ENV
+          echo "VERSION_CODE=${VERSION_LINE##*+}" >> $GITHUB_ENV
+      - name: Promote and sync store texts
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          python .github/scripts/play_publish.py \
+            --version-name "$VERSION_NAME" \
+            --version-code "$VERSION_CODE" \
+            --track "${{ github.event.inputs.track }}" \
+            --rollout "${{ github.event.inputs.rollout }}" \
+            ${{ github.event.inputs.update_listing == 'false' && '--skip-listing' || '' }} \
+            ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}

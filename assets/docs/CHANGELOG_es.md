@@ -1,4 +1,4 @@
-## 2.0.0 (10.10.2026)
+## 2.0.0 (15.10.2026)
 
 - **Nuevo**: Sincroniza tus grupos entre dispositivos – comparte un grupo con los teléfonos de otras personas por Wi-Fi o Bluetooth, o mantén al día tus propios dispositivos a través de tu Google Drive personal. Desactivada por defecto y activable grupo por grupo
 - **Nuevo**: Emparejamiento seguro – conecta dispositivos escaneando un código QR (válido 5 minutos) o por Bluetooth; los datos sincronizados están cifrados de extremo a extremo y cada emparejamiento solo da acceso al grupo para el que se hizo

@@ -1,4 +1,4 @@
-## 2.0.0 (10.10.2026)
+## 2.0.0 (15.10.2026)
 
 - **New**: Sync your groups across devices – share a group with other people's phones over Wi-Fi or Bluetooth, or keep your own devices in step through your personal Google Drive. Off by default and enabled group by group
 - **New**: Secure pairing – connect devices by scanning a QR code (valid for 5 minutes) or over Bluetooth; synced data is end-to-end encrypted, and each pairing only grants access to the group it was made for

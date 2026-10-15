@@ -1,4 +1,4 @@
-## 2.0.0 (10.10.2026)
+## 2.0.0 (15.10.2026)
 
 - **Novo**: Sincronize seus grupos entre dispositivos – compartilhe um grupo com os celulares de outras pessoas por Wi-Fi ou Bluetooth, ou mantenha seus próprios dispositivos em dia pelo seu Google Drive pessoal. Desativada por padrão e ativada grupo a grupo
 - **Novo**: Pareamento seguro – conecte dispositivos lendo um código QR (válido por 5 minutos) ou por Bluetooth; os dados sincronizados têm criptografia de ponta a ponta, e cada pareamento só dá acesso ao grupo para o qual foi feito
