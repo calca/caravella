@@ -36,7 +36,10 @@ class InlineSelectField extends StatelessWidget {
           fontWeight: FontWeight.w400,
         );
 
-    final child = Padding(
+    final child = Container(
+      // 48dp minimum touch target, like the text fields.
+      constraints: const BoxConstraints(minHeight: FormTheme.minFieldHeight),
+      alignment: Alignment.centerLeft,
       padding: EdgeInsets.symmetric(vertical: FormTheme.fieldVerticalPadding),
       child: Row(
         children: [

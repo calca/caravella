@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Group actions (favorite, overview, search, sync, options) are announced once instead of twice (a nested `Tooltip` duplicated each button)
   - Participant rows in Overview → Participants are a single node with their totals and debts, with a "Send reminder" long-press hint, instead of an empty actionable node
   - Light theme secondary text (`outline`, used for subtitles, inactive tabs and hints) darkened from #919191 (3.2:1) to #666666 (≥4.6:1 on every light surface); the "Recent expenses" label and empty-state hints no longer use half-transparent text
-  - Chips (payer, category, search filters), the "+" chips, form fields, "See all" and map pins now have 48dp touch targets
+  - Chips (payer, category, search filters), the "+" chips, form fields, the date and place rows, "Use current location", "See all", the home recent-expense rows and map pins now have 48dp touch targets
+  - The expenses map and place-search map are announced by name, and map pins / the group-type icon / cards with a custom accessible name can actually be activated by screen readers (their tap action was dropped together with the excluded child semantics)
   - Amounts and other mixed-style texts (`CurrencyDisplay`, section headers, stat cards, search highlights) now follow the system font size (they used `RichText`, which ignores it); the group page header grows with large text instead of sliding under the Back button; expense titles wrap to two lines at large text sizes
 - Fixed the "Automatic backup" toggle (Settings → Data management) announcing "double tap to enable/disable **screen security**" to screen readers — it reused the FLAG_SECURE hint, the same bug already fixed on the Dynamic color and App Functions toggles. It now relies on its label + toggle-state semantics like those
 

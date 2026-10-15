@@ -52,9 +52,12 @@ class BaseCard extends StatelessWidget {
   Widget _wrapTappable(Widget card) {
     if (!mergeSemantics) return card;
     if (semanticLabel != null) {
+      // ExcludeSemantics also drops the InkWell's tap action, so expose it
+      // on this node or screen readers can't activate the card.
       return Semantics(
         button: true,
         label: semanticLabel,
+        onTap: onTap,
         child: ExcludeSemantics(child: card),
       );
     }

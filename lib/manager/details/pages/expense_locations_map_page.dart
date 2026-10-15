@@ -170,6 +170,9 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
         child: Semantics(
           button: true,
           label: markerLabel,
+          // The child GestureDetector's tap is excluded with the rest of the
+          // subtree, so expose the action on this node.
+          onTap: () => _showExpenseDetails(expenses),
           excludeSemantics: true,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -277,6 +280,7 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
           Expanded(
             child: ErrorBoundary(
               child: StandardMap(
+                semanticLabel: gloc.expenses_map,
                 mapController: _mapController,
                 initialCenter: center,
                 initialZoom: hasBounds ? 12 : 14,

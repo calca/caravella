@@ -232,6 +232,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
 
   Widget _buildFullScreenMap(ColorScheme colorScheme) {
     return StandardMap(
+      semanticLabel: gen.AppLocalizations.of(context).location,
       mapController: _controller.mapController,
       initialCenter: _controller.state.mapCenter,
       initialZoom: _controller.state.mapZoom,
@@ -254,6 +255,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                 child: Semantics(
                   button: true,
                   label: place.displayName,
+                  onTap: () => Navigator.of(context).pop(place),
                   excludeSemantics: true,
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,

@@ -39,6 +39,7 @@ class GroupNameWithIconField extends StatelessWidget {
           Semantics(
             button: true,
             label: gen.AppLocalizations.of(context).group_type_description,
+            onTap: onIconTap,
             excludeSemantics: true,
             child: InkWell(
               onTap: onIconTap,
