@@ -14,11 +14,16 @@ plugins {
 val enableAndroidWidgetOverride: Boolean? = (project.findProperty("enableAndroidWidget") as? String)?.toBoolean()
     ?: System.getenv("ENABLE_ANDROID_WIDGET")?.toBoolean()
 
+// Release signing key (android/key.properties, written by CI from secrets).
+// Without it — local checkouts, F-Droid — release builds come out unsigned
+// instead of failing on an empty signing config; F-Droid signs the APK itself.
+val keystorePropertiesFile = rootProject.file("key.properties")
+val hasReleaseKeystore = keystorePropertiesFile.exists()
+
 android {
     signingConfigs {
-        create("release") {
-            val keystorePropertiesFile = rootProject.file("key.properties")
-            if (keystorePropertiesFile.exists()) {
+        if (hasReleaseKeystore) {
+            create("release") {
                 val keystoreProperties = Properties()
                 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
                 storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
@@ -81,7 +86,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            if (hasReleaseKeystore) signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
