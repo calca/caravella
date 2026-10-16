@@ -1,0 +1,8 @@
+Versione 2.0.1 - Più facile per tutti
+
+• TalkBack migliorato: ogni pulsante ha un nome, schede più facili da esplorare
+• Contrasto più alto e aree di tocco più grandi
+• Importi e titoli seguono la dimensione del testo di sistema
+• Una versione senza librerie proprietarie di Google, pensata per F-Droid
+
+Grazie per usare Caravella!

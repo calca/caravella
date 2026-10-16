@@ -1,3 +1,12 @@
+## 2.0.1 (16.10.2026)
+
+- **Improvements**: Better TalkBack support – every button now has a name, home group cards are easier to navigate, avatars read people's names, and map pins can be opened with a screen reader
+- **Improvements**: Easier to read and tap – stronger contrast for secondary text in light mode and larger touch targets for chips, form fields, dates, places and map pins
+- **Improvements**: Amounts and headings now follow your system font size, and long expense titles wrap instead of being cut off
+- **New**: Caravella is getting ready for F-Droid, with a build free of proprietary Google libraries
+- **Fixed**: The "Automatic backup" switch no longer announces the wrong hint to screen readers
+- **Fixed**: The search icon on the Groups page is no longer dimmed in dark mode
+
 ## 2.0.0 (15.10.2026)
 
 - **New**: Sync your groups across devices – share a group with other people's phones over Wi-Fi or Bluetooth, or keep your own devices in step through your personal Google Drive. Off by default and enabled group by group

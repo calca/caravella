@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-10-16
+
 ### Changed
 - **F-Droid build without proprietary libraries**: everything that needs Google Play Services, ML Kit or Play Core (current location via the fused provider, receipt OCR, QR scanning, Bluetooth sync, Google Drive, in-app review and updates) moved into the new `packages/caravella_gms`, behind the `GmsIntegrations` interface in `caravella_core`. `./build_variant.sh foss` swaps it for `packages/caravella_gms_foss` (same name, nothing inside) so those libraries are not compiled into the F-Droid APK at all — the previous dart-define flags only hid them, which F-Droid's scanner rejects. In the F-Droid build those features are hidden, except current location, which now uses the platform `LocationManager`. Play builds are unchanged. CI checks that the FOSS variant compiles and has no non-free artifact on its classpath; `metadata.yml` has the new recipe, and the Gradle wrapper now pins `distributionSha256Sum`
 
@@ -471,7 +473,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/calca/caravella/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/calca/caravella/compare/v1.8.0...v2.0.0
 [1.8.0]: https://github.com/calca/caravella/compare/v1.6.0...v1.8.0
 [1.6.0]: https://github.com/calca/caravella/compare/v1.4.0...v1.6.0

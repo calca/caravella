@@ -76,13 +76,13 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
-## 🎉 What's New in v2.0.0
+## 🎉 What's New in v2.0.1
 
-- **Sync Your Groups**: Share a group with friends' phones over Wi-Fi or Bluetooth, or keep your own devices in step through your personal Google Drive — off by default and enabled group by group
-- **Secure Pairing**: Connect devices with a short-lived QR code or over Bluetooth; synced data is end-to-end encrypted and each pairing only unlocks the group it was made for
-- **Faster Expense Entry**: Payer and category are now quick-tap chip rows, most recently used first, with a "+" chip to add a new one on the spot
-- **Fresh Settings**: A new Appearance page for language, dynamic color and theme, plus an "Invite your friends" shortcut
-- **Smoother Everyday Use**: In-app updates now install reliably, and unsaved-changes warnings show up exactly when they should
+- **More Accessible**: Every button now has a name for TalkBack, home cards are easier to navigate, and avatars read people's names
+- **Easier to Read and Tap**: Stronger contrast for secondary text in light mode, larger touch targets for chips, fields and map pins, and amounts that follow your system font size
+- **Now on F-Droid**: A build free of proprietary Google libraries, made for F-Droid
+- **Polish**: The search icon on the Groups page is no longer dimmed in dark mode
+
 
 ## 🛠️ Tech Stack & Architecture
 

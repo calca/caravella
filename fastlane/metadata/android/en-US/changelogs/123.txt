@@ -1,0 +1,8 @@
+Version 2.0.1 - Easier for Everyone
+
+• Better TalkBack support: every button has a name, cards are easier to navigate
+• Stronger contrast and larger touch targets
+• Amounts and headings follow your system font size
+• A build free of proprietary Google libraries, made for F-Droid
+
+Thanks for using Caravella!

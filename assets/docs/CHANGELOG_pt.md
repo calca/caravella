@@ -1,3 +1,12 @@
+## 2.0.1 (16.10.2026)
+
+- **Melhorias**: Melhor suporte ao TalkBack – todos os botões têm nome, os cartões de grupo na tela inicial são mais fáceis de navegar, os avatares leem o nome das pessoas e os marcadores do mapa abrem com o leitor de tela
+- **Melhorias**: Mais fácil de ler e tocar – mais contraste no texto secundário do tema claro e áreas de toque maiores para chips, campos, datas, locais e marcadores
+- **Melhorias**: Valores e títulos seguem o tamanho de texto do sistema, e títulos longos de despesas quebram linha em vez de serem cortados
+- **Novidade**: O Caravella está se preparando para o F-Droid, com uma versão sem bibliotecas proprietárias do Google
+- **Correções**: O botão "Backup automático" não anuncia mais uma dica errada aos leitores de tela
+- **Correções**: O ícone de busca na página Grupos não aparece mais apagado no tema escuro
+
 ## 2.0.0 (15.10.2026)
 
 - **Novo**: Sincronize seus grupos entre dispositivos – compartilhe um grupo com os celulares de outras pessoas por Wi-Fi ou Bluetooth, ou mantenha seus próprios dispositivos em dia pelo seu Google Drive pessoal. Desativada por padrão e ativada grupo a grupo
