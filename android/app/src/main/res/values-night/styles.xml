@@ -20,7 +20,6 @@
         <!-- Android 15+: Edge-to-edge via SystemChrome.setEnabledSystemUIMode -->
         <!-- Bar colors controlled by SystemUiOverlayStyle in Flutter code -->
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 </resources>

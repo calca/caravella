@@ -20,6 +20,8 @@ flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
 flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
 ```
 
+**Toolchain**: Android Gradle Plugin, Gradle and Kotlin versions follow Flutter's own Android templates (`android/settings.gradle.kts`, `android/gradle/wrapper/gradle-wrapper.properties`); `android.builtInKotlin=false`/`android.newDsl=false` in `android/gradle.properties` keep plugins that haven't migrated to AGP 9's built-in Kotlin/new DSL working. `minSdk` is 29 (Android 10). Release builds ship the R8 mapping and native symbol tables inside the App Bundle (`ndk.debugSymbolLevel = "SYMBOL_TABLE"`) and use R8 optimized resource shrinking (`android.r8.optimizedResourceShrinking=true`).
+
 **Release signing**: `release` builds are signed with the key from `android/key.properties` (not committed; CI writes it from secrets). Without that file — a local checkout, F-Droid — `build.gradle.kts` skips the signing config and the release APK comes out unsigned instead of failing; F-Droid signs it with its own key.
 
 ## iOS flavors (`ios/Runner.xcodeproj`)

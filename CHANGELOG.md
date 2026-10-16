@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Minimum Android version is now 10 (API 29)**, up from 7.0. Devices on Android 7–9 keep the version they have but no longer get updates
+- Edge-to-edge on every supported Android version (`WindowCompat.enableEdgeToEdge` in `MainActivity`, previously only Android 10+) and display-cutout mode `always` from Android 11 instead of the deprecated `shortEdges` — addresses the two edge-to-edge recommendations in Play Console. The remaining deprecated-API hits Play lists come from libraries (Material date picker, AndroidX `EdgeToEdge` fallbacks)
+- Android Gradle Plugin 8.13 → **9.1.0**, Gradle 8.14 → 9.3.1, Kotlin 2.2.20 → 2.4.0 (Flutter 3.47's template versions); R8 optimized resource shrinking enabled, and release App Bundles now carry native symbol tables (`debugSymbolLevel = SYMBOL_TABLE`) so Play can symbolicate native crashes
+- The Store workflow keeps each release's R8 `mapping.txt` and native debug symbols as a build artifact, to retrace obfuscated names shown in Play Console
 - Android Gradle Plugin 8.11.1 → 8.13.2. With 8.11 the release lint check failed under JDK 21 (`MainActivity must extend android.app.Activity`, a false positive: it couldn't load the `android-37.0` platform), which blocked local and F-Droid release builds; CI only passed because it runs JDK 17
 - Release builds are signed only when `android/key.properties` exists; without it (local checkout, F-Droid) the release APK is built unsigned instead of failing on an empty signing config
 

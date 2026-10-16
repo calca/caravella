@@ -2,7 +2,6 @@ package io.caravella.egm
 
 import android.app.backup.BackupManager
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.core.view.WindowCompat
 import io.flutter.embedding.android.FlutterActivity
@@ -27,10 +26,9 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Abilita l'edge-to-edge per Android 10+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-        }
+        // Edge-to-edge on every supported version (Android 15+ enforces it):
+        // transparent system bars, Flutter's SafeArea/insets handle padding.
+        WindowCompat.enableEdgeToEdge(window)
         
         // Handle both shortcut and App Function intents
         handleAddExpenseIntent(intent)
@@ -117,27 +115,23 @@ class MainActivity : FlutterActivity() {
         shortcutsChannel?.setMethodCallHandler { call, result ->
             when (call.method) {
                 "updateShortcuts" -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                        try {
-                            @Suppress("UNCHECKED_CAST")
-                            val groups = (call.arguments as? List<Map<String, Any>>)?.map { map ->
-                                ShortcutManager.GroupInfo(
-                                    id = map["id"] as String,
-                                    title = map["title"] as String,
-                                    isPinned = map["isPinned"] as Boolean,
-                                    lastUpdated = (map["lastUpdated"] as Number).toLong(),
-                                    color = (map["color"] as? Number)?.toInt(),
-                                    file = map["file"] as? String
-                                )
-                            } ?: emptyList()
-                            
-                            ShortcutManager.updateShortcuts(this, groups)
-                            result.success(true)
-                        } catch (e: Exception) {
-                            result.error("SHORTCUT_ERROR", "Failed to update shortcuts: ${e.message}", null)
-                        }
-                    } else {
-                        result.success(false) // Shortcuts not supported on this API level
+                    try {
+                        @Suppress("UNCHECKED_CAST")
+                        val groups = (call.arguments as? List<Map<String, Any>>)?.map { map ->
+                            ShortcutManager.GroupInfo(
+                                id = map["id"] as String,
+                                title = map["title"] as String,
+                                isPinned = map["isPinned"] as Boolean,
+                                lastUpdated = (map["lastUpdated"] as Number).toLong(),
+                                color = (map["color"] as? Number)?.toInt(),
+                                file = map["file"] as? String
+                            )
+                        } ?: emptyList()
+                        
+                        ShortcutManager.updateShortcuts(this, groups)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("SHORTCUT_ERROR", "Failed to update shortcuts: ${e.message}", null)
                     }
                 }
                 "clearShortcuts" -> {

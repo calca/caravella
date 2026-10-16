@@ -112,6 +112,20 @@ jobs:
           path: |
             io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab
             io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256
+      # Play already gets the R8 mapping and native symbols from inside the
+      # AAB (BUNDLE-METADATA) and shows them under App bundle explorer, but
+      # doesn't let you download them back. Keep a copy per release so
+      # obfuscated names in Play Console recommendations/crashes can be
+      # retraced locally (`retrace mapping.txt stacktrace.txt`).
+      - name: Upload R8 mapping and native debug symbols
+        uses: actions/upload-artifact@v4
+        with:
+          name: io_caravella_egm-${{ env.VERSION }}-mapping
+          path: |
+            build/app/outputs/mapping/prodRelease/mapping.txt
+            build/app/outputs/native-debug-symbols/prodRelease/native-debug-symbols.zip
+          if-no-files-found: warn
+          retention-days: 90
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
