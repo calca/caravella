@@ -276,7 +276,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         iconPadding: FormTheme.standardIconPadding,
         child: InkWell(
           onTap: widget.enabled ? _showLocationDetails : null,
-          child: Padding(
+          child: Container(
+            // 48dp minimum touch target, like the other form fields.
+            constraints: const BoxConstraints(
+              minHeight: FormTheme.minFieldHeight,
+            ),
+            alignment: Alignment.centerLeft,
             padding: FormTheme.standardContentPadding,
             child: Row(
               children: [
@@ -309,7 +314,11 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       iconPadding: FormTheme.standardIconPadding,
       child: InkWell(
         onTap: widget.enabled ? _showPlaceSearch : null,
-        child: Padding(
+        child: Container(
+          constraints: const BoxConstraints(
+            minHeight: FormTheme.minFieldHeight,
+          ),
+          alignment: Alignment.centerLeft,
           padding: FormTheme.standardContentPadding,
           child: Row(
             children: [
@@ -329,7 +338,10 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                   tooltip: gloc.get_current_location,
                   onPressed: _getCurrentLocation,
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+                  constraints: const BoxConstraints(
+                    minWidth: AppDimens.minTouchTarget,
+                    minHeight: AppDimens.minTouchTarget,
+                  ),
                 ),
               if (widget.enabled) ...[
                 const SizedBox(width: 8),

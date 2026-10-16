@@ -174,9 +174,8 @@ class _GroupCardEmptyStateState extends State<GroupCardEmptyState>
                 ),
                 const SizedBox(height: 24),
                 // Encouraging message with bold words
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
+                Text.rich(
+                  TextSpan(
                     children: _parseMessageWithBold(
                       _message,
                       widget.theme.textTheme.bodyLarge?.copyWith(
@@ -189,6 +188,7 @@ class _GroupCardEmptyStateState extends State<GroupCardEmptyState>
                           const TextStyle(),
                     ),
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

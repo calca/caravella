@@ -47,7 +47,9 @@ const ColorScheme lightColorScheme = ColorScheme(
   surfaceContainerHigh: Color(0xFFEDEDED),
   surfaceContainerHighest: Color(0xFFE7E7E7),
   onSurfaceVariant: Color(0xFF000000),
-  outline: Color(0xFF919191),
+  outline: Color(
+    0xFF666666,
+  ), // Also used for secondary text: >=4.5:1 on every light surface (WCAG AA)
   outlineVariant: Color(0xFFD1D1D1),
   shadow: Color(0xFF000000),
   scrim: Color(0xFF000000),

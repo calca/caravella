@@ -61,7 +61,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
       start = index + lowerQuery.length;
       if (start >= source.length) break;
     }
-    return RichText(text: TextSpan(children: matches));
+    return Text.rich(TextSpan(children: matches));
   }
 
   @override

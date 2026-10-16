@@ -50,10 +50,8 @@ class ExpenseFormCompactHeader extends StatelessWidget {
               child: Tooltip(
                 message: title,
                 waitDuration: const Duration(milliseconds: 400),
-                child: RichText(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
+                child: Text.rich(
+                  TextSpan(
                     children: [
                       TextSpan(
                         text: '${gloc.in_group_prefix} ',
@@ -62,6 +60,8 @@ class ExpenseFormCompactHeader extends StatelessWidget {
                       TextSpan(text: title, style: titleStyle),
                     ],
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),

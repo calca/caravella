@@ -276,8 +276,8 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
       currentIndex = queryIndex + query.length;
     }
 
-    return RichText(
-      text: TextSpan(children: spans),
+    return Text.rich(
+      TextSpan(children: spans),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );

@@ -15,6 +15,10 @@ class StandardMap extends StatelessWidget {
   final void Function(TapPosition, LatLng)? onTap;
   final List<Widget> layers;
 
+  /// Accessible name of the map area (e.g. "Expenses Map"). Markers keep
+  /// their own semantics nodes inside it.
+  final String? semanticLabel;
+
   const StandardMap({
     super.key,
     this.mapController,
@@ -24,11 +28,12 @@ class StandardMap extends StatelessWidget {
     this.maxZoom = 18,
     this.onTap,
     this.layers = const [],
+    this.semanticLabel,
   });
 
   @override
   Widget build(BuildContext context) {
-    return FlutterMap(
+    final map = FlutterMap(
       mapController: mapController,
       options: MapOptions(
         initialCenter: initialCenter,
@@ -39,5 +44,10 @@ class StandardMap extends StatelessWidget {
       ),
       children: [const MapTileLayerWidget(), ...layers],
     );
+    if (semanticLabel == null) return map;
+    // container without explicitChildNodes: flutter_map's own tap/long-press
+    // gesture merges into this labeled node instead of forming an unnamed
+    // one; markers with their own Semantics still get separate nodes.
+    return Semantics(container: true, label: semanticLabel, child: map);
   }
 }

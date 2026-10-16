@@ -172,6 +172,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
           ? [
               IconButton(
                 icon: const Icon(Icons.clear_rounded),
+                tooltip: gen.AppLocalizations.of(context).clear,
                 onPressed: _controller.clearSearch,
               ),
             ]
@@ -231,6 +232,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
 
   Widget _buildFullScreenMap(ColorScheme colorScheme) {
     return StandardMap(
+      semanticLabel: gen.AppLocalizations.of(context).location,
       mapController: _controller.mapController,
       initialCenter: _controller.state.mapCenter,
       initialZoom: _controller.state.mapZoom,
@@ -248,15 +250,22 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
             markers: _controller.state.searchResults.map((place) {
               return Marker(
                 point: LatLng(place.latitude, place.longitude),
-                width: AppDimens.minTouchTargetCompact,
-                height: AppDimens.minTouchTargetCompact,
-                child: GestureDetector(
+                width: AppDimens.minTouchTarget,
+                height: AppDimens.minTouchTarget,
+                child: Semantics(
+                  button: true,
+                  label: place.displayName,
                   onTap: () => Navigator.of(context).pop(place),
-                  child: Center(
-                    child: Icon(
-                      Icons.location_on,
-                      color: colorScheme.error,
-                      size: 40,
+                  excludeSemantics: true,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Navigator.of(context).pop(place),
+                    child: Center(
+                      child: Icon(
+                        Icons.location_on,
+                        color: colorScheme.error,
+                        size: 40,
+                      ),
                     ),
                   ),
                 ),

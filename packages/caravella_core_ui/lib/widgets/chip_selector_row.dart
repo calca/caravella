@@ -15,7 +15,9 @@ import '../themes/app_spacing.dart';
 /// when [onAddItemInline] is provided.
 class ChipSelectorRow<T> extends StatelessWidget {
   static const int maxVisibleItems = 4;
-  static const double _chipRowHeight = 38;
+  // 48dp: the minimum touch target; chips keep their compact look via
+  // MaterialTapTargetSize.padded.
+  static const double _chipRowHeight = 48;
   static const String _moreLabel = '...';
 
   final List<T> items;
@@ -153,7 +155,7 @@ class _SelectorChip extends StatelessWidget {
           fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
           color: foreground,
         ),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        materialTapTargetSize: MaterialTapTargetSize.padded,
       ),
     );
   }
@@ -169,24 +171,33 @@ class _AddChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    // 48dp touch target around the 34dp visual circle.
     final chip = InkWell(
       customBorder: const CircleBorder(),
       onTap: enabled ? onTap : null,
-      child: Container(
-        width: 34,
-        height: 34,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: scheme.surfaceContainerLow,
-          border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.3)),
-        ),
-        child: Icon(
-          Icons.add,
-          size: 18,
-          color: enabled
-              ? scheme.onSurfaceVariant
-              : scheme.onSurfaceVariant.withValues(alpha: 0.4),
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: Center(
+          child: Container(
+            width: 34,
+            height: 34,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: scheme.surfaceContainerLow,
+              border: Border.all(
+                color: scheme.outlineVariant.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Icon(
+              Icons.add,
+              size: 18,
+              color: enabled
+                  ? scheme.onSurfaceVariant
+                  : scheme.onSurfaceVariant.withValues(alpha: 0.4),
+            ),
+          ),
         ),
       ),
     );

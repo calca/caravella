@@ -50,6 +50,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
         title: Text(gloc.settings),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),

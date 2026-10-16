@@ -1178,4 +1178,7 @@
   ,"settings_group_templates_delete_title": "Eliminar plantilla"
   ,"settings_group_templates_delete_message": "¿Eliminar la plantilla \"{templateName}\"?"
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
+  ,"clear_dates": "Borrar fechas"
+  ,"accessibility_map_marker_expense": "{name}, {amount}"
+  ,"accessibility_map_marker_group": "{count} gastos, {place}"
 }

@@ -2638,4 +2638,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String settings_group_templates_delete_message(String templateName) {
     return '删除模板“$templateName”？';
   }
+
+  @override
+  String get clear_dates => '清除日期';
+
+  @override
+  String accessibility_map_marker_expense(String name, String amount) {
+    return '$name，$amount';
+  }
+
+  @override
+  String accessibility_map_marker_group(int count, String place) {
+    return '$count 笔费用，$place';
+  }
 }

@@ -20,7 +20,7 @@ Covers `lib/home/**`, plus the `lib/main/` wiring that presents the home screen.
 
 Layout: `HomeCardsHeader` (greeting + settings button) → a featured `GroupCard` (pinned group, or first active group) → "Your Groups" header with a "see all" CTA (pushes [History & Search](APP_HISTORY_SEARCH.md)) → `HorizontalGroupsList` carousel of the rest. Sizing constants live in `home_constants.dart` (`HomeLayoutConstants`, pure constants, no logic).
 
-Card widgets (`lib/home/cards/widgets/`): `GroupCard` (wraps `BaseCard`, background via `GroupBackgroundUtils.resolve`), `GroupCardContent`/`Header`/`Stats`/`Amounts`/`TodaySpending`/`Recents` (body composition), `GroupCardVoiceButton` (per-card mic button — see [Expense Entry § voice input](APP_EXPENSE_ENTRY.md#voice-input)), `CarouselGroupCard`/`HorizontalGroupsList` (carousel tiles), `NewGroupCard` (add-group tile), `EmptyGroupsState`.
+Card widgets (`lib/home/cards/widgets/`): `GroupCard` (wraps `BaseCard` with `mergeSemantics: false`, background via `GroupBackgroundUtils.resolve`; for screen readers the header is the "open group" button, while the recent-expense rows and the add-expense button stay separate nodes), `GroupCardContent`/`Header`/`Stats`/`Amounts`/`TodaySpending`/`Recents` (body composition), `GroupCardVoiceButton` (per-card mic button — see [Expense Entry § voice input](APP_EXPENSE_ENTRY.md#voice-input)), `CarouselGroupCard`/`HorizontalGroupsList` (carousel tiles), `NewGroupCard` (add-group tile), `EmptyGroupsState`.
 
 ## Search
 

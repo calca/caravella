@@ -36,6 +36,7 @@ class SectionPeriod extends StatelessWidget {
               ? IconButton.filledTonal(
                   onPressed: onClearDates,
                   icon: const Icon(Icons.delete_outline, size: 22),
+                  tooltip: gen.AppLocalizations.of(context).clear_dates,
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(
                       context,

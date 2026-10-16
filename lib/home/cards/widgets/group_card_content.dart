@@ -23,6 +23,10 @@ class GroupCardContent extends StatefulWidget {
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
 
+  /// Opens the group; exposed to screen readers on the header, since the
+  /// card itself does not merge its interactive children.
+  final VoidCallback? onOpen;
+
   /// Whether this group's data is fully synced with peers.
   final bool? isSynced;
 
@@ -30,6 +34,7 @@ class GroupCardContent extends StatefulWidget {
     super.key,
     required this.group,
     required this.localizations,
+    this.onOpen,
     required this.theme,
     required this.onExpenseAdded,
     this.onCategoryAdded,
@@ -99,11 +104,17 @@ class _GroupCardContentState extends State<GroupCardContent> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GroupCardHeader(
-              group: _currentGroup,
-              localizations: widget.localizations,
-              theme: widget.theme,
-              isSynced: widget.isSynced,
+            MergeSemantics(
+              child: Semantics(
+                button: widget.onOpen != null,
+                onTap: widget.onOpen,
+                child: GroupCardHeader(
+                  group: _currentGroup,
+                  localizations: widget.localizations,
+                  theme: widget.theme,
+                  isSynced: widget.isSynced,
+                ),
+              ),
             ),
             const Spacer(),
             // Show playful empty state or amounts based on expenses

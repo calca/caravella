@@ -52,7 +52,7 @@ class SectionHeader extends StatelessWidget {
         ),
       );
     }
-    final titleWidget = RichText(text: TextSpan(children: spans));
+    final titleWidget = Text.rich(TextSpan(children: spans));
     final hasDescription = description != null && description!.isNotEmpty;
     final descWidget = hasDescription
         ? Padding(

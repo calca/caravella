@@ -60,12 +60,14 @@ void main() {
         ),
       );
 
-      // The required mark (*) should be present
-      final richTextFinder = find.byType(RichText);
-      expect(richTextFinder, findsOneWidget);
+      // The required mark (*) should be present. The title is a Text.rich
+      // (so it follows the system text size), not a bare RichText.
+      final titleFinder = find.byWidgetPredicate(
+        (w) => w is Text && w.textSpan != null,
+      );
+      expect(titleFinder, findsOneWidget);
 
-      final richText = tester.widget<RichText>(richTextFinder);
-      final textSpan = richText.text as TextSpan;
+      final textSpan = tester.widget<Text>(titleFinder).textSpan as TextSpan;
 
       // Should have 2 spans: title and asterisk
       expect(textSpan.children?.length, 2);
@@ -89,11 +91,12 @@ void main() {
         ),
       );
 
-      final richTextFinder = find.byType(RichText);
-      expect(richTextFinder, findsOneWidget);
+      final titleFinder = find.byWidgetPredicate(
+        (w) => w is Text && w.textSpan != null,
+      );
+      expect(titleFinder, findsOneWidget);
 
-      final richText = tester.widget<RichText>(richTextFinder);
-      final textSpan = richText.text as TextSpan;
+      final textSpan = tester.widget<Text>(titleFinder).textSpan as TextSpan;
 
       // Should have 2 spans: title and asterisk with error color
       expect(textSpan.children?.length, 2);

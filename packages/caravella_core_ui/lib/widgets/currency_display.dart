@@ -25,7 +25,7 @@ class CurrencyDisplay extends StatelessWidget {
 
   /// Formats a currency value as plain text for use in semantic labels,
   /// exports, or other text-only contexts.
-  /// 
+  ///
   /// Example: `CurrencyDisplay.formatCurrencyText(123.45, 'EUR')` returns "123.45 EUR"
   static String formatCurrencyText(
     double value,
@@ -65,7 +65,10 @@ class CurrencyDisplay extends StatelessWidget {
         Flexible(
           child: showDecimals
               ? _buildValueWithSeparateDecimals(
-                  context, formattedValue, decimalSeparator)
+                  context,
+                  formattedValue,
+                  decimalSeparator,
+                )
               : Text(
                   formattedValue,
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
@@ -96,13 +99,10 @@ class CurrencyDisplay extends StatelessWidget {
   ) {
     final parts = formattedValue.split(decimalSeparator);
     final integerPart = parts[0];
-    final decimalPart =
-        parts.length > 1 ? '$decimalSeparator${parts[1]}' : '';
+    final decimalPart = parts.length > 1 ? '$decimalSeparator${parts[1]}' : '';
 
-    return RichText(
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-      text: TextSpan(
+    return Text.rich(
+      TextSpan(
         children: [
           TextSpan(
             text: integerPart,
@@ -122,6 +122,8 @@ class CurrencyDisplay extends StatelessWidget {
             ),
         ],
       ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
     );
   }
 }

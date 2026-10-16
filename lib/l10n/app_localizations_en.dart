@@ -2711,4 +2711,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String settings_group_templates_delete_message(String templateName) {
     return 'Delete template \"$templateName\"?';
   }
+
+  @override
+  String get clear_dates => 'Clear dates';
+
+  @override
+  String accessibility_map_marker_expense(String name, String amount) {
+    return '$name, $amount';
+  }
+
+  @override
+  String accessibility_map_marker_group(int count, String place) {
+    return '$count expenses, $place';
+  }
 }

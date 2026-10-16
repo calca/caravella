@@ -1793,4 +1793,7 @@
   ,"settings_group_templates_delete_title": "删除模板"
   ,"settings_group_templates_delete_message": "删除模板“{templateName}”？"
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
+  ,"clear_dates": "清除日期"
+  ,"accessibility_map_marker_expense": "{name}，{amount}"
+  ,"accessibility_map_marker_group": "{count} 笔费用，{place}"
 }

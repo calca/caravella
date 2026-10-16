@@ -171,10 +171,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
           ),
           const SizedBox(height: 24),
           // Periodo
-          PeriodSectionEditor(
-            onClearDates: _clearDates,
-            errorText: _dateError,
-          ),
+          PeriodSectionEditor(onClearDates: _clearDates, errorText: _dateError),
           const SizedBox(height: 24),
           // Valuta
           SectionFlat(
@@ -245,6 +242,8 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
+      // Tap-outside-to-dismiss-keyboard only; not an action for screen readers.
+      excludeFromSemantics: true,
       child: Selector<GroupFormState, int>(
         selector: (_, state) {
           return Object.hash(

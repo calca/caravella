@@ -45,7 +45,7 @@ class EmptyStateView extends StatelessWidget {
               Text(
                 hint!,
                 style: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.4),
+                  color: colorScheme.outline,
                 ),
                 textAlign: TextAlign.center,
               ),
