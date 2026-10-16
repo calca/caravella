@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'inline_select_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 
 class DateSelectorWidget extends StatelessWidget {
   final DateTime? selectedDate;
@@ -28,7 +29,7 @@ class DateSelectorWidget extends StatelessWidget {
     // Icona a sinistra, rimosso titolo testuale sopra
     final gloc = gen.AppLocalizations.of(context);
     final dateText = selectedDate != null
-        ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
+        ? formatDate(selectedDate!, Locale(locale))
         : gloc.select_expense_date_short;
     final semanticLabel = '${gloc.date}: $dateText';
 

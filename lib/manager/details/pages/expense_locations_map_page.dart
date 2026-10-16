@@ -24,7 +24,6 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
   String? _errorMessage;
   List<ExpenseDetails> _expensesWithLocation = [];
   LatLngBounds? _bounds;
-  Map<String, List<ExpenseDetails>> _groupedExpenses = {};
 
   @override
   void initState() {
@@ -68,28 +67,10 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
           .toList();
       final bounds = computeBounds(points);
 
-      // Group expenses
-      final Map<String, List<ExpenseDetails>> grouped = {};
-      for (final expense in expensesWithLocation) {
-        final location = expense.location;
-        if (location == null ||
-            location.latitude == null ||
-            location.longitude == null) {
-          continue;
-        }
-        final key =
-            '${location.latitude!.toStringAsFixed(6)},${location.longitude!.toStringAsFixed(6)}';
-        if (!grouped.containsKey(key)) {
-          grouped[key] = [];
-        }
-        grouped[key]!.add(expense);
-      }
-
       if (mounted) {
         setState(() {
           _expensesWithLocation = expensesWithLocation;
           _bounds = bounds;
-          _groupedExpenses = grouped;
           _isLoading = false;
           _errorMessage = null;
         });
@@ -133,14 +114,38 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
     );
   }
 
-  List<Marker> _buildMarkers() {
-    if (_groupedExpenses.isEmpty) return [];
+  /// Pins closer than this on screen are merged into one numbered pin, so
+  /// nearby expenses don't stack on top of each other (only the top one
+  /// would be tappable). Re-evaluated on every zoom/pan: zooming in splits
+  /// a group back into separate pins.
+  static const double _clusterRadius = 44;
+
+  /// Groups expenses whose pins would overlap at the current [camera].
+  List<List<ExpenseDetails>> _clusterExpenses(MapCamera camera) {
+    final clusters = <({Offset anchor, List<ExpenseDetails> expenses})>[];
+    for (final expense in _expensesWithLocation) {
+      final offset = camera.latLngToScreenOffset(
+        LatLng(expense.location!.latitude!, expense.location!.longitude!),
+      );
+      final index = clusters.indexWhere(
+        (c) => (c.anchor - offset).distance < _clusterRadius,
+      );
+      if (index >= 0) {
+        clusters[index].expenses.add(expense);
+      } else {
+        clusters.add((anchor: offset, expenses: [expense]));
+      }
+    }
+    return [for (final c in clusters) c.expenses];
+  }
+
+  List<Marker> _buildMarkers(MapCamera camera) {
+    if (_expensesWithLocation.isEmpty) return [];
 
     final colorScheme = Theme.of(context).colorScheme;
     final gloc = gen.AppLocalizations.of(context);
 
-    return _groupedExpenses.entries.map((entry) {
-      final expenses = entry.value;
+    return _clusterExpenses(camera).map((expenses) {
       final firstExpense = expenses.first;
       final location = LatLng(
         firstExpense.location!.latitude!,
@@ -286,7 +291,15 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
                 initialZoom: hasBounds ? 12 : 14,
                 minZoom: 2,
                 maxZoom: 18,
-                layers: [MarkerLayer(markers: _buildMarkers())],
+                layers: [
+                  // Rebuilt on every camera change (MapCamera is inherited),
+                  // so clustering follows the zoom level.
+                  Builder(
+                    builder: (context) => MarkerLayer(
+                      markers: _buildMarkers(MapCamera.of(context)),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

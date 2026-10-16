@@ -48,10 +48,29 @@ class ExpenseMapDetailSheet extends StatelessWidget {
     final theme = Theme.of(context);
 
     final firstExpense = expenses.first;
-    final locationAddress = _formatLocationAddress(firstExpense.location);
-    final fullAddress = locationAddress.isNotEmpty
-        ? locationAddress
-        : '${firstExpense.location?.latitude?.toStringAsFixed(6)}, ${firstExpense.location?.longitude?.toStringAsFixed(6)}';
+    // The map merges pins that would overlap on screen, so a group can mix
+    // nearby places: show one address + coordinates only when they all
+    // share the same spot, otherwise list the distinct place names.
+    String coordinates(ExpenseDetails e) =>
+        '${e.location?.latitude?.toStringAsFixed(6)}, ${e.location?.longitude?.toStringAsFixed(6)}';
+    final samePlace = expenses.every(
+      (e) => coordinates(e) == coordinates(firstExpense),
+    );
+    final String fullAddress;
+    if (samePlace) {
+      final locationAddress = _formatLocationAddress(firstExpense.location);
+      fullAddress = locationAddress.isNotEmpty
+          ? locationAddress
+          : coordinates(firstExpense);
+    } else {
+      fullAddress = {
+        for (final e in expenses)
+          e.location?.name ??
+              e.location?.locality ??
+              e.location?.address ??
+              coordinates(e),
+      }.join(' · ');
+    }
 
     return CaravellaBottomSheetScaffold(
       title: gloc.location,
@@ -73,7 +92,8 @@ class ExpenseMapDetailSheet extends StatelessWidget {
           ),
 
           // Coordinates if available
-          if (firstExpense.location?.latitude != null &&
+          if (samePlace &&
+              firstExpense.location?.latitude != null &&
               firstExpense.location?.longitude != null)
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 16),

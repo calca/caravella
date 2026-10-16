@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 
 class DateCard extends StatelessWidget {
   final int? day;
@@ -81,7 +82,10 @@ class DateCard extends StatelessWidget {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                _formatDate(date!),
+                                formatDate(
+                                  date!,
+                                  Localizations.localeOf(context),
+                                ),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   color: theme.colorScheme.onSurface,
                                 ),
@@ -102,12 +106,5 @@ class DateCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    // Formats date as dd/MM/yyyy
-    return '${date.day.toString().padLeft(2, '0')}/'
-        '${date.month.toString().padLeft(2, '0')}/'
-        '${date.year}';
   }
 }
