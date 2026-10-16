@@ -72,6 +72,7 @@ export 'sync/json/group_serializer.dart';
 export 'sync/json/json_merger.dart';
 export 'sync/json/local_json_store.dart';
 export 'sync/channels/cloud_relay_channel.dart';
+export 'sync/channels/bluetooth_sync_channel.dart';
 export 'sync/channels/lan_sync_channel.dart';
 export 'sync/sync_orchestrator.dart';
 
@@ -84,3 +85,7 @@ export 'state/flag_secure_notifier.dart';
 export 'state/locale_notifier.dart';
 export 'state/theme_mode_notifier.dart';
 export 'state/user_name_notifier.dart';
+
+// Proprietary (Google Mobile Services) integrations — implemented in caravella_gms
+export 'integrations/gms_integrations.dart';
+export 'integrations/update_localizations.dart';

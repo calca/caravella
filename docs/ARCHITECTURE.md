@@ -1,6 +1,6 @@
 # Architecture Overview
 
-Caravella is a multi-platform Flutter app (Material 3) for group expense tracking, split into five local packages plus the main app. There is no backend server or company-run account system, and all data is stored **locally on-device by default** — the optional sync feature lets a user exchange data directly between *their own* devices over LAN/Bluetooth, or (opt-in, separately gated) relay it through *their own* Google Drive; see [Storage Backend](STORAGE_BACKEND.md) and the [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md).
+Caravella is a multi-platform Flutter app (Material 3) for group expense tracking, split into seven local packages plus the main app. There is no backend server or company-run account system, and all data is stored **locally on-device by default** — the optional sync feature lets a user exchange data directly between *their own* devices over LAN/Bluetooth, or (opt-in, separately gated) relay it through *their own* Google Drive; see [Storage Backend](STORAGE_BACKEND.md) and the [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md).
 
 ```
 lib/                        → app-specific UI, pages, controllers ("the app")
@@ -9,11 +9,13 @@ packages/caravella_core_ui/ → shared design-system widgets and themes
 packages/android_app_functions/ → exposes app capabilities to Android AI agents/shortcuts
 packages/play_store_updates/    → Google Play in-app update integration (conditional)
 packages/google_drive_sync/     → Google Drive cloud relay for sync (conditional)
+packages/caravella_gms/         → everything needing proprietary Google libraries (Play build)
+packages/caravella_gms_foss/    → same package name and API, nothing in it (F-Droid build)
 ```
 
 ## Package dependency rules
 
-These are enforced by convention, not by tooling — respect them when adding code:
+These are enforced in CI by `validate_package_boundaries.sh` — respect them when adding code:
 
 - `lib/` may depend on all packages.
 - `caravella_core_ui` depends on `caravella_core` only.
@@ -21,9 +23,10 @@ These are enforced by convention, not by tooling — respect them when adding co
 - `android_app_functions` depends on `caravella_core` only.
 - `play_store_updates` depends on `caravella_core` and `caravella_core_ui`.
 - `google_drive_sync` depends on `caravella_core` only.
-- `play_store_updates` and `google_drive_sync` are normal pubspec dependencies of the root app at all times; the "conditional" part is purely a runtime/compile-time switch (see [Build Variants & Flavors](BUILD_VARIANTS.md)), not conditional dependency resolution.
+- `caravella_gms` depends on `caravella_core`, `google_drive_sync` and `play_store_updates`; `caravella_gms_foss` on `caravella_core` only.
+- Proprietary Google libraries (Play Services, ML Kit, Play Core) and the packages wrapping them (`google_drive_sync`, `play_store_updates`) are only used inside `caravella_gms`; the root app depends on `caravella_gms` alone and reaches those features through `GmsIntegrations.instance`. The F-Droid build swaps the package for `caravella_gms_foss` with `./build_variant.sh foss`, so the libraries aren't in the dependency graph at all — see [caravella_gms](PACKAGE_CARAVELLA_GMS.md).
 
-See [caravella_core reference](PACKAGE_CARAVELLA_CORE.md), [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md), [android_app_functions](PACKAGE_ANDROID_APP_FUNCTIONS.md), [play_store_updates](PACKAGE_PLAY_STORE_UPDATES.md), [google_drive_sync](PACKAGE_GOOGLE_DRIVE_SYNC.md) for what's inside each.
+See [caravella_core reference](PACKAGE_CARAVELLA_CORE.md), [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md), [android_app_functions](PACKAGE_ANDROID_APP_FUNCTIONS.md), [play_store_updates](PACKAGE_PLAY_STORE_UPDATES.md), [google_drive_sync](PACKAGE_GOOGLE_DRIVE_SYNC.md), [caravella_gms](PACKAGE_CARAVELLA_GMS.md) for what's inside each.
 
 ## App startup sequence
 
@@ -33,6 +36,7 @@ Entry point `lib/main.dart`:
 2. Everything runs inside `runZonedGuarded` — the error handler explicitly swallows known-noisy network/map-tile errors and logs the rest via `LoggerService.warning`.
 3. `AppInitialization.initialize()` (`lib/main/app_initialization.dart`), in order:
    - `WidgetsFlutterBinding.ensureInitialized()`
+   - `configureGmsIntegrations()` — installs the build's `gmsIntegrations` (Play or FOSS) into `GmsIntegrations.instance` — see [caravella_gms](PACKAGE_CARAVELLA_GMS.md)
    - `configureErrorHandling()` — `FlutterError.onError` / `PlatformDispatcher.instance.onError`
    - `configureImagePicker()` — forces the Android photo picker
    - `configureEnvironment()` — reads `--dart-define=FLAVOR` and sets `AppConfig.environment`

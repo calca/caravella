@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_gms/caravella_gms.dart';
 
 import '../settings/flag_secure_android.dart';
 
@@ -171,9 +172,21 @@ class AppInitialization {
     }
   }
 
+  /// Installs the Google Mobile Services integrations compiled into this
+  /// build — the real ones, or none in the F-Droid build (see
+  /// `docs/PACKAGE_CARAVELLA_GMS.md`).
+  static void configureGmsIntegrations() {
+    GmsIntegrations.instance = gmsIntegrations;
+    LoggerService.info(
+      'GMS integrations: ${gmsIntegrations.isAvailable ? 'enabled' : 'none (FOSS build)'}',
+      name: 'app.init',
+    );
+  }
+
   /// Runs all initialization steps in the correct order.
   static Future<void> initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
+    configureGmsIntegrations();
     configureErrorHandling();
     configureImagePicker();
     configureEnvironment();

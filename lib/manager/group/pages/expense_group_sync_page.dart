@@ -5,7 +5,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../../../sync/bluetooth_advertise_sheet.dart';
-import '../../../sync/bluetooth_sync_channel.dart';
 import '../../../sync/bluetooth_sync_factory.dart';
 import '../../../sync/qr_pair_show_sheet.dart';
 import '../../../sync/sync_history_page.dart';
@@ -121,9 +120,8 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
   }
 
   void _shareViaBluetooth(BuildContext context, SyncOrchestrator orchestrator) {
-    final channel = BluetoothSyncChannel()
-      ..onDelta = orchestrator.handleIncomingDelta
-      ..onPairingRequest = orchestrator.handlePairingCompleted;
+    final channel = BluetoothSyncFactory.createChannel(orchestrator);
+    if (channel == null) return;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

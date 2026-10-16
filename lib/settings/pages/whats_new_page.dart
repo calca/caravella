@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:play_store_updates/play_store_updates.dart';
 import '../update/app_update_localizations.dart';
 
 class WhatsNewPage extends StatefulWidget {
@@ -122,11 +121,11 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
         ),
 
-        // Update check widget (only on Android)
-        if (Platform.isAndroid)
+        // Update check widget (only on Android, Play builds)
+        if (Platform.isAndroid && GmsIntegrations.instance.appUpdates != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: UpdateCheckWidget(
+            child: GmsIntegrations.instance.appUpdates!.buildUpdateCheckWidget(
               localizations: AppUpdateLocalizations(loc),
               cardBuilder: (context, child) => SettingsCard(
                 context: context,

@@ -1,52 +1,42 @@
-import 'package:geolocator/geolocator.dart' as geo;
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:caravella_core/caravella_core.dart';
 
-/// Platform implementation of LocationServiceAbstraction using geolocator and geocoding packages
+import 'location_manager_position_provider.dart';
+
+/// Platform implementation of LocationServiceAbstraction: the position comes
+/// from Google's fused provider when the build has it
+/// ([GmsIntegrations.createPositionProvider]), otherwise from the platform
+/// `LocationManager`; reverse geocoding uses the `geocoding` package.
 class LocationServiceImpl implements LocationServiceAbstraction {
   final geocoding.Geocoding _geocoding = geocoding.Geocoding();
+  final PositionProvider _positionProvider;
+
+  LocationServiceImpl({PositionProvider? positionProvider})
+    : _positionProvider =
+          positionProvider ??
+          GmsIntegrations.instance.createPositionProvider() ??
+          LocationManagerPositionProvider();
 
   @override
-  Future<bool> isLocationServiceEnabled() async {
-    return await geo.Geolocator.isLocationServiceEnabled();
-  }
+  Future<bool> isLocationServiceEnabled() =>
+      _positionProvider.isLocationServiceEnabled();
 
   @override
-  Future<LocationPermissionStatus> checkPermission() async {
-    final permission = await geo.Geolocator.checkPermission();
-    return _toLocationPermissionStatus(permission);
-  }
+  Future<LocationPermissionStatus> checkPermission() =>
+      _positionProvider.checkPermission();
 
   @override
-  Future<LocationPermissionStatus> requestPermission() async {
-    final permission = await geo.Geolocator.requestPermission();
-    return _toLocationPermissionStatus(permission);
-  }
+  Future<LocationPermissionStatus> requestPermission() =>
+      _positionProvider.requestPermission();
 
   @override
   Future<LocationPosition?> getCurrentPosition({
     LocationAccuracy accuracy = LocationAccuracy.high,
     Duration timeLimit = const Duration(seconds: 10),
-  }) async {
-    try {
-      final position = await geo.Geolocator.getCurrentPosition(
-        locationSettings: geo.LocationSettings(
-          accuracy: _toGeolocatorAccuracy(accuracy),
-          timeLimit: timeLimit,
-        ),
-      );
-
-      return LocationPosition(
-        latitude: position.latitude,
-        longitude: position.longitude,
-        altitude: position.altitude,
-        accuracy: position.accuracy,
-        timestamp: position.timestamp,
-      );
-    } catch (e) {
-      return null;
-    }
-  }
+  }) => _positionProvider.getCurrentPosition(
+    accuracy: accuracy,
+    timeLimit: timeLimit,
+  );
 
   @override
   Future<GeocodedPlacemark?> reverseGeocode({
@@ -78,38 +68,6 @@ class LocationServiceImpl implements LocationServiceAbstraction {
       );
     } catch (e) {
       return null;
-    }
-  }
-
-  LocationPermissionStatus _toLocationPermissionStatus(
-    geo.LocationPermission permission,
-  ) {
-    switch (permission) {
-      case geo.LocationPermission.denied:
-        return LocationPermissionStatus.denied;
-      case geo.LocationPermission.deniedForever:
-        return LocationPermissionStatus.deniedForever;
-      case geo.LocationPermission.whileInUse:
-        return LocationPermissionStatus.whileInUse;
-      case geo.LocationPermission.always:
-        return LocationPermissionStatus.always;
-      case geo.LocationPermission.unableToDetermine:
-        return LocationPermissionStatus.denied;
-    }
-  }
-
-  geo.LocationAccuracy _toGeolocatorAccuracy(LocationAccuracy accuracy) {
-    switch (accuracy) {
-      case LocationAccuracy.lowest:
-        return geo.LocationAccuracy.lowest;
-      case LocationAccuracy.low:
-        return geo.LocationAccuracy.low;
-      case LocationAccuracy.medium:
-        return geo.LocationAccuracy.medium;
-      case LocationAccuracy.high:
-        return geo.LocationAccuracy.high;
-      case LocationAccuracy.best:
-        return geo.LocationAccuracy.best;
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:google_drive_sync/google_drive_sync.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 
@@ -65,9 +64,10 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
   // alive across rebuilds.
   CloudRelayChannel? get _cloudChannel => widget.orchestrator.cloudChannel;
 
-  GoogleDriveCloudChannel? get _driveChannel {
+  /// The account side of the channel (Google Drive sign-in), if it has one.
+  CloudAccountChannel? get _driveChannel {
     final channel = _cloudChannel;
-    return channel is GoogleDriveCloudChannel ? channel : null;
+    return channel is CloudAccountChannel ? channel as CloudAccountChannel : null;
   }
 
   @override

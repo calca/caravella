@@ -1,4 +1,4 @@
-import 'package:play_store_updates/play_store_updates.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 /// Adapter that implements UpdateLocalizations using the app's localizations.

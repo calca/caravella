@@ -16,6 +16,7 @@ class MainActivity : FlutterActivity() {
 
     private var shortcutsChannel: MethodChannel? = null
     private var appFunctionsChannel: MethodChannel? = null
+    private var locationChannel: LocationChannel? = null
 
     // Pending ADD_EXPENSE data from shortcuts (groupId + groupTitle only)
     private var pendingShortcutAction: Map<String, String>? = null
@@ -153,6 +154,10 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        // Location channel – platform LocationManager, used when the build has
+        // no Google Play Services (F-Droid)
+        locationChannel = LocationChannel(applicationContext, flutterEngine.dartExecutor.binaryMessenger)
+
         // App Functions channel – forwards App Function invocations to Dart
         appFunctionsChannel = MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -172,5 +177,11 @@ class MainActivity : FlutterActivity() {
             appFunctionsChannel?.invokeMethod("onAddExpense", data)
             pendingAppFunctionAction = null
         }
+    }
+
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        locationChannel?.dispose()
+        locationChannel = null
+        super.cleanUpFlutterEngine(flutterEngine)
     }
 }

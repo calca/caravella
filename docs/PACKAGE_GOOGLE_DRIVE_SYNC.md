@@ -44,8 +44,9 @@ Ties auth + API client together and implements the periodic-polling half of `Clo
 
 ## Where it's wired into the app
 
-- `lib/sync/sync_bootstrap.dart` — `SyncBootstrap.initialize()` passes `GoogleDriveSyncFactory.createCloudChannel()` as `SyncOrchestrator`'s `cloudChannel`.
-- `lib/sync/sync_settings_screen.dart` — the whole Cloud Sync section (`_buildCloudSection`) is conditionally built on `orchestrator.isCloudEnabled`; `_CloudSyncCard` reads `widget.orchestrator.cloudChannel` (the same instance the orchestrator uses, not a throwaway one — important, since a fresh `GoogleDriveCloudChannel` would have no sign-in session) and downcasts to `GoogleDriveCloudChannel` for the sign-in flow.
+- `packages/caravella_gms/lib/src/play_gms_integrations.dart` — `PlayGmsIntegrations.createCloudChannel()` returns `GoogleDriveSyncFactory.createCloudChannel()`; the app never imports this package directly, and the F-Droid build doesn't contain it (see [caravella_gms](PACKAGE_CARAVELLA_GMS.md)).
+- `lib/sync/sync_bootstrap.dart` — `SyncBootstrap.initialize()` passes `GmsIntegrations.instance.createCloudChannel()` as `SyncOrchestrator`'s `cloudChannel`.
+- `lib/sync/multi_device_sync_page.dart` — `_CloudSyncCard` reads `widget.orchestrator.cloudChannel` (the same instance the orchestrator uses, not a throwaway one — important, since a fresh `GoogleDriveCloudChannel` would have no sign-in session) and casts it to `CloudAccountChannel` (the `caravella_core` interface `GoogleDriveCloudChannel` implements) for the sign-in flow; `lib/sync/sync_settings_screen.dart` only shows the cloud entry when `orchestrator.isCloudEnabled`.
 
 ## Known gaps
 

@@ -34,11 +34,11 @@ These templates plug into the group-type selector during group creation — see 
 
 ## What's New
 
-`whats_new_page.dart` (`WhatsNewPage`) loads a locale-specific changelog asset (`assets/docs/CHANGELOG_<lang>.md`, falling back to English) and renders it with `gpt_markdown`. On Android, also embeds `UpdateCheckWidget` from `play_store_updates` for a manual "check for updates" card — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md).
+`whats_new_page.dart` (`WhatsNewPage`) loads a locale-specific changelog asset (`assets/docs/CHANGELOG_<lang>.md`, falling back to English) and renders it with `gpt_markdown`. On Android, in Play builds, also embeds the manual "check for updates" card (`GmsIntegrations.instance.appUpdates?.buildUpdateCheckWidget`, i.e. `UpdateCheckWidget` from `play_store_updates`); the F-Droid build has no `appUpdates` and shows no card — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) and [caravella_gms](PACKAGE_CARAVELLA_GMS.md).
 
 ## Update localization adapter
 
-`update/app_update_localizations.dart` (`AppUpdateLocalizations implements UpdateLocalizations`) maps the app's generated `gen.AppLocalizations` strings onto the interface required by `play_store_updates`, used both by `HomePage`'s automatic check and `WhatsNewPage`'s manual widget.
+`update/app_update_localizations.dart` (`AppUpdateLocalizations implements UpdateLocalizations`) maps the app's generated `gen.AppLocalizations` strings onto the `UpdateLocalizations` interface (`caravella_core/lib/integrations/update_localizations.dart`, consumed by `play_store_updates`), used both by `HomePage`'s automatic check and `WhatsNewPage`'s manual widget.
 
 ## See also
 

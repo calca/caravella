@@ -125,7 +125,7 @@ flutter run --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true \
   --dart-define=GOOGLE_DRIVE_IOS_CLIENT_ID=1234567890-abc...apps.googleusercontent.com
 ```
 
-Omit `ENABLE_GOOGLE_DRIVE_SYNC` entirely (the normal F-Droid/default build) and none of this matters — `GoogleDriveSyncFactory.createCloudChannel()` returns `null`, the Cloud Sync section stays hidden, and `google_sign_in`/`googleapis` are never touched at runtime.
+Omit `ENABLE_GOOGLE_DRIVE_SYNC` entirely (the default) and none of this matters — `GoogleDriveSyncFactory.createCloudChannel()` returns `null`, the Cloud Sync section stays hidden, and `google_sign_in`/`googleapis` are never touched at runtime. The F-Droid build goes further and doesn't contain them at all (FOSS variant — see [caravella_gms](PACKAGE_CARAVELLA_GMS.md)).
 
 ## Verifying it works
 

@@ -22,6 +22,7 @@ This applies to both directions:
 | `packages/caravella_core_ui/lib/**` (widgets, themes, map) | [PACKAGE_CARAVELLA_CORE_UI.md](PACKAGE_CARAVELLA_CORE_UI.md), and [LOCATION_AND_MAPS.md](LOCATION_AND_MAPS.md) for `map/` |
 | `packages/android_app_functions/lib/**` + native Kotlin under `android/.../appfunctions/` | [PACKAGE_ANDROID_APP_FUNCTIONS.md](PACKAGE_ANDROID_APP_FUNCTIONS.md) |
 | `packages/play_store_updates/lib/**` | [PACKAGE_PLAY_STORE_UPDATES.md](PACKAGE_PLAY_STORE_UPDATES.md) |
+| `packages/caravella_gms/**`, `packages/caravella_gms_foss/**`, `packages/caravella_core/lib/integrations/**`, `build_variant.sh` | [PACKAGE_CARAVELLA_GMS.md](PACKAGE_CARAVELLA_GMS.md), [BUILD_VARIANTS.md](BUILD_VARIANTS.md#play-vs-foss-variant), [FDROID_SUBMISSION.md](FDROID_SUBMISSION.md) |
 | `packages/google_drive_sync/lib/**` | [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md), [GOOGLE_DRIVE_SYNC_SETUP.md](GOOGLE_DRIVE_SYNC_SETUP.md) |
 | `packages/caravella_core/lib/sync/**`, `lib/sync/**` | [SYNC_ARCHITECTURE.md](SYNC_ARCHITECTURE.md), [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md) |
 | `lib/main.dart`, `lib/main/**` | [ARCHITECTURE.md](ARCHITECTURE.md) |

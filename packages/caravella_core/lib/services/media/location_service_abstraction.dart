@@ -1,6 +1,11 @@
-/// Service abstraction for location retrieval operations
-/// Isolates platform dependencies (geolocator) for better testability
-abstract class LocationServiceAbstraction {
+/// Source of the device position: location-service state, permission and a
+/// single position fix.
+///
+/// Split out of [LocationServiceAbstraction] because the best Android
+/// implementation (Google's fused location provider, via `geolocator`) is
+/// proprietary: it lives in the `caravella_gms` package, and builds without
+/// Google Mobile Services fall back to the platform `LocationManager`.
+abstract class PositionProvider {
   /// Check if location services are enabled on the device
   Future<bool> isLocationServiceEnabled();
 
@@ -20,7 +25,12 @@ abstract class LocationServiceAbstraction {
     LocationAccuracy accuracy = LocationAccuracy.high,
     Duration timeLimit = const Duration(seconds: 10),
   });
+}
 
+/// Service abstraction for location retrieval operations: a
+/// [PositionProvider] plus reverse geocoding. Isolates platform
+/// dependencies for better testability.
+abstract class LocationServiceAbstraction implements PositionProvider {
   /// Reverse geocode coordinates to get address information
   ///
   /// [latitude] - Latitude coordinate

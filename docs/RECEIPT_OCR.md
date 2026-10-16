@@ -4,10 +4,10 @@ Lets users scan a receipt (camera or gallery) to auto-fill an expense's amount a
 
 ## Implementation
 
-`ReceiptScannerService` (`lib/services/receipt_scanner_service.dart`, singleton) uses **`google_mlkit_text_recognition`** (`TextRecognizer(script: TextRecognitionScript.latin)` — Latin script only, so it covers IT/EN/ES/PT but not the app's Chinese locale).
+`ReceiptScannerService` (`lib/services/receipt_scanner_service.dart`, singleton) gets its text recognizer from `GmsIntegrations.instance.createReceiptTextRecognizer()`: in Play builds that's `MlKitReceiptTextRecognizer` (`packages/caravella_gms`), **`google_mlkit_text_recognition`** with `TextRecognitionScript.latin` — Latin script only, so it covers IT/EN/ES/PT but not the app's Chinese locale. The F-Droid build has no recognizer: `isAvailable` is false and `ExpenseFormComponent` hides both scan actions — see [caravella_gms](PACKAGE_CARAVELLA_GMS.md).
 
 `scanReceipt(File imageFile)`:
-1. `_textRecognizer.processImage(InputImage.fromFile(imageFile))` — runs OCR.
+1. `recognizer.recognizeText(imageFile.path)` — runs OCR, returning the plain text.
 2. `_parseReceiptText` regex-scans line by line for:
    - **Amount** — keyword-adjacent numbers (`totale`, `total`, `subtotal`, `tot.`, `somma`), or `€`/`eur`-adjacent numbers, falling back to any `NN.NN`/`NN,NN` pattern if no keyword/currency match is found.
    - **Description** — the first plausible non-numeric, non-date line within the first 5 lines (merchant name/item guess).

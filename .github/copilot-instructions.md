@@ -15,7 +15,8 @@
   - Export: `import 'package:caravella_core/caravella_core.dart';`
 - **`packages/caravella_core_ui/`**: Reusable UI components, widgets, themes-independent components
   - Export: `import 'package:caravella_core_ui/caravella_core_ui.dart';`
-- **`packages/play_store_updates/`**: Google Play Store update functionality (conditional with `ENABLE_PLAY_UPDATES=true`)
+- **`packages/caravella_gms/`**: everything needing proprietary Google libraries (Play Services, ML Kit, Play Core); the app reaches it only via `GmsIntegrations.instance`. `packages/caravella_gms_foss/` is the same-named FOSS stand-in selected by `./build_variant.sh foss` (F-Droid)
+- **`packages/play_store_updates/`**: Google Play Store update functionality (conditional with `ENABLE_PLAY_UPDATES=true`), used only through `caravella_gms`
   - Export: `import 'package:play_store_updates/play_store_updates.dart';`
 - **`lib/`**: App-specific UI, pages, managers, main app logic
 

@@ -34,7 +34,7 @@ flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-defin
 flutter gen-l10n
 ```
 
-CI (`.github/workflows/Development - Android.yml`) runs exactly: `flutter pub get` → `flutter analyze` → `flutter test` → **`flutter test` inside each of the 5 `packages/*` (own `pub get` + `flutter test`, since they're separate Dart packages the root `flutter test` never reaches)** → signed staging APK build. Match this locally before pushing — when touching a package, also run `(cd packages/<name> && flutter pub get && flutter test)`.
+CI (`.github/workflows/Development - Android.yml`) runs exactly: `flutter pub get` → `flutter analyze` → `flutter test` → **`flutter test` inside each `packages/*` (own `pub get` + `flutter test`, since they're separate Dart packages the root `flutter test` never reaches)** → F-Droid (FOSS) variant guard → signed staging APK build. Match this locally before pushing — when touching a package, also run `(cd packages/<name> && flutter pub get && flutter test)`.
 
 ## Package boundaries
 
@@ -42,6 +42,7 @@ CI (`.github/workflows/Development - Android.yml`) runs exactly: `flutter pub ge
 - `caravella_core_ui` → `caravella_core` only.
 - `caravella_core` → independent (no dependency on other local packages).
 - `android_app_functions` (exposes app capabilities to Android AI agents/shortcuts) and `play_store_updates` (conditional on `ENABLE_PLAY_UPDATES=true`) both depend on `caravella_core` (and `play_store_updates` also on `caravella_core_ui`).
+- `caravella_gms` holds **everything that needs a proprietary Google library** (Play Services, ML Kit, Play Core: location provider, receipt OCR, QR scanning, Bluetooth/Nearby, in-app review/updates, and it depends on `google_drive_sync`/`play_store_updates`). The app depends on it alone and uses `GmsIntegrations.instance` (interface in `caravella_core`); never add those libraries to the root `pubspec.yaml` or import them in `lib/`. `packages/caravella_gms_foss` has the same package name with nothing in it — `./build_variant.sh foss` (F-Droid build) switches to it via `pubspec_overrides.yaml`. See [`docs/PACKAGE_CARAVELLA_GMS.md`](docs/PACKAGE_CARAVELLA_GMS.md).
 - `google_drive_sync` (Google Drive cloud relay for the sync feature, conditional on `ENABLE_GOOGLE_DRIVE_SYNC=true` — see [`docs/GOOGLE_DRIVE_SYNC_SETUP.md`](docs/GOOGLE_DRIVE_SYNC_SETUP.md)) depends on `caravella_core` only.
 - `lib/main.dart` is a thin entrypoint; actual startup sequencing (Talker logging init, `AppInitialization.initialize()`, shortcuts, Android App Functions, `runApp`) lives in `lib/main/app_initialization.dart` and `lib/main/caravella_app.dart`. Provider wiring is factored out into `lib/main/provider_setup.dart` (`ProviderSetup.createProviders` / `wrapWithNotifiers`) rather than inline in `main.dart`.
 

@@ -1,3 +1,4 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Gates Bluetooth (Nearby Connections) sync on the `ENABLE_BLUETOOTH_SYNC`
@@ -12,16 +13,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// API) should pass `--dart-define=ENABLE_BLUETOOTH_SYNC=false` explicitly
 /// — see docs/FDROID_SUBMISSION.md.
 ///
-/// As with the other conditional packages, this only gates *reachability*
-/// (the Bluetooth section is hidden from Settings → Sync when disabled) —
-/// `nearby_connections` remains a normal, always-present pubspec
-/// dependency; see docs/BUILD_VARIANTS.md for why that's an accepted
-/// pattern in this codebase already.
+/// The transport itself (Google Nearby Connections) comes from
+/// `caravella_gms` ([GmsIntegrations.createBluetoothChannel]); the F-Droid
+/// build doesn't include it at all, so [isEnabled] is also false there
+/// regardless of the flag.
 class BluetoothSyncFactory {
   static const _prefKey = 'sync_bluetooth_enabled';
 
   static bool get isEnabled =>
-      const bool.fromEnvironment('ENABLE_BLUETOOTH_SYNC', defaultValue: true);
+      const bool.fromEnvironment('ENABLE_BLUETOOTH_SYNC', defaultValue: true) &&
+      GmsIntegrations.instance.supportsBluetoothSync;
+
+  /// A new channel for one pairing session, wired to [orchestrator]; `null`
+  /// when Bluetooth sync isn't available in this build.
+  static BluetoothSyncChannel? createChannel(SyncOrchestrator orchestrator) {
+    if (!isEnabled) return null;
+    return GmsIntegrations.instance.createBluetoothChannel()
+      ?..onDelta = orchestrator.handleIncomingDelta
+      ..onPairingRequest = orchestrator.handlePairingCompleted;
+  }
 
   /// Whether the user has enabled Bluetooth sync (opt-in preference,
   /// separate from the [isEnabled] build-time flag). Defaults to `false` —

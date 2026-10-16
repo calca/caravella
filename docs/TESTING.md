@@ -82,7 +82,7 @@ Tests run automatically on pull requests via GitHub Actions. The workflow:
 1. Checks out the code
 2. Sets up Flutter
 3. Runs `flutter test` in the root app
-4. Runs `flutter pub get` + `flutter test` inside each of the 5 `packages/*` (own step, since the root `flutter test` never reaches them — see "Overview" above)
+4. Runs `flutter pub get` + `flutter test` inside each of the `packages/*` (own step, since the root `flutter test` never reaches them — see "Overview" above)
 5. Reports failures as PR check annotations
 
 ## Tips

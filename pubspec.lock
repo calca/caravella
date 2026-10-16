@@ -174,6 +174,13 @@ packages:
       relative: true
     source: path
     version: "1.6.0"
+  caravella_gms:
+    dependency: "direct main"
+    description:
+      path: "packages/caravella_gms"
+      relative: true
+    source: path
+    version: "1.0.0"
   characters:
     dependency: transitive
     description:
@@ -683,7 +690,7 @@ packages:
     source: hosted
     version: "5.0.0"
   geolocator:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: geolocator
       sha256: "4e41ad6bc072364ff01822531dac47936c065e5bf8f928f240a25bb51256ada0"
@@ -702,10 +709,10 @@ packages:
     dependency: transitive
     description:
       name: geolocator_apple
-      sha256: "853803d6bb1713c094e935b4a5ae5f19c0308acf81da13fa9ff84fb4c70c0b73"
+      sha256: "3b3189beba8b59b2a0eee970b466e991e4ac1564a9034f82a825a3c45c4be1fa"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.14"
+    version: "2.3.15"
   geolocator_linux:
     dependency: transitive
     description:
@@ -747,7 +754,7 @@ packages:
     source: hosted
     version: "2.2.0"
   google_drive_sync:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "packages/google_drive_sync"
       relative: true
@@ -770,7 +777,7 @@ packages:
     source: hosted
     version: "0.13.0"
   google_mlkit_text_recognition:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_mlkit_text_recognition
       sha256: e13685af5093c8be009a3555909b72a80e10cfe8f97752bcbdf99fa0ccbda810
@@ -789,18 +796,18 @@ packages:
     dependency: transitive
     description:
       name: google_sign_in_android
-      sha256: c403315d87aba1f815a0a401093f97808cab6cb2bdd11ca431ff8587fd7f1c00
+      sha256: "312e74b3e839896ff30ed98310da4cc24dbfa19ad060b1612f7718d5afa66480"
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.17"
+    version: "7.2.18"
   google_sign_in_ios:
     dependency: transitive
     description:
       name: google_sign_in_ios
-      sha256: "55e8b7ea216d671f81dd17b0ef535d0a7d239ef1aea4f6f79fbf14abaa9c3687"
+      sha256: b8efb315c778390f1b1c4fc14d74c42784dd9ee0c1d0c26b13f30b46826319ad
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.6"
+    version: "6.3.8"
   google_sign_in_platform_interface:
     dependency: transitive
     description:
@@ -970,7 +977,7 @@ packages:
     source: hosted
     version: "0.2.2"
   in_app_review:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: in_app_review
       sha256: "364db0c160b37fe7fad9cdaa18f968473924b17368869010af902760421b6bf8"
@@ -1146,7 +1153,7 @@ packages:
     source: hosted
     version: "2.1.0"
   mobile_scanner:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: mobile_scanner
       sha256: "5a51ea79f0cf8293f616a5d08baae185b59b5e6bb24df01f2a63037ade0bade0"
@@ -1170,7 +1177,7 @@ packages:
     source: hosted
     version: "0.19.5"
   nearby_connections:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: nearby_connections
       sha256: "94d500bdb11f9a3db3b1cb2949ab438107e581f0142380efc17ecc8038e99369"
@@ -1362,7 +1369,7 @@ packages:
     source: hosted
     version: "3.2.0"
   play_store_updates:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "packages/play_store_updates"
       relative: true

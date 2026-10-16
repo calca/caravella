@@ -3,7 +3,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-import 'bluetooth_sync_channel.dart';
 import 'bluetooth_sync_factory.dart';
 import 'bluetooth_sync_sheet.dart';
 import 'qr_pair_scan_page.dart';
@@ -142,7 +141,9 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
             ),
           ),
         ),
-        if (_enabled) ...[
+        // Scanning needs the camera QR reader from caravella_gms; builds
+        // without it (F-Droid) can still be paired by showing their own code.
+        if (_enabled && GmsIntegrations.instance.supportsQrScanning) ...[
           const SizedBox(height: 8),
           SettingsCard(
             context: context,
@@ -208,9 +209,8 @@ class _BluetoothSyncSectionState extends State<_BluetoothSyncSection> {
   }
 
   void _discoverDevices(BuildContext context) {
-    final channel = BluetoothSyncChannel()
-      ..onDelta = widget.orchestrator.handleIncomingDelta
-      ..onPairingRequest = widget.orchestrator.handlePairingCompleted;
+    final channel = BluetoothSyncFactory.createChannel(widget.orchestrator);
+    if (channel == null) return;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

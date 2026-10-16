@@ -5,7 +5,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-import 'bluetooth_sync_channel.dart';
 
 /// State machine phases for the Bluetooth advertise (share) flow.
 enum _AdvertisePhase { waiting, completed, error }

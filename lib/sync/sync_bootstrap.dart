@@ -1,5 +1,4 @@
 import 'package:caravella_core/caravella_core.dart';
-import 'package:google_drive_sync/google_drive_sync.dart';
 
 /// Builds the app-wide [SyncOrchestrator].
 ///
@@ -22,14 +21,15 @@ class SyncBootstrap {
 
     await DeviceIdentity.initialize();
 
-    // Google Drive cloud relay is only built when the app is compiled with
-    // --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true (see
-    // docs/GOOGLE_DRIVE_SYNC_SETUP.md) — null otherwise, which hides the
-    // Cloud Sync section entirely (SyncOrchestrator.isCloudEnabled).
+    // Google Drive cloud relay comes from caravella_gms and is only built
+    // when the app is compiled with --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true
+    // (see docs/GOOGLE_DRIVE_SYNC_SETUP.md) — null otherwise, and always null
+    // in the F-Droid build, which hides the Cloud Sync section entirely
+    // (SyncOrchestrator.isCloudEnabled).
     final orchestrator = SyncOrchestrator(
       lanChannel: LanSyncChannel(),
       syncManager: SyncManager(repository: repository),
-      cloudChannel: GoogleDriveSyncFactory.createCloudChannel(),
+      cloudChannel: GmsIntegrations.instance.createCloudChannel(),
     );
     await orchestrator.initialize();
     return orchestrator;
