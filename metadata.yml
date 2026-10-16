@@ -87,6 +87,7 @@ Builds:
       - packages/google_drive_sync
       - packages/play_store_updates
     prebuild:
+      - sdkmanager 'platforms;android-37.0'
       - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml
         | head -1)
       - '[[ $flutterVersion ]]'
