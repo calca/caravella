@@ -4,6 +4,9 @@ Android 15 (API 35) deprecated the theme-XML approach to opting out of edge-to-e
 
 ## Where it's implemented
 
+**Native side** — `MainActivity.onCreate` calls `WindowCompat.enableEdgeToEdge(window)` (androidx.core) on every supported version (`minSdk` is 29), so the window draws behind transparent system bars before Flutter's first frame; Play Console flags apps that only opt in on some versions. The display-cutout mode is `always` from Android 11 (`values-v30/` and `values-night-v30/styles.xml`) — the deprecated `shortEdges` is no longer used, and Android 10 uses the platform default.
+
+**Flutter side** — 
 `AppInitialization.configureSystemUI()` (`lib/main/app_initialization.dart`), called once during startup (see [Architecture Overview § startup sequence](ARCHITECTURE.md#app-startup-sequence)):
 
 ```dart

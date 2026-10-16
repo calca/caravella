@@ -38,6 +38,8 @@ flutter build appbundle --flavor prod --release \
 
 The upload authenticates as the service account in the `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` secret (`play-deploy@elegant-obelisk-472510-g8.iam.gserviceaccount.com`, Google Play Android Developer API enabled in its Cloud project). That account must be a Play Console user (**Users and permissions**) with app permissions on *Caravella* to release to testing tracks and production; without them the step fails with `The caller does not have permission`, which is why every run before 2.0.0 stopped at the upload.
 
+Besides the AAB, the Store workflow uploads an `io_caravella_egm-<version>-mapping` artifact (R8 `mapping.txt` + `native-debug-symbols.zip`, kept 90 days). Play already gets both from inside the AAB but never lets you download them again, so this copy is what you use to retrace obfuscated class names that Play Console shows in recommendations or crash reports.
+
 ## `Store - Promote.yml` ("Android CI - Store Promote")
 
 Manually triggered with inputs `target_branch`, `track` (default `production`), `rollout` (user fraction, `1` = full), `promote_release` (off = listing-only update, track untouched), `update_listing` and `dry_run`. It builds nothing: it promotes the version code already uploaded by `Store - Android.yml` (read from `pubspec.yaml` on `target_branch`), in one Play edit via [`.github/scripts/play_publish.py`](../.github/scripts/play_publish.py):

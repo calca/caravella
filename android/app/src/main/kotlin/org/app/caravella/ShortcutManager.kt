@@ -11,8 +11,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.RectF
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -21,12 +19,7 @@ import java.io.File
 object ShortcutManager {
     private const val ACTION_ADD_EXPENSE = "io.caravella.egm.ADD_EXPENSE"
 
-    @RequiresApi(Build.VERSION_CODES.N_MR1)
     fun updateShortcuts(context: Context, groups: List<GroupInfo>) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-            return
-        }
-
         // Groups are already filtered and sorted by Dart layer
         // Just create shortcuts for all provided groups
         val shortcuts = groups.mapIndexed { index, group ->
@@ -42,7 +35,6 @@ object ShortcutManager {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N_MR1)
     private fun createShortcut(
         context: Context,
         group: GroupInfo,
@@ -261,12 +253,10 @@ object ShortcutManager {
     }
 
     fun clearShortcuts(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            try {
-                ShortcutManagerCompat.removeAllDynamicShortcuts(context)
-            } catch (e: Exception) {
-                // Silently fail
-            }
+        try {
+            ShortcutManagerCompat.removeAllDynamicShortcuts(context)
+        } catch (e: Exception) {
+            // Silently fail
         }
     }
 

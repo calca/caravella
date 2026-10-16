@@ -47,7 +47,9 @@ android {
 
     defaultConfig {
         applicationId = "io.caravella.egm"
-        minSdk = flutter.minSdkVersion
+        // Android 10+. Raised from Flutter's default (24) when moving to
+        // edge-to-edge everywhere; no active installs were below it.
+        minSdk = 29
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -88,6 +90,9 @@ android {
         release {
             if (hasReleaseKeystore) signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // Ship native symbol tables in the App Bundle so Play can
+            // symbolicate native crashes/ANRs (Play Console recommendation).
+            ndk { debugSymbolLevel = "SYMBOL_TABLE" }
         }
     }
 }
