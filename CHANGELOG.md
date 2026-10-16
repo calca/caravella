@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The expenses map and place-search map are announced by name, and map pins / the group-type icon / cards with a custom accessible name can actually be activated by screen readers (their tap action was dropped together with the excluded child semantics)
   - Amounts and other mixed-style texts (`CurrencyDisplay`, section headers, stat cards, search highlights) now follow the system font size (they used `RichText`, which ignores it); the group page header grows with large text instead of sliding under the Back button; expense titles wrap to two lines at large text sizes
 - Fixed the "Automatic backup" toggle (Settings → Data management) announcing "double tap to enable/disable **screen security**" to screen readers — it reused the FLAG_SECURE hint, the same bug already fixed on the Dynamic color and App Functions toggles. It now relies on its label + toggle-state semantics like those
+- Fixed the search icon on the Groups page looking dimmed in dark mode: it used the secondary icon color (grey in dark, black in light) and now matches the page title
 
 ## [2.0.0] - 2026-10-15
 
