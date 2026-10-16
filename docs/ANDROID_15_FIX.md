@@ -20,7 +20,7 @@ SystemChrome.setSystemUIOverlayStyle(
 );
 ```
 
-This puts the app in edge-to-edge mode with fully transparent system bars up front. Icon brightness (light vs. dark status/nav bar icons) is **not** set here — it's managed dynamically per-screen based on the active theme by `AppSystemUI` (`caravella_core_ui`, see [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md)), which wraps screens in an `AnnotatedRegion<SystemUiOverlayStyle>` and recomputes light/dark icon style from the current `ColorScheme`.
+This puts the app in edge-to-edge mode with fully transparent system bars up front. Icon brightness (light vs. dark status/nav bar icons) is **not** set here — it's managed dynamically per-screen based on the active theme by `AppSystemUI` (`caravella_core_ui`, see [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md)), which wraps screens in an `AnnotatedRegion<SystemUiOverlayStyle>` and recomputes light/dark icon style from the current `ColorScheme`. `CaravellaApp`'s `MaterialApp.builder` also wraps every route in a default `AppSystemUI`, so screens without their own still get theme-correct bars (and switch immediately on a theme change) instead of keeping the previous screen's style; a screen's own `AppSystemUI` takes precedence.
 
 ## What NOT to do
 

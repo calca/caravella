@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Android Gradle Plugin 8.11.1 → 8.13.2. With 8.11 the release lint check failed under JDK 21 (`MainActivity must extend android.app.Activity`, a false positive: it couldn't load the `android-37.0` platform), which blocked local and F-Droid release builds; CI only passed because it runs JDK 17
 - Release builds are signed only when `android/key.properties` exists; without it (local checkout, F-Droid) the release APK is built unsigned instead of failing on an empty signing config
 
+### Fixed
+- The navigation bar kept the previous theme's color after switching theme from Settings → Appearance (black bar with dark icons right after choosing Light), and on other screens without their own system-bar styling: the app now applies a theme-aware default to every screen
+- Expense pins that overlap on the map (e.g. several expenses a few hundred meters apart in the same city) are now grouped into one numbered pin that opens all of them; zooming in splits the group. Before, only the top pin could be tapped
+- Dates now use the app language's format everywhere: the home group card, the group period and date fields, and the expense date wrote day/month by hand, while statistics followed the locale (so the same period read 9/10 - 18/10 on the home card and 10/9 - 10/18 in Overview, in English). The home card's open-ended periods no longer show the Italian "Dal"/"Fino al" in every language
+
 ## [2.0.1] - 2026-10-16
 
 ### Changed

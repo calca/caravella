@@ -37,7 +37,7 @@ If you ever need to support unequal/itemized splits, this is the function to cha
 
 ## Locations map
 
-`expense_locations_map_page.dart` filters expenses down to those with a non-null lat/lng, computes bounds via `computeBounds` (see [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md)), and renders pins on a `flutter_map` (OSM). Tapping a pin opens `ExpenseMapDetailSheet`. See [Location & Maps](LOCATION_AND_MAPS.md).
+`expense_locations_map_page.dart` filters expenses down to those with a non-null lat/lng, computes bounds via `computeBounds` (see [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md)), and renders pins on a `flutter_map` (OSM). Pins that would overlap on screen (closer than 44 logical px at the current zoom) are merged into one numbered pin; the clustering runs in a `Builder` inside the map's layers, so it's recomputed on every zoom/pan and zooming in splits a group back up. Tapping a pin opens `ExpenseMapDetailSheet`, which shows a single address + coordinates when every expense in the group shares the spot, or the distinct place names otherwise. See [Location & Maps](LOCATION_AND_MAPS.md).
 
 ## Search
 

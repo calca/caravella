@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../home_constants.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 
 /// Displays the header section of a group card.
 ///
@@ -30,36 +31,13 @@ class GroupCardHeader extends StatelessWidget {
     this.centerTitleHorizontally = false,
   });
 
-  String _formatDateRange(ExpenseGroup group, gen.AppLocalizations loc) {
-    final start = group.startDate;
-    final end = group.endDate;
-
-    if (start != null && end != null) {
-      return '${_formatDate(start)} - ${_formatDate(end)}';
-    } else if (start != null) {
-      return 'Dal ${_formatDate(start)}';
-    } else if (end != null) {
-      return 'Fino al ${_formatDate(end)}';
-    }
-    return '';
-  }
-
-  String _formatDate(DateTime date) {
-    final currentYear = DateTime.now().year;
-    if (date.year == currentYear) {
-      return '${date.day}/${date.month}';
-    } else {
-      return '${date.day}/${date.month}/${date.year}';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: centerTitleHorizontally
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
-      children: [_buildTitle(), if (showDateRange) _buildDateRange()],
+      children: [_buildTitle(), if (showDateRange) _buildDateRange(context)],
     );
   }
 
@@ -100,7 +78,7 @@ class GroupCardHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildDateRange() {
+  Widget _buildDateRange(BuildContext context) {
     // Show pin/shared badges even if there are no dates
     if (group.startDate == null &&
         group.endDate == null &&
@@ -124,7 +102,11 @@ class GroupCardHeader extends StatelessWidget {
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  _formatDateRange(group, localizations),
+                  formatDateRange(
+                    start: group.startDate,
+                    end: group.endDate,
+                    locale: Localizations.localeOf(context),
+                  ),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

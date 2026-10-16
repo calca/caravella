@@ -1,10 +1,17 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
 
+/// Formats a single date for display in the app's locale (numeric, e.g.
+/// 16/10/2026 in Italian, 10/16/2026 in English). Every date shown in the UI
+/// goes through here or [formatDateRange] so screens agree on the format;
+/// exports use their own fixed formats.
+String formatDate(DateTime date, Locale locale) =>
+    DateFormat.yMd(locale.toString()).format(date);
+
 /// Formats a date range using the current locale with graceful fallbacks.
 /// Rules:
 /// - both null => returns '–'
-/// - single date => that date
+/// - only a start => "start –"; only an end => "– end"
 /// - same day start/end => single date
 /// - otherwise => "start - end"
 String formatDateRange({
@@ -35,8 +42,8 @@ String formatDateRange({
     return '${fmt(start)} - ${fmt(end)}';
   }
 
-  final single = start ?? end!;
-  return fmt(single);
+  if (start != null) return '${fmt(start)} –';
+  return '– ${fmt(end!)}';
 }
 
 bool _isSameDay(DateTime a, DateTime b) =>

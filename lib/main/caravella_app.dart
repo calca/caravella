@@ -134,7 +134,15 @@ class _CaravellaAppState extends State<CaravellaApp> {
                     ),
                     child: Stack(
                       children: [
-                        Positioned.fill(child: child ?? const SizedBox()),
+                        // Theme-aware fallback for the system bars: pages that
+                        // don't wrap themselves in AppSystemUI would otherwise
+                        // keep the previous screen's (or previous theme's)
+                        // navigation bar colors — e.g. a black nav bar right
+                        // after switching to light theme in Appearance. Pages
+                        // with their own AppSystemUI still take precedence.
+                        Positioned.fill(
+                          child: AppSystemUI(child: child ?? const SizedBox()),
+                        ),
                         SafeArea(
                           child: ToastViewer(
                             alignment: Alignment.topCenter,

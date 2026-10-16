@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'period_selection_bottom_sheet.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 
 class SectionPeriod extends StatelessWidget {
   final DateTime? startDate;
@@ -118,16 +119,19 @@ class _PeriodDisplayCard extends StatelessWidget {
       displayText = gloc.select_period_hint;
       iconData = Icons.calendar_month_outlined;
     } else if (startDate != null && endDate != null) {
-      displayText = '${_formatDate(startDate!)} - ${_formatDate(endDate!)}';
+      displayText =
+          '${formatDate(startDate!, Localizations.localeOf(context))} - ${formatDate(endDate!, Localizations.localeOf(context))}';
       final duration = endDate!.difference(startDate!).inDays + 1;
       secondaryText = '$duration days';
       iconData = Icons.calendar_month;
     } else if (startDate != null) {
-      displayText = '${gloc.select_start}: ${_formatDate(startDate!)}';
+      displayText =
+          '${gloc.select_start}: ${formatDate(startDate!, Localizations.localeOf(context))}';
       secondaryText = gloc.select_end;
       iconData = Icons.calendar_month_outlined;
     } else {
-      displayText = '${gloc.select_end}: ${_formatDate(endDate!)}';
+      displayText =
+          '${gloc.select_end}: ${formatDate(endDate!, Localizations.localeOf(context))}';
       secondaryText = gloc.select_start;
       iconData = Icons.calendar_month_outlined;
     }
@@ -203,13 +207,6 @@ class _PeriodDisplayCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    // Formats date as dd/MM/yyyy
-    return '${date.day.toString().padLeft(2, '0')}/'
-        '${date.month.toString().padLeft(2, '0')}/'
-        '${date.year}';
   }
 }
 
