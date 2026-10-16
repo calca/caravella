@@ -48,12 +48,33 @@ This is the authoritative list — every `String.fromEnvironment`/`bool.fromEnvi
 | `ENABLE_PLAY_UPDATES` | bool, default `false` | `packages/play_store_updates/lib/src/update_service_factory.dart` | Enables real Google Play in-app-update checks (`PlayStoreUpdateService`) instead of the no-op stub — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) |
 | `ENABLE_GOOGLE_DRIVE_SYNC` | bool, default `false` | `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart` | Builds a real `GoogleDriveCloudChannel` (Google Sign-In + Drive API) for the sync feature's Cloud Sync option instead of leaving it `null`/hidden — see [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md) and its [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md) |
 | `GOOGLE_DRIVE_IOS_CLIENT_ID` | String, default `''` | `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart` | iOS-only OAuth client ID for Google Drive sync; unused/unnecessary on Android — see [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md#step-5--optional-ios-oauth-client) |
-| `ENABLE_BLUETOOTH_SYNC` | bool, default **`true`** | `lib/sync/bluetooth_sync_factory.dart` | Hides the Bluetooth section of Settings → Sync when `false` — the only flag on this page that defaults *on*, since Bluetooth sync already ships; F-Droid-style builds pass `=false` explicitly to avoid the Google Play Services dependency `nearby_connections` pulls in — see [F-Droid Submission](FDROID_SUBMISSION.md) |
+| `ENABLE_BLUETOOTH_SYNC` | bool, default **`true`** | `lib/sync/bluetooth_sync_factory.dart` | Hides the Bluetooth section of Settings → Sync when `false` — the only flag on this page that defaults *on*, since Bluetooth sync already ships. Irrelevant for the FOSS variant, which has no Bluetooth transport at all (see [Play vs. FOSS variant](#play-vs-foss-variant)) |
 | `ENABLE_ANDROID_WIDGET` | bool, default per-flavor (`true` for dev/staging, `false` for prod), see below | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableAndroidWidget`), also read natively in `build.gradle.kts` | Enables/disables the Android home-screen widget, both on the Flutter side (`PlatformHomeWidgetManager`) and natively (disables the widget receiver/config activity in the manifest) |
 | `ENABLE_TALKER_SCREEN` | bool, default `false` | `packages/caravella_core/lib/config/app_config.dart` (`AppConfig.enableTalkerScreen`) | Shows the in-app "Debug Logs" (Talker) screen in Settings even outside debug builds |
 | `UNSPLASH_ACCESS_KEY` | String, default `''` | `lib/services/unsplash/unsplash_service.dart` | Enables the Unsplash background-photo search in group creation/editing (empty ⇒ feature silently disabled, returns no results) |
 
 If you add a new `--dart-define`, add a row here — this table is meant to be the single source of truth (see [Keeping This Documentation Current](MAINTAINING_DOCS.md)).
+
+## Play vs. FOSS variant
+
+Separate from the flavors and dart-defines above, every build is one of two **variants**, chosen by `./build_variant.sh` before `flutter pub get`/`flutter build`:
+
+| Variant | `caravella_gms` resolves to | Use |
+|---|---|---|
+| `gms` (default) | `packages/caravella_gms` — Play Services, ML Kit, Play Core | Play Store, GitHub releases, CI |
+| `foss` | `packages/caravella_gms_foss` — no Google libraries | F-Droid |
+
+```bash
+./build_variant.sh foss    # writes pubspec_overrides.yaml (git-ignored) + flutter pub get
+flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
+./build_variant.sh check   # fails if a non-free Google artifact is on the release classpath
+./build_variant.sh gms     # back to the Play build
+./build_variant.sh         # prints the current variant
+```
+
+This has to be a dependency switch rather than another `--dart-define`: a define only picks code paths, while every plugin in the resolved dependency graph is still registered by Flutter and compiled by Gradle, which is what F-Droid's scanner rejects. In the FOSS variant receipt OCR, QR scanning, Bluetooth sync, Google Drive, in-app review and in-app updates are hidden, and the current location comes from the platform `LocationManager` instead of Google's fused provider — see [caravella_gms](PACKAGE_CARAVELLA_GMS.md) for the full feature table.
+
+The flags below still apply inside the `gms` variant; in the `foss` variant the features they gate don't exist.
 
 ## Google Play updates vs. F-Droid
 
@@ -63,11 +84,11 @@ If you add a new `--dart-define`, add a row here — this table is meant to be t
 # With Play Store update checks (staging/prod builds normally use this)
 flutter build apk --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=FLAVOR=prod --flavor prod --release
 
-# Without (F-Droid-style build — no Google dependency reachable at runtime)
+# Without (no update checks, but in_app_update is still compiled in)
 flutter build apk --dart-define=FLAVOR=prod --flavor prod --release
 ```
 
-Note: `play_store_updates` is always a normal pubspec dependency of the root app — the "conditional" part is a runtime/compile-time code path, not conditional dependency resolution (see [Architecture Overview](ARCHITECTURE.md)).
+Note: without the flag `in_app_update` is still in the APK — only the [FOSS variant](#play-vs-foss-variant) removes it. `play_store_updates` is reached only through `caravella_gms` (see [Architecture Overview](ARCHITECTURE.md#package-dependency-rules)).
 
 ## Google Drive sync (optional)
 
@@ -83,17 +104,17 @@ flutter run --flavor dev --dart-define=FLAVOR=dev
 
 ## Bluetooth sync (on by default)
 
-`ENABLE_BLUETOOTH_SYNC` works the other way round from the two flags above: it **defaults to `true`**, because Bluetooth sync already ships in normal builds — flipping the default would silently remove a working feature from any build that doesn't know to ask for it. Only pass `=false` when you specifically want it gone, e.g. for an F-Droid build avoiding the Google Play Services dependency `nearby_connections` pulls in (Nearby Connections API) — see [F-Droid Submission](FDROID_SUBMISSION.md).
+`ENABLE_BLUETOOTH_SYNC` works the other way round from the two flags above: it **defaults to `true`**, because Bluetooth sync already ships in normal builds — flipping the default would silently remove a working feature from any build that doesn't know to ask for it. Only pass `=false` when you specifically want it hidden from a Play build; the F-Droid build doesn't need it, since the [FOSS variant](#play-vs-foss-variant) has no Bluetooth transport.
 
 ```bash
 # Default — Bluetooth sync reachable, same as today
 flutter run --flavor dev --dart-define=FLAVOR=dev
 
-# Explicitly excluded (F-Droid-style)
+# Explicitly hidden
 flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=ENABLE_BLUETOOTH_SYNC=false
 ```
 
-As with every flag on this page, `nearby_connections` stays a normal, always-present pubspec dependency either way — the flag only gates whether `lib/sync/sync_settings_screen.dart` ever shows the Bluetooth section (and therefore whether `BluetoothSyncChannel` is ever constructed), not whether the dependency is compiled into the binary.
+The flag only gates whether `BluetoothSyncFactory.isEnabled` is true (and therefore whether the Bluetooth section shows and a channel is ever created through `GmsIntegrations.createBluetoothChannel`); `nearby_connections` stays compiled into every `gms`-variant build either way.
 
 ## Android home widget
 

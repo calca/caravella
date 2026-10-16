@@ -1,4 +1,4 @@
-import 'package:in_app_review/in_app_review.dart';
+import '../../integrations/gms_integrations.dart';
 import '../storage/preferences_service.dart';
 import '../logging/logger_service.dart';
 import '../../data/expense_group_storage_v2.dart';
@@ -8,11 +8,15 @@ import '../../data/expense_group_storage_v2.dart';
 /// Shows rating dialog:
 /// - Once after user adds their 10th expense
 /// - Then once per month (minimum 30 days gap)
+///
+/// The review flow itself comes from [GmsIntegrations.storeReview]; builds
+/// without it (F-Droid) never prompt.
 class RatingService {
   static const int _initialExpenseThreshold = 10;
   static const int _monthlyThresholdDays = 30;
 
-  static final InAppReview _inAppReview = InAppReview.instance;
+  static StoreReviewClient? get _inAppReview =>
+      GmsIntegrations.instance.storeReview;
 
   /// Check if we should prompt for rating and show dialog if appropriate
   ///
@@ -20,9 +24,9 @@ class RatingService {
   /// Returns true if rating prompt was shown.
   static Future<bool> checkAndPromptForRating() async {
     try {
-      // Check if in-app review is available on this platform
-      final isAvailable = await _inAppReview.isAvailable();
-      if (!isAvailable) {
+      // Check if in-app review is available in this build and platform
+      final review = _inAppReview;
+      if (review == null || !await review.isAvailable()) {
         LoggerService.info(
           'In-app review not available on this platform',
           name: 'rating',
@@ -47,7 +51,7 @@ class RatingService {
         );
 
         // Request the review
-        await _inAppReview.requestReview();
+        await review.requestReview();
 
         // Update tracking
         await prefs.storeRating.setLastPromptTime(DateTime.now());
@@ -106,13 +110,15 @@ class RatingService {
   /// This bypasses all checks and directly opens the store rating dialog.
   static Future<void> openStoreForRating() async {
     try {
-      final isAvailable = await _inAppReview.isAvailable();
+      final review = _inAppReview;
+      if (review == null) return;
+      final isAvailable = await review.isAvailable();
 
       if (isAvailable) {
-        await _inAppReview.requestReview();
+        await review.requestReview();
       } else {
         // Fallback: Open store listing
-        await _inAppReview.openStoreListing();
+        await review.openStoreListing();
       }
     } catch (e) {
       LoggerService.warning(

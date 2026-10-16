@@ -2,9 +2,11 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:mobile_scanner/mobile_scanner.dart';
 
 /// Full-screen camera scanner for pairing with another device's QR code.
+///
+/// The camera view comes from [GmsIntegrations.buildQrScanner] (ML Kit);
+/// only reachable when [GmsIntegrations.supportsQrScanning] is true.
 ///
 /// Pops with `true` if pairing succeeded, `false` otherwise.
 class QrPairScanPage extends StatefulWidget {
@@ -17,26 +19,16 @@ class QrPairScanPage extends StatefulWidget {
 }
 
 class _QrPairScanPageState extends State<QrPairScanPage> {
-  final MobileScannerController _controller = MobileScannerController();
   bool _handling = false;
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Future<void> _onDetect(BarcodeCapture capture) async {
-    if (_handling || capture.barcodes.isEmpty) return;
-
-    final raw = capture.barcodes.first.rawValue;
-    if (raw == null) return;
+  Future<void> _onDetect(String raw) async {
+    if (_handling) return;
 
     final payload = PairingPayload.tryParse(raw);
     if (payload == null) return; // Not a pairing QR — keep scanning.
 
+    // Pausing the scanner stops the camera.
     setState(() => _handling = true);
-    await _controller.stop();
 
     if (!mounted) return;
     final loc = gen.AppLocalizations.of(context);
@@ -91,7 +83,11 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          MobileScanner(controller: _controller, onDetect: _onDetect),
+          GmsIntegrations.instance.buildQrScanner(
+                onDetect: _onDetect,
+                paused: _handling,
+              ) ??
+              const SizedBox.shrink(),
           if (_handling)
             const ColoredBox(
               color: Colors.black54,

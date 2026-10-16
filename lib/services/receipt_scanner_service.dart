@@ -1,29 +1,49 @@
 import 'dart:io';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:caravella_core/caravella_core.dart';
 
-/// Service for scanning receipts using on-device OCR
+/// Service for scanning receipts using on-device OCR.
+///
+/// Text recognition comes from [GmsIntegrations.createReceiptTextRecognizer]
+/// (ML Kit); builds without it (F-Droid) report [isAvailable] false and the
+/// expense form hides the scan buttons. The amount/description parsing here
+/// is plain Dart.
 class ReceiptScannerService {
   static final ReceiptScannerService _instance = ReceiptScannerService._internal();
   factory ReceiptScannerService() => _instance;
   ReceiptScannerService._internal();
 
-  final _textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+  ReceiptTextRecognizer? _textRecognizer;
+  bool _recognizerResolved = false;
+
+  ReceiptTextRecognizer? get _recognizer {
+    if (!_recognizerResolved) {
+      _recognizerResolved = true;
+      _textRecognizer = GmsIntegrations.instance.createReceiptTextRecognizer();
+    }
+    return _textRecognizer;
+  }
+
+  /// Whether this build can scan receipts.
+  bool get isAvailable => _recognizer != null;
 
   /// Scans a receipt image and extracts amount and description
   /// Returns a map with 'amount' (double?) and 'description' (String?)
   Future<Map<String, dynamic>> scanReceipt(File imageFile) async {
     try {
-      final inputImage = InputImage.fromFile(imageFile);
-      final recognizedText = await _textRecognizer.processImage(inputImage);
-      
-      if (recognizedText.text.isEmpty) {
+      final recognizer = _recognizer;
+      if (recognizer == null) {
+        LoggerService.warning('OCR: not available in this build', name: 'receipt_scanner');
+        return {'amount': null, 'description': null};
+      }
+      final text = await recognizer.recognizeText(imageFile.path);
+
+      if (text.isEmpty) {
         LoggerService.info('OCR: no text found in image', name: 'receipt_scanner');
         return {'amount': null, 'description': null};
       }
 
-      LoggerService.info('OCR: text recognized (${recognizedText.text.length} chars)', name: 'receipt_scanner');
-      final result = _parseReceiptText(recognizedText.text);
+      LoggerService.info('OCR: text recognized (${text.length} chars)', name: 'receipt_scanner');
+      final result = _parseReceiptText(text);
       return result;
     } catch (e, st) {
       LoggerService.error('OCR: failed to scan receipt', name: 'receipt_scanner', error: e, stackTrace: st);
@@ -90,6 +110,8 @@ class ReceiptScannerService {
 
   /// Dispose of resources
   void dispose() {
-    _textRecognizer.close();
+    _textRecognizer?.close();
+    _textRecognizer = null;
+    _recognizerResolved = false;
   }
 }

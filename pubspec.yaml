@@ -57,7 +57,6 @@ dependencies:
   share_plus: ^13.2.1
   archive: ^4.0.9
   flag_secure: ^2.0.2
-  geolocator: ^14.0.2
   geocoding: ^5.0.0
   http: ^1.6.0
   path: ^1.9.1
@@ -69,28 +68,23 @@ dependencies:
   flutter_local_notifications: ^22.0.1
   flutter_map: ^8.3.0
   latlong2: ^0.10.1
-  in_app_review: ^2.0.11
   dynamic_color: ^2.1.0
   pdfx: ^2.9.2
   video_player: ^2.11.1
   chewie: ^1.14.0
   zentoast: ^0.2.2
   talker_flutter: ^5.1.19
-  google_mlkit_text_recognition: ^0.17.1
-  # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
-  play_store_updates:
-    path: packages/play_store_updates
-  # Conditional dependency: only exercised when ENABLE_GOOGLE_DRIVE_SYNC=true
-  # (see GoogleDriveSyncFactory) — always a normal pubspec dependency, same
-  # pattern as play_store_updates above.
-  google_drive_sync:
-    path: packages/google_drive_sync
+  # Everything that needs proprietary Google libraries (Play Services, ML Kit,
+  # Play Core: location, receipt OCR, QR scanning, Bluetooth sync, in-app
+  # review/updates, Google Drive). `./build_variant.sh foss` (F-Droid) points
+  # this at packages/caravella_gms_foss instead — keep those libraries out of
+  # this file. See docs/PACKAGE_CARAVELLA_GMS.md.
+  caravella_gms:
+    path: packages/caravella_gms
   android_nav_setting: ^0.0.2+2
-  nearby_connections: ^4.0.2
   home_widget: ^0.9.3
   permission_handler: ^13.0.1
   qr_flutter: ^4.1.0
-  mobile_scanner: ^7.2.1
   material_ui: ^1.0.0
 
 dev_dependencies:

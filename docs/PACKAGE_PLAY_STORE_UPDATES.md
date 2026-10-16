@@ -37,8 +37,10 @@ Both `UpdateCheckWidget` and the home-page auto-check surface `updateDownloaded`
 
 ## Where it's wired into the app
 
-- `HomePage._performUpdateCheckIfNeeded()` (`lib/home/home_page.dart`) — automatic check, once per session.
-- `WhatsNewPage` (`lib/settings/pages/whats_new_page.dart`) — embeds `UpdateCheckWidget` for a manual "check for updates" card, Android only.
+The app never imports this package: `caravella_gms`'s `PlayStoreAppUpdates` (`packages/caravella_gms/lib/src/play_store_app_updates.dart`) wraps it as `GmsIntegrations.appUpdates`, and the F-Droid build doesn't contain it at all — see [caravella_gms](PACKAGE_CARAVELLA_GMS.md). The `UpdateLocalizations` interface lives in `caravella_core` (`integrations/update_localizations.dart`); `src/update_localizations.dart` here only re-exports it.
+
+- `HomePage._performUpdateCheckIfNeeded()` (`lib/home/home_page.dart`) — automatic check, once per session, via `appUpdates.checkAndShowUpdateIfNeeded`.
+- `WhatsNewPage` (`lib/settings/pages/whats_new_page.dart`) — `appUpdates.buildUpdateCheckWidget` (an `UpdateCheckWidget`) for a manual "check for updates" card, Android only.
 
 ## See also
 

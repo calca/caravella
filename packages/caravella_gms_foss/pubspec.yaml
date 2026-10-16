@@ -1,0 +1,24 @@
+# Same package name as packages/caravella_gms on purpose: the F-Droid build
+# points the app's `caravella_gms` dependency here (pubspec_overrides.yaml,
+# written by ./build_variant.sh foss), so no proprietary library is
+# compiled in. Must keep exporting the same `gmsIntegrations` symbol.
+name: caravella_gms
+description: >-
+  FOSS stand-in for packages/caravella_gms: same API, no Google
+  libraries, every proprietary feature reported as unavailable.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  caravella_core:
+    path: ../caravella_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

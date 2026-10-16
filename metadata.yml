@@ -62,10 +62,17 @@ Description: |-
 AntiFeatures: []
 
 # Build configuration
+#
+# F-Droid builds the FOSS variant: `./build_variant.sh foss` swaps
+# packages/caravella_gms (Play Services, ML Kit, Play Core) for
+# packages/caravella_gms_foss, so no proprietary library is compiled in, and
+# the packages that only the Play build uses are deleted before the scan.
+# Only tags from v2.0.1 on contain the FOSS variant — older tags can't be
+# built without non-free dependencies.
 Builds:
-  - versionName: '1.0.46'
-    versionCode: 46
-    commit: main
+  - versionName: '2.0.1'
+    versionCode: 123
+    commit: v2.0.1
     output: build/app/outputs/flutter-apk/app-prod-release.apk
     srclibs:
       - flutter@stable
@@ -75,36 +82,20 @@ Builds:
       - windows
       - linux
       - web
+      - packages/caravella_gms
+      - packages/google_drive_sync
+      - packages/play_store_updates
     prebuild:
-      - echo "sdk.dir=$ANDROID_HOME" > local.properties
-      - echo "flutter.sdk=$$flutter$$" > local.properties
+      - echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+      - echo "flutter.sdk=$$flutter$$" >> android/local.properties
+      - ./build_variant.sh foss --no-pub-get
     build:
       - $$flutter$$/bin/flutter config --no-analytics
       - $$flutter$$/bin/flutter pub get
-      - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_BLUETOOTH_SYNC=false
-
-  - versionName: '2.0.0'
-    versionCode: 122
-    commit: v2.0.0
-    output: build/app/outputs/flutter-apk/app-prod-release.apk
-    srclibs:
-      - flutter@stable
-    rm:
-      - ios
-      - macos
-      - windows
-      - linux
-      - web
-    prebuild:
-      - echo "sdk.dir=$ANDROID_HOME" > local.properties
-      - echo "flutter.sdk=$$flutter$$" > local.properties
-    build:
-      - $$flutter$$/bin/flutter config --no-analytics
-      - $$flutter$$/bin/flutter pub get
-      - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_BLUETOOTH_SYNC=false
+      - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
 
 # Auto-update configuration
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 2.0.0
-CurrentVersionCode: 122
+CurrentVersion: 2.0.1
+CurrentVersionCode: 123

@@ -6,13 +6,17 @@ F-Droid is a community-maintained FOSS Android app catalog. This page covers wha
 
 ## Build configuration
 
-F-Droid builds the **`prod`** flavor, without `ENABLE_PLAY_UPDATES` and without `ENABLE_GOOGLE_DRIVE_SYNC` (so `play_store_updates`'s factory falls back to the no-op implementation and `google_drive_sync`'s factory returns `null`), and **with `ENABLE_BLUETOOTH_SYNC=false` explicitly** — that flag defaults to `true` (unlike the other two), so it must be passed to exclude the Bluetooth section and the Google Play Services dependency it reaches (`nearby_connections`). See [Build Variants & Flavors](BUILD_VARIANTS.md), [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md), and [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md):
+F-Droid builds the **`prod`** flavor in the **FOSS variant**: before building, the recipe runs `./build_variant.sh foss`, which points the app's `caravella_gms` dependency at `packages/caravella_gms_foss` — a package with the same name and API but no proprietary Google library. The Play Services, ML Kit and Play Core plugins then aren't in the dependency graph at all, so they aren't compiled into the APK (earlier builds only made them unreachable with dart-defines, which F-Droid's scanner still rejects). See [caravella_gms](PACKAGE_CARAVELLA_GMS.md) and [Build Variants § Play vs. FOSS variant](BUILD_VARIANTS.md#play-vs-foss-variant):
 
 ```bash
-flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_BLUETOOTH_SYNC=false
+./build_variant.sh foss
+flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
+./build_variant.sh check   # no non-free Google artifact on the release classpath
 ```
 
-Cross-check the exact build stanza (including any `--dart-define=ENABLE_ANDROID_WIDGET=...`) against `metadata.yml`'s `Builds:` section directly — do not rely on the command shown above being current if `metadata.yml` has since changed.
+The recipe in `metadata.yml` also deletes (`rm:`) the packages only the Play build uses — `packages/caravella_gms`, `packages/google_drive_sync`, `packages/play_store_updates` — so the source scan doesn't see them; pub never needs them once the override is in place. `ENABLE_PLAY_UPDATES`, `ENABLE_GOOGLE_DRIVE_SYNC` and `ENABLE_BLUETOOTH_SYNC` don't need to be passed: the features they gate don't exist in the FOSS variant.
+
+Cross-check the exact build stanza (including any `--dart-define=ENABLE_ANDROID_WIDGET=...`) against `metadata.yml`'s `Builds:` section directly — do not rely on the command shown above being current if `metadata.yml` has since changed. Only tags that contain `build_variant.sh` can be built this way; older tags can't be built without non-free dependencies.
 
 Package name: `io.caravella.egm`. F-Droid signs the APK with its own key — the repo's release keystore is not used for F-Droid builds.
 
@@ -31,13 +35,14 @@ Package name: `io.caravella.egm`. F-Droid signs the APK with its own key — the
 
 ## Dependency / anti-feature review points
 
-F-Droid requires no non-free dependencies and no non-free network services. Two things in the current dependency set are worth re-checking against F-Droid's policy at submission time rather than assuming they're fine:
+F-Droid requires no non-free dependencies and no non-free network services.
 
-- **`google_mlkit_text_recognition`** (receipt OCR — see [Receipt OCR](RECEIPT_OCR.md)) bundles Google ML Kit. Confirm current F-Droid inclusion policy on ML Kit before submitting/updating.
-- **`UNSPLASH_ACCESS_KEY`** (background photo search — see [Group Management § photo/background flow](APP_GROUP_MANAGEMENT.md#photobackground-flow)) is a keyed third-party network service. It degrades gracefully to "feature unavailable" with no key set, but if a key is baked into F-Droid's reproducible build it becomes a non-free network dependency; if not, the feature is simply absent from F-Droid builds. Decide and document which is intended before submission.
-- **`google_sign_in`/`googleapis`** (`google_drive_sync` package) depend on Google Play Services for sign-in, same category of concern as `in_app_update` above — but like `ENABLE_PLAY_UPDATES`, `ENABLE_GOOGLE_DRIVE_SYNC` defaults off and F-Droid's build never sets it, so this code is compiled in but never invoked at runtime (see [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md#factory-pattern)). Re-verify this precedent is still acceptable to F-Droid at submission time rather than assuming it carries over automatically.
-- **`nearby_connections`** (Bluetooth peer-to-peer sync, `lib/sync/bluetooth_sync_channel.dart`) depends on Google Play Services (Nearby Connections API) on Android. Gated by `ENABLE_BLUETOOTH_SYNC` (default `true`, unlike every other flag on this page) — F-Droid's build recipe (`metadata.yml`) passes `=false` to exclude it; see [Build Variants & Flavors § Bluetooth sync](BUILD_VARIANTS.md#bluetooth-sync-on-by-default). As with `in_app_update`/`google_sign_in` above, the dependency is still compiled into the binary either way, only never invoked at runtime when the flag is off — re-verify this "compiled in but unreachable" precedent remains acceptable to F-Droid policy at submission time.
+- **Non-free libraries** are all confined to `packages/caravella_gms` and absent from the FOSS variant: `geolocator` (fused location), `google_mlkit_text_recognition` (receipt OCR), `mobile_scanner` (ML Kit barcode, QR pairing), `nearby_connections` (Bluetooth sync), `in_app_review` and `in_app_update` (Play Core, via `play_store_updates`), `google_sign_in`/`googleapis` (Drive, via `google_drive_sync`). CI enforces both halves: `validate_package_boundaries.sh` fails if any of them is imported or depended on outside `caravella_gms`, and the "F-Droid (FOSS) variant guard" step runs `./build_variant.sh check` on the release classpath. When a new plugin is added anywhere, re-run `./build_variant.sh foss && ./build_variant.sh check` — a free-looking plugin can still pull in `com.google.android.gms`.
+- **What the F-Droid build loses**: receipt scanning, QR *scanning* (it can still be paired by showing its own QR), Bluetooth sync, Google Drive sync, in-app review and in-app updates. Current location still works, through the platform `LocationManager` (`LocationChannel.kt`).
+- **`UNSPLASH_ACCESS_KEY`** (background photo search — see [Group Management § photo/background flow](APP_GROUP_MANAGEMENT.md#photobackground-flow)) is a keyed third-party network service. The F-Droid recipe doesn't pass it, so the feature is simply absent there (it degrades to "feature unavailable" with no key). Keep it that way: a baked-in key would make it a non-free network dependency.
+- **OpenStreetMap** tiles and Nominatim place search are free network services and stay enabled.
 - **`bonsoir`** (LAN/mDNS peer-to-peer sync, `packages/caravella_core/lib/sync/channels/lan_sync_channel.dart`) has no Google Play Services dependency and isn't gated by any flag — it runs whenever a group has sync enabled, on every build including F-Droid's.
+- The Flutter embedding itself references (but doesn't bundle) Play Core split-install classes for deferred components; F-Droid builds Flutter apps with that as a known case.
 
 For everything else, verify licenses against `pubspec.yaml`/`pubspec.lock` directly (pub.dev shows each package's license) rather than trusting a hardcoded table — the dependency set changes often enough that a static table here would go stale within a few releases.
 
@@ -56,7 +61,7 @@ Camera and location are declared `android:required="false"` in `AndroidManifest.
 - F-Droid docs: https://f-droid.org/docs/
 - Metadata reference: https://f-droid.org/docs/Build_Metadata_Reference/
 - Inclusion policy: https://f-droid.org/docs/Inclusion_Policy/
-- Request for Packaging (first submission): https://gitlab.com/fdroid/rfp/-/issues
+- Request for Packaging (first submission): https://gitlab.com/fdroid/rfp/-/issues — Caravella's is [rfp#3406](https://gitlab.com/fdroid/rfp/-/work_items/3406). RFPs are picked up rarely; the faster route is opening a merge request on [fdroiddata](https://gitlab.com/fdroid/fdroiddata) with `metadata/io.caravella.egm.yml` (based on this repo's `metadata.yml`), whose CI builds the app and gets a reviewer.
 
 ## See also
 
@@ -64,3 +69,4 @@ Camera and location are declared `android:required="false"` in `AndroidManifest.
 - [CI Pipelines](CI_PIPELINES.md)
 - [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md)
 - [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md)
+- [caravella_gms](PACKAGE_CARAVELLA_GMS.md)

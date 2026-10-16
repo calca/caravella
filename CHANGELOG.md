@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **F-Droid build without proprietary libraries**: everything that needs Google Play Services, ML Kit or Play Core (current location via the fused provider, receipt OCR, QR scanning, Bluetooth sync, Google Drive, in-app review and updates) moved into the new `packages/caravella_gms`, behind the `GmsIntegrations` interface in `caravella_core`. `./build_variant.sh foss` swaps it for `packages/caravella_gms_foss` (same name, nothing inside) so those libraries are not compiled into the F-Droid APK at all — the previous dart-define flags only hid them, which F-Droid's scanner rejects. In the F-Droid build those features are hidden, except current location, which now uses the platform `LocationManager`. Play builds are unchanged. CI checks that the FOSS variant compiles and has no non-free artifact on its classpath; `metadata.yml` has the new recipe, and the Gradle wrapper now pins `distributionSha256Sum`
+
 ### Fixed
 - **Accessibility pass (TalkBack, contrast, touch targets, large text)**, from an audit of the 2.0 build:
   - Screen readers now announce the previously unnamed controls: the Back button in group Settings, the "clear dates" button of the group period, the clear button of place search, the group-type icon next to the group name, and every pin on the expenses map and place-search map (expense name + amount, or "N expenses, place")

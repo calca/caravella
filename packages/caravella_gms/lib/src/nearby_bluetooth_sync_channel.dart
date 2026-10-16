@@ -9,6 +9,7 @@ import 'package:caravella_core/sync/crypto/sync_envelope.dart';
 import 'package:caravella_core/sync/device_identity.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/utils/sync_clock.dart';
+import 'package:caravella_core/sync/channels/bluetooth_sync_channel.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -39,94 +40,6 @@ const Duration _handshakeTimeout = Duration(seconds: 15);
 /// response before giving up.
 const Duration _syncResponseTimeout = Duration(seconds: 30);
 
-/// Thrown by [BluetoothSyncChannel] when the user has not granted the
-/// Android runtime permissions required for Nearby Connections (Bluetooth
-/// scan/connect/advertise, and nearby Wi-Fi devices on Android 13+).
-///
-/// Callers with UI context (e.g. [BluetoothSyncSheet]) should catch this
-/// specifically to show an actionable, localized message instead of a raw
-/// plugin error.
-class BluetoothPermissionDeniedException implements Exception {
-  const BluetoothPermissionDeniedException();
-
-  @override
-  String toString() => 'Bluetooth/nearby-device permissions were denied';
-}
-
-/// Callback invoked when a Bluetooth pairing handshake completes (on either
-/// side): should persist the peer's identity and grant it access to
-/// [groupId] — pairing is scoped to the specific group that was being
-/// advertised, not every synced group.
-typedef BluetoothPairingCallback = Future<void> Function(
-  String deviceId,
-  String deviceName,
-  String platform,
-  String groupId,
-);
-
-// ---------------------------------------------------------------------------
-// Bluetooth peer events
-// ---------------------------------------------------------------------------
-
-/// Events emitted by the Bluetooth sync channel.
-sealed class BluetoothPeerEvent {
-  const BluetoothPeerEvent();
-}
-
-/// A nearby peer was found.
-class PeerFound extends BluetoothPeerEvent {
-  /// Advertised name of the peer.
-  final String name;
-
-  /// Nearby Connections endpoint ID.
-  final String endpointId;
-
-  const PeerFound({required this.name, required this.endpointId});
-
-  @override
-  String toString() => 'PeerFound(name: $name, endpointId: $endpointId)';
-}
-
-/// A previously found peer is no longer available.
-class PeerLost extends BluetoothPeerEvent {
-  /// Nearby Connections endpoint ID that was lost.
-  final String endpointId;
-
-  const PeerLost({required this.endpointId});
-
-  @override
-  String toString() => 'PeerLost(endpointId: $endpointId)';
-}
-
-/// Bluetooth sync started.
-class BtSyncStarted extends BluetoothPeerEvent {
-  const BtSyncStarted();
-
-  @override
-  String toString() => 'BtSyncStarted()';
-}
-
-/// Bluetooth sync completed successfully.
-class BtSyncCompleted extends BluetoothPeerEvent {
-  /// The result of the sync exchange.
-  final SyncResult result;
-
-  const BtSyncCompleted({required this.result});
-
-  @override
-  String toString() => 'BtSyncCompleted(result: $result)';
-}
-
-/// Bluetooth sync encountered an error.
-class BtSyncError extends BluetoothPeerEvent {
-  /// Human-readable error description.
-  final String error;
-
-  const BtSyncError({required this.error});
-
-  @override
-  String toString() => 'BtSyncError(error: $error)';
-}
 
 // ---------------------------------------------------------------------------
 // Chunk envelope
@@ -161,7 +74,7 @@ class _ChunkHeader {
 // BluetoothSyncChannel
 // ---------------------------------------------------------------------------
 
-/// Bluetooth / Nearby Connections sync channel.
+/// [BluetoothSyncChannel] backed by Google Nearby Connections.
 ///
 /// This channel is **manual** — only activated explicitly by the user.
 /// It uses the Google Nearby Connections API for peer-to-peer communication.
@@ -177,7 +90,7 @@ class _ChunkHeader {
 ///
 /// **Chunking:** If the payload exceeds 32 KB, it is split into chunks with
 /// a header `{index, total, data: base64}`. Chunks are reassembled on receive.
-class BluetoothSyncChannel {
+class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   static const String _tag = 'sync.channel.bluetooth';
   static const String _channel = 'nearby';
 
@@ -213,6 +126,7 @@ class BluetoothSyncChannel {
   String _advertisingGroupTitle = '';
 
   /// Callback for processing received deltas. Set before initiating sync.
+  @override
   Future<Map<String, dynamic>> Function(
     Map<String, dynamic> remoteDelta,
     String peerId,
@@ -220,15 +134,19 @@ class BluetoothSyncChannel {
 
   /// Callback invoked when a pairing handshake completes. Should persist
   /// the peer and grant it access to the group involved.
+  @override
   BluetoothPairingCallback? onPairingRequest;
 
   /// Stream of Bluetooth peer events.
+  @override
   Stream<BluetoothPeerEvent> get events => _eventController.stream;
 
   /// Whether currently advertising.
+  @override
   bool get isAdvertising => _advertising;
 
   /// Whether currently discovering.
+  @override
   bool get isDiscovering => _discovering;
 
   /// Requests the Android runtime permissions required for Nearby
@@ -241,6 +159,7 @@ class BluetoothSyncChannel {
   /// `nearby_connections` plugin does not do this itself. No-ops (returns
   /// `true`) on platforms/OS versions where a given permission doesn't
   /// apply.
+  @override
   Future<bool> requestPermissions() async {
     final statuses = await [
       Permission.bluetoothScan,
@@ -264,6 +183,7 @@ class BluetoothSyncChannel {
   ///
   /// Throws [BluetoothPermissionDeniedException] if the required runtime
   /// permissions are not granted.
+  @override
   Future<void> startAdvertising({
     required String groupId,
     String groupTitle = '',
@@ -314,6 +234,7 @@ class BluetoothSyncChannel {
   ///
   /// Throws [BluetoothPermissionDeniedException] if the required runtime
   /// permissions are not granted.
+  @override
   Future<void> startDiscovery() async {
     if (_discovering) {
       LoggerService.debug('Already discovering — skipping', name: _tag);
@@ -350,6 +271,7 @@ class BluetoothSyncChannel {
   }
 
   /// Stop all advertising and discovery.
+  @override
   Future<void> stopAll() async {
     try {
       if (_advertising) {
@@ -395,6 +317,7 @@ class BluetoothSyncChannel {
   ///
   /// Connects, performs the `hello`/`hello_ack` key-exchange handshake,
   /// then exchanges encrypted deltas, and disconnects.
+  @override
   Future<SyncResult> syncWithPeer(String endpointId) async {
     _eventController.add(const BtSyncStarted());
 
@@ -553,6 +476,7 @@ class BluetoothSyncChannel {
   /// Dispose the channel: stops any active advertising/discovery (so Nearby
   /// Connections doesn't keep running after the caller is done with this
   /// instance) and closes the event stream.
+  @override
   void dispose() {
     unawaited(stopAll());
     _eventController.close();

@@ -229,7 +229,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final isEdit =
         widget.config.initialExpense?.id != null &&
         widget.config.initialExpense!.id.isNotEmpty;
-    final canScan = !isEdit && !widget.config.isReadOnly;
+    final canScan =
+        _receiptScanner.isAvailable && !isEdit && !widget.config.isReadOnly;
     widget.config.onScanReceiptCallbackChanged?.call(
       canScan ? () => _scanReceipt(source: ImageSource.camera) : null,
     );
@@ -569,10 +570,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           : null,
       showExpandButton: false,
       onExpand: null,
-      onScanReceipt: widget.config.initialExpense == null
+      onScanReceipt:
+          _receiptScanner.isAvailable && widget.config.initialExpense == null
           ? () => _scanReceipt(source: ImageSource.camera)
           : null,
-      onScanReceiptFromGallery: widget.config.initialExpense == null
+      onScanReceiptFromGallery:
+          _receiptScanner.isAvailable && widget.config.initialExpense == null
           ? () => _scanReceipt(source: ImageSource.gallery)
           : null,
       showVoiceButton: showVoice,

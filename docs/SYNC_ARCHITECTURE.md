@@ -10,7 +10,7 @@ Read this after [caravella_core reference](PACKAGE_CARAVELLA_CORE.md) and, if yo
 flowchart TB
     subgraph app["lib/ (app layer)"]
         UI["Sync UI: sync_settings_screen.dart,\nmulti_user_sync_page.dart,\nqr_pair_scan_page.dart / qr_pair_show_sheet.dart, ..."]
-        BT["BluetoothSyncChannel\n(lib/sync/bluetooth_sync_channel.dart)"]
+        BT["NearbyBluetoothSyncChannel\n(packages/caravella_gms)"]
         Bootstrap["SyncBootstrap.initialize()\n(lib/sync/sync_bootstrap.dart)"]
     end
 
@@ -57,7 +57,7 @@ flowchart TB
 | `DeltaBuilder` | `packages/caravella_core/lib/sync/delta_builder.dart` | Builds the outgoing delta for a peer: every `sync_enabled` group changed since the last recorded sync *with that peer* and granted to it, each as a **full group snapshot**, not a field-level diff. |
 | `SyncDao` | `packages/caravella_core/lib/sync/sync_dao.dart` | SQLite query layer over the sync tables added to the same DB `SqliteExpenseGroupRepository` uses (see [Storage](#storage-sqlite-schema) below). |
 | `LanSyncChannel` | `packages/caravella_core/lib/sync/channels/lan_sync_channel.dart` | mDNS discovery (`bonsoir`) + an embedded `shelf`/`shelf_router` HTTP server (`/pair`, `/sync/delta`, `/sync/ping`) for the actual exchange. |
-| `BluetoothSyncChannel` | `lib/sync/bluetooth_sync_channel.dart` | Manual-only (never auto-syncs) Nearby Connections channel. Same pairing philosophy as LAN (public-key handshake, per-group grant) but the *advertiser* unilaterally decides which group is on offer — see `_handleHello`, `lib/sync/bluetooth_sync_channel.dart:771-818`. Has its own chunking (32 KB payload limit, capped reassembly buffer, timeouts) since Nearby Connections payloads are smaller than a typical HTTP body. |
+| `BluetoothSyncChannel` | interface in `packages/caravella_core/lib/sync/channels/bluetooth_sync_channel.dart`; implementation `NearbyBluetoothSyncChannel` in `packages/caravella_gms/lib/src/nearby_bluetooth_sync_channel.dart` (Play builds only — the F-Droid build has no Bluetooth sync, see [caravella_gms](PACKAGE_CARAVELLA_GMS.md)); created per session by `BluetoothSyncFactory.createChannel` | Manual-only (never auto-syncs) Nearby Connections channel. Same pairing philosophy as LAN (public-key handshake, per-group grant) but the *advertiser* unilaterally decides which group is on offer — see `_handleHello`, `lib/sync/bluetooth_sync_channel.dart:771-818`. Has its own chunking (32 KB payload limit, capped reassembly buffer, timeouts) since Nearby Connections payloads are smaller than a typical HTTP body. |
 | `CloudRelayChannel` (abstract) → `GoogleDriveCloudChannel` | `packages/caravella_core/lib/sync/channels/cloud_relay_channel.dart` → `packages/google_drive_sync/lib/src/google_drive_cloud_channel.dart` | Interface lives in `caravella_core` so it stays independent of any concrete cloud SDK; the Google Drive implementation lives in its own conditional package. Full detail: [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md). |
 | `DeviceKeyManager` / `PeerKeyStore` / `SyncEnvelope` | `packages/caravella_core/lib/sync/crypto/` | X25519 keypair (generated once, persisted), ECDH+HKDF-SHA256 shared-key derivation, AES-256-GCM envelope encrypt/decrypt. Shared by LAN and Bluetooth; the cloud channel doesn't use this at all (see [Trust model](#trust-model-per-channel)). |
 | `DeviceIdentity` | `packages/caravella_core/lib/sync/device_identity.dart` | `{deviceId (persisted UUID v4), deviceName (re-resolved via device_info_plus every launch, not persisted), platform}`. Singleton, `initialize()` must run once before use — done in `SyncBootstrap.initialize()` before `SyncOrchestrator` is constructed. |
@@ -71,7 +71,7 @@ flowchart TB
 SyncOrchestrator(
   lanChannel: LanSyncChannel(),
   syncManager: SyncManager(repository: repository),
-  cloudChannel: GoogleDriveSyncFactory.createCloudChannel(), // null unless ENABLE_GOOGLE_DRIVE_SYNC=true
+  cloudChannel: GmsIntegrations.instance.createCloudChannel(), // null unless ENABLE_GOOGLE_DRIVE_SYNC=true (and always in the F-Droid build)
 )
 ```
 
@@ -150,7 +150,7 @@ sequenceDiagram
     Note over A,B: Both devices now trust each other<br/>for exactly this one group
 ```
 
-Bluetooth pairing is the same idea with a different transport: an unencrypted `hello`/`hello_ack` handshake over Nearby Connections (`lib/sync/bluetooth_sync_channel.dart:394-463` connecting side, `:771-818` advertising side) instead of QR + HTTP — the key exchange and grant-writing steps afterward are identical.
+Bluetooth pairing is the same idea with a different transport: an unencrypted `hello`/`hello_ack` handshake over Nearby Connections (`NearbyBluetoothSyncChannel.syncWithPeer` on the connecting side, `_handleHello` on the advertising side — `packages/caravella_gms/lib/src/nearby_bluetooth_sync_channel.dart`) instead of QR + HTTP — the key exchange and grant-writing steps afterward are identical.
 
 ## Delta sync flow (already-paired devices, LAN)
 
@@ -176,7 +176,7 @@ Confirmed by the integration test titled `'two devices converge after bidirectio
 
 - **The Google Drive channel currently only downloads, never uploads, at runtime.** `GoogleDriveCloudChannel.uploadShard` and the `LocalJsonStore`/`GroupSerializer` machinery it would use are fully implemented and unit-tested in isolation, but nothing calls `uploadShard` from `SyncOrchestrator`, any UI page, or the periodic-polling `start()` loop — verified by grepping every call site in the repo. Worse: the shards `downloadAllShards()` does fetch are never merged into the local DB either — `SyncOrchestrator.initialize`'s `onShards` callback for the cloud channel only logs the count (`packages/caravella_core/lib/sync/sync_orchestrator.dart:114-120`). As shipped, the cloud channel doesn't move data in either direction end-to-end; treat it as inert until this is wired up, not as a third peer to LAN/Bluetooth.
 - **`SyncManager.syncWithPeer` is always called with the channel name hard-coded to `'lan'`** inside `SyncOrchestrator._handleDelta` (`packages/caravella_core/lib/sync/sync_orchestrator.dart:402`), even when the delta arrived via `handleIncomingDelta` from `BluetoothSyncChannel`. So the `sync_log.channel` column (and anything reading it) will record Bluetooth-originated exchanges as `'lan'`. This doesn't affect the `SyncResult` a Bluetooth sheet shows the user directly — `BluetoothSyncChannel.syncWithPeer` tags its own returned `SyncResult.channel` correctly as `'nearby'` — the discrepancy is specifically in the `sync_log` table.
-- Chunking/timeouts are Bluetooth-specific (32 KB max payload, ~128 MB reassembly cap, 15s handshake / 30s response timeouts — see `lib/sync/bluetooth_sync_channel.dart`). LAN relies on a single HTTP body; Cloud on a single Drive file per device — neither has (or currently needs) analogous limits.
+- Chunking/timeouts are Bluetooth-specific (32 KB max payload, ~128 MB reassembly cap, 15s handshake / 30s response timeouts — see `packages/caravella_gms/lib/src/nearby_bluetooth_sync_channel.dart`). LAN relies on a single HTTP body; Cloud on a single Drive file per device — neither has (or currently needs) analogous limits.
 
 ## See also
 

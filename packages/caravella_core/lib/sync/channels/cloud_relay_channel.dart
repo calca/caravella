@@ -16,9 +16,11 @@ typedef DeltaJsonCallback = Future<void> Function(
 /// This is an **interface** — `caravella_core` stays independent of any
 /// concrete cloud provider SDK (see the package boundary rules in
 /// `CLAUDE.md`). The real implementation lives in the separate
-/// `google_drive_sync` package (`GoogleDriveCloudChannel`), built only when
-/// the app is compiled with `--dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true` —
-/// see `SyncBootstrap` (`lib/sync/sync_bootstrap.dart`) for the wiring.
+/// `google_drive_sync` package (`GoogleDriveCloudChannel`), handed out by
+/// `GmsIntegrations.createCloudChannel` (`caravella_gms`) only when the app
+/// is compiled with `--dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true` and never
+/// in the F-Droid build — see `SyncBootstrap` (`lib/sync/sync_bootstrap.dart`)
+/// for the wiring.
 ///
 /// [isEnabled]/[setEnabled] are shared, concrete implementations (the user
 /// opt-in flag is persisted via [SharedPreferences] under the key

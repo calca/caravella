@@ -1,0 +1,32 @@
+name: caravella_gms
+description: >-
+  Caravella features that need proprietary Google libraries (Play Services,
+  ML Kit, Play Core). Swapped for packages/caravella_gms_foss in the F-Droid
+  build — see docs/PACKAGE_CARAVELLA_GMS.md.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  material_ui: ^1.0.0
+  caravella_core:
+    path: ../caravella_core
+  google_drive_sync:
+    path: ../google_drive_sync
+  play_store_updates:
+    path: ../play_store_updates
+  geolocator: ^14.0.2
+  google_mlkit_text_recognition: ^0.17.1
+  in_app_review: ^2.0.11
+  mobile_scanner: ^7.2.1
+  nearby_connections: ^4.0.2
+  permission_handler: ^13.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

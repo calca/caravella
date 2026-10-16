@@ -6,7 +6,7 @@ Two GitHub Actions workflows exist under `.github/workflows/`. They are **not id
 
 Triggers: push/PR to `main`, and `release: published`.
 
-- **`build` job** (runs unless the triggering event is a release): `flutter pub get` → `flutter analyze` → `flutter test --coverage` (uploads `coverage/lcov.info` as the `coverage-report` artifact — visibility only, no minimum-coverage gate) → build a **signed staging APK**:
+- **`build` job** (runs unless the triggering event is a release): `flutter pub get` → `flutter analyze` → guard scripts (`validate_package_boundaries.sh`, `validate_accessibility.sh --skip-tests`, `validate_design_tokens.sh`) → `flutter test --coverage` (uploads `coverage/lcov.info` as the `coverage-report` artifact — visibility only, no minimum-coverage gate) → `flutter pub get && flutter test` in every `packages/*` → **F-Droid (FOSS) variant guard** (`./build_variant.sh foss`, `flutter analyze`, `./build_variant.sh check` — fails if a non-free Google artifact reaches the release classpath — then `./build_variant.sh gms`; see [caravella_gms](PACKAGE_CARAVELLA_GMS.md)) → build a **signed staging APK**:
   ```bash
   flutter build apk --flavor staging --release \
     --dart-define=FLAVOR=staging \
@@ -56,7 +56,7 @@ Typical release: run `Store - Android.yml` with `track=internal`, test, then run
 
 - Flutter is pinned to a specific stable version (check the `flutter-version:` key in each workflow file for the current pin — it's bumped periodically and this page won't track it).
 - **`ENABLE_ANDROID_WIDGET` follows the flavor in CI**: `true` for every `staging` build (`Development - Android.yml`'s `build` job, and its `release` job when the release is a prerelease), `false` for every `prod` build (`Development - Android.yml`'s `release` job for a non-prerelease, and `Store - Android.yml`'s prod App Bundle). This matches `android/app/build.gradle.kts`'s native per-flavor default (on for `dev`/`staging`, off for `prod`) — see [Build Variants § Android home widget](BUILD_VARIANTS.md#android-home-widget).
-- Neither workflow ever builds an F-Droid-style artifact (`ENABLE_PLAY_UPDATES` omitted). That build variant is only ever exercised by F-Droid's own build server — see [F-Droid Submission](FDROID_SUBMISSION.md).
+- Neither workflow ever builds an F-Droid APK; the FOSS variant is only analyzed and dependency-checked (see the `build` job above). The APK itself is only built by F-Droid's own build server — see [F-Droid Submission](FDROID_SUBMISSION.md).
 - Both workflows now also pass `ENABLE_BLUETOOTH_SYNC=true` (redundant with its default, kept explicit for parity with `ENABLE_PLAY_UPDATES`) and `ENABLE_GOOGLE_DRIVE_SYNC=true` — the staging APK and prod App Bundle CI produces both ship with the real Google Drive cloud channel reachable. This requires OAuth clients registered in Google Cloud Console for `io.caravella.egm.staging` and `io.caravella.egm` against the matching signing certificate's SHA-1 — the release (upload) keystore for the staging APK and the GitHub Release prod APK, and additionally the **Play App Signing** key for `io.caravella.egm`, since Google Play re-signs the App Bundle with its own key before delivering it — or Google Sign-In will fail with `DEVELOPER_ERROR` in these builds — see the [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md).
 
 ## See also

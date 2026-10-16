@@ -4,13 +4,29 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/sync/bluetooth_advertise_sheet.dart';
-import 'package:io_caravella_egm/sync/bluetooth_sync_channel.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/sync/bluetooth_sync_sheet.dart';
 
 /// Channel that never touches the platform: discovery/advertising just
 /// "run" forever, so the sheets stay in their initial searching/waiting
 /// phase (a spinner plus a short status text).
 class _IdleBluetoothChannel extends BluetoothSyncChannel {
+  @override
+  bool get isAdvertising => false;
+
+  @override
+  bool get isDiscovering => false;
+
+  @override
+  Future<bool> requestPermissions() async => true;
+
+  @override
+  Future<SyncResult> syncWithPeer(String endpointId) =>
+      throw UnimplementedError();
+
+  @override
+  void dispose() {}
+
   final _events = StreamController<BluetoothPeerEvent>.broadcast();
 
   @override

@@ -62,6 +62,18 @@ jobs:
         with:
           name: coverage-report
           path: coverage/lcov.info
+      # The F-Droid build swaps packages/caravella_gms for
+      # packages/caravella_gms_foss (./build_variant.sh foss). Make sure that
+      # variant still compiles and that no proprietary Google artifact
+      # (Play Services, ML Kit, Play Core, Firebase) reaches its classpath,
+      # then switch back for the Play build below.
+      - name: F-Droid (FOSS) variant guard
+        run: |
+          set -e
+          ./build_variant.sh foss
+          flutter analyze
+          ./build_variant.sh check
+          ./build_variant.sh gms
       - name: Build staging APK (signed)
         run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - name: Get app version

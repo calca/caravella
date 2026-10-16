@@ -13,9 +13,11 @@ cd "$(dirname "$0")"
 
 fail=0
 
-# All five local packages, so an import of any of them is checked against
-# the allow-list below, whichever package it's found in.
-all_packages=(caravella_core caravella_core_ui android_app_functions play_store_updates google_drive_sync)
+# All local packages (by directory), so an import of any of them is checked
+# against the allow-list below, whichever package it's found in.
+# packages/caravella_gms_foss is published as `caravella_gms` too (the
+# F-Droid stand-in), so it's never imported under its directory name.
+all_packages=(caravella_core caravella_core_ui android_app_functions play_store_updates google_drive_sync caravella_gms caravella_gms_foss)
 
 # package -> space-separated list of local packages it may import.
 allowed_deps() {
@@ -25,6 +27,8 @@ allowed_deps() {
     android_app_functions) echo "caravella_core" ;;
     play_store_updates) echo "caravella_core caravella_core_ui" ;;
     google_drive_sync) echo "caravella_core" ;;
+    caravella_gms) echo "caravella_core google_drive_sync play_store_updates" ;;
+    caravella_gms_foss) echo "caravella_core" ;;
     *) echo "" ;;
   esac
 }
@@ -59,8 +63,35 @@ for pkg in "${all_packages[@]}"; do
   check_package "$pkg"
 done
 
+# Proprietary Google libraries (and the packages wrapping them) may only be
+# used inside packages/caravella_gms and the packages it depends on —
+# anywhere else they'd end up in the F-Droid build, which swaps
+# caravella_gms for caravella_gms_foss (see docs/PACKAGE_CARAVELLA_GMS.md).
+nonfree='geolocator|google_mlkit_[a-z_]+|in_app_review|in_app_update|mobile_scanner|nearby_connections|google_sign_in|google_drive_sync|play_store_updates'
+echo "== Proprietary libraries only via caravella_gms =="
+hits=$(grep -rnE --include="*.dart" "package:($nonfree)/" lib test \
+  packages/caravella_core/lib packages/caravella_core_ui/lib \
+  packages/android_app_functions/lib packages/caravella_gms_foss 2>/dev/null)
+if [[ -n "$hits" ]]; then
+  echo "FAIL: proprietary library imported outside packages/caravella_gms"
+  echo "$hits" | sed 's/^/  /'
+  fail=1
+fi
+for pubspec in pubspec.yaml packages/caravella_core/pubspec.yaml \
+  packages/caravella_core_ui/pubspec.yaml \
+  packages/android_app_functions/pubspec.yaml \
+  packages/caravella_gms_foss/pubspec.yaml; do
+  dep_hits=$(grep -nE "^  ($nonfree):" "$pubspec")
+  if [[ -n "$dep_hits" ]]; then
+    echo "FAIL: $pubspec depends on a proprietary library directly"
+    echo "$dep_hits" | sed 's/^/  /'
+    fail=1
+  fi
+done
+
 if [[ "$fail" -eq 0 ]]; then
   echo "OK: no local package imports outside docs/ARCHITECTURE.md's allow-list"
+  echo "OK: proprietary libraries only used through caravella_gms"
 fi
 
 exit $fail

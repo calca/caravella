@@ -12,7 +12,8 @@ import 'google_drive_auth_service.dart';
 /// `--dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true` — see
 /// [GoogleDriveSyncFactory] (`google_drive_sync_factory.dart`) and
 /// `lib/sync/sync_bootstrap.dart` in the app for the gating.
-class GoogleDriveCloudChannel extends CloudRelayChannel {
+class GoogleDriveCloudChannel extends CloudRelayChannel
+    implements CloudAccountChannel {
   static const _tag = 'sync.channel.cloud.drive';
 
   /// Default polling interval for periodic sync.
@@ -32,18 +33,22 @@ class GoogleDriveCloudChannel extends CloudRelayChannel {
   ///
   /// Shown in the UI so the user can see which account is linked (see
   /// `SyncSettingsScreen`'s cloud sync card).
+  @override
   String? get signedInAccountEmail => _auth.currentUser?.email;
 
   /// Shows the Google sign-in UI. Returns `true` on success.
+  @override
   Future<bool> signIn() async => (await _auth.signIn()) != null;
 
   /// Restores a previous sign-in session without showing any UI. Callers
   /// (e.g. the sync settings screen on load) should call this once cloud
   /// sync is known to be enabled, so the linked account shows up without
   /// forcing the user to sign in again every app launch.
+  @override
   Future<bool> restoreSession() async => (await _auth.signInSilently()) != null;
 
   /// Signs out of the linked Google account.
+  @override
   Future<void> signOut() => _auth.signOut();
 
   @override
