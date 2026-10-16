@@ -68,7 +68,9 @@ AntiFeatures: []
 # the packages that only the Play build uses are deleted before the scan.
 # The test-only dev dependency sqflite_common_ffi is dropped too: its sqlite3
 # build hook would bundle a prebuilt libsqlite3.so. Flutter is pinned to the
-# version CI uses. Only tags from v2.0.1 on contain the FOSS variant — older
+# version CI uses. F-Droid's sdkmanager installs platforms;android-37.0
+# without a package.xml, and AGP 8.11 can't parse ApiLevel=37.0 from its
+# source.properties, so the recipe normalizes it to 37. Only tags from v2.0.1 on contain the FOSS variant — older
 # tags can't be built without non-free dependencies. The copy submitted to
 # fdroiddata (metadata/io.caravella.egm.yml) has the same Builds entry.
 Builds:
@@ -88,6 +90,7 @@ Builds:
       - packages/play_store_updates
     prebuild:
       - sdkmanager 'platforms;android-37.0'
+      - sed -i -e 's/^AndroidVersion.ApiLevel=37.0$/AndroidVersion.ApiLevel=37/' $$SDK$$/platforms/android-37.0/source.properties
       - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml
         | head -1)
       - '[[ $flutterVersion ]]'
