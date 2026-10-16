@@ -20,6 +20,8 @@ flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
 flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
 ```
 
+**Release signing**: `release` builds are signed with the key from `android/key.properties` (not committed; CI writes it from secrets). Without that file — a local checkout, F-Droid — `build.gradle.kts` skips the signing config and the release APK comes out unsigned instead of failing; F-Droid signs it with its own key.
+
 ## iOS flavors (`ios/Runner.xcodeproj`)
 
 Mirrors the Android setup: three Xcode schemes (`dev`/`staging`/`prod`), each with its own `Debug-<flavor>`/`Release-<flavor>`/`Profile-<flavor>` build configuration and `ios/Flutter/<flavor><Config>.xcconfig` (e.g. `devDebug.xcconfig`), setting `PRODUCT_BUNDLE_IDENTIFIER` and the `BUNDLE_NAME`/`BUNDLE_DISPLAY_NAME` consumed by `Info.plist`.

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Android Gradle Plugin 8.11.1 → 8.13.2. With 8.11 the release lint check failed under JDK 21 (`MainActivity must extend android.app.Activity`, a false positive: it couldn't load the `android-37.0` platform), which blocked local and F-Droid release builds; CI only passed because it runs JDK 17
+- Release builds are signed only when `android/key.properties` exists; without it (local checkout, F-Droid) the release APK is built unsigned instead of failing on an empty signing config
+
 ## [2.0.1] - 2026-10-16
 
 ### Changed
