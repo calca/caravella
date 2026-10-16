@@ -255,6 +255,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.search_rounded),
+                    // Match the header title; the default onSurfaceVariant
+                    // is black in light mode but a dim grey in dark mode.
+                    color: Theme.of(context).colorScheme.onSurface,
                     tooltip: gloc.show_search,
                     onPressed: () async {
                       await GroupSearchPage.show(context);
