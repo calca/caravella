@@ -2,8 +2,7 @@
 # For more information see: https://f-droid.org/docs/All_About_Descriptions_Graphics_and_Screenshots/
 
 Categories:
-  - Money
-  - Office
+  - Finance Manager
 
 License: MIT
 
@@ -81,7 +80,6 @@ Builds:
       - flutter@stable
     rm:
       - ios
-      - linux
       - macos
       - web
       - windows
@@ -89,7 +87,8 @@ Builds:
       - packages/google_drive_sync
       - packages/play_store_updates
     prebuild:
-      - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml | head -1)
+      - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml
+        | head -1)
       - '[[ $flutterVersion ]]'
       - git -C $$flutter$$ checkout -f $flutterVersion
       - sed -i -e '/sqflite_common_ffi/d' pubspec.yaml
