@@ -67,35 +67,46 @@ AntiFeatures: []
 # packages/caravella_gms (Play Services, ML Kit, Play Core) for
 # packages/caravella_gms_foss, so no proprietary library is compiled in, and
 # the packages that only the Play build uses are deleted before the scan.
-# Only tags from v2.0.1 on contain the FOSS variant — older tags can't be
-# built without non-free dependencies.
+# The test-only dev dependency sqflite_common_ffi is dropped too: its sqlite3
+# build hook would bundle a prebuilt libsqlite3.so. Flutter is pinned to the
+# version CI uses. Only tags from v2.0.1 on contain the FOSS variant — older
+# tags can't be built without non-free dependencies. The copy submitted to
+# fdroiddata (metadata/io.caravella.egm.yml) has the same Builds entry.
 Builds:
-  - versionName: '2.0.1'
+  - versionName: 2.0.1
     versionCode: 123
-    commit: v2.0.1
+    commit: 412a722047db68446d791713963bb18ec9e9fd1f
     output: build/app/outputs/flutter-apk/app-prod-release.apk
     srclibs:
       - flutter@stable
     rm:
       - ios
-      - macos
-      - windows
       - linux
+      - macos
       - web
+      - windows
       - packages/caravella_gms
       - packages/google_drive_sync
       - packages/play_store_updates
     prebuild:
-      - echo "sdk.dir=$ANDROID_HOME" > android/local.properties
-      - echo "flutter.sdk=$$flutter$$" >> android/local.properties
+      - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml | head -1)
+      - '[[ $flutterVersion ]]'
+      - git -C $$flutter$$ checkout -f $flutterVersion
+      - sed -i -e '/sqflite_common_ffi/d' pubspec.yaml
       - ./build_variant.sh foss --no-pub-get
-    build:
+      - export PUB_CACHE=$(pwd)/.pub-cache
       - $$flutter$$/bin/flutter config --no-analytics
       - $$flutter$$/bin/flutter pub get
-      - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
+    scandelete:
+      - .pub-cache
+    build:
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - $$flutter$$/bin/flutter build apk --release --flavor prod --dart-define=FLAVOR=prod
+    ndk: r28c
 
 # Auto-update configuration
 AutoUpdateMode: Version
-UpdateCheckMode: Tags
+UpdateCheckMode: Tags ^v\d+\.\d+\.\d+$
+UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
 CurrentVersion: 2.0.1
 CurrentVersionCode: 123
