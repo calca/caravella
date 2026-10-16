@@ -9,7 +9,9 @@ import 'form_theme.dart';
 /// Requires Flutter 3.22.0 or later.
 const ColorScheme lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF009688),
+  // Deep teal: >=4.5:1 as text on every light surface and under white text
+  // (the brand teal #009688 stays on the launcher icon and splash).
+  primary: Color(0xFF00736A),
   onPrimary: Color(0xFFFFFFFF),
   primaryContainer: Color(0xFFB2DFDB),
   onPrimaryContainer: Color(0xFF000000),
@@ -18,7 +20,7 @@ const ColorScheme lightColorScheme = ColorScheme(
   onPrimaryFixed: Color(0xFF004D40),
   onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFF4F58),
-  onSecondary: Color(0xFFFFFFFF),
+  onSecondary: Color(0xFF000000),
   secondaryContainer: Color(0xFFFFDAD7),
   onSecondaryContainer: Color(0xFF000000),
   secondaryFixed: Color(0xFFF7DFE0),
@@ -56,7 +58,7 @@ const ColorScheme lightColorScheme = ColorScheme(
   inverseSurface: Color(0xFF121212),
   onInverseSurface: Color(0xFFFFFFFF),
   inversePrimary: Color(0xFFB2DFDB),
-  surfaceTint: Color(0xFF009688),
+  surfaceTint: Color(0xFF00736A),
 );
 
 /// Soft Dark [ColorScheme] - A softer, more readable dark theme.
@@ -73,7 +75,7 @@ const ColorScheme darkColorScheme = ColorScheme(
   onPrimaryFixed: Color(0xFF004D40),
   onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFC6E75),
-  onSecondary: Color(0xFFFFFFFF),
+  onSecondary: Color(0xFF000000),
   secondaryContainer: Color(0xFF92001A),
   onSecondaryContainer: Color(0xFFFFFFFF),
   secondaryFixed: Color(0xFFF7DFE0),
@@ -81,7 +83,7 @@ const ColorScheme darkColorScheme = ColorScheme(
   onSecondaryFixed: Color(0xFFA60008),
   onSecondaryFixedVariant: Color(0xFFB3060E),
   tertiary: Color(0xFFF75F67),
-  onTertiary: Color(0xFFFFFFFF),
+  onTertiary: Color(0xFF000000),
   tertiaryContainer: Color(0xFF580810),
   onTertiaryContainer: Color(0xFFFFFFFF),
   tertiaryFixed: Color(0xFFF0D8DA),
@@ -103,13 +105,15 @@ const ColorScheme darkColorScheme = ColorScheme(
   surfaceContainerHigh: Color(0xFF2A2C2D), // High elevation container
   surfaceContainerHighest: Color(0xFF313334), // Highest elevation container
   onSurfaceVariant: Color(0xFFA0A0A0), // Secondary text - WCAG AA compliant
-  outline: Color(0xFF8A8A8A), // Visible outline color
+  outline: Color(
+    0xFFA0A0A0,
+  ), // Also secondary text: >=4.5:1 on every dark surface/container (WCAG AA)
   outlineVariant: Color(0xFF5A5A5A), // Subtle outline variant
   shadow: Color(0xFF000000),
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFFFFFFFF),
   onInverseSurface: Color(0xFF121212),
-  inversePrimary: Color(0xFF009688),
+  inversePrimary: Color(0xFF00736A),
   surfaceTint: Color(0xFF80CBC4),
 );
 
@@ -257,14 +261,16 @@ class CaravellaThemes {
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
         filled: false,
+        // `outline`, not `outlineVariant`: the underline is what identifies
+        // the field, so it needs >=3:1 non-text contrast (WCAG 1.4.11).
         border: UnderlineInputBorder(
-          borderSide: BorderSide(color: scheme.outlineVariant, width: 0.5),
+          borderSide: BorderSide(color: scheme.outline, width: 1),
         ),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: scheme.outlineVariant, width: 0.5),
+          borderSide: BorderSide(color: scheme.outline, width: 1),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: scheme.primary, width: 1),
+          borderSide: BorderSide(color: scheme.primary, width: 2),
         ),
         disabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(

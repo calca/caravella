@@ -63,7 +63,7 @@ class GroupCardHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.05),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(
           HomeLayoutConstants.buttonBorderRadius,
         ),
@@ -71,7 +71,7 @@ class GroupCardHeader extends StatelessWidget {
       child: Text(
         label,
         style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
+          color: theme.colorScheme.onSurface,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -97,7 +97,7 @@ class GroupCardHeader extends StatelessWidget {
               Icon(
                 Icons.event_outlined,
                 size: 14,
-                color: theme.colorScheme.onSurfaceVariant,
+                color: theme.colorScheme.onSurface,
               ),
               const SizedBox(width: 4),
               Expanded(
@@ -108,7 +108,7 @@ class GroupCardHeader extends StatelessWidget {
                     locale: Localizations.localeOf(context),
                   ),
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
