@@ -70,7 +70,10 @@ AntiFeatures: []
 # build hook would bundle a prebuilt libsqlite3.so. Flutter is pinned to the
 # version CI uses. The compileSdk platform and the build-tools AGP 8.11
 # defaults to are installed up front: if AGP downloads build-tools itself
-# mid-build, it reloads the SDK and no longer finds 'android-37'. Only tags from v2.0.1 on contain the FOSS variant — older
+# mid-build, it reloads the SDK and no longer finds 'android-37'. The recipe
+# also turns off the release lint check (with JDK 21 it reports a false
+# 'MainActivity must extend Activity') and the release signing config, since
+# F-Droid builds unsigned and signs the APK itself. Only tags from v2.0.1 on contain the FOSS variant — older
 # tags can't be built without non-free dependencies. The copy submitted to
 # fdroiddata (metadata/io.caravella.egm.yml) has the same Builds entry.
 Builds:
@@ -96,6 +99,8 @@ Builds:
       - git -C $$flutter$$ checkout -f $flutterVersion
       - sed -i -e '/sqflite_common_ffi/d' pubspec.yaml
       - ./build_variant.sh foss --no-pub-get
+      - sed -i -e 's/^android {$/android { lint { checkReleaseBuilds = false }/' -e
+        '/signingConfig = signingConfigs.getByName("release")/d' android/app/build.gradle.kts
       - export PUB_CACHE=$(pwd)/.pub-cache
       - $$flutter$$/bin/flutter config --no-analytics
       - $$flutter$$/bin/flutter pub get
