@@ -1,0 +1,8 @@
+Version 2.0.2 - Smoother and Clearer
+
+• Google Drive sync sign-in now works
+• Updates offer to install as soon as they finish downloading
+• Easier to read: clearer text over group photos, deeper teal buttons
+• Nearby expenses on the map are grouped into one pin
+
+Thanks for using Caravella!

@@ -1,3 +1,13 @@
+## 2.0.2 (17.10.2026)
+
+- **Fixed**: Signing in to Google Drive sync now works – before, "Sync your devices" always reported that Google sign-in had failed
+- **Fixed**: When an update finishes downloading, Caravella now offers to install it right away, without having to close and reopen the app
+- **Improvements**: Easier to read – text over group photos is clearly readable in dark mode, buttons and links use a deeper teal in light mode, text fields have a more visible line, and groups without a photo no longer look like black circles in dark mode
+- **Improvements**: Expenses close to each other on the map are grouped into one numbered pin that opens them all; zoom in to split them
+- **Improvements**: Dates follow your language's format everywhere in the app
+- **Fixed**: The navigation bar now follows the theme right after you switch between light and dark
+- **Changed**: Caravella now requires Android 10 or later
+
 ## 2.0.1 (16.10.2026)
 
 - **Improvements**: Better TalkBack support – every button now has a name, home group cards are easier to navigate, avatars read people's names, and map pins can be opened with a screen reader

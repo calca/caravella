@@ -1,0 +1,8 @@
+Versión 2.0.2 - Más fluida y legible
+
+• Ya funciona el inicio de sesión de la sincronización con Google Drive
+• Las actualizaciones ofrecen instalarse en cuanto se descargan
+• Más legible: texto claro sobre las fotos de grupo, botones más intensos
+• Los gastos cercanos en el mapa se agrupan en un marcador
+
+¡Gracias por usar Caravella!

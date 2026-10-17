@@ -1,0 +1,8 @@
+Versione 2.0.2 - Più fluida e leggibile
+
+• L'accesso a Google per la sincronizzazione con Drive ora funziona
+• Gli aggiornamenti propongono l'installazione appena scaricati
+• Più leggibile: testi chiari sulle foto dei gruppi, pulsanti più decisi
+• Le spese vicine sulla mappa sono raggruppate in un segnaposto
+
+Grazie per usare Caravella!

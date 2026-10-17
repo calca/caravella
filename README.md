@@ -76,13 +76,13 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
-## 🎉 What's New in v2.0.1
+## 🎉 What's New in v2.0.2
 
-- **More Accessible**: Every button now has a name for TalkBack, home cards are easier to navigate, and avatars read people's names
-- **Easier to Read and Tap**: Stronger contrast for secondary text in light mode, larger touch targets for chips, fields and map pins, and amounts that follow your system font size
-- **Now on F-Droid**: A build free of proprietary Google libraries, made for F-Droid
-- **Polish**: The search icon on the Groups page is no longer dimmed in dark mode
-
+- **Google Drive Sync Works**: Signing in to sync your own devices through Google Drive no longer fails
+- **Smoother Updates**: When an update finishes downloading, Caravella offers to install it right away — no need to restart the app
+- **Easier to Read**: Clearer text over group photos in dark mode, a deeper teal for buttons and links, and better-defined fields
+- **Tidier Map**: Expenses close to each other are grouped into one numbered pin
+- **Your Date Format**: Dates follow your language everywhere in the app
 
 ## 🛠️ Tech Stack & Architecture
 
