@@ -28,18 +28,14 @@ class NoExpense extends StatelessWidget {
           Text(
             noExpenseLabel,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.outline.withValues(alpha: 0.6),
+              color: Theme.of(context).colorScheme.outline,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             addFirstExpenseLabel,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.outline.withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.outline,
             ),
           ),
         ],

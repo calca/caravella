@@ -16,6 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Release builds are signed only when `android/key.properties` exists; without it (local checkout, F-Droid) the release APK is built unsigned instead of failing on an empty signing config
 
 ### Fixed
+- **Contrast review of the light and dark themes** (WCAG AA, measured on device):
+  - Dark theme, text over a group's background photo (home card and group page header): the photo veil started almost transparent at the top, right where the title, dates, Favorite/Shared badges, "Total" and "today" sit, and those were grey — 1.3–2.8:1 over a light sky. The veil now covers the whole text area at 70% (then nearly opaque below), and those texts use the primary text color: ≥5.3:1 even over a pure white or black photo (5.4–8.7:1 measured on the demo photos). The photo is a little more muted at the top in the light theme too, since the same veil has to work with dark photos
+  - Light theme teal used as text and on filled buttons ("Add expense", "See all", selected chips, links) darkened from #009688 (3.3–3.7:1) to #00736A (≥4.6:1 on every light surface, 5.7:1 under white text). The launcher icon and splash keep #009688
+  - Dark theme secondary text (`outline`) lightened from #8A8A8A to #A0A0A0, which was 3.7–4.4:1 on cards
+  - Text field underlines use `outline` instead of `outlineVariant` (1.4:1 → 5.4:1 in the light theme; 3:1 is required for the border that identifies a field), 1 px wide; focused fields go to 2 px so they stay distinguishable
+  - Empty-state texts ("No expenses") are no longer half-transparent (2.1–2.5:1)
+  - Text on the coral `secondary`/`tertiary` colors is black instead of white (2.8–3.2:1 → ≥6.5:1), except on the light theme's darker `tertiary`, where white already passes
+  - New `test/themes/theme_contrast_test.dart` checks these ratios for the whole palette in both themes and the photo veil, so a future color change can't silently regress them
 - The navigation bar kept the previous theme's color after switching theme from Settings → Appearance (black bar with dark icons right after choosing Light), and on other screens without their own system-bar styling: the app now applies a theme-aware default to every screen
 - Expense pins that overlap on the map (e.g. several expenses a few hundred meters apart in the same city) are now grouped into one numbered pin that opens all of them; zooming in splits the group. Before, only the top pin could be tapped
 - Dates now use the app language's format everywhere: the home group card, the group period and date fields, and the expense date wrote day/month by hand, while statistics followed the locale (so the same period read 9/10 - 18/10 on the home card and 10/9 - 10/18 in Overview, in English). The home card's open-ended periods no longer show the Italian "Dal"/"Fino al" in every language

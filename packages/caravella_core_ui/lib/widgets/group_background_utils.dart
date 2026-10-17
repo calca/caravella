@@ -28,7 +28,8 @@ class GroupBackground {
 /// Utility for computing the background appearance of an [ExpenseGroup].
 ///
 /// The rules mirror those used in [GroupCard]:
-/// - **Image present**: transparent-to-surface gradient over the image.
+/// - **Image present**: surface veil over the image, strong enough for text
+///   on any photo, ramping to nearly opaque below the text area.
 /// - **Color only**: opaque palette-color-to-transparent gradient.
 /// - **Neither**: plain [ColorScheme.surfaceContainerLowest].
 class GroupBackgroundUtils {
@@ -47,6 +48,28 @@ class GroupBackgroundUtils {
     );
   }
 
+  /// Surface veil opacity over the top part of a photo, where the group title,
+  /// dates, badges and totals sit. With `onSurface` text this keeps WCAG AA
+  /// contrast (>=4.5:1) even over a pure white or pure black photo: 5.3:1 in
+  /// the dark theme, 9.9:1 in the light theme.
+  static const double imageTextScrimAlpha = 0.7;
+
+  /// Gradient laid over a background photo: [imageTextScrimAlpha] down to
+  /// 50 % (the text area), then nearly opaque [surface] at 65 % for the
+  /// content below.
+  static LinearGradient buildImageScrim(Color surface) {
+    return LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        surface.withValues(alpha: imageTextScrimAlpha),
+        surface.withValues(alpha: imageTextScrimAlpha),
+        surface.withValues(alpha: 0.95),
+      ],
+      stops: const [0.0, 0.5, 0.65],
+    );
+  }
+
   /// Resolves [GroupBackground] for [group] using the given [colorScheme].
   ///
   /// Pass [baseColor] to override the surface color used as the gradient
@@ -62,13 +85,10 @@ class GroupBackgroundUtils {
         : null;
 
     if (imagePath != null && File(imagePath).existsSync()) {
-      // Image present: semi-transparent surface top → nearly-opaque surface bottom
+      // Image present: readable veil over the text area → nearly-opaque bottom
       return GroupBackground(
-        color: surface.withValues(alpha: 0.1),
-        gradient: buildGradient(
-          surface.withValues(alpha: 0.1),
-          surface.withValues(alpha: 0.95),
-        ),
+        color: surface.withValues(alpha: imageTextScrimAlpha),
+        gradient: buildImageScrim(surface),
         imagePath: imagePath,
       );
     }

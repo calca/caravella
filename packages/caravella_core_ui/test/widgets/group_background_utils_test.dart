@@ -33,6 +33,17 @@ void main() {
     });
   });
 
+  group('GroupBackgroundUtils.buildImageScrim', () {
+    test('keeps the text area veiled enough for AA contrast on any photo', () {
+      final gradient = GroupBackgroundUtils.buildImageScrim(Colors.black);
+
+      expect(gradient.stops, [0.0, 0.5, 0.65]);
+      expect(gradient.colors[0].a, closeTo(0.7, 0.01));
+      expect(gradient.colors[1].a, closeTo(0.7, 0.01));
+      expect(gradient.colors[2].a, closeTo(0.95, 0.01));
+    });
+  });
+
   group('GroupBackgroundUtils.resolve', () {
     test('falls back to surfaceContainerLowest with no image and no color', () {
       final result = GroupBackgroundUtils.resolve(_group(), colorScheme);
@@ -105,7 +116,16 @@ void main() {
         baseColor: Colors.purple,
       );
 
-      expect(result.color, Colors.purple.withValues(alpha: 0.1));
+      expect(
+        result.color,
+        Colors.purple.withValues(
+          alpha: GroupBackgroundUtils.imageTextScrimAlpha,
+        ),
+      );
+      expect(
+        result.gradient!.colors.last,
+        Colors.purple.withValues(alpha: 0.95),
+      );
     });
   });
 }

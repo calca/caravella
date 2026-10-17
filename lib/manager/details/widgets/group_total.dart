@@ -31,7 +31,7 @@ class GroupTotal extends StatelessWidget {
           displayTitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w500,
-            color: colorScheme.onSurfaceVariant,
+            color: colorScheme.onSurface,
             fontSize: 16,
           ),
         ),

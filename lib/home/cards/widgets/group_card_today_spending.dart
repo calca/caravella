@@ -20,10 +20,8 @@ class GroupCardTodaySpending extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = theme.colorScheme;
-    final backgroundColor = colorScheme.onSurfaceVariant.withValues(
-      alpha: 0.05,
-    );
-    final textColor = colorScheme.onSurfaceVariant;
+    final backgroundColor = colorScheme.onSurface.withValues(alpha: 0.05);
+    final textColor = colorScheme.onSurface;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
