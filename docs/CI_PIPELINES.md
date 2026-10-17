@@ -25,7 +25,7 @@ Publishing a release on GitHub no longer builds anything or bumps `pubspec.yaml`
 
 Manually triggered with input `target_branch`. A test build for sideloading; **nothing goes to Google Play** and `pubspec.yaml` isn't touched.
 
-- Tag `v<version>-rc.<n>`: `<version>` from `pubspec.yaml`, `<n>` one past the highest existing `rc` tag of that version (`v2.0.2-rc.1`, `-rc.2`, …). Fails if `v<version>` is already a published release — bump the version first.
+- Tag `v<version>-rc.<n>`: `<version>` from `pubspec.yaml`, `<n>` one past the highest existing `rc` tag of that version (`v2.0.2-rc.1`, `-rc.2`, …). Fails if the tag `v<version>` already exists (that version was released) — bump the version first.
 - Runs `flutter analyze`, the package boundary guard, `flutter test` and every package's tests, then builds the **signed staging APK** with the same flags as the CI `build` job (Talker screen on, widget on). Staging installs next to the Play app (`io.caravella.egm.staging`, "Caravella - Staging", own data).
 - Publishes a GitHub **pre-release** (never marked Latest) on the built commit with `io_caravella_egm-staging-<version>-rc.<n>.apk` + `.sha256`, and notes from `CHANGELOG.md` `[Unreleased]` (via [`.github/scripts/release_notes.py`](../.github/scripts/release_notes.py)) plus a compare link to the previous rc, or to the last store release for `rc.1`. It fails if `[Unreleased]` is empty.
 
