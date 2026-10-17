@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Store workflow keeps each release's R8 `mapping.txt` and native debug symbols as a build artifact, to retrace obfuscated names shown in Play Console
 - Android Gradle Plugin 8.11.1 → 8.13.2. With 8.11 the release lint check failed under JDK 21 (`MainActivity must extend android.app.Activity`, a false positive: it couldn't load the `android-37.0` platform), which blocked local and F-Droid release builds; CI only passed because it runs JDK 17
 - Release builds are signed only when `android/key.properties` exists; without it (local checkout, F-Droid) the release APK is built unsigned instead of failing on an empty signing config
+- **GitHub releases follow the store**: the new manual *Android CI - Pre-release* workflow publishes a GitHub pre-release `v<version>-rc.<n>` with a signed staging APK and the `[Unreleased]` notes, for testing without touching Google Play. *Android CI - Store* now also builds a prod APK from the same commit and prepares a draft GitHub release `v<version>` with the version's CHANGELOG notes; *Android CI - Store Promote* publishes it when the version goes to production. The old job that built an APK and bumped `pubspec.yaml` on every published GitHub release is gone — the version is bumped when preparing a release
 
 ### Fixed
 - **Contrast review of the light and dark themes** (WCAG AA, measured on device):

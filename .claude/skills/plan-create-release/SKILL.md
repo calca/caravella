@@ -203,11 +203,13 @@ version: X.Y.Z+BUILD_NUMBER
 - `/packages/caravella_core_ui/pubspec.yaml`
 - `/packages/play_store_updates/pubspec.yaml`
 
-### 8. Crea Git Tag
-```bash
-git tag -a vX.Y.Z -m "Release vX.Y.Z - [Descrizione breve]"
-git push origin vX.Y.Z
-```
+### 8. Pubblica (tag e release GitHub li crea la CI)
+Non creare il tag a mano. Dopo il merge in `main` delle modifiche sopra:
+- (facoltativo) **Android CI - Pre-release** → pre-release GitHub `vX.Y.Z-rc.N` con APK staging per i tester, note da `[Unreleased]`; da lanciare *prima* di spostare le voci nella nuova versione
+- **Android CI - Store** con `track=internal` → AAB su Play + bozza (non pubblica) della release GitHub `vX.Y.Z` con APK prod e note dalla sezione `[X.Y.Z]` del CHANGELOG
+- **Android CI - Store Promote** con `track=production` → promozione su Play, poi pubblica la bozza: crea il tag `vX.Y.Z` sul commit compilato e la segna come Latest
+
+Vedi `docs/CI_PIPELINES.md`.
 
 ## Linee Guida Scrittura Release Notes
 
@@ -263,7 +265,7 @@ git push origin vX.Y.Z
 - [ ] Changelog Fastlane per F-Droid creati per tutti i locale (fastlane/metadata/android)
 - [ ] Release notes XML create per tutti i locale store
 - [ ] Store metadata rivisti e aggiornati se necessario
-- [ ] Git tag creato con formato corretto
+- [ ] Release GitHub `vX.Y.Z` pubblicata dal workflow Store Promote (production)
 - [ ] Tutti i file committati e pushati
 - [ ] Build di test eseguito con successo
 - [ ] `flutter analyze` passa senza errori

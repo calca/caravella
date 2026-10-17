@@ -27,7 +27,7 @@ Package name: `io.caravella.egm`. F-Droid signs the APK with its own key — the
 
 ## Keeping `metadata.yml` in sync
 
-`metadata.yml`'s version fields drift independently from `pubspec.yaml` and from the actual release process (CI auto-bumps `pubspec.yaml` on every published release — see [CI Pipelines](CI_PIPELINES.md) — but does not touch `metadata.yml`). Whenever you cut a release intended for F-Droid:
+`metadata.yml`'s version fields drift independently from `pubspec.yaml` and from the actual release process (`pubspec.yaml` is bumped by hand when preparing a release; no workflow touches `metadata.yml` — see [CI Pipelines](CI_PIPELINES.md)). Whenever you cut a release intended for F-Droid:
 
 1. Confirm `pubspec.yaml`'s `version:` matches the GitHub release tag.
 2. Update `metadata.yml`'s `CurrentVersion`/`CurrentVersionCode` and add a new `Builds:` entry if the build recipe changed.

@@ -15,6 +15,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
       ENABLE_ANDROID_WIDGET: "false"
@@ -23,6 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.target_branch }}
+          fetch-depth: 0
       - name: Show build branch
         run: |
           echo "Building branch: ${{ github.event.inputs.target_branch }}"
@@ -74,6 +77,9 @@ jobs:
           done
       - name: Build prod App Bundle (signed)
         run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+      # Same commit and flags as the AAB, for the GitHub release (sideloading).
+      - name: Build prod APK (signed)
+        run: flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=false --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - name: Get app version
         id: get_version
         run: |
@@ -138,3 +144,35 @@ jobs:
           inAppUpdatePriority: 3
         env:
           JAVA_DISTRIBUTION: 'temurin'
+      # Draft GitHub release v<version> for this exact commit, with the prod APK.
+      # It stays invisible until "Android CI - Store Promote" moves the version
+      # to production, which publishes it. Re-running this workflow for the
+      # same version replaces the draft.
+      - name: Prepare draft GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v$VERSION"
+          if [ "$(gh release view "$TAG" --json isDraft -q .isDraft 2>/dev/null)" = "false" ]; then
+            echo "::warning::$TAG is already published on GitHub; leaving it as it is"
+            exit 0
+          fi
+          gh api "repos/${{ github.repository }}/releases?per_page=100" \
+            --jq ".[] | select(.draft and .tag_name == \"$TAG\") | .id" |
+            while read -r id; do gh api -X DELETE "repos/${{ github.repository }}/releases/$id"; done
+          PREVIOUS=$(git tag -l 'v[0-9]*' --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | grep -vx "$TAG" | head -1)
+          if ! python3 .github/scripts/release_notes.py "$VERSION" --kind store \
+               --tag "$TAG" --previous-tag "$PREVIOUS" > notes.md; then
+            echo "::warning::No CHANGELOG.md section for $VERSION yet: draft uses [Unreleased]; Store Promote refreshes the notes when publishing"
+            python3 .github/scripts/release_notes.py Unreleased --kind store \
+              --tag "$TAG" --previous-tag "$PREVIOUS" > notes.md
+          fi
+          APK="io_caravella_egm-$VERSION.apk"
+          mv build/app/outputs/flutter-apk/app-prod-release.apk "$APK"
+          sha256sum "$APK" > "$APK.sha256"
+          gh release create "$TAG" "$APK" "$APK.sha256" \
+            --draft \
+            --target "$(git rev-parse HEAD)" \
+            --title "Caravella $VERSION" \
+            --notes-file notes.md
+          echo "### Draft GitHub release $TAG ready; Store Promote to production publishes it" >> $GITHUB_STEP_SUMMARY

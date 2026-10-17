@@ -3,7 +3,9 @@ name: Android CI - Store Promote
 # Promotes a bundle already uploaded by "Android CI - Store" (e.g. on the
 # internal track) to another track, with release notes from
 # store/changelog/release-notes-<version>.xml, and syncs the store listing
-# full descriptions from store/metadata/listing_<lang>.md.
+# full descriptions from store/metadata/listing_<lang>.md. Promoting to
+# production also publishes the draft GitHub release v<version> that
+# "Android CI - Store" prepared (prod APK + CHANGELOG notes).
 
 on:
   workflow_dispatch:
@@ -36,11 +38,14 @@ on:
 jobs:
   promote:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.target_branch }}
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -63,3 +68,31 @@ jobs:
             ${{ github.event.inputs.promote_release == 'false' && '--skip-release' || '' }} \
             ${{ github.event.inputs.update_listing == 'false' && '--skip-listing' || '' }} \
             ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
+      - name: Publish the GitHub release
+        if: >-
+          github.event.inputs.track == 'production' &&
+          github.event.inputs.promote_release == 'true' &&
+          github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v$VERSION_NAME"
+          STATE=$(gh release view "$TAG" --json isDraft -q .isDraft 2>/dev/null || echo missing)
+          if [ "$STATE" = "false" ]; then
+            echo "$TAG is already published on GitHub"
+            exit 0
+          fi
+          if [ "$STATE" = "missing" ]; then
+            echo "::error::No draft GitHub release $TAG: run 'Android CI - Store' for $VERSION_NAME first (it builds the APK and prepares the draft). Play was promoted anyway."
+            exit 1
+          fi
+          # Refresh the notes: CHANGELOG.md may have been finalized after the upload.
+          PREVIOUS=$(git tag -l 'v[0-9]*' --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | grep -vx "$TAG" | head -1)
+          if python3 .github/scripts/release_notes.py "$VERSION_NAME" --kind store \
+               --tag "$TAG" --previous-tag "$PREVIOUS" > notes.md; then
+            gh release edit "$TAG" --notes-file notes.md
+          else
+            echo "::warning::No CHANGELOG.md section for $VERSION_NAME: publishing with the draft's notes"
+          fi
+          gh release edit "$TAG" --draft=false --latest
+          echo "### Published GitHub release [$TAG](${{ github.server_url }}/${{ github.repository }}/releases/tag/$TAG)" >> $GITHUB_STEP_SUMMARY
