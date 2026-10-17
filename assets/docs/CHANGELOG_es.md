@@ -1,3 +1,13 @@
+## 2.0.2 (17.10.2026)
+
+- **Correcciones**: Iniciar sesión en la sincronización con Google Drive ya funciona; antes "Sincronizar tus dispositivos" siempre indicaba que el inicio de sesión con Google había fallado
+- **Correcciones**: Cuando una actualización termina de descargarse, Caravella ofrece instalarla al momento, sin tener que cerrar y volver a abrir la app
+- **Mejoras**: Más fácil de leer: el texto sobre las fotos de los grupos se lee bien en el tema oscuro, los botones y enlaces usan un verde azulado más intenso en el tema claro, los campos de texto tienen una línea más visible y los grupos sin foto ya no parecen círculos negros en el tema oscuro
+- **Mejoras**: Los gastos cercanos en el mapa se agrupan en un único marcador numerado que los abre todos; al acercar el zoom se separan
+- **Mejoras**: Las fechas siguen el formato de tu idioma en toda la app
+- **Correcciones**: La barra de navegación sigue el tema en cuanto cambias entre claro y oscuro
+- **Cambios**: Caravella ahora requiere Android 10 o posterior
+
 ## 2.0.1 (16.10.2026)
 
 - **Mejoras**: Mejor compatibilidad con TalkBack: todos los botones tienen nombre, las tarjetas de grupo de inicio son más fáciles de recorrer, los avatares leen el nombre de las personas y los marcadores del mapa se abren con el lector de pantalla

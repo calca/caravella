@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-10-17
+
 ### Changed
 - **Minimum Android version is now 10 (API 29)**, up from 7.0. Devices on Android 7–9 keep the version they have but no longer get updates
 - Edge-to-edge on every supported Android version (`WindowCompat.enableEdgeToEdge` in `MainActivity`, previously only Android 10+) and display-cutout mode `always` from Android 11 instead of the deprecated `shortEdges` — addresses the two edge-to-edge recommendations in Play Console. The remaining deprecated-API hits Play lists come from libraries (Material date picker, AndroidX `EdgeToEdge` fallbacks)
@@ -498,7 +500,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/calca/caravella/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/calca/caravella/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/calca/caravella/compare/v1.8.0...v2.0.0
 [1.8.0]: https://github.com/calca/caravella/compare/v1.6.0...v1.8.0
