@@ -1,0 +1,101 @@
+name: Android CI - Pre-release
+
+# Test build for sideloading: a signed staging APK published as a GitHub
+# pre-release (v<version>-rc.<n>), with notes from CHANGELOG.md [Unreleased].
+# Nothing goes to Google Play and pubspec.yaml is not touched.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch to build'
+        required: true
+        default: 'main'
+
+concurrency:
+  group: prerelease
+  cancel-in-progress: false
+
+jobs:
+  prerelease:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+          fetch-depth: 0
+      - name: Pick tag and check release notes
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/\+.*//')
+          if gh release view "v$VERSION" >/dev/null 2>&1 && \
+             [ "$(gh release view "v$VERSION" --json isDraft -q .isDraft)" = "false" ]; then
+            echo "v$VERSION is already released: bump the version in pubspec.yaml first" >&2
+            exit 1
+          fi
+          LAST=$(git tag -l "v$VERSION-rc.*" | sed "s/^v$VERSION-rc\.//" | sort -n | tail -1)
+          TAG="v$VERSION-rc.$(( ${LAST:-0} + 1 ))"
+          # Compare against the latest store release, or the previous rc of this version.
+          PREVIOUS=$(git tag -l "v$VERSION-rc.*" --sort=-v:refname | head -1)
+          [ -n "$PREVIOUS" ] || PREVIOUS=$(git tag -l 'v[0-9]*' --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "PREVIOUS=$PREVIOUS" >> $GITHUB_ENV
+          echo "SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          python3 .github/scripts/release_notes.py Unreleased --kind prerelease \
+            --tag "$TAG" --previous-tag "$PREVIOUS" --commit "$(git rev-parse --short HEAD)" > notes.md
+          echo "Building $TAG (previous: $PREVIOUS)"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.6'
+          channel: 'stable'
+      - name: Decode keystore from secret
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+          test -s android/upload-keystore.jks
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      - name: Configure signing properties
+        run: |
+          echo "storeFile=upload-keystore.jks" > android/key.properties
+          echo "storePassword=$KEYSTORE_PASSWORD" >> android/key.properties
+          echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Analyze
+        run: flutter analyze
+      - name: Package boundary guard
+        run: ./validate_package_boundaries.sh
+      - name: Run tests
+        run: flutter test
+      - name: Test local packages
+        run: |
+          set -e
+          for pkg in packages/*/; do
+            if [ -f "${pkg}pubspec.yaml" ]; then
+              echo "== flutter test: $pkg =="
+              (cd "$pkg" && flutter pub get && flutter test)
+            fi
+          done
+      - name: Build staging APK (signed)
+        run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+      - name: Publish GitHub pre-release
+        run: |
+          APK="io_caravella_egm-staging-${TAG#v}.apk"
+          mv build/app/outputs/flutter-apk/app-staging-release.apk "$APK"
+          sha256sum "$APK" > "$APK.sha256"
+          gh release create "$TAG" "$APK" "$APK.sha256" \
+            --prerelease --latest=false \
+            --target "$SHA" \
+            --title "$TAG (test build)" \
+            --notes-file notes.md
+          echo "### Published [$TAG](${{ github.server_url }}/${{ github.repository }}/releases/tag/$TAG)" >> $GITHUB_STEP_SUMMARY

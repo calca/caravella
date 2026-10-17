@@ -5,12 +5,9 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  release:
-    types: [published]
 
 jobs:
   build:
-    if: github.event_name != 'release'
     runs-on: ubuntu-latest
     env:
       UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
@@ -92,105 +89,3 @@ jobs:
         with:
           name: io_caravella_egm-staging-apk
           path: io_caravella_egm-staging-*.apk
-
-  release:
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-          token: ${{ secrets.GH_PAT }}
-          fetch-depth: 0
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.47.6'
-          channel: 'stable'
-      - name: Decode keystore from secret
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
-          test -s android/upload-keystore.jks
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-      - name: Configure signing properties
-        run: |
-          echo "storeFile=upload-keystore.jks" > android/key.properties
-          echo "storePassword=$KEYSTORE_PASSWORD" >> android/key.properties
-          echo "keyAlias=$KEY_ALIAS" >> android/key.properties
-          echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      - name: Install dependencies
-        run: flutter pub get
-      - name: Determine build flavor
-        id: determine_flavor
-        run: |
-          if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
-            echo "FLAVOR=staging" >> $GITHUB_ENV
-            echo "BUILD_TYPE=staging" >> $GITHUB_ENV
-            echo "APK_NAME=app-staging-release.apk" >> $GITHUB_ENV
-            echo "FILE_PREFIX=io_caravella_egm-staging" >> $GITHUB_ENV
-            echo "TALKER_FLAG=--dart-define=ENABLE_TALKER_SCREEN=true" >> $GITHUB_ENV
-            echo "WIDGET_FLAG=--dart-define=ENABLE_ANDROID_WIDGET=true" >> $GITHUB_ENV
-          else
-            echo "FLAVOR=prod" >> $GITHUB_ENV
-            echo "BUILD_TYPE=production" >> $GITHUB_ENV
-            echo "APK_NAME=app-prod-release.apk" >> $GITHUB_ENV
-            echo "FILE_PREFIX=io_caravella_egm" >> $GITHUB_ENV
-            echo "TALKER_FLAG=" >> $GITHUB_ENV
-            echo "WIDGET_FLAG=--dart-define=ENABLE_ANDROID_WIDGET=false" >> $GITHUB_ENV
-          fi
-      - name: Build APK (signed)
-        run: flutter build apk --flavor ${{ env.FLAVOR }} --release --dart-define=FLAVOR=${{ env.FLAVOR }} ${{ env.TALKER_FLAG }} --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true ${{ env.WIDGET_FLAG }} --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
-      - name: Get app version
-        id: get_version
-        run: |
-          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/\+.*//')
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-      - name: Get current date
-        id: get_date
-        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-      - name: Rename APK
-        run: |
-          mv build/app/outputs/flutter-apk/${{ env.APK_NAME }} ${{ env.FILE_PREFIX }}-$VERSION-$DATE.apk
-      - name: Upload APK to Release
-        uses: softprops/action-gh-release@v2
-        with:
-          token: ${{ secrets.GH_PAT }}
-          files: ${{ env.FILE_PREFIX }}-*.apk
-      - name: Bump version and versionCode in pubspec.yaml
-        run: |
-          VERSION_LINE=$(grep '^version:' pubspec.yaml)
-          VERSION_FULL=$(echo "$VERSION_LINE" | sed 's/version: //')
-          VERSION_NUM=$(echo "$VERSION_FULL" | cut -d'+' -f1)
-          VERSION_CODE=$(echo "$VERSION_FULL" | cut -d'+' -f2)
-          # Increment patch version (es: 1.0.0 -> 1.0.1)
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$(echo $VERSION_NUM)"
-          PATCH=$((PATCH + 1))
-          NEW_VERSION_NUM="$MAJOR.$MINOR.$PATCH"
-          NEW_CODE=$((VERSION_CODE + 1))
-          sed "s/^version: .*/version: $NEW_VERSION_NUM+$NEW_CODE/" pubspec.yaml > pubspec.yaml.tmp
-          mv pubspec.yaml.tmp pubspec.yaml
-          echo "Bumped version to $NEW_VERSION_NUM+$NEW_CODE"
-          echo "NEW_VERSION_NUM=$NEW_VERSION_NUM" >> $GITHUB_ENV
-          echo "NEW_CODE=$NEW_CODE" >> $GITHUB_ENV
-      - name: Commit and push version bump
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          
-          # Assicurati di essere sul branch main
-          git checkout main
-          
-          # Commit e push
-          git add pubspec.yaml
-          git commit -m "Bump version to $NEW_VERSION_NUM+$NEW_CODE [skip ci]" || echo "No changes to commit"
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
