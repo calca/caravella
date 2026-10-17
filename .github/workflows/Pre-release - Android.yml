@@ -32,8 +32,9 @@ jobs:
       - name: Pick tag and check release notes
         run: |
           VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/\+.*//')
-          if gh release view "v$VERSION" >/dev/null 2>&1 && \
-             [ "$(gh release view "v$VERSION" --json isDraft -q .isDraft)" = "false" ]; then
+          # A store release leaves a v<version> tag (older ones have no GitHub
+          # release, only the tag): test builds must carry the next version.
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
             echo "v$VERSION is already released: bump the version in pubspec.yaml first" >&2
             exit 1
           fi
