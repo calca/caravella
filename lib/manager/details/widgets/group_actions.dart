@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../sync/settings_sync_badge.dart';
 
@@ -33,7 +34,7 @@ class GroupActions extends StatelessWidget {
 
     ButtonStyle ctaStyle() {
       return IconButton.styleFrom(
-        backgroundColor: colorScheme.surfaceContainerLowest,
+        backgroundColor: colorScheme.raisedSurface,
         foregroundColor: colorScheme.onSurface,
         minimumSize: const Size(54, 54),
       );
