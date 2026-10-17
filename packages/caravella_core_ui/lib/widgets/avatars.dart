@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
+import '../themes/caravella_themes.dart';
 
 /// Circular avatar showing a participant's initials.
 class ParticipantAvatar extends StatelessWidget {
@@ -86,10 +87,10 @@ class ExpenseGroupAvatar extends StatelessWidget {
         // New palette index - resolve to theme-aware color
         bgColor =
             ExpenseGroupColorPalette.resolveColor(trip.color, colorScheme) ??
-            (backgroundColor ?? colorScheme.surfaceContainerLowest);
+            (backgroundColor ?? colorScheme.raisedSurface);
       }
     } else {
-      bgColor = backgroundColor ?? colorScheme.surfaceContainerLowest;
+      bgColor = backgroundColor ?? colorScheme.raisedSurface;
     }
     final initials = trip.title.length >= 2
         ? trip.title.substring(0, 2).toUpperCase()

@@ -134,6 +134,16 @@ extension CaravellaSemanticColors on ColorScheme {
   Color get onWarning => brightness == Brightness.dark
       ? const Color(0xFF4A2F00)
       : const Color(0xFFFFFFFF);
+
+  /// Fill for elements that should stand out *above* the page background
+  /// (`surfaceContainer`): group avatars without a color, the group page's
+  /// round action buttons, group cards without a photo or color.
+  /// `surfaceContainerLowest` does that in the light theme (white on light
+  /// grey) but is near-black in the dark theme, so those elements read as
+  /// holes in the page; the dark theme lifts them one step lighter instead.
+  Color get raisedSurface => brightness == Brightness.dark
+      ? surfaceContainerHighest
+      : surfaceContainerLowest;
 }
 
 class CaravellaThemes {

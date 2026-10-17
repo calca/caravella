@@ -45,6 +45,15 @@ void main() {
   });
 
   group('GroupBackgroundUtils.resolve', () {
+    test('falls back to a lighter container in the dark theme', () {
+      final result = GroupBackgroundUtils.resolve(
+        _group(),
+        const ColorScheme.dark(),
+      );
+
+      expect(result.color, const ColorScheme.dark().surfaceContainerHighest);
+    });
+
     test('falls back to surfaceContainerLowest with no image and no color', () {
       final result = GroupBackgroundUtils.resolve(_group(), colorScheme);
 

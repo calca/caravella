@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
+import '../themes/caravella_themes.dart';
 
 /// Resolved background properties for an [ExpenseGroup].
 ///
@@ -31,7 +32,7 @@ class GroupBackground {
 /// - **Image present**: surface veil over the image, strong enough for text
 ///   on any photo, ramping to nearly opaque below the text area.
 /// - **Color only**: opaque palette-color-to-transparent gradient.
-/// - **Neither**: plain [ColorScheme.surfaceContainerLowest].
+/// - **Neither**: plain `raisedSurface` (see [CaravellaSemanticColors]).
 class GroupBackgroundUtils {
   GroupBackgroundUtils._();
 
@@ -113,6 +114,6 @@ class GroupBackgroundUtils {
     }
 
     // Fallback: plain surface
-    return GroupBackground(color: colorScheme.surfaceContainerLowest);
+    return GroupBackground(color: colorScheme.raisedSurface);
   }
 }
