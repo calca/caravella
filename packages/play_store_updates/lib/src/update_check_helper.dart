@@ -107,8 +107,9 @@ Future<void> _promptInstallReadyUpdate(
 /// 1. Check if enough time has passed since last check (7 days)
 /// 2. If yes, check for updates
 /// 3. If update available, show recommendation sheet
-/// 4. If user accepts, start flexible update
-/// 5. Record the check timestamp
+/// 4. If user accepts, start flexible update (toast when the download starts)
+/// 5. When the download finishes, prompt to install (restarts the app)
+/// 6. Record the check timestamp
 Future<void> checkAndShowUpdateIfNeeded(
   BuildContext context,
   UpdateLocalizations localizations,
@@ -157,18 +158,28 @@ Future<void> checkAndShowUpdateIfNeeded(
     bottomSheetBuilder,
   );
 
-  // If user wants to update, start flexible update
-  if (shouldUpdate == true) {
-    await updateService.startFlexibleUpdate();
+  if (shouldUpdate != true) return;
 
-    if (!context.mounted) return;
+  // Completes only when the download has finished (or was declined/failed),
+  // so the user keeps using the app meanwhile and gets the install prompt at
+  // the end — without having to restart the app to see it.
+  final downloaded = await updateService.startFlexibleUpdate(
+    onDownloadStarted: () {
+      if (!context.mounted) return;
+      AppToast.show(
+        context,
+        localizations.updateDownloading,
+        type: ToastType.info,
+        icon: Icons.download,
+      );
+    },
+  );
 
-    // Show toast to inform user
-    AppToast.show(
-      context,
-      localizations.updateDownloading,
-      type: ToastType.info,
-      icon: Icons.download,
-    );
-  }
+  if (!downloaded || !context.mounted) return;
+  await _promptInstallReadyUpdate(
+    context,
+    updateService,
+    localizations,
+    bottomSheetBuilder,
+  );
 }

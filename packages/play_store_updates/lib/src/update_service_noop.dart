@@ -18,7 +18,8 @@ class NoOpUpdateService implements UpdateService {
   Future<Map<String, dynamic>?> checkForUpdate() async => null;
 
   @override
-  Future<bool> startFlexibleUpdate() async => false;
+  Future<bool> startFlexibleUpdate({VoidCallback? onDownloadStarted}) async =>
+      false;
 
   @override
   Future<bool> completeFlexibleUpdate() async => false;

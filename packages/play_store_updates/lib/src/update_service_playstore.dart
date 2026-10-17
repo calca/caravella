@@ -33,8 +33,10 @@ class PlayStoreUpdateService implements UpdateService {
   }
 
   @override
-  Future<bool> startFlexibleUpdate() =>
-      psu.AppUpdateService.startFlexibleUpdate();
+  Future<bool> startFlexibleUpdate({VoidCallback? onDownloadStarted}) =>
+      psu.AppUpdateService.startFlexibleUpdate(
+        onDownloadStarted: onDownloadStarted,
+      );
 
   @override
   Future<bool> completeFlexibleUpdate() =>

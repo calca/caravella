@@ -274,19 +274,13 @@ class UpdateCheckWidget extends StatelessWidget {
     BuildContext context,
     UpdateNotifier notifier,
   ) async {
-    // Start flexible update (allows background download)
+    // Completes when the download has finished: meanwhile the card shows
+    // "Downloading…", then its button turns into "Install".
     final success = await notifier.startFlexibleUpdate();
 
     if (!context.mounted) return;
 
-    if (success) {
-      AppToast.show(
-        context,
-        localizations.updateDownloading,
-        type: ToastType.info,
-        icon: Icons.download,
-      );
-    } else if (notifier.error != null) {
+    if (!success && notifier.error != null) {
       AppToast.show(
         context,
         localizations.updateError,
