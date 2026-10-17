@@ -17,4 +17,13 @@ void main() {
       expect(GoogleDriveSyncFactory.createCloudChannel(), isNull);
     });
   });
+
+  test('ships the Web OAuth client ID that Android sign-in requires', () {
+    // Without it every Android sign-in fails with "serverClientId must be
+    // provided on Android" before the signing certificate is even checked.
+    expect(
+      GoogleDriveSyncFactory.serverClientId,
+      matches(RegExp(r'^\d+-[a-z0-9]+\.apps\.googleusercontent\.com$')),
+    );
+  });
 }

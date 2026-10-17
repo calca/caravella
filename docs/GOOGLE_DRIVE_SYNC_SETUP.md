@@ -12,7 +12,8 @@ To make sign-in work you need, in a Google Cloud project you control:
 1. The **Drive API** enabled.
 2. An **OAuth consent screen** configured.
 3. One **OAuth client ID** per Android `applicationId` you want to test/ship (the app has three: `.dev`, `.staging`, and the prod one with no suffix — see the flavor table in [Build Variants](BUILD_VARIANTS.md)), each tied to a signing certificate fingerprint.
-4. Optionally, an **iOS OAuth client ID** if you build for iOS.
+4. One **Web OAuth client ID** — Android sign-in (Credential Manager) requires it as `serverClientId`, even though nothing runs on a server (Step 4c).
+5. Optionally, an **iOS OAuth client ID** if you build for iOS.
 
 None of this costs money for this use case — see the "Cost" section at the bottom.
 
@@ -86,7 +87,26 @@ Either command prints a `SHA1:` line like `AA:BB:CC:...` — copy it.
 4. SHA-1 certificate fingerprint: from step 4a.
 5. Create. Repeat for every (applicationId, keystore) combination you need.
 
-**No client ID string goes into the app for Android** — `google_sign_in` resolves the right OAuth client automatically at runtime from the package name + the certificate the APK was actually signed with. If sign-in fails with `ApiException: 10` (`DEVELOPER_ERROR`), the package name/SHA-1 pair you registered doesn't match what you're running — the single most common setup mistake here.
+The Android clients' IDs never go into the app: Google matches them at sign-in from the package name + the certificate the APK was actually signed with. If sign-in fails with `ApiException: 10` / `DEVELOPER_ERROR` (or a `providerConfigurationError`), the package name/SHA-1 pair you registered doesn't match what you're running — the most common setup mistake here.
+
+### 4c. Create the Web client (`serverClientId`)
+
+`google_sign_in` 7.x signs in through Android's Credential Manager, which **refuses to run without a `serverClientId`**: the ID of a **Web application** OAuth client in the *same* project as the Android clients. Without it every Android sign-in fails immediately with `GoogleSignInException(clientConfigurationError, serverClientId must be provided on Android)` — the app shows "Google sign-in failed or was cancelled" (this was the case up to 2.0.1).
+
+1. **Credentials → Create Credentials → OAuth client ID → Web application**. Any name; no JavaScript origins or redirect URIs.
+2. Copy the Client ID into `_caravellaServerClientId` in `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart`, or pass it at build time with `--dart-define=GOOGLE_DRIVE_SERVER_CLIENT_ID=...` (which overrides the constant). It is not a secret — it only names the project; sign-in still needs a matching Android client. A test checks the constant looks like a client ID.
+
+### Current Caravella setup
+
+Google Cloud project **`caravella-egm`**: Drive API enabled; consent screen *External*, *In production*, scope `drive.appdata` (listed as non-sensitive, so no verification review). OAuth clients:
+
+| Client | Type | For |
+|---|---|---|
+| Caravella server client (Android sign-in) — `809210426021-lmearsi2…` | Web | `serverClientId` baked into the app |
+| Caravella Android prod (Play signing) | Android | `io.caravella.egm` installed from Google Play |
+| Caravella Android staging (upload key) | Android | `io.caravella.egm.staging` (CI and pre-release APKs) |
+
+The prod APK attached to GitHub releases is signed with the upload key, so `io.caravella.egm` + the upload key SHA-1 (`05:E0:C3:9D:B5:B1:6B:79:F5:0C:4E:05:F2:62:CD:19:D8:51:F8:3B`) needs its own Android client for sign-in to work there. Debug builds (`flutter run`) need one for the debug keystore.
 
 ## Step 5 — (Optional) iOS OAuth client
 
