@@ -104,7 +104,8 @@ class AppUpdateNotifier extends ChangeNotifier {
     }
   }
 
-  /// Start a flexible update.
+  /// Start a flexible update. Completes once the download has finished
+  /// (see [AppUpdateService.startFlexibleUpdate]).
   Future<bool> startFlexibleUpdate() async {
     _isDownloading = true;
     _error = null;
@@ -112,7 +113,11 @@ class AppUpdateNotifier extends ChangeNotifier {
 
     try {
       final success = await AppUpdateService.startFlexibleUpdate();
-      if (!success) {
+      if (success) {
+        // Don't rely only on the install-status stream for this: the
+        // completed call already means the update is downloaded.
+        _updateDownloaded = true;
+      } else {
         _error = 'Failed to start update';
       }
       return success;

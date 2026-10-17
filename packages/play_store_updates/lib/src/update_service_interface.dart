@@ -16,8 +16,14 @@ abstract class UpdateService {
   /// Returns a map with update information or null if no update available.
   Future<Map<String, dynamic>?> checkForUpdate();
 
-  /// Start a flexible update flow.
-  Future<bool> startFlexibleUpdate();
+  /// Start a flexible update flow: Play asks the user to confirm, then
+  /// downloads in the background.
+  ///
+  /// The returned future completes only once the download has **finished**
+  /// (`true`, ready for [completeFlexibleUpdate]) or the user declined / it
+  /// failed (`false`) — not when the download starts. [onDownloadStarted]
+  /// fires when it actually starts, e.g. to tell the user it's under way.
+  Future<bool> startFlexibleUpdate({VoidCallback? onDownloadStarted});
 
   /// Complete a flexible update (install and restart).
   Future<bool> completeFlexibleUpdate();

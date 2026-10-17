@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:in_app_update/in_app_update.dart';
@@ -60,12 +61,20 @@ class AppUpdateService {
   /// (downloading/downloaded/installing/installed/failed/canceled).
   ///
   /// Empty on non-Android platforms.
+  ///
+  /// One platform subscription shared by every listener: each
+  /// [InAppUpdate.installUpdateListener] call opens the same native event
+  /// channel again, and cancelling any of them stops it for all — so the
+  /// settings card and the home prompt must not listen separately.
   static Stream<InstallStatus> get installUpdateStream {
     if (!Platform.isAndroid) {
       return const Stream.empty();
     }
-    return InAppUpdate.installUpdateListener;
+    return _installUpdateStream ??=
+        InAppUpdate.installUpdateListener.asBroadcastStream();
   }
+
+  static Stream<InstallStatus>? _installUpdateStream;
 
   /// Whether a flexible update started in a previous check has already
   /// finished downloading and is waiting for [completeFlexibleUpdate] to
@@ -128,10 +137,26 @@ class AppUpdateService {
   /// Flexible updates allow the user to continue using the app while
   /// the update downloads in the background.
   ///
-  /// Returns true if the update was started successfully.
-  static Future<bool> startFlexibleUpdate() async {
+  /// `in_app_update` completes [InAppUpdate.startFlexibleUpdate] only when the
+  /// download has finished, so this returns `true` once the update is
+  /// downloaded and ready for [completeFlexibleUpdate], `false` if the user
+  /// declined or the download failed. [onDownloadStarted] is called on the
+  /// first `downloading` status.
+  static Future<bool> startFlexibleUpdate({
+    void Function()? onDownloadStarted,
+  }) async {
     if (!Platform.isAndroid) {
       return false;
+    }
+
+    StreamSubscription<InstallStatus>? statusSub;
+    if (onDownloadStarted != null) {
+      statusSub = installUpdateStream.listen((status) {
+        if (status == InstallStatus.downloading) {
+          onDownloadStarted();
+          statusSub?.cancel();
+        }
+      });
     }
 
     try {
@@ -147,6 +172,8 @@ class AppUpdateService {
     } catch (e) {
       LoggerAdapter.warning('Flexible update error: $e');
       return false;
+    } finally {
+      await statusSub?.cancel();
     }
   }
 
