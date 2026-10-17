@@ -13,11 +13,13 @@ import 'package:http/http.dart' as http;
 /// [GoogleSignInAccount.authorizationClient]) rather than passed upfront —
 /// unlike the pre-7.0 `signIn()`/`authHeaders` API this replaces.
 ///
-/// The iOS OAuth client ID is optional here: pass it via
-/// [GoogleDriveAuthService.new] when building for iOS (see
-/// `docs/GOOGLE_DRIVE_SYNC_SETUP.md`). Android needs no client ID in code —
-/// it's resolved from the OAuth Android client registered against the
-/// app's package name + signing certificate SHA-1 in Google Cloud Console.
+/// Android needs [serverClientId]: the ID of the project's OAuth **Web**
+/// client. Credential Manager refuses to sign in without it
+/// (`GoogleSignInException(clientConfigurationError, serverClientId must be
+/// provided on Android)`); the Android OAuth clients registered against the
+/// package name + signing SHA-1 are matched behind the scenes, in the same
+/// Google Cloud project. The iOS client ID is only needed on iOS. See
+/// `docs/GOOGLE_DRIVE_SYNC_SETUP.md`.
 class GoogleDriveAuthService {
   static const _tag = 'sync.channel.cloud.auth';
 
@@ -28,26 +30,38 @@ class GoogleDriveAuthService {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   final String? _iosClientId;
+  final String? _serverClientId;
 
   bool _initialized = false;
   GoogleSignInAccount? _currentUser;
 
-  GoogleDriveAuthService({String? iosClientId}) : _iosClientId = iosClientId;
+  GoogleDriveAuthService({String? iosClientId, String? serverClientId})
+    : _iosClientId = iosClientId,
+      _serverClientId = serverClientId;
 
   /// [GoogleSignIn.initialize] must complete exactly once before any other
   /// call — this makes every public method here safe to call repeatedly.
   Future<void> _ensureInitialized() async {
     if (_initialized) return;
 
-    await _googleSignIn.initialize(clientId: _iosClientId);
-    _googleSignIn.authenticationEvents.listen((event) {
-      switch (event) {
-        case GoogleSignInAuthenticationEventSignIn(:final user):
-          _currentUser = user;
-        case GoogleSignInAuthenticationEventSignOut():
-          _currentUser = null;
-      }
-    });
+    await _googleSignIn.initialize(
+      clientId: _iosClientId,
+      serverClientId: _serverClientId,
+    );
+    _googleSignIn.authenticationEvents.listen(
+      (event) {
+        switch (event) {
+          case GoogleSignInAuthenticationEventSignIn(:final user):
+            _currentUser = user;
+          case GoogleSignInAuthenticationEventSignOut():
+            _currentUser = null;
+        }
+      },
+      // Failures are also delivered here; signIn()/signInSilently() already
+      // report them, so just keep them from surfacing as uncaught errors.
+      onError: (Object e) =>
+          LoggerService.debug('Authentication event error: $e', name: _tag),
+    );
 
     _initialized = true;
   }
@@ -68,10 +82,7 @@ class GoogleDriveAuthService {
       _currentUser = account;
       return account;
     } catch (e, st) {
-      LoggerService.warning(
-        'Silent sign-in failed',
-        name: _tag,
-      );
+      LoggerService.warning('Silent sign-in failed', name: _tag);
       LoggerService.debug('$e\n$st', name: _tag);
       return null;
     }

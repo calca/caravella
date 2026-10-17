@@ -23,8 +23,11 @@ class GoogleDriveCloudChannel extends CloudRelayChannel
 
   Timer? _pollTimer;
 
-  GoogleDriveCloudChannel({String? iosClientId})
-      : _auth = GoogleDriveAuthService(iosClientId: iosClientId);
+  GoogleDriveCloudChannel({String? iosClientId, String? serverClientId})
+    : _auth = GoogleDriveAuthService(
+        iosClientId: iosClientId,
+        serverClientId: serverClientId,
+      );
 
   @override
   String get channelName => 'cloud';
