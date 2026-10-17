@@ -128,12 +128,13 @@ img.onload = async () => {
   if (shot.fixQr) {
     // Emulator-only text: replace the hardware model with a device name, drop the emulator warning.
     c.fillStyle = "#f8f8f8";
-    c.fillRect(200, 2450, 880, 80);
-    c.fillRect(30, 2600, 1220, 160);
+    // Rows measured on raw/04-qr.png (1280x2856): device name 2408-2448, warning 2565-2701.
+    c.fillRect(200, 2395, 880, 68);
+    c.fillRect(30, 2550, 1220, 165);
     c.fillStyle = "#111";
     c.font = "400 46px Montserrat, 'PingFang SC'";
     c.textAlign = "center";
-    c.fillText(t.device, 640, 2505);
+    c.fillText(t.device, 640, 2444);
   }
   document.body.dataset.ready = "1";
 };
