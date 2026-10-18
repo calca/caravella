@@ -53,7 +53,13 @@ class BackgroundPicker extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.edit_outlined),
+                // Explicit color: on this page the icon otherwise rendered
+                // with Flutter's fallback icon color (near-black) in the dark
+                // theme (#527).
+                Icon(
+                  Icons.edit_outlined,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ],
             ),
           ),
@@ -107,10 +113,11 @@ class BackgroundPicker extends StatelessWidget {
             ),
           );
         } else {
-          child = const Icon(
+          child = Icon(
             Icons.palette_outlined,
             size: 48,
-            key: ValueKey('icon'),
+            color: scheme.onSurfaceVariant,
+            key: const ValueKey('icon'),
           );
         }
         return AnimatedSwitcher(

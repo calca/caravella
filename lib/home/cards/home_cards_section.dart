@@ -331,8 +331,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         ),
 
         // Section header for "Your Groups" with CTA to history - pinned at bottom
+        // No end padding: "See all" ends flush with the featured card (#528).
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 20, 16),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
           child: Row(
             children: [
               Expanded(
@@ -352,7 +353,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                   );
                 },
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.only(left: 8),
                   minimumSize: const Size(48, 48),
                   tapTargetSize: MaterialTapTargetSize.padded,
                 ),
