@@ -5212,6 +5212,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New expense in {group}'**
   String new_expense_in_group(String group);
+
+  /// Line above the Groups page title
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0 {No active groups} one {1 active group} other {{count} active groups}}'**
+  String groups_active_count(int count);
 }
 
 class _AppLocalizationsDelegate

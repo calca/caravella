@@ -1801,4 +1801,5 @@
   ,"quick_action_map": "地图"
   ,"quick_action_search": "搜索"
   ,"new_expense_in_group": "在{group}中新增支出"
+  ,"groups_active_count": "{count, plural, other {{count} 个活跃群组}}"
 }

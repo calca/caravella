@@ -2668,4 +2668,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String new_expense_in_group(String group) {
     return '在$group中新增支出';
   }
+
+  @override
+  String groups_active_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个活跃群组',
+    );
+    return '$_temp0';
+  }
 }

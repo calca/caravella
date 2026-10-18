@@ -1171,4 +1171,5 @@
   ,"quick_action_map": "Mappa"
   ,"quick_action_search": "Cerca"
   ,"new_expense_in_group": "Nuova spesa in {group}"
+  ,"groups_active_count": "{count, plural, =0 {Nessun gruppo attivo} one {1 gruppo attivo} other {{count} gruppi attivi}}"
 }

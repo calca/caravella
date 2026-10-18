@@ -56,10 +56,8 @@ class _AppShellState extends State<AppShell> {
     final gloc = gen.AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
     final tab = _tab.value;
-    // The page behind the bar: Home uses surfaceContainer, Groups surface.
-    final pageColor = tab == AppTab.home
-        ? scheme.surfaceContainer
-        : scheme.surface;
+    // Both tabs use surfaceContainer as page color behind the bar.
+    final pageColor = scheme.surfaceContainer;
 
     return AppShellScope._(
       tab: _tab,

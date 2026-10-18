@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../group/pages/group_creation_wizard_page.dart';
 import 'widgets/expense_group_empty_states.dart';
-import 'widgets/swipeable_expense_group_card.dart';
+import 'widgets/group_photo_card.dart';
 import '../../home/search/group_search_page.dart';
 import '../../main/app_shell.dart';
 
@@ -18,8 +18,7 @@ class ExpesensHistoryPage extends StatefulWidget {
   State<ExpesensHistoryPage> createState() => _ExpesensHistoryPageState();
 }
 
-class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
-    with TickerProviderStateMixin {
+class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
   List<ExpenseGroup> _activeTrips = [];
   List<ExpenseGroup> _archivedTrips = [];
   List<ExpenseGroup> _filteredActiveTrips = [];
@@ -29,9 +28,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   late final ScrollController _scrollController;
   bool _fabVisible = true;
   Timer? _fabIdleTimer;
-  late final TabController _tabController;
-
-  // (Removed) _statusOptions helper previously used for SegmentedButton.
+  bool _showArchived = false;
 
   @override
   void initState() {
@@ -39,13 +36,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _loadTrips();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
-
-    // Tabs: Active | Archived (Material 3 expressive duration)
-    _tabController = TabController(
-      length: 2,
-      vsync: this,
-      animationDuration: const Duration(milliseconds: 350),
-    );
   }
 
   ExpenseGroupNotifier? _groupNotifier;
@@ -56,7 +46,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _fabIdleTimer?.cancel();
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -178,73 +167,80 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     await _loadTrips();
   }
 
-  Widget _buildTabContent(List<ExpenseGroup> trips, String tabType) {
+  /// Favorite group as a wide card on top (active groups only), the others
+  /// as a two-column grid of photo tiles.
+  List<Widget> _buildGroupSlivers(List<ExpenseGroup> trips, double bottom) {
     if (_loading) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(child: CircularProgressIndicator.adaptive()),
+        ),
+      ];
     }
-
     if (trips.isEmpty) {
-      return ExpenseGroupEmptyStates(
-        searchQuery: '',
-        periodFilter: tabType,
-        onTripAdded: () async {
-          final result = await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const GroupCreationWizardPage(),
-            ),
-          );
-          if (result == true) {
-            await _loadTrips();
-          }
-        },
-      );
+      return [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: ExpenseGroupEmptyStates(
+            searchQuery: '',
+            periodFilter: _showArchived ? 'archived' : 'active',
+            onTripAdded: _createGroup,
+          ),
+        ),
+      ];
     }
 
-    // Inside the app shell the last card must scroll clear of the floating
-    // navigation.
-    final bottomPadding = AppShellScope.maybeOf(context) != null
-        ? FloatingNavBar.reservedHeight +
-              MediaQuery.paddingOf(context).bottom +
-              16
-        : 100.0;
-    return ListView.builder(
-      controller: null,
-      padding: EdgeInsets.fromLTRB(24, 0, 24, bottomPadding),
-      itemCount: trips.length,
-      itemBuilder: (context, index) {
-        final trip = trips[index];
-        return SwipeableExpenseGroupCard(
-          trip: trip,
-          onArchiveToggle: _onArchiveToggle,
-          onDelete: () => _loadTrips(),
-          onPin: () => _loadTrips(),
-        );
-      },
-    );
-  }
-
-  Widget _buildStatusSegmentedButton(BuildContext context) {
-    // Replaced with a TabBar containing two tabs: Active | Archived
-    final gloc = gen.AppLocalizations.of(context);
-
-    return SizedBox(
-      width: double.infinity,
-      child: CaravellaTabBar(
-        controller: _tabController,
-        tabs: [
-          Tab(text: gloc.status_active),
-          Tab(text: gloc.status_archived),
-        ],
+    final favorite = _showArchived
+        ? null
+        : trips.where((t) => t.pinned).firstOrNull;
+    final others = trips.where((t) => t != favorite).toList();
+    return [
+      if (favorite != null)
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
+          sliver: SliverToBoxAdapter(
+            child: SizedBox(
+              height: 168,
+              child: GroupPhotoCard(
+                group: favorite,
+                wide: true,
+                onArchiveToggle: _onArchiveToggle,
+                onChanged: _loadTrips,
+              ),
+            ),
+          ),
+        ),
+      SliverPadding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, bottom),
+        sliver: SliverGrid(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 14,
+            crossAxisSpacing: 14,
+            childAspectRatio: 0.82,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (context, i) => GroupPhotoCard(
+              group: others[i],
+              onArchiveToggle: _onArchiveToggle,
+              onChanged: _loadTrips,
+            ),
+            childCount: others.length,
+          ),
+        ),
       ),
-    );
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     // As the Groups tab of the app shell, "new group" is the round button
     // next to the floating navigation; pushed on its own, the page keeps
-    // its FAB.
+    // its FAB and a back button.
     final shell = AppShellScope.maybeOf(context);
     shell?.setPrimaryAction(
       AppTab.groups,
@@ -254,59 +250,166 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         onPressed: _createGroup,
       ),
     );
+    final top = MediaQuery.paddingOf(context).top;
+    final bottom = shell != null
+        ? FloatingNavBar.reservedHeight +
+              MediaQuery.paddingOf(context).bottom +
+              16
+        : 100.0;
+    final trips = _showArchived ? _filteredArchivedTrips : _filteredActiveTrips;
 
-    return AppSystemUI.surface(
+    return AppSystemUI.surfaceContainer(
+      context: context,
       child: Scaffold(
-        appBar: const CaravellaAppBar(),
+        backgroundColor: scheme.surfaceContainer,
         floatingActionButton: shell == null ? _buildAnimatedFab(gloc) : null,
-        body: Column(
+        body: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SectionHeader(
-                      title: gloc.expense_groups_title,
-                      description: gloc.expense_groups_desc,
-                      padding: EdgeInsets.zero,
+            CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverToBoxAdapter(child: SizedBox(height: top + 16)),
+                // Same header language as Home: count above a large title,
+                // search in a raised circle like Home's settings button.
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        if (shell == null) ...[
+                          const BackButton(),
+                          const SizedBox(width: 4),
+                        ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                gloc.groups_active_count(_activeTrips.length),
+                                style: textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Semantics(
+                                header: true,
+                                child: Text(
+                                  gloc.nav_groups,
+                                  style: textTheme.headlineMedium?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Material(
+                          color: scheme.raisedSurface,
+                          shape: const CircleBorder(),
+                          child: IconButton(
+                            icon: const Icon(Icons.search_rounded),
+                            color: scheme.onSurface,
+                            tooltip: gloc.show_search,
+                            onPressed: () async {
+                              await GroupSearchPage.show(context);
+                              // The user may have changed pin/archive state
+                              // from the search page.
+                              if (mounted) await _loadTrips();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(Icons.search_rounded),
-                    // Match the header title; the default onSurfaceVariant
-                    // is black in light mode but a dim grey in dark mode.
-                    color: Theme.of(context).colorScheme.onSurface,
-                    tooltip: gloc.show_search,
-                    onPressed: () async {
-                      await GroupSearchPage.show(context);
-                      // Reload after returning from search (user may have
-                      // changed pin/archive state from within the search page)
-                      if (mounted) await _loadTrips();
-                    },
-                  ),
-                ],
-              ),
-            ),
-            // STATUS FILTER SEGMENTED BUTTONS
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-              child: _buildStatusSegmentedButton(context),
-            ),
-            // MAIN CONTENT
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
                 ),
-                children: [
-                  _buildTabContent(_filteredActiveTrips, 'active'),
-                  _buildTabContent(_filteredArchivedTrips, 'archived'),
-                ],
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                  sliver: SliverToBoxAdapter(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: _StatusToggle(
+                        showArchived: _showArchived,
+                        activeLabel:
+                            '${gloc.status_active} · ${_activeTrips.length}',
+                        archivedLabel:
+                            '${gloc.status_archived} · ${_archivedTrips.length}',
+                        onChanged: (v) => setState(() => _showArchived = v),
+                      ),
+                    ),
+                  ),
+                ),
+                ..._buildGroupSlivers(trips, bottom),
+              ],
+            ),
+            // Opaque strip behind the status bar for scrolled content.
+            Container(height: top, color: scheme.surfaceContainer),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Active / Archived switch, styled like the floating navigation pill.
+class _StatusToggle extends StatelessWidget {
+  final bool showArchived;
+  final String activeLabel;
+  final String archivedLabel;
+  final ValueChanged<bool> onChanged;
+
+  const _StatusToggle({
+    required this.showArchived,
+    required this.activeLabel,
+    required this.archivedLabel,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    Widget segment(String label, bool selected, VoidCallback onTap) =>
+        Semantics(
+          selected: selected,
+          button: true,
+          label: label,
+          onTap: onTap,
+          excludeSemantics: true,
+          child: InkWell(
+            customBorder: const StadiumBorder(),
+            onTap: onTap,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              constraints: const BoxConstraints(minHeight: 44),
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              alignment: Alignment.center,
+              decoration: ShapeDecoration(
+                shape: const StadiumBorder(),
+                color: selected
+                    ? FloatingNavBar.selectedColor(s)
+                    : Colors.transparent,
+              ),
+              child: Text(
+                label,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  color: selected ? s.onSurface : s.onSurfaceVariant,
+                ),
               ),
             ),
+          ),
+        );
+    return DecoratedBox(
+      decoration: ShapeDecoration(
+        shape: const StadiumBorder(),
+        color: FloatingNavBar.pillColor(s),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            segment(activeLabel, !showArchived, () => onChanged(false)),
+            segment(archivedLabel, showArchived, () => onChanged(true)),
           ],
         ),
       ),

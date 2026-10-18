@@ -2758,4 +2758,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String new_expense_in_group(String group) {
     return 'Nova despesa em $group';
   }
+
+  @override
+  String groups_active_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count grupos ativos',
+      one: '1 grupo ativo',
+      zero: 'Nenhum grupo ativo',
+    );
+    return '$_temp0';
+  }
 }

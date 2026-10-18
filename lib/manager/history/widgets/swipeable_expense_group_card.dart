@@ -1,11 +1,9 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../details/pages/expense_group_detail_page.dart';
-import 'history_options_sheet.dart';
+import 'group_options.dart';
 
 /// Expense group card with long-press contextual menu
 class SwipeableExpenseGroupCard extends StatelessWidget {
@@ -24,128 +22,13 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     this.searchQuery,
   });
 
-  void _showContextMenu(BuildContext context) {
-    HapticFeedback.mediumImpact();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (sheetCtx) => HistoryOptionsSheet(
-        trip: trip,
-        onPinToggle: () async {
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await _executePinAction(context);
-        },
-        onArchiveToggle: () async {
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await _executeArchiveAction(context);
-        },
-        onDelete: () async {
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await _executeDeleteAction(context);
-        },
-      ),
-    );
-  }
-
-  Future<void> _executePinAction(BuildContext context) async {
-    final isPinned = trip.pinned;
-    final gloc = gen.AppLocalizations.of(context);
-    final actionText = isPinned
-        ? gloc.unpinned_with_undo
-        : gloc.pinned_with_undo;
-
-    // Use notifier to update pin state (handles storage + shortcuts)
-    final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
-    await notifier.updateGroupPin(trip.id, !isPinned);
-
-    // Trigger reload callback if provided
-    onPin?.call();
-
-    if (!context.mounted) return;
-    AppToast.show(
-      context,
-      '$actionText • ${trip.title}',
-      type: ToastType.info,
-      duration: const Duration(seconds: 4),
-    );
-  }
-
-  Future<void> _executeArchiveAction(BuildContext context) async {
-    final isArchived = trip.archived;
-    final gloc = gen.AppLocalizations.of(context);
-    final actionText = isArchived
-        ? gloc.unarchived_with_undo
-        : gloc.archived_with_undo;
-
-    // Execute action
-    await onArchiveToggle(trip.id, !isArchived);
-
-    // Small delay to ensure UI has updated
-    await Future.delayed(const Duration(milliseconds: 100));
-
-    // Show AppToast with undo
-    if (context.mounted) {
-      AppToast.show(
-        context,
-        '$actionText • ${trip.title}',
-        type: ToastType.info,
-        duration: const Duration(seconds: 4),
-      );
-    }
-  }
-
-  Future<void> _executeDeleteAction(BuildContext context) async {
-    final gloc = gen.AppLocalizations.of(context);
-
-    // Show confirmation dialog
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => Material3Dialog(
-        title: Text(gloc.delete_trip),
-        content: Text(gloc.delete_trip_confirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(gloc.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              foregroundColor: Theme.of(context).colorScheme.onError,
-            ),
-            child: Text(gloc.delete),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed != true || !context.mounted) return;
-
-    // Execute deletion
-    await ExpenseGroupStorageV2.deleteGroup(trip.id);
-
-    // Notify the ExpenseGroupNotifier about the deletion
-    if (context.mounted) {
-      final notifier = context.read<ExpenseGroupNotifier>();
-      notifier.notifyGroupDeleted(trip.id);
-    }
-
-    // Trigger reload callback if provided
-    onDelete?.call();
-
-    if (!context.mounted) return;
-    AppToast.show(
-      context,
-      '${gloc.deleted_with_undo} • ${trip.title}',
-      type: ToastType.success,
-      duration: const Duration(seconds: 3),
-    );
-  }
+  void _showContextMenu(BuildContext context) => showGroupOptionsSheet(
+    context,
+    trip: trip,
+    onArchiveToggle: onArchiveToggle,
+    onDelete: onDelete,
+    onPin: onPin,
+  );
 
   @override
   Widget build(BuildContext context) {

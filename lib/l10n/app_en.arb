@@ -1216,4 +1216,6 @@
   ,"@quick_action_search": {"description": "Home quick action: search the expenses of the featured group"}
   ,"new_expense_in_group": "New expense in {group}"
   ,"@new_expense_in_group": {"description": "Label of the round button next to the floating navigation on Home: adds an expense to the featured group", "placeholders": {"group": {"type": "String"}}}
+  ,"groups_active_count": "{count, plural, =0 {No active groups} one {1 active group} other {{count} active groups}}"
+  ,"@groups_active_count": {"description": "Line above the Groups page title", "placeholders": {"count": {"type": "int"}}}
 }
