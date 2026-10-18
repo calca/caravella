@@ -2651,4 +2651,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String accessibility_map_marker_group(int count, String place) {
     return '$count 笔费用，$place';
   }
+
+  @override
+  String get nav_home => '首页';
+
+  @override
+  String get nav_groups => '群组';
+
+  @override
+  String get quick_action_map => '地图';
+
+  @override
+  String get quick_action_search => '搜索';
+
+  @override
+  String new_expense_in_group(String group) {
+    return '在$group中新增支出';
+  }
 }

@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.0.2+124
+version: 2.0.3+125
 
 environment:
   sdk: ">=3.9.0 <4.0.0"
@@ -81,7 +81,6 @@ dependencies:
   # this file. See docs/PACKAGE_CARAVELLA_GMS.md.
   caravella_gms:
     path: packages/caravella_gms
-  android_nav_setting: ^0.0.2+2
   home_widget: ^0.9.3
   permission_handler: ^13.0.1
   qr_flutter: ^4.1.0

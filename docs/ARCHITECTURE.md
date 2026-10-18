@@ -49,7 +49,7 @@ Entry point `lib/main.dart`:
 6. `runApp(const CaravellaApp())`.
 
 `CaravellaApp` (`lib/main/caravella_app.dart`) loads locale/theme/dynamic-color prefs, then nests:
-`ProviderSetup.createProviders` → `DynamicColorBuilder` → `ProviderSetup.wrapWithNotifiers` → `ToastProvider.create` → `MaterialApp`.
+`ProviderSetup.createProviders` → `DynamicColorBuilder` → `ProviderSetup.wrapWithNotifiers` → `ToastProvider.create` → `MaterialApp`. `MaterialApp.home` is `AppShell` (`lib/main/app_shell.dart`): the Home and Groups tabs under the floating navigation — see [Home § AppShell](APP_HOME.md#appshell-home-and-groups-tabs).
 
 `ProviderSetup` (`lib/main/provider_setup.dart`) wires the app-wide providers:
 - `createProviders`: `ExpenseGroupNotifier`, `UserNameNotifier`, `GroupTypeTemplatesNotifier` — all `ChangeNotifierProvider`s. `ExpenseGroupNotifier` gets two injected platform callbacks here: a shortcuts-update callback (→ `PlatformShortcutsManager.updateShortcuts()` + `PlatformHomeWidgetManager.updateHomeWidgets()`) and a notification-cancel callback (→ `NotificationManager().cancelNotificationForGroup`).

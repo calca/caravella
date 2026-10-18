@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **New Home / Groups navigation**: a floating bar at the bottom switches between Home and the list of all groups (Groups), with the selected tab's name sliding out next to its icon. Next to it, a round button does the main thing of the current tab — a new expense in the featured group on Home, a new group on Groups. Back from Groups returns to Home. The bar is hidden on the welcome screen
+- Home shows the featured group card at full height, without the "Your groups" carousel (all groups are in the Groups tab, so the home looks the same with one group or many — #529, #530). Below the card, reached by scrolling, quick actions open its overview, map, search and share/export. The card's "Add expense" text button is replaced by the round button
+- Removed the unused `android_nav_setting` dependency (it only sized the old carousel)
+
 ### Fixed
 - Dark theme: the pencil next to the group background picker (group settings → Other) was near-black on the dark page (#527)
 - Home: "See all" now ends flush with the group card's right edge instead of ~28 dp short of it (#528)

@@ -17,6 +17,10 @@ class GroupCard extends StatelessWidget {
   /// Whether this group's data is fully synced with peers.
   final bool? isSynced;
 
+  /// Whether the card shows its own "Add expense" button. Off on Home, where
+  /// the round button next to the floating navigation does it.
+  final bool showAddButton;
+
   const GroupCard({
     super.key,
     required this.group,
@@ -27,6 +31,7 @@ class GroupCard extends StatelessWidget {
     this.isSelected = false,
     this.selectionProgress = 0.0,
     this.isSynced,
+    this.showAddButton = true,
   });
 
   Color _getSelectedColor(bool isDarkMode) {
@@ -82,6 +87,7 @@ class GroupCard extends StatelessWidget {
           localizations: localizations,
           theme: theme,
           onExpenseAdded: onGroupUpdated,
+          showAddButton: showAddButton,
           onCategoryAdded: onCategoryAdded,
           isSynced: isSynced,
         ),

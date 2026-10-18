@@ -1,0 +1,175 @@
+import 'package:flutter/foundation.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+
+/// Top-level destinations under the floating navigation.
+enum AppTab { home, groups }
+
+/// Root of the app below [MaterialApp]: Home and Groups as two tabs kept
+/// alive in an [IndexedStack], with a [FloatingNavBar] floating over them.
+///
+/// Each tab registers its primary action (the round button next to the bar)
+/// through [AppShellScope.of]: Home's is "new expense" in the featured group,
+/// Groups' is "new group". A tab can also hide the bar (Home's welcome
+/// screen). Pages pushed on top of the shell (group detail, settings…) cover
+/// it entirely, so the bar only appears on the two tabs.
+class AppShell extends StatefulWidget {
+  final Widget home;
+  final Widget groups;
+
+  const AppShell({super.key, required this.home, required this.groups});
+
+  @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  final ValueNotifier<AppTab> _tab = ValueNotifier(AppTab.home);
+  final Map<AppTab, FloatingNavAction?> _actions = {};
+  bool _navVisible = true;
+
+  void _setAction(AppTab tab, FloatingNavAction? action) {
+    if (_actions[tab] == action) return;
+    _actions[tab] = action;
+    if (mounted) setState(() {});
+  }
+
+  void _setNavVisible(bool visible) {
+    if (_navVisible == visible) return;
+    if (mounted) setState(() => _navVisible = visible);
+  }
+
+  void _select(AppTab tab) {
+    if (_tab.value == tab) return;
+    setState(() => _tab.value = tab);
+  }
+
+  @override
+  void dispose() {
+    _tab.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final tab = _tab.value;
+    // The page behind the bar: Home uses surfaceContainer, Groups surface.
+    final pageColor = tab == AppTab.home
+        ? scheme.surfaceContainer
+        : scheme.surface;
+
+    return AppShellScope._(
+      tab: _tab,
+      setAction: _setAction,
+      setNavVisible: _setNavVisible,
+      select: _select,
+      // Back on Groups returns to Home instead of leaving the app.
+      child: PopScope(
+        canPop: tab == AppTab.home,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) _select(AppTab.home);
+        },
+        child: Stack(
+          children: [
+            IndexedStack(
+              index: tab.index,
+              children: [widget.home, widget.groups],
+            ),
+            if (_navVisible) ...[
+              // Content scrolling under the bar fades into the page instead
+              // of showing half-hidden items behind it.
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: IgnorePointer(
+                  child: Container(
+                    height:
+                        FloatingNavBar.reservedHeight +
+                        60 +
+                        MediaQuery.paddingOf(context).bottom,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          pageColor.withValues(alpha: 0),
+                          pageColor.withValues(alpha: 0.92),
+                        ],
+                        stops: const [0, 0.55],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: FloatingNavBar(
+                  selectedIndex: tab.index,
+                  onSelected: (i) => _select(AppTab.values[i]),
+                  items: [
+                    FloatingNavItem(
+                      icon: Icons.home_outlined,
+                      selectedIcon: Icons.home_rounded,
+                      label: gloc.nav_home,
+                    ),
+                    FloatingNavItem(
+                      icon: Icons.folder_copy_outlined,
+                      selectedIcon: Icons.folder_copy_rounded,
+                      label: gloc.nav_groups,
+                    ),
+                  ],
+                  action: _actions[tab],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Lets the tabs of [AppShell] register their primary action, hide the bar
+/// and react to tab changes. `maybeOf` returns null outside the shell (e.g.
+/// the Groups page pushed from elsewhere), where pages keep their own FAB.
+class AppShellScope extends InheritedWidget {
+  final ValueNotifier<AppTab> _tab;
+  final void Function(AppTab tab, FloatingNavAction? action) _setAction;
+  final void Function(bool visible) _setNavVisible;
+  final void Function(AppTab tab) _select;
+
+  const AppShellScope._({
+    required ValueNotifier<AppTab> tab,
+    required void Function(AppTab, FloatingNavAction?) setAction,
+    required void Function(bool) setNavVisible,
+    required void Function(AppTab) select,
+    required super.child,
+  }) : _tab = tab,
+       _setAction = setAction,
+       _setNavVisible = setNavVisible,
+       _select = select;
+
+  static AppShellScope? maybeOf(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<AppShellScope>();
+
+  /// The selected tab; listen to it to refresh a tab when it is shown.
+  ValueListenable<AppTab> get tab => _tab;
+
+  /// Sets (or clears, with null) the round button shown while [tab] is
+  /// selected. Safe to call during build: applied after the frame.
+  void setPrimaryAction(AppTab tab, FloatingNavAction? action) => WidgetsBinding
+      .instance
+      .addPostFrameCallback((_) => _setAction(tab, action));
+
+  /// Shows or hides the whole bar. Safe to call during build.
+  void setNavVisible(bool visible) => WidgetsBinding.instance
+      .addPostFrameCallback((_) => _setNavVisible(visible));
+
+  /// Switches to [tab] (e.g. "see all groups" from Home).
+  void select(AppTab tab) => _select(tab);
+
+  @override
+  bool updateShouldNotify(AppShellScope oldWidget) => false;
+}

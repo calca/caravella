@@ -9,6 +9,7 @@ import '../group/pages/group_creation_wizard_page.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/swipeable_expense_group_card.dart';
 import '../../home/search/group_search_page.dart';
+import '../../main/app_shell.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
   const ExpesensHistoryPage({super.key});
@@ -140,6 +141,13 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
   }
 
+  Future<void> _createGroup() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const GroupCreationWizardPage()),
+    );
+    if (result == true) await _loadTrips();
+  }
+
   Widget _buildAnimatedFab(gen.AppLocalizations gloc) {
     return AnimatedSlide(
       duration: const Duration(milliseconds: 260),
@@ -151,14 +159,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         opacity: _fabVisible ? 1 : 0,
         child: AddFab(
           heroTag: 'add-group-fab',
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const GroupCreationWizardPage(),
-              ),
-            );
-            if (result == true) await _loadTrips();
-          },
+          onPressed: _createGroup,
           tooltip: gloc.add_trip,
         ),
       ),
@@ -199,9 +200,16 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       );
     }
 
+    // Inside the app shell the last card must scroll clear of the floating
+    // navigation.
+    final bottomPadding = AppShellScope.maybeOf(context) != null
+        ? FloatingNavBar.reservedHeight +
+              MediaQuery.paddingOf(context).bottom +
+              16
+        : 100.0;
     return ListView.builder(
       controller: null,
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
+      padding: EdgeInsets.fromLTRB(24, 0, 24, bottomPadding),
       itemCount: trips.length,
       itemBuilder: (context, index) {
         final trip = trips[index];
@@ -234,11 +242,23 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    // As the Groups tab of the app shell, "new group" is the round button
+    // next to the floating navigation; pushed on its own, the page keeps
+    // its FAB.
+    final shell = AppShellScope.maybeOf(context);
+    shell?.setPrimaryAction(
+      AppTab.groups,
+      FloatingNavAction(
+        icon: Icons.create_new_folder_outlined,
+        label: gloc.create_new_group,
+        onPressed: _createGroup,
+      ),
+    );
 
     return AppSystemUI.surface(
       child: Scaffold(
         appBar: const CaravellaAppBar(),
-        floatingActionButton: _buildAnimatedFab(gloc),
+        floatingActionButton: shell == null ? _buildAnimatedFab(gloc) : null,
         body: Column(
           children: [
             Padding(

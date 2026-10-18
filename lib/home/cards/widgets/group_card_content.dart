@@ -30,6 +30,9 @@ class GroupCardContent extends StatefulWidget {
   /// Whether this group's data is fully synced with peers.
   final bool? isSynced;
 
+  /// See [GroupCard.showAddButton].
+  final bool showAddButton;
+
   const GroupCardContent({
     super.key,
     required this.group,
@@ -39,6 +42,7 @@ class GroupCardContent extends StatefulWidget {
     required this.onExpenseAdded,
     this.onCategoryAdded,
     this.isSynced,
+    this.showAddButton = true,
   });
 
   @override
@@ -138,17 +142,18 @@ class _GroupCardContentState extends State<GroupCardContent> {
               localizations: widget.localizations,
               theme: widget.theme,
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: GroupCardAddButton(
-                    group: _currentGroup,
-                    theme: widget.theme,
-                    controller: addExpenseController,
+            if (widget.showAddButton)
+              Row(
+                children: [
+                  Expanded(
+                    child: GroupCardAddButton(
+                      group: _currentGroup,
+                      theme: widget.theme,
+                      controller: addExpenseController,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         );
       },

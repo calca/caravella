@@ -1206,4 +1206,14 @@
   ,"@accessibility_map_marker_expense": {"description": "Screen reader label of an expenses-map pin for a single expense", "placeholders": {"name": {"type": "String"}, "amount": {"type": "String"}}}
   ,"accessibility_map_marker_group": "{count} expenses, {place}"
   ,"@accessibility_map_marker_group": {"description": "Screen reader label of an expenses-map pin grouping several expenses at one place", "placeholders": {"count": {"type": "int"}, "place": {"type": "String"}}}
+  ,"nav_home": "Home"
+  ,"@nav_home": {"description": "Floating navigation: Home tab"}
+  ,"nav_groups": "Groups"
+  ,"@nav_groups": {"description": "Floating navigation: Groups tab (all expense groups)"}
+  ,"quick_action_map": "Map"
+  ,"@quick_action_map": {"description": "Home quick action: open the expenses map of the featured group"}
+  ,"quick_action_search": "Search"
+  ,"@quick_action_search": {"description": "Home quick action: search the expenses of the featured group"}
+  ,"new_expense_in_group": "New expense in {group}"
+  ,"@new_expense_in_group": {"description": "Label of the round button next to the floating navigation on Home: adds an expense to the featured group", "placeholders": {"group": {"type": "String"}}}
 }

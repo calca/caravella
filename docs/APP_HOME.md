@@ -2,6 +2,15 @@
 
 Covers `lib/home/**`, plus the `lib/main/` wiring that presents the home screen.
 
+## `AppShell`: Home and Groups tabs
+
+`MaterialApp.home` is `AppShell` (`lib/main/app_shell.dart`): **Home** (`CaravellaHomePage`) and **Groups** (`ExpesensHistoryPage`, see [History & Search](APP_HISTORY_SEARCH.md)) as two tabs kept alive in an `IndexedStack`, under a floating `FloatingNavBar` (from `caravella_core_ui`: neutral pill, the selected tab's label slides out next to its icon). Pages pushed on top (group detail, settings, forms…) cover the shell, so the bar only shows on the two tabs.
+
+- **Primary action**: the round button beside the bar is the current tab's main action, registered by the tab through `AppShellScope.of(context)?.setPrimaryAction(tab, FloatingNavAction(...))` (applied after the frame, so it's safe from `build`). Home registers "new expense in <featured group>" (opens the same quick-add sheet as the card used to — `AddExpenseController`), or "create new group" when no group is active; Groups registers "create new group" (its own FAB is hidden inside the shell, kept when the page is pushed elsewhere). The icon cross-fades/rotates when switching tabs.
+- `setNavVisible(false)` hides the bar: `HomePage` does it while loading and on the welcome screen (first start, or no group left at all).
+- **Back** on Groups returns to Home (`PopScope`); on Home it leaves the app as before.
+- A gradient behind the bar fades content scrolling under it into the page color; scrollable tab content reserves `FloatingNavBar.reservedHeight` + the bottom inset at its end.
+
 ## `CaravellaHomePage` → `HomePage`
 
 `CaravellaHomePage` (`lib/main/caravella_home_page.dart`) is a thin wrapper around `HomePage`. On first build it subscribes to the global `routeObserver` (see [Architecture Overview](ARCHITECTURE.md)) and calls `NotificationManager.restoreNotifications(context)` exactly once — this is what re-shows persistent notifications for all groups after an app restart (see [Notifications](NOTIFICATIONS.md)).
@@ -18,9 +27,9 @@ Covers `lib/home/**`, plus the `lib/main/` wiring that presents the home screen.
 
 `HomeCardsSection` (`lib/home/cards/home_cards_section.dart`) manages the active-groups list locally (seeded from `HomePage` or self-loaded), also listens to `ExpenseGroupNotifier`, and does **incremental patch updates** (`_updateAffectedGroupsLocally`) instead of full reloads when possible — falling back to a full `_loadActiveGroups()` only if a changed/deleted group isn't found locally.
 
-Layout: `HomeCardsHeader` (greeting + settings button) → a featured `GroupCard` (pinned group, or first active group) → "Your Groups" header with a "see all" CTA (pushes [History & Search](APP_HISTORY_SEARCH.md)) → `HorizontalGroupsList` carousel of the rest. Sizing constants live in `home_constants.dart` (`HomeLayoutConstants`, pure constants, no logic).
+Layout: a scroll view with `HomeCardsHeader` (greeting + settings button) → the featured `GroupCard` (pinned group, or first active group), sized to fill the screen above the floating navigation (at least `HomeLayoutConstants.minFeaturedCardHeight`, so short screens scroll instead of squeezing it) and without its own add-expense button (`showAddButton: false` — the shell's round button does it) → `GroupQuickActions` (Overview, Map, Search, Share/export for that group, disabled without expenses / places), which sits under the bar and is reached by scrolling. An opaque strip behind the status bar keeps scrolled content off the clock. All groups are in the Groups tab — there is no carousel. With no active group (all archived) it shows `EmptyGroupsState`. Sizing constants live in `home_constants.dart` (`HomeLayoutConstants`, pure constants, no logic).
 
-Card widgets (`lib/home/cards/widgets/`): `GroupCard` (wraps `BaseCard` with `mergeSemantics: false`, background via `GroupBackgroundUtils.resolve`; for screen readers the header is the "open group" button, while the recent-expense rows and the add-expense button stay separate nodes), `GroupCardContent`/`Header`/`Stats`/`Amounts`/`TodaySpending`/`Recents` (body composition), `GroupCardVoiceButton` (per-card mic button — see [Expense Entry § voice input](APP_EXPENSE_ENTRY.md#voice-input)), `CarouselGroupCard`/`HorizontalGroupsList` (carousel tiles), `NewGroupCard` (add-group tile), `EmptyGroupsState`.
+Card widgets (`lib/home/cards/widgets/`): `GroupCard` (wraps `BaseCard` with `mergeSemantics: false`, background via `GroupBackgroundUtils.resolve`; for screen readers the header is the "open group" button, while the recent-expense rows and the add-expense button stay separate nodes), `GroupCardContent`/`Header`/`Stats`/`Amounts`/`TodaySpending`/`Recents` (body composition), `GroupCardVoiceButton` (per-card mic button — see [Expense Entry § voice input](APP_EXPENSE_ENTRY.md#voice-input)), `GroupQuickActions` (shortcuts under the card), `EmptyGroupsState`.
 
 ## Search
 

@@ -1,4 +1,6 @@
 import 'package:material_ui/material_ui.dart';
+import '../manager/history/expenses_history_page.dart';
+import 'app_shell.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -154,7 +156,10 @@ class _CaravellaAppState extends State<CaravellaApp> {
                     ),
                   );
                 },
-                home: const CaravellaHomePage(title: 'Caravella'),
+                home: const AppShell(
+                  home: CaravellaHomePage(title: 'Caravella'),
+                  groups: ExpesensHistoryPage(),
+                ),
                 navigatorObservers: [routeObserver],
               ),
             ),

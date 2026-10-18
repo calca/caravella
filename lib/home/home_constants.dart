@@ -38,15 +38,6 @@ class HomeLayoutConstants {
   /// Standard card margin
   static const EdgeInsets cardMargin = EdgeInsets.only(bottom: 16.0);
 
-  // ==================== Heights ====================
-
-  /// Height of carousel group card tiles
-  static const double carouselTileSize = 90.0;
-
-  /// Total height of carousel card including text
-  /// (tile + spacing + title + spacing + balance + 1px buffer)
-  static const double carouselCardTotalHeight = carouselTileSize + 39;
-
   // ==================== Animation Durations ====================
 
   /// Duration for container animations (e.g., selection state)
@@ -116,17 +107,7 @@ class HomeLayoutConstants {
   static const double headerHeight =
       56.0 + 32.0; // 56 avatar + 32 padding (16 top + 16 bottom)
 
-  // ==================== Layout Proportions ====================
-
-  /// Featured card height as proportion of content area
-  static const double featuredCardHeightRatio = 0.66;
-
-  /// Carousel height as proportion of content area
-  static const double carouselHeightRatio = 0.34;
-
-  /// Bottom bar height as proportion of screen height
-  static const double bottomBarHeightRatio = 1 / 6;
-
-  /// Bottom bar additional padding (added to safe area)
-  static const double bottomBarExtraPadding = 16.0;
+  /// Smallest height of the featured group card on Home: on short screens
+  /// the page scrolls instead of squeezing the card.
+  static const double minFeaturedCardHeight = 420.0;
 }

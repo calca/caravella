@@ -5182,6 +5182,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} expenses, {place}'**
   String accessibility_map_marker_group(int count, String place);
+
+  /// Floating navigation: Home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get nav_home;
+
+  /// Floating navigation: Groups tab (all expense groups)
+  ///
+  /// In en, this message translates to:
+  /// **'Groups'**
+  String get nav_groups;
+
+  /// Home quick action: open the expenses map of the featured group
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get quick_action_map;
+
+  /// Home quick action: search the expenses of the featured group
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get quick_action_search;
+
+  /// Label of the round button next to the floating navigation on Home: adds an expense to the featured group
+  ///
+  /// In en, this message translates to:
+  /// **'New expense in {group}'**
+  String new_expense_in_group(String group);
 }
 
 class _AppLocalizationsDelegate

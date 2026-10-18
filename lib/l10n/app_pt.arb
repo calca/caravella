@@ -1143,4 +1143,9 @@
   ,"clear_dates": "Limpar datas"
   ,"accessibility_map_marker_expense": "{name}, {amount}"
   ,"accessibility_map_marker_group": "{count} despesas, {place}"
+  ,"nav_home": "Início"
+  ,"nav_groups": "Grupos"
+  ,"quick_action_map": "Mapa"
+  ,"quick_action_search": "Buscar"
+  ,"new_expense_in_group": "Nova despesa em {group}"
 }

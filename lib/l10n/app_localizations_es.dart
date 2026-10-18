@@ -2745,4 +2745,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String accessibility_map_marker_group(int count, String place) {
     return '$count gastos, $place';
   }
+
+  @override
+  String get nav_home => 'Inicio';
+
+  @override
+  String get nav_groups => 'Grupos';
+
+  @override
+  String get quick_action_map => 'Mapa';
+
+  @override
+  String get quick_action_search => 'Buscar';
+
+  @override
+  String new_expense_in_group(String group) {
+    return 'Nuevo gasto en $group';
+  }
 }

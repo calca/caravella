@@ -8,7 +8,7 @@ Covers `lib/manager/history/**` (the all-groups list) and `lib/home/search/group
 
 - Listens to `ExpenseGroupNotifier` for external delete/update events and reloads (`_onNotifierChanged`).
 - Sorts pinned groups first (`_applyFilter`).
-- A hide-on-scroll `AddFab` opens `GroupCreationWizardPage` (see [Group Management](APP_GROUP_MANAGEMENT.md)).
+- It is the **Groups tab** of the app shell (see [Home § AppShell](APP_HOME.md#appshell-home-and-groups-tabs)): there it registers "create new group" as the round button next to the floating navigation and pads its list so the last card scrolls clear of the bar. When pushed on its own (e.g. from the all-archived empty state) it shows a hide-on-scroll `AddFab` instead. Both open `GroupCreationWizardPage` (see [Group Management](APP_GROUP_MANAGEMENT.md)).
 - A search icon opens `GroupSearchPage` (in `lib/home/search/`, not under `manager/`).
 - Archive toggling goes through `ExpenseGroupNotifier.updateGroupArchive` (handles storage persistence + app-shortcuts refresh), then the list reloads.
 

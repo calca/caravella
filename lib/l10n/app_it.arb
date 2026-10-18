@@ -1166,4 +1166,9 @@
   ,"clear_dates": "Cancella date"
   ,"accessibility_map_marker_expense": "{name}, {amount}"
   ,"accessibility_map_marker_group": "{count} spese, {place}"
+  ,"nav_home": "Home"
+  ,"nav_groups": "Gruppi"
+  ,"quick_action_map": "Mappa"
+  ,"quick_action_search": "Cerca"
+  ,"new_expense_in_group": "Nuova spesa in {group}"
 }

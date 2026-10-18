@@ -1796,4 +1796,9 @@
   ,"clear_dates": "清除日期"
   ,"accessibility_map_marker_expense": "{name}，{amount}"
   ,"accessibility_map_marker_group": "{count} 笔费用，{place}"
+  ,"nav_home": "首页"
+  ,"nav_groups": "群组"
+  ,"quick_action_map": "地图"
+  ,"quick_action_search": "搜索"
+  ,"new_expense_in_group": "在{group}中新增支出"
 }
