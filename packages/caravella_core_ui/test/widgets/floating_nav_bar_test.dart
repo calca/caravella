@@ -1,5 +1,4 @@
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -65,7 +64,7 @@ void main() {
 
     expect(
       tester.getSemantics(find.bySemanticsLabel('Groups')),
-      containsSemantics(
+      isSemantics(
         label: 'Groups',
         isButton: true,
         isSelected: true,
@@ -73,10 +72,8 @@ void main() {
       ),
     );
     expect(
-      tester
-          .getSemantics(find.bySemanticsLabel('Home'))
-          .hasFlag(SemanticsFlag.isSelected),
-      isFalse,
+      tester.getSemantics(find.bySemanticsLabel('Home')),
+      isSemantics(label: 'Home', isButton: true, isSelected: false),
     );
     handle.dispose();
   });
@@ -100,7 +97,7 @@ void main() {
     await tester.pump();
     expect(
       tester.getSemantics(find.bySemanticsLabel('New expense')),
-      containsSemantics(isButton: true, hasTapAction: true),
+      isSemantics(isButton: true, hasTapAction: true),
     );
     handle.dispose();
   });
