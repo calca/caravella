@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Dark theme: the pencil next to the group background picker (group settings → Other) was near-black on the dark page (#527)
+- Home: "See all" now ends flush with the group card's right edge instead of ~28 dp short of it (#528)
+
 ## [2.0.2] - 2026-10-17
 
 ### Changed
