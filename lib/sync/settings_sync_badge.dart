@@ -187,9 +187,10 @@ class _SyncStatusIconState extends State<SyncStatusIcon> with _SyncStatusMixin {
 }
 
 /// Home's sync button, next to the settings gear: a raised round button
-/// whose cloud icon tells the overall sync state — done (green), syncing
-/// (rotating arrows), failed (ochre, crossed cloud) — and opens the sync
-/// settings. Hidden while no sync channel is enabled.
+/// whose sync-arrows icon tells the overall sync state — done (arrows with
+/// a check, green), syncing (rotating arrows), failed (arrows with "!",
+/// ochre) — and opens the sync settings. Sync is device to device, so no
+/// cloud icons. Hidden while no sync channel is enabled.
 class HomeSyncButton extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
@@ -231,8 +232,12 @@ class _HomeSyncButtonState extends State<HomeSyncButton>
     final (IconData icon, Color color, String state) = syncing
         ? (Icons.sync_rounded, s.onSurface, gloc.sync_state_syncing)
         : hasError
-        ? (Icons.cloud_off_outlined, s.warning, gloc.sync_state_error)
-        : (Icons.cloud_done_outlined, s.success, gloc.sync_state_synced);
+        ? (Icons.sync_problem_rounded, s.warning, gloc.sync_state_error)
+        : (
+            Icons.published_with_changes_rounded,
+            s.success,
+            gloc.sync_state_synced,
+          );
 
     Widget glyph = Icon(icon, color: color);
     if (syncing) {
