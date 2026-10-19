@@ -2,7 +2,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
-import 'package:io_caravella_egm/manager/group/widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/services/notification_service.dart';
@@ -97,203 +96,163 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
     }
   }
 
-  Widget _buildOtherContent(BuildContext context) {
+  Future<void> _toggleNotification(BuildContext context, bool value) async {
     final gloc = gen.AppLocalizations.of(context);
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+
+    final controller = context.read<GroupFormController>();
+    final notifier = context.read<ExpenseGroupNotifier>();
+    final notificationService = NotificationService();
+
+    // If enabling, request permissions first
+    if (value) {
+      final granted = await notificationService.requestPermissions();
+      if (!granted && context.mounted) {
+        AppToast.show(context, gloc.notification_enabled, type: ToastType.info);
+        return;
+      }
+    }
+
+    // Update state and save immediately
+    controller.state.setNotificationEnabled(value);
+
+    try {
+      final savedGroup = await controller.save();
+
+      // Force repository reload
+      ExpenseGroupStorageV2.forceReload();
+
+      // Notify listeners
+      if (controller.state.id != null) {
+        notifier.notifyGroupUpdated(controller.state.id!);
+      }
+
+      // Handle notification based on new value
+      if (value && context.mounted) {
+        // Show or update notification (with date range check)
+        await NotificationManager().updateNotificationForGroup(
+          savedGroup,
+          gloc,
+        );
+
+        if (context.mounted) {
+          AppToast.show(
+            context,
+            gloc.notification_enabled,
+            type: ToastType.success,
+          );
+        }
+      } else {
+        // Cancel notification for this group
+        await NotificationManager().cancelNotificationForGroup(savedGroup.id);
+
+        if (context.mounted) {
+          AppToast.show(
+            context,
+            '${gloc.notification_enabled} ${gloc.accessibility_currently_disabled.toLowerCase()}',
+            type: ToastType.info,
+          );
+        }
+      }
+    } catch (e, st) {
+      // Revert state on error
+      controller.state.setNotificationEnabled(!value);
+
+      LoggerService.error(
+        'Failed to toggle notification',
+        name: 'manager.group',
+        error: e,
+        stackTrace: st,
+      );
+
+      if (context.mounted) {
+        AppToast.show(
+          context,
+          gloc.error_saving_group(e.toString()),
+          type: ToastType.error,
+        );
+      }
+    }
+  }
+
+  Future<void> _toggleAutoLocation(BuildContext context, bool value) async {
+    final gloc = gen.AppLocalizations.of(context);
+
+    final controller = context.read<GroupFormController>();
+    final notifier = context.read<ExpenseGroupNotifier>();
+    controller.state.setAutoLocationEnabled(value);
+    try {
+      await controller.save();
+      if (controller.state.id != null) {
+        notifier.notifyGroupUpdated(controller.state.id!);
+      }
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to toggle auto location',
+        name: 'manager.group',
+        error: e,
+        stackTrace: st,
+      );
+
+      if (context.mounted) {
+        AppToast.show(
+          context,
+          gloc.error_saving_group(e.toString()),
+          type: ToastType.error,
+        );
+      }
+    }
+  }
+
+  List<Widget> _buildOtherContent(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    return [
+      SettingsGroup(
+        label: gloc.background,
         children: [
-          SectionFlat(
-            title: '',
-            children: [
-              // Sfondo
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SectionHeader(
-                    title: gloc.background,
-                    description: gloc.choose_image_or_color,
-                    padding: EdgeInsets.zero,
-                    spacing: 4,
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  gloc.choose_image_or_color,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(height: 12),
-                  const BackgroundPicker(),
-                ],
-              ),
-              const SizedBox(height: 32),
-              // Notifica persistente
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SectionHeader(
-                    title: gloc.notification_enabled,
-                    description: gloc.notification_enabled_desc,
-                    padding: EdgeInsets.zero,
-                    spacing: 4,
-                  ),
-                  const SizedBox(height: 12),
-                  Selector<GroupFormState, bool>(
-                    selector: (context, s) => s.notificationEnabled,
-                    builder: (context, enabled, child) => Semantics(
-                      toggled: enabled,
-                      label:
-                          '${gloc.notification_enabled_desc} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
-                      hint: gloc.notification_enabled_desc,
-                      child: SwitchListTile(
-                        title: Text(gloc.notification_enabled),
-                        subtitle: Text(
-                          enabled
-                              ? gloc.accessibility_currently_enabled
-                              : gloc.accessibility_currently_disabled,
-                        ),
-                        value: enabled,
-                        onChanged: (value) async {
-                          final controller = context
-                              .read<GroupFormController>();
-                          final notifier = context.read<ExpenseGroupNotifier>();
-                          final notificationService = NotificationService();
-
-                          // If enabling, request permissions first
-                          if (value) {
-                            final granted = await notificationService
-                                .requestPermissions();
-                            if (!granted && context.mounted) {
-                              AppToast.show(
-                                context,
-                                gloc.notification_enabled,
-                                type: ToastType.info,
-                              );
-                              return;
-                            }
-                          }
-
-                          // Update state and save immediately
-                          controller.state.setNotificationEnabled(value);
-
-                          try {
-                            final savedGroup = await controller.save();
-
-                            // Force repository reload
-                            ExpenseGroupStorageV2.forceReload();
-
-                            // Notify listeners
-                            if (controller.state.id != null) {
-                              notifier.notifyGroupUpdated(controller.state.id!);
-                            }
-
-                            // Handle notification based on new value
-                            if (value && context.mounted) {
-                              // Show or update notification (with date range check)
-                              await NotificationManager()
-                                  .updateNotificationForGroup(savedGroup, gloc);
-
-                              if (context.mounted) {
-                                AppToast.show(
-                                  context,
-                                  gloc.notification_enabled,
-                                  type: ToastType.success,
-                                );
-                              }
-                            } else {
-                              // Cancel notification for this group
-                              await NotificationManager()
-                                  .cancelNotificationForGroup(savedGroup.id);
-
-                              if (context.mounted) {
-                                AppToast.show(
-                                  context,
-                                  '${gloc.notification_enabled} ${gloc.accessibility_currently_disabled.toLowerCase()}',
-                                  type: ToastType.info,
-                                );
-                              }
-                            }
-                          } catch (e, st) {
-                            // Revert state on error
-                            controller.state.setNotificationEnabled(!value);
-
-                            LoggerService.error(
-                              'Failed to toggle notification',
-                              name: 'manager.group',
-                              error: e,
-                              stackTrace: st,
-                            );
-
-                            if (context.mounted) {
-                              AppToast.show(
-                                context,
-                                gloc.error_saving_group(e.toString()),
-                                type: ToastType.error,
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              // Posizione automatica
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SectionHeader(
-                    title: gloc.settings_auto_location_section,
-                    description: gloc.settings_auto_location_section_desc,
-                    padding: EdgeInsets.zero,
-                    spacing: 4,
-                  ),
-                  const SizedBox(height: 12),
-                  Selector<GroupFormState, bool>(
-                    selector: (context, s) => s.autoLocationEnabled,
-                    builder: (context, enabled, child) => Semantics(
-                      toggled: enabled,
-                      label:
-                          '${gloc.settings_auto_location_title} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
-                      hint: gloc.settings_auto_location_desc,
-                      child: SwitchListTile(
-                        title: Text(gloc.settings_auto_location_title),
-                        subtitle: Text(gloc.settings_auto_location_desc),
-                        value: enabled,
-                        onChanged: (value) async {
-                          final controller = context
-                              .read<GroupFormController>();
-                          final notifier = context.read<ExpenseGroupNotifier>();
-                          controller.state.setAutoLocationEnabled(value);
-                          try {
-                            await controller.save();
-                            if (controller.state.id != null) {
-                              notifier.notifyGroupUpdated(controller.state.id!);
-                            }
-                          } catch (e, st) {
-                            LoggerService.error(
-                              'Failed to toggle auto location',
-                              name: 'manager.group',
-                              error: e,
-                              stackTrace: st,
-                            );
-
-                            if (context.mounted) {
-                              AppToast.show(
-                                context,
-                                gloc.error_saving_group(e.toString()),
-                                type: ToastType.error,
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 12),
+                const BackgroundPicker(),
+              ],
+            ),
           ),
-          const SizedBox(height: 100),
         ],
       ),
-    );
+      SettingsGroup(
+        children: [
+          Selector<GroupFormState, bool>(
+            selector: (context, s) => s.notificationEnabled,
+            builder: (context, enabled, child) => SettingsTile(
+              icon: Icons.notifications_outlined,
+              title: gloc.notification_enabled,
+              subtitle: gloc.notification_enabled_desc,
+              switchValue: enabled,
+              onSwitch: (value) => _toggleNotification(context, value),
+            ),
+          ),
+          Selector<GroupFormState, bool>(
+            selector: (context, s) => s.autoLocationEnabled,
+            builder: (context, enabled, child) => SettingsTile(
+              icon: Icons.my_location_outlined,
+              title: gloc.settings_auto_location_title,
+              subtitle: gloc.settings_auto_location_desc,
+              switchValue: enabled,
+              onSwitch: (value) => _toggleAutoLocation(context, value),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 24),
+    ];
   }
 
   @override
@@ -372,11 +331,13 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
               if (navigator.canPop()) navigator.pop();
             }
           },
-          child: Scaffold(
-            appBar: CaravellaAppBar(actions: const []),
-            body: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: _buildOtherContent(context),
+          child: AppSystemUI.edgeToEdge(
+            child: SettingsScaffold(
+              eyebrow: controller.state.title.isEmpty
+                  ? null
+                  : controller.state.title,
+              title: gen.AppLocalizations.of(context).segment_other,
+              children: _buildOtherContent(context),
             ),
           ),
         );

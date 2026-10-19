@@ -167,11 +167,16 @@ class _CategoriesPageScaffoldState extends State<_CategoriesPageScaffold> {
               if (navigator.canPop()) navigator.pop();
             }
           },
-          child: Scaffold(
-            appBar: CaravellaAppBar(actions: const []),
-            body: const SingleChildScrollView(
-              padding: EdgeInsets.all(20.0),
-              child: CategoriesEditor(),
+          child: AppSystemUI.edgeToEdge(
+            child: SettingsScaffold(
+              eyebrow: controller.state.title.isEmpty
+                  ? null
+                  : controller.state.title,
+              title: gen.AppLocalizations.of(context).categories,
+              description: gen.AppLocalizations.of(
+                context,
+              ).categories_description,
+              children: const [CategoriesEditor(), SizedBox(height: 24)],
             ),
           ),
         );

@@ -2,7 +2,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
-import 'package:io_caravella_egm/manager/group/widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
@@ -138,14 +137,16 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
 
   Widget _buildGeneralContent(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Nome gruppo con icona categoria
-          SectionFlat(
-            title: '',
+    // Each block in a card, like the settings pages.
+    Widget card(Widget child) => SettingsGroup(
+      children: [Padding(padding: const EdgeInsets.all(16), child: child)],
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Nome gruppo con icona categoria
+        card(
+          Column(
             children: [
               Selector<GroupFormState, bool>(
                 selector: (context, s) => s.title.trim().isEmpty,
@@ -169,13 +170,14 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          // Periodo
+        ),
+        // Periodo
+        card(
           PeriodSectionEditor(onClearDates: _clearDates, errorText: _dateError),
-          const SizedBox(height: 24),
-          // Valuta
-          SectionFlat(
-            title: '',
+        ),
+        // Valuta
+        card(
+          Column(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,9 +233,9 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
               ),
             ],
           ),
-          const SizedBox(height: 100),
-        ],
-      ),
+        ),
+        const SizedBox(height: 24),
+      ],
     );
   }
 
@@ -319,17 +321,19 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                 if (navigator.canPop()) navigator.pop();
               }
             },
-            child: Scaffold(
-              appBar: CaravellaAppBar(actions: const []),
-              body: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  key: _formKey,
-                  child: DefaultTextStyle.merge(
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    child: _buildGeneralContent(context),
+            child: AppSystemUI.edgeToEdge(
+              child: SettingsScaffold(
+                eyebrow: gen.AppLocalizations.of(context).group,
+                title: gen.AppLocalizations.of(context).segment_general,
+                children: [
+                  Form(
+                    key: _formKey,
+                    child: DefaultTextStyle.merge(
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      child: _buildGeneralContent(context),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           );

@@ -170,11 +170,16 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
               if (navigator.canPop()) navigator.pop();
             }
           },
-          child: Scaffold(
-            appBar: CaravellaAppBar(actions: const []),
-            body: const SingleChildScrollView(
-              padding: EdgeInsets.all(20.0),
-              child: ParticipantsEditor(),
+          child: AppSystemUI.edgeToEdge(
+            child: SettingsScaffold(
+              eyebrow: controller.state.title.isEmpty
+                  ? null
+                  : controller.state.title,
+              title: gen.AppLocalizations.of(context).participants,
+              description: gen.AppLocalizations.of(
+                context,
+              ).participants_description,
+              children: const [ParticipantsEditor(), SizedBox(height: 24)],
             ),
           ),
         );

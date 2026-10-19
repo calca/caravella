@@ -12,7 +12,7 @@ Covers `lib/settings/**`.
 - **Privacy** (Android-only) — FLAG_SECURE switch (`FlagSecureAndroid.setFlagSecure`, see `flag_secure_android.dart`), and the App Functions enable switch (gates [android_app_functions](PACKAGE_ANDROID_APP_FUNCTIONS.md)'s `onAddExpense`).
 - **Info** — invite friends (share), `DeveloperPage`, app version → `WhatsNewPage`, and a "Debug Logs" row (only in debug builds or when `AppConfig.enableTalkerScreen`) opening `TalkerScreen(talker: LoggerService.instance)`.
 
-Icons are monochrome, in a neutral circle; toggles are `Switch`es (the whole row toggles), rows that open a page end with a chevron. Sub-pages (backup, sync, appearance…) still use the older `SettingsSection`/`SettingsCard`.
+Icons are monochrome, in a neutral circle; toggles are `Switch`es (the whole row toggles), rows that open a page end with a chevron, external links end with an "open in new" icon. Every sub-page uses the same layout (eyebrow = where you came from, large title, optional description): Appearance (theme choice in a card, dynamic color switch, language), Backup & restore, Information (`DeveloperPage`), What's new (update check and changelog in cards), group type templates (list + add button; the template form with name, icon and categories in cards and a Save bar), and the sync pages (`SyncSettingsScreen`, `MultiUserSyncPage`, `MultiDeviceSyncPage`, `SyncHistoryPage` — channel icons instead of emoji).
 
 ## Backup & restore
 

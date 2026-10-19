@@ -11,13 +11,23 @@ import 'status_bar_fade.dart';
 class SettingsScaffold extends StatelessWidget {
   final String? eyebrow;
   final String title;
+
+  /// Optional explanation under the title.
+  final String? description;
   final List<Widget> children;
+  final Widget? floatingActionButton;
+
+  /// Fixed bar at the bottom (e.g. a Save button).
+  final Widget? bottomBar;
 
   const SettingsScaffold({
     super.key,
     this.eyebrow,
     required this.title,
+    this.description,
     required this.children,
+    this.floatingActionButton,
+    this.bottomBar,
   });
 
   @override
@@ -27,6 +37,8 @@ class SettingsScaffold extends StatelessWidget {
     final padding = MediaQuery.paddingOf(context);
     return Scaffold(
       backgroundColor: s.surfaceContainer,
+      floatingActionButton: floatingActionButton,
+      bottomNavigationBar: bottomBar,
       body: Stack(
         children: [
           ListView(
@@ -67,6 +79,15 @@ class SettingsScaffold extends StatelessWidget {
                         ),
                       ),
                     ),
+                    if (description != null && description!.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        description!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: s.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

@@ -75,83 +75,67 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-
-    return Scaffold(appBar: const CaravellaAppBar(), body: _buildBody(loc));
+    return AppSystemUI.edgeToEdge(
+      child: SettingsScaffold(
+        eyebrow: loc.settings,
+        title: loc.whats_new_title,
+        children: _buildBody(loc),
+      ),
+    );
   }
 
-  Widget _buildBody(gen.AppLocalizations loc) {
+  List<Widget> _buildBody(gen.AppLocalizations loc) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const [
+        Padding(
+          padding: EdgeInsets.only(top: 48),
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      ];
     }
 
     if (_hasError) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              loc.whats_new_load_error,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
+      return [
+        Padding(
+          padding: const EdgeInsets.only(top: 48),
+          child: Column(
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 64,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                loc.whats_new_load_error,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
         ),
-      );
+      ];
     }
 
     final theme = Theme.of(context);
-
-    return ListView(
-      padding: EdgeInsets.fromLTRB(
-        0,
-        0,
-        0,
-        MediaQuery.of(context).padding.bottom + 24,
-      ),
-      children: [
-        // Header section with icon and description
-        SectionHeader(
-          title: loc.whats_new_title,
-          description: loc.whats_new_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-
-        // Update check widget (only on Android, Play builds)
-        if (Platform.isAndroid && GmsIntegrations.instance.appUpdates != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: GmsIntegrations.instance.appUpdates!.buildUpdateCheckWidget(
-              localizations: AppUpdateLocalizations(loc),
-              cardBuilder: (context, child) => SettingsCard(
-                context: context,
-                color: Theme.of(context).colorScheme.surface,
-                child: child,
-              ),
-            ),
+    return [
+      // Update check (only on Android, Play builds)
+      if (Platform.isAndroid && GmsIntegrations.instance.appUpdates != null)
+        GmsIntegrations.instance.appUpdates!.buildUpdateCheckWidget(
+          localizations: AppUpdateLocalizations(loc),
+          cardBuilder: (context, child) => SettingsGroup(
+            children: [Padding(padding: const EdgeInsets.all(4), child: child)],
           ),
-
-        // Changelog section header
-        SectionHeader(
-          title: loc.changelog_title,
-          description: loc.changelog_desc,
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
         ),
-
-        // Changelog content in a card
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
+      SettingsGroup(
+        label: loc.changelog_title,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
             child: _buildMarkdownContent(theme),
           ),
-        ),
-      ],
-    );
+        ],
+      ),
+    ];
   }
 
   Widget _buildMarkdownContent(ThemeData theme) {

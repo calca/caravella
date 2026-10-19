@@ -13,21 +13,26 @@ class AppearanceSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    return Scaffold(
-      appBar: AppBar(title: Text(loc.settings_appearance)),
-      body: ListView(
-        padding: EdgeInsets.fromLTRB(
-          16,
-          16,
-          16,
-          MediaQuery.of(context).padding.bottom + 24,
-        ),
+    return AppSystemUI.edgeToEdge(
+      child: SettingsScaffold(
+        eyebrow: loc.settings,
+        title: loc.settings_appearance,
         children: [
-          _buildThemeSelector(context, loc),
-          const SizedBox(height: 16),
-          _buildDynamicColorRow(context, loc),
-          const SizedBox(height: 8),
-          _buildLanguageRow(context, locale, loc),
+          SettingsGroup(
+            label: loc.settings_theme,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: _buildThemeSelector(context, loc),
+              ),
+            ],
+          ),
+          SettingsGroup(
+            children: [
+              _buildDynamicColorRow(context, loc),
+              _buildLanguageRow(context, locale, loc),
+            ],
+          ),
         ],
       ),
     );
@@ -38,26 +43,15 @@ class AppearanceSettingsPage extends StatelessWidget {
     String locale,
     gen.AppLocalizations loc,
   ) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    final label = _getLanguageLabel(locale, loc);
-    return SettingsCard(
-      context: context,
-      semanticsButton: true,
-      semanticsLabel: '${loc.settings_language} - Current: $label',
-      color: colorScheme.surface,
+    return SettingsTile(
+      icon: Icons.language,
+      title: loc.settings_language,
+      subtitle: _getLanguageLabel(locale, loc),
       onTap: () => _showLanguagePicker(context, locale, loc),
-      child: ListTile(
-        leading: const Icon(Icons.language),
-        title: Text(loc.settings_language, style: textTheme.titleMedium),
-        subtitle: Text(label),
-        trailing: const Icon(Icons.arrow_drop_down),
-      ),
     );
   }
 
   Widget _buildThemeSelector(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
     final currentMode =
         ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
     final options = <(ThemeMode, String, IconData)>[
@@ -65,31 +59,21 @@ class AppearanceSettingsPage extends StatelessWidget {
       (ThemeMode.light, loc.theme_light, Icons.light_mode_outlined),
       (ThemeMode.dark, loc.theme_dark, Icons.dark_mode_outlined),
     ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Text(loc.settings_theme, style: textTheme.titleMedium),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            for (final option in options) ...[
-              if (option != options.first) const SizedBox(width: 8),
-              Expanded(
-                child: _buildThemeOption(
-                  context,
-                  icon: option.$3,
-                  label: option.$2,
-                  selected: option.$1 == currentMode,
-                  onTap: () =>
-                      ThemeModeNotifier.of(context)?.changeTheme(option.$1),
-                ),
-              ),
-            ],
-          ],
-        ),
+        for (final option in options) ...[
+          if (option != options.first) const SizedBox(width: 8),
+          Expanded(
+            child: _buildThemeOption(
+              context,
+              icon: option.$3,
+              label: option.$2,
+              selected: option.$1 == currentMode,
+              onTap: () =>
+                  ThemeModeNotifier.of(context)?.changeTheme(option.$1),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -115,10 +99,8 @@ class AppearanceSettingsPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: selected ? scheme.surfaceContainerHigh : null,
-            border: Border.all(
-              color: selected ? Colors.transparent : scheme.outlineVariant,
-            ),
+            // Same tonal fill as the selected pill of the floating bar.
+            color: selected ? FloatingNavBar.selectedColor(scheme) : null,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -142,30 +124,14 @@ class AppearanceSettingsPage extends StatelessWidget {
   }
 
   Widget _buildDynamicColorRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
     final dynamicColorNotifier = DynamicColorNotifier.of(context);
     final enabled = dynamicColorNotifier?.dynamicColorEnabled ?? false;
-
-    void toggle(bool val) {
-      dynamicColorNotifier?.changeDynamicColor(val);
-    }
-
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      semanticsToggled: enabled,
-      semanticsLabel: loc.settings_dynamic_color,
-      onTap: () => toggle(!enabled),
-      child: ListTile(
-        leading: const Icon(Icons.palette_outlined),
-        title: Text(loc.settings_dynamic_color, style: textTheme.titleMedium),
-        subtitle: Text(
-          loc.settings_dynamic_color_desc,
-          style: textTheme.bodySmall,
-        ),
-        trailing: Switch(value: enabled, onChanged: toggle),
-      ),
+    return SettingsTile(
+      icon: Icons.palette_outlined,
+      title: loc.settings_dynamic_color,
+      subtitle: loc.settings_dynamic_color_desc,
+      switchValue: enabled,
+      onSwitch: (val) => dynamicColorNotifier?.changeDynamicColor(val),
     );
   }
 

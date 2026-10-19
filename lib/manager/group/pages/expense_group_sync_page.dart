@@ -56,7 +56,8 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     _lastCheckedOrchestrator = orchestrator;
 
     final lan = await orchestrator.isLanSyncEnabled();
-    final bt = BluetoothSyncFactory.isEnabled &&
+    final bt =
+        BluetoothSyncFactory.isEnabled &&
         await BluetoothSyncFactory.isUserEnabled();
 
     if (mounted) {
@@ -139,8 +140,6 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     final orchestrator = context.watch<SyncOrchestrator?>();
 
     final channelsAvailable = _lanAvailable || _btAvailable;
@@ -153,133 +152,66 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
         if (didPop) return;
         Navigator.of(context).pop(_changed);
       },
-      child: Scaffold(
-        appBar: CaravellaAppBar(actions: const []),
-        body: ListView(
-          padding: EdgeInsets.fromLTRB(
-            0,
-            0,
-            0,
-            MediaQuery.of(context).padding.bottom + 24,
-          ),
+      child: AppSystemUI.edgeToEdge(
+        child: SettingsScaffold(
+          eyebrow: _currentTrip.title,
+          title: gloc.sync_title,
+          description: gloc.sync_settings_desc,
           children: [
-            SettingsSection(
-              title: gloc.sync_title,
-              description: gloc.sync_settings_desc,
+            SettingsGroup(
               children: [
-                SettingsCard(
-                  context: context,
-                  color: colorScheme.surface,
-                  semanticsToggled: _currentTrip.syncEnabled && canToggleOn,
-                  onTap: !_canToggleSync(orchestrator, canToggleOn)
+                SettingsTile(
+                  icon: Icons.sync_outlined,
+                  title: gloc.sync_group_enable,
+                  subtitle: canToggleOn
+                      ? gloc.sync_group_enable_desc
+                      : gloc.sync_group_needs_channel,
+                  switchValue: _currentTrip.syncEnabled && canToggleOn,
+                  onSwitch: !_canToggleSync(orchestrator, canToggleOn)
                       ? null
-                      : () => _handleSyncToggle(!_currentTrip.syncEnabled),
-                  child: ListTile(
-                    enabled: _canToggleSync(orchestrator, canToggleOn),
-                    leading: const Icon(Icons.sync_outlined),
-                    title: Text(
-                      gloc.sync_group_enable,
-                      style: textTheme.titleMedium,
-                    ),
-                    subtitle: Text(
-                      canToggleOn
-                          ? gloc.sync_group_enable_desc
-                          : gloc.sync_group_needs_channel,
-                      style: textTheme.bodySmall,
-                    ),
-                    trailing: Switch(
-                      value: _currentTrip.syncEnabled && canToggleOn,
-                      onChanged: !_canToggleSync(orchestrator, canToggleOn)
-                          ? null
-                          : (value) => _handleSyncToggle(value),
-                    ),
-                  ),
+                      : (value) => _handleSyncToggle(value),
                 ),
               ],
             ),
             if (orchestrator != null &&
                 _currentTrip.syncEnabled &&
                 canToggleOn) ...[
-              SettingsSection(
-                title: gloc.sync_paired_devices_title,
-                description: '',
+              SettingsGroup(
+                label: gloc.sync_paired_devices_title,
                 children: [
-                  if (_lanAvailable) ...[
-                    SettingsCard(
-                      context: context,
-                      color: colorScheme.surface,
-                      semanticsButton: true,
-                      semanticsLabel: gloc.sync_qr_show_button,
+                  if (_lanAvailable)
+                    SettingsTile(
+                      icon: Icons.qr_code,
+                      title: gloc.sync_qr_show_button,
                       onTap: () => _showQr(context, orchestrator),
-                      child: ListTile(
-                        leading: Icon(Icons.qr_code, color: colorScheme.primary),
-                        title: Text(
-                          gloc.sync_qr_show_button,
-                          style: textTheme.titleMedium,
-                        ),
-                        trailing: const Icon(Icons.chevron_right),
-                      ),
                     ),
-                    const SizedBox(height: 8),
-                  ],
-                  if (_btAvailable) ...[
-                    SettingsCard(
-                      context: context,
-                      color: colorScheme.surface,
-                      semanticsButton: true,
-                      semanticsLabel: gloc.sync_bt_title,
+                  if (_btAvailable)
+                    SettingsTile(
+                      icon: Icons.bluetooth,
+                      title: gloc.sync_bt_title,
                       onTap: () => _shareViaBluetooth(context, orchestrator),
-                      child: ListTile(
-                        leading:
-                            Icon(Icons.bluetooth, color: colorScheme.primary),
-                        title: Text(
-                          gloc.sync_bt_title,
-                          style: textTheme.titleMedium,
-                        ),
-                        trailing: const Icon(Icons.chevron_right),
-                      ),
                     ),
-                    const SizedBox(height: 8),
-                  ],
-                  SettingsCard(
-                    context: context,
-                    color: colorScheme.surface,
-                    semanticsLabel: gloc.sync_paired_devices_title,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: PairedDevicesList(
-                        orchestrator: orchestrator,
-                        groupId: _currentTrip.id,
-                        showRemoveAction: true,
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: PairedDevicesList(
+                      orchestrator: orchestrator,
+                      groupId: _currentTrip.id,
+                      showRemoveAction: true,
                     ),
                   ),
                 ],
               ),
             ],
-            if (orchestrator != null) ...[
-              SettingsSection(
-                title: gloc.sync_history_title,
-                description: '',
+            if (orchestrator != null)
+              SettingsGroup(
                 children: [
-                  SettingsCard(
-                    context: context,
-                    color: colorScheme.surface,
-                    semanticsButton: true,
-                    semanticsLabel: gloc.sync_history_title,
+                  SettingsTile(
+                    icon: Icons.history,
+                    title: gloc.sync_history_title,
                     onTap: () => _openHistory(context, orchestrator),
-                    child: ListTile(
-                      leading: const Icon(Icons.history),
-                      title: Text(
-                        gloc.sync_history_title,
-                        style: textTheme.titleMedium,
-                      ),
-                      trailing: const Icon(Icons.chevron_right),
-                    ),
                   ),
                 ],
               ),
-            ],
           ],
         ),
       ),

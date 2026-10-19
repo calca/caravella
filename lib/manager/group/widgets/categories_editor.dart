@@ -20,6 +20,7 @@ class CategoriesEditor extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CategoriesSection(
+          showHeader: false,
           categories: state.categories,
           onAddCategory: (name) =>
               state.addCategory(ExpenseCategory(name: name)),

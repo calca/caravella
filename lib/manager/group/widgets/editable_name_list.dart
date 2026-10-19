@@ -24,6 +24,10 @@ class EditableNameList extends StatefulWidget {
   final String? description;
   final bool showEmptyHint;
 
+  /// Show [title] / [description] above the list (off when the page title
+  /// already says it).
+  final bool showHeader;
+
   const EditableNameList({
     super.key,
     required this.title,
@@ -44,6 +48,7 @@ class EditableNameList extends StatefulWidget {
     this.borderColor,
     this.description,
     this.showEmptyHint = false,
+    this.showHeader = true,
   });
 
   @override
@@ -91,7 +96,8 @@ class _EditableNameListState extends State<EditableNameList> {
     // e.g. "Mario" -> "mario", isn't flagged as colliding with itself).
     final lower = val.toLowerCase();
     final duplicate = widget.items.asMap().entries.any(
-      (entry) => entry.key != _editingIndex && entry.value.toLowerCase() == lower,
+      (entry) =>
+          entry.key != _editingIndex && entry.value.toLowerCase() == lower,
     );
     if (duplicate) {
       AppToast.show(context, widget.duplicateError, type: ToastType.info);
@@ -135,55 +141,51 @@ class _EditableNameListState extends State<EditableNameList> {
   }
 
   Widget _buildStaticRow(int index, String name) {
+    final s = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 14.0,
-                ),
-                child: Text(name, style: AppTextStyles.listItem(context)),
-              ),
+      padding: const EdgeInsets.fromLTRB(14, 6, 6, 6),
+      child: Row(
+        children: [
+          _iconCircle(widget.itemIcon),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              name,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
-            IconButton.filledTonal(
-              tooltip: widget.editTooltip,
-              icon: const Icon(Icons.edit_outlined, size: 20),
-              onPressed: () => _startEdit(index),
-              style: IconButton.styleFrom(
-                backgroundColor: Theme.of(
-                  context,
-                ).colorScheme.surfaceContainerHigh,
-                foregroundColor: Theme.of(context).colorScheme.onSurface,
-                minimumSize: const Size(
-                  AppDimens.minTouchTargetCompact,
-                  AppDimens.minTouchTargetCompact,
-                ),
-              ),
+          ),
+          IconButton(
+            tooltip: widget.editTooltip,
+            icon: Icon(
+              Icons.edit_outlined,
+              size: 20,
+              color: s.onSurfaceVariant,
             ),
-            const SizedBox(width: 4),
-            IconButton.filledTonal(
-              tooltip: widget.deleteTooltip,
-              icon: const Icon(Icons.delete_outline, size: 20),
-              onPressed: () => widget.onDelete(index),
-              style: IconButton.styleFrom(
-                backgroundColor: Theme.of(
-                  context,
-                ).colorScheme.surfaceContainerHigh,
-                foregroundColor: Theme.of(context).colorScheme.error,
-                minimumSize: const Size(
-                  AppDimens.minTouchTargetCompact,
-                  AppDimens.minTouchTargetCompact,
-                ),
-              ),
-            ),
-          ],
-        ),
+            onPressed: () => _startEdit(index),
+          ),
+          IconButton(
+            tooltip: widget.deleteTooltip,
+            icon: Icon(Icons.delete_outline, size: 20, color: s.error),
+            onPressed: () => widget.onDelete(index),
+          ),
+        ],
       ),
+    );
+  }
+
+  /// Monochrome icon in a neutral circle, as in the settings rows.
+  Widget _iconCircle(IconData icon) {
+    final s = Theme.of(context).colorScheme;
+    return Container(
+      width: 38,
+      height: 38,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: s.onSurface.withValues(alpha: 0.06),
+      ),
+      child: Icon(icon, size: 20, color: s.onSurface),
     );
   }
 
@@ -271,53 +273,75 @@ class _EditableNameListState extends State<EditableNameList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(
-          title: widget.title,
-          description: widget.description,
-          requiredMark: widget.requiredMark,
-          showRequiredHint: widget.showEmptyHint && widget.items.isEmpty,
-          padding: EdgeInsets.zero,
-          spacing: 4,
-        ),
-        const SizedBox(height: 12),
-        ...List.generate(widget.items.length, (index) {
-          if (_editingIndex == index) return _buildEditRow();
-          return _buildStaticRow(index, widget.items[index]);
-        }),
-        if (_adding)
-          _buildAddRow()
-        else
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: _startAdd,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 14.0,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.add, size: 24),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        widget.addLabel,
-                        style: AppTextStyles.listItem(context),
-                      ),
+    final s = Theme.of(context).colorScheme;
+    final rows = <Widget>[
+      ...List.generate(widget.items.length, (index) {
+        if (_editingIndex == index) return _buildEditRow();
+        return _buildStaticRow(index, widget.items[index]);
+      }),
+      if (_adding)
+        _buildAddRow()
+      else
+        InkWell(
+          onTap: _startAdd,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+            child: Row(
+              children: [
+                _iconCircle(Icons.add),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.addLabel,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: s.primary,
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
+        ),
+    ];
+    final radius = BorderRadius.circular(20);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (widget.showHeader) ...[
+          SectionHeader(
+            title: widget.title,
+            description: widget.description,
+            requiredMark: widget.requiredMark,
+            showRequiredHint: widget.showEmptyHint && widget.items.isEmpty,
+            padding: EdgeInsets.zero,
+            spacing: 4,
+          ),
+          const SizedBox(height: 12),
+        ],
+        // Rows in a card, like the settings pages.
+        CardOutline(
+          borderRadius: radius,
+          child: Material(
+            color: s.raisedSurface,
+            borderRadius: radius,
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                for (var i = 0; i < rows.length; i++) ...[
+                  if (i > 0)
+                    Divider(
+                      height: 1,
+                      indent: 64,
+                      endIndent: 16,
+                      color: s.outlineVariant.withValues(alpha: 0.5),
+                    ),
+                  rows[i],
+                ],
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

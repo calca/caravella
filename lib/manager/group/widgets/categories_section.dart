@@ -9,18 +9,23 @@ class CategoriesSection extends StatelessWidget {
   final void Function(int, String) onEditCategory;
   final void Function(int) onRemoveCategory;
 
+  /// See [EditableNameList.showHeader].
+  final bool showHeader;
+
   const CategoriesSection({
     super.key,
     required this.categories,
     required this.onAddCategory,
     required this.onEditCategory,
     required this.onRemoveCategory,
+    this.showHeader = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     return EditableNameList(
+      showHeader: showHeader,
       title: loc.categories,
       requiredMark: true,
       description: loc.categories_description,

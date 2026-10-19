@@ -28,20 +28,21 @@ class MultiUserSyncPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppSystemUI.surface(
-      child: Scaffold(
-        appBar: const CaravellaAppBar(),
-        body: ListView(
-          children: [
-            _LocalSyncSection(orchestrator: orchestrator),
-            // Hidden when built with --dart-define=ENABLE_BLUETOOTH_SYNC=false
-            // (F-Droid-style builds that want to exclude the Google Play
-            // Services dependency `nearby_connections` pulls in) — see
-            // docs/FDROID_SUBMISSION.md.
-            if (BluetoothSyncFactory.isEnabled)
-              _BluetoothSyncSection(orchestrator: orchestrator),
-          ],
-        ),
+    final loc = gen.AppLocalizations.of(context);
+    return AppSystemUI.edgeToEdge(
+      child: SettingsScaffold(
+        eyebrow: loc.sync_title,
+        title: loc.sync_multiuser_title,
+        description: loc.sync_multiuser_description,
+        children: [
+          _LocalSyncSection(orchestrator: orchestrator),
+          // Hidden when built with --dart-define=ENABLE_BLUETOOTH_SYNC=false
+          // (F-Droid-style builds that want to exclude the Google Play
+          // Services dependency `nearby_connections` pulls in) — see
+          // docs/FDROID_SUBMISSION.md.
+          if (BluetoothSyncFactory.isEnabled)
+            _BluetoothSyncSection(orchestrator: orchestrator),
+        ],
       ),
     );
   }
@@ -105,62 +106,32 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return SettingsSection(
-      title: loc.sync_local_title,
-      description: loc.sync_local_description,
+    return SettingsGroup(
+      label: loc.sync_local_title,
       children: [
-        SettingsCard(
-          context: context,
-          color: colorScheme.surface,
-          semanticsLabel: loc.sync_local_title,
-          semanticsToggled: _enabled,
-          onTap: _loading || _busy ? null : () => _toggleLan(!_enabled),
-          child: ListTile(
-            enabled: !_loading && !_busy,
-            leading: _busy
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Icon(
-                    _enabled ? Icons.wifi : Icons.wifi_off,
-                    color: _enabled ? colorScheme.primary : colorScheme.outline,
-                  ),
-            title: Text(loc.sync_local_title, style: textTheme.titleMedium),
-            subtitle: Text(loc.sync_local_description),
-            trailing: Switch(
-              value: _enabled,
-              onChanged: _loading || _busy ? null : _toggleLan,
-            ),
-          ),
+        SettingsTile(
+          icon: _enabled ? Icons.wifi : Icons.wifi_off,
+          title: loc.sync_local_title,
+          subtitle: loc.sync_local_description,
+          switchValue: _enabled,
+          onSwitch: _loading || _busy ? null : _toggleLan,
+          trailing: _busy
+              ? const SizedBox.square(
+                  dimension: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : null,
         ),
-        // Scanning needs the camera QR reader from caravella_gms; builds
-        // without it (F-Droid) can still be paired by showing their own code.
-        if (_enabled && GmsIntegrations.instance.supportsQrScanning) ...[
-          const SizedBox(height: 8),
-          SettingsCard(
-            context: context,
-            color: colorScheme.surface,
-            semanticsButton: true,
-            semanticsLabel: loc.sync_qr_scan_button,
+        if (_enabled && GmsIntegrations.instance.supportsQrScanning)
+          SettingsTile(
+            icon: Icons.qr_code_scanner,
+            title: loc.sync_qr_scan_button,
+            subtitle: loc.sync_qr_scan_description,
             onTap: () => _scanQr(context),
-            child: ListTile(
-              leading: Icon(Icons.qr_code_scanner, color: colorScheme.primary),
-              title: Text(
-                loc.sync_qr_scan_button,
-                style: textTheme.titleMedium,
-              ),
-              subtitle: Text(loc.sync_qr_scan_description),
-              trailing: const Icon(Icons.chevron_right),
-            ),
           ),
-        ],
       ],
     );
   }
@@ -226,48 +197,22 @@ class _BluetoothSyncSectionState extends State<_BluetoothSyncSection> {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return SettingsSection(
-      title: loc.sync_channel_bluetooth,
-      description: loc.sync_bt_description,
+    return SettingsGroup(
+      label: loc.sync_channel_bluetooth,
       children: [
-        SettingsCard(
-          context: context,
-          color: colorScheme.surface,
-          semanticsLabel: loc.sync_bt_title,
-          semanticsToggled: _enabled,
-          onTap: _loading ? null : () => _toggle(!_enabled),
-          child: ListTile(
-            enabled: !_loading,
-            leading: Icon(
-              _enabled ? Icons.bluetooth : Icons.bluetooth_disabled,
-              color: _enabled ? colorScheme.primary : colorScheme.outline,
-            ),
-            title: Text(loc.sync_bt_title, style: textTheme.titleMedium),
-            subtitle: Text(loc.sync_bt_description),
-            trailing: Switch(
-              value: _enabled,
-              onChanged: _loading ? null : _toggle,
-            ),
-          ),
+        SettingsTile(
+          icon: _enabled ? Icons.bluetooth : Icons.bluetooth_disabled,
+          title: loc.sync_bt_title,
+          subtitle: loc.sync_bt_description,
+          switchValue: _enabled,
+          onSwitch: _loading ? null : _toggle,
         ),
-        if (_enabled) ...[
-          const SizedBox(height: 8),
-          SettingsCard(
-            context: context,
-            color: colorScheme.surface,
-            semanticsButton: true,
-            semanticsLabel: loc.sync_bt_title,
+        if (_enabled)
+          SettingsTile(
+            icon: Icons.bluetooth_searching,
+            title: loc.sync_bt_title,
             onTap: () => _discoverDevices(context),
-            child: ListTile(
-              leading: Icon(Icons.bluetooth, color: colorScheme.primary),
-              title: Text(loc.sync_bt_title, style: textTheme.titleMedium),
-              trailing: const Icon(Icons.chevron_right),
-            ),
           ),
-        ],
       ],
     );
   }

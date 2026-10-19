@@ -9,18 +9,23 @@ class ParticipantsSection extends StatelessWidget {
   final void Function(int, String) onEditParticipant;
   final void Function(int) onRemoveParticipant;
 
+  /// See [EditableNameList.showHeader].
+  final bool showHeader;
+
   const ParticipantsSection({
     super.key,
     required this.participants,
     required this.onAddParticipant,
     required this.onEditParticipant,
     required this.onRemoveParticipant,
+    this.showHeader = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     return EditableNameList(
+      showHeader: showHeader,
       title: loc.participants,
       requiredMark: true,
       description: loc.participants_description,

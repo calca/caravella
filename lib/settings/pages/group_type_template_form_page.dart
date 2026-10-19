@@ -109,94 +109,107 @@ class _GroupTypeTemplateFormPageState extends State<GroupTypeTemplateFormPage> {
     final isEdit = widget.template != null;
     final scheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          isEdit
-              ? loc.settings_group_templates_edit_title
-              : loc.settings_group_templates_add_title,
+    Widget label(String text) => Padding(
+      padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
+      child: Text(
+        text.toUpperCase(),
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: scheme.onSurfaceVariant,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.6,
         ),
       ),
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    );
+
+    return AppSystemUI.edgeToEdge(
+      child: SettingsScaffold(
+        eyebrow: loc.settings_group_templates_page_title,
+        title: isEdit
+            ? loc.settings_group_templates_edit_title
+            : loc.settings_group_templates_add_title,
+        bottomBar: BottomActionBar(
+          onPressed: _save,
+          label: loc.save,
+          enabled: !_saving,
+        ),
+        children: [
+          SettingsGroup(
+            label: loc.settings_group_templates_name_label,
             children: [
-              TextField(
-                controller: _nameController,
-                style: FormTheme.getFieldTextStyle(context),
-                decoration: FormTheme.getStandardDecoration(
-                  hintText: loc.settings_group_templates_name_hint,
-                ).copyWith(labelText: loc.settings_group_templates_name_label),
-                maxLength: 40,
-              ),
-              const SizedBox(height: 16),
-              SectionHeader(
-                title: loc.settings_group_templates_icon_label,
-                padding: EdgeInsets.zero,
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: GroupTypeLocalization.availableIcons.map((icon) {
-                  final selected = icon.codePoint == _iconCodePoint;
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: () =>
-                        setState(() => _iconCodePoint = icon.codePoint),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 150),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: selected
-                            ? scheme.primaryContainer
-                            : scheme.surfaceContainerHigh,
-                        border: Border.all(
-                          color: selected ? scheme.primary : Colors.transparent,
-                          width: 2,
-                        ),
-                      ),
-                      child: Icon(
-                        icon,
-                        color: selected
-                            ? scheme.onPrimaryContainer
-                            : scheme.onSurfaceVariant,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 24),
-              EditableNameList(
-                title: loc.settings_group_templates_categories_label,
-                requiredMark: true,
-                items: _categories,
-                addLabel: loc.add_category,
-                hintLabel: loc.category_name,
-                editTooltip: loc.edit_category,
-                deleteTooltip: loc.delete,
-                saveTooltip: loc.save,
-                cancelTooltip: loc.cancel,
-                addTooltip: loc.add,
-                duplicateError: '${loc.category_name} ${loc.already_exists}',
-                onAdd: _addCategory,
-                onEdit: _editCategory,
-                onDelete: _removeCategory,
-                itemIcon: AppIcons.category,
-                showEmptyHint: _categories.isEmpty,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                child: TextField(
+                  controller: _nameController,
+                  style: FormTheme.getFieldTextStyle(context),
+                  decoration: FormTheme.getBorderlessDecoration(
+                    hintText: loc.settings_group_templates_name_hint,
+                  ),
+                  maxLength: 40,
+                ),
               ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomActionBar(
-        onPressed: _save,
-        label: loc.save,
-        enabled: !_saving,
+          SettingsGroup(
+            label: loc.settings_group_templates_icon_label,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: GroupTypeLocalization.availableIcons.map((icon) {
+                    final selected = icon.codePoint == _iconCodePoint;
+                    return Semantics(
+                      selected: selected,
+                      button: true,
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () =>
+                            setState(() => _iconCodePoint = icon.codePoint),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: selected
+                                ? scheme.onSurface
+                                : scheme.onSurface.withValues(alpha: 0.06),
+                          ),
+                          child: Icon(
+                            icon,
+                            color: selected ? scheme.surface : scheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+          label(loc.settings_group_templates_categories_label),
+          EditableNameList(
+            title: loc.settings_group_templates_categories_label,
+            showHeader: false,
+            requiredMark: true,
+            items: _categories,
+            addLabel: loc.add_category,
+            hintLabel: loc.category_name,
+            editTooltip: loc.edit_category,
+            deleteTooltip: loc.delete,
+            saveTooltip: loc.save,
+            cancelTooltip: loc.cancel,
+            addTooltip: loc.add,
+            duplicateError: '${loc.category_name} ${loc.already_exists}',
+            onAdd: _addCategory,
+            onEdit: _editCategory,
+            onDelete: _removeCategory,
+            itemIcon: AppIcons.category,
+            showEmptyHint: _categories.isEmpty,
+          ),
+          const SizedBox(height: 24),
+        ],
       ),
     );
   }
