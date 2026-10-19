@@ -4,11 +4,13 @@ Covers `lib/manager/history/**` (the all-groups list) and `lib/home/search/group
 
 ## Groups list ("history")
 
-`ExpesensHistoryPage` (`history/expenses_history_page.dart` — note: the class/file typo "Expesens" is in the actual source, not a documentation error) is the **all-groups index**, not an activity log: an **Active / Archived** `TabController(length: 2)` view, loading `ExpenseGroupStorageV2.getActiveGroups()`/`.getArchivedGroups()` in parallel.
+`ExpesensHistoryPage` (`history/expenses_history_page.dart` — note: the class/file typo "Expesens" is in the actual source, not a documentation error) is the **all-groups index**, not an activity log, loading `ExpenseGroupStorageV2.getActiveGroups()`/`.getArchivedGroups()` in parallel. It shares Home's look: `surfaceContainer` page, a "N active groups" line above a large "Groups" title, search in a raised circle, and an **Active · n / Archived · n** pill switch (`_StatusToggle`, styled like the floating navigation) instead of tabs.
+
+- Groups are `GroupPhotoCard`s (`widgets/group_photo_card.dart`): on the Active view the favorite group is a wide card on top, the others a two-column grid of tiles. All cards share one background treatment — a photo is only hinted under the raised surface (`PhotoVeil` from `caravella_core_ui`, like the Home card) with the theme's text colors; a palette color is used solid with contrasting text; otherwise a raised neutral surface, and cards without a photo show the group type icon top-left. Every card has the `CardOutline` hairline to stand out from the page. Tap opens the group; long press opens the shared options sheet (`showGroupOptionsSheet` in `widgets/group_options.dart`: favorite, archive, delete — also used by `SwipeableExpenseGroupCard` in group search).
 
 - Listens to `ExpenseGroupNotifier` for external delete/update events and reloads (`_onNotifierChanged`).
 - Sorts pinned groups first (`_applyFilter`).
-- A hide-on-scroll `AddFab` opens `GroupCreationWizardPage` (see [Group Management](APP_GROUP_MANAGEMENT.md)).
+- It is the **Groups tab** of the app shell (see [Home § AppShell](APP_HOME.md#appshell-home-and-groups-tabs)): there it registers "create new group" as the round button next to the floating navigation and pads its list so the last card scrolls clear of the bar. When pushed on its own (e.g. from the all-archived empty state) it shows a hide-on-scroll `AddFab` instead. Both open `GroupCreationWizardPage` (see [Group Management](APP_GROUP_MANAGEMENT.md)).
 - A search icon opens `GroupSearchPage` (in `lib/home/search/`, not under `manager/`).
 - Archive toggling goes through `ExpenseGroupNotifier.updateGroupArchive` (handles storage persistence + app-shortcuts refresh), then the list reloads.
 

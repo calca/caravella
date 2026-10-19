@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **New Home / Groups navigation**: a floating bar at the bottom switches between Home and the list of all groups (Groups), with the selected tab's name sliding out next to its icon. Next to it, a round button does the main thing of the current tab — a new expense in the featured group on Home, a new group on Groups. Back from Groups returns to Home, and switching between the two plays a short fade, while the bar's highlight slides over to the new tab and its icon gives a small bounce (none when animations are turned off in the system settings). The bar is hidden on the welcome screen
+- Home shows the featured group card at full height, without the "Your groups" carousel (all groups are in the Groups tab, so the home looks the same with one group or many — #529, #530). Below the card, reached by scrolling, quick actions open its overview, map, search and share/export. The card's "Add expense" text button is replaced by the round button
+- **Groups page redesign** in Home's style: grey page, large title with the number of active groups, search in a round button, Active / Archived pill switch with counts. The favorite group is a wide photo card on top and the others are photo tiles in two columns; every photo card uses the same treatment (clean photo, dark gradient at the bottom, white text) so all of them read the same in light and dark theme
+- Cards stand out from the page with a thin outline. A group's photo is now just hinted under the card color, the same on Home and Groups, with the usual text colors; Groups cards without a photo show the group type icon; the Home card lists three recent expenses instead of two when the screen is tall enough, and the fade behind the bottom bar no longer covers the bottom of the card
+- **Getting started**: a group with no expenses shows a short checklist on the Home card instead of an emoji — group created, add the first expense, add the participants, choose a photo or a color. Each step opens the right screen and ticks itself; the first expense replaces it with the totals
+- Removed the unused `android_nav_setting` dependency (it only sized the old carousel)
+
 ### Fixed
+- Groups page: after changing a group (e.g. its photo or color) the list didn't update until the app was restarted
 - Dark theme: the pencil next to the group background picker (group settings → Other) was near-black on the dark page (#527)
 - Home: "See all" now ends flush with the group card's right edge instead of ~28 dp short of it (#528)
 

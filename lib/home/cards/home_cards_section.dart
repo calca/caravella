@@ -1,14 +1,16 @@
+import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:android_nav_setting/android_nav_setting.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
 import 'package:caravella_core/caravella_core.dart';
 import '../home_constants.dart';
-// Removed locale_notifier import after migration
-// locale_notifier no longer needed after migration
+import '../navigation_helpers.dart';
+import '../../main/app_shell.dart';
+import 'widgets/group_quick_actions.dart';
 import 'widgets/widgets.dart';
-import '../../manager/history/expenses_history_page.dart';
 
 class HomeCardsSection extends StatefulWidget {
   final VoidCallback onTripAdded;
@@ -35,7 +37,6 @@ class HomeCardsSection extends StatefulWidget {
 class _HomeCardsSectionState extends State<HomeCardsSection> {
   List<ExpenseGroup> _activeGroups = [];
   ExpenseGroupNotifier? _groupNotifier;
-  bool _hasNavigationBar = false;
 
   @override
   void initState() {
@@ -44,19 +45,6 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     _activeGroups = widget.initialGroups ?? [];
     if (widget.initialGroups == null) {
       _loadActiveGroups();
-    }
-    _initNavSetting();
-  }
-
-  Future<void> _initNavSetting() async {
-    try {
-      final navSetting = AndroidNavSetting();
-      final isGesture = await navSetting.isGestureNavigationEnabled();
-      if (mounted) {
-        setState(() => _hasNavigationBar = !isGesture);
-      }
-    } catch (e) {
-      // best-effort: silently ignore errors (plugin may fail on some devices)
     }
   }
 
@@ -239,168 +227,149 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     }
   }
 
+  /// The featured group: the pinned one, else the first active group.
+  ExpenseGroup? get _featuredGroup =>
+      _activeGroups.isEmpty ? null : (widget.pinnedTrip ?? _activeGroups.first);
+
+  /// Registers Home's round button next to the floating navigation: a new
+  /// expense in the featured group, or a new group when there is none.
+  void _registerPrimaryAction(gen.AppLocalizations loc) {
+    final shell = AppShellScope.maybeOf(context);
+    if (shell == null) return;
+    final featured = _featuredGroup;
+    shell.setPrimaryAction(
+      AppTab.home,
+      featured == null
+          ? FloatingNavAction(
+              icon: Icons.create_new_folder_outlined,
+              label: loc.create_new_group,
+              onPressed: () => NavigationHelpers.openGroupCreationWithCallback(
+                context,
+                onGroupAdded: ([_]) => _handleGroupAdded(),
+              ),
+            )
+          : FloatingNavAction(
+              icon: Icons.add_rounded,
+              label: loc.new_expense_in_group(featured.title),
+              onPressed: () => AddExpenseController(
+                group: featured,
+                onExpenseAdded: _handleGroupUpdated,
+                onCategoryAdded: _softLoadActiveGroups,
+              ).showAddExpenseSheet(context, featured),
+            ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final topSafeArea = MediaQuery.of(context).padding.top;
+    final topSafeArea = MediaQuery.paddingOf(context).top;
+    _registerPrimaryAction(loc);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Safe area for status bar
-        SizedBox(height: topSafeArea),
-
-        // Header compatto con altezza fissa
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            HomeLayoutConstants.horizontalPadding,
-            16.0,
-            HomeLayoutConstants.horizontalPadding,
-            16.0,
-          ),
-          child: HomeCardsHeader(localizations: loc, theme: theme),
-        ),
-
-        // Content area - fills remaining space dynamically
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: HomeLayoutConstants.horizontalPadding,
-            ),
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              switchInCurve: Curves.easeIn,
-              switchOutCurve: Curves.easeOut,
-              child: _activeGroups.isEmpty
-                  ? EmptyGroupsState(
-                      localizations: loc,
-                      theme: theme,
-                      allArchived: widget.allArchived,
-                      onGroupAdded: _handleGroupAdded,
-                    )
-                  : _buildContent(loc, theme),
-            ),
-          ),
-        ),
-
-        // Bottom bar removed from HomeCardsSection; footer handled externally if needed
-      ],
+    final header = Padding(
+      padding: const EdgeInsets.fromLTRB(
+        HomeLayoutConstants.horizontalPadding,
+        16.0,
+        HomeLayoutConstants.horizontalPadding,
+        16.0,
+      ),
+      child: HomeCardsHeader(localizations: loc, theme: theme),
     );
-  }
 
-  Widget _buildContent(gen.AppLocalizations loc, ThemeData theme) {
-    // Safety check - this should never happen due to calling context, but be defensive
-    if (_activeGroups.isEmpty) {
-      return EmptyGroupsState(
-        key: const ValueKey('empty_state'),
-        localizations: loc,
-        theme: theme,
-        allArchived: widget.allArchived,
-        onGroupAdded: _handleGroupAdded,
+    final featured = _featuredGroup;
+    if (featured == null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: topSafeArea),
+          header,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                HomeLayoutConstants.horizontalPadding,
+                0,
+                HomeLayoutConstants.horizontalPadding,
+                FloatingNavBar.reservedHeight,
+              ),
+              child: EmptyGroupsState(
+                localizations: loc,
+                theme: theme,
+                allArchived: widget.allArchived,
+                onGroupAdded: _handleGroupAdded,
+              ),
+            ),
+          ),
+        ],
       );
     }
 
-    // Get featured group: use pinned/favorite if available, otherwise first from active groups
-    final featuredGroup = widget.pinnedTrip ?? _activeGroups.first;
-
-    // Get remaining groups for carousel (excluding featured)
-    final carouselGroups = _activeGroups
-        .where((g) => g.id != featuredGroup.id)
-        .toList();
-
-    return Column(
-      key: const ValueKey('content'),
-      children: [
-        // Top spacing before featured card
-        const SizedBox(height: 8),
-
-        // Featured group card - takes all remaining space
-        Expanded(
-          child: GroupCard(
-            group: featuredGroup,
-            localizations: loc,
-            theme: theme,
-            onGroupUpdated: _handleGroupUpdated,
-            onCategoryAdded: () {
-              _softLoadActiveGroups();
-            },
-            isSelected: true,
-            selectionProgress: 1.0,
-          ),
-        ),
-
-        // Section header for "Your Groups" with CTA to history - pinned at bottom
-        // No end padding: "See all" ends flush with the featured card (#528).
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  loc.your_groups,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+    // The featured card fills the screen above the floating navigation; the
+    // quick actions sit below it and are reached by scrolling. All groups
+    // live in the Groups tab, so there is no carousel any more (#529, #530).
+    final bottomSafeArea = MediaQuery.paddingOf(context).bottom;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardHeight = math.max(
+          HomeLayoutConstants.minFeaturedCardHeight,
+          constraints.maxHeight -
+              topSafeArea -
+              HomeLayoutConstants.headerHeight -
+              FloatingNavBar.reservedHeight -
+              bottomSafeArea,
+        );
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: topSafeArea),
+                  header,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: HomeLayoutConstants.horizontalPadding,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: cardHeight,
+                          child: GroupCard(
+                            group: featured,
+                            localizations: loc,
+                            theme: theme,
+                            onGroupUpdated: _handleGroupUpdated,
+                            onCategoryAdded: _softLoadActiveGroups,
+                            isSelected: true,
+                            selectionProgress: 1.0,
+                            showAddButton:
+                                AppShellScope.maybeOf(context) == null,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        GroupQuickActions(group: featured),
+                        SizedBox(
+                          height:
+                              FloatingNavBar.reservedHeight +
+                              bottomSafeArea +
+                              24,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ExpesensHistoryPage(),
-                    ),
-                  );
-                },
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.only(left: 8),
-                  minimumSize: const Size(48, 48),
-                  tapTargetSize: MaterialTapTargetSize.padded,
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      loc.see_all,
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 2),
-                    Icon(
-                      Icons.chevron_right,
-                      size: 18,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // Carousel with remaining groups - respect bottom safe area
-        SafeArea(
-          top: false,
-          left: false,
-          right: false,
-          bottom: true,
-          child: SizedBox(
-            height: HomeLayoutConstants.carouselCardTotalHeight,
-            child: HorizontalGroupsList(
-              groups: carouselGroups,
-              localizations: loc,
-              theme: theme,
-              onGroupUpdated: _handleGroupUpdated,
-              onGroupAdded: _handleGroupAdded,
-              onCategoryAdded: () {
-                _softLoadActiveGroups();
-              },
             ),
-          ),
-        ),
-        // Extra spacing when system navigation bar is present
-        if (!_hasNavigationBar) const SizedBox(height: 12),
-      ],
+            // Opaque strip behind the status bar so scrolled content doesn't
+            // run under the clock.
+            Container(
+              height: topSafeArea,
+              color: theme.colorScheme.surfaceContainer,
+            ),
+          ],
+        );
+      },
     );
   }
 }

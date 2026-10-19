@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'group_card_header.dart';
 import 'group_card_amounts.dart';
-import 'group_card_empty_state.dart';
+import 'group_card_get_started.dart';
 // group_card_stats.dart removed import (not needed here)
 import 'add_expense_controller.dart';
 import 'group_card_recents.dart';
@@ -30,6 +30,9 @@ class GroupCardContent extends StatefulWidget {
   /// Whether this group's data is fully synced with peers.
   final bool? isSynced;
 
+  /// See [GroupCard.showAddButton].
+  final bool showAddButton;
+
   const GroupCardContent({
     super.key,
     required this.group,
@@ -39,11 +42,18 @@ class GroupCardContent extends StatefulWidget {
     required this.onExpenseAdded,
     this.onCategoryAdded,
     this.isSynced,
+    this.showAddButton = true,
   });
 
   @override
   State<GroupCardContent> createState() => _GroupCardContentState();
 }
+
+/// Card content height from which three recent expenses fit instead of two.
+const double _threeRecentsMinHeight = 560;
+
+/// Height taken by the add-expense button row.
+const double _addButtonExtent = 64;
 
 class _GroupCardContentState extends State<GroupCardContent> {
   late ExpenseGroup _currentGroup;
@@ -86,7 +96,9 @@ class _GroupCardContentState extends State<GroupCardContent> {
   void didUpdateWidget(GroupCardContent oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Update current group if the widget's group changed
-    if (oldWidget.group.id != widget.group.id) {
+    // (any new instance: the Home reloads a group after its participants,
+    // photo or color change, and the checklist must follow).
+    if (!identical(oldWidget.group, widget.group)) {
       _currentGroup = widget.group;
     }
   }
@@ -117,38 +129,54 @@ class _GroupCardContentState extends State<GroupCardContent> {
               ),
             ),
             const Spacer(),
-            // Show playful empty state or amounts based on expenses
+            // No expenses yet: a getting-started checklist instead of the
+            // amounts and the recent expenses.
             if (_currentGroup.expenses.isEmpty)
-              GroupCardEmptyState(
-                localizations: widget.localizations,
+              GroupCardGetStarted(
+                group: _currentGroup,
                 theme: widget.theme,
+                localizations: widget.localizations,
+                onAddExpense: () => addExpenseController.showAddExpenseSheet(
+                  context,
+                  _currentGroup,
+                ),
               )
-            else
+            else ...[
               GroupCardAmounts(
                 group: _currentGroup,
                 theme: widget.theme,
                 localizations: widget.localizations,
               ),
-            const Spacer(),
-            GroupCardRecents(
-              key: ValueKey(
-                'recents_${_currentGroup.id}_${_currentGroup.expenses.length}',
-              ),
-              group: _currentGroup,
-              localizations: widget.localizations,
-              theme: widget.theme,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: GroupCardAddButton(
-                    group: _currentGroup,
-                    theme: widget.theme,
-                    controller: addExpenseController,
-                  ),
+              const Spacer(),
+              GroupCardRecents(
+                key: ValueKey(
+                  'recents_${_currentGroup.id}_${_currentGroup.expenses.length}',
                 ),
-              ],
-            ),
+                group: _currentGroup,
+                localizations: widget.localizations,
+                theme: widget.theme,
+                // A third recent expense when the card is tall enough (it
+                // takes the space of the add button when that is hidden).
+                count:
+                    constraints.maxHeight >=
+                        _threeRecentsMinHeight -
+                            (widget.showAddButton ? 0 : _addButtonExtent)
+                    ? 3
+                    : 2,
+              ),
+            ],
+            if (widget.showAddButton)
+              Row(
+                children: [
+                  Expanded(
+                    child: GroupCardAddButton(
+                      group: _currentGroup,
+                      theme: widget.theme,
+                      controller: addExpenseController,
+                    ),
+                  ),
+                ],
+              ),
           ],
         );
       },

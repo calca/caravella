@@ -17,6 +17,10 @@ class GroupCard extends StatelessWidget {
   /// Whether this group's data is fully synced with peers.
   final bool? isSynced;
 
+  /// Whether the card shows its own "Add expense" button. Off on Home, where
+  /// the round button next to the floating navigation does it.
+  final bool showAddButton;
+
   const GroupCard({
     super.key,
     required this.group,
@@ -27,6 +31,7 @@ class GroupCard extends StatelessWidget {
     this.isSelected = false,
     this.selectionProgress = 0.0,
     this.isSynced,
+    this.showAddButton = true,
   });
 
   Color _getSelectedColor(bool isDarkMode) {
@@ -61,30 +66,56 @@ class GroupCard extends StatelessWidget {
       ),
     );
 
+    // Photo: just hinted under the card color (PhotoVeil, as on the Groups
+    // cards), so the content keeps the theme's text colors.
+    final photo = bg.hasImage ? bg.imagePath : null;
+    final card = BaseCard(
+      isFlat: false,
+      noBorder: true, // CardOutline draws the edge
+      margin: EdgeInsets.zero,
+      borderRadius: BorderRadius.circular(32),
+      backgroundColor: photo != null ? Colors.transparent : bg.color,
+      backgroundGradient: photo != null ? null : bg.gradient,
+      onTap: () => _openGroup(context),
+      // The card hosts its own buttons and tappable rows, so it is not
+      // collapsed into one node; the header carries the "open group" action.
+      mergeSemantics: false,
+      child: GroupCardContent(
+        onOpen: () => _openGroup(context),
+        group: group,
+        localizations: localizations,
+        theme: theme,
+        onExpenseAdded: onGroupUpdated,
+        showAddButton: showAddButton,
+        onCategoryAdded: onCategoryAdded,
+        isSynced: isSynced,
+      ),
+    );
+    final radius = BorderRadius.circular(32);
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       height: double.infinity, // Assicura che usi tutto lo spazio verticale
-      child: BaseCard(
-        isFlat: false,
-        margin: const EdgeInsets.only(bottom: 16),
-        borderRadius: BorderRadius.circular(32),
-        backgroundColor: bg.color,
-        backgroundImage: bg.imagePath,
-        backgroundGradient: bg.gradient,
-        onTap: () => _openGroup(context),
-        // The card hosts its own buttons and tappable rows, so it is not
-        // collapsed into one node; the header carries the "open group" action.
-        mergeSemantics: false,
-        child: GroupCardContent(
-          onOpen: () => _openGroup(context),
-          group: group,
-          localizations: localizations,
-          theme: theme,
-          onExpenseAdded: onGroupUpdated,
-          onCategoryAdded: onCategoryAdded,
-          isSynced: isSynced,
-        ),
+      padding: const EdgeInsets.only(bottom: 16),
+      child: CardOutline(
+        borderRadius: radius,
+        child: photo == null
+            ? card
+            : Stack(
+                children: [
+                  Positioned.fill(
+                    child: ClipRRect(
+                      borderRadius: radius,
+                      child: PhotoVeil(
+                        path: photo,
+                        color: theme.colorScheme.surface,
+                      ),
+                    ),
+                  ),
+                  card,
+                ],
+              ),
       ),
     );
   }

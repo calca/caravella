@@ -2743,4 +2743,58 @@ class AppLocalizationsIt extends AppLocalizations {
   String accessibility_map_marker_group(int count, String place) {
     return '$count spese, $place';
   }
+
+  @override
+  String get nav_home => 'Home';
+
+  @override
+  String get nav_groups => 'Gruppi';
+
+  @override
+  String get quick_action_map => 'Mappa';
+
+  @override
+  String get quick_action_search => 'Cerca';
+
+  @override
+  String new_expense_in_group(String group) {
+    return 'Nuova spesa in $group';
+  }
+
+  @override
+  String groups_active_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gruppi attivi',
+      one: '1 gruppo attivo',
+      zero: 'Nessun gruppo attivo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get get_started_title => 'Per iniziare';
+
+  @override
+  String get_started_progress(int done, int total) {
+    return '$done di $total fatti';
+  }
+
+  @override
+  String get get_started_create_group => 'Crea il gruppo';
+
+  @override
+  String get get_started_first_expense => 'Aggiungi la prima spesa';
+
+  @override
+  String get get_started_participants => 'Aggiungi i partecipanti';
+
+  @override
+  String get get_started_look => 'Scegli una foto o un colore';
+
+  @override
+  String get_started_step_done(String step) {
+    return '$step, fatto';
+  }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
+import '../main/app_shell.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -292,6 +293,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    // The floating navigation stays hidden on the welcome screen (and while
+    // loading, so it doesn't flash over it).
+    // Welcome shows on first start and whenever no group is left at all.
+    final showsWelcome =
+        _isFirstStart == true ||
+        (_activeGroups.isEmpty && _archivedGroups.isEmpty);
+    AppShellScope.maybeOf(context)?.setNavVisible(_dataLoaded && !showsWelcome);
 
     final scaffoldBody = Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,

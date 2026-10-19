@@ -2651,4 +2651,56 @@ class AppLocalizationsZh extends AppLocalizations {
   String accessibility_map_marker_group(int count, String place) {
     return '$count 笔费用，$place';
   }
+
+  @override
+  String get nav_home => '首页';
+
+  @override
+  String get nav_groups => '群组';
+
+  @override
+  String get quick_action_map => '地图';
+
+  @override
+  String get quick_action_search => '搜索';
+
+  @override
+  String new_expense_in_group(String group) {
+    return '在$group中新增支出';
+  }
+
+  @override
+  String groups_active_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个活跃群组',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get get_started_title => '开始使用';
+
+  @override
+  String get_started_progress(int done, int total) {
+    return '已完成 $done/$total';
+  }
+
+  @override
+  String get get_started_create_group => '创建群组';
+
+  @override
+  String get get_started_first_expense => '添加第一笔支出';
+
+  @override
+  String get get_started_participants => '添加参与者';
+
+  @override
+  String get get_started_look => '选择照片或颜色';
+
+  @override
+  String get_started_step_done(String step) {
+    return '$step，已完成';
+  }
 }
