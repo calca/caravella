@@ -56,19 +56,21 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
     // Wire notifier listener for external updates/deletes
     _groupNotifier?.removeListener(_onNotifierChanged);
     _groupNotifier = context.read<ExpenseGroupNotifier>();
+    _seenRevision = _groupNotifier?.revision ?? 0;
     _groupNotifier?.addListener(_onNotifierChanged);
   }
 
-  void _onNotifierChanged() async {
-    final deleted = _groupNotifier?.deletedGroupIds ?? [];
-    final updated = _groupNotifier?.updatedGroupIds ?? [];
+  /// Last [ExpenseGroupNotifier.revision] this page loaded.
+  int _seenRevision = 0;
 
-    if ((deleted.isNotEmpty || updated.isNotEmpty) && mounted) {
+  void _onNotifierChanged() async {
+    // Compare revisions rather than reading the updated/deleted queues: in
+    // the app shell Home is alive too and clears them first.
+    final revision = _groupNotifier?.revision ?? 0;
+    if (revision != _seenRevision && mounted) {
+      _seenRevision = revision;
       // Reload the trips to reflect external changes (deletions/updates)
       await _loadTrips();
-      // Clear notifier queues after handling
-      _groupNotifier?.clearDeletedGroups();
-      _groupNotifier?.clearUpdatedGroups();
     }
   }
 

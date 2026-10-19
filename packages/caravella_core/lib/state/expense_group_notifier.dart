@@ -10,7 +10,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   final List<String> _updatedGroupIds = [];
   String? _lastAddedCategory;
   String? _lastAddedParticipant;
-  String? _lastEvent; // es: 'expense_added', 'category_added', 'participant_added'
+  String?
+  _lastEvent; // es: 'expense_added', 'category_added', 'participant_added'
   final List<String> _deletedGroupIds = [];
 
   // Optional callback for platform-specific shortcuts (e.g., Android Quick Actions)
@@ -20,6 +21,14 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   Future<void> Function(String groupId)? _onNotificationCancel;
 
   ExpenseGroup? get currentGroup => _currentGroup;
+
+  int _revision = 0;
+
+  /// Grows every time a group is marked updated or deleted. Unlike
+  /// [updatedGroupIds]/[deletedGroupIds], which the first listener may clear,
+  /// it can't be consumed: pages alive at the same time (Home and Groups in
+  /// the app shell) compare it with the value they last saw.
+  int get revision => _revision;
 
   // Lista degli ID dei gruppi che sono stati aggiornati
   List<String> get updatedGroupIds => List.unmodifiable(_updatedGroupIds);
@@ -61,6 +70,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     if (!_updatedGroupIds.contains(updatedGroup.id)) {
       _updatedGroupIds.add(updatedGroup.id);
     }
+    _revision++;
 
     notifyListeners();
 
@@ -186,6 +196,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     if (!_updatedGroupIds.contains(groupId)) {
       _updatedGroupIds.add(groupId);
     }
+    _revision++;
     notifyListeners();
   }
 
@@ -194,6 +205,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     if (!_deletedGroupIds.contains(groupId)) {
       _deletedGroupIds.add(groupId);
     }
+    _revision++;
     notifyListeners();
     // Update shortcuts when group is deleted
     _updateShortcuts();
@@ -215,6 +227,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     if (!_updatedGroupIds.contains(groupId)) {
       _updatedGroupIds.add(groupId);
     }
+    _revision++;
 
     notifyListeners();
     _updateShortcuts();
@@ -241,6 +254,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     if (!_updatedGroupIds.contains(groupId)) {
       _updatedGroupIds.add(groupId);
     }
+    _revision++;
 
     notifyListeners();
     _updateShortcuts();
