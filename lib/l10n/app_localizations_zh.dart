@@ -2703,4 +2703,59 @@ class AppLocalizationsZh extends AppLocalizations {
   String get_started_step_done(String step) {
     return '$step，已完成';
   }
+
+  @override
+  String get balances => '余额';
+
+  @override
+  String get per_person => '人均';
+
+  @override
+  String get settle_up => '结清方式';
+
+  @override
+  String get all_settled_up => '已全部结清';
+
+  @override
+  String balance_gets_back(String name, String amount) {
+    return '$name 应收回 $amount';
+  }
+
+  @override
+  String balance_owes(String name, String amount) {
+    return '$name 应付 $amount';
+  }
+
+  @override
+  String settlement_pays(String from, String to, String amount) {
+    return '$from 付给 $to $amount';
+  }
+
+  @override
+  String places_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个地点',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get more_options => '更多选项';
+
+  @override
+  String get highest_expense => '最高支出';
+
+  @override
+  String get most_expensive_day => '花费最多的一天';
+
+  @override
+  String get chart_day_by_day => '每日支出';
+
+  @override
+  String get this_week => '本周';
+
+  @override
+  String get last_week => '上周';
 }

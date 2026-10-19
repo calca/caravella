@@ -5260,6 +5260,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{step}, done'**
   String get_started_step_done(String step);
+
+  /// Group page view: what each participant gets back or owes
+  ///
+  /// In en, this message translates to:
+  /// **'Balances'**
+  String get balances;
+
+  /// Group page key figure: total divided by the number of participants
+  ///
+  /// In en, this message translates to:
+  /// **'Per person'**
+  String get per_person;
+
+  /// Heading of the suggested payments that settle the group
+  ///
+  /// In en, this message translates to:
+  /// **'Settle up'**
+  String get settle_up;
+
+  /// Balances view when nobody owes anything
+  ///
+  /// In en, this message translates to:
+  /// **'All settled up'**
+  String get all_settled_up;
+
+  /// Screen reader label of a positive balance
+  ///
+  /// In en, this message translates to:
+  /// **'{name} gets back {amount}'**
+  String balance_gets_back(String name, String amount);
+
+  /// Screen reader label of a negative balance
+  ///
+  /// In en, this message translates to:
+  /// **'{name} owes {amount}'**
+  String balance_owes(String name, String amount);
+
+  /// Screen reader label of a suggested payment
+  ///
+  /// In en, this message translates to:
+  /// **'{from} pays {to} {amount}'**
+  String settlement_pays(String from, String to, String amount);
+
+  /// Number of distinct places on the group map card
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one {1 place} other {{count} places}}'**
+  String places_count(int count);
+
+  /// Tooltip of the group page menu button (favorite, map, sync, share, settings)
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get more_options;
+
+  /// Statistics card: the single largest expense of the group
+  ///
+  /// In en, this message translates to:
+  /// **'Highest expense'**
+  String get highest_expense;
+
+  /// Statistics card: the day with the highest total spending
+  ///
+  /// In en, this message translates to:
+  /// **'Most expensive day'**
+  String get most_expensive_day;
+
+  /// Title of the group statistics chart of daily spending over the group period
+  ///
+  /// In en, this message translates to:
+  /// **'Day by day'**
+  String get chart_day_by_day;
+
+  /// Title of the group statistics chart of the current week
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get this_week;
+
+  /// Header of the group page expenses of the previous calendar week
+  ///
+  /// In en, this message translates to:
+  /// **'Last week'**
+  String get last_week;
 }
 
 class _AppLocalizationsDelegate

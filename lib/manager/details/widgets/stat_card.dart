@@ -34,7 +34,7 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     // Use latest Material 3 surface token
-    final surface = theme.colorScheme.surface;
+    final surface = theme.colorScheme.raisedSurface;
 
     // Use CurrencyDisplay for consistent formatting in semantic labels
     final formattedValue = CurrencyDisplay.formatCurrencyText(
@@ -120,9 +120,11 @@ class StatCard extends StatelessWidget {
                                 value: ((percent! / 100).clamp(0, 1)),
                                 minHeight: 6,
                                 borderRadius: BorderRadius.circular(4),
-                                color: theme.colorScheme.surfaceDim,
-                                backgroundColor: theme.colorScheme.surfaceDim
-                                    .withAlpha((0.4 * 255).toInt()),
+                                // Primary on a neutral track, visible in
+                                // both themes (surfaceDim vanished in dark).
+                                color: theme.colorScheme.primary,
+                                backgroundColor: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.08),
                               ),
                             ),
                             const SizedBox(width: 12),

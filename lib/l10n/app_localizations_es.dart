@@ -2799,4 +2799,60 @@ class AppLocalizationsEs extends AppLocalizations {
   String get_started_step_done(String step) {
     return '$step, hecho';
   }
+
+  @override
+  String get balances => 'Saldos';
+
+  @override
+  String get per_person => 'Por persona';
+
+  @override
+  String get settle_up => 'Para saldar';
+
+  @override
+  String get all_settled_up => 'Todo saldado';
+
+  @override
+  String balance_gets_back(String name, String amount) {
+    return '$name recupera $amount';
+  }
+
+  @override
+  String balance_owes(String name, String amount) {
+    return '$name debe $amount';
+  }
+
+  @override
+  String settlement_pays(String from, String to, String amount) {
+    return '$from paga a $to $amount';
+  }
+
+  @override
+  String places_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lugares',
+      one: '1 lugar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get more_options => 'Más opciones';
+
+  @override
+  String get highest_expense => 'Gasto más alto';
+
+  @override
+  String get most_expensive_day => 'Día más caro';
+
+  @override
+  String get chart_day_by_day => 'Día a día';
+
+  @override
+  String get this_week => 'Esta semana';
+
+  @override
+  String get last_week => 'La semana pasada';
 }

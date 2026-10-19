@@ -254,6 +254,11 @@ class CaravellaThemes {
       textTheme: _createTextTheme(scheme),
       useMaterial3: true,
       scaffoldBackgroundColor: scheme.surface,
+      // Round floating buttons everywhere, like the "+" beside the floating
+      // navigation.
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        shape: CircleBorder(),
+      ),
       dialogTheme: DialogThemeData(
         backgroundColor: scheme.surfaceContainerHigh,
         surfaceTintColor: scheme.surfaceTint,

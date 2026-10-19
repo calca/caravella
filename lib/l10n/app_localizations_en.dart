@@ -2778,4 +2778,60 @@ class AppLocalizationsEn extends AppLocalizations {
   String get_started_step_done(String step) {
     return '$step, done';
   }
+
+  @override
+  String get balances => 'Balances';
+
+  @override
+  String get per_person => 'Per person';
+
+  @override
+  String get settle_up => 'Settle up';
+
+  @override
+  String get all_settled_up => 'All settled up';
+
+  @override
+  String balance_gets_back(String name, String amount) {
+    return '$name gets back $amount';
+  }
+
+  @override
+  String balance_owes(String name, String amount) {
+    return '$name owes $amount';
+  }
+
+  @override
+  String settlement_pays(String from, String to, String amount) {
+    return '$from pays $to $amount';
+  }
+
+  @override
+  String places_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count places',
+      one: '1 place',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get more_options => 'More options';
+
+  @override
+  String get highest_expense => 'Highest expense';
+
+  @override
+  String get most_expensive_day => 'Most expensive day';
+
+  @override
+  String get chart_day_by_day => 'Day by day';
+
+  @override
+  String get this_week => 'This week';
+
+  @override
+  String get last_week => 'Last week';
 }

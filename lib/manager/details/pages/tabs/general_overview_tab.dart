@@ -10,7 +10,15 @@ import '../../widgets/stat_card.dart';
 /// and spending trend for the last 7 and 30 days.
 class GeneralOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
-  const GeneralOverviewTab({super.key, required this.trip});
+
+  /// Without its own scroll view, to sit inside the group page's scroll.
+  final bool embedded;
+
+  const GeneralOverviewTab({
+    super.key,
+    required this.trip,
+    this.embedded = false,
+  });
 
   // Delegated to shared helpers for consistency
   List<double> _weeklySeries() => buildWeeklySeries(trip);
@@ -40,19 +48,22 @@ class GeneralOverviewTab extends StatelessWidget {
     final monthly = _monthlySeries();
     final dateRange = _dateRangeSeries();
 
-    return SingleChildScrollView(
+    final content = Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 8),
-          _TopSummaryRow(
-            total: trip.getTotalExpenses(),
-            currency: trip.currency,
-            participants: trip.getParticipantsByActivity(),
-            count: trip.participants.length,
-          ),
-          const SizedBox(height: 24),
+          // The group page shows the total above the selector already.
+          if (!embedded) ...[
+            _TopSummaryRow(
+              total: trip.getTotalExpenses(),
+              currency: trip.currency,
+              participants: trip.getParticipantsByActivity(),
+              count: trip.participants.length,
+            ),
+            const SizedBox(height: 24),
+          ],
           if (shouldShowDateRangeChart(trip)) ...[
             DateRangeExpenseChart(
               dailyTotals: dateRange,
@@ -108,6 +119,7 @@ class GeneralOverviewTab extends StatelessWidget {
         ],
       ),
     );
+    return embedded ? content : SingleChildScrollView(child: content);
   }
 }
 
@@ -222,7 +234,7 @@ class _DetailsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = theme.colorScheme;
-    final surface = colorScheme.surface;
+    final surface = colorScheme.raisedSurface;
 
     final dateStr = _dateRangeString(context);
     final participantsCount = trip.participants.length;

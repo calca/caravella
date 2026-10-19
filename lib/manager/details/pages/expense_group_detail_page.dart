@@ -3,20 +3,22 @@ import 'package:flutter/rendering.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'dart:async';
-import 'package:provider/provider.dart';
 import 'dart:io';
+import 'package:provider/provider.dart';
 
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/delete_expense_dialog.dart';
 import '../../expense/pages/expense_form_page.dart';
-import '../widgets/group_actions.dart';
-import '../../../home/cards/widgets/group_card_header.dart';
-import '../../../home/cards/widgets/group_card_amounts.dart';
-import '../widgets/filtered_expense_list.dart';
 import '../widgets/expense_export_actions.dart';
+import '../widgets/grouped_expense_list.dart';
+import '../widgets/empty_expense_state.dart';
+import '../widgets/group_balances_view.dart';
+import '../widgets/group_detail_header.dart';
+import '../widgets/group_map_card.dart';
+import '../widgets/group_statistics_view.dart';
+import 'expense_locations_map_page.dart';
 import '../../../services/notification_manager.dart';
 
-import 'unified_overview_page.dart';
 import 'group_settings_page.dart';
 import 'expense_search_page.dart';
 import '../../group/pages/expense_group_sync_page.dart';
@@ -46,23 +48,14 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
   bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
   String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
-  static const double _expandedHeaderHeight = 300.0;
+  static const double _topBarHeight = 64.0;
 
-  /// Height of the text-driven part of the header (title + amounts) at 1x;
-  /// the header grows by this much per extra unit of text scale so large
-  /// accessibility font sizes don't push the title under the back button.
-  static const double _scalableHeaderContent = 150.0;
-
-  /// Expanded header height for the current text scale.
-  double _expandedHeight(BuildContext context) {
-    final scale = MediaQuery.textScalerOf(context).scale(1.0);
-    return _expandedHeaderHeight +
-        _scalableHeaderContent * (scale - 1.0).clamp(0.0, 2.0);
-  }
+  /// Selected view: 0 expenses, 1 balances, 2 statistics.
+  int _section = 0;
 
   /// Scroll offset past which the collapsed title is shown.
   double _collapsedTitleThreshold(BuildContext context) =>
-      _expandedHeight(context) - 56.0;
+      MediaQuery.textScalerOf(context).scale(56.0);
 
   @override
   void initState() {
@@ -127,13 +120,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (!mounted || refreshed == null) return;
     setState(() => _trip = refreshed);
     _groupNotifier?.setCurrentGroup(refreshed);
-  }
-
-  void _openUnifiedOverviewPage() {
-    if (_trip == null) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
-    );
   }
 
   void _openSearchPage() {
@@ -438,210 +424,250 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (trip == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
+    final s = theme.colorScheme;
     final gloc = gen.AppLocalizations.of(context);
-    final showCollapsedTitle = _collapsedTitleVisible;
-    final contentOverlayColor = colorScheme.surface.withValues(alpha: 0.95);
+    final pageColor = s.surfaceContainer;
+    final topInset = MediaQuery.paddingOf(context).top;
 
-    const double toolbarH = 56.0;
-    final double expandedH = _expandedHeight(context);
+    // Over a group color the top bar and title use its contrasting color;
+    // once the bar turns opaque (scrolled) it follows the theme again.
+    final bandColor = GroupHeaderBand.colorOf(trip, s);
+    final bandForeground = GroupHeaderBand.foregroundOf(trip, s);
+    final barForeground = _collapsedTitleVisible ? s.onSurface : bandForeground;
+    final bool? forceStatusBarLight =
+        bandColor != null && !_collapsedTitleVisible
+        ? !ExpenseGroupColorPalette.isLightColor(bandColor)
+        : null;
 
-    final bg = GroupBackgroundUtils.resolve(
-      trip,
-      colorScheme,
-      baseColor: colorScheme.surfaceContainer,
+    final sections = [gloc.expenses, gloc.balances, gloc.statistics];
+
+    final Widget content = switch (_section) {
+      _ when trip.expenses.isEmpty => SliverToBoxAdapter(
+        child: SizedBox(
+          height: 420,
+          child: EmptyExpenseState(onAddFirstExpense: _showAddExpenseSheet),
+        ),
+      ),
+      0 => WeekGroupedExpenseSliver(
+        expenses: trip.expenses,
+        currency: trip.currency,
+        onExpenseTap: _openEditExpense,
+        highlightedExpenseId: _newlyAddedExpenseId,
+      ),
+      1 => SliverToBoxAdapter(child: GroupBalancesView(group: trip)),
+      _ => SliverToBoxAdapter(child: GroupStatisticsView(group: trip)),
+    };
+
+    Widget roundButton({
+      required IconData icon,
+      required String tooltip,
+      required VoidCallback onPressed,
+      Color? color,
+    }) => Material(
+      color: _collapsedTitleVisible ? Colors.transparent : s.raisedSurface,
+      shape: const CircleBorder(),
+      child: IconButton(
+        icon: Icon(icon),
+        color: color ?? s.onSurface,
+        tooltip: tooltip,
+        onPressed: onPressed,
+      ),
     );
-    final Color homeBackgroundColor = colorScheme.surfaceContainer;
-    final LinearGradient? detailGradient = bg.gradient;
-
-    // The header behind the app bar can be a user-picked accent color that's
-    // independent of the app's light/dark theme (unlike the plain
-    // surfaceContainer fallback or a photo, both already theme-consistent),
-    // so compute app bar/status bar contrast from its actual color instead
-    // of blindly following colorScheme.onSurface — otherwise a light accent
-    // color in dark mode (or a dark one in light mode) can render icons
-    // invisible against it.
-    final Color? headerAccentTopColor = (!bg.hasImage && detailGradient != null)
-        ? detailGradient.colors.first
-        : null;
-    final Color appBarForegroundColor = headerAccentTopColor != null
-        ? ExpenseGroupColorPalette.getContrastingTextColor(headerAccentTopColor)
-        : colorScheme.onSurface;
-    final bool? forceStatusBarLight = headerAccentTopColor != null
-        ? !ExpenseGroupColorPalette.isLightColor(headerAccentTopColor)
-        : null;
-
-    Widget buildHeaderBackground() {
-      if (bg.hasImage) {
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.file(
-              File(bg.imagePath!),
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-            ),
-            if (detailGradient != null)
-              DecoratedBox(decoration: BoxDecoration(gradient: detailGradient)),
-          ],
-        );
-      }
-
-      if (detailGradient != null) {
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            ColoredBox(color: bg.color),
-            DecoratedBox(decoration: BoxDecoration(gradient: detailGradient)),
-          ],
-        );
-      }
-
-      return ColoredBox(color: homeBackgroundColor);
-    }
 
     return AppSystemUI(
       forceStatusBarLight: forceStatusBarLight,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: pageColor,
         body: Stack(
-          fit: StackFit.expand,
           children: [
-            Positioned.fill(child: buildHeaderBackground()),
             CustomScrollView(
               controller: _scrollController,
               slivers: [
-                SliverAppBar(
-                  pinned: true,
-                  floating: false,
-                  expandedHeight: expandedH,
-                  toolbarHeight: toolbarH,
-                  collapsedHeight: toolbarH,
-                  elevation: 0,
-                  scrolledUnderElevation: 0,
-                  surfaceTintColor: Colors.transparent,
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: appBarForegroundColor,
-                  // Without this, SliverAppBar computes its own system
-                  // overlay style from backgroundColor's estimated
-                  // brightness — and Colors.transparent reads as "dark"
-                  // (its RGB channels are 0,0,0), silently overriding
-                  // AppSystemUI's status bar icon brightness above.
-                  systemOverlayStyle: AppSystemUI.resolveStyle(
-                    context,
-                    forceStatusBarLight: forceStatusBarLight,
-                  ),
-                  centerTitle: false,
-                  title: AnimatedOpacity(
-                    opacity: showCollapsedTitle ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 220),
-                    child: Text(
-                      trip.title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: appBarForegroundColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                  leading: IconButton(
-                    tooltip: gloc.accessibility_back_button,
-                    icon: Icon(
-                      Icons.arrow_back_rounded,
-                      color: appBarForegroundColor,
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  flexibleSpace: FlexibleSpaceBar(
-                    collapseMode: CollapseMode.pin,
-                    background: Padding(
-                      padding: EdgeInsets.only(
-                        top: toolbarH,
-                        left: 16,
-                        right: 16,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GroupCardHeader(
-                            group: trip,
-                            localizations: gloc,
-                            theme: theme,
-                            showDateRange: false,
-                            showPinnedBadge: false,
-                            centerTitleHorizontally: true,
-                          ),
-                          const SizedBox(height: 8),
-                          GroupCardAmounts(
-                            group: trip,
-                            theme: theme,
-                            localizations: gloc,
-                          ),
-                          const SizedBox(height: 42),
-                          GroupActions(
-                            hasExpenses: trip.expenses.isNotEmpty,
-                            isPinned: trip.pinned,
-                            onOverview: trip.expenses.isNotEmpty
-                                ? _openUnifiedOverviewPage
-                                : null,
-                            onSearch: trip.expenses.isNotEmpty
-                                ? _openSearchPage
-                                : null,
-                            onFavorite: trip.archived ? null : _handlePinToggle,
-                            syncEnabled: trip.syncEnabled,
-                            orchestrator: context.watch<SyncOrchestrator?>(),
-                            onSync: _showSyncPage,
-                            onOptions: _showSettingsPage,
-                          ),
-                          const SizedBox(height: 0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
                 SliverToBoxAdapter(
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      color: contentOverlayColor,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FilteredExpenseList(
-                              expenses: trip.expenses,
-                              currency: trip.currency,
-                              onExpenseTap: _openEditExpense,
-                              onAddExpense: _showAddExpenseSheet,
-                              newlyAddedExpenseId: _newlyAddedExpenseId,
-                            ),
-                          ],
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: GroupHeaderBand(
+                          group: trip,
+                          pageColor: pageColor,
                         ),
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          20,
+                          topInset + _topBarHeight + 4,
+                          20,
+                          20,
+                        ),
+                        child: GroupDetailHeader(
+                          group: trip,
+                          foreground: bandForeground,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.only(bottom: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   sliver: SliverToBoxAdapter(
-                    child: Container(
-                      height: _calculateBottomPadding(),
-                      color: contentOverlayColor,
+                    child: PillSegmentedControl(
+                      labels: sections,
+                      selectedIndex: _section,
+                      onChanged: (i) => setState(() => _section = i),
+                      expand: true,
                     ),
                   ),
                 ),
+                content,
+                SliverToBoxAdapter(
+                  child: SizedBox(height: _calculateBottomPadding()),
+                ),
               ],
+            ),
+            // Top bar over the band: round buttons at rest, an opaque bar
+            // with the group name once the title has scrolled away.
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              color: _collapsedTitleVisible
+                  ? pageColor
+                  : pageColor.withValues(alpha: 0),
+              padding: EdgeInsets.fromLTRB(12, topInset + 4, 12, 4),
+              child: SizedBox(
+                height: _topBarHeight - 8,
+                child: Row(
+                  children: [
+                    roundButton(
+                      icon: Icons.arrow_back_rounded,
+                      tooltip: gloc.accessibility_back_button,
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: AnimatedOpacity(
+                        opacity: _collapsedTitleVisible ? 1 : 0,
+                        duration: const Duration(milliseconds: 200),
+                        child: Text(
+                          trip.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: barForeground,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (trip.expenses.isNotEmpty) ...[
+                      roundButton(
+                        icon: Icons.search_rounded,
+                        tooltip: gloc.search_expenses,
+                        onPressed: _openSearchPage,
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                    _GroupMenuButton(
+                      background: _collapsedTitleVisible
+                          ? Colors.transparent
+                          : s.raisedSurface,
+                      items: [
+                        if (!trip.archived)
+                          _MenuItem(
+                            trip.pinned
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border_rounded,
+                            trip.pinned ? gloc.unpin : gloc.pin,
+                            _handlePinToggle,
+                          ),
+                        if (groupPlacesCount(trip) > 0)
+                          _MenuItem(
+                            Icons.map_outlined,
+                            gloc.quick_action_map,
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ExpenseLocationsMapPage(group: trip),
+                              ),
+                            ),
+                          ),
+                        _MenuItem(
+                          Icons.sync_rounded,
+                          gloc.sync_title,
+                          _showSyncPage,
+                        ),
+                        if (trip.expenses.isNotEmpty)
+                          _MenuItem(
+                            Icons.ios_share_rounded,
+                            gloc.export_share,
+                            () => showExpenseExportOptionsSheet(context, trip),
+                          ),
+                        _MenuItem(
+                          Icons.settings_outlined,
+                          gloc.settings,
+                          _showSettingsPage,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
-        floatingActionButton: _buildAnimatedFab(colorScheme),
+        floatingActionButton: _buildAnimatedFab(s),
+      ),
+    );
+  }
+}
+
+class _MenuItem {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _MenuItem(this.icon, this.label, this.onTap);
+}
+
+/// The group page's "more" button: a round ⋯ opening a menu with the less
+/// frequent actions, so the top bar keeps only back and search.
+class _GroupMenuButton extends StatelessWidget {
+  final Color background;
+  final List<_MenuItem> items;
+
+  const _GroupMenuButton({required this.background, required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    final s = Theme.of(context).colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+    return MenuAnchor(
+      alignmentOffset: const Offset(-140, 4),
+      style: MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(s.raisedSurface),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
+      ),
+      menuChildren: [
+        for (final item in items)
+          MenuItemButton(
+            leadingIcon: Icon(item.icon),
+            onPressed: item.onTap,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 24),
+              child: Text(item.label),
+            ),
+          ),
+      ],
+      builder: (context, controller, _) => Material(
+        color: background,
+        shape: const CircleBorder(),
+        child: IconButton(
+          icon: const Icon(Icons.more_horiz_rounded),
+          color: s.onSurface,
+          tooltip: gloc.more_options,
+          onPressed: () =>
+              controller.isOpen ? controller.close() : controller.open(),
+        ),
       ),
     );
   }

@@ -4,22 +4,28 @@ Covers `lib/manager/details/**` — the per-group detail screen, the stats tabs,
 
 ## Group detail page
 
-`ExpenseGroupDetailPage` (`details/pages/expense_group_detail_page.dart`) is the main per-group screen — **not itself tabbed**: hero header, expense list via `FilteredExpenseList`, a hide-on-scroll FAB, and the expense add/edit sheet (`lib/manager/expense/pages/expense_form_page.dart` — see [Expense Entry](APP_EXPENSE_ENTRY.md)). It links out to:
+`ExpenseGroupDetailPage` (`details/pages/expense_group_detail_page.dart`) is the main per-group screen, in the Home / Groups style: `surfaceContainer` page, one `CustomScrollView` with
 
-- `_openUnifiedOverviewPage()` → `UnifiedOverviewPage` (the tabbed stats UI, below)
-- `_openSearchPage()` → `ExpenseSearchPage.show`
-- An export-options bottom sheet using the exporters (below)
+- **Header** — `GroupHeaderBand` (`widgets/group_detail_header.dart`) behind the top of the page: the group's photo as a `PhotoVeil` or its palette color, melting into the page color; over a color, title and top-bar icons use the color's contrasting text color (`GroupHeaderBand.foregroundOf`) and the status bar follows. On it `GroupDetailHeader`: a heart when the group is a favorite, dates · participant count, the title, and three key-figure cards — total, today (`getTodaySpendingSync`), per person.
+- **Selector** — a `PillSegmentedControl` (from `caravella_core_ui`) **Expenses / Balances / Statistics** (`_section`); the content below switches:
+  - Expenses: `WeekGroupedExpenseSliver` (`widgets/grouped_expense_list.dart`) — one card per calendar week (Monday–Sunday), newest first; the header names it ("This week", "Last week", else the date range) with the week total; rows are `ExpenseAmountCard`s with their relative date, opening the edit sheet; a just-added expense fades in (`highlightedExpenseId`). With no expenses, `EmptyExpenseState`.
+  - Balances: `GroupBalancesView` (`widgets/group_balances_view.dart`) — a bar per participant from `computeBalances` (right/primary = gets back, left/error = owes), then "Settle up" with the `computeSettlements` payments, or "All settled up".
+  - Statistics: `GroupStatisticsView` (`widgets/group_statistics_view.dart`) — spending chart in a card titled above it instead of the D / W / M letter badge ("Day by day" with the period for the date-range chart, else "This week" and "This month"; a card whose series is all zero is left out), `GroupPayersBubbles` (each participant's avatar sized by what they paid, area ∝ amount), `GroupMapCard` (only when `groupPlacesCount` > 0 — distinct coordinates rounded to ~100 m) opening `ExpenseLocationsMapPage`, daily / monthly average `StatCard`s, highest expense and most expensive day (`highestExpense`, `mostExpensiveDay` — reusing `WeekGroupedExpenseSliver.groupByDay`), then `CategoriesOverviewTab(embedded: true)`. Total, period and participants aren't repeated (they're in the header).
+- **Top bar** — an overlay with round buttons (back, search, ⋯) that turns opaque with the group name once the title scrolls away (`_collapsedTitleVisible`). The ⋯ menu (`_GroupMenuButton`, a `MenuAnchor`) holds favorite/unfavorite, map, synchronization, share & export (`showExpenseExportOptionsSheet`) and settings (`GroupSettingsPage`).
+- A round, hide-on-scroll `AddFab` and the expense add/edit sheet (`lib/manager/expense/pages/expense_form_page.dart` — see [Expense Entry](APP_EXPENSE_ENTRY.md)).
+
+The separate `UnifiedOverviewPage` (below) is still reached from Home's quick actions.
 
 ## Stats tabs
 
-`UnifiedOverviewPage` (`pages/unified_overview_page.dart`) is where the tabbed UI actually lives: `DefaultTabController(length: 3)` with tabs **General / Participants / Categories** (in that source-code order), rendering `GeneralOverviewTab`, `ParticipantsOverviewTab`, `CategoriesOverviewTab` inside a `RepaintBoundary` so the whole page can be captured as a shareable image (`_shareImage`). A parallel `_shareText` builds a plain-text summary using the same settlement computation as the Participants tab. A map button opens `ExpenseLocationsMapPage` (below); a share sheet offers text vs. image export.
+`UnifiedOverviewPage` (`pages/unified_overview_page.dart`) is where the tabbed UI actually lives: `DefaultTabController(length: 3)` with tabs **General / Participants / Categories** (in that source-code order), rendering `GeneralOverviewTab`, `ParticipantsOverviewTab`, `CategoriesOverviewTab` (the first and last also take `embedded: true` to drop their own scroll view — and, for General, the total summary row — when hosted in another page) inside a `RepaintBoundary` so the whole page can be captured as a shareable image (`_shareImage`). A parallel `_shareText` builds a plain-text summary using the same settlement computation as the Participants tab. A map button opens `ExpenseLocationsMapPage` (below); a share sheet offers text vs. image export.
 
 Chart/series helpers live in `pages/tabs/usecase/`:
 
 - `daily_totals_utils.dart` — `calculateDailyTotalsOptimized(group, startDate, days)` buckets expense amounts into a fixed-length daily array; `buildWeeklySeries`/`buildMonthlySeries` wrap it ("this week starting Monday" / "this calendar month"); `buildAdaptiveDateRangeSeries` picks the group's explicit date range if ≤30 days, else falls back to the actual expense date span (also capped at 30 days); `shouldShowDateRangeChart` decides whether `GeneralOverviewTab` shows one combined date-range chart instead of separate weekly+monthly charts.
 - `date_range_formatter.dart` — `formatDateRange({start, end, locale})`, omitting the year when it matches the current year, always showing both years when a range crosses a year boundary.
 
-> **Known dead code**: `pages/tabs/usecase/overview_stats_logic.dart` is an empty file with no references anywhere in `lib/` — the real stats logic lives directly on `ExpenseGroup` in `caravella_core` (`getTotalExpenses`, `getDailyAverage`, `getCategoryTotals`, etc., called directly by the tab widgets). Similarly, `settlements_logic.dart` is just a re-export shim (`export 'package:caravella_core/caravella_core.dart' show Settlement, computeSettlements;`) — the real algorithm is in `caravella_core`. Feel free to delete `overview_stats_logic.dart` if you're in the area; it's leftover scaffolding from a refactor.
+> `settlements_logic.dart` is just a re-export shim (`export 'package:caravella_core/caravella_core.dart' show Settlement, computeSettlements;`) — the real algorithm is in `caravella_core`; the stats logic lives on `ExpenseGroup` (`getTotalExpenses`, `getDailyAverage`, `getCategoryTotals`, …).
 
 ## Settlements algorithm
 
@@ -31,7 +37,7 @@ The "who owes whom" logic is `computeSettlements(ExpenseGroup trip)` in `package
 4. Splits into `creditors`/`debtors` (ignoring near-zero balances via a `0.01` epsilon), sorts each descending.
 5. Runs a classic **greedy minimal-transaction matching**: repeatedly settle `min(largestCreditor, largestDebtor)`, record a `Settlement(fromId, toId, amount)` (participant **IDs**, not names — survives renames), decrement both sides, advance whichever hit zero.
 
-This produces a minimal (or near-minimal) set of transactions, not a full pairwise ledger. Consumers: `ParticipantsOverviewTab`, `UnifiedOverviewPage._buildTextSummary`, `MarkdownExporter.generate`.
+This produces a minimal (or near-minimal) set of transactions, not a full pairwise ledger. Consumers: `GroupBalancesView`, `ParticipantsOverviewTab`, `UnifiedOverviewPage._buildTextSummary`, `MarkdownExporter.generate`. The per-participant balances themselves (step 3) are `computeBalances(trip)`, used directly by `GroupBalancesView`.
 
 If you ever need to support unequal/itemized splits, this is the function to change — but note it's a fundamental behavior change (currently *whoever pays* is credited the full amount, not *whoever benefits*).
 

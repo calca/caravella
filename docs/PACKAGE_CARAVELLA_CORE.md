@@ -22,7 +22,7 @@ Full details on both backends, the SQLite schema, the factory, `ExpenseGroupStor
 - **`ExpenseLocation`** — lat/lng plus full geocoding detail (`street`, `locality`, `administrativeArea`, `postalCode`, `country`, ...); `hasLocation`/`displayText` (name → address → coordinates fallback).
 - **`ExpenseGroupType`** (enum `personal, family, travel, other`) — carries an icon and `defaultCategoryKeys` (i18n keys) used to seed categories for new groups.
 - **`GroupTypeTemplate`** — user-defined custom group type (`iconCodePoint`, `defaultCategories`), persisted separately via `GroupTypeTemplateService`/`PreferencesService`, not in group storage.
-- **`group_settlements.dart`** — `computeSettlements(ExpenseGroup) → List<Settlement>`: the "who owes whom" algorithm. See [App: Group Details & Stats § Settlements algorithm](APP_GROUP_DETAILS_STATS.md#settlements-algorithm) for the full write-up.
+- **`group_settlements.dart`** — `computeBalances(ExpenseGroup) → Map<String, double>` (per participant id: paid minus equal share) and `computeSettlements(ExpenseGroup) → List<Settlement>`: the "who owes whom" algorithm. See [App: Group Details & Stats § Settlements algorithm](APP_GROUP_DETAILS_STATS.md#settlements-algorithm) for the full write-up.
 - **`ExpenseGroupColorPalette`** — theme-aware color resolution (`resolveGroupColor(group, colorScheme)`), 12-color palette mapped onto `ColorScheme` roles so group colors adapt to light/dark mode; also handles legacy ARGB migration and text-contrast helpers.
 
 ## State notifiers (`state/`)

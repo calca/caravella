@@ -1,4 +1,5 @@
 import 'expense_group.dart';
+
 /// Strongly-typed settlement item using participant IDs (robust to name changes).
 class Settlement {
   final String fromId; // debtor id
@@ -41,15 +42,13 @@ class Settlement {
   int get hashCode => Object.hash(fromId, toId, amount);
 }
 
-/// Computes minimal settlements between participants to balance accounts.
-/// Returns a typed list of [Settlement].
-List<Settlement> computeSettlements(ExpenseGroup trip) {
-  if (trip.participants.length < 2 || trip.expenses.isEmpty) return [];
-
-  // Balances keyed by participant id
+/// Each participant's balance, keyed by participant id: what they paid
+/// minus their equal share of the total. Positive = gets money back,
+/// negative = owes. Sums to zero (up to rounding).
+Map<String, double> computeBalances(ExpenseGroup trip) {
   final balances = <String, double>{};
-  final total = trip.getTotalExpenses();
-  final fairShare = total / trip.participants.length;
+  if (trip.participants.isEmpty) return balances;
+  final fairShare = trip.getTotalExpenses() / trip.participants.length;
 
   for (final p in trip.participants) {
     balances[p.id] = 0.0;
@@ -62,6 +61,16 @@ List<Settlement> computeSettlements(ExpenseGroup trip) {
   for (final p in trip.participants) {
     balances[p.id] = (balances[p.id] ?? 0) - fairShare;
   }
+  return balances;
+}
+
+/// Computes minimal settlements between participants to balance accounts.
+/// Returns a typed list of [Settlement].
+List<Settlement> computeSettlements(ExpenseGroup trip) {
+  if (trip.participants.length < 2 || trip.expenses.isEmpty) return [];
+
+  // Balances keyed by participant id
+  final balances = computeBalances(trip);
 
   final creditors = <MapEntry<String, double>>[]; // id -> credit
   final debtors = <MapEntry<String, double>>[]; // id -> debt

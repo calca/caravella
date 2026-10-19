@@ -2797,4 +2797,60 @@ class AppLocalizationsIt extends AppLocalizations {
   String get_started_step_done(String step) {
     return '$step, fatto';
   }
+
+  @override
+  String get balances => 'Saldi';
+
+  @override
+  String get per_person => 'A testa';
+
+  @override
+  String get settle_up => 'Per pareggiare';
+
+  @override
+  String get all_settled_up => 'Siete pari';
+
+  @override
+  String balance_gets_back(String name, String amount) {
+    return '$name deve ricevere $amount';
+  }
+
+  @override
+  String balance_owes(String name, String amount) {
+    return '$name deve dare $amount';
+  }
+
+  @override
+  String settlement_pays(String from, String to, String amount) {
+    return '$from dà a $to $amount';
+  }
+
+  @override
+  String places_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count luoghi',
+      one: '1 luogo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get more_options => 'Altre opzioni';
+
+  @override
+  String get highest_expense => 'Spesa più alta';
+
+  @override
+  String get most_expensive_day => 'Giorno più caro';
+
+  @override
+  String get chart_day_by_day => 'Giorno per giorno';
+
+  @override
+  String get this_week => 'Questa settimana';
+
+  @override
+  String get last_week => 'Settimana scorsa';
 }
