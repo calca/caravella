@@ -332,10 +332,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     // Use surfaceContainer system UI when NOT in welcome section
     // _isFirstStart is null during loading, treat as non-welcome for system UI
     if (_isFirstStart != true) {
-      return AppSystemUI.surfaceContainer(
-        context: context,
-        child: scaffoldBody,
-      );
+      return AppSystemUI.edgeToEdge(child: scaffoldBody);
     }
 
     // Welcome section handles its own system UI

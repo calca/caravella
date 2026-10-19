@@ -5344,6 +5344,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last week'**
   String get last_week;
+
+  /// Home quick action under the group card: new expense from a receipt photo
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get quick_action_scan;
+
+  /// Home quick action under the group card: add an expense by voice
+  ///
+  /// In en, this message translates to:
+  /// **'Voice'**
+  String get quick_action_voice;
 }
 
 class _AppLocalizationsDelegate

@@ -2855,4 +2855,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get last_week => 'La semana pasada';
+
+  @override
+  String get quick_action_scan => 'Escanear';
+
+  @override
+  String get quick_action_voice => 'Voz';
 }

@@ -2834,4 +2834,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get last_week => 'Last week';
+
+  @override
+  String get quick_action_scan => 'Scan';
+
+  @override
+  String get quick_action_voice => 'Voice';
 }

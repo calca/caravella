@@ -2851,4 +2851,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get last_week => 'Semana passada';
+
+  @override
+  String get quick_action_scan => 'Digitalizar';
+
+  @override
+  String get quick_action_voice => 'Voz';
 }

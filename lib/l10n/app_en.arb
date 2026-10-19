@@ -1260,4 +1260,8 @@
   ,"@this_week": {"description": "Title of the group statistics chart of the current week"}
   ,"last_week": "Last week"
   ,"@last_week": {"description": "Header of the group page expenses of the previous calendar week"}
+  ,"quick_action_scan": "Scan"
+  ,"@quick_action_scan": {"description": "Home quick action under the group card: new expense from a receipt photo"}
+  ,"quick_action_voice": "Voice"
+  ,"@quick_action_voice": {"description": "Home quick action under the group card: add an expense by voice"}
 }

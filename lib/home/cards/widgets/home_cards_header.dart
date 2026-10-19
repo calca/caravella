@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../../settings/pages/settings_page.dart';
 import '../../../sync/settings_sync_badge.dart';
 
@@ -138,22 +139,27 @@ class HomeCardsHeader extends StatelessWidget {
         Consumer<SyncOrchestrator?>(
           builder: (context, orchestrator, _) {
             final settingsIcon = Icon(
-              Icons.settings,
+              Icons.settings_outlined,
               color: theme.colorScheme.onSurface,
             );
-            return IconButton(
-              icon: orchestrator == null
-                  ? settingsIcon
-                  : SettingsSyncBadge(
-                      orchestrator: orchestrator,
-                      child: settingsIcon,
-                    ),
-              tooltip: localizations.settings,
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx) => const SettingsPage()),
-                );
-              },
+            // Raised round button, like the group page's top bar.
+            return Material(
+              color: theme.colorScheme.raisedSurface,
+              shape: const CircleBorder(),
+              child: IconButton(
+                icon: orchestrator == null
+                    ? settingsIcon
+                    : SettingsSyncBadge(
+                        orchestrator: orchestrator,
+                        child: settingsIcon,
+                      ),
+                tooltip: localizations.settings,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => const SettingsPage()),
+                  );
+                },
+              ),
             );
           },
         ),

@@ -2853,4 +2853,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get last_week => 'Settimana scorsa';
+
+  @override
+  String get quick_action_scan => 'Scansiona';
+
+  @override
+  String get quick_action_voice => 'Voce';
 }

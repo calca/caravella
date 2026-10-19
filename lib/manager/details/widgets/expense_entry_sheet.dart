@@ -20,6 +20,9 @@ class ExpenseEntrySheet extends StatefulWidget {
   final void Function(bool)? onFormValidityChanged;
   final void Function(VoidCallback?)? onSaveCallbackChanged;
 
+  /// See [ExpenseFormConfig.autoStartScan].
+  final bool autoStartScan;
+
   const ExpenseEntrySheet({
     super.key,
     required this.group,
@@ -33,6 +36,7 @@ class ExpenseEntrySheet extends StatefulWidget {
     this.showGroupHeader = true,
     this.onFormValidityChanged,
     this.onSaveCallbackChanged,
+    this.autoStartScan = false,
   });
 
   @override
@@ -88,6 +92,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           onExpand: widget.onExpand,
           onFormValidityChanged: widget.onFormValidityChanged,
           onSaveCallbackChanged: widget.onSaveCallbackChanged,
+          autoStartScan: widget.autoStartScan,
         ),
       ),
     );

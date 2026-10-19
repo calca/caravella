@@ -23,8 +23,13 @@ class AddExpenseController {
     this.onCategoryAdded,
   });
 
-  /// Shows the quick add expense bottom sheet.
-  void showAddExpenseSheet(BuildContext context, ExpenseGroup currentGroup) {
+  /// Shows the quick add expense bottom sheet; with [startScan] it opens the
+  /// camera for a receipt scan right away.
+  void showAddExpenseSheet(
+    BuildContext context,
+    ExpenseGroup currentGroup, {
+    bool startScan = false,
+  }) {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
 
@@ -40,6 +45,7 @@ class AddExpenseController {
             group: currentGroup,
             fullEdit: false,
             showGroupHeader: false,
+            autoStartScan: startScan,
             onExpenseSaved: (expense) async {
               final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);
@@ -221,6 +227,7 @@ class _ExpenseEntrySheetWithState extends StatefulWidget {
   final bool fullEdit;
   final void Function(ExpenseFormState)? onExpand;
   final bool showGroupHeader;
+  final bool autoStartScan;
 
   const _ExpenseEntrySheetWithState({
     required this.group,
@@ -230,6 +237,7 @@ class _ExpenseEntrySheetWithState extends StatefulWidget {
     this.fullEdit = true,
     this.onExpand,
     this.showGroupHeader = true,
+    this.autoStartScan = false,
   });
 
   @override
@@ -264,6 +272,7 @@ class _ExpenseEntrySheetWithStateState
       onExpand: widget.onExpand,
       showGroupHeader: widget.showGroupHeader,
       onFormValidityChanged: _updateFormValidity,
+      autoStartScan: widget.autoStartScan,
     );
   }
 }

@@ -348,7 +348,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        GroupQuickActions(group: featured),
+                        GroupQuickActions(
+                          group: featured,
+                          onExpenseAdded: _handleGroupUpdated,
+                        ),
                         SizedBox(
                           height:
                               FloatingNavBar.reservedHeight +
@@ -361,12 +364,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                 ],
               ),
             ),
-            // Opaque strip behind the status bar so scrolled content doesn't
-            // run under the clock.
-            Container(
-              height: topSafeArea,
-              color: theme.colorScheme.surfaceContainer,
-            ),
+            // Edge to edge: scrolled content fades under the clock.
+            StatusBarFade(color: theme.colorScheme.surfaceContainer),
           ],
         );
       },

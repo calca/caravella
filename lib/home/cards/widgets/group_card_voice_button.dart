@@ -20,10 +20,21 @@ class GroupCardVoiceButton extends StatefulWidget {
   final ExpenseGroup group;
   final VoidCallback onExpenseAdded;
 
+  /// Custom look (e.g. Home's quick actions): gets the start action (null
+  /// while listening or processing) and the listening state. Without it the
+  /// button draws its own mic icon.
+  final Widget Function(
+    BuildContext context,
+    VoidCallback? onPressed,
+    bool listening,
+  )?
+  builder;
+
   const GroupCardVoiceButton({
     super.key,
     required this.group,
     required this.onExpenseAdded,
+    this.builder,
   });
 
   @override
@@ -45,7 +56,15 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
-    _checkAvailability();
+    // Checking availability initializes speech recognition, which asks for
+    // the microphone permission: a shortcut that is always on screen (Home's
+    // quick actions) defers that to the first tap — startListening checks
+    // again and reports "not available" if needed.
+    if (widget.builder != null) {
+      _isAvailable = true;
+    } else {
+      _checkAvailability();
+    }
   }
 
   Future<void> _checkAvailability() async {
@@ -291,6 +310,13 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
   @override
   Widget build(BuildContext context) {
     if (!_isAvailable) return const SizedBox.shrink();
+    if (widget.builder case final builder?) {
+      return builder(
+        context,
+        (_isListening || _isProcessing) ? null : _startListening,
+        _isListening || _isProcessing,
+      );
+    }
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;

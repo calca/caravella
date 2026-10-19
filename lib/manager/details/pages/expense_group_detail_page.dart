@@ -475,7 +475,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       ),
     );
 
-    return AppSystemUI(
+    return AppSystemUI.edgeToEdge(
       forceStatusBarLight: forceStatusBarLight,
       child: Scaffold(
         backgroundColor: pageColor,

@@ -2758,4 +2758,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get last_week => '上周';
+
+  @override
+  String get quick_action_scan => '扫描';
+
+  @override
+  String get quick_action_voice => '语音';
 }
