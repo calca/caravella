@@ -31,7 +31,23 @@ class ExpenseGroupDetailPage extends StatefulWidget {
   State<ExpenseGroupDetailPage> createState() => _ExpenseGroupDetailPageState();
 }
 
-class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
+class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
+    with SingleTickerProviderStateMixin {
+  /// Fades the new view in when switching Expenses / Balances / Statistics,
+  /// in step with the selector's sliding fill.
+  late final AnimationController _sectionFade = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 280),
+    value: 1,
+  );
+
+  void _selectSection(int i) {
+    if (i == _section) return;
+    setState(() => _section = i);
+    if (MediaQuery.disableAnimationsOf(context)) return;
+    _sectionFade.forward(from: 0);
+  }
+
   // Opacità lista spese (default 1.0, manual refresh stato rimosso)
   // final double _listOpacity = 1.0; // RIMOSSO: non più necessario
 
@@ -85,6 +101,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     _groupNotifier = null;
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _sectionFade.dispose();
     _fabIdleTimer?.cancel();
     super.dispose();
   }
@@ -530,12 +547,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     child: PillSegmentedControl(
                       labels: sections,
                       selectedIndex: _section,
-                      onChanged: (i) => setState(() => _section = i),
+                      onChanged: _selectSection,
                       expand: true,
                     ),
                   ),
                 ),
-                content,
+                SliverFadeTransition(
+                  opacity: CurvedAnimation(
+                    parent: _sectionFade,
+                    curve: Curves.easeOutCubic,
+                  ),
+                  sliver: content,
+                ),
                 SliverToBoxAdapter(
                   child: SizedBox(height: _calculateBottomPadding()),
                 ),
