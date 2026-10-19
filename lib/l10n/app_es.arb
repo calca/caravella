@@ -1201,4 +1201,6 @@
   ,"balance_gets_back": "{name} recupera {amount}"
   ,"balance_owes": "{name} debe {amount}"
   ,"settlement_pays": "{from} paga a {to} {amount}"
+  ,"places_count": "{count, plural, one {1 lugar} other {{count} lugares}}"
+  ,"more_options": "Más opciones"
 }

@@ -2730,4 +2730,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String settlement_pays(String from, String to, String amount) {
     return '$from 付给 $to $amount';
   }
+
+  @override
+  String places_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个地点',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get more_options => '更多选项';
 }

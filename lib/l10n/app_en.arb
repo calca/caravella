@@ -1246,4 +1246,8 @@
   ,"@balance_owes": {"description": "Screen reader label of a negative balance", "placeholders": {"name": {"type": "String"}, "amount": {"type": "String"}}}
   ,"settlement_pays": "{from} pays {to} {amount}"
   ,"@settlement_pays": {"description": "Screen reader label of a suggested payment", "placeholders": {"from": {"type": "String"}, "to": {"type": "String"}, "amount": {"type": "String"}}}
+  ,"places_count": "{count, plural, one {1 place} other {{count} places}}"
+  ,"@places_count": {"description": "Number of distinct places on the group map card", "placeholders": {"count": {"type": "int"}}}
+  ,"more_options": "More options"
+  ,"@more_options": {"description": "Tooltip of the group page menu button (favorite, map, sync, share, settings)"}
 }

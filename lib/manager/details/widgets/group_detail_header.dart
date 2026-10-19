@@ -109,11 +109,27 @@ class GroupDetailHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          dates == null ? people : '$dates · $people',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: foreground.withValues(alpha: 0.8),
-          ),
+        Row(
+          children: [
+            // Favorite moved to the ⋯ menu: the heart here shows the state.
+            if (group.pinned) ...[
+              Icon(
+                Icons.favorite_rounded,
+                size: 16,
+                color: foreground,
+                semanticLabel: gloc.pin,
+              ),
+              const SizedBox(width: 6),
+            ],
+            Flexible(
+              child: Text(
+                dates == null ? people : '$dates · $people',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: foreground.withValues(alpha: 0.8),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 2),
         Semantics(

@@ -54,13 +54,16 @@ class GeneralOverviewTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 8),
-          _TopSummaryRow(
-            total: trip.getTotalExpenses(),
-            currency: trip.currency,
-            participants: trip.getParticipantsByActivity(),
-            count: trip.participants.length,
-          ),
-          const SizedBox(height: 24),
+          // The group page shows the total above the selector already.
+          if (!embedded) ...[
+            _TopSummaryRow(
+              total: trip.getTotalExpenses(),
+              currency: trip.currency,
+              participants: trip.getParticipantsByActivity(),
+              count: trip.participants.length,
+            ),
+            const SizedBox(height: 24),
+          ],
           if (shouldShowDateRangeChart(trip)) ...[
             DateRangeExpenseChart(
               dailyTotals: dateRange,
@@ -231,7 +234,7 @@ class _DetailsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = theme.colorScheme;
-    final surface = colorScheme.surface;
+    final surface = colorScheme.raisedSurface;
 
     final dateStr = _dateRangeString(context);
     final participantsCount = trip.participants.length;

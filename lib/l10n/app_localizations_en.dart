@@ -2805,4 +2805,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String settlement_pays(String from, String to, String amount) {
     return '$from pays $to $amount';
   }
+
+  @override
+  String places_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count places',
+      one: '1 place',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get more_options => 'More options';
 }

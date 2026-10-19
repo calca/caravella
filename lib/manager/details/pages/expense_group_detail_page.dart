@@ -14,6 +14,8 @@ import '../widgets/day_grouped_expense_list.dart';
 import '../widgets/empty_expense_state.dart';
 import '../widgets/group_balances_view.dart';
 import '../widgets/group_detail_header.dart';
+import '../widgets/group_map_card.dart';
+import 'expense_locations_map_page.dart';
 import 'tabs/categories_overview_tab.dart';
 import 'tabs/general_overview_tab.dart';
 import '../../../services/notification_manager.dart';
@@ -439,11 +441,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         ? !ExpenseGroupColorPalette.isLightColor(bandColor)
         : null;
 
-    final sections = [
-      gloc.expenses,
-      gloc.balances,
-      gloc.statistics,
-    ];
+    final sections = [gloc.expenses, gloc.balances, gloc.statistics];
 
     final Widget content = switch (_section) {
       _ when trip.expenses.isEmpty => SliverToBoxAdapter(
@@ -464,6 +462,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Column(
             children: [
+              if (groupPlacesCount(trip) > 0)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                  child: GroupMapCard(group: trip),
+                ),
               GeneralOverviewTab(trip: trip, embedded: true),
               CategoriesOverviewTab(trip: trip, embedded: true),
             ],
@@ -571,24 +574,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                         ),
                       ),
                     ),
-                    if (trip.syncEnabled) ...[
-                      roundButton(
-                        icon: Icons.sync_rounded,
-                        tooltip: gloc.sync_title,
-                        onPressed: _showSyncPage,
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                    if (!trip.archived) ...[
-                      roundButton(
-                        icon: trip.pinned
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        tooltip: trip.pinned ? gloc.unpin : gloc.pin,
-                        onPressed: _handlePinToggle,
-                      ),
-                      const SizedBox(width: 8),
-                    ],
                     if (trip.expenses.isNotEmpty) ...[
                       roundButton(
                         icon: Icons.search_rounded,
@@ -597,10 +582,47 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       ),
                       const SizedBox(width: 8),
                     ],
-                    roundButton(
-                      icon: Icons.settings_outlined,
-                      tooltip: gloc.options,
-                      onPressed: _showSettingsPage,
+                    _GroupMenuButton(
+                      background: _collapsedTitleVisible
+                          ? Colors.transparent
+                          : s.raisedSurface,
+                      items: [
+                        if (!trip.archived)
+                          _MenuItem(
+                            trip.pinned
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border_rounded,
+                            trip.pinned ? gloc.unpin : gloc.pin,
+                            _handlePinToggle,
+                          ),
+                        if (groupPlacesCount(trip) > 0)
+                          _MenuItem(
+                            Icons.map_outlined,
+                            gloc.quick_action_map,
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ExpenseLocationsMapPage(group: trip),
+                              ),
+                            ),
+                          ),
+                        _MenuItem(
+                          Icons.sync_rounded,
+                          gloc.sync_title,
+                          _showSyncPage,
+                        ),
+                        if (trip.expenses.isNotEmpty)
+                          _MenuItem(
+                            Icons.ios_share_rounded,
+                            gloc.export_share,
+                            () => showExpenseExportOptionsSheet(context, trip),
+                          ),
+                        _MenuItem(
+                          Icons.settings_outlined,
+                          gloc.settings,
+                          _showSettingsPage,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -609,6 +631,59 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ],
         ),
         floatingActionButton: _buildAnimatedFab(s),
+      ),
+    );
+  }
+}
+
+class _MenuItem {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _MenuItem(this.icon, this.label, this.onTap);
+}
+
+/// The group page's "more" button: a round ⋯ opening a menu with the less
+/// frequent actions, so the top bar keeps only back and search.
+class _GroupMenuButton extends StatelessWidget {
+  final Color background;
+  final List<_MenuItem> items;
+
+  const _GroupMenuButton({required this.background, required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    final s = Theme.of(context).colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+    return MenuAnchor(
+      alignmentOffset: const Offset(-140, 4),
+      style: MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(s.raisedSurface),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
+      ),
+      menuChildren: [
+        for (final item in items)
+          MenuItemButton(
+            leadingIcon: Icon(item.icon),
+            onPressed: item.onTap,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 24),
+              child: Text(item.label),
+            ),
+          ),
+      ],
+      builder: (context, controller, _) => Material(
+        color: background,
+        shape: const CircleBorder(),
+        child: IconButton(
+          icon: const Icon(Icons.more_horiz_rounded),
+          color: s.onSurface,
+          tooltip: gloc.more_options,
+          onPressed: () =>
+              controller.isOpen ? controller.close() : controller.open(),
+        ),
       ),
     );
   }

@@ -5302,6 +5302,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{from} pays {to} {amount}'**
   String settlement_pays(String from, String to, String amount);
+
+  /// Number of distinct places on the group map card
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one {1 place} other {{count} places}}'**
+  String places_count(int count);
+
+  /// Tooltip of the group page menu button (favorite, map, sync, share, settings)
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get more_options;
 }
 
 class _AppLocalizationsDelegate

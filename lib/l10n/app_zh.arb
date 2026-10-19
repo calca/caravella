@@ -1816,4 +1816,6 @@
   ,"balance_gets_back": "{name} 应收回 {amount}"
   ,"balance_owes": "{name} 应付 {amount}"
   ,"settlement_pays": "{from} 付给 {to} {amount}"
+  ,"places_count": "{count, plural, other {{count} 个地点}}"
+  ,"more_options": "更多选项"
 }
