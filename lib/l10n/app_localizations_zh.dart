@@ -2805,4 +2805,40 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get edit => '编辑';
+
+  @override
+  String get recent_searches => '最近搜索';
+
+  @override
+  String get by_type => '按类型';
+
+  @override
+  String get favorites => '收藏';
+
+  @override
+  String get all_groups => '全部';
+
+  @override
+  String get status_label => '状态';
+
+  @override
+  String show_results(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '显示 $count 个结果',
+      zero: '无结果',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String group_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个群组',
+    );
+    return '$_temp0';
+  }
 }

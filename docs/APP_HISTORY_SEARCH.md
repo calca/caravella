@@ -6,7 +6,7 @@ Covers `lib/manager/history/**` (the all-groups list) and `lib/home/search/group
 
 `ExpesensHistoryPage` (`history/expenses_history_page.dart` — note: the class/file typo "Expesens" is in the actual source, not a documentation error) is the **all-groups index**, not an activity log, loading `ExpenseGroupStorageV2.getActiveGroups()`/`.getArchivedGroups()` in parallel. It shares Home's look: `surfaceContainer` page, a "N active groups" line above a large "Groups" title, search in a raised circle, and an **Active · n / Archived · n** pill switch (`PillSegmentedControl` from `caravella_core_ui`, styled like the floating navigation) instead of tabs.
 
-- Groups are `GroupPhotoCard`s (`widgets/group_photo_card.dart`): on the Active view the favorite group is a wide card on top, the others a two-column grid of tiles. All cards share one background treatment — a photo is only hinted under the raised surface (`PhotoVeil` from `caravella_core_ui`, like the Home card) with the theme's text colors; a palette color is used solid with contrasting text; otherwise a raised neutral surface, and cards without a photo show the group type icon top-left. Every card has the `CardOutline` hairline to stand out from the page. Tap opens the group; long press opens the shared options sheet (`showGroupOptionsSheet` in `widgets/group_options.dart`: favorite, archive, delete — also used by `SwipeableExpenseGroupCard` in group search).
+- Groups are `GroupPhotoCard`s (`widgets/group_photo_card.dart`): on the Active view the favorite group is a wide card on top, the others a two-column grid of tiles. All cards share one background treatment — a photo is only hinted under the raised surface (`PhotoVeil` from `caravella_core_ui`, like the Home card) with the theme's text colors; a palette color is used solid with contrasting text; otherwise a raised neutral surface, and cards without a photo show the group type icon top-left. Every card has the `CardOutline` hairline to stand out from the page. Tap opens the group; long press opens the shared options sheet (`showGroupOptionsSheet` in `widgets/group_options.dart`: favorite, archive, delete — also used by group search).
 
 - Listens to `ExpenseGroupNotifier` for external delete/update events and reloads (`_onNotifierChanged`).
 - Sorts pinned groups first (`_applyFilter`).
@@ -14,17 +14,9 @@ Covers `lib/manager/history/**` (the all-groups list) and `lib/home/search/group
 - A search icon opens `GroupSearchPage` (in `lib/home/search/`, not under `manager/`).
 - Archive toggling goes through `ExpenseGroupNotifier.updateGroupArchive` (handles storage persistence + app-shortcuts refresh), then the list reloads.
 
-## Group cards in this view
+## Group options
 
-`SwipeableExpenseGroupCard` (`widgets/swipeable_expense_group_card.dart`) — despite the name, the current implementation is **long-press-to-open-menu**, not swipe gestures. Long-press (with haptic feedback) opens `HistoryOptionsSheet`. Its three actions:
-
-- `onPinToggle` → `_executePinAction` → `ExpenseGroupNotifier.updateGroupPin`
-- `onArchiveToggle` → the parent page's callback, wired to the notifier
-- `onDelete`
-
-Each completes with an `AppToast` that mentions "undo" wording, though the actual undo mechanism isn't implemented in this file — it likely relies on the toast action button from `caravella_core_ui`; verify current behavior before assuming undo works end-to-end.
-
-`HistoryOptionsSheet` (`widgets/history_options_sheet.dart`) is a pure presentation `StatelessWidget` (pin/unpin, archive/unarchive, delete `ListTile`s) — the pin option is disabled when the group is already archived.
+Long press on a group card (here and in group search) opens `showGroupOptionsSheet` (`widgets/group_options.dart`): favorite / unfavorite (`ExpenseGroupNotifier.updateGroupPin`), archive / unarchive (the caller's callback, wired to the notifier), delete. `HistoryOptionsSheet` (`widgets/history_options_sheet.dart`) is the presentation of those actions; the pin option is disabled when the group is archived.
 
 ## Empty states
 
@@ -32,7 +24,7 @@ Each completes with an `AppToast` that mentions "undo" wording, though the actua
 
 ## Cross-group search
 
-`GroupSearchPage` (`lib/home/search/group_search_page.dart`) — see [App: Home § Search](APP_HOME.md#search) for the full description; it reuses `SwipeableExpenseGroupCard` from this area.
+`GroupSearchPage` (`lib/home/search/group_search_page.dart`) — see [App: Home § Search](APP_HOME.md#search) for the full description; its rows open the group and, on long press, the same options sheet.
 
 ## See also
 

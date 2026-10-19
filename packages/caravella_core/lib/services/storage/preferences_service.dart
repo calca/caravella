@@ -31,6 +31,9 @@ abstract class _PreferenceKeys {
 
   // Group type templates
   static const String groupTypeTemplates = 'group_type_templates';
+
+  // Search
+  static const String recentGroupSearches = 'recent_group_searches';
 }
 
 /// Default values for preferences
@@ -153,6 +156,9 @@ class PreferencesService {
   // ============================================================================
 
   /// Group type templates preferences management
+  /// Recent searches (group search suggestions).
+  SearchPreferences get search => SearchPreferences._(_prefs);
+
   GroupTypeTemplatesPreferences get groupTypeTemplates =>
       GroupTypeTemplatesPreferences._(_prefs);
 
@@ -430,5 +436,36 @@ class GroupTypeTemplatesPreferences {
   /// Remove persisted templates
   Future<void> clearTemplates() async {
     await _prefs.remove(_PreferenceKeys.groupTypeTemplates);
+  }
+}
+
+/// Recent searches, newest first, shown as suggestions before typing.
+class SearchPreferences {
+  SearchPreferences._(this._prefs);
+  final SharedPreferences _prefs;
+
+  /// How many recent searches are kept.
+  static const int maxRecent = 5;
+
+  /// Recent group searches, newest first.
+  List<String> getRecentGroupSearches() =>
+      _prefs.getStringList(_PreferenceKeys.recentGroupSearches) ?? const [];
+
+  /// Records [query] (trimmed; case-insensitive duplicates move to the top).
+  Future<void> addRecentGroupSearch(String query) async {
+    final q = query.trim();
+    if (q.isEmpty) return;
+    final list = [
+      q,
+      ...getRecentGroupSearches().where(
+        (r) => r.toLowerCase() != q.toLowerCase(),
+      ),
+    ].take(maxRecent).toList();
+    await _prefs.setStringList(_PreferenceKeys.recentGroupSearches, list);
+  }
+
+  /// Forgets all recent group searches.
+  Future<void> clearRecentGroupSearches() async {
+    await _prefs.remove(_PreferenceKeys.recentGroupSearches);
   }
 }

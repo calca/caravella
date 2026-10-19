@@ -1220,4 +1220,11 @@
   ,"chart_week_by_week": "Semana a semana"
   ,"chart_month_by_month": "Mes a mes"
   ,"edit": "Editar"
+  ,"recent_searches": "Búsquedas recientes"
+  ,"by_type": "Por tipo"
+  ,"favorites": "Favoritos"
+  ,"all_groups": "Todos"
+  ,"status_label": "Estado"
+  ,"show_results": "{count, plural, =0{Sin resultados} =1{Mostrar 1 resultado} other{Mostrar {count} resultados}}"
+  ,"group_count": "{count, plural, =1{1 grupo} other{{count} grupos}}"
 }

@@ -5421,6 +5421,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit'**
   String get edit;
+
+  /// Group search: recent queries shown before typing
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches'**
+  String get recent_searches;
+
+  /// Group search: group types shown before typing
+  ///
+  /// In en, this message translates to:
+  /// **'By type'**
+  String get by_type;
+
+  /// Group search filter: favorite groups only
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// Group search status filter: active and archived
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all_groups;
+
+  /// Group search filters: active / archived section
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status_label;
+
+  /// Button closing the search filters sheet
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No results} =1{Show 1 result} other{Show {count} results}}'**
+  String show_results(int count);
+
+  /// Number of groups (search suggestions by type)
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 group} other{{count} groups}}'**
+  String group_count(int count);
 }
 
 class _AppLocalizationsDelegate

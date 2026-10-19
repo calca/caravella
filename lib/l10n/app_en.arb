@@ -1284,4 +1284,18 @@
   ,"@chart_month_by_month": {"description": "Title of the group statistics chart with one point per month (long groups)"}
   ,"edit": "Edit"
   ,"@edit": {"description": "Spoken action of the profile card at the top of the settings pages"}
+  ,"recent_searches": "Recent searches"
+  ,"@recent_searches": {"description": "Group search: recent queries shown before typing"}
+  ,"by_type": "By type"
+  ,"@by_type": {"description": "Group search: group types shown before typing"}
+  ,"favorites": "Favorites"
+  ,"@favorites": {"description": "Group search filter: favorite groups only"}
+  ,"all_groups": "All"
+  ,"@all_groups": {"description": "Group search status filter: active and archived"}
+  ,"status_label": "Status"
+  ,"@status_label": {"description": "Group search filters: active / archived section"}
+  ,"show_results": "{count, plural, =0{No results} =1{Show 1 result} other{Show {count} results}}"
+  ,"@show_results": {"description": "Button closing the search filters sheet", "placeholders": {"count": {"type": "int"}}}
+  ,"group_count": "{count, plural, =1{1 group} other{{count} groups}}"
+  ,"@group_count": {"description": "Number of groups (search suggestions by type)", "placeholders": {"count": {"type": "int"}}}
 }

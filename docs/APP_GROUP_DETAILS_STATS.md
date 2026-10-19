@@ -47,7 +47,7 @@ If you ever need to support unequal/itemized splits, this is the function to cha
 
 ## Search
 
-`expense_search_page.dart` (`ExpenseSearchPage`) is full-text + filter search over a group's expenses (name/note/category/paidBy/location/amount), with quick date-range chips (`PeriodSelectionBottomSheet`), category/paid-by filter chips, and has-attachment/has-location toggles.
+`expense_search_page.dart` (`ExpenseSearchPage`) is full-text + filter search over a group's expenses (name / note / category / payer / place / amount), in the app's style (`SearchTopBar`, `FilterPill`, `PillSection`, `SearchSummaryBar` from `caravella_core_ui`). Before typing (no query, no filters) it shows the filters as suggestions: paid by, categories, period (today, last 7 days, this month, a range via `PeriodSelectionBottomSheet`), with attachment / with place. The filters button opens the same choices in a sheet ("Show N results"); active filters stay as removable pills (plus "Clear" when there are several). Results show their count and total, then one card of `ExpenseAmountCard` rows with the match highlighted; an expense found only through its place or note gets a line under the row saying so (`_matchReason`).
 
 ## Group settings
 

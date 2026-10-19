@@ -2903,4 +2903,42 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get edit => 'Editar';
+
+  @override
+  String get recent_searches => 'Búsquedas recientes';
+
+  @override
+  String get by_type => 'Por tipo';
+
+  @override
+  String get favorites => 'Favoritos';
+
+  @override
+  String get all_groups => 'Todos';
+
+  @override
+  String get status_label => 'Estado';
+
+  @override
+  String show_results(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mostrar $count resultados',
+      one: 'Mostrar 1 resultado',
+      zero: 'Sin resultados',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String group_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count grupos',
+      one: '1 grupo',
+    );
+    return '$_temp0';
+  }
 }

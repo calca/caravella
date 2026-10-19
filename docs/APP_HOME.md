@@ -33,7 +33,7 @@ Card widgets (`lib/home/cards/widgets/`): `GroupCard` (wraps `BaseCard` with `me
 
 ## Search
 
-`GroupSearchPage` (`lib/home/search/group_search_page.dart`) is a full-screen "Gmail-style" search: autofocused `TextField` in the app bar, filters active+archived groups client-side by title, renders results as `SwipeableExpenseGroupCard` (see [History & Search](APP_HISTORY_SEARCH.md)), supports swipe-to-archive and delete/pin actions via `ExpenseGroupNotifier`.
+`GroupSearchPage` (`lib/home/search/group_search_page.dart`) searches active and archived groups by title, in the app's style (`SearchTopBar` and pills from `caravella_core_ui`). Before typing (no query, no filters) it suggests recent searches (`PreferencesService.search`, last 5, recorded when a result is opened or the query submitted) and the group types present (plus Archived / Favorites); a filters button opens a sheet (status all / active / archived, favorites, type) and active filters stay as removable pills. Results are listed in Active / Archived cards (`GroupIconAvatar`, title with the match highlighted by `HighlightedText`, dates · people, total); tap opens the group, long press the options sheet (see [History & Search](APP_HISTORY_SEARCH.md)).
 
 ## First-run onboarding
 

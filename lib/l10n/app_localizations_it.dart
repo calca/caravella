@@ -1920,8 +1920,8 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count expenses',
-      one: '1 expense',
+      other: '$count spese',
+      one: '1 spesa',
     );
     return '$_temp0';
   }
@@ -2901,4 +2901,42 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get edit => 'Modifica';
+
+  @override
+  String get recent_searches => 'Ricerche recenti';
+
+  @override
+  String get by_type => 'Per tipo';
+
+  @override
+  String get favorites => 'Preferiti';
+
+  @override
+  String get all_groups => 'Tutti';
+
+  @override
+  String get status_label => 'Stato';
+
+  @override
+  String show_results(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mostra $count risultati',
+      one: 'Mostra 1 risultato',
+      zero: 'Nessun risultato',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String group_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gruppi',
+      one: '1 gruppo',
+    );
+    return '$_temp0';
+  }
 }

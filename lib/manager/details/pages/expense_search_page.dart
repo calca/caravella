@@ -4,18 +4,19 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../group/widgets/period_selection_bottom_sheet.dart';
-import '../widgets/expense_search_filter_chips.dart';
 import '../widgets/expense_search_empty_state.dart';
 
-/// Full-screen search page for expenses within a group.
+/// Search over a group's expenses, in the app's style.
 ///
-/// Features:
-/// - Full-text search across all expense fields (name, note, category, paidBy,
-///   location, amount)
-/// - Quick date filter chips with reusable range picker
-/// - Category and paid-by filter chips
-/// - Has-attachment and has-location toggle filters
-/// - Results displayed using [ExpenseAmountCard]
+/// Full-text across name, note, category, payer, place and amount. Before
+/// typing it suggests filters to start from (payer, category, period, with
+/// attachment / place); a filters button opens the same choices in a sheet,
+/// and active filters stay as removable pills. Results come with their
+/// count and total, in one card; a result found only through its place or
+/// note says so under the row.
+/// Period filters of [ExpenseSearchPage].
+enum ExpenseSearchDateFilter { today, last7Days, thisMonth, range }
+
 class ExpenseSearchPage extends StatefulWidget {
   final List<ExpenseDetails> expenses;
   final List<ExpenseCategory> categories;
@@ -276,122 +277,329 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
 
   void _unfocus() => _searchFocusNode.unfocus();
 
-  @override
-  Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    final filteredExpenses = _filteredExpenses;
+  int get _activeFilterCount =>
+      (_selectedStartDate != null && _selectedEndDate != null ? 1 : 0) +
+      (_selectedCategoryId != null ? 1 : 0) +
+      (_selectedParticipantId != null ? 1 : 0) +
+      (_filterHasAttachment ? 1 : 0) +
+      (_filterHasLocation ? 1 : 0);
 
-    return Scaffold(
-      appBar: SearchAppBar(
-        controller: _searchController,
-        focusNode: _searchFocusNode,
-        hintText: gloc.search_in_group(widget.groupName),
-        onChanged: (value) => setState(() => _searchQuery = value),
-        suffixIcon: _searchQuery.isNotEmpty
-            ? IconButton(
-                tooltip: gloc.clear,
-                icon: const Icon(Icons.close_rounded, size: 20),
-                onPressed: () {
-                  _searchController.clear();
-                  setState(() => _searchQuery = '');
-                },
-              )
-            : _hasActiveFilters
-            ? IconButton(
-                icon: const Icon(Icons.filter_list_off_rounded, size: 20),
-                onPressed: _clearAllFilters,
-                tooltip: gloc.clear_filters,
-              )
-            : null,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 12),
-          SearchFilterSectionLabel(label: gloc.dates),
-          const SizedBox(height: 6),
-          DateFilterChipsSection(
-            todayLabel: gloc.today,
-            last7DaysLabel: gloc.last_7_days,
-            thisMonthLabel: gloc.this_month,
-            rangeLabel: _formatDateRangeLabel(context),
-            selectedDateFilter: _selectedDateFilter,
-            onTodaySelected: () =>
-                _togglePresetFilter(ExpenseSearchDateFilter.today),
-            onLast7DaysSelected: () =>
-                _togglePresetFilter(ExpenseSearchDateFilter.last7Days),
-            onThisMonthSelected: () =>
-                _togglePresetFilter(ExpenseSearchDateFilter.thisMonth),
-            onRangeSelected: () =>
-                _togglePresetFilter(ExpenseSearchDateFilter.range),
-          ),
+  bool get _showSuggestions =>
+      _searchQuery.trim().isEmpty && _activeFilterCount == 0;
 
-          // Filter chips
-          const SizedBox(height: 12),
-          SearchFilterSectionLabel(label: gloc.filters),
-          const SizedBox(height: 6),
-          FilterChipsSection(
-            categories: widget.categories,
-            participants: widget.participants,
-            selectedCategoryId: _selectedCategoryId,
-            selectedParticipantId: _selectedParticipantId,
-            filterHasAttachment: _filterHasAttachment,
-            filterHasLocation: _filterHasLocation,
-            onCategorySelected: (id) {
-              _unfocus();
-              setState(() {
-                _selectedCategoryId = _selectedCategoryId == id ? null : id;
-              });
-            },
-            onParticipantSelected: (id) {
-              _unfocus();
-              setState(() {
-                _selectedParticipantId = _selectedParticipantId == id
+  String _dateLabel(gen.AppLocalizations gloc) => switch (_selectedDateFilter) {
+    ExpenseSearchDateFilter.today => gloc.today,
+    ExpenseSearchDateFilter.last7Days => gloc.last_7_days,
+    ExpenseSearchDateFilter.thisMonth => gloc.this_month,
+    _ => _formatDateRangeLabel(context),
+  };
+
+  /// Filter pills (suggestions before typing, and the filters sheet).
+  /// [onChanged] lets the sheet rebuild itself after each tap.
+  List<Widget> _filterSections(
+    gen.AppLocalizations gloc, {
+    VoidCallback? onChanged,
+  }) {
+    void apply(VoidCallback change) {
+      _unfocus();
+      setState(change);
+      onChanged?.call();
+    }
+
+    return [
+      PillSection(
+        label: gloc.paid_by,
+        pills: [
+          for (final p in widget.participants)
+            FilterPill(
+              icon: Icons.person_outline,
+              label: p.name,
+              selected: _selectedParticipantId == p.id,
+              onTap: () => apply(
+                () => _selectedParticipantId = _selectedParticipantId == p.id
                     ? null
-                    : id;
-              });
-            },
-            onHasAttachmentToggled: () {
-              _unfocus();
-              setState(() => _filterHasAttachment = !_filterHasAttachment);
-            },
-            onHasLocationToggled: () {
-              _unfocus();
-              setState(() => _filterHasLocation = !_filterHasLocation);
-            },
+                    : p.id,
+              ),
+            ),
+        ],
+      ),
+      PillSection(
+        label: gloc.categories,
+        pills: [
+          for (final c in widget.categories)
+            FilterPill(
+              label: c.name,
+              selected: _selectedCategoryId == c.id,
+              onTap: () => apply(
+                () => _selectedCategoryId = _selectedCategoryId == c.id
+                    ? null
+                    : c.id,
+              ),
+            ),
+        ],
+      ),
+      PillSection(
+        label: gloc.period,
+        pills: [
+          for (final (f, label) in [
+            (ExpenseSearchDateFilter.today, gloc.today),
+            (ExpenseSearchDateFilter.last7Days, gloc.last_7_days),
+            (ExpenseSearchDateFilter.thisMonth, gloc.this_month),
+            (ExpenseSearchDateFilter.range, _formatDateRangeLabel(context)),
+          ])
+            FilterPill(
+              icon: f == ExpenseSearchDateFilter.range
+                  ? Icons.date_range_outlined
+                  : null,
+              label: label,
+              selected: _selectedDateFilter == f,
+              onTap: () {
+                _togglePresetFilter(f);
+                onChanged?.call();
+              },
+            ),
+        ],
+      ),
+      PillSection(
+        label: gloc.filters,
+        pills: [
+          FilterPill(
+            icon: Icons.attach_file_rounded,
+            label: gloc.has_attachment,
+            selected: _filterHasAttachment,
+            onTap: () =>
+                apply(() => _filterHasAttachment = !_filterHasAttachment),
           ),
-
-          const SizedBox(height: 4),
-
-          // Results
-          Expanded(
-            child: filteredExpenses.isEmpty
-                ? EmptySearchState(hasActiveFilters: _hasActiveFilters)
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                    itemCount: filteredExpenses.length,
-                    itemBuilder: (context, index) {
-                      final expense = filteredExpenses[index];
-                      return ExpenseAmountCard(
-                        title: expense.name ?? '',
-                        amount: expense.amount ?? 0,
-                        checked: true,
-                        paidBy: expense.paidBy,
-                        category: expense.category.name,
-                        date: expense.date,
-                        currency: widget.currency,
-                        highlightQuery: _searchQuery.trim().isEmpty
-                            ? null
-                            : _searchQuery,
-                        onTap: () {
-                          _unfocus();
-                          widget.onExpenseTap(expense);
-                        },
-                      );
-                    },
-                  ),
+          FilterPill(
+            icon: Icons.place_outlined,
+            label: gloc.has_location,
+            selected: _filterHasLocation,
+            onTap: () => apply(() => _filterHasLocation = !_filterHasLocation),
           ),
         ],
       ),
+    ];
+  }
+
+  Future<void> _openFilters() async {
+    _unfocus();
+    final gloc = gen.AppLocalizations.of(context);
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) => StatefulBuilder(
+        builder: (sheetContext, setSheet) => SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  gloc.filters,
+                  style: Theme.of(
+                    sheetContext,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                ..._filterSections(gloc, onChanged: () => setSheet(() {})),
+                const SizedBox(height: 24),
+                FilledButton(
+                  onPressed: () => Navigator.of(sheetContext).pop(),
+                  child: Text(gloc.show_results(_filteredExpenses.length)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Why [e] matched when the query isn't in its title, category or payer
+  /// (shown under the row): its place or its note.
+  (IconData, String)? _matchReason(ExpenseDetails e) {
+    final q = _searchQuery.trim().toLowerCase();
+    if (q.isEmpty) return null;
+    if ((e.name ?? '').toLowerCase().contains(q) ||
+        e.category.name.toLowerCase().contains(q) ||
+        e.paidBy.name.toLowerCase().contains(q)) {
+      return null;
+    }
+    final place = e.location?.displayText ?? '';
+    if (place.toLowerCase().contains(q)) return (Icons.place_outlined, place);
+    final note = e.note ?? '';
+    if (note.toLowerCase().contains(q)) return (Icons.notes_rounded, note);
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final s = Theme.of(context).colorScheme;
+    final top = MediaQuery.paddingOf(context).top;
+    final bottom = MediaQuery.paddingOf(context).bottom;
+    final results = _filteredExpenses;
+    final number = NumberFormat(
+      '#,##0.00',
+      Localizations.localeOf(context).toString(),
+    );
+    final total = results.fold<double>(0, (t, e) => t + (e.amount ?? 0));
+
+    final activePills = <Widget>[
+      if (_selectedStartDate != null && _selectedEndDate != null)
+        FilterPill(
+          icon: Icons.date_range_outlined,
+          label: _dateLabel(gloc),
+          selected: true,
+          onRemove: () => _setDateFilter(null),
+        ),
+      for (final p in widget.participants)
+        if (p.id == _selectedParticipantId)
+          FilterPill(
+            icon: Icons.person_outline,
+            label: p.name,
+            selected: true,
+            onRemove: () => setState(() => _selectedParticipantId = null),
+          ),
+      for (final c in widget.categories)
+        if (c.id == _selectedCategoryId)
+          FilterPill(
+            label: c.name,
+            selected: true,
+            onRemove: () => setState(() => _selectedCategoryId = null),
+          ),
+      if (_filterHasAttachment)
+        FilterPill(
+          icon: Icons.attach_file_rounded,
+          label: gloc.has_attachment,
+          selected: true,
+          onRemove: () => setState(() => _filterHasAttachment = false),
+        ),
+      if (_filterHasLocation)
+        FilterPill(
+          icon: Icons.place_outlined,
+          label: gloc.has_location,
+          selected: true,
+          onRemove: () => setState(() => _filterHasLocation = false),
+        ),
+    ];
+
+    return AppSystemUI.edgeToEdge(
+      child: Scaffold(
+        backgroundColor: s.surfaceContainer,
+        body: Padding(
+          padding: EdgeInsets.fromLTRB(16, top + 8, 16, 0),
+          child: Column(
+            children: [
+              SearchTopBar(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                hintText: gloc.search_in_group(widget.groupName),
+                onChanged: (value) => setState(() => _searchQuery = value),
+                onFilters: _openFilters,
+                activeFilters: _activeFilterCount,
+                filtersTooltip: gloc.filters,
+                clearTooltip: gloc.clear,
+              ),
+              Expanded(
+                child: _showSuggestions
+                    ? ListView(
+                        padding: EdgeInsets.only(bottom: bottom + 24),
+                        children: _filterSections(gloc),
+                      )
+                    : ListView(
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+                        padding: EdgeInsets.only(top: 12, bottom: bottom + 24),
+                        children: [
+                          if (activePills.isNotEmpty)
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                ...activePills,
+                                if (activePills.length > 1)
+                                  FilterPill(
+                                    icon: Icons.filter_list_off_rounded,
+                                    label: gloc.clear_filters,
+                                    onTap: _clearAllFilters,
+                                  ),
+                              ],
+                            ),
+                          if (activePills.isNotEmpty)
+                            const SizedBox(height: 12),
+                          if (results.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 32),
+                              child: EmptySearchState(
+                                hasActiveFilters: _hasActiveFilters,
+                              ),
+                            )
+                          else ...[
+                            SearchSummaryBar(
+                              count: gloc.expense_count(results.length),
+                              total:
+                                  '${number.format(total)} ${widget.currency}',
+                            ),
+                            SettingsGroup(
+                              children: [
+                                for (final e in results) _resultRow(e),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _resultRow(ExpenseDetails expense) {
+    final theme = Theme.of(context);
+    final reason = _matchReason(expense);
+    final row = ExpenseAmountCard(
+      title: expense.name ?? '',
+      amount: expense.amount ?? 0,
+      checked: true,
+      paidBy: expense.paidBy,
+      category: expense.category.name,
+      date: expense.date,
+      currency: widget.currency,
+      compact: true,
+      highlightQuery: _searchQuery.trim().isEmpty ? null : _searchQuery,
+      onTap: () {
+        _unfocus();
+        widget.onExpenseTap(expense);
+      },
+    );
+    if (reason == null) return row;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        row,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(56, 0, 16, 10),
+          child: Row(
+            children: [
+              Icon(reason.$1, size: 14, color: theme.colorScheme.primary),
+              const SizedBox(width: 4),
+              Expanded(
+                child: HighlightedText(
+                  text: reason.$2,
+                  query: _searchQuery,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/manager/details/pages/expense_search_page.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 
@@ -75,16 +76,28 @@ void main() {
       );
     }
 
-    testWidgets('displays search page with all expenses', (tester) async {
+    testWidgets('before typing it suggests filters, not the list', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
       expect(find.text('Search in Test group'), findsOneWidget);
+      expect(find.text('PAID BY'), findsOneWidget);
+      expect(find.text('CATEGORIES'), findsOneWidget);
+      expect(find.text('Pizza dinner'), findsNothing);
+    });
 
-      // Verify all expenses are listed
-      expect(find.text('Pizza dinner'), findsOneWidget);
-      expect(find.text('Bus ticket'), findsOneWidget);
-      expect(find.text('Groceries'), findsOneWidget);
+    testWidgets('results show their count and total', (tester) async {
+      await tester.pumpWidget(buildSearchPage());
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilterPill, 'Food'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SearchSummaryBar), findsOneWidget);
+      expect(find.text('2 expenses'), findsOneWidget);
+      // The active filter stays as a removable pill.
+      expect(find.widgetWithIcon(FilterPill, Icons.close_rounded), findsOne);
     });
 
     testWidgets('search input filters by expense name', (tester) async {
@@ -92,10 +105,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Type in search box
-      await tester.enterText(
-        find.byType(TextField),
-        'Pizza',
-      );
+      await tester.enterText(find.byType(TextField), 'Pizza');
       await tester.pumpAndSettle();
 
       // Only Pizza dinner should be visible
@@ -139,14 +149,15 @@ void main() {
       expect(find.text('Pizza dinner'), findsNothing);
     });
 
-    testWidgets('displays filter chips for categories and participants',
-        (tester) async {
+    testWidgets('displays filter chips for categories and participants', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
       // Category chips
-      expect(find.widgetWithText(FilterChip, 'Food'), findsOneWidget);
-      expect(find.widgetWithText(FilterChip, 'Transport'), findsOneWidget);
+      expect(find.widgetWithText(FilterPill, 'Food'), findsOneWidget);
+      expect(find.widgetWithText(FilterPill, 'Transport'), findsOneWidget);
 
       // Participant chips
       expect(find.text('Alice'), findsOneWidget);
@@ -162,7 +173,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap Food category chip
-      await tester.tap(find.widgetWithText(FilterChip, 'Food'));
+      await tester.tap(find.widgetWithText(FilterPill, 'Food'));
       await tester.pumpAndSettle();
 
       // Only Food expenses should be shown (Pizza dinner and Groceries)
@@ -306,10 +317,9 @@ void main() {
       await tester.tap(find.byIcon(Icons.close_rounded));
       await tester.pumpAndSettle();
 
-      // All expenses should be shown again
-      expect(find.text('Pizza dinner'), findsOneWidget);
-      expect(find.text('Bus ticket'), findsOneWidget);
-      expect(find.text('Groceries'), findsOneWidget);
+      // Back to the suggestions
+      expect(find.text('PAID BY'), findsOneWidget);
+      expect(find.text('Pizza dinner'), findsNothing);
     });
 
     testWidgets('empty state shows when no results match', (tester) async {
@@ -328,36 +338,30 @@ void main() {
       );
     });
 
-    testWidgets('empty expense list shows initial empty state', (
-      tester,
-    ) async {
+    testWidgets('empty expense list still offers the filters', (tester) async {
       await tester.pumpWidget(buildSearchPage(expenses: []));
       await tester.pumpAndSettle();
 
-      // Should show the search page title as placeholder
-      expect(find.text('Search expenses'), findsAtLeast(1));
+      expect(find.text('PAID BY'), findsOneWidget);
     });
 
-    testWidgets('toggling category chip off restores all expenses', (
-      tester,
-    ) async {
+    testWidgets('removing the category pill clears the filter', (tester) async {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
       // Tap Food to filter
-      await tester.tap(find.widgetWithText(FilterChip, 'Food'));
+      await tester.tap(find.widgetWithText(FilterPill, 'Food'));
       await tester.pumpAndSettle();
       expect(find.text('Bus ticket'), findsNothing);
 
-      // Tap Food again to deselect
-      await tester.tap(find.widgetWithText(FilterChip, 'Food'));
+      // Remove the active Food pill: back to the suggestions
+      await tester.tap(find.widgetWithText(FilterPill, 'Food'));
       await tester.pumpAndSettle();
-      expect(find.text('Bus ticket'), findsOneWidget);
+      expect(find.text('PAID BY'), findsOneWidget);
+      expect(find.byType(SearchSummaryBar), findsNothing);
     });
 
-    testWidgets('range chip opens reusable period selector', (
-      tester,
-    ) async {
+    testWidgets('range chip opens reusable period selector', (tester) async {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 

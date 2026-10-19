@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 /// in the app bar itself. `title` is intentionally not a parameter here.
 ///
 /// If the page needs a visible title, use a plain `AppBar(title: ...)`
-/// instead. For an inline search field, use [SearchAppBar].
+/// instead. For a search page, use [SearchTopBar].
 class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Widget? leading;

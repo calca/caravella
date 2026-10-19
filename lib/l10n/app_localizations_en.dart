@@ -2881,4 +2881,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get edit => 'Edit';
+
+  @override
+  String get recent_searches => 'Recent searches';
+
+  @override
+  String get by_type => 'By type';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get all_groups => 'All';
+
+  @override
+  String get status_label => 'Status';
+
+  @override
+  String show_results(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Show $count results',
+      one: 'Show 1 result',
+      zero: 'No results',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String group_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count groups',
+      one: '1 group',
+    );
+    return '$_temp0';
+  }
 }
