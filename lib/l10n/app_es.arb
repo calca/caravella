@@ -1229,4 +1229,7 @@
   ,"group_count": "{count, plural, =1{1 grupo} other{{count} grupos}}"
   ,"expense_details_section": "Detalles"
   ,"add_expense_button": "Añadir gasto"
+  ,"auto_backup_last": "Última copia: {date}"
+  ,"auto_backup_never": "Aún no hay copia — Android suele hacerla de noche, cargando y con Wi‑Fi"
+  ,"auto_backup_off": "Desactivado: los datos de Caravella quedan fuera de la copia del teléfono"
 }

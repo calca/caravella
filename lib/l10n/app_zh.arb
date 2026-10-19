@@ -1844,4 +1844,7 @@
   ,"group_count": "{count, plural, other{{count} 个群组}}"
   ,"expense_details_section": "详情"
   ,"add_expense_button": "添加支出"
+  ,"auto_backup_last": "上次备份：{date}"
+  ,"auto_backup_never": "尚无备份——Android 通常在夜间充电并连接 Wi‑Fi 时备份"
+  ,"auto_backup_off": "已关闭：Caravella 的数据不会包含在手机备份中"
 }

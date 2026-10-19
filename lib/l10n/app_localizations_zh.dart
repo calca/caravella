@@ -2847,4 +2847,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get add_expense_button => '添加支出';
+
+  @override
+  String auto_backup_last(String date) {
+    return '上次备份：$date';
+  }
+
+  @override
+  String get auto_backup_never => '尚无备份——Android 通常在夜间充电并连接 Wi‑Fi 时备份';
+
+  @override
+  String get auto_backup_off => '已关闭：Caravella 的数据不会包含在手机备份中';
 }

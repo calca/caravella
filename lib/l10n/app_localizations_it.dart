@@ -2945,4 +2945,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get add_expense_button => 'Aggiungi spesa';
+
+  @override
+  String auto_backup_last(String date) {
+    return 'Ultimo backup: $date';
+  }
+
+  @override
+  String get auto_backup_never =>
+      'Nessun backup ancora — di solito Android lo fa di notte, in carica e con Wi‑Fi';
+
+  @override
+  String get auto_backup_off =>
+      'Disattivato: i dati di Caravella restano fuori dal backup del telefono';
 }

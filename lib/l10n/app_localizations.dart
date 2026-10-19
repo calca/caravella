@@ -5475,6 +5475,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add expense'**
   String get add_expense_button;
+
+  /// Time of the last Android cloud backup
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup: {date}'**
+  String auto_backup_last(String date);
+
+  /// Android backup is on but has not run yet
+  ///
+  /// In en, this message translates to:
+  /// **'No backup yet — Android usually backs up overnight, while charging on Wi‑Fi'**
+  String get auto_backup_never;
+
+  /// Android backup switch turned off
+  ///
+  /// In en, this message translates to:
+  /// **'Off: Caravella\'s data is left out of your phone\'s backup'**
+  String get auto_backup_off;
 }
 
 class _AppLocalizationsDelegate

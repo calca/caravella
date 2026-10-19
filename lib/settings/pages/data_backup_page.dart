@@ -7,6 +7,7 @@ import 'package:archive/archive_io.dart';
 import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +32,7 @@ class DataBackupPage extends StatelessWidget {
                   builder: (context, notifier, _) => SettingsTile(
                     icon: Icons.backup_outlined,
                     title: gloc.auto_backup_title,
-                    subtitle: gloc.auto_backup_desc,
+                    subtitle: _autoBackupStatus(context, gloc, notifier),
                     switchValue: notifier.enabled,
                     onSwitch: notifier.setEnabled,
                   ),
@@ -59,6 +60,21 @@ class DataBackupPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// "Last backup: 19 Oct, 21:30", "No backup yet…" or "Off…" (iOS keeps
+  /// the plain description: iCloud doesn't report when it ran).
+  String _autoBackupStatus(
+    BuildContext context,
+    gen.AppLocalizations gloc,
+    AutoBackupNotifier notifier,
+  ) {
+    if (!notifier.enabled) return gloc.auto_backup_off;
+    if (!Platform.isAndroid) return gloc.auto_backup_desc;
+    final last = notifier.lastBackup;
+    if (last == null) return gloc.auto_backup_never;
+    final locale = Localizations.localeOf(context).toString();
+    return gloc.auto_backup_last(DateFormat.MMMd(locale).add_Hm().format(last));
   }
 
   Future<void> _backupTrips(
