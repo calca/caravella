@@ -4,13 +4,15 @@ Covers `lib/settings/**`.
 
 ## Settings hub
 
-`settings_page.dart` (`SettingsPage`) wraps its content in a local `MultiProvider` for `FlagSecureNotifier` and `AppFunctionsEnabledNotifier`, organized into sections (`SettingsSection`/`SettingsCard`, `widgets/`):
+`settings_page.dart` (`SettingsPage`) wraps its content in a local `MultiProvider` for `FlagSecureNotifier` and `AppFunctionsEnabledNotifier`. It uses the shared settings layout from `caravella_core_ui` (`SettingsScaffold` + `SettingsProfileCard` + `SettingsGroup`/`SettingsTile`, the same as the group settings page — see [Group Details § Group settings](APP_GROUP_DETAILS_STATS.md#group-settings)): eyebrow "Caravella", large "Settings" title, then
 
-- **General** — username dialog, language picker (it/en/es/pt/zh), dynamic-color switch, theme picker (light/dark/system).
-- **Personalization** — link to `GroupTypeTemplatesPage`.
+- `UserProfileCard` (`widgets/general_settings_section.dart`) — the user's name (or a prompt), tap opens the name dialog (`GeneralSettingsSection.showNameDialog`).
+- **General** — Appearance (`AppearanceSettingsPage`: language, theme, dynamic color).
+- **Data** — Sync (`SyncSettingsScreen`, when the orchestrator exists), Backup & restore (`DataBackupPage`), group type templates (`GroupTypeTemplatesPage`).
 - **Privacy** (Android-only) — FLAG_SECURE switch (`FlagSecureAndroid.setFlagSecure`, see `flag_secure_android.dart`), and the App Functions enable switch (gates [android_app_functions](PACKAGE_ANDROID_APP_FUNCTIONS.md)'s `onAddExpense`).
-- **Data** — link to `DataBackupPage`.
-- **Info** — link to `DeveloperPage`; app version → `WhatsNewPage`; a "Debug Logs" row (only in debug builds or when `AppConfig.enableTalkerScreen`) opening `TalkerScreen(talker: LoggerService.instance)`.
+- **Info** — invite friends (share), `DeveloperPage`, app version → `WhatsNewPage`, and a "Debug Logs" row (only in debug builds or when `AppConfig.enableTalkerScreen`) opening `TalkerScreen(talker: LoggerService.instance)`.
+
+Icons are monochrome, in a neutral circle; toggles are `Switch`es (the whole row toggles), rows that open a page end with a chevron. Sub-pages (backup, sync, appearance…) still use the older `SettingsSection`/`SettingsCard`.
 
 ## Backup & restore
 

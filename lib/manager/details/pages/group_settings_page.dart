@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
@@ -10,7 +12,7 @@ import '../../group/pages/expense_group_categories_page.dart';
 import '../../group/pages/expense_group_other_page.dart';
 import '../../group/pages/expense_group_sync_page.dart';
 import '../../group/group_edit_mode.dart';
-import '../../../sync/settings_sync_badge.dart';
+import '../pages/tabs/usecase/date_range_formatter.dart';
 
 class GroupSettingsPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -42,202 +44,96 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final trip = _currentTrip;
+    final dates = (trip.startDate != null || trip.endDate != null)
+        ? formatDateRange(
+            start: trip.startDate,
+            end: trip.endDate,
+            locale: Localizations.localeOf(context),
+          )
+        : null;
+    String names(Iterable<String> all) {
+      final list = all.toList();
+      if (list.length <= 3) return list.join(', ');
+      return '${list.take(3).join(', ')}…';
+    }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(gloc.settings),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: ListView(
-        padding: EdgeInsets.fromLTRB(
-          0,
-          0,
-          0,
-          MediaQuery.of(context).padding.bottom + 24,
-        ),
+    final hasExpenses = trip.expenses.isNotEmpty;
+    return AppSystemUI.edgeToEdge(
+      child: SettingsScaffold(
+        eyebrow: gloc.group,
+        title: gloc.settings,
         children: [
-          // Group section
-          SettingsSection(
-            title: gloc.group,
-            description: gloc.edit_group_desc,
+          SettingsProfileCard(
+            leading: _GroupAvatar(group: trip),
+            title: trip.title,
+            subtitle: [
+              ?dates,
+              gloc.participant_count(trip.participants.length),
+              trip.currency,
+            ].join(' · '),
+            actionLabel: gloc.edit,
+            onTap: () => _openGeneralPage(context),
+          ),
+          SettingsGroup(
+            label: gloc.group,
             children: [
-              SettingsCard(
-                context: context,
-                color: colorScheme.surface,
-                onTap: () => _openGeneralPage(context),
-                child: ListTile(
-                  leading: const Icon(Icons.settings_outlined),
-                  title: Text(
-                    gloc.segment_general,
-                    style: textTheme.titleMedium,
-                  ),
-                  subtitle: Text(
-                    gloc.settings_general_desc,
-                    style: textTheme.bodySmall,
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                ),
-              ),
-              const SizedBox(height: 8),
-              SettingsCard(
-                context: context,
-                color: colorScheme.surface,
+              SettingsTile(
+                icon: Icons.people_outline,
+                title: gloc.participants,
+                subtitle: trip.participants.isEmpty
+                    ? gloc.participants_description
+                    : names(trip.participants.map((p) => p.name)),
                 onTap: () => _openParticipantsPage(context),
-                child: ListTile(
-                  leading: const Icon(Icons.people_outline),
-                  title: Text(gloc.participants, style: textTheme.titleMedium),
-                  subtitle: Text(
-                    gloc.participants_description,
-                    style: textTheme.bodySmall,
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                ),
               ),
-              const SizedBox(height: 8),
-              SettingsCard(
-                context: context,
-                color: colorScheme.surface,
+              SettingsTile(
+                icon: Icons.label_outline,
+                title: gloc.categories,
+                subtitle: trip.categories.isEmpty
+                    ? gloc.categories_description
+                    : names(trip.categories.map((c) => c.name)),
                 onTap: () => _openCategoriesPage(context),
-                child: ListTile(
-                  leading: const Icon(Icons.label_outline),
-                  title: Text(gloc.categories, style: textTheme.titleMedium),
-                  subtitle: Text(
-                    gloc.categories_description,
-                    style: textTheme.bodySmall,
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                ),
               ),
-              const SizedBox(height: 8),
-              SettingsCard(
-                context: context,
-                color: colorScheme.surface,
+              SettingsTile(
+                icon: Icons.tune_outlined,
+                title: gloc.segment_other,
+                subtitle: gloc.other_settings_desc,
                 onTap: () => _openOtherPage(context),
-                child: ListTile(
-                  leading: const Icon(Icons.tune_outlined),
-                  title: Text(gloc.segment_other, style: textTheme.titleMedium),
-                  subtitle: Text(
-                    gloc.other_settings_desc,
-                    style: textTheme.bodySmall,
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                ),
               ),
             ],
           ),
-
-          // Export and Share section
-          SettingsSection(
-            title: gloc.export_share,
-            description: gloc.export_options_desc,
+          SettingsGroup(
+            label: gloc.export_share,
             children: [
-              if (context.watch<SyncOrchestrator?>()
-                  case final orchestrator?) ...[
-                SettingsCard(
-                  context: context,
-                  color: colorScheme.surface,
-                  onTap: () => _openSyncPage(context),
-                  child: ListTile(
-                    leading: _currentTrip.syncEnabled
-                        ? SettingsSyncBadge(
-                            orchestrator: orchestrator,
-                            child: const Icon(Icons.sync_outlined),
-                          )
-                        : const Icon(Icons.sync_outlined),
-                    title: Text(gloc.sync_title, style: textTheme.titleMedium),
-                    subtitle: Text(
-                      gloc.sync_settings_desc,
-                      style: textTheme.bodySmall,
-                    ),
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  ),
-                ),
-                const SizedBox(height: 8),
-              ],
-              SettingsCard(
-                context: context,
-                color: colorScheme.surface,
-                onTap: _currentTrip.expenses.isEmpty
-                    ? null
-                    : () => _openExportOptions(context),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.ios_share_outlined,
-                    color: _currentTrip.expenses.isEmpty
-                        ? colorScheme.onSurface.withValues(alpha: 0.38)
-                        : null,
-                  ),
-                  title: Text(
-                    gloc.export_options,
-                    style: textTheme.titleMedium?.copyWith(
-                      color: _currentTrip.expenses.isEmpty
-                          ? colorScheme.onSurface.withValues(alpha: 0.38)
-                          : null,
-                    ),
-                  ),
-                  subtitle: Text(
-                    gloc.export_options_desc,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: _currentTrip.expenses.isEmpty
-                          ? colorScheme.onSurface.withValues(alpha: 0.38)
-                          : null,
-                    ),
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: _currentTrip.expenses.isEmpty
-                        ? colorScheme.outline.withValues(alpha: 0.38)
-                        : null,
-                  ),
-                ),
+              SettingsTile(
+                icon: Icons.sync_rounded,
+                title: gloc.sync_title,
+                subtitle: gloc.sync_settings_desc,
+                onTap: () => _openSyncPage(context),
+              ),
+              SettingsTile(
+                icon: Icons.ios_share_outlined,
+                title: gloc.export_options,
+                subtitle: gloc.export_options_desc,
+                onTap: hasExpenses ? () => _openExportOptions(context) : null,
               ),
             ],
           ),
-
-          // Dangerous section
-          SettingsSection(
-            title: gloc.danger_zone,
-            description: gloc.danger_zone_desc,
+          SettingsGroup(
+            label: gloc.danger_zone,
             children: [
-              SettingsCard(
-                context: context,
-                color: colorScheme.surface,
+              SettingsTile(
+                icon: trip.archived
+                    ? Icons.unarchive_outlined
+                    : Icons.archive_outlined,
+                title: trip.archived ? gloc.unarchive : gloc.archive,
                 onTap: () => _handleArchiveToggle(context),
-                child: ListTile(
-                  leading: Icon(
-                    _currentTrip.archived
-                        ? Icons.unarchive_outlined
-                        : Icons.archive_outlined,
-                  ),
-                  title: Text(
-                    _currentTrip.archived ? gloc.unarchive : gloc.archive,
-                    style: textTheme.titleMedium,
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                ),
               ),
-              const SizedBox(height: 8),
-              SettingsCard(
-                context: context,
-                color: colorScheme.surface,
+              SettingsTile(
+                icon: Icons.delete_outline,
+                title: gloc.delete_group,
+                destructive: true,
                 onTap: () => _handleDelete(context),
-                child: ListTile(
-                  leading: Icon(Icons.delete_outline, color: colorScheme.error),
-                  title: Text(
-                    gloc.delete_group,
-                    style: textTheme.titleMedium?.copyWith(
-                      color: colorScheme.error,
-                    ),
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                ),
               ),
             ],
           ),
@@ -436,5 +332,38 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
       widget.onGroupDeleted?.call();
       Navigator.of(context).pop(); // Close settings page
     }
+  }
+}
+
+/// The group's photo, or its color / a neutral circle with its type icon.
+class _GroupAvatar extends StatelessWidget {
+  final ExpenseGroup group;
+
+  const _GroupAvatar({required this.group});
+
+  @override
+  Widget build(BuildContext context) {
+    final s = Theme.of(context).colorScheme;
+    final file = group.file;
+    if (file != null && file.isNotEmpty && File(file).existsSync()) {
+      return ClipOval(child: Image.file(File(file), fit: BoxFit.cover));
+    }
+    final Color? color = group.color == null
+        ? null
+        : ExpenseGroupColorPalette.isLegacyColorValue(group.color)
+        ? Color(group.color!)
+        : ExpenseGroupColorPalette.resolveColor(group.color, s);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color ?? s.onSurface.withValues(alpha: 0.06),
+      ),
+      child: Icon(
+        (group.groupType ?? ExpenseGroupType.other).icon,
+        color: color == null
+            ? s.onSurface
+            : ExpenseGroupColorPalette.getContrastingTextColor(color),
+      ),
+    );
   }
 }

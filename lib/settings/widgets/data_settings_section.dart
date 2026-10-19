@@ -4,10 +4,10 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import '../pages/data_backup_page.dart';
-import '../../sync/settings_sync_badge.dart';
+import '../pages/group_type_templates_page.dart';
 import '../../sync/sync_settings_screen.dart';
 
-/// "Data" settings section: backup/restore and sync entry points.
+/// "Data" settings section: sync, backup/restore and group type templates.
 class DataSettingsSection extends StatelessWidget {
   const DataSettingsSection({super.key});
 
@@ -15,61 +15,38 @@ class DataSettingsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final orchestrator = context.watch<SyncOrchestrator?>();
-    return SettingsSection(
-      title: loc.settings_data,
-      description: loc.settings_data_desc,
+    return SettingsGroup(
+      label: loc.settings_data,
       children: [
-        if (orchestrator != null) ...[
-          const SizedBox(height: 8),
-          _buildSyncRow(context, loc, orchestrator),
-        ],
-        _buildDataManageRow(context, loc),
+        if (orchestrator != null)
+          SettingsTile(
+            icon: Icons.sync_rounded,
+            title: loc.sync_title,
+            subtitle: loc.sync_settings_desc,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) =>
+                    SyncSettingsScreen(orchestrator: orchestrator),
+              ),
+            ),
+          ),
+        SettingsTile(
+          icon: Icons.storage_outlined,
+          title: loc.settings_data_manage,
+          subtitle: loc.data_title,
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (ctx) => const DataBackupPage())),
+        ),
+        SettingsTile(
+          icon: Icons.category_outlined,
+          title: loc.settings_group_templates_manage_title,
+          subtitle: loc.settings_group_templates_manage_desc,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const GroupTypeTemplatesPage()),
+          ),
+        ),
       ],
-    );
-  }
-
-  Widget _buildSyncRow(
-    BuildContext context,
-    gen.AppLocalizations loc,
-    SyncOrchestrator orchestrator,
-  ) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (ctx) => SyncSettingsScreen(orchestrator: orchestrator),
-        ),
-      ),
-      child: ListTile(
-        leading: SettingsSyncBadge(
-          orchestrator: orchestrator,
-          child: const Icon(Icons.sync_outlined),
-        ),
-        title: Text(loc.sync_title, style: textTheme.titleMedium),
-        subtitle: Text(loc.sync_settings_desc),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      ),
-    );
-  }
-
-  Widget _buildDataManageRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      onTap: () => Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (ctx) => const DataBackupPage())),
-      child: ListTile(
-        leading: const Icon(Icons.storage_outlined),
-        title: Text(loc.settings_data_manage, style: textTheme.titleMedium),
-        subtitle: Text(loc.data_title),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      ),
     );
   }
 }

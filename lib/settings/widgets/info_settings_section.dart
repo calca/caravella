@@ -21,42 +21,47 @@ class InfoSettingsSection extends StatelessWidget {
     // Show debug logs in debug mode or if build flag is enabled
     final showDebugLogs = kDebugMode || AppConfig.enableTalkerScreen;
 
-    return SettingsSection(
-      title: loc.settings_info,
-      description: loc.settings_info_desc,
+    return SettingsGroup(
+      label: loc.settings_info,
       children: [
-        _buildInviteFriendsRow(context, loc),
-        const SizedBox(height: 8),
-        _buildInfoCardRow(context, loc),
-        const SizedBox(height: 8),
-        _buildAppVersionRow(context, loc),
-        if (showDebugLogs) ...[
-          const SizedBox(height: 8),
-          _buildDebugLogsRow(context, loc),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildInviteFriendsRow(
-    BuildContext context,
-    gen.AppLocalizations loc,
-  ) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      onTap: () => _shareInvite(context, loc),
-      child: ListTile(
-        leading: const Icon(Icons.share_outlined),
-        title: Text(loc.settings_invite_friends, style: textTheme.titleMedium),
-        subtitle: Text(
-          loc.settings_invite_friends_desc,
-          style: textTheme.bodySmall,
+        SettingsTile(
+          icon: Icons.share_outlined,
+          title: loc.settings_invite_friends,
+          subtitle: loc.settings_invite_friends_desc,
+          onTap: () => _shareInvite(context, loc),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      ),
+        SettingsTile(
+          icon: Icons.info_outline,
+          title: loc.settings_info_card,
+          subtitle: loc.settings_info_card_desc,
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (ctx) => const DeveloperPage())),
+        ),
+        SettingsTile(
+          icon: Icons.new_releases_outlined,
+          title: loc.settings_app_version,
+          subtitleWidget: FutureBuilder<String>(
+            future: _getAppVersion(),
+            builder: (context, snapshot) => Text(snapshot.data ?? '-'),
+          ),
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (ctx) => const WhatsNewPage())),
+        ),
+        if (showDebugLogs)
+          SettingsTile(
+            icon: Icons.bug_report_outlined,
+            title: loc.settings_debug_logs_title,
+            subtitle: loc.settings_debug_logs_desc,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    TalkerScreen(talker: LoggerService.instance),
+              ),
+            ),
+          ),
+      ],
     );
   }
 
@@ -71,73 +76,6 @@ class InfoSettingsSection extends StatelessWidget {
     } catch (e) {
       LoggerService.warning('Error sharing invite', name: 'ui.share');
     }
-  }
-
-  Widget _buildAppVersionRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      onTap: () => Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (ctx) => const WhatsNewPage())),
-      child: ListTile(
-        leading: const Icon(Icons.info_outline),
-        title: Text(loc.settings_app_version, style: textTheme.titleMedium),
-        subtitle: FutureBuilder<String>(
-          future: _getAppVersion(),
-          builder: (context, snapshot) => Text(snapshot.data ?? '-'),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      ),
-    );
-  }
-
-  Widget _buildInfoCardRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      onTap: () => Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (ctx) => const DeveloperPage())),
-      child: ListTile(
-        leading: const Icon(Icons.info_outline),
-        title: Text(loc.settings_info_card, style: textTheme.titleMedium),
-        subtitle: Text(loc.settings_info_card_desc, style: textTheme.bodySmall),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      ),
-    );
-  }
-
-  Widget _buildDebugLogsRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => TalkerScreen(talker: LoggerService.instance),
-          ),
-        );
-      },
-      child: ListTile(
-        leading: const Icon(Icons.bug_report),
-        title: Text(
-          loc.settings_debug_logs_title,
-          style: textTheme.titleMedium,
-        ),
-        subtitle: Text(
-          loc.settings_debug_logs_desc,
-          style: textTheme.bodySmall,
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      ),
-    );
   }
 
   Future<String> _getAppVersion() async {

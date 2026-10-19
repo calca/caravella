@@ -51,7 +51,7 @@ If you ever need to support unequal/itemized splits, this is the function to cha
 
 ## Group settings
 
-`group_settings_page.dart` (`GroupSettingsPage`) is a list of tiles navigating into the standalone group editor pages described in [Group Management](APP_GROUP_MANAGEMENT.md) (`ExpenseGroupGeneralPage`, `...ParticipantsPage`, `...CategoriesPage`, `...OtherPage`) plus export options.
+`group_settings_page.dart` (`GroupSettingsPage`) uses the same layout as the app settings (`SettingsScaffold`, see [Settings](APP_SETTINGS.md#settings-hub)): eyebrow "Group", "Settings" title, a `SettingsProfileCard` with the group's photo / color / type icon, title and dates · people · currency (tap → `ExpenseGroupGeneralPage`), then **Group** (participants and categories, with their first names as subtitle; Other → `ExpenseGroupOtherPage`), **Share & export** (sync page, export options — disabled without expenses) and **Danger zone** (archive / unarchive, delete in the error color). The editor pages are described in [Group Management](APP_GROUP_MANAGEMENT.md).
 
 ## Data export
 

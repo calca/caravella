@@ -28,6 +28,7 @@ export 'widgets/floating_nav_bar.dart';
 export 'widgets/photo_veil.dart';
 export 'widgets/pill_segmented_control.dart';
 export 'widgets/status_bar_fade.dart';
+export 'widgets/settings_list.dart';
 export 'widgets/material3_dialog.dart';
 export 'widgets/no_expense.dart';
 export 'widgets/search_app_bar.dart';

@@ -1834,4 +1834,5 @@
   ,"balance_reminder_message": "{from}你好！在“{group}”中你需要支付 {amount} 给 {to}。"
   ,"chart_week_by_week": "每周支出"
   ,"chart_month_by_month": "每月支出"
+  ,"edit": "编辑"
 }

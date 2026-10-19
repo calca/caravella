@@ -1219,4 +1219,5 @@
   ,"balance_reminder_message": "¡Hola {from}! En «{group}» debes {amount} a {to}."
   ,"chart_week_by_week": "Semana a semana"
   ,"chart_month_by_month": "Mes a mes"
+  ,"edit": "Editar"
 }

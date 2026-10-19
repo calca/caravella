@@ -164,10 +164,7 @@ class AppearanceSettingsPage extends StatelessWidget {
           loc.settings_dynamic_color_desc,
           style: textTheme.bodySmall,
         ),
-        trailing: Switch(
-          value: enabled,
-          onChanged: toggle,
-        ),
+        trailing: Switch(value: enabled, onChanged: toggle),
       ),
     );
   }

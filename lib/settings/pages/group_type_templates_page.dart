@@ -20,7 +20,9 @@ class GroupTypeTemplatesPage extends StatelessWidget {
         builder: (context, notifier, _) {
           final templates = notifier.templates;
           if (templates.isEmpty) {
-            return Center(child: Text(loc.settings_group_templates_empty_state));
+            return Center(
+              child: Text(loc.settings_group_templates_empty_state),
+            );
           }
 
           return ListView.separated(
@@ -32,11 +34,7 @@ class GroupTypeTemplatesPage extends StatelessWidget {
               return SettingsCard(
                 context: context,
                 color: Theme.of(context).colorScheme.surface,
-                onTap: () => _openEditor(
-                  context,
-                  notifier,
-                  template: template,
-                ),
+                onTap: () => _openEditor(context, notifier, template: template),
                 child: ListTile(
                   leading: Icon(
                     GroupTypeLocalization.iconFromCodePoint(
@@ -50,11 +48,8 @@ class GroupTypeTemplatesPage extends StatelessWidget {
                     children: [
                       IconButton(
                         tooltip: loc.settings_group_templates_edit_title,
-                        onPressed: () => _openEditor(
-                          context,
-                          notifier,
-                          template: template,
-                        ),
+                        onPressed: () =>
+                            _openEditor(context, notifier, template: template),
                         icon: const Icon(Icons.edit_outlined),
                       ),
                       IconButton(
@@ -129,10 +124,8 @@ class GroupTypeTemplatesPage extends StatelessWidget {
   }) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => GroupTypeTemplateFormPage(
-          notifier: notifier,
-          template: template,
-        ),
+        builder: (_) =>
+            GroupTypeTemplateFormPage(notifier: notifier, template: template),
       ),
     );
   }
