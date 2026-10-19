@@ -89,6 +89,17 @@ class BackgroundPicker extends StatelessWidget {
               width: 48,
               height: 48,
               fit: BoxFit.cover,
+              // The photo file may be gone (deleted, restored backup):
+              // show a placeholder instead of Flutter's error box.
+              errorBuilder: (_, _, _) => Container(
+                width: 48,
+                height: 48,
+                color: scheme.onSurface.withValues(alpha: 0.06),
+                child: Icon(
+                  Icons.broken_image_outlined,
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
             ),
           );
         } else if (state.color != null) {
