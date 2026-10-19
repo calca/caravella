@@ -16,7 +16,8 @@ import 'group_options.dart';
 /// - **photo**: just hinted under the raised surface ([PhotoVeil], like the
 ///   Home card), with the theme's text colors;
 /// - **color**: the palette color, with contrasting text;
-/// - **neither**: a raised neutral surface with the group type icon.
+/// - **neither**: the raised surface of the Home card, with the group type
+///   icon.
 ///
 /// Tap opens the group; long press opens [showGroupOptionsSheet].
 class GroupPhotoCard extends StatelessWidget {
@@ -63,7 +64,8 @@ class GroupPhotoCard extends StatelessWidget {
 
     final background = hasPhoto
         ? PhotoVeil(path: file, color: s.surfaceContainerHighest)
-        : ColoredBox(color: color ?? s.surfaceContainerHighest);
+        // No photo or color: the same raised surface as the Home card.
+        : ColoredBox(color: color ?? s.raisedSurface);
 
     // Cards without a photo show the group type icon top-left, so they don't
     // look empty.

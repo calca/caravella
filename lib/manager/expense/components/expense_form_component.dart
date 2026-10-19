@@ -59,6 +59,7 @@ class ExpenseFormComponent extends StatefulWidget {
     void Function(VoidCallback?)? onVoiceCallbackChanged,
     void Function(VoidCallback?)? onScanReceiptCallbackChanged,
     void Function(VoidCallback?)? onScanReceiptFromGalleryCallbackChanged,
+    bool autoStartScan = false,
   }) : config = ExpenseFormConfig(
          initialExpense: initialExpense,
          participants: participants,
@@ -87,6 +88,7 @@ class ExpenseFormComponent extends StatefulWidget {
          onScanReceiptFromGalleryCallbackChanged:
              onScanReceiptFromGalleryCallbackChanged,
          isReadOnly: isReadOnly,
+         autoStartScan: autoStartScan,
        );
 
   @override
@@ -146,6 +148,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
         if (widget.config.onVoiceCallbackChanged != null) {
           _notifyVoiceCallback();
+        }
+
+        if (widget.config.autoStartScan &&
+            _receiptScanner.isAvailable &&
+            widget.config.initialExpense == null &&
+            !widget.config.isReadOnly) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _scanReceipt(source: ImageSource.camera);
+          });
         }
 
         if (widget.config.onScanReceiptCallbackChanged != null ||

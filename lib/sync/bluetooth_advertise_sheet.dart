@@ -5,7 +5,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-
 /// State machine phases for the Bluetooth advertise (share) flow.
 enum _AdvertisePhase { waiting, completed, error }
 
@@ -55,17 +54,20 @@ class _BluetoothAdvertiseSheetState extends State<BluetoothAdvertiseSheet> {
     _eventSub = widget.channel.events.listen(_handleEvent);
 
     widget.channel
-        .startAdvertising(groupId: widget.groupId, groupTitle: widget.groupTitle)
+        .startAdvertising(
+          groupId: widget.groupId,
+          groupTitle: widget.groupTitle,
+        )
         .catchError((e) {
-      if (mounted) {
-        setState(() {
-          _phase = _AdvertisePhase.error;
-          _errorMessage = e is BluetoothPermissionDeniedException
-              ? gen.AppLocalizations.of(context).sync_bt_permission_denied
-              : e.toString();
+          if (mounted) {
+            setState(() {
+              _phase = _AdvertisePhase.error;
+              _errorMessage = e is BluetoothPermissionDeniedException
+                  ? gen.AppLocalizations.of(context).sync_bt_permission_denied
+                  : e.toString();
+            });
+          }
         });
-      }
-    });
   }
 
   void _handleEvent(BluetoothPeerEvent event) {
@@ -199,10 +201,7 @@ class _BluetoothAdvertiseSheetState extends State<BluetoothAdvertiseSheet> {
             ),
           ],
           const SizedBox(height: 16),
-          FilledButton.tonal(
-            onPressed: _retry,
-            child: Text(loc.sync_bt_retry),
-          ),
+          FilledButton.tonal(onPressed: _retry, child: Text(loc.sync_bt_retry)),
         ],
       ),
     );

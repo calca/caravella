@@ -136,8 +136,11 @@ class SyncHistoryPage extends StatelessWidget {
               style: textTheme.labelSmall?.copyWith(color: colorScheme.outline),
             ),
             if (errors > 0)
-              Icon(Icons.warning_amber_rounded,
-                  size: 14, color: colorScheme.error),
+              Icon(
+                Icons.warning_amber_rounded,
+                size: 14,
+                color: colorScheme.error,
+              ),
           ],
         ),
       ),

@@ -260,8 +260,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
         : 100.0;
     final trips = _showArchived ? _filteredArchivedTrips : _filteredActiveTrips;
 
-    return AppSystemUI.surfaceContainer(
-      context: context,
+    return AppSystemUI.edgeToEdge(
       child: Scaffold(
         backgroundColor: scheme.surfaceContainer,
         floatingActionButton: shell == null ? _buildAnimatedFab(gloc) : null,
@@ -343,8 +342,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
                 ..._buildGroupSlivers(trips, bottom),
               ],
             ),
-            // Opaque strip behind the status bar for scrolled content.
-            Container(height: top, color: scheme.surfaceContainer),
+            // Edge to edge: scrolled content fades under the clock.
+            StatusBarFade(color: scheme.surfaceContainer),
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../../settings/pages/settings_page.dart';
 import '../../../sync/settings_sync_badge.dart';
 
@@ -132,30 +133,27 @@ class HomeCardsHeader extends StatelessWidget {
         ),
         const SizedBox(width: 8),
 
-        // CTA button: apre direttamente la pagina delle impostazioni, con un
-        // pallino di stato sync (verde = ok, ocra = problemi) una volta che
-        // il SyncOrchestrator (solo backend SQLite) ha finito l'init.
+        // Sync state (only when a sync channel is on), then settings.
         Consumer<SyncOrchestrator?>(
-          builder: (context, orchestrator, _) {
-            final settingsIcon = Icon(
-              Icons.settings,
+          builder: (context, orchestrator, _) => orchestrator == null
+              ? const SizedBox.shrink()
+              : HomeSyncButton(orchestrator: orchestrator),
+        ),
+        Material(
+          color: theme.colorScheme.raisedSurface,
+          shape: const CircleBorder(),
+          child: IconButton(
+            icon: Icon(
+              Icons.settings_outlined,
               color: theme.colorScheme.onSurface,
-            );
-            return IconButton(
-              icon: orchestrator == null
-                  ? settingsIcon
-                  : SettingsSyncBadge(
-                      orchestrator: orchestrator,
-                      child: settingsIcon,
-                    ),
-              tooltip: localizations.settings,
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx) => const SettingsPage()),
-                );
-              },
-            );
-          },
+            ),
+            tooltip: localizations.settings,
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (ctx) => const SettingsPage()));
+            },
+          ),
         ),
       ],
     );

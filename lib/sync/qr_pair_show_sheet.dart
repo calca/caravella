@@ -57,9 +57,9 @@ class _QrPairShowSheetState extends State<QrPairShowSheet> {
             groupTitle: widget.groupTitle,
           )
           .then((payload) {
-        _startCountdown(payload);
-        return payload;
-      });
+            _startCountdown(payload);
+            return payload;
+          });
     });
   }
 
@@ -139,10 +139,7 @@ class _QrPairShowSheetState extends State<QrPairShowSheet> {
                     size: 48,
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    loc.sync_qr_expired_title,
-                    style: textTheme.titleMedium,
-                  ),
+                  Text(loc.sync_qr_expired_title, style: textTheme.titleMedium),
                   const SizedBox(height: 4),
                   Text(
                     loc.sync_qr_expired_desc,

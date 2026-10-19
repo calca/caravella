@@ -65,6 +65,22 @@ class AppSystemUI extends StatelessWidget {
     );
   }
 
+  /// Edge to edge: transparent system navigation bar (no contrast scrim),
+  /// for pages whose content runs to the bottom of the screen (Home, Groups,
+  /// a group's page).
+  factory AppSystemUI.edgeToEdge({
+    Key? key,
+    required Widget child,
+    bool? forceStatusBarLight,
+  }) {
+    return AppSystemUI(
+      key: key,
+      navigationBarColor: Colors.transparent,
+      forceStatusBarLight: forceStatusBarLight,
+      child: child,
+    );
+  }
+
   /// Creates an AppSystemUI with custom gradient navigation bar
   factory AppSystemUI.custom({
     Key? key,
@@ -111,6 +127,10 @@ class AppSystemUI extends StatelessWidget {
       statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
       systemNavigationBarColor: effectiveNavBarColor,
       systemNavigationBarIconBrightness: navBarIconBrightness,
+      // Android would otherwise add its own scrim behind a transparent bar.
+      systemNavigationBarContrastEnforced: effectiveNavBarColor.a == 0
+          ? false
+          : null,
     );
   }
 

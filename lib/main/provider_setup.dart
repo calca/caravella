@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import '../services/notification_manager.dart';
 import '../settings/state/group_type_templates_notifier.dart';
+import '../sync/sync_activity.dart';
 import '../sync/sync_bootstrap.dart';
 
 /// Sets up all global providers for the app.
@@ -35,6 +36,14 @@ class ProviderSetup {
         FutureProvider<SyncOrchestrator?>(
           create: (_) => SyncBootstrap.initialize(),
           initialData: null,
+        ),
+        // Refreshes groups changed by a sync and tracks the per-group sync
+        // state shown on the "Shared" badge.
+        ChangeNotifierProxyProvider<SyncOrchestrator?, SyncActivity>(
+          create: (context) =>
+              SyncActivity(context.read<ExpenseGroupNotifier>()),
+          update: (_, orchestrator, activity) =>
+              activity!..attach(orchestrator),
         ),
       ],
       child: child,

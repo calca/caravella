@@ -2853,4 +2853,49 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get last_week => 'Settimana scorsa';
+
+  @override
+  String get quick_action_scan => 'Scansiona';
+
+  @override
+  String get quick_action_voice => 'Voce';
+
+  @override
+  String get sync_state_syncing => 'sincronizzazione in corso';
+
+  @override
+  String get sync_state_synced => 'aggiornato';
+
+  @override
+  String get sync_state_error =>
+      'sincronizzazione non riuscita, tocca per i dettagli';
+
+  @override
+  String get share_balances => 'Condividi i saldi';
+
+  @override
+  String balances_share_title(String group) {
+    return '$group · saldi';
+  }
+
+  @override
+  String balances_share_footer(String total, String perPerson) {
+    return 'Totale $total · $perPerson a testa';
+  }
+
+  @override
+  String balance_reminder_message(
+    String from,
+    String group,
+    String amount,
+    String to,
+  ) {
+    return 'Ciao $from! Per «$group» devi $amount a $to.';
+  }
+
+  @override
+  String get chart_week_by_week => 'Settimana per settimana';
+
+  @override
+  String get chart_month_by_month => 'Mese per mese';
 }

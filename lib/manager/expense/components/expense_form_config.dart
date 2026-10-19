@@ -42,6 +42,10 @@ class ExpenseFormConfig {
   final bool autoLocationEnabled;
   final bool isReadOnly;
 
+  /// Opens the camera for a receipt scan as soon as the form appears (new
+  /// expenses only, when OCR is available) — Home's "Scan" shortcut.
+  final bool autoStartScan;
+
   // Controllers
   final ScrollController? scrollController;
 
@@ -80,6 +84,7 @@ class ExpenseFormConfig {
     // Settings
     required this.autoLocationEnabled,
     this.isReadOnly = false,
+    this.autoStartScan = false,
 
     // Controllers
     this.scrollController,

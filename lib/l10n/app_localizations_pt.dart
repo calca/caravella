@@ -2851,4 +2851,48 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get last_week => 'Semana passada';
+
+  @override
+  String get quick_action_scan => 'Digitalizar';
+
+  @override
+  String get quick_action_voice => 'Voz';
+
+  @override
+  String get sync_state_syncing => 'sincronizando';
+
+  @override
+  String get sync_state_synced => 'atualizado';
+
+  @override
+  String get sync_state_error => 'falha na sincronização, toque para detalhes';
+
+  @override
+  String get share_balances => 'Compartilhar saldos';
+
+  @override
+  String balances_share_title(String group) {
+    return '$group · saldos';
+  }
+
+  @override
+  String balances_share_footer(String total, String perPerson) {
+    return 'Total $total · $perPerson por pessoa';
+  }
+
+  @override
+  String balance_reminder_message(
+    String from,
+    String group,
+    String amount,
+    String to,
+  ) {
+    return 'Oi $from! No grupo «$group» você deve $amount a $to.';
+  }
+
+  @override
+  String get chart_week_by_week => 'Semana a semana';
+
+  @override
+  String get chart_month_by_month => 'Mês a mês';
 }

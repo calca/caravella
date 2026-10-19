@@ -119,8 +119,7 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
           color: colorScheme.surface,
           semanticsLabel: loc.sync_local_title,
           semanticsToggled: _enabled,
-          onTap:
-              _loading || _busy ? null : () => _toggleLan(!_enabled),
+          onTap: _loading || _busy ? null : () => _toggleLan(!_enabled),
           child: ListTile(
             enabled: !_loading && !_busy,
             leading: _busy
@@ -153,7 +152,10 @@ class _LocalSyncSectionState extends State<_LocalSyncSection> {
             onTap: () => _scanQr(context),
             child: ListTile(
               leading: Icon(Icons.qr_code_scanner, color: colorScheme.primary),
-              title: Text(loc.sync_qr_scan_button, style: textTheme.titleMedium),
+              title: Text(
+                loc.sync_qr_scan_button,
+                style: textTheme.titleMedium,
+              ),
               subtitle: Text(loc.sync_qr_scan_description),
               trailing: const Icon(Icons.chevron_right),
             ),

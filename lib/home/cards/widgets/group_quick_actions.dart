@@ -6,23 +6,33 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/pages/expense_group_detail_page.dart';
 import '../../../manager/details/pages/expense_locations_map_page.dart';
 import '../../../manager/details/pages/expense_search_page.dart';
-import '../../../manager/details/pages/unified_overview_page.dart';
-import '../../../manager/details/widgets/expense_export_actions.dart';
+import '../../../services/receipt_scanner_service.dart';
+import 'add_expense_controller.dart';
+import 'group_card_voice_button.dart';
 
-/// Row of shortcuts under the featured group card on Home: overview, map,
-/// search and share/export for that group. They sit below the floating
-/// navigation and are reached by scrolling (#529). Disabled while the group
-/// has no expenses, like the matching actions on the group page.
+/// Row of shortcuts under the featured group card on Home: new expense from
+/// a receipt scan, new expense by voice, the group's map and search. They
+/// sit below the floating navigation and are reached by scrolling (#529).
+/// Scan and voice only appear where the device supports them; map and search
+/// are disabled until the group has places / expenses.
 class GroupQuickActions extends StatelessWidget {
   final ExpenseGroup group;
 
-  const GroupQuickActions({super.key, required this.group});
+  /// Called after an expense is added by scan or voice.
+  final VoidCallback onExpenseAdded;
+
+  const GroupQuickActions({
+    super.key,
+    required this.group,
+    required this.onExpenseAdded,
+  });
 
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final hasExpenses = group.expenses.isNotEmpty;
     final hasPlaces = group.expenses.any((e) => e.location != null);
+    final canScan = ReceiptScannerService().isAvailable;
 
     void push(Widget page) =>
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
@@ -30,12 +40,27 @@ class GroupQuickActions extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _QuickAction(
-          icon: Icons.bar_chart_rounded,
-          label: gloc.overview,
-          onTap: hasExpenses
-              ? () => push(UnifiedOverviewPage(trip: group))
-              : null,
+        if (canScan)
+          _QuickAction(
+            icon: Icons.document_scanner_outlined,
+            label: gloc.quick_action_scan,
+            semanticLabel: gloc.scan_receipt,
+            onTap: () => AddExpenseController(
+              group: group,
+              onExpenseAdded: onExpenseAdded,
+            ).showAddExpenseSheet(context, group, startScan: true),
+          ),
+        // Hidden on devices without speech recognition.
+        GroupCardVoiceButton(
+          group: group,
+          onExpenseAdded: onExpenseAdded,
+          builder: (context, onPressed, listening) => _QuickAction(
+            icon: listening ? Icons.mic_rounded : Icons.mic_none_rounded,
+            label: gloc.quick_action_voice,
+            semanticLabel: gloc.voice_add_expense,
+            active: listening,
+            onTap: onPressed,
+          ),
         ),
         _QuickAction(
           icon: Icons.map_outlined,
@@ -61,13 +86,6 @@ class GroupQuickActions extends StatelessWidget {
                 )
               : null,
         ),
-        _QuickAction(
-          icon: Icons.ios_share_rounded,
-          label: gloc.share_label,
-          onTap: hasExpenses
-              ? () => showExpenseExportOptionsSheet(context, group)
-              : null,
-        ),
       ],
     );
   }
@@ -78,7 +96,19 @@ class _QuickAction extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
 
-  const _QuickAction({required this.icon, required this.label, this.onTap});
+  /// Spoken instead of [label] when the short label needs context.
+  final String? semanticLabel;
+
+  /// Highlighted (e.g. while listening).
+  final bool active;
+
+  const _QuickAction({
+    required this.icon,
+    required this.label,
+    this.onTap,
+    this.semanticLabel,
+    this.active = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +119,7 @@ class _QuickAction extends StatelessWidget {
     return Semantics(
       button: true,
       enabled: enabled,
-      label: label,
+      label: semanticLabel ?? label,
       onTap: onTap,
       excludeSemantics: true,
       child: InkWell(
@@ -105,9 +135,9 @@ class _QuickAction extends StatelessWidget {
                 height: 60,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: s.raisedSurface,
+                  color: active ? s.primaryContainer : s.raisedSurface,
                 ),
-                child: Icon(icon, color: fg),
+                child: Icon(icon, color: active ? s.onPrimaryContainer : fg),
               ),
               const SizedBox(height: 6),
               Text(

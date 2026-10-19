@@ -3,7 +3,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-
 /// Settings sub-page for syncing a single user's **own** devices via the
 /// optional Google Drive relay (`ENABLE_GOOGLE_DRIVE_SYNC`).
 ///
@@ -29,9 +28,7 @@ class MultiDeviceSyncPage extends StatelessWidget {
               title: loc.sync_cloud_title,
               description:
                   '${loc.sync_cloud_description}. ${loc.sync_cloud_scope_description}',
-              children: [
-                _CloudSyncCard(orchestrator: orchestrator),
-              ],
+              children: [_CloudSyncCard(orchestrator: orchestrator)],
             ),
           ],
         ),
@@ -67,7 +64,9 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
   /// The account side of the channel (Google Drive sign-in), if it has one.
   CloudAccountChannel? get _driveChannel {
     final channel = _cloudChannel;
-    return channel is CloudAccountChannel ? channel as CloudAccountChannel : null;
+    return channel is CloudAccountChannel
+        ? channel as CloudAccountChannel
+        : null;
   }
 
   @override

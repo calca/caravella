@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import '../../../sync/group_sync_badge.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../home_constants.dart';
@@ -117,7 +118,12 @@ class GroupCardHeader extends StatelessWidget {
             if (group.pinned && showPinnedBadge) _buildPill(localizations.pin),
             if (group.pinned && showPinnedBadge && group.syncEnabled)
               const SizedBox(width: 4),
-            if (group.syncEnabled) _buildPill(localizations.sync_group_shared),
+            if (group.syncEnabled)
+              GroupSyncBadge(
+                group: group,
+                background: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                foreground: theme.colorScheme.onSurface,
+              ),
           ],
         ),
         const SizedBox(height: HomeLayoutConstants.smallSpacing),

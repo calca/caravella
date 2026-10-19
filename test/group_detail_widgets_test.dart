@@ -2,6 +2,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 import 'package:io_caravella_egm/manager/details/widgets/grouped_expense_list.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_balances_view.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_map_card.dart';
@@ -169,5 +170,77 @@ void main() {
     expect(total, 40);
     expect(highestExpense(_group([])), isNull);
     expect(mostExpensiveDay(_group([])), isNull);
+  });
+
+  group('one spending chart, step by length', () {
+    final now = DateTime(2026, 10, 19);
+    ExpenseGroup span(DateTime from, DateTime to) => _group([
+      _expense('first', 10, from, _anna),
+      _expense('last', 20, to, _luca),
+    ]);
+
+    test('up to 31 days: day by day over the whole period', () {
+      final s = buildGroupSpendingSeries(
+        span(DateTime(2026, 10, 1), DateTime(2026, 10, 10)),
+        now: now,
+      )!;
+      expect(s.step, SpendingStep.day);
+      expect(s.values.length, 10);
+      expect(s.values.first, 10);
+      expect(s.values.last, 20);
+    });
+
+    test('up to ~6 months: week by week', () {
+      final s = buildGroupSpendingSeries(
+        span(DateTime(2026, 6, 1), DateTime(2026, 8, 30)),
+        now: now,
+      )!;
+      expect(s.step, SpendingStep.week);
+      expect(s.values.reduce((a, b) => a + b), 30);
+    });
+
+    test('longer: month by month', () {
+      final s = buildGroupSpendingSeries(
+        span(DateTime(2025, 1, 15), DateTime(2026, 3, 2)),
+        now: now,
+      )!;
+      expect(s.step, SpendingStep.month);
+      expect(s.values.length, 15);
+      expect(s.values.first, 10);
+      expect(s.values.last, 20);
+    });
+
+    test('an ongoing group stops at today', () {
+      final g = ExpenseGroup(
+        title: 'Flat',
+        expenses: [_expense('rent', 100, DateTime(2026, 10, 3), _anna)],
+        participants: [_anna],
+        currency: '€',
+        startDate: DateTime(2026, 10, 1),
+        endDate: DateTime(2027, 6, 30),
+      );
+      final s = buildGroupSpendingSeries(g, now: now)!;
+      expect(s.step, SpendingStep.day);
+      expect(s.end, now);
+    });
+  });
+
+  testWidgets('balances: share the summary or a reminder', (tester) async {
+    final shared = <String>[];
+    await tester.pumpWidget(
+      _wrap(
+        GroupBalancesView(
+          group: _group([_expense('Hotel', 100, day1, _anna)]),
+          share: (text) async => shared.add(text),
+        ),
+      ),
+    );
+    await tester.tap(find.byTooltip('Send reminder: Luca'));
+    await tester.tap(find.text('Share balances'));
+    expect(shared, [
+      'Hi Luca! For “Rome” you owe 50.00 € to Anna.',
+      'Rome · balances\nLuca → Anna: 50.00 €\n'
+          'Total 100.00 € · 50.00 € per person',
+    ]);
   });
 }

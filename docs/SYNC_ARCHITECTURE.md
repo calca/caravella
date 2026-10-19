@@ -77,6 +77,13 @@ SyncOrchestrator(
 
 Sync is unavailable entirely if the app is running on the legacy JSON storage backend (`--dart-define=USE_JSON_BACKEND=true` — see [Storage Backend](STORAGE_BACKEND.md)): `SyncBootstrap.initialize()` returns `null` in that case (`lib/sync/sync_bootstrap.dart:17-21`), because `SyncDao` depends on SQLite-specific columns/tables that don't exist on the JSON repository.
 
+### Sync → UI: `SyncActivity`
+
+`lib/sync/sync_activity.dart` (a `ChangeNotifierProxyProvider<SyncOrchestrator?, SyncActivity>` in `provider_setup.dart`, attached once the orchestrator exists) listens to `SyncOrchestrator.events`:
+
+- a `SyncCompleted` with `applied > 0` calls `ExpenseGroupNotifier.notifyGroupUpdated` for each id in `result.groupIds`, so Home, Groups and an open group page (which reloads on a new notifier `revision`) show synced changes without a manual refresh;
+- the overall state is shown on Home by `HomeSyncButton` (`lib/sync/settings_sync_badge.dart`), a raised round button next to the settings gear, visible only when a sync channel is on: sync arrows with a check (green) when the last sync went fine, rotating arrows while syncing, arrows with "!" (ochre) after a failure — no cloud icons, sync is device to device; it opens `SyncSettingsScreen`. Synced groups show a plain "Shared" pill (`GroupSyncBadge`). `SettingsSyncBadge` (dot on an icon) remains in Settings and group settings.
+
 ## Storage: SQLite schema
 
 `SyncDao` reads/writes five things, all added as additive migrations on the same database `SqliteExpenseGroupRepository` owns (see [Storage Backend](STORAGE_BACKEND.md) for the full migration history):

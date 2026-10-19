@@ -4,7 +4,10 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+
 import 'bluetooth_sync_factory.dart';
+import 'sync_settings_screen.dart';
 
 /// Shared "overall sync health" polling behind both [SettingsSyncBadge] and
 /// [SyncStatusIcon]:
@@ -21,6 +24,7 @@ mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
   StreamSubscription<SyncEvent>? _eventSub;
   bool anyChannelEnabled = false;
   bool hasError = false;
+  bool syncing = false;
   bool loaded = false;
 
   @override
@@ -60,8 +64,15 @@ mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
   void _onEvent(SyncEvent event) {
     if (!mounted) return;
     setState(() {
-      if (event is SyncFailed) hasError = true;
-      if (event is SyncCompleted) hasError = event.result.errors > 0;
+      if (event is SyncStarted) syncing = true;
+      if (event is SyncFailed) {
+        syncing = false;
+        hasError = true;
+      }
+      if (event is SyncCompleted) {
+        syncing = false;
+        hasError = event.result.errors > 0;
+      }
     });
   }
 }
@@ -161,8 +172,7 @@ class SyncStatusIcon extends StatefulWidget {
   State<SyncStatusIcon> createState() => _SyncStatusIconState();
 }
 
-class _SyncStatusIconState extends State<SyncStatusIcon>
-    with _SyncStatusMixin {
+class _SyncStatusIconState extends State<SyncStatusIcon> with _SyncStatusMixin {
   @override
   SyncOrchestrator get orchestrator => widget.orchestrator;
 
@@ -173,5 +183,86 @@ class _SyncStatusIconState extends State<SyncStatusIcon>
         ? (hasError ? colorScheme.warning : colorScheme.success)
         : widget.defaultColor;
     return Icon(widget.icon, size: widget.size, color: color);
+  }
+}
+
+/// Home's sync button, next to the settings gear: a raised round button
+/// whose sync-arrows icon tells the overall sync state — done (arrows with
+/// a check, green), syncing (rotating arrows), failed (arrows with "!",
+/// ochre) — and opens the sync settings. Sync is device to device, so no
+/// cloud icons. Hidden while no sync channel is enabled.
+class HomeSyncButton extends StatefulWidget {
+  final SyncOrchestrator orchestrator;
+
+  const HomeSyncButton({super.key, required this.orchestrator});
+
+  @override
+  State<HomeSyncButton> createState() => _HomeSyncButtonState();
+}
+
+class _HomeSyncButtonState extends State<HomeSyncButton>
+    with _SyncStatusMixin, SingleTickerProviderStateMixin {
+  @override
+  SyncOrchestrator get orchestrator => widget.orchestrator;
+
+  late final AnimationController _spin = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1200),
+  );
+
+  @override
+  void dispose() {
+    _spin.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!loaded || !anyChannelEnabled) return const SizedBox.shrink();
+    final s = Theme.of(context).colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+
+    if (syncing && !_spin.isAnimating) {
+      _spin.repeat();
+    } else if (!syncing && _spin.isAnimating) {
+      _spin.stop();
+      _spin.value = 0;
+    }
+
+    final (IconData icon, Color color, String state) = syncing
+        ? (Icons.sync_rounded, s.onSurface, gloc.sync_state_syncing)
+        : hasError
+        ? (Icons.sync_problem_rounded, s.warning, gloc.sync_state_error)
+        : (
+            Icons.published_with_changes_rounded,
+            s.success,
+            gloc.sync_state_synced,
+          );
+
+    Widget glyph = Icon(icon, color: color);
+    if (syncing) {
+      // Material's sync arrows turn counterclockwise.
+      glyph = RotationTransition(
+        turns: Tween(begin: 0.0, end: -1.0).animate(_spin),
+        child: glyph,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Material(
+        color: s.raisedSurface,
+        shape: const CircleBorder(),
+        child: IconButton(
+          icon: glyph,
+          tooltip: '${gloc.sync_title}, $state',
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SyncSettingsScreen(orchestrator: orchestrator),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

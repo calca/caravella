@@ -2834,4 +2834,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get last_week => 'Last week';
+
+  @override
+  String get quick_action_scan => 'Scan';
+
+  @override
+  String get quick_action_voice => 'Voice';
+
+  @override
+  String get sync_state_syncing => 'syncing';
+
+  @override
+  String get sync_state_synced => 'up to date';
+
+  @override
+  String get sync_state_error => 'sync failed, tap for details';
+
+  @override
+  String get share_balances => 'Share balances';
+
+  @override
+  String balances_share_title(String group) {
+    return '$group · balances';
+  }
+
+  @override
+  String balances_share_footer(String total, String perPerson) {
+    return 'Total $total · $perPerson per person';
+  }
+
+  @override
+  String balance_reminder_message(
+    String from,
+    String group,
+    String amount,
+    String to,
+  ) {
+    return 'Hi $from! For “$group” you owe $amount to $to.';
+  }
+
+  @override
+  String get chart_week_by_week => 'Week by week';
+
+  @override
+  String get chart_month_by_month => 'Month by month';
 }

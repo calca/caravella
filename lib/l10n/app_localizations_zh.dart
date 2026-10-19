@@ -2758,4 +2758,48 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get last_week => '上周';
+
+  @override
+  String get quick_action_scan => '扫描';
+
+  @override
+  String get quick_action_voice => '语音';
+
+  @override
+  String get sync_state_syncing => '正在同步';
+
+  @override
+  String get sync_state_synced => '已同步';
+
+  @override
+  String get sync_state_error => '同步失败，点按查看详情';
+
+  @override
+  String get share_balances => '分享余额';
+
+  @override
+  String balances_share_title(String group) {
+    return '$group · 余额';
+  }
+
+  @override
+  String balances_share_footer(String total, String perPerson) {
+    return '总计 $total · 人均 $perPerson';
+  }
+
+  @override
+  String balance_reminder_message(
+    String from,
+    String group,
+    String amount,
+    String to,
+  ) {
+    return '$from你好！在“$group”中你需要支付 $amount 给 $to。';
+  }
+
+  @override
+  String get chart_week_by_week => '每周支出';
+
+  @override
+  String get chart_month_by_month => '每月支出';
 }

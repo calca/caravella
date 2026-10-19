@@ -31,7 +31,23 @@ class ExpenseGroupDetailPage extends StatefulWidget {
   State<ExpenseGroupDetailPage> createState() => _ExpenseGroupDetailPageState();
 }
 
-class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
+class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
+    with SingleTickerProviderStateMixin {
+  /// Fades the new view in when switching Expenses / Balances / Statistics,
+  /// in step with the selector's sliding fill.
+  late final AnimationController _sectionFade = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 280),
+    value: 1,
+  );
+
+  void _selectSection(int i) {
+    if (i == _section) return;
+    setState(() => _section = i);
+    if (MediaQuery.disableAnimationsOf(context)) return;
+    _sectionFade.forward(from: 0);
+  }
+
   // Opacità lista spese (default 1.0, manual refresh stato rimosso)
   // final double _listOpacity = 1.0; // RIMOSSO: non più necessario
 
@@ -47,6 +63,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   bool _fabVisible = true; // controllo visibilità totale
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
   bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
+
+  /// The top bar turns opaque as soon as content scrolls under it.
+  bool _barOpaque = false;
   String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
   static const double _topBarHeight = 64.0;
 
@@ -74,6 +93,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
     // Ottieni il nuovo notifier e aggiungi il listener
     _groupNotifier = context.read<ExpenseGroupNotifier>();
+    _seenRevision = _groupNotifier?.revision ?? 0;
     _groupNotifier?.addListener(_onGroupChanged);
   }
 
@@ -84,11 +104,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     _groupNotifier = null;
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _sectionFade.dispose();
     _fabIdleTimer?.cancel();
     super.dispose();
   }
 
+  /// Last [ExpenseGroupNotifier.revision] seen: a newer one (e.g. a sync
+  /// that changed groups) reloads this group from storage.
+  int _seenRevision = 0;
+
   void _onGroupChanged() {
+    final revision = _groupNotifier?.revision ?? 0;
+    if (revision != _seenRevision) {
+      _seenRevision = revision;
+      unawaited(_reloadFromStorage());
+    }
     final currentGroup = _groupNotifier?.currentGroup;
 
     // Se il gruppo corrente nel notifier è lo stesso che stiamo visualizzando, aggiorna
@@ -114,6 +144,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   // _refreshTrip removed: state updates occur inline after each mutation.
+  Future<void> _reloadFromStorage() async {
+    if (_trip == null) return;
+    final fresh = await ExpenseGroupStorageV2.getTripById(_trip!.id);
+    if (mounted && fresh != null) setState(() => _trip = fresh);
+  }
+
   Future<void> _refreshGroup() async {
     if (_trip == null) return;
     final refreshed = await ExpenseGroupStorageV2.getTripById(_trip!.id);
@@ -375,8 +411,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     // Mostra titolo nella appbar quando la flexible space è quasi collassata
     final shouldShow =
         _scrollController.offset > _collapsedTitleThreshold(context);
-    if (shouldShow != _collapsedTitleVisible && mounted) {
-      setState(() => _collapsedTitleVisible = shouldShow);
+    final opaque = _scrollController.offset > 2;
+    if ((shouldShow != _collapsedTitleVisible || opaque != _barOpaque) &&
+        mounted) {
+      setState(() {
+        _collapsedTitleVisible = shouldShow;
+        _barOpaque = opaque;
+      });
     }
   }
 
@@ -434,9 +475,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     // once the bar turns opaque (scrolled) it follows the theme again.
     final bandColor = GroupHeaderBand.colorOf(trip, s);
     final bandForeground = GroupHeaderBand.foregroundOf(trip, s);
-    final barForeground = _collapsedTitleVisible ? s.onSurface : bandForeground;
-    final bool? forceStatusBarLight =
-        bandColor != null && !_collapsedTitleVisible
+    final barForeground = _barOpaque ? s.onSurface : bandForeground;
+    final bool? forceStatusBarLight = bandColor != null && !_barOpaque
         ? !ExpenseGroupColorPalette.isLightColor(bandColor)
         : null;
 
@@ -465,7 +505,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       required VoidCallback onPressed,
       Color? color,
     }) => Material(
-      color: _collapsedTitleVisible ? Colors.transparent : s.raisedSurface,
+      color: _barOpaque ? Colors.transparent : s.raisedSurface,
       shape: const CircleBorder(),
       child: IconButton(
         icon: Icon(icon),
@@ -475,7 +515,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       ),
     );
 
-    return AppSystemUI(
+    return AppSystemUI.edgeToEdge(
       forceStatusBarLight: forceStatusBarLight,
       child: Scaffold(
         backgroundColor: pageColor,
@@ -514,12 +554,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     child: PillSegmentedControl(
                       labels: sections,
                       selectedIndex: _section,
-                      onChanged: (i) => setState(() => _section = i),
+                      onChanged: _selectSection,
                       expand: true,
                     ),
                   ),
                 ),
-                content,
+                SliverFadeTransition(
+                  opacity: CurvedAnimation(
+                    parent: _sectionFade,
+                    curve: Curves.easeOutCubic,
+                  ),
+                  sliver: content,
+                ),
                 SliverToBoxAdapter(
                   child: SizedBox(height: _calculateBottomPadding()),
                 ),
@@ -529,9 +575,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             // with the group name once the title has scrolled away.
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              color: _collapsedTitleVisible
-                  ? pageColor
-                  : pageColor.withValues(alpha: 0),
+              color: _barOpaque ? pageColor : pageColor.withValues(alpha: 0),
               padding: EdgeInsets.fromLTRB(12, topInset + 4, 12, 4),
               child: SizedBox(
                 height: _topBarHeight - 8,
@@ -567,7 +611,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       const SizedBox(width: 8),
                     ],
                     _GroupMenuButton(
-                      background: _collapsedTitleVisible
+                      background: _barOpaque
                           ? Colors.transparent
                           : s.raisedSurface,
                       items: [

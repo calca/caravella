@@ -30,4 +30,34 @@ void main() {
       isSemantics(isSelected: false, isButton: true, hasTapAction: true),
     );
   });
+
+  testWidgets('the selected fill slides to the new segment', (tester) async {
+    Widget control(int selected) => MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: SizedBox(
+            width: 300,
+            child: PillSegmentedControl(
+              labels: const ['A', 'B', 'C'],
+              selectedIndex: selected,
+              onChanged: (_) {},
+              expand: true,
+            ),
+          ),
+        ),
+      ),
+    );
+    double fillLeft() => tester.getRect(find.byType(AnimatedPositioned)).left;
+
+    await tester.pumpWidget(control(0));
+    final start = fillLeft();
+    await tester.pumpWidget(control(2));
+    await tester.pump(const Duration(milliseconds: 100));
+    final mid = fillLeft();
+    await tester.pumpAndSettle();
+    final end = fillLeft();
+
+    expect(mid, greaterThan(start));
+    expect(mid, lessThan(end));
+  });
 }
