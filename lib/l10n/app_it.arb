@@ -1213,4 +1213,6 @@
   ,"show_results": "{count, plural, =0{Nessun risultato} =1{Mostra 1 risultato} other{Mostra {count} risultati}}"
   ,"group_count": "{count, plural, =1{1 gruppo} other{{count} gruppi}}"
   ,"expense_count": "{count, plural, =1{1 spesa} other{{count} spese}}"
+  ,"expense_details_section": "Dettagli"
+  ,"add_expense_button": "Aggiungi spesa"
 }

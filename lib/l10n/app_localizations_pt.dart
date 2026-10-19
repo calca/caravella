@@ -2936,4 +2936,10 @@ class AppLocalizationsPt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get expense_details_section => 'Detalhes';
+
+  @override
+  String get add_expense_button => 'Adicionar despesa';
 }

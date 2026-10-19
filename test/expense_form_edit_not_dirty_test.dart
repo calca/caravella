@@ -94,14 +94,14 @@ void main() {
       final l10n = await openEditPage(tester);
 
       final amountField = find.byWidgetPredicate(
-        (w) => w is EditableText && w.controller.text == '12.5',
+        (w) => w is EditableText && w.controller.text == '12.50',
       );
       await tester.showKeyboard(amountField);
       tester.testTextInput.updateEditingValue(
         const TextEditingValue(
-          text: '12.5',
+          text: '12.50',
           selection: TextSelection.collapsed(offset: 0),
-          composing: TextRange(start: 0, end: 4),
+          composing: TextRange(start: 0, end: 5),
         ),
       );
       await tester.pumpAndSettle();
@@ -116,7 +116,7 @@ void main() {
     final l10n = await openEditPage(tester);
 
     final amountField = find.byWidgetPredicate(
-      (w) => w is EditableText && w.controller.text == '12.5',
+      (w) => w is EditableText && w.controller.text == '12.50',
     );
     await tester.enterText(amountField, '13');
     await tester.pumpAndSettle();

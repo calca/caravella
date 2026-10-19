@@ -44,6 +44,10 @@ class AddExpenseController {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      // Taller now that the details are always there: keep it below the
+      // status bar.
+      useSafeArea: true,
       builder: (context) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;

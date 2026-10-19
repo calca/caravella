@@ -1227,4 +1227,6 @@
   ,"status_label": "Estado"
   ,"show_results": "{count, plural, =0{Sin resultados} =1{Mostrar 1 resultado} other{Mostrar {count} resultados}}"
   ,"group_count": "{count, plural, =1{1 grupo} other{{count} grupos}}"
+  ,"expense_details_section": "Detalles"
+  ,"add_expense_button": "Añadir gasto"
 }

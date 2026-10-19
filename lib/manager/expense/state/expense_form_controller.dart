@@ -69,11 +69,18 @@ class ExpenseFormController extends ChangeNotifier {
   double? parseLocalizedAmount(String input) =>
       ExpenseValidationService.parseAmount(input);
 
+  /// [amount] as the amount field shows it: no decimals for whole
+  /// amounts, otherwise always two ("54.50", not "54.5").
+  static String formatAmountForInput(double amount) =>
+      amount == amount.roundToDouble()
+      ? amount.toStringAsFixed(0)
+      : amount.toStringAsFixed(2);
+
   // Initialize controllers from state
   void _initializeFromState() {
     nameController.text = _state.name;
     amountController.text = _state.amount != null && _state.amount! > 0
-        ? _state.amount.toString()
+        ? formatAmountForInput(_state.amount!)
         : '';
     noteController.text = _state.note;
   }

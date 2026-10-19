@@ -1842,4 +1842,6 @@
   ,"status_label": "状态"
   ,"show_results": "{count, plural, =0{无结果} other{显示 {count} 个结果}}"
   ,"group_count": "{count, plural, other{{count} 个群组}}"
+  ,"expense_details_section": "详情"
+  ,"add_expense_button": "添加支出"
 }

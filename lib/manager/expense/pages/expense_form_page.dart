@@ -137,133 +137,154 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final isReadOnly = widget.group.archived;
     final isEdit =
         widget.initialExpense?.id != null &&
         widget.initialExpense!.id.isNotEmpty;
     final viewInsetsBottom = MediaQuery.of(context).viewInsets.bottom;
+    final padding = MediaQuery.paddingOf(context);
     final syncOrchestrator = context.watch<SyncOrchestrator?>();
+    final title = isReadOnly
+        ? gloc.expense
+        : (isEdit ? gloc.edit_expense : gloc.new_expense);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          tooltip: gloc.accessibility_back_button,
-          icon: const Icon(Icons.arrow_back),
-          // maybePop (not pop) so this respects ExpenseFormComponent's
-          // PopScope/unsaved-changes guard, same as the system back
-          // button/gesture already does.
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
-        actions: [
-          if (widget.initialExpense?.id != null &&
-              widget.initialExpense!.id.isNotEmpty) ...[
-            IconButton(
-              icon: const Icon(Icons.share_outlined),
-              tooltip: gloc.share_label,
-              onPressed: _handleShare,
-            ),
-            if (widget.onDelete != null && !isReadOnly)
-              IconButton(
-                icon: Icon(
-                  Icons.delete_outline,
-                  color: Theme.of(context).colorScheme.error,
+    return AppSystemUI.edgeToEdge(
+      child: Scaffold(
+        backgroundColor: scheme.surfaceContainer,
+        body: Stack(
+          children: [
+            FocusTraversalGroup(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  padding.top + 8,
+                  16,
+                  isReadOnly ? padding.bottom + 32 : 24,
                 ),
-                tooltip: gloc.delete_expense,
-                onPressed: widget.onDelete,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        // maybePop (inside RoundBackButton) respects
+                        // ExpenseFormComponent's unsaved-changes guard.
+                        const RoundBackButton(),
+                        const Spacer(),
+                        if (isEdit) ...[
+                          RoundIconButton(
+                            icon: Icons.share_outlined,
+                            tooltip: gloc.share_label,
+                            onPressed: _handleShare,
+                          ),
+                          if (widget.onDelete != null && !isReadOnly) ...[
+                            const SizedBox(width: 8),
+                            RoundIconButton(
+                              icon: Icons.delete_outline_rounded,
+                              tooltip: gloc.delete_expense,
+                              destructive: true,
+                              onPressed: widget.onDelete,
+                            ),
+                          ],
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.group.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                          Semantics(
+                            header: true,
+                            child: Text(
+                              title,
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (isEdit &&
+                        syncOrchestrator != null &&
+                        widget.group.syncEnabled)
+                      ExpenseAuthorshipInfo(
+                        orchestrator: syncOrchestrator,
+                        group: widget.group,
+                        expense: widget.initialExpense!,
+                      ),
+                    const SizedBox(height: 16),
+                    ExpenseFormComponent.legacy(
+                      initialExpense: widget.initialExpense,
+                      participants: widget.group.getParticipantsByLastUsed(),
+                      categories: widget.group.getCategoriesByLastUsed(),
+                      tripStartDate: widget.group.startDate,
+                      tripEndDate: widget.group.endDate,
+                      shouldAutoClose: true,
+                      fullEdit: true,
+                      showGroupHeader: false,
+                      showActionsRow: false,
+                      currency: widget.group.currency,
+                      autoLocationEnabled: widget.group.autoLocationEnabled,
+                      onExpenseAdded: widget.onExpenseSaved,
+                      onCategoryAdded: widget.onCategoryAdded,
+                      onParticipantAdded: widget.onParticipantAdded,
+                      onDelete: widget.onDelete,
+                      onFormValidityChanged: _updateFormValidity,
+                      onSaveCallbackChanged: _updateSaveCallback,
+                      onVoiceCallbackChanged: _updateVoiceCallback,
+                      onScanReceiptCallbackChanged: _updateScanCallback,
+                      onScanReceiptFromGalleryCallbackChanged:
+                          _updateScanFromGalleryCallback,
+                      groupId: widget.group.id,
+                      isReadOnly: isReadOnly,
+                    ),
+                  ],
+                ),
               ),
-          ],
-        ],
-      ),
-      body: SafeArea(
-        bottom: false,
-        child: FocusTraversalGroup(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SectionHeader(
-                  title: isReadOnly
-                      ? gloc.expense
-                      : (widget.initialExpense?.id != null &&
-                                widget.initialExpense!.id.isNotEmpty
-                            ? gloc.edit_expense
-                            : gloc.new_expense),
-                  description: '${gloc.group} ${widget.group.title}',
-                ),
-                if (isEdit &&
-                    syncOrchestrator != null &&
-                    widget.group.syncEnabled)
-                  ExpenseAuthorshipInfo(
-                    orchestrator: syncOrchestrator,
-                    group: widget.group,
-                    expense: widget.initialExpense!,
-                  ),
-                const SizedBox(height: 24),
-                ExpenseFormComponent.legacy(
-                  initialExpense: widget.initialExpense,
-                  participants: widget.group.getParticipantsByLastUsed(),
-                  categories: widget.group.getCategoriesByLastUsed(),
-                  tripStartDate: widget.group.startDate,
-                  tripEndDate: widget.group.endDate,
-                  shouldAutoClose: true,
-                  fullEdit: true,
-                  showGroupHeader: false,
-                  showActionsRow: false,
-                  currency: widget.group.currency,
-                  autoLocationEnabled: widget.group.autoLocationEnabled,
-                  onExpenseAdded: widget.onExpenseSaved,
-                  onCategoryAdded: widget.onCategoryAdded,
-                  onParticipantAdded: widget.onParticipantAdded,
-                  onDelete: widget.onDelete,
-                  onFormValidityChanged: _updateFormValidity,
-                  onSaveCallbackChanged: _updateSaveCallback,
-                  onVoiceCallbackChanged: _updateVoiceCallback,
-                  onScanReceiptCallbackChanged: _updateScanCallback,
-                  onScanReceiptFromGalleryCallbackChanged:
-                      _updateScanFromGalleryCallback,
-                  groupId: widget.group.id,
-                  isReadOnly: isReadOnly,
-                ),
-              ],
             ),
-          ),
+            StatusBarFade(color: scheme.surfaceContainer),
+          ],
         ),
-      ),
-      bottomNavigationBar: isReadOnly
-          ? null
-          : AnimatedPadding(
-              duration: const Duration(milliseconds: 180),
-              curve: Curves.easeOut,
-              padding: EdgeInsets.only(bottom: viewInsetsBottom),
-              child: SafeArea(
-                top: false,
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    border: Border(
-                      top: BorderSide(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.outlineVariant.withValues(alpha: 0.3),
-                        width: 1,
+        bottomNavigationBar: isReadOnly
+            ? null
+            : ColoredBox(
+                // Also under the system navigation bar (edge to edge).
+                color: scheme.surfaceContainer,
+                child: AnimatedPadding(
+                  duration: const Duration(milliseconds: 180),
+                  curve: Curves.easeOut,
+                  padding: EdgeInsets.only(bottom: viewInsetsBottom),
+                  child: SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                      child: ExpenseFormActionsWidget(
+                        onSave: _isFormValid ? _handleSave : null,
+                        isFormValid: _isFormValid,
+                        isEdit: isEdit,
+                        showExpandButton: false,
+                        showVoiceButton: !isEdit,
+                        onVoiceTap: _voiceCallback,
+                        onScanReceipt: _scanCallback,
+                        onScanReceiptFromGallery: _scanFromGalleryCallback,
                       ),
                     ),
                   ),
-                  child: ExpenseFormActionsWidget(
-                    onSave: _isFormValid ? _handleSave : null,
-                    isFormValid: _isFormValid,
-                    isEdit: isEdit,
-                    showExpandButton: false,
-                    showVoiceButton: !isEdit,
-                    onVoiceTap: _voiceCallback,
-                    onScanReceipt: _scanCallback,
-                    onScanReceiptFromGallery: _scanFromGalleryCallback,
-                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }

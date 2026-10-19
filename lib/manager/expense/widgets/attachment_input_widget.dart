@@ -17,6 +17,10 @@ class AttachmentInputWidget extends StatefulWidget {
   final Function(String) onAttachmentTapped;
   final bool enabled;
 
+  /// Shows only a dashed "Attachments" pill that adds the first one (the
+  /// expense form swaps it for the full strip once there is one).
+  final bool asPill;
+
   const AttachmentInputWidget({
     super.key,
     required this.groupId,
@@ -26,6 +30,7 @@ class AttachmentInputWidget extends StatefulWidget {
     required this.onAttachmentRemoved,
     required this.onAttachmentTapped,
     this.enabled = true,
+    this.asPill = false,
   });
 
   @override
@@ -62,6 +67,27 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
     final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
 
+    if (widget.asPill) {
+      final busy = _stateManager.isProcessing;
+      return FormPill(
+        icon: busy ? null : Icons.attach_file_rounded,
+        leading: busy
+            ? SizedBox.square(
+                dimension: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              )
+            : null,
+        label: loc.attachments,
+        style: FormPillStyle.add,
+        onTap: widget.enabled && !busy
+            ? () => _showAttachmentSourcePicker(context)
+            : null,
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -71,7 +97,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
             Row(
               children: [
                 Icon(
-                  Icons.attach_file,
+                  Icons.attach_file_rounded,
                   size: 20,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

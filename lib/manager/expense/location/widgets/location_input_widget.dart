@@ -1,28 +1,30 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../location_service.dart';
 import '../constants.dart';
 import '../../pages/place_search_page.dart';
 
+/// The expense's place as a pill: dashed "Place" when empty (tap searches
+/// a place, current location included), the locality once set (tap shows
+/// the details sheet: current location, search, remove), a spinner while
+/// the position is being detected — by this widget or, via [isRetrieving],
+/// by the form's automatic detection.
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
-  final TextStyle? textStyle;
   final Function(ExpenseLocation?) onLocationChanged;
-  final FocusNode? externalFocusNode;
   final bool autoRetrieve;
+  final bool isRetrieving;
   final Function(bool)? onRetrievalStatusChanged;
   final bool enabled;
 
   const LocationInputWidget({
     super.key,
     this.initialLocation,
-    this.textStyle,
     required this.onLocationChanged,
-    this.externalFocusNode,
     this.autoRetrieve = false,
+    this.isRetrieving = false,
     this.onRetrievalStatusChanged,
     this.enabled = true,
   });
@@ -32,20 +34,15 @@ class LocationInputWidget extends StatefulWidget {
 }
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
-  final TextEditingController _controller = TextEditingController();
   bool _isGettingLocation = false;
   bool _isResolvingAddress = false;
   ExpenseLocation? _currentLocation;
-  late final FocusNode _fieldFocusNode;
 
   @override
   void initState() {
     super.initState();
-    _fieldFocusNode = widget.externalFocusNode ?? FocusNode();
     _currentLocation = widget.initialLocation;
-    if (_currentLocation != null) {
-      _controller.text = _currentLocation!.displayText;
-    } else if (widget.autoRetrieve) {
+    if (_currentLocation == null && widget.autoRetrieve) {
       // Auto-retrieve location if enabled and no initial location
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _getCurrentLocation();
@@ -59,17 +56,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     // Update internal state if initialLocation changes externally
     if (widget.initialLocation != oldWidget.initialLocation) {
       _currentLocation = widget.initialLocation;
-      _controller.text = _currentLocation?.displayText ?? '';
     }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    if (widget.externalFocusNode == null) {
-      _fieldFocusNode.dispose();
-    }
-    super.dispose();
   }
 
   Future<void> _getCurrentLocation() async {
@@ -94,9 +81,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     if (location != null && mounted) {
       setState(() {
         _currentLocation = location;
-        _controller.text = location.displayText.isNotEmpty
-            ? location.displayText
-            : '${location.latitude!.toStringAsFixed(6)}, ${location.longitude!.toStringAsFixed(6)}';
       });
 
       // Optional lightweight feedback when an address gets resolved
@@ -123,7 +107,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   void _clearLocation() {
     setState(() {
       _currentLocation = null;
-      _controller.clear();
     });
     widget.onLocationChanged(null);
   }
@@ -184,7 +167,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
         setState(() {
           _currentLocation = location;
-          _controller.text = location.displayText;
           _isResolvingAddress = false;
         });
 
@@ -232,129 +214,48 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
-    // Show loading indicator
-    if (_isGettingLocation || _isResolvingAddress) {
-      return IconLeadingField(
-        icon: SizedBox(
-          width: LocationConstants.loaderSize,
-          height: LocationConstants.loaderSize,
+    if (widget.isRetrieving || _isGettingLocation || _isResolvingAddress) {
+      return FormPill(
+        leading: SizedBox.square(
+          dimension: LocationConstants.loaderSize,
           child: CircularProgressIndicator(
             strokeWidth: LocationConstants.loaderStrokeWidth,
             color: colorScheme.onSurfaceVariant,
           ),
         ),
-        semanticsLabel: gloc.location,
-        tooltip: gloc.location,
-        alignTop: false,
-        iconPadding: FormTheme.standardIconPadding,
-        child: Padding(
-          padding: FormTheme.standardContentPadding,
-          child: Text(
-            _isGettingLocation ? gloc.getting_location : gloc.address_resolved,
-            style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
-          ),
-        ),
+        label: _isResolvingAddress
+            ? gloc.address_resolved
+            : gloc.getting_location,
       );
     }
 
-    // Show read-only locality with dropdown if location exists
-    if (_currentLocation != null) {
+    final location = _currentLocation;
+    if (location != null) {
       final displayText =
-          _currentLocation!.locality ??
-          _currentLocation!.address ??
-          _currentLocation!.name ??
-          gloc.location_hint;
-
-      return IconLeadingField(
-        icon: const Icon(Icons.place_outlined),
-        semanticsLabel: gloc.location,
-        tooltip: gloc.location,
-        alignTop: false,
-        iconPadding: FormTheme.standardIconPadding,
-        child: InkWell(
+          location.locality ??
+          location.name ??
+          location.address ??
+          (location.latitude != null && location.longitude != null
+              ? '${location.latitude!.toStringAsFixed(4)}, ${location.longitude!.toStringAsFixed(4)}'
+              : gloc.location);
+      return ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 240),
+        child: FormPill(
+          icon: Icons.place_outlined,
+          label: displayText,
+          semanticsLabel: '${gloc.location}: $displayText',
           onTap: widget.enabled ? _showLocationDetails : null,
-          child: Container(
-            // 48dp minimum touch target, like the other form fields.
-            constraints: const BoxConstraints(
-              minHeight: FormTheme.minFieldHeight,
-            ),
-            alignment: Alignment.centerLeft,
-            padding: FormTheme.standardContentPadding,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    displayText,
-                    style:
-                        widget.textStyle ??
-                        FormTheme.getFieldTextStyle(context),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_drop_down,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ],
-            ),
-          ),
         ),
       );
     }
 
-    // Show empty state with action buttons
-    return IconLeadingField(
-      icon: const Icon(Icons.place_outlined),
-      semanticsLabel: gloc.location,
-      tooltip: gloc.location,
-      alignTop: false,
-      iconPadding: FormTheme.standardIconPadding,
-      child: InkWell(
-        onTap: widget.enabled ? _showPlaceSearch : null,
-        child: Container(
-          constraints: const BoxConstraints(
-            minHeight: FormTheme.minFieldHeight,
-          ),
-          alignment: Alignment.centerLeft,
-          padding: FormTheme.standardContentPadding,
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  gloc.location_hint,
-                  style: FormTheme.getFieldTextStyle(
-                    context,
-                  )?.copyWith(color: colorScheme.onSurfaceVariant),
-                ),
-              ),
-              if (widget.enabled)
-                IconButton(
-                  icon: const Icon(Icons.my_location),
-                  iconSize: LocationConstants.iconSize,
-                  color: colorScheme.onSurfaceVariant,
-                  tooltip: gloc.get_current_location,
-                  onPressed: _getCurrentLocation,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: AppDimens.minTouchTarget,
-                    minHeight: AppDimens.minTouchTarget,
-                  ),
-                ),
-              if (widget.enabled) ...[
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.search,
-                  size: LocationConstants.iconSize,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
+    return FormPill(
+      icon: Icons.place_outlined,
+      label: gloc.location,
+      style: FormPillStyle.add,
+      onTap: widget.enabled ? _showPlaceSearch : null,
     );
   }
 }

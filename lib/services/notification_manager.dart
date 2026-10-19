@@ -154,7 +154,8 @@ class NotificationManager {
       // home-screen widget, before `runApp()` has attached the widget tree)
       // can arrive before a context exists yet, so wait briefly for one
       // instead of dropping the action.
-      final context = await ShortcutsNavigationService.waitForNavigatorContext();
+      final context =
+          await ShortcutsNavigationService.waitForNavigatorContext();
       if (context == null || !context.mounted) {
         LoggerService.warning(
           'Cannot navigate: context not available',
@@ -348,6 +349,10 @@ class NotificationManager {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      // Taller now that the details are always there: keep it below the
+      // status bar.
+      useSafeArea: true,
       builder: (sheetContext) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;

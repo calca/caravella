@@ -5463,6 +5463,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 group} other{{count} groups}}'**
   String group_count(int count);
+
+  /// Label above the date, place, attachments and note pills in the expense form
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get expense_details_section;
+
+  /// Primary button that saves a new expense
+  ///
+  /// In en, this message translates to:
+  /// **'Add expense'**
+  String get add_expense_button;
 }
 
 class _AppLocalizationsDelegate

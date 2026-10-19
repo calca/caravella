@@ -2919,4 +2919,10 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get expense_details_section => 'Details';
+
+  @override
+  String get add_expense_button => 'Add expense';
 }
