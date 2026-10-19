@@ -122,7 +122,7 @@ class GroupDetailHeader extends StatelessWidget {
               ),
               const SizedBox(width: 6),
             ],
-            Flexible(
+            Expanded(
               child: Text(
                 dates == null ? people : '$dates · $people',
                 maxLines: 1,
