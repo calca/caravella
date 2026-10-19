@@ -35,15 +35,6 @@ class GroupPhotoCard extends StatelessWidget {
     this.wide = false,
   });
 
-  /// Scrim over photos: transparent at the top, ~55 % black where the text
-  /// starts, ~80 % at the bottom (white text ≥4.5:1 even on a white photo).
-  static const LinearGradient photoScrim = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [Color(0x00000000), Color(0x8C000000), Color(0xCC000000)],
-    stops: [0.25, 0.55, 1.0],
-  );
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -80,11 +71,32 @@ class GroupPhotoCard extends StatelessWidget {
             children: [
               Image.file(File(file), fit: BoxFit.cover),
               const DecoratedBox(
-                decoration: BoxDecoration(gradient: photoScrim),
+                decoration: BoxDecoration(gradient: PhotoScrim.bottom),
               ),
             ],
           )
         : ColoredBox(color: color ?? s.surfaceContainerHighest);
+
+    // Cards without a photo show the group type icon top-left, so they don't
+    // look empty.
+    final typeIcon = hasPhoto
+        ? null
+        : Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              width: wide ? 44 : 40,
+              height: wide ? 44 : 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: fg.withValues(alpha: 0.12),
+              ),
+              child: Icon(
+                (group.groupType ?? ExpenseGroupType.other).icon,
+                size: wide ? 24 : 22,
+                color: fg,
+              ),
+            ),
+          );
 
     final amount = CurrencyDisplay(
       value: total,
@@ -181,31 +193,42 @@ class GroupPhotoCard extends StatelessWidget {
       onPin: onChanged,
     );
 
-    return Semantics(
-      button: true,
-      label: [
-        group.title,
-        if (group.pinned) gloc.pin,
-        ?dates,
-        people,
-        '${total.toStringAsFixed(2)} ${group.currency}',
-      ].join(', '),
-      onTap: open,
-      onLongPress: options,
-      excludeSemantics: true,
-      child: Material(
-        borderRadius: BorderRadius.circular(wide ? 28 : 24),
-        clipBehavior: Clip.antiAlias,
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: open,
-          onLongPress: options,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              background,
-              Padding(padding: EdgeInsets.all(wide ? 18 : 14), child: content),
-            ],
+    return CardOutline(
+      borderRadius: BorderRadius.circular(wide ? 28 : 24),
+      child: Semantics(
+        button: true,
+        label: [
+          group.title,
+          if (group.pinned) gloc.pin,
+          ?dates,
+          people,
+          '${total.toStringAsFixed(2)} ${group.currency}',
+        ].join(', '),
+        onTap: open,
+        onLongPress: options,
+        excludeSemantics: true,
+        child: Material(
+          borderRadius: BorderRadius.circular(wide ? 28 : 24),
+          clipBehavior: Clip.antiAlias,
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: open,
+            onLongPress: options,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                background,
+                if (typeIcon != null)
+                  Padding(
+                    padding: EdgeInsets.all(wide ? 18 : 14),
+                    child: typeIcon,
+                  ),
+                Padding(
+                  padding: EdgeInsets.all(wide ? 18 : 14),
+                  child: content,
+                ),
+              ],
+            ),
           ),
         ),
       ),

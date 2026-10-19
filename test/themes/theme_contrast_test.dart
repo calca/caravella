@@ -83,4 +83,14 @@ void main() {
       });
     });
   }
+
+  test('white text over the photo scrim stays readable on a white photo', () {
+    // Both scrims are at least textAlpha black where text sits.
+    final veiled = Color.alphaBlend(
+      Colors.black.withValues(alpha: PhotoScrim.textAlpha),
+      Colors.white,
+    );
+    expect(_contrast(Colors.white, veiled), greaterThanOrEqualTo(4.5));
+    expect(PhotoScrim.full.colors.first.a, closeTo(PhotoScrim.textAlpha, 0.01));
+  });
 }

@@ -9,11 +9,17 @@ class GroupCardRecents extends StatefulWidget {
   final gen.AppLocalizations localizations;
   final ThemeData theme;
 
+  /// How many recent expenses to show (fetched up to [maxCount]).
+  final int count;
+
+  static const int maxCount = 3;
+
   const GroupCardRecents({
     super.key,
     required this.group,
     required this.localizations,
     required this.theme,
+    this.count = 2,
   });
 
   @override
@@ -44,7 +50,7 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
     // Fetch from storage API
     final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
       widget.group.id,
-      limit: 2,
+      limit: GroupCardRecents.maxCount,
     );
 
     // Cache the result
@@ -64,8 +70,8 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
           // Show cached data if available, otherwise hide
           if (_cachedRecentExpenses != null &&
               _cachedRecentExpenses!.isNotEmpty) {
-            final lastTwo = _cachedRecentExpenses!;
-            return _buildRecentsColumn(ctx, lastTwo);
+            final recent = _cachedRecentExpenses!;
+            return _buildRecentsColumn(ctx, recent);
           }
           return const SizedBox.shrink();
         }
@@ -74,21 +80,22 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
         if (snapshot.hasError || !snapshot.hasData) {
           if (_cachedRecentExpenses != null &&
               _cachedRecentExpenses!.isNotEmpty) {
-            final lastTwo = _cachedRecentExpenses!;
-            return _buildRecentsColumn(ctx, lastTwo);
+            final recent = _cachedRecentExpenses!;
+            return _buildRecentsColumn(ctx, recent);
           }
           return const SizedBox.shrink();
         }
 
-        final lastTwo = snapshot.data!;
-        if (lastTwo.isEmpty) return const SizedBox.shrink();
+        final recent = snapshot.data!;
+        if (recent.isEmpty) return const SizedBox.shrink();
 
-        return _buildRecentsColumn(ctx, lastTwo);
+        return _buildRecentsColumn(ctx, recent);
       },
     );
   }
 
-  Widget _buildRecentsColumn(BuildContext ctx, List<ExpenseDetails> lastTwo) {
+  Widget _buildRecentsColumn(BuildContext ctx, List<ExpenseDetails> recent) {
+    final shown = recent.take(widget.count).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -121,8 +128,8 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
             );
           },
           child: Column(
-            key: ValueKey<String>(lastTwo.map((e) => e.id).join('-')),
-            children: lastTwo.asMap().entries.map((entry) {
+            key: ValueKey<String>(shown.map((e) => e.id).join('-')),
+            children: shown.asMap().entries.map((entry) {
               final index = entry.key;
               final e = entry.value;
               return TweenAnimationBuilder<double>(

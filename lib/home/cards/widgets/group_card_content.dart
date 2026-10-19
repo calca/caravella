@@ -49,6 +49,12 @@ class GroupCardContent extends StatefulWidget {
   State<GroupCardContent> createState() => _GroupCardContentState();
 }
 
+/// Card content height from which three recent expenses fit instead of two.
+const double _threeRecentsMinHeight = 560;
+
+/// Height taken by the add-expense button row.
+const double _addButtonExtent = 64;
+
 class _GroupCardContentState extends State<GroupCardContent> {
   late ExpenseGroup _currentGroup;
   ExpenseGroupNotifier? _groupNotifier;
@@ -141,6 +147,14 @@ class _GroupCardContentState extends State<GroupCardContent> {
               group: _currentGroup,
               localizations: widget.localizations,
               theme: widget.theme,
+              // A third recent expense when the card is tall enough (it
+              // takes the space of the add button when that is hidden).
+              count:
+                  constraints.maxHeight >=
+                      _threeRecentsMinHeight -
+                          (widget.showAddButton ? 0 : _addButtonExtent)
+                  ? 3
+                  : 2,
             ),
             if (widget.showAddButton)
               Row(
