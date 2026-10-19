@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the unused `android_nav_setting` dependency (it only sized the old carousel)
 
 ### Fixed
+- Settings → your name: saving the dialog (e.g. with the name cleared) crashed the page, because the text field was released while the dialog was still closing
 - Settings → Debug logs showed an error screen ("No MaterialLocalizations found") instead of the logs
 - A group whose background photo file was missing (e.g. deleted from the phone) showed an error box in its "Other" settings; it now shows a placeholder
 - Changes received by sync (e.g. expenses added on another device) now show up right away on Home, Groups and the open group page; before you had to pull to refresh or reopen the page. On Home the sync state moved from a dot on the settings button to its own round button next to it: sync arrows with a check when up to date, turning while syncing, with an exclamation mark after a failure — tap it for the sync settings

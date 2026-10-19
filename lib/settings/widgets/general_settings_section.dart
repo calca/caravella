@@ -43,36 +43,59 @@ class GeneralSettingsSection extends StatelessWidget {
     BuildContext context,
     gen.AppLocalizations loc,
     UserNameNotifier userNameNotifier,
-  ) async {
-    final controller = TextEditingController(text: userNameNotifier.name);
+  ) => showDialog<void>(
+    context: context,
+    builder: (_) => _NameDialog(loc: loc, user: userNameNotifier),
+  );
+}
 
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return Material3Dialog(
-          title: Text(loc.settings_user_name_title),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: InputDecoration(hintText: loc.settings_user_name_hint),
-            textCapitalization: TextCapitalization.words,
-            maxLength: 50,
-          ),
-          actions: [
-            Material3DialogActions.cancel(context, loc.cancel),
-            Material3DialogActions.primary(
-              context,
-              loc.save,
-              onPressed: () {
-                userNameNotifier.setName(controller.text);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+/// The name dialog owns its text controller, so it is disposed only when
+/// the dialog is gone — disposing it right after `showDialog` returned
+/// crashed while the closing animation still built the field.
+class _NameDialog extends StatefulWidget {
+  final gen.AppLocalizations loc;
+  final UserNameNotifier user;
+
+  const _NameDialog({required this.loc, required this.user});
+
+  @override
+  State<_NameDialog> createState() => _NameDialogState();
+}
+
+class _NameDialogState extends State<_NameDialog> {
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.user.name,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    widget.user.setName(_controller.text);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = widget.loc;
+    return Material3Dialog(
+      title: Text(loc.settings_user_name_title),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        decoration: InputDecoration(hintText: loc.settings_user_name_hint),
+        textCapitalization: TextCapitalization.words,
+        maxLength: 50,
+        onSubmitted: (_) => _save(),
+      ),
+      actions: [
+        Material3DialogActions.cancel(context, loc.cancel),
+        Material3DialogActions.primary(context, loc.save, onPressed: _save),
+      ],
     );
-    controller.dispose();
   }
 }
 
