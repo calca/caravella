@@ -54,12 +54,9 @@ class GroupMapCard extends StatelessWidget {
                     height: 44,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: s.primaryContainer,
+                      color: s.surfaceContainerHighest,
                     ),
-                    child: Icon(
-                      Icons.map_outlined,
-                      color: s.onPrimaryContainer,
-                    ),
+                    child: Icon(Icons.map_outlined, color: s.onSurface),
                   ),
                   const SizedBox(width: 14),
                   Expanded(

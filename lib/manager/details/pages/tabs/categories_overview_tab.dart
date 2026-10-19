@@ -56,7 +56,9 @@ class CategoriesOverviewTab extends StatelessWidget {
       ..sort((a, b) => b.value.compareTo(a.value));
 
     final content = Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
+      padding: embedded
+          ? EdgeInsets.zero
+          : const EdgeInsets.fromLTRB(12, 8, 12, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

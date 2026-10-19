@@ -328,13 +328,14 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
                   sliver: SliverToBoxAdapter(
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: _StatusToggle(
-                        showArchived: _showArchived,
-                        activeLabel:
-                            '${gloc.status_active} · ${_activeTrips.length}',
-                        archivedLabel:
-                            '${gloc.status_archived} · ${_archivedTrips.length}',
-                        onChanged: (v) => setState(() => _showArchived = v),
+                      child: PillSegmentedControl(
+                        labels: [
+                          '${gloc.status_active} · ${_activeTrips.length}',
+                          '${gloc.status_archived} · ${_archivedTrips.length}',
+                        ],
+                        selectedIndex: _showArchived ? 1 : 0,
+                        onChanged: (i) =>
+                            setState(() => _showArchived = i == 1),
                       ),
                     ),
                   ),
@@ -344,74 +345,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
             ),
             // Opaque strip behind the status bar for scrolled content.
             Container(height: top, color: scheme.surfaceContainer),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Active / Archived switch, styled like the floating navigation pill.
-class _StatusToggle extends StatelessWidget {
-  final bool showArchived;
-  final String activeLabel;
-  final String archivedLabel;
-  final ValueChanged<bool> onChanged;
-
-  const _StatusToggle({
-    required this.showArchived,
-    required this.activeLabel,
-    required this.archivedLabel,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    Widget segment(String label, bool selected, VoidCallback onTap) =>
-        Semantics(
-          selected: selected,
-          button: true,
-          label: label,
-          onTap: onTap,
-          excludeSemantics: true,
-          child: InkWell(
-            customBorder: const StadiumBorder(),
-            onTap: onTap,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              constraints: const BoxConstraints(minHeight: 44),
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              alignment: Alignment.center,
-              decoration: ShapeDecoration(
-                shape: const StadiumBorder(),
-                color: selected
-                    ? FloatingNavBar.selectedColor(s)
-                    : Colors.transparent,
-              ),
-              child: Text(
-                label,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  color: selected ? s.onSurface : s.onSurfaceVariant,
-                ),
-              ),
-            ),
-          ),
-        );
-    return DecoratedBox(
-      decoration: ShapeDecoration(
-        shape: const StadiumBorder(),
-        color: FloatingNavBar.pillColor(s),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            segment(activeLabel, !showArchived, () => onChanged(false)),
-            segment(archivedLabel, showArchived, () => onChanged(true)),
           ],
         ),
       ),

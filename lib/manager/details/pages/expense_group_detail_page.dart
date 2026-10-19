@@ -15,9 +15,8 @@ import '../widgets/empty_expense_state.dart';
 import '../widgets/group_balances_view.dart';
 import '../widgets/group_detail_header.dart';
 import '../widgets/group_map_card.dart';
+import '../widgets/group_statistics_view.dart';
 import 'expense_locations_map_page.dart';
-import 'tabs/categories_overview_tab.dart';
-import 'tabs/general_overview_tab.dart';
 import '../../../services/notification_manager.dart';
 
 import 'group_settings_page.dart';
@@ -457,22 +456,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         highlightedExpenseId: _newlyAddedExpenseId,
       ),
       1 => SliverToBoxAdapter(child: GroupBalancesView(group: trip)),
-      _ => SliverToBoxAdapter(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Column(
-            children: [
-              if (groupPlacesCount(trip) > 0)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                  child: GroupMapCard(group: trip),
-                ),
-              GeneralOverviewTab(trip: trip, embedded: true),
-              CategoriesOverviewTab(trip: trip, embedded: true),
-            ],
-          ),
-        ),
-      ),
+      _ => SliverToBoxAdapter(child: GroupStatisticsView(group: trip)),
     };
 
     Widget roundButton({
