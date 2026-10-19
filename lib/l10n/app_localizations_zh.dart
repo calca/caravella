@@ -2678,4 +2678,29 @@ class AppLocalizationsZh extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get get_started_title => '开始使用';
+
+  @override
+  String get_started_progress(int done, int total) {
+    return '已完成 $done/$total';
+  }
+
+  @override
+  String get get_started_create_group => '创建群组';
+
+  @override
+  String get get_started_first_expense => '添加第一笔支出';
+
+  @override
+  String get get_started_participants => '添加参与者';
+
+  @override
+  String get get_started_look => '选择照片或颜色';
+
+  @override
+  String get_started_step_done(String step) {
+    return '$step，已完成';
+  }
 }

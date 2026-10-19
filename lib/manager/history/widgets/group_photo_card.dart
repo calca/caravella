@@ -13,12 +13,10 @@ import 'group_options.dart';
 /// favorite group at the top.
 ///
 /// Every card shares one background treatment so they look alike:
-/// - **photo**: shown clean at the top, with a uniform black scrim rising
-///   from the bottom under white text (readable on any photo, same in light
-///   and dark theme — unlike the surface-colored veil of the Home card,
-///   which washed small photos out);
+/// - **photo**: just hinted under the raised surface ([PhotoVeil], like the
+///   Home card), with the theme's text colors;
 /// - **color**: the palette color, with contrasting text;
-/// - **neither**: a raised neutral surface.
+/// - **neither**: a raised neutral surface with the group type icon.
 ///
 /// Tap opens the group; long press opens [showGroupOptionsSheet].
 class GroupPhotoCard extends StatelessWidget {
@@ -48,12 +46,10 @@ class GroupPhotoCard extends StatelessWidget {
         : ExpenseGroupColorPalette.isLegacyColorValue(group.color)
         ? Color(group.color!)
         : ExpenseGroupColorPalette.resolveColor(group.color, s);
-    final Color fg = hasPhoto
-        ? Colors.white
-        : color != null
+    final Color fg = color != null
         ? ExpenseGroupColorPalette.getContrastingTextColor(color)
         : s.onSurface;
-    final Color fgSecondary = fg.withValues(alpha: hasPhoto ? 0.9 : 0.8);
+    final Color fgSecondary = fg.withValues(alpha: 0.8);
 
     final people = gloc.participant_count(group.participants.length);
     final dates = (group.startDate != null || group.endDate != null)
@@ -66,15 +62,7 @@ class GroupPhotoCard extends StatelessWidget {
     final total = group.getTotalExpenses();
 
     final background = hasPhoto
-        ? Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.file(File(file), fit: BoxFit.cover),
-              const DecoratedBox(
-                decoration: BoxDecoration(gradient: PhotoScrim.bottom),
-              ),
-            ],
-          )
+        ? PhotoVeil(path: file, color: s.surfaceContainerHighest)
         : ColoredBox(color: color ?? s.surfaceContainerHighest);
 
     // Cards without a photo show the group type icon top-left, so they don't

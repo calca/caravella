@@ -25,7 +25,7 @@ export 'widgets/currency_display.dart';
 export 'widgets/empty_state_view.dart';
 export 'widgets/expense_amount_card.dart';
 export 'widgets/floating_nav_bar.dart';
-export 'widgets/photo_scrim.dart';
+export 'widgets/photo_veil.dart';
 export 'widgets/material3_dialog.dart';
 export 'widgets/no_expense.dart';
 export 'widgets/search_app_bar.dart';

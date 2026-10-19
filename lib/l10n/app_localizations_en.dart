@@ -2753,4 +2753,29 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get get_started_title => 'Get started';
+
+  @override
+  String get_started_progress(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get get_started_create_group => 'Create the group';
+
+  @override
+  String get get_started_first_expense => 'Add the first expense';
+
+  @override
+  String get get_started_participants => 'Add the participants';
+
+  @override
+  String get get_started_look => 'Choose a photo or a color';
+
+  @override
+  String get_started_step_done(String step) {
+    return '$step, done';
+  }
 }

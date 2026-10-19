@@ -66,43 +66,57 @@ class GroupCard extends StatelessWidget {
       ),
     );
 
-    // Photo: the same dark scrim as the Groups cards, with the content drawn
-    // in the dark theme (white text) whatever the app theme is.
-    final photoStyle = bg.hasImage;
-    final cardTheme = photoStyle ? CaravellaThemes.dark : theme;
+    // Photo: just hinted under the card color (PhotoVeil, as on the Groups
+    // cards), so the content keeps the theme's text colors.
+    final photo = bg.hasImage ? bg.imagePath : null;
     final card = BaseCard(
       isFlat: false,
       noBorder: true, // CardOutline draws the edge
       margin: EdgeInsets.zero,
       borderRadius: BorderRadius.circular(32),
-      backgroundColor: photoStyle ? Colors.black : bg.color,
-      backgroundImage: bg.imagePath,
-      backgroundGradient: photoStyle ? PhotoScrim.full : bg.gradient,
+      backgroundColor: photo != null ? Colors.transparent : bg.color,
+      backgroundGradient: photo != null ? null : bg.gradient,
       onTap: () => _openGroup(context),
       // The card hosts its own buttons and tappable rows, so it is not
       // collapsed into one node; the header carries the "open group" action.
       mergeSemantics: false,
-      child: Theme(
-        data: cardTheme,
-        child: GroupCardContent(
-          onOpen: () => _openGroup(context),
-          group: group,
-          localizations: localizations,
-          theme: cardTheme,
-          onExpenseAdded: onGroupUpdated,
-          showAddButton: showAddButton,
-          onCategoryAdded: onCategoryAdded,
-          isSynced: isSynced,
-        ),
+      child: GroupCardContent(
+        onOpen: () => _openGroup(context),
+        group: group,
+        localizations: localizations,
+        theme: theme,
+        onExpenseAdded: onGroupUpdated,
+        showAddButton: showAddButton,
+        onCategoryAdded: onCategoryAdded,
+        isSynced: isSynced,
       ),
     );
+    final radius = BorderRadius.circular(32);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       height: double.infinity, // Assicura che usi tutto lo spazio verticale
       padding: const EdgeInsets.only(bottom: 16),
-      child: CardOutline(borderRadius: BorderRadius.circular(32), child: card),
+      child: CardOutline(
+        borderRadius: radius,
+        child: photo == null
+            ? card
+            : Stack(
+                children: [
+                  Positioned.fill(
+                    child: ClipRRect(
+                      borderRadius: radius,
+                      child: PhotoVeil(
+                        path: photo,
+                        color: theme.colorScheme.surface,
+                      ),
+                    ),
+                  ),
+                  card,
+                ],
+              ),
+      ),
     );
   }
 }

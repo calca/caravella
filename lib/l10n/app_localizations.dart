@@ -5218,6 +5218,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0 {No active groups} one {1 active group} other {{count} active groups}}'**
   String groups_active_count(int count);
+
+  /// Title of the getting-started checklist on the Home card of a group with no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get get_started_title;
+
+  /// Progress under the getting-started title
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String get_started_progress(int done, int total);
+
+  /// Getting-started step, always done
+  ///
+  /// In en, this message translates to:
+  /// **'Create the group'**
+  String get get_started_create_group;
+
+  /// Getting-started step: opens the new expense sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add the first expense'**
+  String get get_started_first_expense;
+
+  /// Getting-started step: opens the group participants; done with two or more
+  ///
+  /// In en, this message translates to:
+  /// **'Add the participants'**
+  String get get_started_participants;
+
+  /// Getting-started step: opens the group background (photo or color) settings
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a photo or a color'**
+  String get get_started_look;
+
+  /// Screen reader label of a completed getting-started step
+  ///
+  /// In en, this message translates to:
+  /// **'{step}, done'**
+  String get_started_step_done(String step);
 }
 
 class _AppLocalizationsDelegate

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'group_card_header.dart';
 import 'group_card_amounts.dart';
-import 'group_card_empty_state.dart';
+import 'group_card_get_started.dart';
 // group_card_stats.dart removed import (not needed here)
 import 'add_expense_controller.dart';
 import 'group_card_recents.dart';
@@ -96,7 +96,9 @@ class _GroupCardContentState extends State<GroupCardContent> {
   void didUpdateWidget(GroupCardContent oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Update current group if the widget's group changed
-    if (oldWidget.group.id != widget.group.id) {
+    // (any new instance: the Home reloads a group after its participants,
+    // photo or color change, and the checklist must follow).
+    if (!identical(oldWidget.group, widget.group)) {
       _currentGroup = widget.group;
     }
   }
@@ -127,35 +129,42 @@ class _GroupCardContentState extends State<GroupCardContent> {
               ),
             ),
             const Spacer(),
-            // Show playful empty state or amounts based on expenses
+            // No expenses yet: a getting-started checklist instead of the
+            // amounts and the recent expenses.
             if (_currentGroup.expenses.isEmpty)
-              GroupCardEmptyState(
-                localizations: widget.localizations,
+              GroupCardGetStarted(
+                group: _currentGroup,
                 theme: widget.theme,
+                localizations: widget.localizations,
+                onAddExpense: () => addExpenseController.showAddExpenseSheet(
+                  context,
+                  _currentGroup,
+                ),
               )
-            else
+            else ...[
               GroupCardAmounts(
                 group: _currentGroup,
                 theme: widget.theme,
                 localizations: widget.localizations,
               ),
-            const Spacer(),
-            GroupCardRecents(
-              key: ValueKey(
-                'recents_${_currentGroup.id}_${_currentGroup.expenses.length}',
+              const Spacer(),
+              GroupCardRecents(
+                key: ValueKey(
+                  'recents_${_currentGroup.id}_${_currentGroup.expenses.length}',
+                ),
+                group: _currentGroup,
+                localizations: widget.localizations,
+                theme: widget.theme,
+                // A third recent expense when the card is tall enough (it
+                // takes the space of the add button when that is hidden).
+                count:
+                    constraints.maxHeight >=
+                        _threeRecentsMinHeight -
+                            (widget.showAddButton ? 0 : _addButtonExtent)
+                    ? 3
+                    : 2,
               ),
-              group: _currentGroup,
-              localizations: widget.localizations,
-              theme: widget.theme,
-              // A third recent expense when the card is tall enough (it
-              // takes the space of the add button when that is hidden).
-              count:
-                  constraints.maxHeight >=
-                      _threeRecentsMinHeight -
-                          (widget.showAddButton ? 0 : _addButtonExtent)
-                  ? 3
-                  : 2,
-            ),
+            ],
             if (widget.showAddButton)
               Row(
                 children: [

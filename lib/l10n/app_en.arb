@@ -1218,4 +1218,18 @@
   ,"@new_expense_in_group": {"description": "Label of the round button next to the floating navigation on Home: adds an expense to the featured group", "placeholders": {"group": {"type": "String"}}}
   ,"groups_active_count": "{count, plural, =0 {No active groups} one {1 active group} other {{count} active groups}}"
   ,"@groups_active_count": {"description": "Line above the Groups page title", "placeholders": {"count": {"type": "int"}}}
+  ,"get_started_title": "Get started"
+  ,"@get_started_title": {"description": "Title of the getting-started checklist on the Home card of a group with no expenses"}
+  ,"get_started_progress": "{done} of {total} done"
+  ,"@get_started_progress": {"description": "Progress under the getting-started title", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}}
+  ,"get_started_create_group": "Create the group"
+  ,"@get_started_create_group": {"description": "Getting-started step, always done"}
+  ,"get_started_first_expense": "Add the first expense"
+  ,"@get_started_first_expense": {"description": "Getting-started step: opens the new expense sheet"}
+  ,"get_started_participants": "Add the participants"
+  ,"@get_started_participants": {"description": "Getting-started step: opens the group participants; done with two or more"}
+  ,"get_started_look": "Choose a photo or a color"
+  ,"@get_started_look": {"description": "Getting-started step: opens the group background (photo or color) settings"}
+  ,"get_started_step_done": "{step}, done"
+  ,"@get_started_step_done": {"description": "Screen reader label of a completed getting-started step", "placeholders": {"step": {"type": "String"}}}
 }

@@ -78,14 +78,14 @@ class _AppShellState extends State<AppShell> {
             ),
             if (_navVisible) ...[
               // Content scrolling under the bar fades into the page instead
-              // of showing half-hidden items behind it.
+              // of showing half-hidden items behind it. Only as tall as the
+              // bar, so at rest it doesn't wash the bottom of the Home card.
               Align(
                 alignment: Alignment.bottomCenter,
                 child: IgnorePointer(
                   child: Container(
                     height:
                         FloatingNavBar.reservedHeight +
-                        60 +
                         MediaQuery.paddingOf(context).bottom,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -95,7 +95,7 @@ class _AppShellState extends State<AppShell> {
                           pageColor.withValues(alpha: 0),
                           pageColor.withValues(alpha: 0.92),
                         ],
-                        stops: const [0, 0.55],
+                        stops: const [0, 0.45],
                       ),
                     ),
                   ),

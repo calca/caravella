@@ -2772,4 +2772,29 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get get_started_title => 'Per iniziare';
+
+  @override
+  String get_started_progress(int done, int total) {
+    return '$done di $total fatti';
+  }
+
+  @override
+  String get get_started_create_group => 'Crea il gruppo';
+
+  @override
+  String get get_started_first_expense => 'Aggiungi la prima spesa';
+
+  @override
+  String get get_started_participants => 'Aggiungi i partecipanti';
+
+  @override
+  String get get_started_look => 'Scegli una foto o un colore';
+
+  @override
+  String get_started_step_done(String step) {
+    return '$step, fatto';
+  }
 }
