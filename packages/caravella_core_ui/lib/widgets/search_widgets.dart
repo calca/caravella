@@ -276,6 +276,7 @@ class GroupIconAvatar extends StatelessWidget {
           width: size,
           height: size,
           cacheWidth: (size * 3).round(),
+          errorBuilder: (_, _, _) => const SizedBox.shrink(),
         ),
       );
     } else {

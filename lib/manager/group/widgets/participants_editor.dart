@@ -15,6 +15,7 @@ class ParticipantsEditor extends StatelessWidget {
     final state = context.watch<GroupFormState>();
     final controller = context.read<GroupFormController>();
     return ParticipantsSection(
+      showHeader: false,
       participants: state.participants,
       onAddParticipant: (name) =>
           state.addParticipant(ExpenseParticipant(name: name)),

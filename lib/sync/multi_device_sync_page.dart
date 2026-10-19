@@ -19,19 +19,13 @@ class MultiDeviceSyncPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
 
-    return AppSystemUI.surface(
-      child: Scaffold(
-        appBar: const CaravellaAppBar(),
-        body: ListView(
-          children: [
-            SettingsSection(
-              title: loc.sync_cloud_title,
-              description:
-                  '${loc.sync_cloud_description}. ${loc.sync_cloud_scope_description}',
-              children: [_CloudSyncCard(orchestrator: orchestrator)],
-            ),
-          ],
-        ),
+    return AppSystemUI.edgeToEdge(
+      child: SettingsScaffold(
+        eyebrow: loc.sync_title,
+        title: loc.sync_cloud_title,
+        description:
+            '${loc.sync_cloud_description}. ${loc.sync_cloud_scope_description}',
+        children: [_CloudSyncCard(orchestrator: orchestrator)],
       ),
     );
   }
@@ -163,8 +157,6 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
 
     if (_loading) {
       return const Padding(
@@ -173,58 +165,34 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
       );
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    final email = _driveChannel?.signedInAccountEmail;
+    return SettingsGroup(
       children: [
-        // Enable / disable toggle
-        SettingsCard(
-          context: context,
-          color: colorScheme.surface,
-          semanticsLabel: loc.sync_cloud_enable,
-          semanticsToggled: _enabled,
-          onTap: _busy ? null : () => _toggleCloud(!_enabled),
-          child: ListTile(
-            enabled: !_busy,
-            leading: _busy
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Icon(Icons.cloud_outlined, color: colorScheme.primary),
-            title: Text(loc.sync_cloud_enable, style: textTheme.titleMedium),
-            subtitle: Text(
-              _enabled && _driveChannel?.signedInAccountEmail != null
-                  ? loc.sync_cloud_signed_in_as(
-                      _driveChannel!.signedInAccountEmail!,
-                    )
-                  : loc.sync_cloud_description,
-            ),
-            trailing: Switch(
-              value: _enabled,
-              onChanged: _busy ? null : _toggleCloud,
-            ),
-          ),
+        SettingsTile(
+          icon: Icons.cloud_outlined,
+          title: loc.sync_cloud_enable,
+          subtitle: _enabled && email != null
+              ? loc.sync_cloud_signed_in_as(email)
+              : loc.sync_cloud_description,
+          switchValue: _enabled,
+          onSwitch: _busy ? null : _toggleCloud,
+          trailing: _busy
+              ? const SizedBox.square(
+                  dimension: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : null,
         ),
-        // Sync now button – visible only when cloud is enabled
-        if (_enabled) ...[
-          const SizedBox(height: 8),
-          SettingsCard(
-            context: context,
-            color: colorScheme.surface,
-            semanticsButton: true,
-            semanticsLabel: loc.sync_now,
+        // Sync now – only when cloud sync is on
+        if (_enabled)
+          SettingsTile(
+            icon: Icons.sync,
+            title: loc.sync_now,
+            subtitle: _lastCloudSync != null
+                ? loc.sync_last_sync(_formatTime(_lastCloudSync!))
+                : null,
             onTap: _syncNow,
-            child: ListTile(
-              leading: Icon(Icons.sync, color: colorScheme.primary),
-              title: Text(loc.sync_now, style: textTheme.titleMedium),
-              subtitle: _lastCloudSync != null
-                  ? Text(loc.sync_last_sync(_formatTime(_lastCloudSync!)))
-                  : null,
-              trailing: const Icon(Icons.chevron_right),
-            ),
           ),
-        ],
       ],
     );
   }

@@ -17,100 +17,43 @@ class DataBackupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     return ChangeNotifierProvider<AutoBackupNotifier>(
       create: (_) => AutoBackupNotifier(),
-      child: Scaffold(
-        appBar: const CaravellaAppBar(),
-        body: ListView(
-          padding: EdgeInsets.fromLTRB(
-            0,
-            0,
-            0,
-            MediaQuery.of(context).padding.bottom + 24,
-          ),
+      child: AppSystemUI.edgeToEdge(
+        child: SettingsScaffold(
+          eyebrow: gloc.settings,
+          title: gloc.settings_data_manage,
           children: [
-            // Auto Backup Section
-            SectionHeader(
-              title: gloc.auto_backup_title,
-              description: gloc.auto_backup_desc,
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Consumer<AutoBackupNotifier>(
-                builder: (context, notifier, _) => SettingsCard(
-                  context: context,
-                  color: colorScheme.surface,
-                  semanticsToggled: notifier.enabled,
-                  semanticsLabel: gloc.auto_backup_title,
-                  onTap: () => notifier.setEnabled(!notifier.enabled),
-                  child: ListTile(
-                    leading: const Icon(Icons.backup_outlined),
-                    title: Text(
-                      gloc.auto_backup_title,
-                      style: textTheme.titleMedium,
-                    ),
-                    subtitle: Text(
-                      gloc.auto_backup_desc,
-                      style: textTheme.bodySmall,
-                    ),
-                    trailing: Switch(
-                      value: notifier.enabled,
-                      onChanged: notifier.setEnabled,
-                    ),
+            SettingsGroup(
+              label: gloc.auto_backup_title,
+              children: [
+                Consumer<AutoBackupNotifier>(
+                  builder: (context, notifier, _) => SettingsTile(
+                    icon: Icons.backup_outlined,
+                    title: gloc.auto_backup_title,
+                    subtitle: gloc.auto_backup_desc,
+                    switchValue: notifier.enabled,
+                    onSwitch: notifier.setEnabled,
                   ),
                 ),
-              ),
+              ],
             ),
-
-            // Manual Backup & Restore Section
-            SectionHeader(
-              title: gloc.data_title,
-              description: gloc.settings_data_desc,
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(
-                children: [
-                  SettingsCard(
-                    context: context,
-                    semanticsButton: true,
-                    semanticsLabel: gloc.backup,
-                    color: colorScheme.surface,
-                    onTap: () async {
-                      await _backupTrips(context, gloc);
-                    },
-                    child: ListTile(
-                      leading: const Icon(Icons.cloud_upload_outlined),
-                      title: Text(gloc.backup, style: textTheme.titleMedium),
-                      subtitle: Text(gloc.data_backup_desc),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SettingsCard(
-                    context: context,
-                    semanticsButton: true,
-                    semanticsLabel: gloc.data_restore_title,
-                    color: colorScheme.surface,
-                    onTap: () async {
-                      await _importTrips(context, gloc);
-                    },
-                    child: ListTile(
-                      leading: const Icon(Icons.download_outlined),
-                      title: Text(
-                        gloc.data_restore_title,
-                        style: textTheme.titleMedium,
-                      ),
-                      subtitle: Text(gloc.data_restore_desc),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    ),
-                  ),
-                ],
-              ),
+            SettingsGroup(
+              label: gloc.data_title,
+              children: [
+                SettingsTile(
+                  icon: Icons.upload_outlined,
+                  title: gloc.backup,
+                  subtitle: gloc.data_backup_desc,
+                  onTap: () => _backupTrips(context, gloc),
+                ),
+                SettingsTile(
+                  icon: Icons.download_outlined,
+                  title: gloc.data_restore_title,
+                  subtitle: gloc.data_restore_desc,
+                  onTap: () => _importTrips(context, gloc),
+                ),
+              ],
             ),
           ],
         ),

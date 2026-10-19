@@ -20,7 +20,13 @@ class PhotoVeil extends StatelessWidget {
   Widget build(BuildContext context) => Stack(
     fit: StackFit.expand,
     children: [
-      Image.file(File(path), fit: BoxFit.cover, alignment: Alignment.topCenter),
+      Image.file(
+        File(path),
+        fit: BoxFit.cover,
+        alignment: Alignment.topCenter,
+        // A photo that can't be read (deleted, moved) just leaves the veil.
+        errorBuilder: (_, _, _) => const SizedBox.shrink(),
+      ),
       ColoredBox(color: color.withValues(alpha: alpha)),
     ],
   );

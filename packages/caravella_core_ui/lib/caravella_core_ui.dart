@@ -34,8 +34,6 @@ export 'widgets/material3_dialog.dart';
 export 'widgets/no_expense.dart';
 export 'widgets/section_header.dart';
 export 'widgets/selection_bottom_sheet.dart';
-export 'widgets/settings_card.dart';
-export 'widgets/settings_section.dart';
 
 // Chart widgets
 export 'widgets/charts/chart_badge.dart';

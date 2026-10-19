@@ -28,50 +28,28 @@ class SyncHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
 
-    return AppSystemUI.surface(
-      child: Scaffold(
-        appBar: const CaravellaAppBar(),
-        body: ListView(
-          padding: EdgeInsets.fromLTRB(
-            0,
-            0,
-            0,
-            MediaQuery.of(context).padding.bottom + 24,
+    return AppSystemUI.edgeToEdge(
+      child: SettingsScaffold(
+        eyebrow: loc.sync_title,
+        title: loc.sync_history_title,
+        description: groupId != null
+            ? loc.sync_history_group_desc(groupTitle ?? '')
+            : null,
+        children: [
+          FutureBuilder<List<Map<String, dynamic>>>(
+            future: orchestrator.getHistory(limit: 20, groupId: groupId),
+            builder: (context, snapshot) {
+              final history = snapshot.data ?? [];
+              if (history.isEmpty) return _buildEmptyState(context, loc);
+              return SettingsGroup(
+                children: [
+                  for (final e in history) _buildEntry(context, loc, e),
+                ],
+              );
+            },
           ),
-          children: [
-            SettingsSection(
-              title: loc.sync_history_title,
-              description: groupId != null
-                  ? loc.sync_history_group_desc(groupTitle ?? '')
-                  : '',
-              children: [
-                FutureBuilder<List<Map<String, dynamic>>>(
-                  future: orchestrator.getHistory(limit: 20, groupId: groupId),
-                  builder: (context, snapshot) {
-                    final history = snapshot.data ?? [];
-
-                    if (history.isEmpty) {
-                      return _buildEmptyState(context, loc);
-                    }
-
-                    return SettingsCard(
-                      context: context,
-                      color: colorScheme.surface,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: history
-                            .map((e) => _buildEntry(context, loc, e))
-                            .toList(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -114,26 +92,20 @@ class SyncHistoryPage extends StatelessWidget {
     return Semantics(
       label:
           '${channelDisplay.$2}, $peerId, $relativeTime, $received received, $sent sent',
-      child: ListTile(
-        visualDensity: VisualDensity.compact,
-        leading: Text(channelDisplay.$1, style: const TextStyle(fontSize: 20)),
-        title: Text(
-          peerId.isNotEmpty ? peerId : channelDisplay.$2,
-          style: textTheme.bodyMedium,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          loc.sync_records_exchanged(sent, received),
-          style: textTheme.bodySmall?.copyWith(color: colorScheme.outline),
-        ),
+      excludeSemantics: true,
+      child: SettingsTile(
+        icon: channelDisplay.$1,
+        title: peerId.isNotEmpty ? peerId : channelDisplay.$2,
+        subtitle: loc.sync_records_exchanged(sent, received),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               relativeTime,
-              style: textTheme.labelSmall?.copyWith(color: colorScheme.outline),
+              style: textTheme.labelSmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
             if (errors > 0)
               Icon(
@@ -147,13 +119,13 @@ class SyncHistoryPage extends StatelessWidget {
     );
   }
 
-  /// Returns (emoji, display name) for a sync channel.
-  (String, String) _channelInfo(String channel, gen.AppLocalizations loc) {
+  /// Returns (icon, display name) for a sync channel.
+  (IconData, String) _channelInfo(String channel, gen.AppLocalizations loc) {
     return switch (channel) {
-      'lan' => ('📡', loc.sync_channel_lan),
-      'nearby' || 'bluetooth' => ('🔵', loc.sync_channel_bluetooth),
-      'cloud' => ('☁️', loc.sync_channel_cloud),
-      _ => ('🔄', channel),
+      'lan' => (Icons.wifi, loc.sync_channel_lan),
+      'nearby' || 'bluetooth' => (Icons.bluetooth, loc.sync_channel_bluetooth),
+      'cloud' => (Icons.cloud_outlined, loc.sync_channel_cloud),
+      _ => (Icons.sync, channel),
     };
   }
 

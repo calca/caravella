@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
@@ -65,7 +63,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
         title: gloc.settings,
         children: [
           SettingsProfileCard(
-            leading: _GroupAvatar(group: trip),
+            leading: GroupIconAvatar(group: trip, size: 52),
             title: trip.title,
             subtitle: [
               ?dates,
@@ -332,38 +330,5 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
       widget.onGroupDeleted?.call();
       Navigator.of(context).pop(); // Close settings page
     }
-  }
-}
-
-/// The group's photo, or its color / a neutral circle with its type icon.
-class _GroupAvatar extends StatelessWidget {
-  final ExpenseGroup group;
-
-  const _GroupAvatar({required this.group});
-
-  @override
-  Widget build(BuildContext context) {
-    final s = Theme.of(context).colorScheme;
-    final file = group.file;
-    if (file != null && file.isNotEmpty && File(file).existsSync()) {
-      return ClipOval(child: Image.file(File(file), fit: BoxFit.cover));
-    }
-    final Color? color = group.color == null
-        ? null
-        : ExpenseGroupColorPalette.isLegacyColorValue(group.color)
-        ? Color(group.color!)
-        : ExpenseGroupColorPalette.resolveColor(group.color, s);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color ?? s.onSurface.withValues(alpha: 0.06),
-      ),
-      child: Icon(
-        (group.groupType ?? ExpenseGroupType.other).icon,
-        color: color == null
-            ? s.onSurface
-            : ExpenseGroupColorPalette.getContrastingTextColor(color),
-      ),
-    );
   }
 }

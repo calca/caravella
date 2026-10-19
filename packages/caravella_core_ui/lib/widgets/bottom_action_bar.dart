@@ -49,10 +49,7 @@ class BottomActionBar extends StatelessWidget {
             onPressed: enabled ? onPressed : null,
             style: FilledButton.styleFrom(
               elevation: 0,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               minimumSize: const Size(48, 48),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),

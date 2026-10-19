@@ -14,65 +14,62 @@ class GroupTypeTemplatesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(loc.settings_group_templates_page_title)),
-      body: Consumer<GroupTypeTemplatesNotifier>(
+    final s = Theme.of(context).colorScheme;
+    return AppSystemUI.edgeToEdge(
+      child: Consumer<GroupTypeTemplatesNotifier>(
         builder: (context, notifier, _) {
           final templates = notifier.templates;
-          if (templates.isEmpty) {
-            return Center(
-              child: Text(loc.settings_group_templates_empty_state),
-            );
-          }
-
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-            itemCount: templates.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final template = templates[index];
-              return SettingsCard(
-                context: context,
-                color: Theme.of(context).colorScheme.surface,
-                onTap: () => _openEditor(context, notifier, template: template),
-                child: ListTile(
-                  leading: Icon(
-                    GroupTypeLocalization.iconFromCodePoint(
-                      template.iconCodePoint,
-                    ),
+          return SettingsScaffold(
+            eyebrow: loc.settings,
+            title: loc.settings_group_templates_page_title,
+            floatingActionButton: AddFab(
+              onPressed: () => _openEditor(context, notifier),
+              tooltip: loc.settings_group_templates_add_title,
+            ),
+            children: [
+              if (templates.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 32, 8, 0),
+                  child: Text(
+                    loc.settings_group_templates_empty_state,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: s.onSurfaceVariant),
                   ),
-                  title: Text(template.name),
-                  subtitle: Text(template.defaultCategories.join(', ')),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        tooltip: loc.settings_group_templates_edit_title,
-                        onPressed: () =>
-                            _openEditor(context, notifier, template: template),
-                        icon: const Icon(Icons.edit_outlined),
-                      ),
-                      IconButton(
-                        tooltip: loc.settings_group_templates_delete_title,
-                        onPressed: () => _confirmDelete(
-                          context,
-                          notifier,
-                          template: template,
+                )
+              else
+                SettingsGroup(
+                  children: [
+                    for (final template in templates)
+                      SettingsTile(
+                        icon: GroupTypeLocalization.iconFromCodePoint(
+                          template.iconCodePoint,
                         ),
-                        icon: const Icon(Icons.delete_outline),
+                        title: template.name,
+                        subtitle: template.defaultCategories.join(', '),
+                        onTap: () =>
+                            _openEditor(context, notifier, template: template),
+                        trailing: IconButton(
+                          tooltip: loc.settings_group_templates_delete_title,
+                          onPressed: () => _confirmDelete(
+                            context,
+                            notifier,
+                            template: template,
+                          ),
+                          icon: Icon(
+                            Icons.delete_outline,
+                            color: s.onSurfaceVariant,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
-              );
-            },
+              // Room for the add button.
+              const SizedBox(height: 88),
+            ],
           );
         },
-      ),
-      floatingActionButton: AddFab(
-        onPressed: () =>
-            _openEditor(context, context.read<GroupTypeTemplatesNotifier>()),
-        tooltip: loc.settings_group_templates_add_title,
       ),
     );
   }

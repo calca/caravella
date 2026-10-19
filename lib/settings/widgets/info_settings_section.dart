@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart' as legacy;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -56,8 +57,18 @@ class InfoSettingsSection extends StatelessWidget {
             subtitle: loc.settings_debug_logs_desc,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) =>
-                    TalkerScreen(talker: LoggerService.instance),
+                // TalkerScreen is built on Flutter's classic material
+                // widgets, which look up the classic MaterialLocalizations
+                // type — not the material_ui one the app provides — and
+                // otherwise fail with "No MaterialLocalizations found".
+                builder: (context) => Localizations.override(
+                  context: context,
+                  delegates: const [
+                    legacy.GlobalMaterialLocalizations.delegate,
+                    legacy.GlobalCupertinoLocalizations.delegate,
+                  ],
+                  child: TalkerScreen(talker: LoggerService.instance),
+                ),
               ),
             ),
           ),
