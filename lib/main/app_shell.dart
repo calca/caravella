@@ -7,7 +7,8 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 enum AppTab { home, groups }
 
 /// Root of the app below [MaterialApp]: Home and Groups as two tabs kept
-/// alive in an [IndexedStack], with a [FloatingNavBar] floating over them.
+/// alive (switched with a Material "fade through"), with a [FloatingNavBar]
+/// floating over them.
 ///
 /// Each tab registers its primary action (the round button next to the bar)
 /// through [AppShellScope.of]: Home's is "new expense" in the featured group,
@@ -72,9 +73,14 @@ class _AppShellState extends State<AppShell> {
         },
         child: Stack(
           children: [
-            IndexedStack(
-              index: tab.index,
-              children: [widget.home, widget.groups],
+            // Page color behind the tabs, so the fade through never shows
+            // the black window between them.
+            ColoredBox(
+              color: pageColor,
+              child: FadeThroughStack(
+                index: tab.index,
+                children: [widget.home, widget.groups],
+              ),
             ),
             if (_navVisible) ...[
               // Content scrolling under the bar fades into the page instead
@@ -170,4 +176,103 @@ class AppShellScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(AppShellScope oldWidget) => false;
+}
+
+/// Like an [IndexedStack] — every child stays alive and keeps its state —
+/// but switching child plays the Material "fade through": the old child
+/// fades out in the first 35 %, then the new one fades in while scaling up
+/// from 92 %. Instant when the platform asks to disable animations.
+@visibleForTesting
+class FadeThroughStack extends StatefulWidget {
+  final int index;
+  final List<Widget> children;
+  final Duration duration;
+
+  const FadeThroughStack({
+    super.key,
+    required this.index,
+    required this.children,
+    this.duration = const Duration(milliseconds: 300),
+  });
+
+  @override
+  State<FadeThroughStack> createState() => _FadeThroughStackState();
+}
+
+class _FadeThroughStackState extends State<FadeThroughStack>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: widget.duration,
+    value: 1,
+  );
+  int? _previous;
+
+  static const _outCurve = Interval(0, 0.35, curve: Curves.easeOut);
+  static const _inCurve = Interval(0.35, 1, curve: Curves.easeOutCubic);
+
+  @override
+  void didUpdateWidget(FadeThroughStack oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index == widget.index) return;
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _previous = null;
+      _controller.value = 1;
+      return;
+    }
+    _previous = oldWidget.index;
+    _controller.forward(from: 0).whenComplete(() {
+      if (mounted) setState(() => _previous = null);
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        for (var i = 0; i < widget.children.length; i++)
+          _layer(i, widget.children[i]),
+      ],
+    );
+  }
+
+  // Same wrapper chain for every child whatever its role, so switching
+  // never rebuilds a child's subtree from scratch.
+  Widget _layer(int i, Widget child) {
+    final active = i == widget.index;
+    final leaving = i == _previous;
+    return TickerMode(
+      enabled: active || leaving,
+      child: Offstage(
+        offstage: !active && !leaving,
+        child: IgnorePointer(
+          ignoring: !active,
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              final t = _controller.value;
+              final opacity = active
+                  ? _inCurve.transform(t)
+                  : leaving
+                  ? 1 - _outCurve.transform(t)
+                  : 0.0;
+              final scale = active ? 0.92 + 0.08 * _inCurve.transform(t) : 1.0;
+              return Opacity(
+                opacity: opacity,
+                child: Transform.scale(scale: scale, child: child),
+              );
+            },
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
 }

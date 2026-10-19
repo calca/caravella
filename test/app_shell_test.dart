@@ -97,4 +97,39 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(FloatingNavBar), findsNothing);
   });
+
+  testWidgets('fade through keeps both tabs alive while switching', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.folder_copy_outlined));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 60));
+
+    // Mid-animation: the old tab is fading out, the new one is on stage.
+    expect(find.text('page home'), findsOneWidget);
+    expect(find.text('page groups'), findsOneWidget);
+
+    await tester.pumpAndSettle();
+    expect(find.text('page home'), findsNothing); // offstage, still alive
+    expect(find.text('page home', skipOffstage: false), findsOneWidget);
+    expect(find.text('page groups'), findsOneWidget);
+  });
+
+  testWidgets('switches instantly when animations are disabled', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(disableAnimations: true),
+        child: _app(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.folder_copy_outlined));
+    await tester.pump();
+    expect(find.text('page home'), findsNothing);
+    expect(find.text('page groups'), findsOneWidget);
+  });
 }
