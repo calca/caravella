@@ -1,5 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:caravella_core/caravella_core.dart';
+import '../../../services/receipt_scanner_service.dart';
+import 'package:caravella_core/caravella_core.dart' hide ImageSource;
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
@@ -23,12 +29,12 @@ class AddExpenseController {
     this.onCategoryAdded,
   });
 
-  /// Shows the quick add expense bottom sheet; with [startScan] it opens the
-  /// camera for a receipt scan right away.
+  /// Shows the quick add expense bottom sheet, optionally pre-filled with
+  /// [initialExpense] (e.g. a scanned receipt).
   void showAddExpenseSheet(
     BuildContext context,
     ExpenseGroup currentGroup, {
-    bool startScan = false,
+    ExpenseDetails? initialExpense,
   }) {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
@@ -45,7 +51,7 @@ class AddExpenseController {
             group: currentGroup,
             fullEdit: false,
             showGroupHeader: false,
-            autoStartScan: startScan,
+            initialExpense: initialExpense,
             onExpenseSaved: (expense) async {
               final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);
@@ -93,6 +99,80 @@ class AddExpenseController {
     ).whenComplete(() {
       notifier.clearCurrentGroup();
     });
+  }
+
+  /// Home's "Scan": opens the camera right away, reads the receipt, then
+  /// shows the quick-add sheet pre-filled with its amount and description
+  /// (still empty fields if nothing was recognised) and the photo attached.
+  Future<void> scanReceiptAndAdd(BuildContext context) async {
+    final gloc = gen.AppLocalizations.of(context);
+    try {
+      final picked = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (picked == null || !context.mounted) return;
+      AppToast.show(
+        context,
+        gloc.scanning_receipt,
+        duration: const Duration(seconds: 2),
+      );
+      final result = await ReceiptScannerService().scanReceipt(
+        File(picked.path),
+      );
+      if (!context.mounted) return;
+      final amount = result['amount'] as double?;
+      final description = result['description'] as String?;
+      if (amount == null && description == null) {
+        AppToast.show(context, gloc.no_text_found);
+      }
+      // Keep the receipt photo as the expense's first attachment.
+      String? receipt;
+      try {
+        receipt = await AttachmentsStorageService.getAttachmentPath(
+          group.title,
+          group.id,
+          picked.name,
+        );
+        await File(picked.path).copy(receipt);
+      } catch (e) {
+        LoggerService.warning(
+          'Could not keep the receipt photo: $e',
+          name: 'ui.scan',
+        );
+        receipt = null;
+      }
+      if (!context.mounted) return;
+      showAddExpenseSheet(
+        context,
+        group,
+        initialExpense: ExpenseDetails(
+          id: '',
+          name: description,
+          amount: amount,
+          paidBy: ExpenseParticipant(name: ''),
+          category: ExpenseCategory(name: ''),
+          date: DateTime.now(),
+          attachments: [?receipt],
+        ),
+      );
+    } on PlatformException catch (e) {
+      if (!context.mounted) return;
+      final denied =
+          e.code == 'camera_access_denied' || e.code == 'photo_access_denied';
+      AppToast.show(
+        context,
+        denied ? gloc.receipt_scan_permission_denied : gloc.receipt_scan_error,
+        type: ToastType.error,
+      );
+    } catch (e, st) {
+      LoggerService.error(
+        'Receipt scan from Home failed',
+        name: 'ui.scan',
+        error: e,
+        stackTrace: st,
+      );
+      if (context.mounted) {
+        AppToast.show(context, gloc.receipt_scan_error, type: ToastType.error);
+      }
+    }
   }
 
   void _openFullExpenseForm(
@@ -227,7 +307,7 @@ class _ExpenseEntrySheetWithState extends StatefulWidget {
   final bool fullEdit;
   final void Function(ExpenseFormState)? onExpand;
   final bool showGroupHeader;
-  final bool autoStartScan;
+  final ExpenseDetails? initialExpense;
 
   const _ExpenseEntrySheetWithState({
     required this.group,
@@ -237,7 +317,7 @@ class _ExpenseEntrySheetWithState extends StatefulWidget {
     this.fullEdit = true,
     this.onExpand,
     this.showGroupHeader = true,
-    this.autoStartScan = false,
+    this.initialExpense,
   });
 
   @override
@@ -272,7 +352,7 @@ class _ExpenseEntrySheetWithStateState
       onExpand: widget.onExpand,
       showGroupHeader: widget.showGroupHeader,
       onFormValidityChanged: _updateFormValidity,
-      autoStartScan: widget.autoStartScan,
+      initialExpense: widget.initialExpense,
     );
   }
 }

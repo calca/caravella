@@ -11,9 +11,7 @@ import '../../manager/details/pages/expense_group_detail_page.dart';
 class AppFunctionsInitialization {
   /// Set up the [PlatformAppFunctionsManager] with the add-expense callback.
   static void initialize() {
-    PlatformAppFunctionsManager.initialize(
-      onAddExpense: _handleAddExpense,
-    );
+    PlatformAppFunctionsManager.initialize(onAddExpense: _handleAddExpense);
   }
 
   /// Called when an AI agent requests a new expense to be added.
@@ -114,9 +112,7 @@ class AppFunctionsInitialization {
   ) {
     if (categoryName != null && group.categories.isNotEmpty) {
       final match = group.categories
-          .where(
-            (c) => c.name.toLowerCase() == categoryName.toLowerCase(),
-          )
+          .where((c) => c.name.toLowerCase() == categoryName.toLowerCase())
           .firstOrNull;
       if (match != null) return match;
     }

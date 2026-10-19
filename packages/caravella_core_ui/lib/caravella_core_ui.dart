@@ -30,6 +30,7 @@ export 'widgets/pill_segmented_control.dart';
 export 'widgets/status_bar_fade.dart';
 export 'widgets/settings_list.dart';
 export 'widgets/search_widgets.dart';
+export 'widgets/round_back_button.dart';
 export 'widgets/material3_dialog.dart';
 export 'widgets/no_expense.dart';
 export 'widgets/section_header.dart';

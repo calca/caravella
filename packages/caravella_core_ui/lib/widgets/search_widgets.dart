@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../themes/caravella_themes.dart';
 import 'card_outline.dart';
+import 'round_back_button.dart';
 
 /// Top of a search page: round back button, the query in a white pill and,
 /// with [onFilters], a round filters button showing how many filters are on.
@@ -38,11 +39,7 @@ class SearchTopBar extends StatelessWidget {
     final s = theme.colorScheme;
     return Row(
       children: [
-        Material(
-          color: s.raisedSurface,
-          shape: const CircleBorder(),
-          child: const BackButton(),
-        ),
+        const RoundBackButton(),
         const SizedBox(width: 8),
         Expanded(
           child: DecoratedBox(

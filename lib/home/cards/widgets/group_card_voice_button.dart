@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -49,6 +50,11 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
   bool _isProcessing = false;
   late final AnimationController _pulseController;
 
+  /// Live feedback for the listening panel (quick-action mode).
+  final ValueNotifier<String> _partial = ValueNotifier('');
+  final ValueNotifier<double> _level = ValueNotifier(0);
+  NavigatorState? _panelNavigator;
+
   @override
   void initState() {
     super.initState();
@@ -77,6 +83,8 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
   @override
   void dispose() {
     _pulseController.dispose();
+    _partial.dispose();
+    _level.dispose();
     _service.cancel();
     super.dispose();
   }
@@ -96,10 +104,18 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
     final localeId =
         '${locale.languageCode}_${locale.countryCode ?? locale.languageCode.toUpperCase()}';
 
+    if (widget.builder != null) _openListeningPanel();
+
     await _service.startListening(
       localeId: localeId,
-      onResult: (text) => _handleResult(text),
+      onPartial: (words) => _partial.value = words,
+      onSoundLevel: (level) => _level.value = level,
+      onResult: (text) {
+        _closeListeningPanel();
+        _handleResult(text);
+      },
       onError: (error) {
+        _closeListeningPanel();
         if (mounted) {
           _pulseController.stop();
           setState(() {
@@ -110,6 +126,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
         }
       },
       onDone: () {
+        _closeListeningPanel();
         if (mounted) {
           _pulseController.stop();
           setState(() {
@@ -119,6 +136,43 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
         }
       },
     );
+  }
+
+  /// A panel from the bottom while listening: a microphone pulsing with the
+  /// voice level, the words recognised so far, and Cancel.
+  void _openListeningPanel() {
+    _partial.value = '';
+    _level.value = 0;
+    final navigator = Navigator.of(context);
+    _panelNavigator = navigator;
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (_) => _ListeningPanel(
+        partial: _partial,
+        level: _level,
+        onCancel: () => navigator.maybePop(),
+      ),
+    ).whenComplete(() {
+      // Closed by the user (cancel, swipe, back): stop listening.
+      if (_panelNavigator != null) {
+        _panelNavigator = null;
+        _service.cancel();
+        if (mounted) {
+          _pulseController.stop();
+          setState(() {
+            _isListening = false;
+            _isProcessing = false;
+          });
+        }
+      }
+    });
+  }
+
+  void _closeListeningPanel() {
+    final navigator = _panelNavigator;
+    _panelNavigator = null;
+    navigator?.maybePop();
   }
 
   String _getError(VoiceInputError error) {
@@ -364,5 +418,102 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
       );
     }
     return Icon(_isListening ? Icons.mic : Icons.mic_none_outlined, size: 22);
+  }
+}
+
+class _ListeningPanel extends StatelessWidget {
+  final ValueListenable<String> partial;
+  final ValueListenable<double> level;
+  final VoidCallback onCancel;
+
+  const _ListeningPanel({
+    required this.partial,
+    required this.level,
+    required this.onCancel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 140,
+              child: Center(
+                child: ValueListenableBuilder<double>(
+                  valueListenable: level,
+                  builder: (context, value, child) {
+                    // Sound level is roughly -2..10 dB: map to a halo scale.
+                    final t = ((value + 2) / 12).clamp(0.0, 1.0);
+                    return Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 120),
+                          width: 88 + 48 * t,
+                          height: 88 + 48 * t,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: s.primary.withValues(alpha: 0.15),
+                          ),
+                        ),
+                        child!,
+                      ],
+                    );
+                  },
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: s.primary,
+                    ),
+                    child: Icon(
+                      Icons.mic_rounded,
+                      size: 40,
+                      color: s.onPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                gloc.voice_input_listening,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ValueListenableBuilder<String>(
+              valueListenable: partial,
+              builder: (context, words, _) => AnimatedSwitcher(
+                duration: const Duration(milliseconds: 150),
+                child: Text(
+                  words.isEmpty ? gloc.voice_input_hint : words,
+                  key: ValueKey(words.isEmpty),
+                  textAlign: TextAlign.center,
+                  style: words.isEmpty
+                      ? theme.textTheme.bodyMedium?.copyWith(
+                          color: s.onSurfaceVariant,
+                        )
+                      : theme.textTheme.titleLarge,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextButton(onPressed: onCancel, child: Text(gloc.cancel)),
+          ],
+        ),
+      ),
+    );
   }
 }

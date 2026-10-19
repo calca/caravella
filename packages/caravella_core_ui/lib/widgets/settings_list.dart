@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../themes/caravella_themes.dart';
 import 'card_outline.dart';
+import 'round_back_button.dart';
 import 'status_bar_fade.dart';
 
 /// Settings page in the app's style (app settings, a group's settings):
@@ -51,11 +52,7 @@ class SettingsScaffold extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Material(
-                  color: s.raisedSurface,
-                  shape: const CircleBorder(),
-                  child: const BackButton(),
-                ),
+                child: const RoundBackButton(),
               ),
               const SizedBox(height: 16),
               Padding(
