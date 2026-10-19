@@ -1818,4 +1818,6 @@
   ,"settlement_pays": "{from} 付给 {to} {amount}"
   ,"places_count": "{count, plural, other {{count} 个地点}}"
   ,"more_options": "更多选项"
+  ,"highest_expense": "最高支出"
+  ,"most_expensive_day": "花费最多的一天"
 }

@@ -2838,4 +2838,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get more_options => 'Altre opzioni';
+
+  @override
+  String get highest_expense => 'Spesa più alta';
+
+  @override
+  String get most_expensive_day => 'Giorno più caro';
 }

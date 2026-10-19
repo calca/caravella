@@ -1165,4 +1165,6 @@
   ,"settlement_pays": "{from} paga a {to} {amount}"
   ,"places_count": "{count, plural, one {1 local} other {{count} locais}}"
   ,"more_options": "Mais opções"
+  ,"highest_expense": "Maior despesa"
+  ,"most_expensive_day": "Dia mais caro"
 }

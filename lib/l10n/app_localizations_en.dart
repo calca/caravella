@@ -2819,4 +2819,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get more_options => 'More options';
+
+  @override
+  String get highest_expense => 'Highest expense';
+
+  @override
+  String get most_expensive_day => 'Most expensive day';
 }

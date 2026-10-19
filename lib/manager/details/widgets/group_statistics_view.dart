@@ -2,16 +2,19 @@ import 'dart:math' as math;
 
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
 import '../pages/tabs/categories_overview_tab.dart';
 import '../pages/tabs/usecase/daily_totals_utils.dart';
 import 'group_map_card.dart';
+import 'day_grouped_expense_list.dart';
 import 'stat_card.dart';
 
 /// Statistics view of the group page: spending chart, who paid how much,
-/// map, daily / monthly averages, then the categories. The total, period
+/// map, daily / monthly averages, highest expense and most expensive day,
+/// then the categories. The total, period
 /// and participant count are already in the page header, so they aren't
 /// repeated here.
 class GroupStatisticsView extends StatelessWidget {
@@ -95,12 +98,65 @@ class GroupStatisticsView extends StatelessWidget {
               ],
             ),
           ),
+          if (highestExpense(group) case final top?) ...[
+            const SizedBox(height: 12),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: StatCard(
+                      title: gloc.highest_expense,
+                      value: top.amount ?? 0,
+                      currency: group.currency,
+                      subtitle: top.name ?? '',
+                      icon: Icons.arrow_upward_rounded,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  if (mostExpensiveDay(group) case (final day, final total))
+                    Expanded(
+                      child: StatCard(
+                        title: gloc.most_expensive_day,
+                        value: total,
+                        currency: group.currency,
+                        subtitle: DateFormat(
+                          'EEE d MMM',
+                          Localizations.localeOf(context).toString(),
+                        ).format(day),
+                        icon: Icons.event_rounded,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
           title(gloc.categories),
           CategoriesOverviewTab(trip: group, embedded: true),
         ],
       ),
     );
   }
+}
+
+/// The group's largest expense, or null when it has none.
+ExpenseDetails? highestExpense(ExpenseGroup group) => group.expenses.isEmpty
+    ? null
+    : group.expenses.reduce(
+        (a, b) => (b.amount ?? 0) > (a.amount ?? 0) ? b : a,
+      );
+
+/// The calendar day with the highest total and that total, or null when the
+/// group has no expenses.
+(DateTime, double)? mostExpensiveDay(ExpenseGroup group) {
+  (DateTime, double)? best;
+  for (final (day, expenses) in DayGroupedExpenseSliver.groupByDay(
+    group.expenses,
+  )) {
+    final total = expenses.fold<double>(0, (t, e) => t + (e.amount ?? 0));
+    if (best == null || total > best.$2) best = (day, total);
+  }
+  return best;
 }
 
 /// Who paid how much: one avatar per participant, sized by what they paid

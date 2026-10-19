@@ -2840,4 +2840,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get more_options => 'Más opciones';
+
+  @override
+  String get highest_expense => 'Gasto más alto';
+
+  @override
+  String get most_expensive_day => 'Día más caro';
 }

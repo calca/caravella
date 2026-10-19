@@ -2743,4 +2743,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get more_options => '更多选项';
+
+  @override
+  String get highest_expense => '最高支出';
+
+  @override
+  String get most_expensive_day => '花费最多的一天';
 }

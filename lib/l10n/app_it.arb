@@ -1188,4 +1188,6 @@
   ,"settlement_pays": "{from} dà a {to} {amount}"
   ,"places_count": "{count, plural, one {1 luogo} other {{count} luoghi}}"
   ,"more_options": "Altre opzioni"
+  ,"highest_expense": "Spesa più alta"
+  ,"most_expensive_day": "Giorno più caro"
 }

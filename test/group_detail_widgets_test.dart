@@ -129,4 +129,18 @@ void main() {
     expect(groupPlacesCount(group), 2);
     expect(groupPlacesCount(_group([])), 0);
   });
+
+  test('highest expense and most expensive day', () {
+    final group = _group([
+      _expense('Breakfast', 10, day1, _anna),
+      _expense('Lunch', 30, day1.add(const Duration(hours: 4)), _luca),
+      _expense('Dinner', 35, day2, _luca),
+    ]);
+    expect(highestExpense(group)?.name, 'Dinner');
+    final (day, total) = mostExpensiveDay(group)!;
+    expect(day, DateTime(2026, 10, 16));
+    expect(total, 40);
+    expect(highestExpense(_group([])), isNull);
+    expect(mostExpensiveDay(_group([])), isNull);
+  });
 }

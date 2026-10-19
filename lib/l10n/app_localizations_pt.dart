@@ -2836,4 +2836,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get more_options => 'Mais opções';
+
+  @override
+  String get highest_expense => 'Maior despesa';
+
+  @override
+  String get most_expensive_day => 'Dia mais caro';
 }

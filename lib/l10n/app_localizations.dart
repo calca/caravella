@@ -5314,6 +5314,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More options'**
   String get more_options;
+
+  /// Statistics card: the single largest expense of the group
+  ///
+  /// In en, this message translates to:
+  /// **'Highest expense'**
+  String get highest_expense;
+
+  /// Statistics card: the day with the highest total spending
+  ///
+  /// In en, this message translates to:
+  /// **'Most expensive day'**
+  String get most_expensive_day;
 }
 
 class _AppLocalizationsDelegate
