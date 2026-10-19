@@ -8,6 +8,7 @@ import 'package:image_picker_platform_interface/image_picker_platform_interface.
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_gms/caravella_gms.dart';
 
+import '../settings/backup/drive_backup_service.dart';
 import '../settings/flag_secure_android.dart';
 
 /// Initializes the app: platform-specific setup, orientation, system UI, and image cache.
@@ -195,5 +196,16 @@ class AppInitialization {
     configureImageCache();
     await initFlagSecure();
     await initStorage();
+    scheduleWeeklyDriveBackup();
+  }
+
+  /// The weekly Google Drive backup, if the user turned it on: shortly
+  /// after start, in the background, never blocking or failing startup.
+  static void scheduleWeeklyDriveBackup() {
+    if (DriveBackupService.store == null) return;
+    Future<void>.delayed(
+      const Duration(seconds: 20),
+      DriveBackupService.runIfDue,
+    );
   }
 }

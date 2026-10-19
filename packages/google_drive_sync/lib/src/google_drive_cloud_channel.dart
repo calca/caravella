@@ -23,11 +23,18 @@ class GoogleDriveCloudChannel extends CloudRelayChannel
 
   Timer? _pollTimer;
 
-  GoogleDriveCloudChannel({String? iosClientId, String? serverClientId})
-    : _auth = GoogleDriveAuthService(
-        iosClientId: iosClientId,
-        serverClientId: serverClientId,
-      );
+  /// [auth] is shared with the Drive backup ([GoogleDriveSyncFactory]
+  /// hands both the same one): Google sign-in can only be initialized once.
+  GoogleDriveCloudChannel({
+    GoogleDriveAuthService? auth,
+    String? iosClientId,
+    String? serverClientId,
+  }) : _auth =
+           auth ??
+           GoogleDriveAuthService(
+             iosClientId: iosClientId,
+             serverClientId: serverClientId,
+           );
 
   @override
   String get channelName => 'cloud';

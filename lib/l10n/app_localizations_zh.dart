@@ -2858,4 +2858,37 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get auto_backup_off => '已关闭：Caravella 的数据不会包含在手机备份中';
+
+  @override
+  String get drive_backup_connect => '连接 Google 云端硬盘';
+
+  @override
+  String get drive_backup_connect_desc => '将备份保存在云端硬盘的私有文件夹中';
+
+  @override
+  String get drive_backup_now => '立即备份到云端硬盘';
+
+  @override
+  String get drive_backup_none => '云端硬盘中还没有备份';
+
+  @override
+  String get drive_backup_restore => '从云端硬盘恢复';
+
+  @override
+  String get drive_backup_restore_desc => '从最近 5 个备份中选择';
+
+  @override
+  String get drive_backup_weekly => '每周备份';
+
+  @override
+  String get drive_backup_weekly_desc => '每周打开应用时保存一份副本';
+
+  @override
+  String get drive_backup_disconnect => '断开连接';
+
+  @override
+  String get drive_backup_saved => '备份已保存到 Google 云端硬盘';
+
+  @override
+  String get drive_backup_error => '无法连接 Google 云端硬盘';
 }

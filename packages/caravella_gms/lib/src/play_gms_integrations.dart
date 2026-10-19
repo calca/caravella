@@ -31,6 +31,11 @@ class PlayGmsIntegrations extends GmsIntegrations {
   CloudRelayChannel? createCloudChannel() =>
       GoogleDriveSyncFactory.createCloudChannel();
 
+  // Same flag as cloud sync (it shares its Google sign-in).
+  @override
+  CloudBackupStore? createCloudBackupStore() =>
+      GoogleDriveSyncFactory.createBackupStore();
+
   @override
   bool get supportsBluetoothSync => true;
 

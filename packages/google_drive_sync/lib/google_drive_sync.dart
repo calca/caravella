@@ -10,5 +10,6 @@ library;
 
 export 'src/google_drive_auth_service.dart';
 export 'src/google_drive_api_client.dart';
+export 'src/google_drive_backup_store.dart';
 export 'src/google_drive_cloud_channel.dart';
 export 'src/google_drive_sync_factory.dart';

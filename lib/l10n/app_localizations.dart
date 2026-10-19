@@ -5493,6 +5493,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Off: Caravella\'s data is left out of your phone\'s backup'**
   String get auto_backup_off;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Google Drive'**
+  String get drive_backup_connect;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Keep backups in a private folder of your Drive'**
+  String get drive_backup_connect_desc;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Back up to Drive now'**
+  String get drive_backup_now;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'No backup on Drive yet'**
+  String get drive_backup_none;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from Drive'**
+  String get drive_backup_restore;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Choose one of the last 5 backups'**
+  String get drive_backup_restore_desc;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly backup'**
+  String get drive_backup_weekly;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'A copy every week, when you open the app'**
+  String get drive_backup_weekly_desc;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get drive_backup_disconnect;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Backup saved to Google Drive'**
+  String get drive_backup_saved;
+
+  /// Settings → Data, Google Drive backup
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach Google Drive'**
+  String get drive_backup_error;
 }
 
 class _AppLocalizationsDelegate

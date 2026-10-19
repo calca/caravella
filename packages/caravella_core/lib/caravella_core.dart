@@ -32,6 +32,7 @@ export 'data/storage_performance.dart';
 export 'services/logging/logger_service.dart';
 
 // Services - Storage
+export 'services/backup/backup_archive.dart';
 export 'services/storage/preferences_service.dart';
 export 'services/storage/group_type_template_service.dart';
 export 'services/storage/attachments_storage_service.dart';
@@ -87,5 +88,6 @@ export 'state/theme_mode_notifier.dart';
 export 'state/user_name_notifier.dart';
 
 // Proprietary (Google Mobile Services) integrations — implemented in caravella_gms
+export 'integrations/cloud_backup_store.dart';
 export 'integrations/gms_integrations.dart';
 export 'integrations/update_localizations.dart';
