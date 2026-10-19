@@ -106,4 +106,40 @@ void main() {
     await tester.pumpWidget(_bar());
     expect(find.byIcon(Icons.add), findsNothing);
   });
+
+  testWidgets('the selected pill slides over to the new destination', (
+    tester,
+  ) async {
+    Rect pill() => tester.getRect(
+      find
+          .descendant(
+            of: find.byType(FloatingNavBar),
+            matching: find.byWidgetPredicate(
+              (w) =>
+                  w is DecoratedBox &&
+                  w.decoration is ShapeDecoration &&
+                  (w.decoration as ShapeDecoration).color ==
+                      FloatingNavBar.selectedColor(ThemeData().colorScheme),
+            ),
+          )
+          .first,
+    );
+
+    await tester.pumpWidget(_bar(selected: 0));
+    await tester.pumpAndSettle();
+    final start = pill();
+    await tester.pumpWidget(_bar(selected: 1));
+    await tester.pump(const Duration(milliseconds: 80));
+    final mid = pill();
+    // Both labels are visible mid-way: one closing, one opening.
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Groups'), findsOneWidget);
+    await tester.pumpAndSettle();
+    final end = pill();
+
+    expect(mid.left, greaterThan(start.left));
+    expect(mid.left, lessThan(end.left));
+    expect(find.text('Home'), findsNothing);
+    expect(tester.takeException(), isNull); // no overflow while resizing
+  });
 }
