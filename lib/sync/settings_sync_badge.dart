@@ -190,7 +190,8 @@ class _SyncStatusIconState extends State<SyncStatusIcon> with _SyncStatusMixin {
 /// whose sync-arrows icon tells the overall sync state — done (arrows with
 /// a check, green), syncing (rotating arrows), failed (arrows with "!",
 /// ochre) — and opens the sync settings. Sync is device to device, so no
-/// cloud icons. Hidden while no sync channel is enabled.
+/// cloud icons. Shown only while syncing or after a failure (hidden when
+/// all is fine or no sync channel is enabled).
 class HomeSyncButton extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
@@ -218,7 +219,12 @@ class _HomeSyncButtonState extends State<HomeSyncButton>
 
   @override
   Widget build(BuildContext context) {
-    if (!loaded || !anyChannelEnabled) return const SizedBox.shrink();
+    // Only when there is something to tell: a sync running or a failure.
+    // "All fine" is the normal state and needs no icon in the header.
+    if (!loaded || !anyChannelEnabled || (!syncing && !hasError)) {
+      if (_spin.isAnimating) _spin.stop();
+      return const SizedBox.shrink();
+    }
     final s = Theme.of(context).colorScheme;
     final gloc = gen.AppLocalizations.of(context);
 

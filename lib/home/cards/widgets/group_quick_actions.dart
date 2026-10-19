@@ -48,7 +48,7 @@ class GroupQuickActions extends StatelessWidget {
             onTap: () => AddExpenseController(
               group: group,
               onExpenseAdded: onExpenseAdded,
-            ).showAddExpenseSheet(context, group, startScan: true),
+            ).scanReceiptAndAdd(context),
           ),
         // Hidden on devices without speech recognition.
         GroupCardVoiceButton(

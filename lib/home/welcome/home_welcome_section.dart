@@ -162,7 +162,8 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
               child: RepaintBoundary(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    gradient: backgroundGradient, // Use gradient instead of solid color
+                    gradient:
+                        backgroundGradient, // Use gradient instead of solid color
                   ),
                 ),
               ),
@@ -174,7 +175,8 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                 left: 24,
                 right: 24,
                 top: topPadding + 16, // Status bar + padding aggiuntivo
-                bottom: bottomPadding + 16, // Navigation bar + padding aggiuntivo
+                bottom:
+                    bottomPadding + 16, // Navigation bar + padding aggiuntivo
               ),
               child: Column(
                 children: [
@@ -271,7 +273,8 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                         ),
                         // Bottone principale "Avanti" sopra al bottone impostazioni
                         Positioned(
-                          bottom: 60, // Posizionato sopra al bottone impostazioni
+                          bottom:
+                              60, // Posizionato sopra al bottone impostazioni
                           right: 0,
                           child: FadeTransition(
                             opacity: _contentFadeAnimation,

@@ -278,8 +278,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
                     child: Row(
                       children: [
                         if (shell == null) ...[
-                          const BackButton(),
-                          const SizedBox(width: 4),
+                          const RoundBackButton(),
+                          const SizedBox(width: 12),
                         ],
                         Expanded(
                           child: Column(

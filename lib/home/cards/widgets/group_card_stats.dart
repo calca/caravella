@@ -57,8 +57,11 @@ class _GroupCardStatsState extends State<GroupCardStats> {
   /// Build daily totals for the last 15 days via shared utility.
   List<double> _buildLast15DaysTotals() {
     final now = DateTime.now();
-    final start = DateTime(now.year, now.month, now.day)
-        .subtract(const Duration(days: 14));
+    final start = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(const Duration(days: 14));
     return calculateDailyTotalsOptimized(widget.group, start, 15);
   }
 

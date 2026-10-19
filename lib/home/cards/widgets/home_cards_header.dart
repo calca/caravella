@@ -56,37 +56,9 @@ class HomeCardsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getFlavorBgColor() {
-      const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'staging');
-      switch (flavor) {
-        case 'prod':
-          return theme.colorScheme.onSurface;
-        case 'dev':
-        case 'staging':
-        default:
-          return theme.colorScheme.tertiary;
-      }
-    }
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Avatar statico
-        Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHigh,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            _getGreetingData().icon,
-            size: 28,
-            color: getFlavorBgColor(),
-          ),
-        ),
-        const SizedBox(width: 16),
-
         // Saluto su due righe (saluto + nome), centrato verticalmente
         Expanded(
           child: Consumer<UserNameNotifier>(
@@ -95,8 +67,9 @@ class HomeCardsHeader extends StatelessWidget {
               final hasName = userNameNotifier.hasName;
               final name = hasName ? userNameNotifier.name : null;
 
+              // Like the Groups page: small greeting over a large name.
               return SizedBox(
-                height: 56, // allinea verticalmente con l'avatar
+                height: 64,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,8 +93,8 @@ class HomeCardsHeader extends StatelessWidget {
                         name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
                           color: theme.colorScheme.onSurface,
                         ),
                       ),

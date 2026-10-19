@@ -59,6 +59,9 @@ class VoiceInputService {
   /// caller can show a message that actually matches what happened
   /// (permission denied vs. no speech detected vs. a real failure).
   ///
+  /// [onPartial] gets the words recognised so far while the user speaks and
+  /// [onSoundLevel] the microphone level, for live feedback.
+  ///
   /// [onDone] is an optional safety net: it fires if the recognizer session
   /// ends without ever calling [onResult] or [onError] (a rare platform
   /// edge case), so the UI never gets stuck showing "listening…" forever.
@@ -67,6 +70,8 @@ class VoiceInputService {
     required void Function(VoiceInputError error) onError,
     void Function()? onDone,
     String? localeId,
+    void Function(String words)? onPartial,
+    void Function(double level)? onSoundLevel,
   }) async {
     if (!_isInitialized) {
       final available = await isAvailable();
@@ -82,7 +87,11 @@ class VoiceInputService {
     _activeOnDone = onDone;
 
     await _speech.listen(
+      onSoundLevelChange: onSoundLevel,
       onResult: (result) {
+        if (!result.finalResult) {
+          onPartial?.call(result.recognizedWords);
+        }
         if (result.finalResult) {
           _sessionResolved = true;
           _activeOnError = null;
@@ -95,7 +104,7 @@ class VoiceInputService {
         localeId: localeId,
         listenMode: stt.ListenMode.confirmation,
         cancelOnError: true,
-        partialResults: false,
+        partialResults: onPartial != null,
       ),
     );
   }
@@ -117,8 +126,7 @@ class VoiceInputService {
     // ones already handled by onResult/onError above — only act on it when
     // nothing has resolved the session yet, so the UI can quietly return to
     // idle instead of hanging.
-    if ((status == 'done' || status == 'notListening') &&
-        !_sessionResolved) {
+    if ((status == 'done' || status == 'notListening') && !_sessionResolved) {
       _sessionResolved = true;
       final callback = _activeOnDone;
       _activeOnError = null;

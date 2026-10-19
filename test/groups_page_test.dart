@@ -1,3 +1,4 @@
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/history/expenses_history_page.dart';
@@ -67,7 +68,7 @@ void main() {
   ) async {
     await tester.pumpWidget(_app());
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.byType(BackButton), findsOneWidget);
+    expect(find.byType(RoundBackButton), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
   });
 }
