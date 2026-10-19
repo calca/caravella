@@ -14,96 +14,42 @@ class PrivacySettingsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final isAndroid = Theme.of(context).platform == TargetPlatform.android;
-    return SettingsSection(
-      title: loc.settings_privacy,
-      description: loc.settings_privacy_desc,
+    if (!isAndroid) return const SizedBox.shrink();
+    return SettingsGroup(
+      label: loc.settings_privacy,
       children: [
-        if (isAndroid) _buildFlagSecureRow(context, loc),
-        if (isAndroid) const SizedBox(height: 8),
-        if (isAndroid) _buildAppFunctionsRow(context, loc),
+        Consumer<FlagSecureNotifier>(
+          builder: (context, notifier, _) => SettingsTile(
+            icon: Icons.privacy_tip_outlined,
+            title: loc.settings_flag_secure_title,
+            subtitle: loc.settings_flag_secure_desc,
+            switchValue: notifier.enabled,
+            onSwitch: (val) async {
+              final applied = await FlagSecureAndroid.setFlagSecure(val);
+              if (!applied) {
+                if (context.mounted) {
+                  AppToast.show(
+                    context,
+                    loc.settings_flag_secure_error,
+                    type: ToastType.error,
+                  );
+                }
+                return;
+              }
+              await notifier.setEnabled(val);
+            },
+          ),
+        ),
+        Consumer<AppFunctionsEnabledNotifier>(
+          builder: (context, notifier, _) => SettingsTile(
+            icon: Icons.smart_toy_outlined,
+            title: loc.settings_app_functions_title,
+            subtitle: loc.settings_app_functions_desc,
+            switchValue: notifier.enabled,
+            onSwitch: notifier.setEnabled,
+          ),
+        ),
       ],
-    );
-  }
-
-  Widget _buildFlagSecureRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return Consumer<FlagSecureNotifier>(
-      builder: (context, notifier, _) {
-        Future<void> toggle(bool val) async {
-          final applied = await FlagSecureAndroid.setFlagSecure(val);
-          if (!applied) {
-            if (context.mounted) {
-              AppToast.show(
-                context,
-                loc.settings_flag_secure_error,
-                type: ToastType.error,
-              );
-            }
-            return;
-          }
-          await notifier.setEnabled(val);
-        }
-
-        return SettingsCard(
-          context: context,
-          color: colorScheme.surface,
-          semanticsToggled: notifier.enabled,
-          semanticsLabel: loc.settings_flag_secure_title,
-          semanticsHint: notifier.enabled
-              ? loc.accessibility_double_tap_disable
-              : loc.accessibility_double_tap_enable,
-          onTap: () => toggle(!notifier.enabled),
-          child: ListTile(
-            leading: const Icon(Icons.privacy_tip_outlined),
-            title: Text(
-              loc.settings_flag_secure_title,
-              style: textTheme.titleMedium,
-            ),
-            subtitle: Text(
-              loc.settings_flag_secure_desc,
-              style: textTheme.bodySmall,
-            ),
-            trailing: Switch(
-              value: notifier.enabled,
-              onChanged: toggle,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildAppFunctionsRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return Consumer<AppFunctionsEnabledNotifier>(
-      builder: (context, notifier, _) {
-        Future<void> toggle(bool val) => notifier.setEnabled(val);
-
-        return SettingsCard(
-          context: context,
-          color: colorScheme.surface,
-          semanticsToggled: notifier.enabled,
-          semanticsLabel: loc.settings_app_functions_title,
-          onTap: () => toggle(!notifier.enabled),
-          child: ListTile(
-            leading: const Icon(Icons.smart_toy_outlined),
-            title: Text(
-              loc.settings_app_functions_title,
-              style: textTheme.titleMedium,
-            ),
-            subtitle: Text(
-              loc.settings_app_functions_desc,
-              style: textTheme.bodySmall,
-            ),
-            trailing: Switch(
-              value: notifier.enabled,
-              onChanged: toggle,
-            ),
-          ),
-        );
-      },
     );
   }
 }

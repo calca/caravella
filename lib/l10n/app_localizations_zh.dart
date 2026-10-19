@@ -2802,4 +2802,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get chart_month_by_month => '每月支出';
+
+  @override
+  String get edit => '编辑';
 }

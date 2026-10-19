@@ -1282,4 +1282,6 @@
   ,"@chart_week_by_week": {"description": "Title of the group statistics chart with one point per week (groups up to ~6 months)"}
   ,"chart_month_by_month": "Month by month"
   ,"@chart_month_by_month": {"description": "Title of the group statistics chart with one point per month (long groups)"}
+  ,"edit": "Edit"
+  ,"@edit": {"description": "Spoken action of the profile card at the top of the settings pages"}
 }

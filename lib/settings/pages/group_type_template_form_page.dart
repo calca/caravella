@@ -27,8 +27,7 @@ class GroupTypeTemplateFormPage extends StatefulWidget {
       _GroupTypeTemplateFormPageState();
 }
 
-class _GroupTypeTemplateFormPageState
-    extends State<GroupTypeTemplateFormPage> {
+class _GroupTypeTemplateFormPageState extends State<GroupTypeTemplateFormPage> {
   late final TextEditingController _nameController;
   late final List<String> _categories;
   late int _iconCodePoint;

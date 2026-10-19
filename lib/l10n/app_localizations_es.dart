@@ -2900,4 +2900,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get chart_month_by_month => 'Mes a mes';
+
+  @override
+  String get edit => 'Editar';
 }

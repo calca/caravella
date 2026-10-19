@@ -1204,4 +1204,5 @@
   ,"balance_reminder_message": "Ciao {from}! Per «{group}» devi {amount} a {to}."
   ,"chart_week_by_week": "Settimana per settimana"
   ,"chart_month_by_month": "Mese per mese"
+  ,"edit": "Modifica"
 }

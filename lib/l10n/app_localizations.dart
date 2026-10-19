@@ -5415,6 +5415,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Month by month'**
   String get chart_month_by_month;
+
+  /// Spoken action of the profile card at the top of the settings pages
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
 }
 
 class _AppLocalizationsDelegate

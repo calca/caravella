@@ -5,7 +5,8 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import '../pages/appearance_settings_page.dart';
 
-/// "General" settings section: user name and appearance entry point.
+/// "General" settings section: the appearance entry point (the user name
+/// is the [UserProfileCard] at the top of the page).
 class GeneralSettingsSection extends StatelessWidget {
   final String locale;
   final void Function(String)? onLocaleChanged;
@@ -19,70 +20,26 @@ class GeneralSettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    return SettingsSection(
-      title: loc.settings_general,
-      description: loc.settings_general_desc,
+    return SettingsGroup(
+      label: loc.settings_general,
       children: [
-        _buildUserNameRow(context, loc),
-        const SizedBox(height: 8),
-        _buildAppearanceRow(context, loc),
+        SettingsTile(
+          icon: Icons.palette_outlined,
+          title: loc.settings_appearance,
+          subtitle: loc.settings_appearance_desc,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (ctx) =>
+                  AppearanceSettingsPage(onLocaleChanged: onLocaleChanged),
+            ),
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildUserNameRow(BuildContext context, gen.AppLocalizations loc) {
-    return Consumer<UserNameNotifier>(
-      builder: (context, userNameNotifier, child) {
-        final textTheme = Theme.of(context).textTheme;
-        final colorScheme = Theme.of(context).colorScheme;
-
-        return SettingsCard(
-          context: context,
-          semanticsButton: true,
-          semanticsLabel: loc.settings_user_name_title,
-          color: colorScheme.surface,
-          onTap: () => _showNameDialog(context, loc, userNameNotifier),
-          child: ListTile(
-            leading: const Icon(Icons.person_outline),
-            title: Text(
-              loc.settings_user_name_title,
-              style: textTheme.titleMedium,
-            ),
-            subtitle: Text(
-              userNameNotifier.hasName
-                  ? userNameNotifier.name
-                  : loc.settings_user_name_desc,
-              style: textTheme.bodySmall,
-            ),
-            trailing: const Icon(Icons.edit),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildAppearanceRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (ctx) =>
-              AppearanceSettingsPage(onLocaleChanged: onLocaleChanged),
-        ),
-      ),
-      child: ListTile(
-        leading: const Icon(Icons.palette_outlined),
-        title: Text(loc.settings_appearance, style: textTheme.titleMedium),
-        subtitle: Text(loc.settings_appearance_desc),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      ),
-    );
-  }
-
-  Future<void> _showNameDialog(
+  /// Asks for the user's name (shared with [UserProfileCard]).
+  static Future<void> showNameDialog(
     BuildContext context,
     gen.AppLocalizations loc,
     UserNameNotifier userNameNotifier,
@@ -116,5 +73,41 @@ class GeneralSettingsSection extends StatelessWidget {
       },
     );
     controller.dispose();
+  }
+}
+
+/// Top card of the app settings: the user's name (or a prompt to set it),
+/// tap to change it.
+class UserProfileCard extends StatelessWidget {
+  const UserProfileCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = gen.AppLocalizations.of(context);
+    final s = Theme.of(context).colorScheme;
+    return Consumer<UserNameNotifier>(
+      builder: (context, user, _) {
+        final name = user.hasName ? user.name : loc.settings_user_name_title;
+        return SettingsProfileCard(
+          leading: CircleAvatar(
+            backgroundColor: s.onSurface.withValues(alpha: 0.06),
+            foregroundColor: s.onSurface,
+            child: user.hasName
+                ? Text(
+                    name.characters.first.toUpperCase(),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )
+                : const Icon(Icons.person_outline),
+          ),
+          title: name,
+          subtitle: loc.settings_user_name_desc,
+          actionLabel: loc.edit,
+          onTap: () =>
+              GeneralSettingsSection.showNameDialog(context, loc, user),
+        );
+      },
+    );
   }
 }
