@@ -4,6 +4,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../group/widgets/period_selection_bottom_sheet.dart';
+import '../widgets/expense_day_row.dart';
 import '../widgets/expense_search_empty_state.dart';
 
 /// Search over a group's expenses, in the app's style.
@@ -560,15 +561,10 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   Widget _resultRow(ExpenseDetails expense) {
     final theme = Theme.of(context);
     final reason = _matchReason(expense);
-    final row = ExpenseAmountCard(
-      title: expense.name ?? '',
-      amount: expense.amount ?? 0,
-      checked: true,
-      paidBy: expense.paidBy,
-      category: expense.category.name,
-      date: expense.date,
+    final row = ExpenseDayRow(
+      expense: expense,
       currency: widget.currency,
-      compact: true,
+      showMonth: true,
       highlightQuery: _searchQuery.trim().isEmpty ? null : _searchQuery,
       onTap: () {
         _unfocus();
@@ -581,7 +577,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
       children: [
         row,
         Padding(
-          padding: const EdgeInsets.fromLTRB(56, 0, 16, 10),
+          padding: const EdgeInsets.fromLTRB(62, 0, 16, 12),
           child: Row(
             children: [
               Icon(reason.$1, size: 14, color: theme.colorScheme.primary),

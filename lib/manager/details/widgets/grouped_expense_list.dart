@@ -4,9 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
+import 'expense_day_row.dart';
+
 /// Expenses of a group as a sliver: one card per calendar week (Monday to
 /// Sunday, newest first) with the week and its total above it; each row
-/// shows when the expense was made. Rows open [onExpenseTap].
+/// ([ExpenseDayRow]) shows its day like a calendar. Rows open
+/// [onExpenseTap].
 class WeekGroupedExpenseSliver extends StatelessWidget {
   final List<ExpenseDetails> expenses;
   final String currency;
@@ -152,20 +155,14 @@ class _WeekSection extends StatelessWidget {
                     if (i > 0)
                       Divider(
                         height: 1,
-                        indent: 16,
+                        indent: 62,
                         endIndent: 16,
                         color: s.outlineVariant.withValues(alpha: 0.5),
                       ),
                     _maybeAnimated(
                       expenses[i].id == highlightedExpenseId,
-                      ExpenseAmountCard(
-                        title: expenses[i].name ?? '',
-                        amount: expenses[i].amount ?? 0,
-                        checked: true,
-                        paidBy: expenses[i].paidBy,
-                        category: expenses[i].category.name,
-                        date: expenses[i].date,
-                        compact: true,
+                      ExpenseDayRow(
+                        expense: expenses[i],
                         currency: currency,
                         onTap: () => onExpenseTap(expenses[i]),
                       ),
