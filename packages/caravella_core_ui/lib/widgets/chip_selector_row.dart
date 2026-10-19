@@ -1,28 +1,29 @@
 import 'package:material_ui/material_ui.dart';
 import 'selection_bottom_sheet.dart';
 import '../themes/app_spacing.dart';
+import '../themes/caravella_themes.dart';
+import 'form_pill.dart';
 
-/// Horizontally scrolling row of selectable chips for compact single-value
-/// pickers (e.g. "paid by", "category").
+/// Pills for compact single-value pickers (e.g. "paid by", "category"),
+/// wrapping onto more lines instead of scrolling off screen.
 ///
 /// Shows up to [maxVisibleItems] items in the order given by [items] (the
 /// caller decides the order, e.g. last-used-first). When there are more
-/// than [maxVisibleItems] + 1 items, the row collapses the remainder behind
-/// a trailing "..." chip that opens [showSelectionBottomSheet] to browse the
-/// full list. If [selected] is hidden behind that overflow, the "..." chip
+/// than [maxVisibleItems] + 1 items, the remainder is collapsed behind a
+/// trailing "..." pill that opens [showSelectionBottomSheet] to browse the
+/// full list. If [selected] is hidden behind that overflow, the "..." pill
 /// shows its label instead, so the current selection always stays visible.
-/// An optional trailing "add" chip opens the same sheet in inline-add mode
-/// when [onAddItemInline] is provided.
+/// An optional trailing "+" pill opens the same sheet in inline-add mode
+/// when [onAddItemInline] is provided. [itemLeading] puts a widget (e.g.
+/// an avatar) before each label.
 class ChipSelectorRow<T> extends StatelessWidget {
   static const int maxVisibleItems = 4;
-  // 48dp: the minimum touch target; chips keep their compact look via
-  // MaterialTapTargetSize.padded.
-  static const double _chipRowHeight = 48;
   static const String _moreLabel = '...';
 
   final List<T> items;
   final T? selected;
   final String Function(T) itemLabel;
+  final Widget Function(T)? itemLeading;
   final ValueChanged<T> onSelected;
   final bool enabled;
 
@@ -40,6 +41,7 @@ class ChipSelectorRow<T> extends StatelessWidget {
     required this.selected,
     required this.itemLabel,
     required this.onSelected,
+    this.itemLeading,
     this.enabled = true,
     this.onAddItemInline,
     this.addItemHint,
@@ -76,131 +78,85 @@ class ChipSelectorRow<T> extends StatelessWidget {
       if (picked != null) onSelected(picked);
     }
 
-    final chips = <Widget>[
+    final pills = <Widget>[
       for (final item in visible)
-        _SelectorChip(
+        FormPill(
           label: itemLabel(item),
-          selected: selected == item,
-          enabled: enabled,
-          onTap: () => onSelected(item),
+          leading: itemLeading?.call(item),
+          style: selected == item
+              ? FormPillStyle.selected
+              : FormPillStyle.normal,
+          onTap: enabled ? () => onSelected(item) : null,
         ),
       if (_hasOverflow)
-        _SelectorChip(
+        FormPill(
           label: selectedIsHidden ? itemLabel(selected as T) : _moreLabel,
-          selected: selectedIsHidden,
-          enabled: enabled,
-          onTap: openPicker,
+          leading: selectedIsHidden ? itemLeading?.call(selected as T) : null,
+          style: selectedIsHidden
+              ? FormPillStyle.selected
+              : FormPillStyle.normal,
+          semanticsLabel: selectedIsHidden ? null : sheetTitle,
+          onTap: enabled ? openPicker : null,
         ),
       if (onAddItemInline != null)
-        _AddChip(
-          enabled: enabled,
+        _AddPill(
           tooltip: addCategoryLabel,
-          onTap: () => openPicker(autoStartAdd: true),
+          onTap: enabled ? () => openPicker(autoStartAdd: true) : null,
         ),
     ];
 
-    if (chips.isEmpty) return const SizedBox.shrink();
+    if (pills.isEmpty) return const SizedBox.shrink();
 
-    return SizedBox(
-      height: _chipRowHeight,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: chips.length,
-        separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.xs),
-        itemBuilder: (context, index) => chips[index],
-      ),
+    return Wrap(
+      spacing: AppSpacing.xs,
+      // FormPill's own touch margin already spaces the rows.
+      runSpacing: 0,
+      children: pills,
     );
   }
 }
 
-class _SelectorChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final bool enabled;
-  final VoidCallback onTap;
-
-  const _SelectorChip({
-    required this.label,
-    required this.selected,
-    required this.enabled,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    // Selected: an outline-led tint (colored border + colored label, faint
-    // fill) rather than a solid container swatch. Idle: a lighter neutral
-    // fill with a softer hairline border than the app's default outline.
-    final foreground = selected ? scheme.primary : scheme.onSurfaceVariant;
-    return Theme(
-      data: Theme.of(context).copyWith(
-        splashColor: scheme.onSurface.withValues(alpha: 0.08),
-        highlightColor: Colors.transparent,
-      ),
-      child: FilterChip(
-        label: Text(label),
-        selected: selected,
-        onSelected: enabled ? (_) => onTap() : null,
-        showCheckmark: false,
-        side: BorderSide(
-          color: selected
-              ? scheme.primary.withValues(alpha: 0.55)
-              : scheme.outlineVariant.withValues(alpha: 0.3),
-        ),
-        backgroundColor: scheme.surfaceContainerLow,
-        selectedColor: scheme.primary.withValues(alpha: 0.1),
-        labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
-          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-          color: foreground,
-        ),
-        materialTapTargetSize: MaterialTapTargetSize.padded,
-      ),
-    );
-  }
-}
-
-class _AddChip extends StatelessWidget {
-  final bool enabled;
+/// Round dashed "+" pill.
+class _AddPill extends StatelessWidget {
   final String? tooltip;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const _AddChip({required this.enabled, required this.onTap, this.tooltip});
+  const _AddPill({required this.onTap, this.tooltip});
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    // 48dp touch target around the 34dp visual circle.
-    final chip = InkWell(
-      customBorder: const CircleBorder(),
-      onTap: enabled ? onTap : null,
-      child: SizedBox(
-        width: 48,
-        height: 48,
-        child: Center(
-          child: Container(
-            width: 34,
-            height: 34,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: scheme.surfaceContainerLow,
-              border: Border.all(
-                color: scheme.outlineVariant.withValues(alpha: 0.3),
-              ),
+    final s = Theme.of(context).colorScheme;
+    Widget pill = Semantics(
+      button: true,
+      enabled: onTap != null,
+      label: tooltip,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: FormPill.touchMargin),
+        child: SizedBox.square(
+          dimension: FormPill.height,
+          child: Material(
+            color: s.raisedSurface,
+            shape: CircleBorder(
+              side: BorderSide(color: s.outlineVariant.withValues(alpha: 0.6)),
             ),
-            child: Icon(
-              Icons.add,
-              size: 18,
-              color: enabled
-                  ? scheme.onSurfaceVariant
-                  : scheme.onSurfaceVariant.withValues(alpha: 0.4),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: onTap,
+              child: Icon(
+                Icons.add_rounded,
+                size: 20,
+                color: onTap != null
+                    ? s.onSurfaceVariant
+                    : s.onSurfaceVariant.withValues(alpha: 0.4),
+              ),
             ),
           ),
         ),
       ),
     );
-    return tooltip != null ? Tooltip(message: tooltip!, child: chip) : chip;
+    if (tooltip != null) pill = Tooltip(message: tooltip!, child: pill);
+    return pill;
   }
 }

@@ -51,22 +51,19 @@ class AmountInputWidget extends StatelessWidget {
         enabled: enabled,
         style: textStyle ?? FormTheme.getFieldTextStyle(context),
         decoration:
-            FormTheme.getStandardDecoration(
+            FormTheme.getCardDecoration(
+              fillColor: theme.colorScheme.raisedSurface,
+              borderColor: CardOutline.colorFor(theme.brightness),
+              focusColor: theme.colorScheme.primary,
+              errorColor: theme.colorScheme.error,
               hintText: label != null ? '${label!} *' : null,
-              isDense: true,
+            ).copyWith(
               suffixIcon: leading == null && trailing != null
                   ? Padding(
-                      padding: const EdgeInsets.only(right: 4),
+                      padding: const EdgeInsets.only(right: 8),
                       child: trailing,
                     )
                   : null,
-            ).copyWith(
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              suffixIconConstraints: const BoxConstraints(
-                minHeight: 32,
-                minWidth: 32,
-              ),
-              semanticCounterText: '',
             ),
         keyboardType: TextInputType.text,
         textInputAction: textInputAction ?? TextInputAction.next,

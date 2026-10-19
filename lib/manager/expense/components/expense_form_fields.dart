@@ -6,13 +6,11 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/amount_input_widget.dart';
 import '../widgets/category_dialog.dart';
-import '../location/widgets/compact_location_indicator.dart';
 import '../widgets/participant_selector_widget.dart';
 import '../widgets/category_selector_widget.dart';
 import '../state/expense_form_controller.dart';
 
-/// Builds the core form fields: amount, name, paid-by, and category
-/// These fields are always visible regardless of expansion state
+/// Builds the core form fields: amount, description, paid-by and category.
 class ExpenseFormFields extends StatelessWidget {
   final ExpenseFormController controller;
   final List<ExpenseParticipant> participants;
@@ -21,14 +19,8 @@ class ExpenseFormFields extends StatelessWidget {
   final Function(String)? onParticipantAdded;
   final Function(List<ExpenseCategory>) onCategoriesUpdated;
   final Function(List<ExpenseParticipant>)? onParticipantsUpdated;
-  final bool fullEdit;
-  final bool autoLocationEnabled;
-  final ExpenseLocation? location;
-  final bool isRetrievingLocation;
-  final VoidCallback onClearLocation;
   final String? currency;
   final VoidCallback onSaveExpense;
-  final bool isInitialExpense;
   final bool isReadOnly;
 
   const ExpenseFormFields({
@@ -38,27 +30,12 @@ class ExpenseFormFields extends StatelessWidget {
     required this.categories,
     required this.onCategoryAdded,
     this.onParticipantAdded,
-    required this.fullEdit,
-    required this.autoLocationEnabled,
-    required this.location,
-    required this.isRetrievingLocation,
-    required this.onClearLocation,
     required this.currency,
     required this.onSaveExpense,
     required this.onCategoriesUpdated,
     this.onParticipantsUpdated,
-    required this.isInitialExpense,
     this.isReadOnly = false,
   });
-
-  // The compact location indicator only makes sense while the form is
-  // still collapsed; once expanded, ExpenseFormExtendedFields owns the
-  // full location field instead.
-  bool get _showLocationIndicator =>
-      !fullEdit &&
-      !controller.isExpanded &&
-      !isInitialExpense &&
-      autoLocationEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +51,6 @@ class ExpenseFormFields extends StatelessWidget {
             _buildAmountField(context, gloc, style),
             SizedBox(height: FormTheme.fieldSpacing),
             _buildNameField(context, gloc, style),
-            SizedBox(height: FormTheme.fieldSpacing),
             _buildParticipantCategorySection(context),
           ],
         );
@@ -120,7 +96,7 @@ class ExpenseFormFields extends StatelessWidget {
     gen.AppLocalizations gloc,
     TextStyle? style,
   ) {
-    final nameField = KeyedSubtree(
+    return KeyedSubtree(
       key: controller.nameFieldKey,
       child: _buildFieldWithStatus(
         context,
@@ -128,11 +104,6 @@ class ExpenseFormFields extends StatelessWidget {
           controller: controller.nameController,
           focusNode: controller.nameFocus,
           label: gloc.expense_name,
-          leading: Icon(
-            Icons.description_outlined,
-            size: 22,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
           textInputAction: controller.isFormValid
               ? TextInputAction.done
               : TextInputAction.next,
@@ -147,23 +118,6 @@ class ExpenseFormFields extends StatelessWidget {
         controller.isNameValid,
         controller.nameTouched,
       ),
-    );
-
-    if (!_showLocationIndicator) return nameField;
-
-    // Auto-location activity is shown on the description line, pinned to
-    // the right, while the compact form is collapsed.
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(child: nameField),
-        CompactLocationIndicator(
-          isRetrieving: isRetrievingLocation,
-          location: location,
-          onCancel: onClearLocation,
-          textStyle: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ],
     );
   }
 
@@ -185,7 +139,6 @@ class ExpenseFormFields extends StatelessWidget {
           controller.isPaidByValid,
           controller.paidByTouched,
         ),
-        SizedBox(height: FormTheme.fieldSpacing),
         _buildFieldWithStatus(
           context,
           CategorySelectorWidget(

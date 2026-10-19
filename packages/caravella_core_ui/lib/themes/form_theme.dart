@@ -140,6 +140,44 @@ class FormTheme {
     );
   }
 
+  /// Returns decoration for a text field drawn as a raised rounded card on a
+  /// grey page (expense form): [fillColor] background, a hairline that turns
+  /// into a 2dp [focusColor] border while editing, the error color on errors.
+  static InputDecoration getCardDecoration({
+    required Color fillColor,
+    required Color borderColor,
+    required Color focusColor,
+    required Color errorColor,
+    String? hintText,
+    Widget? prefixIcon,
+  }) {
+    OutlineInputBorder border(Color color, [double width = 1]) =>
+        OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: color, width: width),
+        );
+    return InputDecoration(
+      constraints: const BoxConstraints(minHeight: minFieldHeight),
+      hintText: hintText,
+      prefixIcon: prefixIcon,
+      filled: true,
+      fillColor: fillColor,
+      isDense: true,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm + 2,
+      ),
+      border: border(borderColor),
+      enabledBorder: border(borderColor),
+      disabledBorder: border(borderColor),
+      focusedBorder: border(focusColor, 2),
+      errorBorder: border(errorColor),
+      focusedErrorBorder: border(errorColor, 2),
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      semanticCounterText: '',
+    );
+  }
+
   /// Returns decoration for large amount fields rendered without borders.
   static InputDecoration getBorderlessAmountDecoration({
     String hintText = '0.00',

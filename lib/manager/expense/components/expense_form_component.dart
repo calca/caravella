@@ -108,12 +108,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final _receiptScanner = ReceiptScannerService();
   final _imagePicker = ImagePicker();
 
-  // Getter per determinare se mostrare i campi estesi
-  bool get _shouldShowExtendedFields =>
-      widget.config.fullEdit ||
-      widget.config.initialExpense != null ||
-      _controller.isExpanded;
-
   bool get _canSwipeExpandToFullEdit =>
       !widget.config.fullEdit &&
       widget.config.initialExpense == null &&
@@ -156,9 +150,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         // Setup focus listeners for scroll coordination
         _setupFocusListeners();
 
-        // Autofocus after first frame
+        // Autofocus the amount after the first frame when adding; when
+        // editing, show the whole expense instead of the keyboard.
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
+          if (mounted && !widget.config.isEditMode) {
             _controller.amountFocus.requestFocus();
             _lifecycleManager.scrollCoordinator?.scrollToField(
               _controller.amountFieldKey,
@@ -313,35 +308,26 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                     _lifecycleManager.updateParticipants(newParticipants);
                     setState(() {});
                   },
-                  fullEdit: widget.config.fullEdit,
-                  autoLocationEnabled: widget.config.autoLocationEnabled,
-                  location: _controller.state.location,
-                  isRetrievingLocation: _lifecycleManager.isRetrievingLocation,
-                  onClearLocation: _clearLocation,
                   currency: widget.config.currency,
                   onSaveExpense: () => _orchestrator.saveExpense(context),
-                  isInitialExpense: widget.config.initialExpense != null,
                   isReadOnly: widget.config.isReadOnly,
                 ),
-                if (_shouldShowExtendedFields)
-                  ListenableBuilder(
-                    listenable: _controller,
-                    builder: (context, _) => ExpenseFormExtendedFields(
-                      controller: _controller,
-                      tripStartDate: widget.config.tripStartDate,
-                      tripEndDate: widget.config.tripEndDate,
-                      locale: locale,
-                      groupId: widget.config.groupId,
-                      groupName: widget.config.groupTitle ?? 'Unnamed',
-                      autoLocationEnabled: widget.config.autoLocationEnabled,
-                      isInitialExpense: widget.config.initialExpense != null,
-                      isFormValid: _controller.isFormValid,
-                      onSaveExpense: () => _orchestrator.saveExpense(context),
-                      isReadOnly: widget.config.isReadOnly,
-                    ),
+                ListenableBuilder(
+                  listenable: _controller,
+                  builder: (context, _) => ExpenseFormExtendedFields(
+                    controller: _controller,
+                    tripStartDate: widget.config.tripStartDate,
+                    tripEndDate: widget.config.tripEndDate,
+                    locale: locale,
+                    groupId: widget.config.groupId,
+                    groupName: widget.config.groupTitle ?? 'Unnamed',
+                    isFormValid: _controller.isFormValid,
+                    onSaveExpense: () => _orchestrator.saveExpense(context),
+                    isReadOnly: widget.config.isReadOnly,
                   ),
+                ),
                 if (widget.config.showActionsRow) ...[
-                  _buildDivider(context),
+                  const SizedBox(height: FormTheme.sectionSpacing),
                   ListenableBuilder(
                     listenable: _controller,
                     builder: (context, _) => _buildActionsRow(),
@@ -362,11 +348,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       final discard = await _confirmDiscardChanges();
       if (discard && mounted && navigator.canPop()) navigator.pop();
     }
-  }
-
-  void _clearLocation() {
-    _controller.updateLocation(null);
-    _controller.setLocationRetrieving(false);
   }
 
   Future<void> _onCategoryAdded(String categoryName) async {
@@ -500,7 +481,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       }
 
       if (amount != null) {
-        _controller.amountController.text = amount.toString();
+        _controller.amountController.text =
+            ExpenseFormController.formatAmountForInput(amount);
       }
       if (description != null && description.isNotEmpty) {
         _controller.nameController.text = description;
@@ -537,20 +519,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         );
       }
     }
-  }
-
-  Widget _buildDivider(BuildContext context) {
-    if (_shouldShowExtendedFields) {
-      // In full edit mode: reserve vertical space but no visual divider
-      return const SizedBox(height: FormTheme.sectionSpacing);
-    }
-    return Divider(
-      height: FormTheme.sectionSpacing,
-      thickness: 1,
-      color: Theme.of(
-        context,
-      ).colorScheme.outlineVariant.withValues(alpha: 0.4),
-    );
   }
 
   Widget _buildActionsRow() {
@@ -601,7 +569,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   void _applyVoiceResult(Map<String, dynamic> parsed) {
     final amount = parsed['amount'] as double?;
     if (amount != null && amount > 0) {
-      _controller.amountController.text = amount.toString();
+      _controller.amountController.text =
+          ExpenseFormController.formatAmountForInput(amount);
     }
     final name = parsed['name'] as String?;
     if (name != null && name.isNotEmpty) {

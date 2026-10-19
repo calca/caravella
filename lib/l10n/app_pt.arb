@@ -1190,4 +1190,6 @@
   ,"show_results": "{count, plural, =0{Nenhum resultado} =1{Mostrar 1 resultado} other{Mostrar {count} resultados}}"
   ,"group_count": "{count, plural, =1{1 grupo} other{{count} grupos}}"
   ,"expense_count": "{count, plural, =1{1 despesa} other{{count} despesas}}"
+  ,"expense_details_section": "Detalhes"
+  ,"add_expense_button": "Adicionar despesa"
 }

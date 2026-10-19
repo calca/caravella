@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../../expense/components/expense_form_component.dart';
 import '../../expense/state/expense_form_state.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
+import '../../expense/widgets/expense_form_actions_widget.dart';
 
 /// Unified sheet for creating or editing an expense.
 /// If [initialExpense] is provided we are editing, otherwise creating a new one.
@@ -41,6 +41,11 @@ class ExpenseEntrySheet extends StatefulWidget {
 
 class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
   late ScrollController _scrollController;
+  bool _isFormValid = false;
+  VoidCallback? _saveCallback;
+  VoidCallback? _voiceCallback;
+  VoidCallback? _scanCallback;
+  VoidCallback? _scanFromGalleryCallback;
 
   @override
   void initState() {
@@ -54,40 +59,104 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
     super.dispose();
   }
 
+  // The form reports these while building: apply them after the frame.
+  void _later(VoidCallback update) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(update);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).padding.bottom;
-    final keyboard = MediaQuery.of(context).viewInsets.bottom;
-    // Avoid double bottom padding: we override scaffold padding bottom to 0 and manage internally.
-    const baseExtra = 8.0; // uniform bottom extra spacing for all modes
-    final internalBottom = bottomInset + baseExtra + keyboard;
-    return CaravellaBottomSheetScaffold(
-      scrollable: true,
-      scrollController: _scrollController,
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Padding(
-        padding: EdgeInsets.only(bottom: internalBottom),
-        child: ExpenseFormComponent.legacy(
-          initialExpense: widget.initialExpense,
-          participants: widget.group.getParticipantsByLastUsed(),
-          categories: widget.group.getCategoriesByLastUsed(),
-          tripStartDate: widget.group.startDate,
-          tripEndDate: widget.group.endDate,
-          shouldAutoClose: false,
-          fullEdit: widget.fullEdit,
-          showGroupHeader: widget.showGroupHeader,
-          groupTitle: widget.group.title,
-          groupId: widget.group.id,
-          currency: widget.group.currency,
-          autoLocationEnabled: widget.group.autoLocationEnabled,
-          onExpenseAdded: widget.onExpenseSaved,
-          onCategoryAdded: widget.onCategoryAdded,
-          onParticipantAdded: widget.onParticipantAdded,
-          onDelete: widget.onDelete,
-          scrollController: _scrollController,
-          onExpand: widget.onExpand,
-          onFormValidityChanged: widget.onFormValidityChanged,
-          onSaveCallbackChanged: widget.onSaveCallbackChanged,
+    final scheme = Theme.of(context).colorScheme;
+    final keyboard = MediaQuery.viewInsetsOf(context).bottom;
+    final isEdit =
+        widget.initialExpense != null && widget.initialExpense!.id.isNotEmpty;
+    final readOnly = widget.group.archived;
+
+    // Handle, then the form scrolling, then Add/Save pinned at the bottom so
+    // it stays above the keyboard however tall the form gets.
+    return Padding(
+      padding: EdgeInsets.only(bottom: keyboard),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: Container(
+                width: 44,
+                height: 4,
+                margin: const EdgeInsets.only(top: 12, bottom: 4),
+                decoration: BoxDecoration(
+                  color: scheme.outlineVariant.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            Flexible(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                child: ExpenseFormComponent.legacy(
+                  initialExpense: widget.initialExpense,
+                  participants: widget.group.getParticipantsByLastUsed(),
+                  categories: widget.group.getCategoriesByLastUsed(),
+                  tripStartDate: widget.group.startDate,
+                  tripEndDate: widget.group.endDate,
+                  shouldAutoClose: false,
+                  fullEdit: widget.fullEdit,
+                  showGroupHeader: widget.showGroupHeader,
+                  showActionsRow: false,
+                  groupTitle: widget.group.title,
+                  groupId: widget.group.id,
+                  currency: widget.group.currency,
+                  autoLocationEnabled: widget.group.autoLocationEnabled,
+                  onExpenseAdded: widget.onExpenseSaved,
+                  onCategoryAdded: widget.onCategoryAdded,
+                  onParticipantAdded: widget.onParticipantAdded,
+                  onDelete: widget.onDelete,
+                  scrollController: _scrollController,
+                  onExpand: widget.onExpand,
+                  isReadOnly: readOnly,
+                  onFormValidityChanged: (valid) {
+                    widget.onFormValidityChanged?.call(valid);
+                    if (valid != _isFormValid) {
+                      _later(() => _isFormValid = valid);
+                    }
+                  },
+                  onSaveCallbackChanged: (callback) {
+                    widget.onSaveCallbackChanged?.call(callback);
+                    _later(() {
+                      _saveCallback = callback;
+                      _isFormValid = callback != null;
+                    });
+                  },
+                  onVoiceCallbackChanged: (callback) =>
+                      _later(() => _voiceCallback = callback),
+                  onScanReceiptCallbackChanged: (callback) =>
+                      _later(() => _scanCallback = callback),
+                  onScanReceiptFromGalleryCallbackChanged: (callback) =>
+                      _later(() => _scanFromGalleryCallback = callback),
+                ),
+              ),
+            ),
+            if (!readOnly)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+                child: ExpenseFormActionsWidget(
+                  onSave: _saveCallback,
+                  isFormValid: _isFormValid,
+                  isEdit: isEdit,
+                  onDelete: isEdit ? widget.onDelete : null,
+                  showVoiceButton: !isEdit,
+                  onVoiceTap: _voiceCallback,
+                  onScanReceipt: _scanCallback,
+                  onScanReceiptFromGallery: _scanFromGalleryCallback,
+                ),
+              ),
+          ],
         ),
       ),
     );

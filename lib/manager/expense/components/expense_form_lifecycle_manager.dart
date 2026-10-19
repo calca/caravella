@@ -141,21 +141,29 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
   Future<void> _retrieveAutoLocation(BuildContext context) async {
     if (!context.mounted) return;
 
-    _isRetrievingLocation = true;
+    _setRetrieving(true);
 
+    // Resolve the address too: the form's place pill shows the locality.
     final location = await LocationService.getCurrentLocation(
       context,
-      onStatusChanged: (retrieving) {
-        _isRetrievingLocation = retrieving;
-      },
+      resolveAddress: true,
+      onStatusChanged: _setRetrieving,
     );
 
-    if (location != null) {
+    // The user may have picked a place meanwhile: keep theirs.
+    if (_isInitialized &&
+        location != null &&
+        _controller?.state.location == null) {
       _autoRetrievedLocation = location;
       _controller?.updateLocation(location);
     }
 
-    _isRetrievingLocation = false;
+    _setRetrieving(false);
+  }
+
+  void _setRetrieving(bool retrieving) {
+    _isRetrievingLocation = retrieving;
+    if (_isInitialized) _controller?.setLocationRetrieving(retrieving);
   }
 
   Future<void> _handleNewlyAddedCategory() async {

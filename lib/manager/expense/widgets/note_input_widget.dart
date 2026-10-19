@@ -1,6 +1,5 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class NoteInputWidget extends StatelessWidget {
@@ -24,33 +23,30 @@ class NoteInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final field = Semantics(
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    return Semantics(
       textField: true,
       label: gloc.note,
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,
         enabled: enabled,
-        maxLines: null, // auto-grow illimitato
-        minLines: 6, // minimo 4 righe visibili
+        maxLines: null,
+        minLines: 3,
         style: textStyle ?? FormTheme.getMultilineTextStyle(context),
-        decoration: FormTheme.getMultilineDecoration(
+        decoration: FormTheme.getCardDecoration(
+          fillColor: s.raisedSurface,
+          borderColor: CardOutline.colorFor(theme.brightness),
+          focusColor: s.primary,
+          errorColor: s.error,
           hintText: gloc.note_hint,
-          labelText: gloc.note,
         ),
         textInputAction: textInputAction ?? TextInputAction.newline,
         onFieldSubmitted: onFieldSubmitted != null
             ? (_) => onFieldSubmitted!()
             : null,
       ),
-    );
-
-    return IconLeadingField(
-      icon: const Icon(Icons.sticky_note_2_outlined),
-      semanticsLabel: gloc.note,
-      tooltip: gloc.note,
-      alignTop: true,
-      child: field,
     );
   }
 }

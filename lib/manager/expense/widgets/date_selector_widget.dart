@@ -1,6 +1,5 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'inline_select_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 
@@ -10,7 +9,6 @@ class DateSelectorWidget extends StatelessWidget {
   final DateTime? tripEndDate;
   final void Function(DateTime) onDateSelected;
   final String locale;
-  final TextStyle? textStyle;
   final bool enabled;
 
   const DateSelectorWidget({
@@ -20,20 +18,25 @@ class DateSelectorWidget extends StatelessWidget {
     required this.locale,
     this.tripStartDate,
     this.tripEndDate,
-    this.textStyle,
     this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Icona a sinistra, rimosso titolo testuale sopra
     final gloc = gen.AppLocalizations.of(context);
-    final dateText = selectedDate != null
-        ? formatDate(selectedDate!, Locale(locale))
-        : gloc.select_expense_date_short;
+    final now = DateTime.now();
+    final date = selectedDate;
+    final isToday =
+        date != null &&
+        date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+    final dateText = date == null
+        ? gloc.select_expense_date_short
+        : isToday
+        ? gloc.today
+        : formatDate(date, Locale(locale));
     final semanticLabel = '${gloc.date}: $dateText';
-
-    // icon color now handled by InlineSelectField's icon theme
 
     Future<void> pickDate() async {
       final picked = await showDatePicker(
@@ -51,13 +54,11 @@ class DateSelectorWidget extends StatelessWidget {
       }
     }
 
-    return InlineSelectField(
+    return FormPill(
       icon: Icons.event_outlined,
       label: dateText,
-      onTap: enabled ? pickDate : null,
-      enabled: enabled,
       semanticsLabel: semanticLabel,
-      textStyle: textStyle ?? FormTheme.getSelectTextStyle(context),
+      onTap: enabled ? pickDate : null,
     );
   }
 }

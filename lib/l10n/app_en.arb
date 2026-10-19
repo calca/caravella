@@ -1298,4 +1298,8 @@
   ,"@show_results": {"description": "Button closing the search filters sheet", "placeholders": {"count": {"type": "int"}}}
   ,"group_count": "{count, plural, =1{1 group} other{{count} groups}}"
   ,"@group_count": {"description": "Number of groups (search suggestions by type)", "placeholders": {"count": {"type": "int"}}}
+  ,"expense_details_section": "Details"
+  ,"@expense_details_section": {"description": "Label above the date, place, attachments and note pills in the expense form"}
+  ,"add_expense_button": "Add expense"
+  ,"@add_expense_button": {"description": "Primary button that saves a new expense"}
 }

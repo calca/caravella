@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/semantics.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class ExpenseFormActionsWidget extends StatelessWidget {
   final VoidCallback? onSave;
@@ -11,7 +12,8 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   final bool
   showExpandButton; // When true shows an expand button (only in add/compact mode)
   final VoidCallback? onExpand;
-  final VoidCallback? onScanReceipt; // Scan receipt with OCR — tap opens the camera directly
+  final VoidCallback?
+  onScanReceipt; // Scan receipt with OCR — tap opens the camera directly
   final VoidCallback?
   onScanReceiptFromGallery; // Long-press (or the "from gallery" custom action) picks an existing photo instead
   final bool showVoiceButton;
@@ -37,11 +39,12 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
-    // Shared style for all action buttons in the row.
+    // Shared style for the round buttons left of Save: raised, monochrome.
     final iconButtonStyle = IconButton.styleFrom(
-      backgroundColor: colorScheme.surfaceContainerHighest,
-      foregroundColor: colorScheme.onSurfaceVariant,
-      minimumSize: const Size(48, 48),
+      backgroundColor: colorScheme.raisedSurface,
+      foregroundColor: colorScheme.onSurface,
+      side: BorderSide(color: CardOutline.colorFor(colorScheme.brightness)),
+      minimumSize: const Size(52, 52),
       padding: EdgeInsets.zero,
     );
 
@@ -53,7 +56,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
         IconButton(
           tooltip: gloc.voice_input_button,
           onPressed: onVoiceTap,
-          icon: const Icon(Icons.mic_none, size: 24),
+          icon: const Icon(Icons.mic_none_rounded, size: 24),
           style: iconButtonStyle,
         ),
       );
@@ -70,24 +73,31 @@ class ExpenseFormActionsWidget extends StatelessWidget {
           button: true,
           label: gloc.scan_receipt,
           customSemanticsActions: scanFromGallery != null
-              ? {CustomSemanticsAction(label: gloc.from_gallery): scanFromGallery}
+              ? {
+                  CustomSemanticsAction(label: gloc.from_gallery):
+                      scanFromGallery,
+                }
               : const {},
           child: Tooltip(
             message: gloc.scan_receipt,
             child: Material(
-              color: colorScheme.surfaceContainerHighest,
-              shape: const CircleBorder(),
+              color: colorScheme.raisedSurface,
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: CardOutline.colorFor(colorScheme.brightness),
+                ),
+              ),
               child: InkWell(
                 customBorder: const CircleBorder(),
                 onTap: onScanReceipt,
                 onLongPress: onScanReceiptFromGallery,
                 child: SizedBox(
-                  width: 48,
-                  height: 48,
+                  width: 52,
+                  height: 52,
                   child: Icon(
                     Icons.document_scanner_outlined,
                     size: 24,
-                    color: colorScheme.onSurfaceVariant,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -133,39 +143,33 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     }
 
     return Row(
-      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ...leftChildren,
-        if (leftChildren.isNotEmpty) const SizedBox(width: 8),
-        const Spacer(),
-        // Aggiungi / Save — filled when valid, muted when invalid
-        FilledButton(
-          onPressed: onSave,
-          style: FilledButton.styleFrom(
-            backgroundColor: isFormValid
-                ? colorScheme.primary
-                : colorScheme.surfaceContainerHighest,
-            foregroundColor: isFormValid
-                ? colorScheme.onPrimary
-                : colorScheme.onSurfaceVariant,
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            minimumSize: const Size(48, 48),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+        if (leftChildren.isNotEmpty) const SizedBox(width: 12),
+        // Add / Save — filled when valid, muted when invalid
+        Expanded(
+          child: FilledButton(
+            onPressed: onSave,
+            style: FilledButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+              disabledBackgroundColor: colorScheme.surfaceContainerHighest,
+              disabledForegroundColor: colorScheme.onSurfaceVariant,
+              elevation: 0,
+              minimumSize: const Size(52, 52),
+              shape: const StadiumBorder(),
             ),
-          ),
-          child: Text(
-            isEdit ? gloc.save.toUpperCase() : gloc.add.toUpperCase(),
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: isFormValid
-                  ? colorScheme.onPrimary
-                  : colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.2,
+            child: Text(
+              isEdit ? gloc.save : gloc.add_expense_button,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: isFormValid
+                    ? colorScheme.onPrimary
+                    : colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w700,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
-            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

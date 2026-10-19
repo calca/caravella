@@ -2841,4 +2841,10 @@ class AppLocalizationsZh extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get expense_details_section => '详情';
+
+  @override
+  String get add_expense_button => '添加支出';
 }
