@@ -5,6 +5,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
+import '../../../sync/group_sync_badge.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
 
 /// The group's photo or color behind the top of its page, melting into
@@ -124,11 +125,21 @@ class GroupDetailHeader extends StatelessWidget {
             Flexible(
               child: Text(
                 dates == null ? people : '$dates · $people',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: foreground.withValues(alpha: 0.8),
                 ),
               ),
             ),
+            if (group.syncEnabled) ...[
+              const SizedBox(width: 8),
+              GroupSyncBadge(
+                group: group,
+                background: foreground.withValues(alpha: 0.1),
+                foreground: foreground,
+              ),
+            ],
           ],
         ),
         const SizedBox(height: 2),

@@ -74,6 +74,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
     // Ottieni il nuovo notifier e aggiungi il listener
     _groupNotifier = context.read<ExpenseGroupNotifier>();
+    _seenRevision = _groupNotifier?.revision ?? 0;
     _groupNotifier?.addListener(_onGroupChanged);
   }
 
@@ -88,7 +89,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     super.dispose();
   }
 
+  /// Last [ExpenseGroupNotifier.revision] seen: a newer one (e.g. a sync
+  /// that changed groups) reloads this group from storage.
+  int _seenRevision = 0;
+
   void _onGroupChanged() {
+    final revision = _groupNotifier?.revision ?? 0;
+    if (revision != _seenRevision) {
+      _seenRevision = revision;
+      unawaited(_reloadFromStorage());
+    }
     final currentGroup = _groupNotifier?.currentGroup;
 
     // Se il gruppo corrente nel notifier è lo stesso che stiamo visualizzando, aggiorna
@@ -114,6 +124,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   // _refreshTrip removed: state updates occur inline after each mutation.
+  Future<void> _reloadFromStorage() async {
+    if (_trip == null) return;
+    final fresh = await ExpenseGroupStorageV2.getTripById(_trip!.id);
+    if (mounted && fresh != null) setState(() => _trip = fresh);
+  }
+
   Future<void> _refreshGroup() async {
     if (_trip == null) return;
     final refreshed = await ExpenseGroupStorageV2.getTripById(_trip!.id);

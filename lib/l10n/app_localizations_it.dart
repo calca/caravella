@@ -2859,4 +2859,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get quick_action_voice => 'Voce';
+
+  @override
+  String get sync_state_syncing => 'sincronizzazione in corso';
+
+  @override
+  String get sync_state_synced => 'aggiornato';
+
+  @override
+  String get sync_state_error =>
+      'sincronizzazione non riuscita, tocca per i dettagli';
 }

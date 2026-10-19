@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the unused `android_nav_setting` dependency (it only sized the old carousel)
 
 ### Fixed
+- Changes received by sync (e.g. expenses added on another device) now show up right away on Home, Groups and the open group page; before you had to pull to refresh or reopen the page. The "Shared" badge of a synced group shows the sync state: a small spinner while syncing, a check when up to date, a warning after a failure (tap it to open the group's sync settings)
 - Groups page: after changing a group (e.g. its photo or color) the list didn't update until the app was restarted
 - Dark theme: the pencil next to the group background picker (group settings → Other) was near-black on the dark page (#527)
 - Home: "See all" now ends flush with the group card's right edge instead of ~28 dp short of it (#528)

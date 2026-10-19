@@ -2840,4 +2840,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quick_action_voice => 'Voice';
+
+  @override
+  String get sync_state_syncing => 'syncing';
+
+  @override
+  String get sync_state_synced => 'up to date';
+
+  @override
+  String get sync_state_error => 'sync failed, tap for details';
 }

@@ -1172,4 +1172,7 @@
   ,"last_week": "Semana passada"
   ,"quick_action_scan": "Digitalizar"
   ,"quick_action_voice": "Voz"
+  ,"sync_state_syncing": "sincronizando"
+  ,"sync_state_synced": "atualizado"
+  ,"sync_state_error": "falha na sincronização, toque para detalhes"
 }

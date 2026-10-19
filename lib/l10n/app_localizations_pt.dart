@@ -2857,4 +2857,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get quick_action_voice => 'Voz';
+
+  @override
+  String get sync_state_syncing => 'sincronizando';
+
+  @override
+  String get sync_state_synced => 'atualizado';
+
+  @override
+  String get sync_state_error => 'falha na sincronização, toque para detalhes';
 }

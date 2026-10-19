@@ -2861,4 +2861,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get quick_action_voice => 'Voz';
+
+  @override
+  String get sync_state_syncing => 'sincronizando';
+
+  @override
+  String get sync_state_synced => 'actualizado';
+
+  @override
+  String get sync_state_error =>
+      'sincronización fallida, toca para ver detalles';
 }

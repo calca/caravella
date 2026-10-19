@@ -1195,4 +1195,7 @@
   ,"last_week": "Settimana scorsa"
   ,"quick_action_scan": "Scansiona"
   ,"quick_action_voice": "Voce"
+  ,"sync_state_syncing": "sincronizzazione in corso"
+  ,"sync_state_synced": "aggiornato"
+  ,"sync_state_error": "sincronizzazione non riuscita, tocca per i dettagli"
 }
