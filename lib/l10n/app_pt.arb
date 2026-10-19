@@ -1182,4 +1182,12 @@
   ,"chart_week_by_week": "Semana a semana"
   ,"chart_month_by_month": "Mês a mês"
   ,"edit": "Editar"
+  ,"recent_searches": "Pesquisas recentes"
+  ,"by_type": "Por tipo"
+  ,"favorites": "Favoritos"
+  ,"all_groups": "Todos"
+  ,"status_label": "Status"
+  ,"show_results": "{count, plural, =0{Nenhum resultado} =1{Mostrar 1 resultado} other{Mostrar {count} resultados}}"
+  ,"group_count": "{count, plural, =1{1 grupo} other{{count} grupos}}"
+  ,"expense_count": "{count, plural, =1{1 despesa} other{{count} despesas}}"
 }

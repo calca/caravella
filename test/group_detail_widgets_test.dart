@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/daily_totals_utils.dart';
+import 'package:io_caravella_egm/manager/details/widgets/expense_day_row.dart';
 import 'package:io_caravella_egm/manager/details/widgets/grouped_expense_list.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_balances_view.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_map_card.dart';
@@ -242,5 +243,32 @@ void main() {
       'Rome · balances\nLuca → Anna: 50.00 €\n'
           'Total 100.00 € · 50.00 € per person',
     ]);
+  });
+
+  testWidgets('expense row: calendar date, payer · category, amount', (
+    tester,
+  ) async {
+    final e = _expense('Ferry', 86, DateTime(2026, 10, 16, 9), _luca);
+    var tapped = 0;
+    await tester.pumpWidget(
+      _wrap(
+        Column(
+          children: [
+            ExpenseDayRow(expense: e, currency: '€', onTap: () => tapped++),
+            ExpenseDayRow(expense: e, currency: '€', showMonth: true),
+          ],
+        ),
+      ),
+    );
+    expect(find.text('FRI'), findsOneWidget);
+    expect(find.text('OCT'), findsOneWidget);
+    expect(find.text('16'), findsNWidgets(2));
+    expect(find.text('Luca · Food'), findsNWidgets(2));
+    await tester.tap(find.text('FRI'));
+    expect(tapped, 1);
+    expect(
+      find.bySemanticsLabel(RegExp(r'^Ferry, Luca · Food, Friday, October 16')),
+      findsNWidgets(2),
+    );
   });
 }
