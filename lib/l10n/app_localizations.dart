@@ -5260,6 +5260,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{step}, done'**
   String get_started_step_done(String step);
+
+  /// Group page view: what each participant gets back or owes
+  ///
+  /// In en, this message translates to:
+  /// **'Balances'**
+  String get balances;
+
+  /// Group page key figure: total divided by the number of participants
+  ///
+  /// In en, this message translates to:
+  /// **'Per person'**
+  String get per_person;
+
+  /// Heading of the suggested payments that settle the group
+  ///
+  /// In en, this message translates to:
+  /// **'Settle up'**
+  String get settle_up;
+
+  /// Balances view when nobody owes anything
+  ///
+  /// In en, this message translates to:
+  /// **'All settled up'**
+  String get all_settled_up;
+
+  /// Screen reader label of a positive balance
+  ///
+  /// In en, this message translates to:
+  /// **'{name} gets back {amount}'**
+  String balance_gets_back(String name, String amount);
+
+  /// Screen reader label of a negative balance
+  ///
+  /// In en, this message translates to:
+  /// **'{name} owes {amount}'**
+  String balance_owes(String name, String amount);
+
+  /// Screen reader label of a suggested payment
+  ///
+  /// In en, this message translates to:
+  /// **'{from} pays {to} {amount}'**
+  String settlement_pays(String from, String to, String amount);
 }
 
 class _AppLocalizationsDelegate

@@ -10,7 +10,15 @@ import '../../widgets/stat_card.dart';
 /// and spending trend for the last 7 and 30 days.
 class GeneralOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
-  const GeneralOverviewTab({super.key, required this.trip});
+
+  /// Without its own scroll view, to sit inside the group page's scroll.
+  final bool embedded;
+
+  const GeneralOverviewTab({
+    super.key,
+    required this.trip,
+    this.embedded = false,
+  });
 
   // Delegated to shared helpers for consistency
   List<double> _weeklySeries() => buildWeeklySeries(trip);
@@ -40,7 +48,7 @@ class GeneralOverviewTab extends StatelessWidget {
     final monthly = _monthlySeries();
     final dateRange = _dateRangeSeries();
 
-    return SingleChildScrollView(
+    final content = Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,6 +116,7 @@ class GeneralOverviewTab extends StatelessWidget {
         ],
       ),
     );
+    return embedded ? content : SingleChildScrollView(child: content);
   }
 }
 

@@ -1232,4 +1232,18 @@
   ,"@get_started_look": {"description": "Getting-started step: opens the group background (photo or color) settings"}
   ,"get_started_step_done": "{step}, done"
   ,"@get_started_step_done": {"description": "Screen reader label of a completed getting-started step", "placeholders": {"step": {"type": "String"}}}
+  ,"balances": "Balances"
+  ,"@balances": {"description": "Group page view: what each participant gets back or owes"}
+  ,"per_person": "Per person"
+  ,"@per_person": {"description": "Group page key figure: total divided by the number of participants"}
+  ,"settle_up": "Settle up"
+  ,"@settle_up": {"description": "Heading of the suggested payments that settle the group"}
+  ,"all_settled_up": "All settled up"
+  ,"@all_settled_up": {"description": "Balances view when nobody owes anything"}
+  ,"balance_gets_back": "{name} gets back {amount}"
+  ,"@balance_gets_back": {"description": "Screen reader label of a positive balance", "placeholders": {"name": {"type": "String"}, "amount": {"type": "String"}}}
+  ,"balance_owes": "{name} owes {amount}"
+  ,"@balance_owes": {"description": "Screen reader label of a negative balance", "placeholders": {"name": {"type": "String"}, "amount": {"type": "String"}}}
+  ,"settlement_pays": "{from} pays {to} {amount}"
+  ,"@settlement_pays": {"description": "Screen reader label of a suggested payment", "placeholders": {"from": {"type": "String"}, "to": {"type": "String"}, "amount": {"type": "String"}}}
 }

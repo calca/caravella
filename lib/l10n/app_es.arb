@@ -1194,4 +1194,11 @@
   ,"get_started_participants": "Añade a los participantes"
   ,"get_started_look": "Elige una foto o un color"
   ,"get_started_step_done": "{step}, hecho"
+  ,"balances": "Saldos"
+  ,"per_person": "Por persona"
+  ,"settle_up": "Para saldar"
+  ,"all_settled_up": "Todo saldado"
+  ,"balance_gets_back": "{name} recupera {amount}"
+  ,"balance_owes": "{name} debe {amount}"
+  ,"settlement_pays": "{from} paga a {to} {amount}"
 }

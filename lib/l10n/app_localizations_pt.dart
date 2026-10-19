@@ -2795,4 +2795,31 @@ class AppLocalizationsPt extends AppLocalizations {
   String get_started_step_done(String step) {
     return '$step, concluído';
   }
+
+  @override
+  String get balances => 'Saldos';
+
+  @override
+  String get per_person => 'Por pessoa';
+
+  @override
+  String get settle_up => 'Para acertar';
+
+  @override
+  String get all_settled_up => 'Tudo acertado';
+
+  @override
+  String balance_gets_back(String name, String amount) {
+    return '$name recebe $amount';
+  }
+
+  @override
+  String balance_owes(String name, String amount) {
+    return '$name deve $amount';
+  }
+
+  @override
+  String settlement_pays(String from, String to, String amount) {
+    return '$from paga a $to $amount';
+  }
 }

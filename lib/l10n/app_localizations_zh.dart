@@ -2703,4 +2703,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get_started_step_done(String step) {
     return '$step，已完成';
   }
+
+  @override
+  String get balances => '余额';
+
+  @override
+  String get per_person => '人均';
+
+  @override
+  String get settle_up => '结清方式';
+
+  @override
+  String get all_settled_up => '已全部结清';
+
+  @override
+  String balance_gets_back(String name, String amount) {
+    return '$name 应收回 $amount';
+  }
+
+  @override
+  String balance_owes(String name, String amount) {
+    return '$name 应付 $amount';
+  }
+
+  @override
+  String settlement_pays(String from, String to, String amount) {
+    return '$from 付给 $to $amount';
+  }
 }

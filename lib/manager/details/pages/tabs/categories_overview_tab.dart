@@ -7,7 +7,15 @@ import '../../widgets/stat_card.dart';
 /// Categories analysis tab: daily average by category + distribution pie chart.
 class CategoriesOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
-  const CategoriesOverviewTab({super.key, required this.trip});
+
+  /// Without its own scroll view, to sit inside the group page's scroll.
+  final bool embedded;
+
+  const CategoriesOverviewTab({
+    super.key,
+    required this.trip,
+    this.embedded = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +55,7 @@ class CategoriesOverviewTab extends StatelessWidget {
     final entries = categoryTotals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    return SingleChildScrollView(
+    final content = Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,5 +100,6 @@ class CategoriesOverviewTab extends StatelessWidget {
         ],
       ),
     );
+    return embedded ? content : SingleChildScrollView(child: content);
   }
 }

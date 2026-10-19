@@ -2799,4 +2799,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get_started_step_done(String step) {
     return '$step, hecho';
   }
+
+  @override
+  String get balances => 'Saldos';
+
+  @override
+  String get per_person => 'Por persona';
+
+  @override
+  String get settle_up => 'Para saldar';
+
+  @override
+  String get all_settled_up => 'Todo saldado';
+
+  @override
+  String balance_gets_back(String name, String amount) {
+    return '$name recupera $amount';
+  }
+
+  @override
+  String balance_owes(String name, String amount) {
+    return '$name debe $amount';
+  }
+
+  @override
+  String settlement_pays(String from, String to, String amount) {
+    return '$from paga a $to $amount';
+  }
 }
