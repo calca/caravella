@@ -133,35 +133,27 @@ class HomeCardsHeader extends StatelessWidget {
         ),
         const SizedBox(width: 8),
 
-        // CTA button: apre direttamente la pagina delle impostazioni, con un
-        // pallino di stato sync (verde = ok, ocra = problemi) una volta che
-        // il SyncOrchestrator (solo backend SQLite) ha finito l'init.
+        // Sync state (only when a sync channel is on), then settings.
         Consumer<SyncOrchestrator?>(
-          builder: (context, orchestrator, _) {
-            final settingsIcon = Icon(
+          builder: (context, orchestrator, _) => orchestrator == null
+              ? const SizedBox.shrink()
+              : HomeSyncButton(orchestrator: orchestrator),
+        ),
+        Material(
+          color: theme.colorScheme.raisedSurface,
+          shape: const CircleBorder(),
+          child: IconButton(
+            icon: Icon(
               Icons.settings_outlined,
               color: theme.colorScheme.onSurface,
-            );
-            // Raised round button, like the group page's top bar.
-            return Material(
-              color: theme.colorScheme.raisedSurface,
-              shape: const CircleBorder(),
-              child: IconButton(
-                icon: orchestrator == null
-                    ? settingsIcon
-                    : SettingsSyncBadge(
-                        orchestrator: orchestrator,
-                        child: settingsIcon,
-                      ),
-                tooltip: localizations.settings,
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (ctx) => const SettingsPage()),
-                  );
-                },
-              ),
-            );
-          },
+            ),
+            tooltip: localizations.settings,
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (ctx) => const SettingsPage()));
+            },
+          ),
         ),
       ],
     );

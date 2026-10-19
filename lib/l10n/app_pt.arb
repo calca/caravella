@@ -1175,4 +1175,10 @@
   ,"sync_state_syncing": "sincronizando"
   ,"sync_state_synced": "atualizado"
   ,"sync_state_error": "falha na sincronização, toque para detalhes"
+  ,"share_balances": "Compartilhar saldos"
+  ,"balances_share_title": "{group} · saldos"
+  ,"balances_share_footer": "Total {total} · {perPerson} por pessoa"
+  ,"balance_reminder_message": "Oi {from}! No grupo «{group}» você deve {amount} a {to}."
+  ,"chart_week_by_week": "Semana a semana"
+  ,"chart_month_by_month": "Mês a mês"
 }

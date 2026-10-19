@@ -5,7 +5,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-
 /// State machine phases for the Bluetooth sync flow.
 enum _BtPhase { searching, peerList, syncing, completed, error }
 
@@ -113,7 +112,10 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
       case BtSyncError(:final error):
         // `error` is the channel's internal (English, unlocalized)
         // exception detail — logged there for debugging, never shown here.
-        LoggerService.debug('Bluetooth sync error detail: $error', name: 'ui.sync');
+        LoggerService.debug(
+          'Bluetooth sync error detail: $error',
+          name: 'ui.sync',
+        );
         setState(() {
           _phase = _BtPhase.error;
           _errorMessage = gen.AppLocalizations.of(context).sync_bt_error_detail;
@@ -195,10 +197,9 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
           const SizedBox(height: 16),
           Text(
             loc.sync_bt_searching,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: colorScheme.outline),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
           ),
         ],
       ),
@@ -256,10 +257,9 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
           const SizedBox(height: 16),
           Text(
             loc.sync_status_syncing,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: colorScheme.outline),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
           ),
         ],
       ),
@@ -314,10 +314,7 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
             ),
           ],
           const SizedBox(height: 16),
-          FilledButton.tonal(
-            onPressed: _retry,
-            child: Text(loc.sync_bt_retry),
-          ),
+          FilledButton.tonal(onPressed: _retry, child: Text(loc.sync_bt_retry)),
         ],
       ),
     );

@@ -53,7 +53,10 @@ class _PairedDevicesListState extends State<PairedDevicesList> {
   }
 
   Future<void> _remove(PairedDevice device) async {
-    await widget.orchestrator.revokeGroupAccess(device.deviceId, widget.groupId);
+    await widget.orchestrator.revokeGroupAccess(
+      device.deviceId,
+      widget.groupId,
+    );
     if (mounted) {
       setState(() {
         _future = widget.orchestrator.getPairedDevicesForGroup(widget.groupId);
@@ -78,9 +81,7 @@ class _PairedDevicesListState extends State<PairedDevicesList> {
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(
               loc.sync_paired_devices_empty,
-              style: textTheme.bodySmall?.copyWith(
-                color: colorScheme.outline,
-              ),
+              style: textTheme.bodySmall?.copyWith(color: colorScheme.outline),
             ),
           );
         }

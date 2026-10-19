@@ -63,6 +63,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   bool _fabVisible = true; // controllo visibilità totale
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
   bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
+
+  /// The top bar turns opaque as soon as content scrolls under it.
+  bool _barOpaque = false;
   String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
   static const double _topBarHeight = 64.0;
 
@@ -408,8 +411,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     // Mostra titolo nella appbar quando la flexible space è quasi collassata
     final shouldShow =
         _scrollController.offset > _collapsedTitleThreshold(context);
-    if (shouldShow != _collapsedTitleVisible && mounted) {
-      setState(() => _collapsedTitleVisible = shouldShow);
+    final opaque = _scrollController.offset > 2;
+    if ((shouldShow != _collapsedTitleVisible || opaque != _barOpaque) &&
+        mounted) {
+      setState(() {
+        _collapsedTitleVisible = shouldShow;
+        _barOpaque = opaque;
+      });
     }
   }
 
@@ -467,9 +475,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     // once the bar turns opaque (scrolled) it follows the theme again.
     final bandColor = GroupHeaderBand.colorOf(trip, s);
     final bandForeground = GroupHeaderBand.foregroundOf(trip, s);
-    final barForeground = _collapsedTitleVisible ? s.onSurface : bandForeground;
-    final bool? forceStatusBarLight =
-        bandColor != null && !_collapsedTitleVisible
+    final barForeground = _barOpaque ? s.onSurface : bandForeground;
+    final bool? forceStatusBarLight = bandColor != null && !_barOpaque
         ? !ExpenseGroupColorPalette.isLightColor(bandColor)
         : null;
 
@@ -498,7 +505,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
       required VoidCallback onPressed,
       Color? color,
     }) => Material(
-      color: _collapsedTitleVisible ? Colors.transparent : s.raisedSurface,
+      color: _barOpaque ? Colors.transparent : s.raisedSurface,
       shape: const CircleBorder(),
       child: IconButton(
         icon: Icon(icon),
@@ -568,9 +575,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
             // with the group name once the title has scrolled away.
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              color: _collapsedTitleVisible
-                  ? pageColor
-                  : pageColor.withValues(alpha: 0),
+              color: _barOpaque ? pageColor : pageColor.withValues(alpha: 0),
               padding: EdgeInsets.fromLTRB(12, topInset + 4, 12, 4),
               child: SizedBox(
                 height: _topBarHeight - 8,
@@ -606,7 +611,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                       const SizedBox(width: 8),
                     ],
                     _GroupMenuButton(
-                      background: _collapsedTitleVisible
+                      background: _barOpaque
                           ? Colors.transparent
                           : s.raisedSurface,
                       items: [

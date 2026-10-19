@@ -1270,4 +1270,16 @@
   ,"@sync_state_synced": {"description": "Screen reader state of the Shared badge after a successful sync"}
   ,"sync_state_error": "sync failed, tap for details"
   ,"@sync_state_error": {"description": "Screen reader state of the Shared badge after a failed sync; the badge opens the sync page"}
+  ,"share_balances": "Share balances"
+  ,"@share_balances": {"description": "Button under the settle-up payments: shares a text summary of the balances"}
+  ,"balances_share_title": "{group} · balances"
+  ,"@balances_share_title": {"description": "First line of the shared balances summary", "placeholders": {"group": {"type": "String"}}}
+  ,"balances_share_footer": "Total {total} · {perPerson} per person"
+  ,"@balances_share_footer": {"description": "Last line of the shared balances summary", "placeholders": {"total": {"type": "String"}, "perPerson": {"type": "String"}}}
+  ,"balance_reminder_message": "Hi {from}! For “{group}” you owe {amount} to {to}."
+  ,"@balance_reminder_message": {"description": "Reminder shared to the participant who has to pay", "placeholders": {"from": {"type": "String"}, "group": {"type": "String"}, "amount": {"type": "String"}, "to": {"type": "String"}}}
+  ,"chart_week_by_week": "Week by week"
+  ,"@chart_week_by_week": {"description": "Title of the group statistics chart with one point per week (groups up to ~6 months)"}
+  ,"chart_month_by_month": "Month by month"
+  ,"@chart_month_by_month": {"description": "Title of the group statistics chart with one point per month (long groups)"}
 }

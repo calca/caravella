@@ -1828,4 +1828,10 @@
   ,"sync_state_syncing": "正在同步"
   ,"sync_state_synced": "已同步"
   ,"sync_state_error": "同步失败，点按查看详情"
+  ,"share_balances": "分享余额"
+  ,"balances_share_title": "{group} · 余额"
+  ,"balances_share_footer": "总计 {total} · 人均 {perPerson}"
+  ,"balance_reminder_message": "{from}你好！在“{group}”中你需要支付 {amount} 给 {to}。"
+  ,"chart_week_by_week": "每周支出"
+  ,"chart_month_by_month": "每月支出"
 }

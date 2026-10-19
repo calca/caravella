@@ -5374,6 +5374,47 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'sync failed, tap for details'**
   String get sync_state_error;
+
+  /// Button under the settle-up payments: shares a text summary of the balances
+  ///
+  /// In en, this message translates to:
+  /// **'Share balances'**
+  String get share_balances;
+
+  /// First line of the shared balances summary
+  ///
+  /// In en, this message translates to:
+  /// **'{group} · balances'**
+  String balances_share_title(String group);
+
+  /// Last line of the shared balances summary
+  ///
+  /// In en, this message translates to:
+  /// **'Total {total} · {perPerson} per person'**
+  String balances_share_footer(String total, String perPerson);
+
+  /// Reminder shared to the participant who has to pay
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {from}! For “{group}” you owe {amount} to {to}.'**
+  String balance_reminder_message(
+    String from,
+    String group,
+    String amount,
+    String to,
+  );
+
+  /// Title of the group statistics chart with one point per week (groups up to ~6 months)
+  ///
+  /// In en, this message translates to:
+  /// **'Week by week'**
+  String get chart_week_by_week;
+
+  /// Title of the group statistics chart with one point per month (long groups)
+  ///
+  /// In en, this message translates to:
+  /// **'Month by month'**
+  String get chart_month_by_month;
 }
 
 class _AppLocalizationsDelegate

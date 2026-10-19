@@ -13,7 +13,8 @@ import 'group_map_card.dart';
 import 'grouped_expense_list.dart';
 import 'stat_card.dart';
 
-/// Statistics view of the group page: spending chart, who paid how much,
+/// Statistics view of the group page: one spending chart over the whole
+/// group ([buildGroupSpendingSeries]), who paid how much,
 /// map, daily / monthly averages, highest expense and most expensive day,
 /// then the categories. The total, period
 /// and participant count are already in the page header, so they aren't
@@ -46,57 +47,30 @@ class GroupStatisticsView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Charts sit in cards named explicitly (instead of the D / W / M
-          // letter badges used where they're inline).
-          if (shouldShowDateRangeChart(group)) ...[
-            if (_hasSpending(buildAdaptiveDateRangeSeries(group)))
-              _ChartCard(
-                title: gloc.chart_day_by_day,
-                subtitle: formatDateRange(
-                  start: group.getEffectiveDateRange().start,
-                  end: group.getEffectiveDateRange().end,
-                  locale: Localizations.localeOf(context),
-                ),
-                chart: DateRangeExpenseChart(
-                  dailyTotals: buildAdaptiveDateRangeSeries(group),
-                  theme: theme,
-                  badgeText: gloc.dateRangeChartBadge,
-                  semanticLabel: gloc.dateRangeExpensesChart,
-                  height: _ChartCard.chartHeight,
-                  showBadge: false,
-                  color: theme.colorScheme.primary,
-                ),
+          // One chart over the whole group, step chosen by its length.
+          if (buildGroupSpendingSeries(group) case final series?
+              when _hasSpending(series.values))
+            _ChartCard(
+              title: switch (series.step) {
+                SpendingStep.day => gloc.chart_day_by_day,
+                SpendingStep.week => gloc.chart_week_by_week,
+                SpendingStep.month => gloc.chart_month_by_month,
+              },
+              subtitle: formatDateRange(
+                start: series.start,
+                end: series.end,
+                locale: Localizations.localeOf(context),
               ),
-          ] else ...[
-            if (_hasSpending(buildWeeklySeries(group))) ...[
-              _ChartCard(
-                title: gloc.this_week,
-                chart: WeeklyExpenseChart(
-                  dailyTotals: buildWeeklySeries(group),
-                  theme: theme,
-                  badgeText: gloc.weeklyChartBadge,
-                  semanticLabel: gloc.weeklyExpensesChart,
-                  height: _ChartCard.chartHeight,
-                  showBadge: false,
-                  color: theme.colorScheme.primary,
-                ),
+              chart: DateRangeExpenseChart(
+                dailyTotals: series.values,
+                theme: theme,
+                badgeText: gloc.dateRangeChartBadge,
+                semanticLabel: gloc.dateRangeExpensesChart,
+                height: _ChartCard.chartHeight,
+                showBadge: false,
+                color: theme.colorScheme.primary,
               ),
-              const SizedBox(height: 12),
-            ],
-            if (_hasSpending(buildMonthlySeries(group)))
-              _ChartCard(
-                title: gloc.this_month,
-                chart: MonthlyExpenseChart(
-                  dailyTotals: buildMonthlySeries(group),
-                  theme: theme,
-                  badgeText: gloc.monthlyChartBadge,
-                  semanticLabel: gloc.monthlyExpensesChart,
-                  height: _ChartCard.chartHeight,
-                  showBadge: false,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-          ],
+            ),
           title(gloc.participants),
           GroupPayersBubbles(group: group),
           if (groupPlacesCount(group) > 0) ...[

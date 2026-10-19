@@ -2871,4 +2871,33 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get sync_state_error =>
       'sincronización fallida, toca para ver detalles';
+
+  @override
+  String get share_balances => 'Compartir saldos';
+
+  @override
+  String balances_share_title(String group) {
+    return '$group · saldos';
+  }
+
+  @override
+  String balances_share_footer(String total, String perPerson) {
+    return 'Total $total · $perPerson por persona';
+  }
+
+  @override
+  String balance_reminder_message(
+    String from,
+    String group,
+    String amount,
+    String to,
+  ) {
+    return '¡Hola $from! En «$group» debes $amount a $to.';
+  }
+
+  @override
+  String get chart_week_by_week => 'Semana a semana';
+
+  @override
+  String get chart_month_by_month => 'Mes a mes';
 }

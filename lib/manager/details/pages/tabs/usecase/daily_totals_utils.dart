@@ -98,3 +98,79 @@ bool shouldShowDateRangeChart(ExpenseGroup group) {
   final inclusiveDays = end.difference(start).inDays + 1; // inclusive span
   return inclusiveDays <= 30;
 }
+
+/// Step of the group spending chart.
+enum SpendingStep { day, week, month }
+
+/// The group's spending over its whole period, bucketed by [step].
+class SpendingSeries {
+  final SpendingStep step;
+  final DateTime start;
+  final DateTime end;
+  final List<double> values;
+
+  const SpendingSeries({
+    required this.step,
+    required this.start,
+    required this.end,
+    required this.values,
+  });
+}
+
+/// One chart for the whole group: from its start date (or first expense) to
+/// its end date (or last expense, never past today for an ongoing group),
+/// day by day up to 31 days, week by week (from the Monday of the first
+/// week) up to ~6 months, month by month beyond. Null without expenses.
+SpendingSeries? buildGroupSpendingSeries(ExpenseGroup group, {DateTime? now}) {
+  if (group.expenses.isEmpty) return null;
+  DateTime day(DateTime d) => DateTime(d.year, d.month, d.day);
+  final dates = group.expenses.map((e) => day(e.date)).toList()..sort();
+  final first = dates.first;
+  final last = dates.last;
+  final today = day(now ?? DateTime.now());
+
+  var start = group.startDate != null ? day(group.startDate!) : first;
+  if (first.isBefore(start)) start = first;
+  var end = group.endDate != null ? day(group.endDate!) : last;
+  // An ongoing group stops at today (or its last expense, if later).
+  final latest = last.isAfter(today) ? last : today;
+  if (end.isAfter(latest)) end = latest;
+  if (last.isAfter(end)) end = last;
+
+  final days = end.difference(start).inDays + 1;
+  if (days <= 31) {
+    return SpendingSeries(
+      step: SpendingStep.day,
+      start: start,
+      end: end,
+      values: calculateDailyTotalsOptimized(group, start, days),
+    );
+  }
+  if (days <= 183) {
+    final monday = start.subtract(Duration(days: start.weekday - 1));
+    final weeks = (end.difference(monday).inDays ~/ 7) + 1;
+    final values = List<double>.filled(weeks, 0);
+    for (final e in group.expenses) {
+      final i = day(e.date).difference(monday).inDays ~/ 7;
+      if (i >= 0 && i < weeks) values[i] += e.amount ?? 0;
+    }
+    return SpendingSeries(
+      step: SpendingStep.week,
+      start: start,
+      end: end,
+      values: values,
+    );
+  }
+  final months = (end.year - start.year) * 12 + end.month - start.month + 1;
+  final values = List<double>.filled(months, 0);
+  for (final e in group.expenses) {
+    final i = (e.date.year - start.year) * 12 + e.date.month - start.month;
+    if (i >= 0 && i < months) values[i] += e.amount ?? 0;
+  }
+  return SpendingSeries(
+    step: SpendingStep.month,
+    start: start,
+    end: end,
+    values: values,
+  );
+}

@@ -75,10 +75,7 @@ class SyncSettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMultiDeviceTile(
-    BuildContext context,
-    gen.AppLocalizations loc,
-  ) {
+  Widget _buildMultiDeviceTile(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -121,8 +118,7 @@ class SyncSettingsScreen extends StatelessWidget {
           onTap: () => _openHistory(context),
           child: ListTile(
             leading: const Icon(Icons.history),
-            title:
-                Text(loc.sync_history_title, style: textTheme.titleMedium),
+            title: Text(loc.sync_history_title, style: textTheme.titleMedium),
             trailing: const Icon(Icons.chevron_right),
           ),
         ),
