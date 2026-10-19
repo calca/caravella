@@ -2846,4 +2846,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get most_expensive_day => 'Día más caro';
+
+  @override
+  String get chart_day_by_day => 'Día a día';
+
+  @override
+  String get this_week => 'Esta semana';
 }

@@ -9,12 +9,26 @@ class DateRangeExpenseChart extends StatelessWidget {
   final String badgeText;
   final String semanticLabel;
 
+  /// Chart height (40 for the compact inline use).
+  final double height;
+
+  /// Whether to show the letter badge beside the chart; off when a card
+  /// around the chart already names it.
+  final bool showBadge;
+
+  /// Line color; the area below uses it at lower opacity. Defaults to a
+  /// faint `onSurfaceVariant`.
+  final Color? color;
+
   const DateRangeExpenseChart({
     super.key,
     required this.dailyTotals,
     required this.theme,
     required this.badgeText,
     required this.semanticLabel,
+    this.height = 40,
+    this.showBadge = true,
+    this.color,
   });
 
   @override
@@ -24,6 +38,14 @@ class DateRangeExpenseChart extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    if (!showBadge) {
+      return Semantics(
+        label: semanticLabel,
+        image: true,
+        excludeSemantics: true,
+        child: _buildChart(),
+      );
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -45,20 +67,22 @@ class DateRangeExpenseChart extends StatelessWidget {
       (i) => FlSpot(i.toDouble(), dailyTotals[i]),
     );
     return SizedBox(
-      height: 40,
+      height: height,
       child: LineChart(
         LineChartData(
           lineBarsData: [
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.25),
+              color:
+                  color ??
+                  theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.25),
               barWidth: 2,
               dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color: theme.colorScheme.onSurfaceVariant.withValues(
-                  alpha: 0.12,
+                color: (color ?? theme.colorScheme.onSurfaceVariant).withValues(
+                  alpha: color != null ? 0.15 : 0.12,
                 ),
               ),
             ),

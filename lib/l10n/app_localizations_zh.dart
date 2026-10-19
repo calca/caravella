@@ -2749,4 +2749,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get most_expensive_day => '花费最多的一天';
+
+  @override
+  String get chart_day_by_day => '每日支出';
+
+  @override
+  String get this_week => '本周';
 }

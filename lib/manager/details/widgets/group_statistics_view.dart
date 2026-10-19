@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../pages/tabs/categories_overview_tab.dart';
 import '../pages/tabs/usecase/daily_totals_utils.dart';
+import '../pages/tabs/usecase/date_range_formatter.dart';
 import 'group_map_card.dart';
 import 'day_grouped_expense_list.dart';
 import 'stat_card.dart';
@@ -45,27 +46,56 @@ class GroupStatisticsView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (shouldShowDateRangeChart(group))
-            DateRangeExpenseChart(
-              dailyTotals: buildAdaptiveDateRangeSeries(group),
-              theme: theme,
-              badgeText: gloc.dateRangeChartBadge,
-              semanticLabel: gloc.dateRangeExpensesChart,
-            )
-          else ...[
-            WeeklyExpenseChart(
-              dailyTotals: buildWeeklySeries(group),
-              theme: theme,
-              badgeText: gloc.weeklyChartBadge,
-              semanticLabel: gloc.weeklyExpensesChart,
-            ),
-            const SizedBox(height: 24),
-            MonthlyExpenseChart(
-              dailyTotals: buildMonthlySeries(group),
-              theme: theme,
-              badgeText: gloc.monthlyChartBadge,
-              semanticLabel: gloc.monthlyExpensesChart,
-            ),
+          // Charts sit in cards named explicitly (instead of the D / W / M
+          // letter badges used where they're inline).
+          if (shouldShowDateRangeChart(group)) ...[
+            if (_hasSpending(buildAdaptiveDateRangeSeries(group)))
+              _ChartCard(
+                title: gloc.chart_day_by_day,
+                subtitle: formatDateRange(
+                  start: group.getEffectiveDateRange().start,
+                  end: group.getEffectiveDateRange().end,
+                  locale: Localizations.localeOf(context),
+                ),
+                chart: DateRangeExpenseChart(
+                  dailyTotals: buildAdaptiveDateRangeSeries(group),
+                  theme: theme,
+                  badgeText: gloc.dateRangeChartBadge,
+                  semanticLabel: gloc.dateRangeExpensesChart,
+                  height: _ChartCard.chartHeight,
+                  showBadge: false,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+          ] else ...[
+            if (_hasSpending(buildWeeklySeries(group))) ...[
+              _ChartCard(
+                title: gloc.this_week,
+                chart: WeeklyExpenseChart(
+                  dailyTotals: buildWeeklySeries(group),
+                  theme: theme,
+                  badgeText: gloc.weeklyChartBadge,
+                  semanticLabel: gloc.weeklyExpensesChart,
+                  height: _ChartCard.chartHeight,
+                  showBadge: false,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+            if (_hasSpending(buildMonthlySeries(group)))
+              _ChartCard(
+                title: gloc.this_month,
+                chart: MonthlyExpenseChart(
+                  dailyTotals: buildMonthlySeries(group),
+                  theme: theme,
+                  badgeText: gloc.monthlyChartBadge,
+                  semanticLabel: gloc.monthlyExpensesChart,
+                  height: _ChartCard.chartHeight,
+                  showBadge: false,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
           ],
           title(gloc.participants),
           GroupPayersBubbles(group: group),
@@ -138,6 +168,67 @@ class GroupStatisticsView extends StatelessWidget {
     );
   }
 }
+
+/// A chart in a card with an explicit title (and optional subtitle, e.g.
+/// the period).
+class _ChartCard extends StatelessWidget {
+  static const double chartHeight = 96;
+
+  final String title;
+  final String? subtitle;
+  final Widget chart;
+
+  const _ChartCard({required this.title, required this.chart, this.subtitle});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final radius = BorderRadius.circular(20);
+    return CardOutline(
+      borderRadius: radius,
+      child: Material(
+        color: s.raisedSurface,
+        borderRadius: radius,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  if (subtitle != null)
+                    Text(
+                      subtitle!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: s.onSurfaceVariant,
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              chart,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Whether a chart series has anything to draw (charts render nothing for
+/// an all-zero series, which would leave an empty card).
+bool _hasSpending(List<double> series) => series.any((v) => v > 0);
 
 /// The group's largest expense, or null when it has none.
 ExpenseDetails? highestExpense(ExpenseGroup group) => group.expenses.isEmpty

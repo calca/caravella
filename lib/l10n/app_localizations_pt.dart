@@ -2842,4 +2842,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get most_expensive_day => 'Dia mais caro';
+
+  @override
+  String get chart_day_by_day => 'Dia a dia';
+
+  @override
+  String get this_week => 'Esta semana';
 }

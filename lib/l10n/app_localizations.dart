@@ -5326,6 +5326,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Most expensive day'**
   String get most_expensive_day;
+
+  /// Title of the group statistics chart of daily spending over the group period
+  ///
+  /// In en, this message translates to:
+  /// **'Day by day'**
+  String get chart_day_by_day;
+
+  /// Title of the group statistics chart of the current week
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get this_week;
 }
 
 class _AppLocalizationsDelegate
