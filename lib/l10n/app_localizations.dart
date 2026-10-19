@@ -5338,6 +5338,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This week'**
   String get this_week;
+
+  /// Header of the group page expenses of the previous calendar week
+  ///
+  /// In en, this message translates to:
+  /// **'Last week'**
+  String get last_week;
 }
 
 class _AppLocalizationsDelegate

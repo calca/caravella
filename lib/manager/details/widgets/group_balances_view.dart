@@ -196,10 +196,14 @@ class _BalanceRow extends StatelessWidget {
                     return Stack(
                       children: [
                         Positioned(
-                          left: half - 0.5,
+                          left: half - 0.75,
                           top: -2,
                           bottom: -2,
-                          child: Container(width: 1, color: s.outlineVariant),
+                          // onSurfaceVariant: outlineVariant vanished on the dark card.
+                          child: Container(
+                            width: 1.5,
+                            color: s.onSurfaceVariant.withValues(alpha: 0.7),
+                          ),
                         ),
                         Positioned(
                           left: positive ? half : half - w,

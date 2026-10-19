@@ -2,7 +2,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
-import 'package:io_caravella_egm/manager/details/widgets/day_grouped_expense_list.dart';
+import 'package:io_caravella_egm/manager/details/widgets/grouped_expense_list.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_balances_view.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_map_card.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_statistics_view.dart';
@@ -51,7 +51,7 @@ void main() {
   final day2 = DateTime(2026, 10, 17, 20);
 
   test('groupByDay groups by calendar day, newest first', () {
-    final days = DayGroupedExpenseSliver.groupByDay([
+    final days = WeekGroupedExpenseSliver.groupByDay([
       _expense('Breakfast', 10, day1, _anna),
       _expense('Dinner', 40, day2, _luca),
       _expense('Lunch', 20, day1.add(const Duration(hours: 4)), _luca),
@@ -60,13 +60,26 @@ void main() {
     expect(days.last.$2.map((e) => e.name), ['Lunch', 'Breakfast']);
   });
 
-  testWidgets('day sections show the day total', (tester) async {
+  test('groupByWeek groups Monday to Sunday, newest first', () {
+    final weeks = WeekGroupedExpenseSliver.groupByWeek([
+      _expense('Sun', 10, DateTime(2026, 10, 18), _anna),
+      _expense('Mon', 20, DateTime(2026, 10, 12), _luca),
+      _expense('Prev Sun', 5, DateTime(2026, 10, 11), _luca),
+    ]);
+    expect(weeks.map((w) => w.$1), [
+      DateTime(2026, 10, 12),
+      DateTime(2026, 10, 5),
+    ]);
+    expect(weeks.first.$2.map((e) => e.name), ['Sun', 'Mon']);
+  });
+
+  testWidgets('week sections show the week and its total', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        DayGroupedExpenseSliver(
+        WeekGroupedExpenseSliver(
           expenses: [
-            _expense('Breakfast', 10, day1, _anna),
-            _expense('Lunch', 20, day1.add(const Duration(hours: 4)), _luca),
+            _expense('Breakfast', 10, DateTime(2025, 3, 4), _anna),
+            _expense('Lunch', 20, DateTime(2025, 3, 6), _luca),
           ],
           currency: '€',
           onExpenseTap: (_) {},
@@ -74,9 +87,23 @@ void main() {
         sliver: true,
       ),
     );
-    expect(find.text('FRI 16 OCT'), findsOneWidget);
+    expect(find.text('3 MAR 2025 – 9 MAR 2025'), findsOneWidget);
     expect(find.text('Breakfast'), findsOneWidget);
     expect(find.text('Lunch'), findsOneWidget);
+  });
+
+  testWidgets('the current week is named', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        WeekGroupedExpenseSliver(
+          expenses: [_expense('Today', 10, DateTime.now(), _anna)],
+          currency: '€',
+          onExpenseTap: (_) {},
+        ),
+        sliver: true,
+      ),
+    );
+    expect(find.text('THIS WEEK'), findsOneWidget);
   });
 
   testWidgets('balances show who gets back, who owes and how to settle', (

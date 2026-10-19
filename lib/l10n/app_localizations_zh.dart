@@ -2755,4 +2755,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get this_week => '本周';
+
+  @override
+  String get last_week => '上周';
 }

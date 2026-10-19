@@ -10,7 +10,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/delete_expense_dialog.dart';
 import '../../expense/pages/expense_form_page.dart';
 import '../widgets/expense_export_actions.dart';
-import '../widgets/day_grouped_expense_list.dart';
+import '../widgets/grouped_expense_list.dart';
 import '../widgets/empty_expense_state.dart';
 import '../widgets/group_balances_view.dart';
 import '../widgets/group_detail_header.dart';
@@ -449,7 +449,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           child: EmptyExpenseState(onAddFirstExpense: _showAddExpenseSheet),
         ),
       ),
-      0 => DayGroupedExpenseSliver(
+      0 => WeekGroupedExpenseSliver(
         expenses: trip.expenses,
         currency: trip.currency,
         onExpenseTap: _openEditExpense,

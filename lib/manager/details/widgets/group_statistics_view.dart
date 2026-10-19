@@ -10,7 +10,7 @@ import '../pages/tabs/categories_overview_tab.dart';
 import '../pages/tabs/usecase/daily_totals_utils.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
 import 'group_map_card.dart';
-import 'day_grouped_expense_list.dart';
+import 'grouped_expense_list.dart';
 import 'stat_card.dart';
 
 /// Statistics view of the group page: spending chart, who paid how much,
@@ -185,43 +185,49 @@ class _ChartCard extends StatelessWidget {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final radius = BorderRadius.circular(20);
-    return CardOutline(
-      borderRadius: radius,
-      child: Material(
-        color: s.raisedSurface,
-        borderRadius: radius,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    // Title outside the card, like the other sections of the view.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(6, 4, 6, 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+              Expanded(
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: s.onSurfaceVariant,
-                      ),
-                    ),
-                ],
+                ),
               ),
-              const SizedBox(height: 12),
-              chart,
+              if (subtitle != null)
+                Text(
+                  subtitle!,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: s.onSurfaceVariant,
+                  ),
+                ),
             ],
           ),
         ),
-      ),
+        CardOutline(
+          borderRadius: radius,
+          child: Material(
+            color: s.raisedSurface,
+            borderRadius: radius,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
+              child: chart,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -241,7 +247,7 @@ ExpenseDetails? highestExpense(ExpenseGroup group) => group.expenses.isEmpty
 /// group has no expenses.
 (DateTime, double)? mostExpensiveDay(ExpenseGroup group) {
   (DateTime, double)? best;
-  for (final (day, expenses) in DayGroupedExpenseSliver.groupByDay(
+  for (final (day, expenses) in WeekGroupedExpenseSliver.groupByDay(
     group.expenses,
   )) {
     final total = expenses.fold<double>(0, (t, e) => t + (e.amount ?? 0));

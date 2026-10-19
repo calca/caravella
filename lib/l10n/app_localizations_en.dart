@@ -2831,4 +2831,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get this_week => 'This week';
+
+  @override
+  String get last_week => 'Last week';
 }

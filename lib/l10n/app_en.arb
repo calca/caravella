@@ -1258,4 +1258,6 @@
   ,"@chart_day_by_day": {"description": "Title of the group statistics chart of daily spending over the group period"}
   ,"this_week": "This week"
   ,"@this_week": {"description": "Title of the group statistics chart of the current week"}
+  ,"last_week": "Last week"
+  ,"@last_week": {"description": "Header of the group page expenses of the previous calendar week"}
 }

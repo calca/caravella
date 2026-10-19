@@ -2850,4 +2850,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get this_week => 'Questa settimana';
+
+  @override
+  String get last_week => 'Settimana scorsa';
 }
