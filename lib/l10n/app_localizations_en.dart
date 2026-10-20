@@ -2959,4 +2959,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get drive_backup_error => 'Couldn\'t reach Google Drive';
+
+  @override
+  String get expense_more_details => 'More details';
 }

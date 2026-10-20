@@ -1858,4 +1858,5 @@
   ,"drive_backup_disconnect": "断开连接"
   ,"drive_backup_saved": "备份已保存到 Google 云端硬盘"
   ,"drive_backup_error": "无法连接 Google 云端硬盘"
+  ,"expense_more_details": "更多详情"
 }

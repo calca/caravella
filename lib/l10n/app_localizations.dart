@@ -5559,6 +5559,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t reach Google Drive'**
   String get drive_backup_error;
+
+  /// Quick-add sheet: opens the full expense page (date, place, attachments, note)
+  ///
+  /// In en, this message translates to:
+  /// **'More details'**
+  String get expense_more_details;
 }
 
 class _AppLocalizationsDelegate

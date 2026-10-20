@@ -1243,4 +1243,5 @@
   ,"drive_backup_disconnect": "Desconectar"
   ,"drive_backup_saved": "Copia guardada en Google Drive"
   ,"drive_backup_error": "No se pudo conectar con Google Drive"
+  ,"expense_more_details": "Más detalles"
 }

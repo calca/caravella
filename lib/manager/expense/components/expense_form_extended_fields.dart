@@ -26,6 +26,11 @@ class ExpenseFormExtendedFields extends StatefulWidget {
   final VoidCallback onSaveExpense;
   final bool isReadOnly;
 
+  /// Set in the quick-add sheet: instead of the details, a "More details"
+  /// pill calling this (opens the full page) — plus the attachments strip
+  /// when there are some (e.g. a scanned receipt), so the photo shows.
+  final VoidCallback? onMoreDetails;
+
   const ExpenseFormExtendedFields({
     super.key,
     required this.controller,
@@ -37,6 +42,7 @@ class ExpenseFormExtendedFields extends StatefulWidget {
     required this.isFormValid,
     required this.onSaveExpense,
     this.isReadOnly = false,
+    this.onMoreDetails,
   });
 
   @override
@@ -73,6 +79,35 @@ class _ExpenseFormExtendedFieldsState extends State<ExpenseFormExtendedFields> {
     final enabled = !widget.isReadOnly;
     final hasAttachments = state.attachments.isNotEmpty;
     final showNote = _noteOpened || _controller.noteController.text.isNotEmpty;
+
+    final moreDetails = widget.onMoreDetails;
+    if (moreDetails != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasAttachments) ...[
+            const SizedBox(height: AppSpacing.md),
+            AttachmentInputWidget(
+              groupId: widget.groupId,
+              groupName: widget.groupName,
+              attachments: state.attachments,
+              onAttachmentAdded: _controller.addAttachment,
+              onAttachmentRemoved: _removeAttachment,
+              onAttachmentTapped: (path) =>
+                  _openAttachmentViewer(context, path),
+              enabled: enabled,
+            ),
+          ],
+          const SizedBox(height: AppSpacing.sm),
+          FormPill(
+            icon: Icons.tune_rounded,
+            label: gloc.expense_more_details,
+            style: FormPillStyle.add,
+            onTap: moreDetails,
+          ),
+        ],
+      );
+    }
 
     final pills = <Widget>[
       DateSelectorWidget(

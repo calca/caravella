@@ -2977,4 +2977,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get drive_backup_error => 'Impossibile raggiungere Google Drive';
+
+  @override
+  String get expense_more_details => 'Altri dettagli';
 }

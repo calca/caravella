@@ -2890,4 +2890,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get drive_backup_error => '无法连接 Google 云端硬盘';
+
+  @override
+  String get expense_more_details => '更多详情';
 }
