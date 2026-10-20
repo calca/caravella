@@ -36,10 +36,10 @@
   "@dateRangeExpensesChart": {
     "description": "Label for date range expenses chart"
   },
-  "settings_flag_secure_desc": "Impede capturas de tela e gravação da tela",
+  "settings_flag_secure_desc": "Bloqueia capturas e gravação",
   "settings_flag_secure_title": "Tela segura",
   "settings_app_functions_title": "Acesso de agentes de IA",
-  "settings_app_functions_desc": "Permite que assistentes de IA (ex. Gemini) leiam e adicionem despesas",
+  "settings_app_functions_desc": "Usa o Gemini e outros assistentes IA",
   "settings_privacy": "Privacidade",
   "select_currency": "Selecionar moeda",
   "select_period_hint_short": "Definir datas",
@@ -228,7 +228,7 @@
   "error_saving_image": "Erro ao salvar imagem",
   "already_exists": "já existe",
   "other_settings": "Outras configurações",
-  "other_settings_desc": "Moeda, plano de fundo e localização automática",
+  "other_settings_desc": "Moeda, fundo, localização",
   "segment_general": "Geral",
   "segment_other": "Outro",
   "status_all": "Todos",
@@ -331,8 +331,8 @@
   "settings_general_desc": "Idioma e aparência",
   "settings_auto_location_section": "Detecção de localização",
   "settings_auto_location_section_desc": "Configurar a detecção automática de localização",
-  "settings_auto_location_title": "Ativar para detectar",
-  "settings_auto_location_desc": "Detectar GPS ao adicionar uma despesa",
+  "settings_auto_location_title": "Localização automática",
+  "settings_auto_location_desc": "Guarda onde fazes cada despesa",
   "settings_language": "Idioma",
   "settings_language_desc": "Escolha o idioma preferido",
   "settings_language_it": "Italiano",
@@ -361,21 +361,21 @@
   "settings_invite_friends_desc": "Compartilhe o Caravella com quem quiser",
   "invite_friends_message": "Oi! Uso o Caravella para dividir as despesas em grupo com amigos, é super prático 🎒💸 Experimente também: https://play.google.com/store/apps/details?id=io.caravella.egm",
   "terms_github_title": "Website: calca",
-  "terms_github_desc": "Website pessoal do desenvolvedor.",
+  "terms_github_desc": "Site do programador",
   "terms_repo_title": "Repositório GitHub",
   "terms_repo_desc": "Código-fonte da aplicação.",
   "terms_issue_title": "Reportar um problema",
-  "terms_issue_desc": "Ir para a página de issues no GitHub.",
+  "terms_issue_desc": "Reporta um problema no GitHub",
   "terms_license_desc": "Ver a licença open source.",
   "support_developer_title": "Pague um café",
   "support_developer_desc": "Apoie o desenvolvimento deste app.",
   "data_title": "Backup e Restauração",
   "data_backup_title": "Backup",
-  "data_backup_desc": "Crie um arquivo de backup dos seus grupos e despesas.",
+  "data_backup_desc": "Guarda as despesas num ficheiro",
   "data_restore_title": "Restaurar",
-  "data_restore_desc": "Importe um backup para restaurar seus dados.",
+  "data_restore_desc": "A partir de um ficheiro",
   "auto_backup_title": "Backup automático",
-  "auto_backup_desc": "Ativar backup automático do sistema",
+  "auto_backup_desc": "Backup do sistema operativo",
   "info_tab": "Informações"
   ,"currency_AED": "United Arab Emirates Dirham"
   ,"currency_AFN": "Afghan Afghani"
@@ -594,7 +594,7 @@
   ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"}
   ,"check_for_updates": "Verificar atualizações"
   ,"@check_for_updates": {"description": "Rótulo para verificar atualizações da Google Play Store"}
-  ,"check_for_updates_desc": "Verificar disponibilidade de nova versão"
+  ,"check_for_updates_desc": "Procura uma nova versão"
   ,"@check_for_updates_desc": {"description": "Descrição para verificação de atualizações"}
   ,"update_available": "Atualização disponível"
   ,"@update_available": {"description": "Título quando há uma atualização disponível"}
@@ -677,7 +677,7 @@
   ,"import_error": "Falha na importação. Verifique o formato do arquivo."
   ,"settings_flag_secure_error": "Couldn't change screen security"
   ,"settings_debug_logs_title": "Debug Logs"
-  ,"settings_debug_logs_desc": "View application logs and error history"
+  ,"settings_debug_logs_desc": "Registos e erros da app"
   ,"developer_link_error": "Couldn't open the link"
   ,"whats_new_load_error": "Failed to load"
   ,"last_7_days": "Últimos 7 dias"
@@ -709,7 +709,7 @@
   ,"select_to_date": "Selecionar até"
   ,"settings_language_es": "Espanhol"
   ,"settings_user_name_title": "Seu nome"
-  ,"settings_user_name_desc": "Nome ou apelido para usar no aplicativo"
+  ,"settings_user_name_desc": "O teu nome na app"
   ,"settings_user_name_hint": "Insira seu nome"
   ,"default_participant_me": "Eu"
   ,"settlement": "Acerto"
@@ -728,7 +728,7 @@
   ,"weekly_expenses_chart": "Despesas semanais"
   ,"notification_enabled": "Notificação persistente"
   ,"@notification_enabled": {"description": "Etiqueta para a configuração de notificação persistente no grupo"}
-  ,"notification_enabled_desc": "Mostra as despesas de hoje em uma notificação sempre visível"
+  ,"notification_enabled_desc": "Despesas de hoje numa notificação"
   ,"@notification_enabled_desc": {"description": "Descrição da configuração de notificação persistente"}
   ,"notification_daily_spent": "Gasto diário: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Texto na notificação que mostra o gasto diário médio", "placeholders": {"amount": {}, "currency": {}}}
@@ -915,7 +915,7 @@
   ,"@danger_zone": {"description": "Título da seção para ações perigosas como arquivar e excluir"}
   ,"danger_zone_desc": "Arquivar ou excluir este grupo"
   ,"@danger_zone_desc": {"description": "Descrição para a seção zona perigosa"}
-  ,"export_options_desc": "Baixar ou compartilhar despesas em vários formatos"
+  ,"export_options_desc": "Descarrega ou partilha as despesas"
   ,"@export_options_desc": {"description": "Descrição para as opções de exportação"}
   ,"export_csv_description": "Formato planilha"
   ,"@export_csv_description": {"description": "Descrição curta para o formato de exportação CSV"}
@@ -927,19 +927,19 @@
   ,"@save_label": {"description": "Rótulo para o botão de salvar"}
   ,"sync_title": "Sincronização"
   ,"@sync_title": {"description": "Título para a página de configurações de sync"}
-  ,"sync_settings_desc": "Compartilhe dados entre seus dispositivos via Wi-Fi ou Bluetooth"
+  ,"sync_settings_desc": "Wi-Fi, Bluetooth ou Google Drive"
   ,"@sync_settings_desc": {"description": "Subtítulo para a entrada de sync nas configurações de Dados"}
   ,"sync_local_title": "Sync local"
   ,"@sync_local_title": {"description": "Título para a seção de sync LAN local"}
-  ,"sync_multiuser_title": "Sincronizar com outras pessoas"
+  ,"sync_multiuser_title": "Sincronizar com outros"
   ,"@sync_multiuser_title": {"description": "Título para a entrada da subpágina de sync Wi-Fi/Bluetooth (dispositivos de outras pessoas)"}
-  ,"sync_multiuser_description": "Compartilhe seus grupos com dispositivos próximos via Wi-Fi ou Bluetooth"
+  ,"sync_multiuser_description": "Grupos por Wi-Fi ou Bluetooth"
   ,"@sync_multiuser_description": {"description": "Descrição para a entrada de sync multiusuário"}
-  ,"sync_multidevice_title": "Sincronizar seus dispositivos"
+  ,"sync_multidevice_title": "Sincronizar dispositivos"
   ,"@sync_multidevice_title": {"description": "Título para a entrada da subpágina de sync na nuvem (dispositivos próprios)"}
-  ,"sync_multidevice_description": "Mantenha seu telefone e outros dispositivos atualizados via Google Drive"
+  ,"sync_multidevice_description": "Sincroniza os teus dispositivos no Drive"
   ,"@sync_multidevice_description": {"description": "Descrição para a entrada de sync multidispositivo"}
-  ,"sync_local_description": "Sincronização automática na rede Wi-Fi"
+  ,"sync_local_description": "Automática na mesma rede Wi-Fi"
   ,"@sync_local_description": {"description": "Descrição para sync LAN"}
   ,"sync_cloud_title": "Sync na nuvem"
   ,"@sync_cloud_title": {"description": "Título para a seção de sync na nuvem"}
@@ -973,7 +973,7 @@
   ,"@sync_last_sync": {"description": "Mostra a hora do último sync","placeholders": {"time": {"type": "String"}}}
   ,"sync_bt_title": "Sync Bluetooth"
   ,"@sync_bt_title": {"description": "Título para sync Bluetooth"}
-  ,"sync_bt_description": "Sincronização manual com dispositivos próximos via Bluetooth"
+  ,"sync_bt_description": "Manual, com dispositivos próximos"
   ,"@sync_bt_description": {"description": "Descrição para sync Bluetooth"}
   ,"sync_bt_searching": "Procurando dispositivos próximos..."
   ,"@sync_bt_searching": {"description": "Estado enquanto procura peers BT"}
@@ -1011,7 +1011,7 @@
   ,"@sync_group_pending": {"description": "Tooltip para status de grupo não sincronizado"}
   ,"sync_group_enable": "Compartilhar este grupo"
   ,"@sync_group_enable": {"description": "Etiqueta para ativar a sincronização em um grupo"}
-  ,"sync_group_enable_desc": "Sincronize as despesas deste grupo com outros dispositivos pareados via Wi-Fi ou Bluetooth"
+  ,"sync_group_enable_desc": "Com os dispositivos emparelhados"
   ,"@sync_group_enable_desc": {"description": "Descrição para o alternador de sincronização do grupo"}
   ,"sync_group_needs_channel": "Ative a sync de Wi-Fi ou Bluetooth nas Configurações para habilitar isso"
   ,"@sync_group_needs_channel": {"description": "Mostrado no lugar de sync_group_enable_desc quando nem Wi-Fi nem Bluetooth sync estão ativos no app"}
@@ -1041,7 +1041,7 @@
   ,"@sync_qr_no_network": {"description": "Exibido quando nenhum endereço de rede local está disponível para o pareamento"}
   ,"sync_qr_scan_title": "Escanear código de pareamento"
   ,"@sync_qr_scan_title": {"description": "Título para a página de escaneamento do QR de pareamento"}
-  ,"sync_qr_scan_description": "Aponte a câmera para o código de pareamento exibido no outro dispositivo"
+  ,"sync_qr_scan_description": "Lê o QR do outro dispositivo"
   ,"@sync_qr_scan_description": {"description": "Instruções para a página de escaneamento do QR de pareamento"}
   ,"sync_qr_pair_success": "Pareado com {deviceName}"
   ,"@sync_qr_pair_success": {"description": "Mensagem de sucesso após parear com um dispositivo escaneado", "placeholders": {"deviceName": {"type": "String"}}}
@@ -1126,7 +1126,7 @@
   ,"settings_group_templates_section_title": "Modelos de tipo de grupo"
   ,"settings_group_templates_section_desc": "Personalize seus modelos de tipo de grupo"
   ,"settings_group_templates_manage_title": "Gerenciar modelos"
-  ,"settings_group_templates_manage_desc": "Crie, edite e exclua modelos personalizados"
+  ,"settings_group_templates_manage_desc": "Cria e edita os teus modelos"
   ,"settings_group_templates_page_title": "Modelos de tipo de grupo"
   ,"settings_group_templates_empty_state": "Nenhum modelo ainda"
   ,"settings_group_templates_add_title": "Adicionar modelo"
@@ -1193,16 +1193,16 @@
   ,"expense_details_section": "Detalhes"
   ,"add_expense_button": "Adicionar despesa"
   ,"auto_backup_last": "Último backup: {date}"
-  ,"auto_backup_never": "Ainda sem backup — o Android costuma fazê-lo à noite, a carregar e com Wi‑Fi"
-  ,"auto_backup_off": "Desativado: os dados do Caravella ficam fora do backup do telefone"
+  ,"auto_backup_never": "Ainda sem backup"
+  ,"auto_backup_off": "Desligado: dados fora do backup"
   ,"drive_backup_connect": "Ligar ao Google Drive"
-  ,"drive_backup_connect_desc": "Guarda os backups numa pasta privada do teu Drive"
+  ,"drive_backup_connect_desc": "Backups numa pasta privada"
   ,"drive_backup_now": "Guardar no Drive agora"
   ,"drive_backup_none": "Ainda sem backups no Drive"
   ,"drive_backup_restore": "Restaurar do Drive"
   ,"drive_backup_restore_desc": "Escolhe um dos últimos 5 backups"
   ,"drive_backup_weekly": "Backup semanal"
-  ,"drive_backup_weekly_desc": "Uma cópia por semana, ao abrir a app"
+  ,"drive_backup_weekly_desc": "Todas as semanas, ao abrir"
   ,"drive_backup_disconnect": "Desligar"
   ,"drive_backup_saved": "Backup guardado no Google Drive"
   ,"drive_backup_error": "Não foi possível aceder ao Google Drive"

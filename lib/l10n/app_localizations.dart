@@ -179,7 +179,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_flag_secure_desc.
   ///
   /// In en, this message translates to:
-  /// **'Prevents screenshots and screen recording'**
+  /// **'Block screenshots and recording'**
   String get settings_flag_secure_desc;
 
   /// No description provided for @settings_flag_secure_title.
@@ -197,7 +197,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_app_functions_desc.
   ///
   /// In en, this message translates to:
-  /// **'Allow AI assistants (e.g. Gemini) to read and add expenses'**
+  /// **'Use Gemini and other AI assistants'**
   String get settings_app_functions_desc;
 
   /// No description provided for @settings_privacy.
@@ -1217,7 +1217,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_debug_logs_desc.
   ///
   /// In en, this message translates to:
-  /// **'View application logs and error history'**
+  /// **'App logs and errors'**
   String get settings_debug_logs_desc;
 
   /// No description provided for @developer_link_error.
@@ -1247,7 +1247,7 @@ abstract class AppLocalizations {
   /// No description provided for @other_settings_desc.
   ///
   /// In en, this message translates to:
-  /// **'Currency, background, and automatic location'**
+  /// **'Currency, background, location'**
   String get other_settings_desc;
 
   /// No description provided for @segment_general.
@@ -1973,13 +1973,13 @@ abstract class AppLocalizations {
   /// No description provided for @settings_auto_location_title.
   ///
   /// In en, this message translates to:
-  /// **'Enable to detect'**
+  /// **'Automatic location'**
   String get settings_auto_location_title;
 
   /// No description provided for @settings_auto_location_desc.
   ///
   /// In en, this message translates to:
-  /// **'Detect GPS when adding an expense'**
+  /// **'Saves where new expenses are made'**
   String get settings_auto_location_desc;
 
   /// No description provided for @settings_language.
@@ -2153,7 +2153,7 @@ abstract class AppLocalizations {
   /// No description provided for @terms_github_desc.
   ///
   /// In en, this message translates to:
-  /// **'Developer\'s personal website.'**
+  /// **'Developer\'s website'**
   String get terms_github_desc;
 
   /// No description provided for @terms_repo_title.
@@ -2177,7 +2177,7 @@ abstract class AppLocalizations {
   /// No description provided for @terms_issue_desc.
   ///
   /// In en, this message translates to:
-  /// **'Go to the GitHub issues page.'**
+  /// **'Report a problem on GitHub'**
   String get terms_issue_desc;
 
   /// No description provided for @terms_license_desc.
@@ -2213,7 +2213,7 @@ abstract class AppLocalizations {
   /// No description provided for @data_backup_desc.
   ///
   /// In en, this message translates to:
-  /// **'Create a backup file of your expenses.'**
+  /// **'Save your expenses to a file'**
   String get data_backup_desc;
 
   /// No description provided for @data_restore_title.
@@ -2225,7 +2225,7 @@ abstract class AppLocalizations {
   /// No description provided for @data_restore_desc.
   ///
   /// In en, this message translates to:
-  /// **'Import a backup to restore your data.'**
+  /// **'From a backup file'**
   String get data_restore_desc;
 
   /// No description provided for @auto_backup_title.
@@ -2237,7 +2237,7 @@ abstract class AppLocalizations {
   /// No description provided for @auto_backup_desc.
   ///
   /// In en, this message translates to:
-  /// **'Enable operating system automatic backup'**
+  /// **'Your phone\'s system backup'**
   String get auto_backup_desc;
 
   /// No description provided for @settings_user_name_title.
@@ -2249,7 +2249,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_user_name_desc.
   ///
   /// In en, this message translates to:
-  /// **'Name or nickname to use in the app'**
+  /// **'Your name in the app'**
   String get settings_user_name_desc;
 
   /// No description provided for @settings_user_name_hint.
@@ -3779,7 +3779,7 @@ abstract class AppLocalizations {
   /// Description for update check
   ///
   /// In en, this message translates to:
-  /// **'Check for new version availability'**
+  /// **'Look for a new version'**
   String get check_for_updates_desc;
 
   /// Title when an update is available
@@ -3920,7 +3920,7 @@ abstract class AppLocalizations {
   /// Description of the persistent notification setting
   ///
   /// In en, this message translates to:
-  /// **'Display today\'s expenses in an always-visible notification'**
+  /// **'Today\'s expenses in a notification'**
   String get notification_enabled_desc;
 
   /// Today's spent amount in notification
@@ -4448,7 +4448,7 @@ abstract class AppLocalizations {
   /// Description for export options
   ///
   /// In en, this message translates to:
-  /// **'Download or share expenses in various formats'**
+  /// **'Download or share the expenses'**
   String get export_options_desc;
 
   /// Short description for CSV export format
@@ -4484,19 +4484,19 @@ abstract class AppLocalizations {
   /// Subtitle for the sync entry point in Data settings
   ///
   /// In en, this message translates to:
-  /// **'Share data between your devices via Wi-Fi or Bluetooth'**
+  /// **'Wi-Fi, Bluetooth or Google Drive'**
   String get sync_settings_desc;
 
   /// Title for the Wi-Fi/Bluetooth (other people's devices) sync sub-page entry
   ///
   /// In en, this message translates to:
-  /// **'Sync with other people'**
+  /// **'Sync with others'**
   String get sync_multiuser_title;
 
   /// Description for the multi-user sync entry
   ///
   /// In en, this message translates to:
-  /// **'Share your groups with nearby devices via Wi-Fi or Bluetooth'**
+  /// **'Groups over Wi-Fi or Bluetooth'**
   String get sync_multiuser_description;
 
   /// Title for the cloud (own devices) sync sub-page entry
@@ -4508,7 +4508,7 @@ abstract class AppLocalizations {
   /// Description for the multi-device sync entry
   ///
   /// In en, this message translates to:
-  /// **'Keep your own phone and other devices up to date via Google Drive'**
+  /// **'Keep your devices in step via Drive'**
   String get sync_multidevice_description;
 
   /// Title for local LAN sync section
@@ -4520,7 +4520,7 @@ abstract class AppLocalizations {
   /// Description for LAN sync
   ///
   /// In en, this message translates to:
-  /// **'Automatic sync on Wi-Fi network'**
+  /// **'Automatic on the same Wi-Fi'**
   String get sync_local_description;
 
   /// Title for cloud sync section
@@ -4622,7 +4622,7 @@ abstract class AppLocalizations {
   /// Description for Bluetooth sync
   ///
   /// In en, this message translates to:
-  /// **'Manual sync with nearby devices via Bluetooth'**
+  /// **'Manual, with nearby devices'**
   String get sync_bt_description;
 
   /// Status while searching for BT peers
@@ -4736,7 +4736,7 @@ abstract class AppLocalizations {
   /// Description for the group sync toggle
   ///
   /// In en, this message translates to:
-  /// **'Sync this group\'s expenses with other paired devices over Wi-Fi or Bluetooth'**
+  /// **'With your paired devices'**
   String get sync_group_enable_desc;
 
   /// Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide
@@ -4826,7 +4826,7 @@ abstract class AppLocalizations {
   /// Instructions for the QR pairing scan page
   ///
   /// In en, this message translates to:
-  /// **'Point your camera at the pairing code shown on the other device'**
+  /// **'Scan the QR on the other device'**
   String get sync_qr_scan_description;
 
   /// Success message after pairing with a scanned device
@@ -5090,7 +5090,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_group_templates_manage_desc.
   ///
   /// In en, this message translates to:
-  /// **'Create, edit, and delete custom templates'**
+  /// **'Create and edit your templates'**
   String get settings_group_templates_manage_desc;
 
   /// No description provided for @settings_group_templates_page_title.
@@ -5485,13 +5485,13 @@ abstract class AppLocalizations {
   /// Android backup is on but has not run yet
   ///
   /// In en, this message translates to:
-  /// **'No backup yet — Android usually backs up overnight, while charging on Wi‑Fi'**
+  /// **'No backup yet'**
   String get auto_backup_never;
 
   /// Android backup switch turned off
   ///
   /// In en, this message translates to:
-  /// **'Off: Caravella\'s data is left out of your phone\'s backup'**
+  /// **'Off: data left out of backups'**
   String get auto_backup_off;
 
   /// Settings → Data, Google Drive backup
@@ -5503,7 +5503,7 @@ abstract class AppLocalizations {
   /// Settings → Data, Google Drive backup
   ///
   /// In en, this message translates to:
-  /// **'Keep backups in a private folder of your Drive'**
+  /// **'Backups in a private folder'**
   String get drive_backup_connect_desc;
 
   /// Settings → Data, Google Drive backup
@@ -5539,7 +5539,7 @@ abstract class AppLocalizations {
   /// Settings → Data, Google Drive backup
   ///
   /// In en, this message translates to:
-  /// **'A copy every week, when you open the app'**
+  /// **'Every week, when you open the app'**
   String get drive_backup_weekly_desc;
 
   /// Settings → Data, Google Drive backup

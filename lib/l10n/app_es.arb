@@ -36,10 +36,10 @@
   "@dateRangeExpensesChart": {
     "description": "Label for date range expenses chart"
   },
-  "settings_flag_secure_desc": "Impide capturas de pantalla y grabación de pantalla",
+  "settings_flag_secure_desc": "Bloquea capturas y grabación",
   "settings_flag_secure_title": "Pantalla segura",
   "settings_app_functions_title": "Acceso de agentes de IA",
-  "settings_app_functions_desc": "Permite a los asistentes de IA (p. ej. Gemini) leer y añadir gastos",
+  "settings_app_functions_desc": "Usa Gemini y otros asistentes IA",
   "settings_privacy": "Privacidad",
   "select_currency": "Seleccionar moneda",
   "select_period_hint_short": "Establecer fechas",
@@ -210,7 +210,7 @@
   "import_error": "Importación fallida. Verifica el formato del archivo.",
   "settings_flag_secure_error": "Couldn't change screen security",
   "settings_debug_logs_title": "Debug Logs",
-  "settings_debug_logs_desc": "View application logs and error history",
+  "settings_debug_logs_desc": "Registros y errores de la app",
   "developer_link_error": "Couldn't open the link",
   "whats_new_load_error": "Failed to load",
   "categories": "Categorías",
@@ -231,7 +231,7 @@
   "currency": "Moneda",
   "settings_tab": "Configuración",
   "other_settings": "Otras configuraciones",
-  "other_settings_desc": "Moneda, fondo y ubicación automática",
+  "other_settings_desc": "Moneda, fondo, ubicación",
   "segment_general": "General",
   "segment_other": "Otro",
   "basic_info": "Información Básica",
@@ -345,8 +345,8 @@
   "settings_general_desc": "Configuración de idioma y apariencia",
   "settings_auto_location_section": "Detección de ubicación",
   "settings_auto_location_section_desc": "Configurar la detección automática de ubicación",
-  "settings_auto_location_title": "Activar para detectar",
-  "settings_auto_location_desc": "Detectar GPS al agregar un gasto",
+  "settings_auto_location_title": "Ubicación automática",
+  "settings_auto_location_desc": "Guarda dónde haces cada gasto",
   "settings_language": "Idioma",
   "settings_language_desc": "Elige tu idioma preferido",
   "settings_language_it": "Italiano",
@@ -376,21 +376,21 @@
   "settings_invite_friends_desc": "Comparte Caravella con quien quieras",
   "invite_friends_message": "¡Hola! Uso Caravella para dividir los gastos en grupo con amigos, es súper cómoda 🎒💸 Pruébala tú también: https://play.google.com/store/apps/details?id=io.caravella.egm",
   "terms_github_title": "Sitio web: calca",
-  "terms_github_desc": "Sitio web personal del desarrollador.",
+  "terms_github_desc": "Web del desarrollador",
   "terms_repo_title": "Repositorio GitHub",
   "terms_repo_desc": "Código fuente de la aplicación.",
   "terms_issue_title": "Reportar un problema",
-  "terms_issue_desc": "Ir a la página de issues en GitHub.",
+  "terms_issue_desc": "Informa de un problema en GitHub",
   "terms_license_desc": "Ver la licencia de código abierto.",
   "support_developer_title": "Cómprame un café",
   "support_developer_desc": "Apoya el desarrollo de esta aplicación.",
   "data_title": "Respaldo y Restauración",
   "data_backup_title": "Respaldo",
-  "data_backup_desc": "Crear un archivo de respaldo de tus gastos.",
+  "data_backup_desc": "Guarda los gastos en un archivo",
   "data_restore_title": "Restauración",
-  "data_restore_desc": "Importar un respaldo para restaurar tus datos.",
+  "data_restore_desc": "Desde un archivo de copia",
   "auto_backup_title": "Respaldo automático",
-  "auto_backup_desc": "Habilitar el respaldo automático del sistema operativo",
+  "auto_backup_desc": "Copia del sistema operativo",
   "info_tab": "Info",
   "select_paid_by": "Seleccionar pagador",
   "select_category": "Seleccionar una categoría",
@@ -716,7 +716,7 @@
   ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
   ,"check_for_updates": "Buscar actualizaciones"
   ,"@check_for_updates": {"description": "Etiqueta para buscar actualizaciones de Google Play Store"}
-  ,"check_for_updates_desc": "Verificar disponibilidad de nueva versión"
+  ,"check_for_updates_desc": "Busca una nueva versión"
   ,"@check_for_updates_desc": {"description": "Descripción para verificación de actualizaciones"}
   ,"update_available": "Actualización disponible"
   ,"@update_available": {"description": "Título cuando hay una actualización disponible"}
@@ -760,14 +760,14 @@
   ,"@reminder_message_multiple": {"description": "Mensaje de recordatorio cuando un participante debe dinero a varias personas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
   ,"settings_user_name_title": "Tu nombre"
   ,"@settings_user_name_title": {"description": "Título de la configuración del nombre de usuario"}
-  ,"settings_user_name_desc": "Nombre o apodo para usar en la app"
+  ,"settings_user_name_desc": "Tu nombre en la app"
   ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
   ,"settings_user_name_hint": "Ingresa tu nombre"
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
   ,"default_participant_me": "Yo"
   ,"notification_enabled": "Notificación persistente"
   ,"@notification_enabled": {"description": "Etiqueta para la configuración de notificación persistente en el grupo"}
-  ,"notification_enabled_desc": "Muestra los gastos del día en una notificación siempre visible"
+  ,"notification_enabled_desc": "Gastos de hoy en una notificación"
   ,"@notification_enabled_desc": {"description": "Descripción de la configuración de notificación persistente"}
   ,"notification_daily_spent": "Gasto diario: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Texto en la notificación que muestra el gasto diario promedio", "placeholders": {"amount": {}, "currency": {}}}
@@ -953,7 +953,7 @@
   ,"@danger_zone": {"description": "Título de sección para acciones peligrosas como archivar y eliminar"}
   ,"danger_zone_desc": "Archivar o eliminar este grupo"
   ,"@danger_zone_desc": {"description": "Descripción para la sección zona peligrosa"}
-  ,"export_options_desc": "Descargar o compartir gastos en varios formatos"
+  ,"export_options_desc": "Descarga o comparte los gastos"
   ,"@export_options_desc": {"description": "Descripción para las opciones de exportación"}
   ,"export_csv_description": "Formato hoja de cálculo"
   ,"@export_csv_description": {"description": "Descripción corta para el formato de exportación CSV"}
@@ -965,19 +965,19 @@
   ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
   ,"sync_title": "Sincronización"
   ,"@sync_title": {"description": "Título para la página de ajustes de sync"}
-  ,"sync_settings_desc": "Comparte datos entre tus dispositivos por Wi-Fi o Bluetooth"
+  ,"sync_settings_desc": "Wi-Fi, Bluetooth o Google Drive"
   ,"@sync_settings_desc": {"description": "Subtítulo para la entrada de sync en ajustes de Datos"}
   ,"sync_local_title": "Sync local"
   ,"@sync_local_title": {"description": "Título para la sección de sync LAN local"}
-  ,"sync_multiuser_title": "Sincronizar con otras personas"
+  ,"sync_multiuser_title": "Sincroniza con otros"
   ,"@sync_multiuser_title": {"description": "Título para la entrada a la subpágina de sync Wi-Fi/Bluetooth (dispositivos de otras personas)"}
-  ,"sync_multiuser_description": "Comparte tus grupos con dispositivos cercanos vía Wi-Fi o Bluetooth"
+  ,"sync_multiuser_description": "Grupos por Wi-Fi o Bluetooth"
   ,"@sync_multiuser_description": {"description": "Descripción para la entrada de sync multiusuario"}
-  ,"sync_multidevice_title": "Sincronizar tus dispositivos"
+  ,"sync_multidevice_title": "Sincroniza dispositivos"
   ,"@sync_multidevice_title": {"description": "Título para la entrada a la subpágina de sync en la nube (dispositivos propios)"}
-  ,"sync_multidevice_description": "Mantén actualizados tu teléfono y otros dispositivos vía Google Drive"
+  ,"sync_multidevice_description": "Sincroniza tus dispositivos con Drive"
   ,"@sync_multidevice_description": {"description": "Descripción para la entrada de sync multidispositivo"}
-  ,"sync_local_description": "Sincronización automática en red Wi-Fi"
+  ,"sync_local_description": "Automática en la misma Wi-Fi"
   ,"@sync_local_description": {"description": "Descripción para sync LAN"}
   ,"sync_cloud_title": "Sync en la nube"
   ,"@sync_cloud_title": {"description": "Título para la sección de sync en la nube"}
@@ -1011,7 +1011,7 @@
   ,"@sync_last_sync": {"description": "Muestra la hora del último sync","placeholders": {"time": {"type": "String"}}}
   ,"sync_bt_title": "Sync Bluetooth"
   ,"@sync_bt_title": {"description": "Título para sync Bluetooth"}
-  ,"sync_bt_description": "Sincronización manual con dispositivos cercanos vía Bluetooth"
+  ,"sync_bt_description": "Manual, con dispositivos cercanos"
   ,"@sync_bt_description": {"description": "Descripción para sync Bluetooth"}
   ,"sync_bt_searching": "Buscando dispositivos cercanos..."
   ,"@sync_bt_searching": {"description": "Estado mientras busca peers BT"}
@@ -1049,7 +1049,7 @@
   ,"@sync_group_pending": {"description": "Tooltip para estado de grupo no sincronizado"}
   ,"sync_group_enable": "Compartir este grupo"
   ,"@sync_group_enable": {"description": "Etiqueta para habilitar la sincronización en un grupo"}
-  ,"sync_group_enable_desc": "Sincroniza los gastos de este grupo con otros dispositivos emparejados por Wi-Fi o Bluetooth"
+  ,"sync_group_enable_desc": "Con los dispositivos vinculados"
   ,"@sync_group_enable_desc": {"description": "Descripción para el interruptor de sincronización del grupo"}
   ,"sync_group_needs_channel": "Activa la sync de Wi-Fi o Bluetooth en Ajustes para habilitar esto"
   ,"@sync_group_needs_channel": {"description": "Se muestra en lugar de sync_group_enable_desc cuando ni Wi-Fi ni Bluetooth sync están activos a nivel de app"}
@@ -1079,7 +1079,7 @@
   ,"@sync_qr_no_network": {"description": "Se muestra cuando no hay una dirección de red local disponible para el emparejamiento"}
   ,"sync_qr_scan_title": "Escanear código de emparejamiento"
   ,"@sync_qr_scan_title": {"description": "Título para la página de escaneo del QR de emparejamiento"}
-  ,"sync_qr_scan_description": "Apunta la cámara al código de emparejamiento mostrado en el otro dispositivo"
+  ,"sync_qr_scan_description": "Escanea el QR del otro dispositivo"
   ,"@sync_qr_scan_description": {"description": "Instrucciones para la página de escaneo del QR de emparejamiento"}
   ,"sync_qr_pair_success": "Emparejado con {deviceName}"
   ,"@sync_qr_pair_success": {"description": "Mensaje de éxito tras emparejar con un dispositivo escaneado", "placeholders": {"deviceName": {"type": "String"}}}
@@ -1164,7 +1164,7 @@
   ,"settings_group_templates_section_title": "Plantillas de tipo de grupo"
   ,"settings_group_templates_section_desc": "Personaliza tus preajustes de tipo de grupo"
   ,"settings_group_templates_manage_title": "Gestionar plantillas"
-  ,"settings_group_templates_manage_desc": "Crea, edita y elimina plantillas personalizadas"
+  ,"settings_group_templates_manage_desc": "Crea y edita tus plantillas"
   ,"settings_group_templates_page_title": "Plantillas de tipo de grupo"
   ,"settings_group_templates_empty_state": "Aún no hay plantillas"
   ,"settings_group_templates_add_title": "Añadir plantilla"
@@ -1230,16 +1230,16 @@
   ,"expense_details_section": "Detalles"
   ,"add_expense_button": "Añadir gasto"
   ,"auto_backup_last": "Última copia: {date}"
-  ,"auto_backup_never": "Aún no hay copia — Android suele hacerla de noche, cargando y con Wi‑Fi"
-  ,"auto_backup_off": "Desactivado: los datos de Caravella quedan fuera de la copia del teléfono"
+  ,"auto_backup_never": "Aún no hay copia"
+  ,"auto_backup_off": "Apagado: datos fuera de la copia"
   ,"drive_backup_connect": "Conectar Google Drive"
-  ,"drive_backup_connect_desc": "Guarda las copias en una carpeta privada de tu Drive"
+  ,"drive_backup_connect_desc": "Copias en una carpeta privada"
   ,"drive_backup_now": "Guardar en Drive ahora"
   ,"drive_backup_none": "Aún no hay copias en Drive"
   ,"drive_backup_restore": "Restaurar desde Drive"
   ,"drive_backup_restore_desc": "Elige una de las últimas 5 copias"
   ,"drive_backup_weekly": "Copia semanal"
-  ,"drive_backup_weekly_desc": "Una copia cada semana, al abrir la app"
+  ,"drive_backup_weekly_desc": "Cada semana, al abrir la app"
   ,"drive_backup_disconnect": "Desconectar"
   ,"drive_backup_saved": "Copia guardada en Google Drive"
   ,"drive_backup_error": "No se pudo conectar con Google Drive"

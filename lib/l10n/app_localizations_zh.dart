@@ -45,7 +45,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dateRangeExpensesChart => '期间支出';
 
   @override
-  String get settings_flag_secure_desc => '防止截屏和录屏';
+  String get settings_flag_secure_desc => '禁止截屏和录屏';
 
   @override
   String get settings_flag_secure_title => '安全屏幕';
@@ -54,7 +54,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_app_functions_title => 'AI助手访问';
 
   @override
-  String get settings_app_functions_desc => '允许AI助手（如Gemini）读取和添加费用';
+  String get settings_app_functions_desc => '使用 Gemini 等 AI 助手';
 
   @override
   String get settings_privacy => '隐私';
@@ -587,8 +587,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_debug_logs_title => 'Debug Logs';
 
   @override
-  String get settings_debug_logs_desc =>
-      'View application logs and error history';
+  String get settings_debug_logs_desc => '应用日志和错误';
 
   @override
   String get developer_link_error => 'Couldn\'t open the link';
@@ -603,7 +602,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get other_settings => '其他设置';
 
   @override
-  String get other_settings_desc => '货币、背景和自动定位';
+  String get other_settings_desc => '货币、背景、位置';
 
   @override
   String get segment_general => '常规';
@@ -974,10 +973,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_auto_location_section_desc => '配置自动位置检测';
 
   @override
-  String get settings_auto_location_title => '启用检测';
+  String get settings_auto_location_title => '自动定位';
 
   @override
-  String get settings_auto_location_desc => '添加费用时检测GPS';
+  String get settings_auto_location_desc => '记录新支出的地点';
 
   @override
   String get settings_language => '语言';
@@ -1065,7 +1064,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get terms_github_title => '网站: calca';
 
   @override
-  String get terms_github_desc => '开发者的个人网站。';
+  String get terms_github_desc => '开发者网站';
 
   @override
   String get terms_repo_title => 'GitHub仓库';
@@ -1077,7 +1076,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get terms_issue_title => '报告问题';
 
   @override
-  String get terms_issue_desc => '前往GitHub问题页面。';
+  String get terms_issue_desc => '在 GitHub 上报告问题';
 
   @override
   String get terms_license_desc => '查看开源许可证。';
@@ -1095,25 +1094,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get data_backup_title => '备份';
 
   @override
-  String get data_backup_desc => '创建您的支出备份文件。';
+  String get data_backup_desc => '将支出保存为文件';
 
   @override
   String get data_restore_title => '恢复';
 
   @override
-  String get data_restore_desc => '导入备份以恢复您的数据。';
+  String get data_restore_desc => '从备份文件恢复';
 
   @override
   String get auto_backup_title => '自动备份';
 
   @override
-  String get auto_backup_desc => '启用操作系统自动备份';
+  String get auto_backup_desc => '系统备份';
 
   @override
   String get settings_user_name_title => '您的名称';
 
   @override
-  String get settings_user_name_desc => '在应用中使用的名称或昵称';
+  String get settings_user_name_desc => '你在应用中的名字';
 
   @override
   String get settings_user_name_hint => '输入您的名称';
@@ -1892,7 +1891,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get check_for_updates => '检查更新';
 
   @override
-  String get check_for_updates_desc => '检查新版本可用性';
+  String get check_for_updates_desc => '查找新版本';
 
   @override
   String get update_available => '有可用更新';
@@ -1971,7 +1970,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notification_enabled => '持久通知';
 
   @override
-  String get notification_enabled_desc => '在常驻通知中显示今日消费';
+  String get notification_enabled_desc => '在通知中显示今日支出';
 
   @override
   String notification_daily_spent(String amount, String currency) {
@@ -2257,7 +2256,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get danger_zone_desc => '归档或删除此群组';
 
   @override
-  String get export_options_desc => '以各种格式下载或分享费用';
+  String get export_options_desc => '下载或分享支出';
 
   @override
   String get export_csv_description => '电子表格格式';
@@ -2275,25 +2274,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_title => '同步';
 
   @override
-  String get sync_settings_desc => '通过 Wi-Fi 或蓝牙在设备间共享数据';
+  String get sync_settings_desc => 'Wi-Fi、蓝牙或 Google 云端硬盘';
 
   @override
   String get sync_multiuser_title => '与他人同步';
 
   @override
-  String get sync_multiuser_description => '通过Wi-Fi或蓝牙与附近的设备共享你的群组';
+  String get sync_multiuser_description => '通过 Wi-Fi 或蓝牙共享群组';
 
   @override
   String get sync_multidevice_title => '同步你的设备';
 
   @override
-  String get sync_multidevice_description => '通过Google Drive让你的手机和其他设备保持最新';
+  String get sync_multidevice_description => '通过云端硬盘同步你的设备';
 
   @override
   String get sync_local_title => '本地同步';
 
   @override
-  String get sync_local_description => 'Wi-Fi网络自动同步';
+  String get sync_local_description => '同一 Wi-Fi 下自动同步';
 
   @override
   String get sync_cloud_title => '云同步';
@@ -2351,7 +2350,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_bt_title => '蓝牙同步';
 
   @override
-  String get sync_bt_description => '通过蓝牙与附近设备手动同步';
+  String get sync_bt_description => '手动同步附近设备';
 
   @override
   String get sync_bt_searching => '正在搜索附近设备...';
@@ -2412,7 +2411,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_group_enable => '共享此群组';
 
   @override
-  String get sync_group_enable_desc => '通过Wi-Fi或蓝牙将此群组的支出与其他已配对设备同步';
+  String get sync_group_enable_desc => '与已配对设备同步';
 
   @override
   String get sync_group_needs_channel => '请先在设置中开启Wi-Fi或蓝牙同步以启用此项';
@@ -2461,7 +2460,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_qr_scan_title => '扫描配对码';
 
   @override
-  String get sync_qr_scan_description => '将摄像头对准另一设备上显示的配对码';
+  String get sync_qr_scan_description => '扫描另一台设备上的二维码';
 
   @override
   String sync_qr_pair_success(String deviceName) {
@@ -2599,7 +2598,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_group_templates_manage_title => '管理模板';
 
   @override
-  String get settings_group_templates_manage_desc => '创建、编辑和删除自定义模板';
+  String get settings_group_templates_manage_desc => '创建和编辑模板';
 
   @override
   String get settings_group_templates_page_title => '分组类型模板';
@@ -2854,16 +2853,16 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get auto_backup_never => '尚无备份——Android 通常在夜间充电并连接 Wi‑Fi 时备份';
+  String get auto_backup_never => '尚无备份';
 
   @override
-  String get auto_backup_off => '已关闭：Caravella 的数据不会包含在手机备份中';
+  String get auto_backup_off => '已关闭：数据不备份';
 
   @override
   String get drive_backup_connect => '连接 Google 云端硬盘';
 
   @override
-  String get drive_backup_connect_desc => '将备份保存在云端硬盘的私有文件夹中';
+  String get drive_backup_connect_desc => '备份保存在私有文件夹中';
 
   @override
   String get drive_backup_now => '立即备份到云端硬盘';
@@ -2881,7 +2880,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get drive_backup_weekly => '每周备份';
 
   @override
-  String get drive_backup_weekly_desc => '每周打开应用时保存一份副本';
+  String get drive_backup_weekly_desc => '每周打开应用时备份';
 
   @override
   String get drive_backup_disconnect => '断开连接';
