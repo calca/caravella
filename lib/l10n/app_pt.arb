@@ -1207,4 +1207,7 @@
   ,"drive_backup_saved": "Backup guardado no Google Drive"
   ,"drive_backup_error": "Não foi possível aceder ao Google Drive"
   ,"expense_more_details": "Mais detalhes"
+  ,"quick_action_photo": "Foto"
+  ,"photo_add_expense": "Nova despesa com foto do recibo"
+  ,"receipt_photo_error": "Não foi possível tirar a foto do recibo"
 }

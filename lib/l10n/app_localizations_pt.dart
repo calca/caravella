@@ -2974,4 +2974,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get expense_more_details => 'Mais detalhes';
+
+  @override
+  String get quick_action_photo => 'Foto';
+
+  @override
+  String get photo_add_expense => 'Nova despesa com foto do recibo';
+
+  @override
+  String get receipt_photo_error => 'Não foi possível tirar a foto do recibo';
 }

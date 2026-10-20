@@ -1332,4 +1332,10 @@
   ,"@drive_backup_error": {"description": "Settings → Data, Google Drive backup"}
   ,"expense_more_details": "More details"
   ,"@expense_more_details": {"description": "Quick-add sheet: opens the full expense page (date, place, attachments, note)"}
+  ,"quick_action_photo": "Photo"
+  ,"@quick_action_photo": {"description": "Home quick action without receipt reading (F-Droid build)"}
+  ,"photo_add_expense": "New expense from a receipt photo"
+  ,"@photo_add_expense": {"description": "Home quick action without receipt reading (F-Droid build)"}
+  ,"receipt_photo_error": "Couldn't take the receipt photo"
+  ,"@receipt_photo_error": {"description": "Home quick action without receipt reading (F-Droid build)"}
 }

@@ -1859,4 +1859,7 @@
   ,"drive_backup_saved": "备份已保存到 Google 云端硬盘"
   ,"drive_backup_error": "无法连接 Google 云端硬盘"
   ,"expense_more_details": "更多详情"
+  ,"quick_action_photo": "拍照"
+  ,"photo_add_expense": "用收据照片新建支出"
+  ,"receipt_photo_error": "无法拍摄收据照片"
 }

@@ -2893,4 +2893,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get expense_more_details => '更多详情';
+
+  @override
+  String get quick_action_photo => '拍照';
+
+  @override
+  String get photo_add_expense => '用收据照片新建支出';
+
+  @override
+  String get receipt_photo_error => '无法拍摄收据照片';
 }

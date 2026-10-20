@@ -2980,4 +2980,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get expense_more_details => 'Altri dettagli';
+
+  @override
+  String get quick_action_photo => 'Foto';
+
+  @override
+  String get photo_add_expense => 'Nuova spesa dalla foto dello scontrino';
+
+  @override
+  String get receipt_photo_error =>
+      'Impossibile scattare la foto dello scontrino';
 }

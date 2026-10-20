@@ -5565,6 +5565,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More details'**
   String get expense_more_details;
+
+  /// Home quick action without receipt reading (F-Droid build)
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get quick_action_photo;
+
+  /// Home quick action without receipt reading (F-Droid build)
+  ///
+  /// In en, this message translates to:
+  /// **'New expense from a receipt photo'**
+  String get photo_add_expense;
+
+  /// Home quick action without receipt reading (F-Droid build)
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t take the receipt photo'**
+  String get receipt_photo_error;
 }
 
 class _AppLocalizationsDelegate

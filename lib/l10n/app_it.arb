@@ -1230,4 +1230,7 @@
   ,"drive_backup_saved": "Backup salvato su Google Drive"
   ,"drive_backup_error": "Impossibile raggiungere Google Drive"
   ,"expense_more_details": "Altri dettagli"
+  ,"quick_action_photo": "Foto"
+  ,"photo_add_expense": "Nuova spesa dalla foto dello scontrino"
+  ,"receipt_photo_error": "Impossibile scattare la foto dello scontrino"
 }
