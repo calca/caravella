@@ -2980,6 +2980,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get drive_backup_error => 'No se pudo conectar con Google Drive';
 
   @override
+  String get expense_more_details => 'Más detalles';
+
+  @override
   String get quick_action_photo => 'Foto';
 
   @override

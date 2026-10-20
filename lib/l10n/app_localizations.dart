@@ -5560,6 +5560,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t reach Google Drive'**
   String get drive_backup_error;
 
+  /// Quick-add sheet: opens the full expense page (date, place, attachments, note)
+  ///
+  /// In en, this message translates to:
+  /// **'More details'**
+  String get expense_more_details;
+
   /// Home quick action without receipt reading (F-Droid build)
   ///
   /// In en, this message translates to:

@@ -2973,6 +2973,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get drive_backup_error => 'Não foi possível aceder ao Google Drive';
 
   @override
+  String get expense_more_details => 'Mais detalhes';
+
+  @override
   String get quick_action_photo => 'Foto';
 
   @override

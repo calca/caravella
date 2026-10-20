@@ -210,8 +210,10 @@ class AddExpenseController {
         id: '',
         name: partialState.name.isEmpty ? null : partialState.name,
         amount: partialState.amount,
-        paidBy: partialState.paidBy!,
-        category: partialState.category!,
+        // Nothing picked yet (e.g. a group without participants): the
+        // full page starts with nobody / no category selected.
+        paidBy: partialState.paidBy ?? ExpenseParticipant(name: ''),
+        category: partialState.category ?? ExpenseCategory(name: ''),
         date: partialState.date,
         location: partialState.location,
         note: partialState.note.isEmpty ? null : partialState.note,
