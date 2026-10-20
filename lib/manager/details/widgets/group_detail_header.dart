@@ -9,8 +9,9 @@ import '../../../sync/group_sync_badge.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
 
 /// The group's photo or color behind the top of its page, melting into
-/// [pageColor] at the bottom: a photo is only hinted (as on the Home and
-/// Groups cards), a color is shown full at the top.
+/// [pageColor] at the bottom. A photo is a cover (as on the Home and Groups
+/// cards): in full color at the top, darkened behind the dates and the title
+/// written on it in white; the figure cards below sit on the page color.
 class GroupHeaderBand extends StatelessWidget {
   final ExpenseGroup group;
   final Color pageColor;
@@ -36,8 +37,12 @@ class GroupHeaderBand extends StatelessWidget {
         : null;
   }
 
+  /// Extra room above the title with a photo, so the photo shows.
+  static const double photoExtraTop = 96;
+
   /// Text color for the band's upper part (title, top bar).
   static Color foregroundOf(ExpenseGroup group, ColorScheme s) {
+    if (photoOf(group) != null) return PhotoVeil.onPhoto;
     final color = colorOf(group, s);
     return color == null
         ? s.onSurface
@@ -51,26 +56,33 @@ class GroupHeaderBand extends StatelessWidget {
     final color = colorOf(group, s);
     if (photo == null && color == null) return ColoredBox(color: pageColor);
 
+    if (photo != null) {
+      // From the bottom: the figure cards (lower part on the page color),
+      // then dates and title on the full scrim; the status bar gets a light
+      // shade at the top.
+      return PhotoVeil(
+        path: photo,
+        color: pageColor,
+        topShade: true,
+        solidExtent: 56,
+        textExtent: 112,
+      );
+    }
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (photo != null)
-          PhotoVeil(path: photo, color: pageColor)
-        else
-          ColoredBox(color: color!),
+        ColoredBox(color: color!),
         DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: photo != null
-                  ? [pageColor.withValues(alpha: 0), pageColor]
-                  : [
-                      pageColor.withValues(alpha: 0),
-                      pageColor.withValues(alpha: 0),
-                      pageColor,
-                    ],
-              stops: photo != null ? const [0.55, 1] : const [0, 0.5, 1],
+              colors: [
+                pageColor.withValues(alpha: 0),
+                pageColor.withValues(alpha: 0),
+                pageColor,
+              ],
+              stops: const [0, 0.5, 1],
             ),
           ),
         ),
@@ -128,7 +140,10 @@ class GroupDetailHeader extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: foreground.withValues(alpha: 0.8),
+                  // Full white on a photo: faded white would not hold.
+                  color: foreground == PhotoVeil.onPhoto
+                      ? foreground
+                      : foreground.withValues(alpha: 0.8),
                 ),
               ),
             ),

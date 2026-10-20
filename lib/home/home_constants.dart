@@ -107,7 +107,7 @@ class HomeLayoutConstants {
   static const double headerHeight =
       56.0 + 32.0; // 56 avatar + 32 padding (16 top + 16 bottom)
 
-  /// Smallest height of the featured group card on Home: on short screens
-  /// the page scrolls instead of squeezing the card.
-  static const double minFeaturedCardHeight = 420.0;
+  /// Smallest height of the featured group's two cards on Home: on short
+  /// screens the page scrolls instead of squeezing them.
+  static const double minFeaturedCardHeight = 600.0;
 }

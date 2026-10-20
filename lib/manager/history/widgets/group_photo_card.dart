@@ -13,8 +13,8 @@ import 'group_options.dart';
 /// favorite group at the top.
 ///
 /// Every card shares one background treatment so they look alike:
-/// - **photo**: just hinted under the raised surface ([PhotoVeil], like the
-///   Home card), with the theme's text colors;
+/// - **photo**: a cover ([PhotoVeil], like the Home card and the group page):
+///   full color on top, darkened behind the white text at the bottom;
 /// - **color**: the palette color, with contrasting text;
 /// - **neither**: the raised surface of the Home card, with the group type
 ///   icon.
@@ -47,10 +47,13 @@ class GroupPhotoCard extends StatelessWidget {
         : ExpenseGroupColorPalette.isLegacyColorValue(group.color)
         ? Color(group.color!)
         : ExpenseGroupColorPalette.resolveColor(group.color, s);
-    final Color fg = color != null
+    final Color fg = hasPhoto
+        ? PhotoVeil.onPhoto
+        : color != null
         ? ExpenseGroupColorPalette.getContrastingTextColor(color)
         : s.onSurface;
-    final Color fgSecondary = fg.withValues(alpha: 0.8);
+    // Full white on a photo: faded white would not hold on a light one.
+    final Color fgSecondary = hasPhoto ? fg : fg.withValues(alpha: 0.8);
 
     final people = gloc.participant_count(group.participants.length);
     final dates = (group.startDate != null || group.endDate != null)
@@ -63,7 +66,13 @@ class GroupPhotoCard extends StatelessWidget {
     final total = group.getTotalExpenses();
 
     final background = hasPhoto
-        ? PhotoVeil(path: file, color: s.surfaceContainerHighest)
+        // Photo as a cover: full color on top, darkened behind the text.
+        ? PhotoVeil(
+            path: file,
+            color: s.surfaceContainerHighest,
+            textExtent: wide ? 104 : 116,
+            rampExtent: 64,
+          )
         // No photo or color: the same raised surface as the Home card.
         : ColoredBox(color: color ?? s.raisedSurface);
 
