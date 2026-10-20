@@ -3,14 +3,13 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:archive/archive_io.dart';
-import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
-import 'dart:convert';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
+import '../backup/restore_groups.dart';
+import '../widgets/drive_backup_section.dart';
 
 class DataBackupPage extends StatelessWidget {
   const DataBackupPage({super.key});
@@ -56,6 +55,7 @@ class DataBackupPage extends StatelessWidget {
                 ),
               ],
             ),
+            const DriveBackupSection(),
           ],
         ),
       ),
@@ -82,35 +82,17 @@ class DataBackupPage extends StatelessWidget {
     gen.AppLocalizations loc,
   ) async {
     try {
-      // Use storage APIs to get all groups
-      final groups = await ExpenseGroupStorageV2.getAllGroups();
-
-      if (groups.isEmpty) {
+      final bytes = await BackupArchive.createFromStorage();
+      if (bytes == null) {
         if (!context.mounted) return;
         AppToast.show(context, loc.no_trips_to_backup, type: ToastType.info);
         return;
       }
 
-      // Serialize groups to JSON
-      final jsonData = jsonEncode(groups.map((g) => g.toJson()).toList());
-      final jsonBytes = utf8.encode(jsonData);
-
       final tempDir = await getTemporaryDirectory();
-      final now = DateTime.now();
-      final dateStr =
-          "${now.year.toString().padLeft(4, '0')}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
-      final zipPath = '${tempDir.path}/caravella_backup_$dateStr.zip';
-
-      // Create archive manually to ensure file content is properly added
-      final archive = Archive();
-      final archiveFile = ArchiveFile(
-        ExpenseGroupStorageV2.fileName,
-        jsonBytes.length,
-        jsonBytes,
-      );
-      archive.addFile(archiveFile);
-      final zipData = ZipEncoder().encode(archive);
-      await File(zipPath).writeAsBytes(zipData);
+      final zipPath =
+          '${tempDir.path}/${BackupArchive.fileNameFor(DateTime.now())}';
+      await File(zipPath).writeAsBytes(bytes);
 
       if (!context.mounted) return;
 
@@ -137,129 +119,32 @@ class DataBackupPage extends StatelessWidget {
       type: FileType.custom,
       allowedExtensions: ['zip', 'json'],
     );
-    if (!context.mounted) return;
-    if (result != null && result.path != null) {
-      final filePath = result.path!;
-      final fileName = result.name;
-      final confirm = await showDialog<bool>(
-        context: context,
-        builder: (context) => Material3Dialog(
-          icon: Icon(
-            Icons.upload_file_outlined,
-            color: Theme.of(context).colorScheme.primary,
-            size: 24,
-          ),
-          title: Text(loc.import_confirm_title),
-          content: Text(loc.import_confirm_message(fileName)),
-          actions: [
-            Material3DialogActions.cancel(context, loc.cancel),
-            Material3DialogActions.primary(
-              context,
-              loc.ok,
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        ),
-      );
-      if (confirm == true && context.mounted) {
-        try {
-          late final String jsonContent;
+    if (!context.mounted || result == null || result.path == null) return;
+    final filePath = result.path!;
+    if (!await confirmRestore(context, loc, result.name)) return;
 
-          // Extract JSON content based on file type
-          if (filePath.endsWith('.zip')) {
-            final bytes = await File(filePath).readAsBytes();
-            final archive = ZipDecoder().decodeBytes(bytes);
-            bool fileFound = false;
-            for (final file in archive) {
-              if (file.name == ExpenseGroupStorageV2.fileName) {
-                jsonContent = utf8.decode(file.content as List<int>);
-                fileFound = true;
-                break;
-              }
-            }
-            if (!fileFound) {
-              throw Exception('Backup file not found in archive');
-            }
-          } else if (filePath.endsWith('.json')) {
-            jsonContent = await File(filePath).readAsString();
-          } else {
-            throw Exception('Unsupported file format');
-          }
-
-          // Parse JSON and deserialize groups
-          final List<dynamic> jsonList = jsonDecode(jsonContent);
-          final groups = jsonList
-              .map(
-                (json) => ExpenseGroup.fromJson(json as Map<String, dynamic>),
-              )
-              .toList();
-
-          if (groups.isEmpty) {
-            throw Exception('No groups found in backup');
-          }
-
-          // Use storage APIs to save each group. Track which ones actually
-          // made it to disk so a failure partway through still gets
-          // reflected in the UI instead of leaving it silently stale.
-          final repository = ExpenseGroupStorageV2.repository;
-          final savedGroups = <ExpenseGroup>[];
-          String? saveFailure;
-          for (final group in groups) {
-            final saveResult = await repository.saveGroup(group);
-            if (!saveResult.isSuccess) {
-              saveFailure =
-                  'Failed to save group "${group.title}": '
-                  '${saveResult.error?.message}';
-              break;
-            }
-            savedGroups.add(group);
-          }
-
-          if (savedGroups.isNotEmpty && context.mounted) {
-            final notifier = context.read<ExpenseGroupNotifier>();
-            for (final group in savedGroups) {
-              notifier.notifyGroupUpdated(group.id);
-            }
-          }
-
-          if (saveFailure != null) {
-            throw Exception(saveFailure);
-          }
-
-          // Mark that user has groups (no longer first start)
-          if (context.mounted) {
-            try {
-              await PreferencesService.instance.appState.setIsFirstStart(false);
-            } catch (e, st) {
-              LoggerService.error(
-                'Failed to update first start preference',
-                name: 'settings.backup',
-                error: e,
-                stackTrace: st,
-              );
-            }
-
-            if (context.mounted) {
-              AppToast.show(
-                context,
-                loc.import_success,
-                type: ToastType.success,
-              );
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            }
-          }
-        } catch (e, st) {
-          LoggerService.error(
-            'Failed to import backup',
-            name: 'settings.backup',
-            error: e,
-            stackTrace: st,
-          );
-          if (context.mounted) {
-            AppToast.show(context, loc.import_error, type: ToastType.error);
-          }
-        }
+    late final List<ExpenseGroup> groups;
+    try {
+      final isZip = filePath.endsWith('.zip');
+      if (!isZip && !filePath.endsWith('.json')) {
+        throw const FormatException('Unsupported file format');
       }
+      groups = BackupArchive.decode(
+        await File(filePath).readAsBytes(),
+        isZip: isZip,
+      );
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to read backup',
+        name: 'settings.backup',
+        error: e,
+        stackTrace: st,
+      );
+      if (context.mounted) {
+        AppToast.show(context, loc.import_error, type: ToastType.error);
+      }
+      return;
     }
+    if (context.mounted) await restoreBackupGroups(context, loc, groups);
   }
 }

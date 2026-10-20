@@ -42,6 +42,10 @@ Ties auth + API client together and implements the periodic-polling half of `Clo
 
 `uploadShard`/`downloadAllShards` no-op with a warning log (not an exception) when there's no authenticated session — callers (`SyncOrchestrator`) don't need Drive-specific error handling.
 
+## Backups: `GoogleDriveBackupStore` (`src/google_drive_backup_store.dart`)
+
+Implements `CloudBackupStore` (`caravella_core`) in the same `appDataFolder` and with the same sign-in: `upload` creates `caravella_backup_*.zip` then deletes all but the newest `keep` (5); `list` returns them newest first (`createdTime desc`); `download` reads one. `GoogleDriveSyncFactory` keeps **one shared `GoogleDriveAuthService`** for both the cloud channel and the backup store — `GoogleSignIn.initialize` may only run once per process (`createCloudChannel()` / `createBackupStore()`, both `null` without `ENABLE_GOOGLE_DRIVE_SYNC`).
+
 ## Where it's wired into the app
 
 - `packages/caravella_gms/lib/src/play_gms_integrations.dart` — `PlayGmsIntegrations.createCloudChannel()` returns `GoogleDriveSyncFactory.createCloudChannel()`; the app never imports this package directly, and the F-Droid build doesn't contain it (see [caravella_gms](PACKAGE_CARAVELLA_GMS.md)).

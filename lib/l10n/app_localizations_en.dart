@@ -2938,4 +2938,39 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get auto_backup_off =>
       'Off: Caravella\'s data is left out of your phone\'s backup';
+
+  @override
+  String get drive_backup_connect => 'Connect Google Drive';
+
+  @override
+  String get drive_backup_connect_desc =>
+      'Keep backups in a private folder of your Drive';
+
+  @override
+  String get drive_backup_now => 'Back up to Drive now';
+
+  @override
+  String get drive_backup_none => 'No backup on Drive yet';
+
+  @override
+  String get drive_backup_restore => 'Restore from Drive';
+
+  @override
+  String get drive_backup_restore_desc => 'Choose one of the last 5 backups';
+
+  @override
+  String get drive_backup_weekly => 'Weekly backup';
+
+  @override
+  String get drive_backup_weekly_desc =>
+      'A copy every week, when you open the app';
+
+  @override
+  String get drive_backup_disconnect => 'Disconnect';
+
+  @override
+  String get drive_backup_saved => 'Backup saved to Google Drive';
+
+  @override
+  String get drive_backup_error => 'Couldn\'t reach Google Drive';
 }

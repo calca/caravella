@@ -1308,4 +1308,26 @@
   ,"@auto_backup_never": {"description": "Android backup is on but has not run yet"}
   ,"auto_backup_off": "Off: Caravella's data is left out of your phone's backup"
   ,"@auto_backup_off": {"description": "Android backup switch turned off"}
+  ,"drive_backup_connect": "Connect Google Drive"
+  ,"@drive_backup_connect": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_connect_desc": "Keep backups in a private folder of your Drive"
+  ,"@drive_backup_connect_desc": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_now": "Back up to Drive now"
+  ,"@drive_backup_now": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_none": "No backup on Drive yet"
+  ,"@drive_backup_none": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_restore": "Restore from Drive"
+  ,"@drive_backup_restore": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_restore_desc": "Choose one of the last 5 backups"
+  ,"@drive_backup_restore_desc": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_weekly": "Weekly backup"
+  ,"@drive_backup_weekly": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_weekly_desc": "A copy every week, when you open the app"
+  ,"@drive_backup_weekly_desc": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_disconnect": "Disconnect"
+  ,"@drive_backup_disconnect": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_saved": "Backup saved to Google Drive"
+  ,"@drive_backup_saved": {"description": "Settings → Data, Google Drive backup"}
+  ,"drive_backup_error": "Couldn't reach Google Drive"
+  ,"@drive_backup_error": {"description": "Settings → Data, Google Drive backup"}
 }

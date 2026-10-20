@@ -1,5 +1,7 @@
 import 'package:caravella_core/caravella_core.dart';
 
+import 'google_drive_auth_service.dart';
+import 'google_drive_backup_store.dart';
 import 'google_drive_cloud_channel.dart';
 
 /// Factory gating the Google Drive cloud channel on the
@@ -33,16 +35,29 @@ class GoogleDriveSyncFactory {
     defaultValue: false,
   );
 
+  static GoogleDriveAuthService? _auth;
+
+  /// One Google sign-in for sync and backup (it can only be initialized
+  /// once per process).
+  static GoogleDriveAuthService get _sharedAuth =>
+      _auth ??= GoogleDriveAuthService(
+        iosClientId: _iosClientId.isEmpty ? null : _iosClientId,
+        serverClientId: serverClientId.isEmpty ? null : serverClientId,
+      );
+
   /// Creates the [CloudRelayChannel] for this build: a real
   /// [GoogleDriveCloudChannel] when [isEnabled], otherwise `null` — callers
   /// should treat `null` as "cloud sync unavailable in this build" and hide
   /// the corresponding UI (see `SyncSettingsScreen`).
   static CloudRelayChannel? createCloudChannel() {
     if (!isEnabled) return null;
+    return GoogleDriveCloudChannel(auth: _sharedAuth);
+  }
 
-    return GoogleDriveCloudChannel(
-      iosClientId: _iosClientId.isEmpty ? null : _iosClientId,
-      serverClientId: serverClientId.isEmpty ? null : serverClientId,
-    );
+  /// Backups in the user's Drive when [isEnabled], otherwise `null` (the
+  /// app then offers only the file export).
+  static CloudBackupStore? createBackupStore() {
+    if (!isEnabled) return null;
+    return GoogleDriveBackupStore(_sharedAuth);
   }
 }

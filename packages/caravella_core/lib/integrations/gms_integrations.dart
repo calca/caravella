@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../services/media/location_service_abstraction.dart';
 import '../sync/channels/bluetooth_sync_channel.dart';
 import '../sync/channels/cloud_relay_channel.dart';
+import 'cloud_backup_store.dart';
 import 'update_localizations.dart';
 
 /// Features that need proprietary Google libraries (Play Services, ML Kit,
@@ -41,6 +42,11 @@ abstract class GmsIntegrations {
   /// Cloud relay for sync (Google Drive). `null` → Cloud sync is hidden.
   /// Implementations still honour the `ENABLE_GOOGLE_DRIVE_SYNC` flag.
   CloudRelayChannel? createCloudChannel();
+
+  /// Backups kept in the user's Google Drive. `null` → only the file
+  /// export / import. Implementations still honour the
+  /// `ENABLE_GOOGLE_DRIVE_SYNC` flag.
+  CloudBackupStore? createCloudBackupStore() => null;
 
   /// Whether [createBluetoothChannel] can return a channel.
   bool get supportsBluetoothSync;
