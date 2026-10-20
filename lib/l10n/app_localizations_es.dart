@@ -45,8 +45,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dateRangeExpensesChart => 'Gastos por período';
 
   @override
-  String get settings_flag_secure_desc =>
-      'Impide capturas de pantalla y grabación de pantalla';
+  String get settings_flag_secure_desc => 'Bloquea capturas y grabación';
 
   @override
   String get settings_flag_secure_title => 'Pantalla segura';
@@ -55,8 +54,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_app_functions_title => 'Acceso de agentes de IA';
 
   @override
-  String get settings_app_functions_desc =>
-      'Permite a los asistentes de IA (p. ej. Gemini) leer y añadir gastos';
+  String get settings_app_functions_desc => 'Usa Gemini y otros asistentes IA';
 
   @override
   String get settings_privacy => 'Privacidad';
@@ -599,8 +597,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_debug_logs_title => 'Debug Logs';
 
   @override
-  String get settings_debug_logs_desc =>
-      'View application logs and error history';
+  String get settings_debug_logs_desc => 'Registros y errores de la app';
 
   @override
   String get developer_link_error => 'Couldn\'t open the link';
@@ -615,7 +612,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get other_settings => 'Otras configuraciones';
 
   @override
-  String get other_settings_desc => 'Moneda, fondo y ubicación automática';
+  String get other_settings_desc => 'Moneda, fondo, ubicación';
 
   @override
   String get segment_general => 'General';
@@ -993,10 +990,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Configurar la detección automática de ubicación';
 
   @override
-  String get settings_auto_location_title => 'Activar para detectar';
+  String get settings_auto_location_title => 'Ubicación automática';
 
   @override
-  String get settings_auto_location_desc => 'Detectar GPS al agregar un gasto';
+  String get settings_auto_location_desc => 'Guarda dónde haces cada gasto';
 
   @override
   String get settings_language => 'Idioma';
@@ -1087,7 +1084,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get terms_github_title => 'Sitio web: calca';
 
   @override
-  String get terms_github_desc => 'Sitio web personal del desarrollador.';
+  String get terms_github_desc => 'Web del desarrollador';
 
   @override
   String get terms_repo_title => 'Repositorio GitHub';
@@ -1099,7 +1096,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get terms_issue_title => 'Reportar un problema';
 
   @override
-  String get terms_issue_desc => 'Ir a la página de issues en GitHub.';
+  String get terms_issue_desc => 'Informa de un problema en GitHub';
 
   @override
   String get terms_license_desc => 'Ver la licencia de código abierto.';
@@ -1118,27 +1115,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get data_backup_title => 'Respaldo';
 
   @override
-  String get data_backup_desc => 'Crear un archivo de respaldo de tus gastos.';
+  String get data_backup_desc => 'Guarda los gastos en un archivo';
 
   @override
   String get data_restore_title => 'Restauración';
 
   @override
-  String get data_restore_desc =>
-      'Importar un respaldo para restaurar tus datos.';
+  String get data_restore_desc => 'Desde un archivo de copia';
 
   @override
   String get auto_backup_title => 'Respaldo automático';
 
   @override
-  String get auto_backup_desc =>
-      'Habilitar el respaldo automático del sistema operativo';
+  String get auto_backup_desc => 'Copia del sistema operativo';
 
   @override
   String get settings_user_name_title => 'Tu nombre';
 
   @override
-  String get settings_user_name_desc => 'Nombre o apodo para usar en la app';
+  String get settings_user_name_desc => 'Tu nombre en la app';
 
   @override
   String get settings_user_name_hint => 'Ingresa tu nombre';
@@ -1932,8 +1927,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get check_for_updates => 'Buscar actualizaciones';
 
   @override
-  String get check_for_updates_desc =>
-      'Verificar disponibilidad de nueva versión';
+  String get check_for_updates_desc => 'Busca una nueva versión';
 
   @override
   String get update_available => 'Actualización disponible';
@@ -2016,8 +2010,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notification_enabled => 'Notificación persistente';
 
   @override
-  String get notification_enabled_desc =>
-      'Muestra los gastos del día en una notificación siempre visible';
+  String get notification_enabled_desc => 'Gastos de hoy en una notificación';
 
   @override
   String notification_daily_spent(String amount, String currency) {
@@ -2319,8 +2312,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get danger_zone_desc => 'Archivar o eliminar este grupo';
 
   @override
-  String get export_options_desc =>
-      'Descargar o compartir gastos en varios formatos';
+  String get export_options_desc => 'Descarga o comparte los gastos';
 
   @override
   String get export_csv_description => 'Formato hoja de cálculo';
@@ -2338,28 +2330,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_title => 'Sincronización';
 
   @override
-  String get sync_settings_desc =>
-      'Comparte datos entre tus dispositivos por Wi-Fi o Bluetooth';
+  String get sync_settings_desc => 'Wi-Fi, Bluetooth o Google Drive';
 
   @override
-  String get sync_multiuser_title => 'Sincronizar con otras personas';
+  String get sync_multiuser_title => 'Sincroniza con otros';
 
   @override
-  String get sync_multiuser_description =>
-      'Comparte tus grupos con dispositivos cercanos vía Wi-Fi o Bluetooth';
+  String get sync_multiuser_description => 'Grupos por Wi-Fi o Bluetooth';
 
   @override
-  String get sync_multidevice_title => 'Sincronizar tus dispositivos';
+  String get sync_multidevice_title => 'Sincroniza dispositivos';
 
   @override
   String get sync_multidevice_description =>
-      'Mantén actualizados tu teléfono y otros dispositivos vía Google Drive';
+      'Sincroniza tus dispositivos con Drive';
 
   @override
   String get sync_local_title => 'Sync local';
 
   @override
-  String get sync_local_description => 'Sincronización automática en red Wi-Fi';
+  String get sync_local_description => 'Automática en la misma Wi-Fi';
 
   @override
   String get sync_cloud_title => 'Sync en la nube';
@@ -2419,8 +2409,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_bt_title => 'Sync Bluetooth';
 
   @override
-  String get sync_bt_description =>
-      'Sincronización manual con dispositivos cercanos vía Bluetooth';
+  String get sync_bt_description => 'Manual, con dispositivos cercanos';
 
   @override
   String get sync_bt_searching => 'Buscando dispositivos cercanos...';
@@ -2484,8 +2473,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_group_enable => 'Compartir este grupo';
 
   @override
-  String get sync_group_enable_desc =>
-      'Sincroniza los gastos de este grupo con otros dispositivos emparejados por Wi-Fi o Bluetooth';
+  String get sync_group_enable_desc => 'Con los dispositivos vinculados';
 
   @override
   String get sync_group_needs_channel =>
@@ -2540,8 +2528,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_qr_scan_title => 'Escanear código de emparejamiento';
 
   @override
-  String get sync_qr_scan_description =>
-      'Apunta la cámara al código de emparejamiento mostrado en el otro dispositivo';
+  String get sync_qr_scan_description => 'Escanea el QR del otro dispositivo';
 
   @override
   String sync_qr_pair_success(String deviceName) {
@@ -2689,7 +2676,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settings_group_templates_manage_desc =>
-      'Crea, edita y elimina plantillas personalizadas';
+      'Crea y edita tus plantillas';
 
   @override
   String get settings_group_templates_page_title =>
@@ -2954,19 +2941,16 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get auto_backup_never =>
-      'Aún no hay copia — Android suele hacerla de noche, cargando y con Wi‑Fi';
+  String get auto_backup_never => 'Aún no hay copia';
 
   @override
-  String get auto_backup_off =>
-      'Desactivado: los datos de Caravella quedan fuera de la copia del teléfono';
+  String get auto_backup_off => 'Apagado: datos fuera de la copia';
 
   @override
   String get drive_backup_connect => 'Conectar Google Drive';
 
   @override
-  String get drive_backup_connect_desc =>
-      'Guarda las copias en una carpeta privada de tu Drive';
+  String get drive_backup_connect_desc => 'Copias en una carpeta privada';
 
   @override
   String get drive_backup_now => 'Guardar en Drive ahora';
@@ -2984,8 +2968,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get drive_backup_weekly => 'Copia semanal';
 
   @override
-  String get drive_backup_weekly_desc =>
-      'Una copia cada semana, al abrir la app';
+  String get drive_backup_weekly_desc => 'Cada semana, al abrir la app';
 
   @override
   String get drive_backup_disconnect => 'Desconectar';

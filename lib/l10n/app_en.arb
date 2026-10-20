@@ -36,10 +36,10 @@
   "@dateRangeExpensesChart": {
     "description": "Label for date range expenses chart"
   },
-  "settings_flag_secure_desc": "Prevents screenshots and screen recording",
+  "settings_flag_secure_desc": "Block screenshots and recording",
   "settings_flag_secure_title": "Secure screen",
   "settings_app_functions_title": "AI agent access",
-  "settings_app_functions_desc": "Allow AI assistants (e.g. Gemini) to read and add expenses",
+  "settings_app_functions_desc": "Use Gemini and other AI assistants",
   "settings_privacy": "Privacy",
   "select_currency": "Select currency",
   "select_period_hint_short": "Set dates",
@@ -229,12 +229,12 @@
   "import_error": "Import failed. Check the file format.",
   "settings_flag_secure_error": "Couldn't change screen security",
   "settings_debug_logs_title": "Debug Logs",
-  "settings_debug_logs_desc": "View application logs and error history",
+  "settings_debug_logs_desc": "App logs and errors",
   "developer_link_error": "Couldn't open the link",
   "whats_new_load_error": "Failed to load",
   "categories": "Categories",
   "other_settings": "Other settings",
-  "other_settings_desc": "Currency, background, and automatic location",
+  "other_settings_desc": "Currency, background, location",
   "segment_general": "General",
   "segment_other": "Other",
   "from": "From",
@@ -365,8 +365,8 @@
   "settings_general_desc": "Language and appearance settings",
   "settings_auto_location_section": "Location Detection",
   "settings_auto_location_section_desc": "Configure automatic location detection",
-  "settings_auto_location_title": "Enable to detect",
-  "settings_auto_location_desc": "Detect GPS when adding an expense",
+  "settings_auto_location_title": "Automatic location",
+  "settings_auto_location_desc": "Saves where new expenses are made",
   "settings_language": "Language",
   "settings_language_desc": "Choose your preferred language",
   "settings_language_it": "Italian",
@@ -396,23 +396,23 @@
   "settings_invite_friends_desc": "Share Caravella with anyone",
   "invite_friends_message": "Hey! I use Caravella to split group expenses with friends, it's super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm",
   "terms_github_title": "Website: calca",
-  "terms_github_desc": "Developer's personal website.",
+  "terms_github_desc": "Developer's website",
   "terms_repo_title": "GitHub Repository",
   "terms_repo_desc": "Application source code.",
   "terms_issue_title": "Report a problem",
-  "terms_issue_desc": "Go to the GitHub issues page.",
+  "terms_issue_desc": "Report a problem on GitHub",
   "terms_license_desc": "View the open source license.",
   "support_developer_title": "Buy me a coffee",
   "support_developer_desc": "Support the development of this app.",
   "data_title": "Backup & Restore",
   "data_backup_title": "Backup",
-  "data_backup_desc": "Create a backup file of your expenses.",
+  "data_backup_desc": "Save your expenses to a file",
   "data_restore_title": "Restore",
-  "data_restore_desc": "Import a backup to restore your data.",
+  "data_restore_desc": "From a backup file",
   "auto_backup_title": "Automatic backup",
-  "auto_backup_desc": "Enable operating system automatic backup",
+  "auto_backup_desc": "Your phone's system backup",
   "settings_user_name_title": "Your name",
-  "settings_user_name_desc": "Name or nickname to use in the app",
+  "settings_user_name_desc": "Your name in the app",
   "settings_user_name_hint": "Enter your name"
   ,"default_participant_me": "Me"
   ,"info_tab": "Info"
@@ -745,7 +745,7 @@
   ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
   ,"check_for_updates": "Check for updates"
   ,"@check_for_updates": {"description": "Label to check for updates from Google Play Store"}
-  ,"check_for_updates_desc": "Check for new version availability"
+  ,"check_for_updates_desc": "Look for a new version"
   ,"@check_for_updates_desc": {"description": "Description for update check"}
   ,"update_available": "Update available"
   ,"@update_available": {"description": "Title when an update is available"}
@@ -789,7 +789,7 @@
   ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
   ,"notification_enabled": "Persistent notification"
   ,"@notification_enabled": {"description": "Label for the persistent notification setting in the group"}
-  ,"notification_enabled_desc": "Display today's expenses in an always-visible notification"
+  ,"notification_enabled_desc": "Today's expenses in a notification"
   ,"@notification_enabled_desc": {"description": "Description of the persistent notification setting"}
   ,"notification_daily_spent": "Daily spent: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Text in the notification showing the daily average expense", "placeholders": {"amount": {}, "currency": {}}}
@@ -975,7 +975,7 @@
   ,"@danger_zone": {"description": "Section title for dangerous actions like archive and delete"}
   ,"danger_zone_desc": "Archive or delete this group"
   ,"@danger_zone_desc": {"description": "Description for danger zone section"}
-  ,"export_options_desc": "Download or share expenses in various formats"
+  ,"export_options_desc": "Download or share the expenses"
   ,"@export_options_desc": {"description": "Description for export options"}
   ,"export_csv_description": "Spreadsheet format"
   ,"@export_csv_description": {"description": "Short description for CSV export format"}
@@ -987,19 +987,19 @@
   ,"@save_label": {"description": "Label for save action button"}
   ,"sync_title": "Synchronization"
   ,"@sync_title": {"description": "Title for sync settings page"}
-  ,"sync_settings_desc": "Share data between your devices via Wi-Fi or Bluetooth"
+  ,"sync_settings_desc": "Wi-Fi, Bluetooth or Google Drive"
   ,"@sync_settings_desc": {"description": "Subtitle for the sync entry point in Data settings"}
-  ,"sync_multiuser_title": "Sync with other people"
+  ,"sync_multiuser_title": "Sync with others"
   ,"@sync_multiuser_title": {"description": "Title for the Wi-Fi/Bluetooth (other people's devices) sync sub-page entry"}
-  ,"sync_multiuser_description": "Share your groups with nearby devices via Wi-Fi or Bluetooth"
+  ,"sync_multiuser_description": "Groups over Wi-Fi or Bluetooth"
   ,"@sync_multiuser_description": {"description": "Description for the multi-user sync entry"}
   ,"sync_multidevice_title": "Sync your devices"
   ,"@sync_multidevice_title": {"description": "Title for the cloud (own devices) sync sub-page entry"}
-  ,"sync_multidevice_description": "Keep your own phone and other devices up to date via Google Drive"
+  ,"sync_multidevice_description": "Keep your devices in step via Drive"
   ,"@sync_multidevice_description": {"description": "Description for the multi-device sync entry"}
   ,"sync_local_title": "Local Sync"
   ,"@sync_local_title": {"description": "Title for local LAN sync section"}
-  ,"sync_local_description": "Automatic sync on Wi-Fi network"
+  ,"sync_local_description": "Automatic on the same Wi-Fi"
   ,"@sync_local_description": {"description": "Description for LAN sync"}
   ,"sync_cloud_title": "Cloud Sync"
   ,"@sync_cloud_title": {"description": "Title for cloud sync section"}
@@ -1033,7 +1033,7 @@
   ,"@sync_last_sync": {"description": "Shows last sync time","placeholders": {"time": {"type": "String"}}}
   ,"sync_bt_title": "Bluetooth Sync"
   ,"@sync_bt_title": {"description": "Title for Bluetooth sync"}
-  ,"sync_bt_description": "Manual sync with nearby devices via Bluetooth"
+  ,"sync_bt_description": "Manual, with nearby devices"
   ,"@sync_bt_description": {"description": "Description for Bluetooth sync"}
   ,"sync_bt_searching": "Searching for nearby devices..."
   ,"@sync_bt_searching": {"description": "Status while searching for BT peers"}
@@ -1071,7 +1071,7 @@
   ,"@sync_group_pending": {"description": "Tooltip for unsynced group status"}
   ,"sync_group_enable": "Share this group"
   ,"@sync_group_enable": {"description": "Label for enabling sync on a group"}
-  ,"sync_group_enable_desc": "Sync this group's expenses with other paired devices over Wi-Fi or Bluetooth"
+  ,"sync_group_enable_desc": "With your paired devices"
   ,"@sync_group_enable_desc": {"description": "Description for the group sync toggle"}
   ,"sync_group_needs_channel": "Turn on Wi-Fi or Bluetooth sync in Settings to enable this"
   ,"@sync_group_needs_channel": {"description": "Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide"}
@@ -1101,7 +1101,7 @@
   ,"@sync_qr_no_network": {"description": "Shown when no local network address is available for pairing"}
   ,"sync_qr_scan_title": "Scan pairing code"
   ,"@sync_qr_scan_title": {"description": "Title for the QR pairing scan page"}
-  ,"sync_qr_scan_description": "Point your camera at the pairing code shown on the other device"
+  ,"sync_qr_scan_description": "Scan the QR on the other device"
   ,"@sync_qr_scan_description": {"description": "Instructions for the QR pairing scan page"}
   ,"sync_qr_pair_success": "Paired with {deviceName}"
   ,"@sync_qr_pair_success": {"description": "Success message after pairing with a scanned device", "placeholders": {"deviceName": {"type": "String"}}}
@@ -1186,7 +1186,7 @@
   ,"settings_group_templates_section_title": "Group type templates"
   ,"settings_group_templates_section_desc": "Customize your group type presets"
   ,"settings_group_templates_manage_title": "Manage templates"
-  ,"settings_group_templates_manage_desc": "Create, edit, and delete custom templates"
+  ,"settings_group_templates_manage_desc": "Create and edit your templates"
   ,"settings_group_templates_page_title": "Group type templates"
   ,"settings_group_templates_empty_state": "No templates yet"
   ,"settings_group_templates_add_title": "Add template"
@@ -1304,13 +1304,13 @@
   ,"@add_expense_button": {"description": "Primary button that saves a new expense"}
   ,"auto_backup_last": "Last backup: {date}"
   ,"@auto_backup_last": {"description": "Time of the last Android cloud backup", "placeholders": {"date": {"type": "String"}}}
-  ,"auto_backup_never": "No backup yet — Android usually backs up overnight, while charging on Wi‑Fi"
+  ,"auto_backup_never": "No backup yet"
   ,"@auto_backup_never": {"description": "Android backup is on but has not run yet"}
-  ,"auto_backup_off": "Off: Caravella's data is left out of your phone's backup"
+  ,"auto_backup_off": "Off: data left out of backups"
   ,"@auto_backup_off": {"description": "Android backup switch turned off"}
   ,"drive_backup_connect": "Connect Google Drive"
   ,"@drive_backup_connect": {"description": "Settings → Data, Google Drive backup"}
-  ,"drive_backup_connect_desc": "Keep backups in a private folder of your Drive"
+  ,"drive_backup_connect_desc": "Backups in a private folder"
   ,"@drive_backup_connect_desc": {"description": "Settings → Data, Google Drive backup"}
   ,"drive_backup_now": "Back up to Drive now"
   ,"@drive_backup_now": {"description": "Settings → Data, Google Drive backup"}
@@ -1322,7 +1322,7 @@
   ,"@drive_backup_restore_desc": {"description": "Settings → Data, Google Drive backup"}
   ,"drive_backup_weekly": "Weekly backup"
   ,"@drive_backup_weekly": {"description": "Settings → Data, Google Drive backup"}
-  ,"drive_backup_weekly_desc": "A copy every week, when you open the app"
+  ,"drive_backup_weekly_desc": "Every week, when you open the app"
   ,"@drive_backup_weekly_desc": {"description": "Settings → Data, Google Drive backup"}
   ,"drive_backup_disconnect": "Disconnect"
   ,"@drive_backup_disconnect": {"description": "Settings → Data, Google Drive backup"}
