@@ -30,5 +30,9 @@ void main() {
     expect(find.text('Search'), findsOneWidget);
     expect(find.text('Overview'), findsNothing);
     expect(find.text('Share'), findsNothing);
+    // No receipt reading in this build (as in F-Droid): a receipt photo
+    // instead of the scan, in the same spot.
+    expect(find.text('Photo'), findsOneWidget);
+    expect(find.text('Scan'), findsNothing);
   });
 }

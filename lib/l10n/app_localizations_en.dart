@@ -2959,4 +2959,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get drive_backup_error => 'Couldn\'t reach Google Drive';
+
+  @override
+  String get quick_action_photo => 'Photo';
+
+  @override
+  String get photo_add_expense => 'New expense from a receipt photo';
+
+  @override
+  String get receipt_photo_error => 'Couldn\'t take the receipt photo';
 }
