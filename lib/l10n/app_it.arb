@@ -1215,4 +1215,7 @@
   ,"expense_count": "{count, plural, =1{1 spesa} other{{count} spese}}"
   ,"expense_details_section": "Dettagli"
   ,"add_expense_button": "Aggiungi spesa"
+  ,"auto_backup_last": "Ultimo backup: {date}"
+  ,"auto_backup_never": "Nessun backup ancora — di solito Android lo fa di notte, in carica e con Wi‑Fi"
+  ,"auto_backup_off": "Disattivato: i dati di Caravella restano fuori dal backup del telefono"
 }

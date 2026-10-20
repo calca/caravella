@@ -2947,4 +2947,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get add_expense_button => 'Añadir gasto';
+
+  @override
+  String auto_backup_last(String date) {
+    return 'Última copia: $date';
+  }
+
+  @override
+  String get auto_backup_never =>
+      'Aún no hay copia — Android suele hacerla de noche, cargando y con Wi‑Fi';
+
+  @override
+  String get auto_backup_off =>
+      'Desactivado: los datos de Caravella quedan fuera de la copia del teléfono';
 }

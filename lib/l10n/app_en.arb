@@ -1302,4 +1302,10 @@
   ,"@expense_details_section": {"description": "Label above the date, place, attachments and note pills in the expense form"}
   ,"add_expense_button": "Add expense"
   ,"@add_expense_button": {"description": "Primary button that saves a new expense"}
+  ,"auto_backup_last": "Last backup: {date}"
+  ,"@auto_backup_last": {"description": "Time of the last Android cloud backup", "placeholders": {"date": {"type": "String"}}}
+  ,"auto_backup_never": "No backup yet — Android usually backs up overnight, while charging on Wi‑Fi"
+  ,"@auto_backup_never": {"description": "Android backup is on but has not run yet"}
+  ,"auto_backup_off": "Off: Caravella's data is left out of your phone's backup"
+  ,"@auto_backup_off": {"description": "Android backup switch turned off"}
 }

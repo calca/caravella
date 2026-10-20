@@ -101,8 +101,12 @@ class MainActivity : FlutterActivity() {
                     }
                 }
                 "isBackupEnabled" -> {
-                    // No direct runtime check API; assume true if manifest allows backup.
-                    result.success(true)
+                    // The app's own switch, read by CaravellaBackupAgent.
+                    result.success(CaravellaBackupAgent.isEnabled(this))
+                }
+                "lastBackupTime" -> {
+                    // Last cloud backup run by CaravellaBackupAgent (0 = none).
+                    result.success(CaravellaBackupAgent.lastBackupTime(this))
                 }
                 else -> {
                     result.notImplemented()

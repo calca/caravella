@@ -34,8 +34,9 @@ class BackupService {
           // Request a backup on Android when enabling
           return await _channel.invokeMethod('triggerBackup') ?? false;
         }
-        // Android doesn't allow disabling backup programmatically
-        // The setting in AndroidManifest controls this
+        // Turning it off is the app's own preference (saved by
+        // AutoBackupNotifier), which CaravellaBackupAgent reads to skip
+        // cloud backups: nothing to do on the platform side.
         return true;
       } else if (Platform.isIOS) {
         // On iOS, we control backup exclusion (opposite of enabled)
@@ -48,6 +49,20 @@ class BackupService {
     } catch (e) {
       // If platform doesn't support backup or method fails, return false
       return false;
+    }
+  }
+
+  /// When Android last backed the app up to the cloud (Auto Backup), or
+  /// `null` if it hasn't yet since this was tracked — or off Android.
+  static Future<DateTime?> lastBackupTime() async {
+    try {
+      if (Platform.isAndroid || debugForceAndroid == true) {
+        final ms = await _channel.invokeMethod<int>('lastBackupTime') ?? 0;
+        return ms > 0 ? DateTime.fromMillisecondsSinceEpoch(ms) : null;
+      }
+      return null;
+    } catch (e) {
+      return null;
     }
   }
 

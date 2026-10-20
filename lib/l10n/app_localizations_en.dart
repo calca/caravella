@@ -2925,4 +2925,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get add_expense_button => 'Add expense';
+
+  @override
+  String auto_backup_last(String date) {
+    return 'Last backup: $date';
+  }
+
+  @override
+  String get auto_backup_never =>
+      'No backup yet — Android usually backs up overnight, while charging on Wi‑Fi';
+
+  @override
+  String get auto_backup_off =>
+      'Off: Caravella\'s data is left out of your phone\'s backup';
 }

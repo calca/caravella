@@ -4,126 +4,104 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core/services/backup_service.dart';
 
+/// Android backup switch: the app's own preference (read by the native
+/// backup agent) is the source of truth; the last backup time comes from
+/// the platform channel.
 void main() {
-  group('AutoBackupNotifier', () {
-    late AutoBackupNotifier notifier;
+  const channel = MethodChannel('io.caravella.egm/backup');
+  late List<MethodCall> calls;
+  late int lastBackupMs;
 
-    setUp(() {
-      TestWidgetsFlutterBinding.ensureInitialized();
-      BackupService.debugForceAndroid = true; // simulate Android
-      SharedPreferences.setMockInitialValues({});
+  void mockChannel({bool fail = false}) {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+          calls.add(call);
+          if (fail) throw PlatformException(code: 'ERROR');
+          switch (call.method) {
+            case 'isBackupEnabled':
+              return true;
+            case 'triggerBackup':
+              return true;
+            case 'lastBackupTime':
+              return lastBackupMs;
+          }
+          return null;
+        });
+  }
 
-      // Mock the backup platform channel
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel('io.caravella.egm/backup'),
-            (MethodCall methodCall) async {
-              switch (methodCall.method) {
-                case 'isBackupEnabled':
-                  return false; // Default to disabled
-                case 'setBackupExcluded':
-                  return true; // Success
-                case 'triggerBackup':
-                  return true; // Success
-                default:
-                  return null;
-              }
-            },
-          );
+  Future<AutoBackupNotifier> load() async {
+    final notifier = AutoBackupNotifier();
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    return notifier;
+  }
 
-      notifier = AutoBackupNotifier();
-    });
+  setUp(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    BackupService.debugForceAndroid = true;
+    AutoBackupNotifier.debugIsIOS = false;
+    SharedPreferences.setMockInitialValues({});
+    calls = [];
+    lastBackupMs = 0;
+    mockChannel();
+  });
 
-    tearDown(() {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel('io.caravella.egm/backup'),
-            null,
-          );
-    });
+  tearDown(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
+    BackupService.debugForceAndroid = null;
+    AutoBackupNotifier.debugIsIOS = null;
+  });
 
-    test('should initialize with default value false', () async {
-      // Wait for the initial load to complete
-      await Future.delayed(const Duration(milliseconds: 100));
-      expect(notifier.enabled, false);
-    });
+  test('is on by default, like Android backup', () async {
+    final notifier = await load();
+    expect(notifier.enabled, isTrue);
+  });
 
-    test('should handle platform backup state sync', () async {
-      // Wait for the initial load to complete
-      await Future.delayed(const Duration(milliseconds: 100));
-      expect(notifier.enabled, false);
-    });
+  test('turning it off is saved and stays off after reopening', () async {
+    final notifier = await load();
+    await notifier.setEnabled(false);
+    expect(notifier.enabled, isFalse);
 
-    test('should call platform methods when setting enabled state', () async {
-      // Wait for the initial load to complete
-      await Future.delayed(const Duration(milliseconds: 100));
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('auto_backup_enabled'), isFalse);
 
-      List<MethodCall> methodCalls = [];
+    // The platform still reports backup as allowed: the preference wins.
+    final reopened = await load();
+    expect(reopened.enabled, isFalse);
+  });
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel('io.caravella.egm/backup'),
-            (MethodCall methodCall) async {
-              methodCalls.add(methodCall);
-              switch (methodCall.method) {
-                case 'isBackupEnabled':
-                  return false;
-                case 'setBackupExcluded':
-                  return true;
-                case 'triggerBackup':
-                  return true;
-                default:
-                  return null;
-              }
-            },
-          );
+  test('turning it on asks Android for a backup', () async {
+    SharedPreferences.setMockInitialValues({'auto_backup_enabled': false});
+    final notifier = await load();
+    calls.clear();
 
-      // Enable auto backup
-      await notifier.setEnabled(true);
+    await notifier.setEnabled(true);
 
-      // Should have called platform methods
-      expect(methodCalls.length, greaterThan(0));
-      expect(
-        methodCalls.any(
-          (call) =>
-              call.method == 'setBackupExcluded' ||
-              call.method == 'triggerBackup',
-        ),
-        true,
-      );
-    });
+    expect(notifier.enabled, isTrue);
+    expect(calls.map((c) => c.method), contains('triggerBackup'));
+  });
 
-    test('should notify listeners when state changes', () async {
-      await Future.delayed(const Duration(milliseconds: 100));
+  test('reads the last backup time', () async {
+    lastBackupMs = DateTime(2026, 10, 19, 21, 30).millisecondsSinceEpoch;
+    final notifier = await load();
+    expect(notifier.lastBackup, DateTime(2026, 10, 19, 21, 30));
+  });
 
-      bool notified = false;
-      notifier.addListener(() {
-        notified = true;
-      });
+  test('no backup yet means no time', () async {
+    final notifier = await load();
+    expect(notifier.lastBackup, isNull);
+  });
 
-      await notifier.setEnabled(true);
-      expect(notified, true);
-    });
+  test('a failing platform call when turning on keeps the state', () async {
+    SharedPreferences.setMockInitialValues({'auto_backup_enabled': false});
+    final notifier = await load();
+    mockChannel(fail: true);
 
-    test('should handle platform method failures gracefully', () async {
-      await Future.delayed(const Duration(milliseconds: 100));
+    var notified = false;
+    notifier.addListener(() => notified = true);
+    await notifier.setEnabled(true);
 
-      // Mock platform method failure
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel('io.caravella.egm/backup'),
-            (MethodCall methodCall) async {
-              throw PlatformException(code: 'ERROR', message: 'Platform error');
-            },
-          );
-
-      final initialState = notifier.enabled;
-
-      // Attempt to change state - should handle error gracefully
-      await notifier.setEnabled(!initialState);
-
-      // State should remain unchanged due to platform error
-      expect(notifier.enabled, initialState);
-    });
+    expect(notifier.enabled, isFalse);
+    expect(notified, isTrue);
   });
 }
