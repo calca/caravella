@@ -21,8 +21,7 @@ class GroupCardHeader extends StatelessWidget {
   /// `null` means sync status is unknown or not applicable.
   final bool? isSynced;
 
-  /// Text color, when the header sits on the group photo; the theme's
-  /// `onSurface` otherwise.
+  /// Text color; the theme's `onSurface` by default.
   final Color? foreground;
 
   const GroupCardHeader({

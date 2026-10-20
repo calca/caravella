@@ -13,8 +13,8 @@ import 'group_options.dart';
 /// favorite group at the top.
 ///
 /// Every card shares one background treatment so they look alike:
-/// - **photo**: a cover ([PhotoVeil], like the Home card and the group page):
-///   full color on top, darkened behind the white text at the bottom;
+/// - **photo**: full color on top, melting into the surface the text sits on
+///   ([PhotoVeil], like the Home card and the group page);
 /// - **color**: the palette color, with contrasting text;
 /// - **neither**: the raised surface of the Home card, with the group type
 ///   icon.
@@ -47,13 +47,10 @@ class GroupPhotoCard extends StatelessWidget {
         : ExpenseGroupColorPalette.isLegacyColorValue(group.color)
         ? Color(group.color!)
         : ExpenseGroupColorPalette.resolveColor(group.color, s);
-    final Color fg = hasPhoto
-        ? PhotoVeil.onPhoto
-        : color != null
+    final Color fg = color != null
         ? ExpenseGroupColorPalette.getContrastingTextColor(color)
         : s.onSurface;
-    // Full white on a photo: faded white would not hold on a light one.
-    final Color fgSecondary = hasPhoto ? fg : fg.withValues(alpha: 0.8);
+    final Color fgSecondary = fg.withValues(alpha: 0.8);
 
     final people = gloc.participant_count(group.participants.length);
     final dates = (group.startDate != null || group.endDate != null)
@@ -66,12 +63,13 @@ class GroupPhotoCard extends StatelessWidget {
     final total = group.getTotalExpenses();
 
     final background = hasPhoto
-        // Photo as a cover: full color on top, darkened behind the text.
+        // Photo in full color on top, melting into the surface the text
+        // sits on.
         ? PhotoVeil(
             path: file,
             color: s.surfaceContainerHighest,
-            textExtent: wide ? 104 : 116,
-            rampExtent: 64,
+            solidExtent: wide ? 84 : 96,
+            fadeExtent: 56,
           )
         // No photo or color: the same raised surface as the Home card.
         : ColoredBox(color: color ?? s.raisedSurface);

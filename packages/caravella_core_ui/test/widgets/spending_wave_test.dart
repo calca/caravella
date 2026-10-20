@@ -46,13 +46,12 @@ void main() {
   });
 
   group('PhotoVeil', () {
-    test('scrim behind the text, surface at the bottom, stops in order', () {
+    test('photo on top, surface under the text, stops in order', () {
       const veil = PhotoVeil(
         path: 'x.jpg',
         color: Colors.white,
-        textExtent: 100,
-        rampExtent: 50,
-        solidExtent: 50,
+        solidExtent: 100,
+        fadeExtent: 100,
         topShade: true,
       );
       final g = veil.gradientFor(400);
@@ -60,19 +59,20 @@ void main() {
         expect(g.stops![i], greaterThanOrEqualTo(g.stops![i - 1]));
       }
       expect(g.colors.first.a, closeTo(PhotoVeil.topShadeAlpha, 0.01));
+      // The photo is untouched until the fade starts (400 - 100 - 100 px).
+      final clearUntil = g.stops![g.colors.lastIndexWhere((c) => c.a == 0)];
+      expect(clearUntil, closeTo(200 / 400, 0.001));
+      // Solid surface from 300 px down: the text never sits on the photo.
+      final solidFrom = g.stops![g.colors.indexOf(Colors.white)];
+      expect(solidFrom, closeTo(300 / 400, 0.001));
       expect(g.colors.last, Colors.white);
-      // Full scrim from 250 px (400 - 50 solid - 100 text).
-      final scrimAt =
-          g.stops![g.colors.indexWhere(
-            (c) => (c.a - PhotoVeil.scrimAlpha).abs() < 0.01,
-          )];
-      expect(scrimAt, closeTo(250 / 400, 0.001));
     });
 
     test('a veil shorter than its parts keeps valid stops', () {
       final g = const PhotoVeil(
         path: 'x.jpg',
         color: Colors.white,
+        solidExtent: 80,
       ).gradientFor(40);
       for (var i = 1; i < g.stops!.length; i++) {
         expect(g.stops![i], greaterThanOrEqualTo(g.stops![i - 1]));

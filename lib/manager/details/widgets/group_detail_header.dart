@@ -9,9 +9,9 @@ import '../../../sync/group_sync_badge.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
 
 /// The group's photo or color behind the top of its page, melting into
-/// [pageColor] at the bottom. A photo is a cover (as on the Home and Groups
-/// cards): in full color at the top, darkened behind the dates and the title
-/// written on it in white; the figure cards below sit on the page color.
+/// [pageColor] at the bottom. A photo (as on the Home and Groups cards) is in
+/// full color at the top and melts into the page color, where dates, title
+/// and figure cards keep the theme's colors.
 class GroupHeaderBand extends StatelessWidget {
   final ExpenseGroup group;
   final Color pageColor;
@@ -42,7 +42,6 @@ class GroupHeaderBand extends StatelessWidget {
 
   /// Text color for the band's upper part (title, top bar).
   static Color foregroundOf(ExpenseGroup group, ColorScheme s) {
-    if (photoOf(group) != null) return PhotoVeil.onPhoto;
     final color = colorOf(group, s);
     return color == null
         ? s.onSurface
@@ -57,15 +56,14 @@ class GroupHeaderBand extends StatelessWidget {
     if (photo == null && color == null) return ColoredBox(color: pageColor);
 
     if (photo != null) {
-      // From the bottom: the figure cards (lower part on the page color),
-      // then dates and title on the full scrim; the status bar gets a light
-      // shade at the top.
+      // Dates, title and figure cards on the page color; the photo melts
+      // into it above them, with a light shade under the status bar.
       return PhotoVeil(
         path: photo,
         color: pageColor,
         topShade: true,
-        solidExtent: 56,
-        textExtent: 112,
+        solidExtent: 170,
+        fadeExtent: 110,
       );
     }
     return Stack(
@@ -140,10 +138,7 @@ class GroupDetailHeader extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  // Full white on a photo: faded white would not hold.
-                  color: foreground == PhotoVeil.onPhoto
-                      ? foreground
-                      : foreground.withValues(alpha: 0.8),
+                  color: foreground.withValues(alpha: 0.8),
                 ),
               ),
             ),

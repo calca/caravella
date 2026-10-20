@@ -203,7 +203,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
           sliver: SliverToBoxAdapter(
             child: SizedBox(
-              height: 168,
+              // Room for the photo above the text it melts into.
+              height: 196,
               child: GroupPhotoCard(
                 group: favorite,
                 wide: true,

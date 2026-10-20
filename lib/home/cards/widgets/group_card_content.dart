@@ -11,8 +11,9 @@ import 'add_expense_controller.dart';
 /// The group card on Home (the first of the two): title and dates, total and
 /// today's spending, and a calm wave of the spending over the period.
 ///
-/// With a photo, the photo is the card's cover: title and dates sit on it in
-/// white, and the figures below stay on the card color. The recent expenses
+/// With a photo, the photo fills the top of the card in full color and melts
+/// into the card color, where title, dates and figures keep the theme's
+/// colors. The recent expenses
 /// are in the second card ([GroupCardActivity]).
 class GroupCardContent extends StatelessWidget {
   final ExpenseGroup group;
@@ -67,7 +68,6 @@ class GroupCardContent extends StatelessWidget {
           localizations: localizations,
           theme: theme,
           isSynced: isSynced,
-          foreground: photo != null ? PhotoVeil.onPhoto : null,
         ),
       ),
     );
@@ -124,7 +124,9 @@ class GroupCardContent extends StatelessWidget {
                   PhotoVeil(
                     path: photo,
                     color: theme.colorScheme.surface,
-                    textExtent: 88,
+                    // Title and dates sit on the plain surface below.
+                    solidExtent: 84,
+                    fadeExtent: 120,
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
