@@ -108,24 +108,36 @@ class AddExpenseController {
   /// Home's "Scan": opens the camera right away, reads the receipt, then
   /// shows the quick-add sheet pre-filled with its amount and description
   /// (still empty fields if nothing was recognised) and the photo attached.
-  Future<void> scanReceiptAndAdd(BuildContext context) async {
+  /// With [readReceipt] false — Home's "Photo" in builds without receipt
+  /// reading (F-Droid) — the sheet opens with just the photo attached.
+  Future<void> scanReceiptAndAdd(
+    BuildContext context, {
+    bool readReceipt = true,
+  }) async {
     final gloc = gen.AppLocalizations.of(context);
+    final failure = readReceipt
+        ? gloc.receipt_scan_error
+        : gloc.receipt_photo_error;
     try {
       final picked = await ImagePicker().pickImage(source: ImageSource.camera);
       if (picked == null || !context.mounted) return;
-      AppToast.show(
-        context,
-        gloc.scanning_receipt,
-        duration: const Duration(seconds: 2),
-      );
-      final result = await ReceiptScannerService().scanReceipt(
-        File(picked.path),
-      );
-      if (!context.mounted) return;
-      final amount = result['amount'] as double?;
-      final description = result['description'] as String?;
-      if (amount == null && description == null) {
-        AppToast.show(context, gloc.no_text_found);
+      double? amount;
+      String? description;
+      if (readReceipt) {
+        AppToast.show(
+          context,
+          gloc.scanning_receipt,
+          duration: const Duration(seconds: 2),
+        );
+        final result = await ReceiptScannerService().scanReceipt(
+          File(picked.path),
+        );
+        if (!context.mounted) return;
+        amount = result['amount'] as double?;
+        description = result['description'] as String?;
+        if (amount == null && description == null) {
+          AppToast.show(context, gloc.no_text_found);
+        }
       }
       // Keep the receipt photo as the expense's first attachment.
       String? receipt;
@@ -151,7 +163,10 @@ class AddExpenseController {
           id: '',
           name: description,
           amount: amount,
-          paidBy: ExpenseParticipant(name: ''),
+          // Who paid last, as when adding an expense by hand.
+          paidBy:
+              group.getParticipantsByLastUsed().firstOrNull ??
+              ExpenseParticipant(name: ''),
           category: ExpenseCategory(name: ''),
           date: DateTime.now(),
           attachments: [?receipt],
@@ -163,7 +178,7 @@ class AddExpenseController {
           e.code == 'camera_access_denied' || e.code == 'photo_access_denied';
       AppToast.show(
         context,
-        denied ? gloc.receipt_scan_permission_denied : gloc.receipt_scan_error,
+        denied ? gloc.receipt_scan_permission_denied : failure,
         type: ToastType.error,
       );
     } catch (e, st) {
@@ -174,7 +189,7 @@ class AddExpenseController {
         stackTrace: st,
       );
       if (context.mounted) {
-        AppToast.show(context, gloc.receipt_scan_error, type: ToastType.error);
+        AppToast.show(context, failure, type: ToastType.error);
       }
     }
   }

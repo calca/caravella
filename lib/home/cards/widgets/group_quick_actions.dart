@@ -11,10 +11,11 @@ import 'add_expense_controller.dart';
 import 'group_card_voice_button.dart';
 
 /// Row of shortcuts under the featured group card on Home: new expense from
-/// a receipt scan, new expense by voice, the group's map and search. They
-/// sit below the floating navigation and are reached by scrolling (#529).
-/// Scan and voice only appear where the device supports them; map and search
-/// are disabled until the group has places / expenses.
+/// a receipt scan (a receipt photo without reading it where scanning isn't
+/// available, e.g. F-Droid), new expense by voice, the group's map and
+/// search. They sit below the floating navigation and are reached by
+/// scrolling (#529). Voice only appears where the device supports it; map
+/// and search are disabled until the group has places / expenses.
 class GroupQuickActions extends StatelessWidget {
   final ExpenseGroup group;
 
@@ -40,16 +41,20 @@ class GroupQuickActions extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        if (canScan)
-          _QuickAction(
-            icon: Icons.document_scanner_outlined,
-            label: gloc.quick_action_scan,
-            semanticLabel: gloc.scan_receipt,
-            onTap: () => AddExpenseController(
-              group: group,
-              onExpenseAdded: onExpenseAdded,
-            ).scanReceiptAndAdd(context),
-          ),
+        // Without receipt reading (F-Droid) the same spot takes a photo of
+        // the receipt and attaches it, leaving amount and description to
+        // the user.
+        _QuickAction(
+          icon: canScan
+              ? Icons.document_scanner_outlined
+              : Icons.photo_camera_outlined,
+          label: canScan ? gloc.quick_action_scan : gloc.quick_action_photo,
+          semanticLabel: canScan ? gloc.scan_receipt : gloc.photo_add_expense,
+          onTap: () => AddExpenseController(
+            group: group,
+            onExpenseAdded: onExpenseAdded,
+          ).scanReceiptAndAdd(context, readReceipt: canScan),
+        ),
         // Hidden on devices without speech recognition.
         GroupCardVoiceButton(
           group: group,

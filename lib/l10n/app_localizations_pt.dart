@@ -2971,4 +2971,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get drive_backup_error => 'Não foi possível aceder ao Google Drive';
+
+  @override
+  String get quick_action_photo => 'Foto';
+
+  @override
+  String get photo_add_expense => 'Nova despesa com foto do recibo';
+
+  @override
+  String get receipt_photo_error => 'Não foi possível tirar a foto do recibo';
 }
