@@ -23,6 +23,9 @@ class ExpenseFormFields extends StatelessWidget {
   final VoidCallback onSaveExpense;
   final bool isReadOnly;
 
+  /// Paid-by and category on one line each (quick-add sheet).
+  final bool compactPills;
+
   const ExpenseFormFields({
     super.key,
     required this.controller,
@@ -35,6 +38,7 @@ class ExpenseFormFields extends StatelessWidget {
     required this.onCategoriesUpdated,
     this.onParticipantsUpdated,
     this.isReadOnly = false,
+    this.compactPills = false,
   });
 
   @override
@@ -135,6 +139,7 @@ class ExpenseFormFields extends StatelessWidget {
                 ? (name) => _onAddParticipantInline(context, name)
                 : null,
             enabled: !isReadOnly,
+            singleLine: compactPills,
           ),
           controller.isPaidByValid,
           controller.paidByTouched,
@@ -148,6 +153,7 @@ class ExpenseFormFields extends StatelessWidget {
             onAddCategory: () => _onAddCategory(context),
             onAddCategoryInline: (name) => _onAddCategoryInline(context, name),
             enabled: !isReadOnly,
+            singleLine: compactPills,
           ),
           controller.isCategoryValid(categories.isEmpty),
           controller.categoryTouched,

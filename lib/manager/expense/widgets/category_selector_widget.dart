@@ -23,7 +23,11 @@ class CategorySelectorWidget extends StatelessWidget {
     required this.onAddCategory,
     this.onAddCategoryInline,
     this.enabled = true,
+    this.singleLine = false,
   });
+
+  /// One line of pills, the rest behind "+N" (quick-add sheet).
+  final bool singleLine;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +50,7 @@ class CategorySelectorWidget extends StatelessWidget {
           addCategoryLabel: gloc.add_category,
           alreadyExistsMessage: '${gloc.category_name} ${gloc.already_exists}',
           sheetTitle: gloc.category,
+          singleLine: singleLine,
         ),
       ],
     );

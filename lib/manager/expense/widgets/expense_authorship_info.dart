@@ -124,9 +124,7 @@ class _ExpenseAuthorshipInfoState extends State<ExpenseAuthorshipInfo> {
                       const SizedBox(width: 4),
                       Text(
                         '${line.label} ${line.name}',
-                        style: textTheme.bodySmall?.copyWith(
-                          color: mutedColor,
-                        ),
+                        style: textTheme.bodySmall?.copyWith(color: mutedColor),
                       ),
                     ],
                   ),

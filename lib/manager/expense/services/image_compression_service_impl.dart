@@ -20,7 +20,7 @@ class ImageCompressionServiceImpl implements ImageCompressionService {
         'Starting image compression: ${file.path}',
         name: 'compression',
       );
-      
+
       // Run compression in a separate isolate to avoid blocking UI
       final result = await compute(
         _compressImageIsolate,
