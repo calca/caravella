@@ -117,7 +117,8 @@ class UserProfileCard extends StatelessWidget {
             foregroundColor: s.onSurface,
             child: user.hasName
                 ? Text(
-                    name.characters.first.toUpperCase(),
+                    // Two letters, like the participants' avatars.
+                    nameInitials(name),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),

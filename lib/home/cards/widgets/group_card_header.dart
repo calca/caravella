@@ -21,6 +21,9 @@ class GroupCardHeader extends StatelessWidget {
   /// `null` means sync status is unknown or not applicable.
   final bool? isSynced;
 
+  /// Text color; the theme's `onSurface` by default.
+  final Color? foreground;
+
   const GroupCardHeader({
     super.key,
     required this.group,
@@ -30,7 +33,10 @@ class GroupCardHeader extends StatelessWidget {
     this.showDateRange = true,
     this.showPinnedBadge = true,
     this.centerTitleHorizontally = false,
+    this.foreground,
   });
+
+  Color get _fg => foreground ?? theme.colorScheme.onSurface;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +55,7 @@ class GroupCardHeader extends StatelessWidget {
       style: theme.textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.w600,
         fontSize: HomeLayoutConstants.cardTitleFontSize,
+        color: _fg,
       ),
       overflow: TextOverflow.ellipsis,
     );
@@ -64,7 +71,7 @@ class GroupCardHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+        color: _fg.withValues(alpha: foreground == null ? 0.05 : 0.18),
         borderRadius: BorderRadius.circular(
           HomeLayoutConstants.buttonBorderRadius,
         ),
@@ -72,7 +79,7 @@ class GroupCardHeader extends StatelessWidget {
       child: Text(
         label,
         style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.onSurface,
+          color: _fg,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -95,11 +102,7 @@ class GroupCardHeader extends StatelessWidget {
         Row(
           children: [
             if (group.startDate != null || group.endDate != null) ...[
-              Icon(
-                Icons.event_outlined,
-                size: 14,
-                color: theme.colorScheme.onSurface,
-              ),
+              Icon(Icons.event_outlined, size: 14, color: _fg),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
@@ -108,9 +111,7 @@ class GroupCardHeader extends StatelessWidget {
                     end: group.endDate,
                     locale: Localizations.localeOf(context),
                   ),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
+                  style: theme.textTheme.bodySmall?.copyWith(color: _fg),
                 ),
               ),
             ] else
@@ -121,8 +122,10 @@ class GroupCardHeader extends StatelessWidget {
             if (group.syncEnabled)
               GroupSyncBadge(
                 group: group,
-                background: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                foreground: theme.colorScheme.onSurface,
+                background: _fg.withValues(
+                  alpha: foreground == null ? 0.05 : 0.18,
+                ),
+                foreground: _fg,
               ),
           ],
         ),

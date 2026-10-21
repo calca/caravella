@@ -1247,4 +1247,7 @@
   ,"quick_action_photo": "Foto"
   ,"photo_add_expense": "Nuevo gasto con foto del recibo"
   ,"receipt_photo_error": "No se pudo tomar la foto del recibo"
+  ,"crop_hint": "Arrastra y pellizca para elegir la parte que quieres"
+  ,"crop_preview": "Vista previa"
+  ,"crop_use_photo": "Usar esta foto"
 }

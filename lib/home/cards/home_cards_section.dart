@@ -304,8 +304,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       );
     }
 
-    // The featured card fills the screen above the floating navigation; the
-    // quick actions sit below it and are reached by scrolling. All groups
+    // The featured group's two cards (group, last expenses) fill the screen
+    // above the floating navigation; the quick actions sit below them and
+    // are reached by scrolling. All groups
     // live in the Groups tab, so there is no carousel any more (#529, #530).
     final bottomSafeArea = MediaQuery.paddingOf(context).bottom;
     return LayoutBuilder(
@@ -316,6 +317,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
               topSafeArea -
               HomeLayoutConstants.headerHeight -
               FloatingNavBar.reservedHeight -
+              HomeLayoutConstants.navBarGap -
               bottomSafeArea,
         );
         return Stack(
@@ -341,13 +343,14 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                             theme: theme,
                             onGroupUpdated: _handleGroupUpdated,
                             onCategoryAdded: _softLoadActiveGroups,
-                            isSelected: true,
-                            selectionProgress: 1.0,
                             showAddButton:
                                 AppShellScope.maybeOf(context) == null,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        // The shortcuts stay under the bar until scrolled.
+                        const SizedBox(
+                          height: 16 + HomeLayoutConstants.navBarGap,
+                        ),
                         GroupQuickActions(
                           group: featured,
                           onExpenseAdded: _handleGroupUpdated,

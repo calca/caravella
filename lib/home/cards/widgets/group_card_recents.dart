@@ -12,6 +12,9 @@ class GroupCardRecents extends StatefulWidget {
   /// How many recent expenses to show (fetched up to [maxCount]).
   final int count;
 
+  /// Shown at the end of the "Recent expenses" label row.
+  final Widget? trailing;
+
   static const int maxCount = 3;
 
   const GroupCardRecents({
@@ -20,6 +23,7 @@ class GroupCardRecents extends StatefulWidget {
     required this.localizations,
     required this.theme,
     this.count = 2,
+    this.trailing,
   });
 
   @override
@@ -31,12 +35,25 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
   String? _cachedGroupId;
 
   @override
+  void initState() {
+    super.initState();
+    // Until storage answers, the group's own expenses (newest first), so the
+    // card has its final size from the first frame.
+    _cachedRecentExpenses = _latestInMemory();
+  }
+
+  List<ExpenseDetails> _latestInMemory() =>
+      ([...widget.group.expenses]..sort((a, b) => b.date.compareTo(a.date)))
+          .take(GroupCardRecents.maxCount)
+          .toList();
+
+  @override
   void didUpdateWidget(GroupCardRecents oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Clear cache if group changed or expenses changed
     if (oldWidget.group.id != widget.group.id ||
         oldWidget.group.expenses.length != widget.group.expenses.length) {
-      _cachedRecentExpenses = null;
+      _cachedRecentExpenses = _latestInMemory();
       _cachedGroupId = null;
     }
   }
@@ -48,10 +65,12 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
     }
 
     // Fetch from storage API
-    final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
+    final stored = await ExpenseGroupStorageV2.getRecentExpenses(
       widget.group.id,
       limit: GroupCardRecents.maxCount,
     );
+    // A group not saved yet (or not found) keeps its own expenses.
+    final recentExpenses = stored.isEmpty ? _latestInMemory() : stored;
 
     // Cache the result
     _cachedRecentExpenses = recentExpenses;
@@ -99,13 +118,21 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.localizations.recent_expenses.toUpperCase(),
-          style: widget.theme.textTheme.labelSmall?.copyWith(
-            // outline is the AA-compliant secondary text color in both themes.
-            color: widget.theme.colorScheme.outline,
-            fontWeight: FontWeight.w400,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                widget.localizations.recent_expenses.toUpperCase(),
+                style: widget.theme.textTheme.labelSmall?.copyWith(
+                  // outline is the AA-compliant secondary text color in both
+                  // themes.
+                  color: widget.theme.colorScheme.outline,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            ?widget.trailing,
+          ],
         ),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),

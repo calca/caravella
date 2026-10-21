@@ -2,6 +2,22 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../themes/caravella_themes.dart';
 
+/// Two-letter initials of a person's name, as the avatars show them: first
+/// and last word ("John Doe" -> "JD"), else the first two letters ("Gigi" ->
+/// "GI"), uppercase.
+String nameInitials(String name) {
+  final parts = name
+      .trim()
+      .split(RegExp(r"\s+"))
+      .where((p) => p.isNotEmpty)
+      .toList();
+  if (parts.isEmpty) return '';
+  final initials = parts.length >= 2
+      ? '${parts.first.characters.first}${parts.last.characters.first}'
+      : parts.first.characters.take(2).toString();
+  return initials.toUpperCase();
+}
+
 /// Circular avatar showing a participant's initials.
 class ParticipantAvatar extends StatelessWidget {
   final ExpenseParticipant participant;
@@ -20,25 +36,7 @@ class ParticipantAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    // Build initials from first and last word when possible (e.g., "John Doe" -> "JD").
-    // Fallback to first two characters for single-word names.
-    final parts = participant.name
-        .trim()
-        .split(RegExp(r"\s+"))
-        .where((p) => p.isNotEmpty)
-        .toList();
-    String initials;
-    if (parts.length >= 2) {
-      final first = parts.first;
-      final last = parts.last;
-      initials =
-          (first.isNotEmpty ? first[0] : '') + (last.isNotEmpty ? last[0] : '');
-    } else if (participant.name.length >= 2) {
-      initials = participant.name.substring(0, 2);
-    } else {
-      initials = participant.name;
-    }
-    initials = initials.toUpperCase();
+    final initials = nameInitials(participant.name);
 
     // Screen readers announce the participant's name, not the initials.
     return Semantics(

@@ -9,8 +9,9 @@ import '../../../sync/group_sync_badge.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
 
 /// The group's photo or color behind the top of its page, melting into
-/// [pageColor] at the bottom: a photo is only hinted (as on the Home and
-/// Groups cards), a color is shown full at the top.
+/// [pageColor] at the bottom. A photo (as on the Home and Groups cards) is in
+/// full color at the top and melts into the page color, where dates, title
+/// and figure cards keep the theme's colors.
 class GroupHeaderBand extends StatelessWidget {
   final ExpenseGroup group;
   final Color pageColor;
@@ -36,6 +37,9 @@ class GroupHeaderBand extends StatelessWidget {
         : null;
   }
 
+  /// Extra room above the title with a photo, so the photo shows.
+  static const double photoExtraTop = 96;
+
   /// Text color for the band's upper part (title, top bar).
   static Color foregroundOf(ExpenseGroup group, ColorScheme s) {
     final color = colorOf(group, s);
@@ -51,26 +55,32 @@ class GroupHeaderBand extends StatelessWidget {
     final color = colorOf(group, s);
     if (photo == null && color == null) return ColoredBox(color: pageColor);
 
+    if (photo != null) {
+      // Dates, title and figure cards on the page color; the photo melts
+      // into it above them, with a light shade under the status bar.
+      return PhotoVeil(
+        path: photo,
+        color: pageColor,
+        topShade: true,
+        solidExtent: 160,
+        fadeExtent: 160,
+      );
+    }
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (photo != null)
-          PhotoVeil(path: photo, color: pageColor)
-        else
-          ColoredBox(color: color!),
+        ColoredBox(color: color!),
         DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: photo != null
-                  ? [pageColor.withValues(alpha: 0), pageColor]
-                  : [
-                      pageColor.withValues(alpha: 0),
-                      pageColor.withValues(alpha: 0),
-                      pageColor,
-                    ],
-              stops: photo != null ? const [0.55, 1] : const [0, 0.5, 1],
+              colors: [
+                pageColor.withValues(alpha: 0),
+                pageColor.withValues(alpha: 0),
+                pageColor,
+              ],
+              stops: const [0, 0.5, 1],
             ),
           ),
         ),

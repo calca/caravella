@@ -81,38 +81,6 @@ void main() {
           );
         }
       });
-
-      test('card text stays readable over the light photo veil', () {
-        // PhotoVeil: the Home card puts its surface over the photo and uses
-        // primary and secondary text; Groups cards use surfaceContainerHighest
-        // with onSurface (secondary lines at 80 %).
-        final cases = {
-          scheme.surface: [
-            scheme.onSurface,
-            scheme.onSurfaceVariant,
-            scheme.outline,
-          ],
-          scheme.surfaceContainerHighest: [
-            scheme.onSurface,
-            scheme.onSurface.withValues(alpha: 0.8),
-          ],
-        };
-        cases.forEach((card, texts) {
-          for (final photo in [Colors.white, Colors.black]) {
-            final veiled = Color.alphaBlend(
-              card.withValues(alpha: PhotoVeil.alpha),
-              photo,
-            );
-            for (final text in texts) {
-              expect(
-                _contrast(Color.alphaBlend(text, veiled), veiled),
-                greaterThanOrEqualTo(4.5),
-                reason: '$text on $card over $photo',
-              );
-            }
-          }
-        });
-      });
     });
   }
 }

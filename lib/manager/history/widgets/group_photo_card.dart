@@ -13,8 +13,8 @@ import 'group_options.dart';
 /// favorite group at the top.
 ///
 /// Every card shares one background treatment so they look alike:
-/// - **photo**: just hinted under the raised surface ([PhotoVeil], like the
-///   Home card), with the theme's text colors;
+/// - **photo**: full color on top, melting into the surface the text sits on
+///   ([PhotoVeil], like the Home card and the group page);
 /// - **color**: the palette color, with contrasting text;
 /// - **neither**: the raised surface of the Home card, with the group type
 ///   icon.
@@ -63,7 +63,15 @@ class GroupPhotoCard extends StatelessWidget {
     final total = group.getTotalExpenses();
 
     final background = hasPhoto
-        ? PhotoVeil(path: file, color: s.surfaceContainerHighest)
+        // Photo in full color on top, melting into the surface the text
+        // sits on.
+        ? PhotoVeil(
+            path: file,
+            // The same raised surface as the cards without a photo.
+            color: s.raisedSurface,
+            solidExtent: wide ? 72 : 84,
+            fadeExtent: wide ? 100 : 110,
+          )
         // No photo or color: the same raised surface as the Home card.
         : ColoredBox(color: color ?? s.raisedSurface);
 

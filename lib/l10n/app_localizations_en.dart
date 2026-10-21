@@ -2971,4 +2971,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get receipt_photo_error => 'Couldn\'t take the receipt photo';
+
+  @override
+  String get crop_hint => 'Drag and pinch to choose the part to keep';
+
+  @override
+  String get crop_preview => 'Preview';
+
+  @override
+  String get crop_use_photo => 'Use this photo';
 }

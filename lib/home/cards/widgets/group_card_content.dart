@@ -1,22 +1,21 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:provider/provider.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 import 'group_card_header.dart';
 import 'group_card_amounts.dart';
-import 'group_card_get_started.dart';
-// group_card_stats.dart removed import (not needed here)
 import 'add_expense_controller.dart';
-import 'group_card_recents.dart';
 
-/// Main content widget for expense group cards.
+/// The group card on Home (the first of the two): title and dates, total and
+/// today's spending, and a calm wave of the spending over the period.
 ///
-/// This is a composition of smaller, focused widgets:
-/// - [GroupCardHeader] - Title and date range
-/// - [GroupCardTotalAmount] - Total expenses display
-/// - [GroupCardStats] - Charts and statistics
-/// - [GroupCardAddButton] - Add expense button
-class GroupCardContent extends StatefulWidget {
+/// With a photo, the photo fills the top of the card in full color and melts
+/// into the card color, where title, dates and figures keep the theme's
+/// colors. The recent expenses
+/// are in the second card ([GroupCardActivity]).
+class GroupCardContent extends StatelessWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
   final ThemeData theme;
@@ -33,6 +32,9 @@ class GroupCardContent extends StatefulWidget {
   /// See [GroupCard.showAddButton].
   final bool showAddButton;
 
+  /// The group photo, drawn as the card's cover.
+  final String? photoPath;
+
   const GroupCardContent({
     super.key,
     required this.group,
@@ -43,143 +45,148 @@ class GroupCardContent extends StatefulWidget {
     this.onCategoryAdded,
     this.isSynced,
     this.showAddButton = true,
+    this.photoPath,
   });
 
-  @override
-  State<GroupCardContent> createState() => _GroupCardContentState();
-}
+  /// Card height from which the spending wave fits under the figures.
+  static const double waveMinHeight = 300;
 
-/// Card content height from which three recent expenses fit instead of two.
-const double _threeRecentsMinHeight = 560;
+  /// Same, with a photo cover above the figures.
+  static const double photoWaveMinHeight = 440;
 
-/// Height taken by the add-expense button row.
-const double _addButtonExtent = 64;
-
-class _GroupCardContentState extends State<GroupCardContent> {
-  late ExpenseGroup _currentGroup;
-  ExpenseGroupNotifier? _groupNotifier;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentGroup = widget.group;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // Listen to notifier for updates
-    _groupNotifier?.removeListener(_onGroupUpdated);
-    _groupNotifier = context.read<ExpenseGroupNotifier>();
-    _groupNotifier?.addListener(_onGroupUpdated);
-  }
-
-  @override
-  void dispose() {
-    _groupNotifier?.removeListener(_onGroupUpdated);
-    super.dispose();
-  }
-
-  void _onGroupUpdated() {
-    // Only update if this specific group was modified
-    if (_groupNotifier?.currentGroup?.id == widget.group.id) {
-      if (mounted) {
-        setState(() {
-          _currentGroup = _groupNotifier!.currentGroup!;
-        });
-      }
-    }
-  }
-
-  @override
-  void didUpdateWidget(GroupCardContent oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Update current group if the widget's group changed
-    // (any new instance: the Home reloads a group after its participants,
-    // photo or color change, and the checklist must follow).
-    if (!identical(oldWidget.group, widget.group)) {
-      _currentGroup = widget.group;
-    }
-  }
+  static const double _padding = 24;
 
   @override
   Widget build(BuildContext context) {
-    final addExpenseController = AddExpenseController(
-      group: _currentGroup,
-      onExpenseAdded: widget.onExpenseAdded,
-      onCategoryAdded: widget.onCategoryAdded,
+    final photo = photoPath;
+    final header = MergeSemantics(
+      child: Semantics(
+        button: onOpen != null,
+        onTap: onOpen,
+        child: GroupCardHeader(
+          group: group,
+          localizations: localizations,
+          theme: theme,
+          isSynced: isSynced,
+        ),
+      ),
     );
-
-    return LayoutBuilder(
-      builder: (ctx2, constraints) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            MergeSemantics(
-              child: Semantics(
-                button: widget.onOpen != null,
-                onTap: widget.onOpen,
-                child: GroupCardHeader(
-                  group: _currentGroup,
-                  localizations: widget.localizations,
-                  theme: widget.theme,
-                  isSynced: widget.isSynced,
-                ),
+    final amounts = GroupCardAmounts(
+      group: group,
+      theme: theme,
+      localizations: localizations,
+    );
+    final addButton = showAddButton
+        ? Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: GroupCardAddButton(
+              group: group,
+              theme: theme,
+              controller: AddExpenseController(
+                group: group,
+                onExpenseAdded: onExpenseAdded,
+                onCategoryAdded: onCategoryAdded,
               ),
             ),
-            const Spacer(),
-            // No expenses yet: a getting-started checklist instead of the
-            // amounts and the recent expenses.
-            if (_currentGroup.expenses.isEmpty)
-              GroupCardGetStarted(
-                group: _currentGroup,
-                theme: widget.theme,
-                localizations: widget.localizations,
-                onAddExpense: () => addExpenseController.showAddExpenseSheet(
-                  context,
-                  _currentGroup,
-                ),
-              )
-            else ...[
-              GroupCardAmounts(
-                group: _currentGroup,
-                theme: widget.theme,
-                localizations: widget.localizations,
-              ),
-              const Spacer(),
-              GroupCardRecents(
-                key: ValueKey(
-                  'recents_${_currentGroup.id}_${_currentGroup.expenses.length}',
-                ),
-                group: _currentGroup,
-                localizations: widget.localizations,
-                theme: widget.theme,
-                // A third recent expense when the card is tall enough (it
-                // takes the space of the add button when that is hidden).
-                count:
-                    constraints.maxHeight >=
-                        _threeRecentsMinHeight -
-                            (widget.showAddButton ? 0 : _addButtonExtent)
-                    ? 3
-                    : 2,
-              ),
-            ],
-            if (widget.showAddButton)
-              Row(
+          )
+        : null;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final wave = constraints.maxHeight >= waveMinHeight
+            ? _wave(context)
+            : null;
+
+        if (photo == null) {
+          return Padding(
+            padding: const EdgeInsets.all(_padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                header,
+                const Spacer(),
+                amounts,
+                const Spacer(),
+                ?wave,
+                ?addButton,
+              ],
+            ),
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
                 children: [
-                  Expanded(
-                    child: GroupCardAddButton(
-                      group: _currentGroup,
-                      theme: widget.theme,
-                      controller: addExpenseController,
+                  PhotoVeil(
+                    path: photo,
+                    color: theme.colorScheme.surface,
+                    // Title and dates sit on the plain surface below.
+                    solidExtent: 72,
+                    fadeExtent: 180,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      _padding,
+                      _padding,
+                      _padding,
+                      12,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [header],
                     ),
                   ),
                 ],
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                _padding,
+                16,
+                _padding,
+                _padding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  amounts,
+                  // The photo needs room to show: the wave only on cards
+                  // tall enough for both.
+                  if (wave != null &&
+                      constraints.maxHeight >= photoWaveMinHeight) ...[
+                    const SizedBox(height: 16),
+                    wave,
+                  ],
+                  ?addButton,
+                ],
+              ),
+            ),
           ],
         );
       },
+    );
+  }
+
+  /// The spending over the group's period, or null with too little to draw.
+  Widget? _wave(BuildContext context) {
+    final series = buildGroupSpendingSeries(group);
+    if (series == null || !SpendingWave.canShow(series.values)) return null;
+    final locale = Localizations.localeOf(context).toString();
+    final format = DateFormat.MMMd(locale);
+    final now = DateTime.now();
+    final endsToday =
+        series.end.year == now.year &&
+        series.end.month == now.month &&
+        series.end.day == now.day;
+    return SpendingWave(
+      values: series.values,
+      startLabel: format.format(series.start),
+      endLabel: endsToday ? localizations.today : format.format(series.end),
     );
   }
 }

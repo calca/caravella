@@ -1,18 +1,24 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import '../../../manager/details/pages/expense_group_detail_page.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'add_expense_controller.dart';
+import 'group_card_activity.dart';
 import 'group_card_content.dart';
 
-class GroupCard extends StatelessWidget {
+/// The featured group on Home, as two cards: the group itself (title, dates,
+/// total, today, spending wave — [GroupCardContent]) filling the space, and
+/// below it the last expenses with "See all" ([GroupCardActivity]).
+///
+/// The group's photo or color only goes on the first card.
+class GroupCard extends StatefulWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupUpdated;
   final VoidCallback? onCategoryAdded;
-  final bool isSelected;
-  final double selectionProgress;
 
   /// Whether this group's data is fully synced with peers.
   final bool? isSynced;
@@ -28,95 +34,137 @@ class GroupCard extends StatelessWidget {
     required this.theme,
     required this.onGroupUpdated,
     this.onCategoryAdded,
-    this.isSelected = false,
-    this.selectionProgress = 0.0,
     this.isSynced,
     this.showAddButton = true,
   });
 
-  Color _getSelectedColor(bool isDarkMode) {
-    return theme.colorScheme.surface;
-  }
+  /// Space between the two cards.
+  static const double gap = 12;
 
-  Future<void> _openGroup(BuildContext context) async {
-    final result = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ExpenseGroupDetailPage(trip: group),
-      ),
-    );
-    if (result == true) {
-      onGroupUpdated();
-    }
+  @override
+  State<GroupCard> createState() => _GroupCardState();
+}
+
+class _GroupCardState extends State<GroupCard> {
+  late ExpenseGroup _group;
+  ExpenseGroupNotifier? _notifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _group = widget.group;
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _notifier?.removeListener(_onNotifierChanged);
+    _notifier = context.read<ExpenseGroupNotifier>();
+    _notifier?.addListener(_onNotifierChanged);
+  }
+
+  @override
+  void didUpdateWidget(GroupCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Any new instance: the Home reloads a group after its participants,
+    // photo or color change, and the checklist must follow.
+    if (!identical(oldWidget.group, widget.group)) _group = widget.group;
+  }
+
+  @override
+  void dispose() {
+    _notifier?.removeListener(_onNotifierChanged);
+    super.dispose();
+  }
+
+  void _onNotifierChanged() {
+    final current = _notifier?.currentGroup;
+    if (current != null && current.id == widget.group.id && mounted) {
+      setState(() => _group = current);
+    }
+  }
+
+  Future<void> _openGroup() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => ExpenseGroupDetailPage(trip: _group)),
+    );
+    if (result == true) widget.onGroupUpdated();
+  }
+
+  void _addExpense() => AddExpenseController(
+    group: _group,
+    onExpenseAdded: widget.onGroupUpdated,
+    onCategoryAdded: widget.onCategoryAdded,
+  ).showAddExpenseSheet(context, _group);
+
+  @override
   Widget build(BuildContext context) {
-    final isDarkMode = theme.brightness == Brightness.dark;
-    final selectedColor = _getSelectedColor(isDarkMode);
-
-    // Resolve base background using the shared utility, then blend with
-    // selection progress for the interactive selection highlight.
+    final theme = widget.theme;
     final bg = GroupBackgroundUtils.resolve(
-      group,
+      _group,
       theme.colorScheme,
-      baseColor: Color.lerp(
-        theme.colorScheme.surface,
-        selectedColor,
-        selectionProgress * 0.3,
-      ),
+      baseColor: theme.colorScheme.surface,
     );
-
-    // Photo: just hinted under the card color (PhotoVeil, as on the Groups
-    // cards), so the content keeps the theme's text colors.
     final photo = bg.hasImage ? bg.imagePath : null;
-    final card = BaseCard(
-      isFlat: false,
-      noBorder: true, // CardOutline draws the edge
-      margin: EdgeInsets.zero,
-      borderRadius: BorderRadius.circular(32),
-      backgroundColor: photo != null ? Colors.transparent : bg.color,
-      backgroundGradient: photo != null ? null : bg.gradient,
-      onTap: () => _openGroup(context),
-      // The card hosts its own buttons and tappable rows, so it is not
-      // collapsed into one node; the header carries the "open group" action.
-      mergeSemantics: false,
-      child: GroupCardContent(
-        onOpen: () => _openGroup(context),
-        group: group,
-        localizations: localizations,
-        theme: theme,
-        onExpenseAdded: onGroupUpdated,
-        showAddButton: showAddButton,
-        onCategoryAdded: onCategoryAdded,
-        isSynced: isSynced,
-      ),
-    );
     final radius = BorderRadius.circular(32);
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      height: double.infinity, // Assicura che usi tutto lo spazio verticale
-      padding: const EdgeInsets.only(bottom: 16),
-      child: CardOutline(
+    final groupCard = CardOutline(
+      borderRadius: radius,
+      child: BaseCard(
+        isFlat: false,
+        noBorder: true, // CardOutline draws the edge
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
         borderRadius: radius,
-        child: photo == null
-            ? card
-            : Stack(
-                children: [
-                  Positioned.fill(
-                    child: ClipRRect(
-                      borderRadius: radius,
-                      child: PhotoVeil(
-                        path: photo,
-                        color: theme.colorScheme.surface,
-                      ),
-                    ),
-                  ),
-                  card,
-                ],
-              ),
+        backgroundColor: photo != null ? theme.colorScheme.surface : bg.color,
+        backgroundGradient: photo != null ? null : bg.gradient,
+        onTap: _openGroup,
+        // The header carries the "open group" action for screen readers.
+        mergeSemantics: false,
+        child: ClipRRect(
+          borderRadius: radius,
+          child: GroupCardContent(
+            onOpen: _openGroup,
+            group: _group,
+            localizations: widget.localizations,
+            theme: theme,
+            onExpenseAdded: widget.onGroupUpdated,
+            showAddButton: widget.showAddButton,
+            onCategoryAdded: widget.onCategoryAdded,
+            isSynced: widget.isSynced,
+            photoPath: photo,
+          ),
+        ),
       ),
+    );
+
+    final activityCard = CardOutline(
+      borderRadius: radius,
+      child: BaseCard(
+        isFlat: false,
+        noBorder: true,
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
+        borderRadius: radius,
+        backgroundColor: theme.colorScheme.surface,
+        mergeSemantics: false,
+        child: GroupCardActivity(
+          group: _group,
+          localizations: widget.localizations,
+          theme: theme,
+          onSeeAll: _openGroup,
+          onAddExpense: _addExpense,
+        ),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(child: groupCard),
+        const SizedBox(height: GroupCard.gap),
+        activityCard,
+      ],
     );
   }
 }

@@ -476,7 +476,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     final bandColor = GroupHeaderBand.colorOf(trip, s);
     final bandForeground = GroupHeaderBand.foregroundOf(trip, s);
     final barForeground = _barOpaque ? s.onSurface : bandForeground;
-    final bool? forceStatusBarLight = bandColor != null && !_barOpaque
+    final hasPhoto = GroupHeaderBand.photoOf(trip) != null;
+    final bool? forceStatusBarLight = _barOpaque
+        ? null
+        : hasPhoto
+        ? true // light icons on the photo's shaded top
+        : bandColor != null
         ? !ExpenseGroupColorPalette.isLightColor(bandColor)
         : null;
 
@@ -536,7 +541,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                       Padding(
                         padding: EdgeInsets.fromLTRB(
                           20,
-                          topInset + _topBarHeight + 4,
+                          topInset +
+                              _topBarHeight +
+                              4 +
+                              (hasPhoto ? GroupHeaderBand.photoExtraTop : 0),
                           20,
                           20,
                         ),

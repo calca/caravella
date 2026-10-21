@@ -1233,4 +1233,7 @@
   ,"quick_action_photo": "Foto"
   ,"photo_add_expense": "Nuova spesa dalla foto dello scontrino"
   ,"receipt_photo_error": "Impossibile scattare la foto dello scontrino"
+  ,"crop_hint": "Trascina e pizzica per scegliere la parte da tenere"
+  ,"crop_preview": "Anteprima"
+  ,"crop_use_photo": "Usa questa foto"
 }

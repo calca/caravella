@@ -43,6 +43,7 @@ export 'widgets/charts/chart_type.dart';
 export 'widgets/charts/date_range_expense_chart.dart';
 export 'widgets/charts/last_15_days_bar_chart.dart';
 export 'widgets/charts/monthly_expense_chart.dart';
+export 'widgets/charts/spending_wave.dart';
 export 'widgets/charts/weekly_expense_chart.dart';
 
 // Map widgets
