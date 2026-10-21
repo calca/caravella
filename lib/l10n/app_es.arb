@@ -1,17 +1,11 @@
 {
   "@@locale": "es",
-  "developer_section_title": "Desarrollador y Soporte",
+  "developer_section_title": "Desarrollador y soporte",
   "@developer_section_title": {"description": "Título de la sección para enlaces de desarrollador y soporte en DeveloperPage"},
-  "developer_section_desc": "Apoya al desarrollador o ver perfil",
-  "@developer_section_desc": {"description": "Descripción de la sección para enlaces de desarrollador y soporte en DeveloperPage"},
-  "repo_section_title": "Código fuente y problemas",
+  "repo_section_title": "Código e incidencias",
   "@repo_section_title": {"description": "Título de la sección para enlaces de repositorio y problemas en DeveloperPage"},
-  "repo_section_desc": "Ver código fuente o reportar un problema",
-  "@repo_section_desc": {"description": "Descripción de la sección para enlaces de repositorio y problemas en DeveloperPage"},
   "license_section_title": "Licencia",
   "@license_section_title": {"description": "Título de la sección para enlace de licencia en DeveloperPage"},
-  "license_section_desc": "Ver la licencia de código abierto",
-  "@license_section_desc": {"description": "Descripción de la sección para enlace de licencia en DeveloperPage"},
   "weeklyChartBadge": "S",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"
@@ -40,10 +34,7 @@
   "settings_flag_secure_title": "Pantalla segura",
   "settings_app_functions_title": "Acceso de agentes de IA",
   "settings_app_functions_desc": "Usa Gemini y otros asistentes IA",
-  "settings_privacy": "Privacidad",
-  "select_currency": "Seleccionar moneda",
-  "select_period_hint_short": "Establecer fechas",
-  "select_period_hint": "Seleccionar fechas",
+  "select_currency": "Moneda",
   "suggested_duration": "Duración sugerida",
   "days_count": "{count} días",
   "@days_count": {"description": "Número de días", "placeholders": {"count": {"type": "int"}}},
@@ -67,251 +58,153 @@
   "month_november": "Noviembre",
   "month_december": "Diciembre",
   "in_group_prefix": "en",
-  "save_change_expense": "Guardar cambios",
   "group_total": "Total",
-  "total_spent": "Total gastado",
-  "@total_spent": {"description": "Etiqueta mostrada antes del total gastado en el grupo"},
-  "download_all_csv": "Descargar todo (CSV)",
-  "share_all_csv": "Compartir todo (CSV)",
-  "download_all_ofx": "Descargar todo (OFX)",
-  "share_all_ofx": "Compartir todo (OFX)",
-  "download_all_markdown": "Descargar todo (Markdown)",
-  "share_all_markdown": "Compartir todo (Markdown)",
   "markdown_select_directory_title": "Seleccionar carpeta para guardar Markdown",
   "markdown_saved_in": "Markdown guardado en: {path}",
   "markdown_save_cancelled": "Exportación Markdown cancelada",
   "markdown_save_error": "Error al guardar el archivo Markdown",
   "share_label": "Compartir",
-  "share_text_label": "Compartir texto",
-  "share_image_label": "Compartir imagen",
-  "export_share": "Compartir y Exportar",
-  "contribution_percentages": "Porcentajes",
-  "contribution_percentages_desc": "Parte del total pagada por cada participante",
-  "export_options": "Opciones de Exportación",
+  "export_share": "Compartir y exportar",
+  "export_options": "Exportar gastos",
   "welcome_v3_title": "Organiza.\nComparte.\nLiquida.\n ",
-  "emptyGroupState1": "¡Tu **viaje** comienza aquí!",
-  "@emptyGroupState1": {"description": "Empty state message 1 for groups with no expenses"},
-  "emptyGroupState2": "¿Listo para registrar tu **primer** gasto?",
-  "@emptyGroupState2": {"description": "Empty state message 2 for groups with no expenses"},
-  "emptyGroupState3": "¡**Sin** gastos... aún!",
-  "@emptyGroupState3": {"description": "Empty state message 3 for groups with no expenses"},
-  "emptyGroupState4": "¡Comencemos esta **aventura**!",
-  "@emptyGroupState4": {"description": "Empty state message 4 for groups with no expenses"},
-  "emptyGroupState5": "El **primer** gasto es siempre especial",
-  "@emptyGroupState5": {"description": "Empty state message 5 for groups with no expenses"},
   "good_morning": "Buenos días",
   "good_afternoon": "Buenas tardes",
   "good_evening": "Buenas noches",
-  "your_groups": "Tus grupos",
   "see_all": "Ver todos",
   "@see_all": {"description": "Etiqueta CTA para abrir la página de historial y ver todos los grupos"},
   "view_all_groups": "Ver todos los grupos",
   "@view_all_groups": {"description": "Etiqueta CTA para ver todos los grupos archivados desde el estado vacío"},
   "no_active_groups": "No hay grupos activos",
-  "no_active_groups_subtitle": "Crea un grupo de gastos",
   "create_first_group": "Crear un grupo",
   "new_expense_group": "Nuevo",
-  "tap_to_create": "Tocar para crear",
-  "no_expense_label": "No se encontraron gastos",
-  "image": "Imagen",
-  "select_image": "Seleccionar Imagen",
-  "change_image": "Cambiar Imagen",
-  "from_gallery": "Desde Galería",
-  "from_camera": "Desde Cámara",
-  "remove_image": "Eliminar Imagen",
+  "image": "Foto",
+  "change_image": "Cambiar foto",
+  "from_gallery": "Desde la galería",
+  "from_camera": "Desde la cámara",
   "cannot_delete_assigned_participant": "No se puede eliminar el participante: está asignado a uno o más gastos",
   "@cannot_delete_assigned_participant": {"description": "Se muestra al intentar eliminar un participante que está en uso por gastos existentes"},
   "cannot_delete_assigned_category": "No se puede eliminar la categoría: está asignada a uno o más gastos",
   "@cannot_delete_assigned_category": {"description": "Se muestra al intentar eliminar una categoría que está en uso por gastos existentes"},
   "color": "Color",
-  "remove_color": "Eliminar Color",
-  "color_alternative": "Alternativa a imagen",
   "background": "Fondo",
-  "select_background": "Seleccionar Fondo",
-  "background_options": "Opciones de Fondo",
-  "choose_image_or_color": "Elige imagen o color",
   "participants_description": "Personas que comparten costos",
   "categories_description": "Agrupar gastos por tipo",
-  "dates_description": "Inicio y fin opcionales",
-  "currency_description": "Moneda base para el grupo",
+  "dates_description": "Inicio y fin, opcionales",
   "background_color_selected": "Color seleccionado",
   "background_tap_to_replace": "Tocar para reemplazar",
   "background_tap_to_change": "Tocar para cambiar",
-  "background_select_image_or_color": "Seleccionar imagen o color",
+  "background_select_image_or_color": "Elige una foto o un color",
   "background_random_color": "Color aleatorio",
   "background_remove": "Eliminar fondo",
-  "crop_image_title": "Recortar imagen",
+  "crop_image_title": "Recorta la foto",
   "crop_confirm": "Confirmar",
-  "saving": "Guardando...",
-  "processing_image": "Procesando imagen...",
-  "no_trips_found": "¿A dónde quieres ir?",
+  "saving": "Guardando…",
   "expenses": "Gastos",
   "participants": "Participantes",
   "participants_label": "Participantes",
   "last_7_days": "Últimos 7 días",
   "today": "Hoy",
   "this_month": "Este mes",
-  "recent_activity": "Actividad reciente",
   "recent_expenses": "Gastos recientes",
   "@recent_expenses": {"description": "Etiqueta para la sección de gastos recientes"},
-  "about": "Acerca de",
-  "license_hint": "Esta aplicación se distribuye bajo licencia MIT.",
   "license_link": "Ver licencia MIT en GitHub",
-  "license_section": "Licencia",
-  "add_trip": "Agregar grupo",
-  "new_group": "Nuevo Grupo",
+  "add_trip": "Añadir grupo",
   "create": "Crear",
   "group_name": "Nombre",
   "enter_title": "Introducir un nombre",
-  "enter_participant": "Introducir al menos un participante",
-  "select_start": "Seleccionar inicio",
-  "select_end": "Seleccionar fin",
-  "start_date_not_selected": "Seleccionar inicio",
-  "end_date_not_selected": "Seleccionar fin",
-  "select_from_date": "Seleccionar desde",
-  "select_to_date": "Seleccionar hasta",
-  "date_range_not_selected": "Seleccionar período",
-  "date_range_partial": "Seleccionar ambas fechas",
   "save": "Guardar",
-  "delete_trip": "Eliminar viaje",
-  "delete_trip_confirm": "¿Estás seguro de que quieres eliminar este viaje?",
   "cancel": "Cancelar",
   "ok": "OK",
-  "from_to": "{start} - {end}",
   "add_expense": "Nuevo gasto",
   "edit_expense": "Editar gasto",
   "expand_form": "Expandir formulario",
-  "expand_form_tooltip": "Agregar fecha, ubicación y notas",
+  "expand_form_tooltip": "Añadir fecha, ubicación y notas",
   "category": "Categoría",
   "amount": "Cantidad",
   "invalid_amount": "Cantidad inválida",
-  "no_categories": "Sin categorías",
-  "add_category": "Agregar categoría",
+  "add_category": "Añadir categoría",
   "category_name": "Nombre de categoría",
   "note": "Nota",
   "note_hint": "Nota",
   "select_both_dates": "Si seleccionas una fecha, debes seleccionar ambas",
-  "select_both_dates_or_none": "Selecciona ambas fechas o deja ambas vacías",
   "end_date_after_start": "La fecha de fin debe ser posterior a la de inicio",
-  "start_date_optional": "Desde",
-  "end_date_optional": "Hasta",
-  "dates": "Período",
   "expenses_by_participant": "Por participante",
   "expenses_by_category": "Por categoría",
   "uncategorized": "Sin categoría",
   "backup": "Respaldo",
-  "no_trips_to_backup": "No hay viajes para respaldar",
+  "no_trips_to_backup": "No hay grupos para guardar",
   "backup_error": "Error en el respaldo",
   "backup_share_message": "Aquí está tu respaldo de Caravella",
-  "import": "Importar",
   "import_confirm_title": "Importar datos",
-  "import_confirm_message": "¿Estás seguro de que quieres sobrescribir todos los viajes con el archivo \"{file}\"? Esta acción no se puede deshacer.",
-  "import_success": "¡Importación exitosa! Datos recargados.",
-  "import_error": "Importación fallida. Verifica el formato del archivo.",
-  "settings_flag_secure_error": "Couldn't change screen security",
-  "settings_debug_logs_title": "Debug Logs",
+  "import_confirm_message": "¿Restaurar desde el archivo «{file}»? Los grupos actuales se sustituirán y no se podrá deshacer.",
+  "import_success": "Datos restaurados",
+  "import_error": "No se pudo restaurar: revisa el archivo",
+  "settings_flag_secure_error": "No se pudo cambiar la protección de pantalla",
+  "settings_debug_logs_title": "Registros de depuración",
   "settings_debug_logs_desc": "Registros y errores de la app",
-  "developer_link_error": "Couldn't open the link",
-  "whats_new_load_error": "Failed to load",
+  "developer_link_error": "No se pudo abrir el enlace",
+  "whats_new_load_error": "No se pudieron cargar las novedades",
   "categories": "Categorías",
   "from": "Desde",
   "to": "Hasta",
-  "add": "Agregar",
+  "add": "Añadir",
   "participant_name": "Nombre del participante",
-  "participant_name_hint": "Introducir nombre del participante",
   "edit_participant": "Editar participante",
-  "delete_participant": "Eliminar participante",
-  "add_participant": "Agregar participante",
-  "no_participants": "Sin participantes",
-  "category_name_hint": "Introducir nombre de la categoría",
+  "add_participant": "Añadir participante",
   "edit_category": "Editar categoría",
-  "delete_category": "Eliminar categoría",
-  "participant_name_semantics": "Participante: {name}",
-  "category_name_semantics": "Categoría: {name}",
   "currency": "Moneda",
   "settings_tab": "Configuración",
-  "other_settings": "Otras configuraciones",
   "other_settings_desc": "Notificación, ubicación",
   "segment_general": "General",
   "segment_other": "Otro",
-  "basic_info": "Información Básica",
   "settings": "Configuración",
   "history": "Historial",
-  "all": "TODOS",
-  "search_groups": "Buscar grupos...",
-  "no_search_results": "No se encontraron grupos para",
+  "all": "Todos",
+  "search_groups": "Buscar grupos…",
+  "no_search_results": "No se encontraron grupos",
   "try_different_search": "Intenta buscar con palabras diferentes",
   "show_search": "Mostrar barra de búsqueda",
   "@show_search": {"description": "Tooltip para mostrar la barra de búsqueda de grupos"},
-  "hide_search": "Ocultar barra de búsqueda",
-  "@hide_search": {"description": "Tooltip para ocultar la barra de búsqueda de grupos"},
-  "expense_groups_title": "Grupos de gastos",
-  "@expense_groups_title": {"description": "Encabezado principal para la lista de grupos de gastos en la página de historial"},
-  "expense_groups_desc": "Gestiona tus grupos de gastos",
-  "@expense_groups_desc": {"description": "Subtítulo que describe la sección de grupos de gastos"},
   "active": "Activo",
   "archived": "Archivado",
   "archive": "Archivar",
-  "unarchive": "Desarchivar",
+  "unarchive": "Sacar del archivo",
   "pin": "Favorito",
   "unpin": "Desfavorito",
-  "delete": "Eliminar",
-  "undo": "DESHACER",
   "archived_with_undo": "Archivado",
-  "unarchived_with_undo": "Desarchivado",
+  "unarchived_with_undo": "Sacado del archivo",
   "pinned_with_undo": "Marcado como favorito",
   "unpinned_with_undo": "Favorito quitado",
   "deleted_with_undo": "Eliminado",
-  "archive_confirm": "¿Quieres archivar",
-  "unarchive_confirm": "¿Quieres desarchivar",
-  "overview": "Resumen",
   "statistics": "Estadísticas",
   "period": "Período",
   "total_expenses": "Total de gastos",
   "number_of_expenses": "Número de gastos",
-  "options": "Opciones",
-  "show_overview": "Mostrar resumen",
-  "show_statistics": "Mostrar estadísticas",
-  "no_expenses_to_display": "No hay gastos para mostrar",
-  "no_expenses_to_analyze": "No hay gastos para analizar",
   "select_expense_date": "Seleccionar fecha del gasto",
   "select_expense_date_short": "Seleccionar fecha",
   "date": "Fecha",
-  "edit_group": "Editar Grupo",
-  "edit_group_desc": "Modifica la configuración, participantes y categorías del grupo",
-  "new_group_desc": "Crea un nuevo grupo de gastos con configuración personalizada",
   "delete_group": "Eliminar grupo",
-  "delete_group_confirm": "¿Estás seguro de que quieres eliminar este grupo de gastos? Esta acción no se puede deshacer.",
-  "add_expense_fab": "Agregar Gasto",
+  "delete_group_confirm": "El grupo y todos sus gastos se eliminarán. No se podrá deshacer.",
+  "add_expense_fab": "Añadir gasto",
   "pin_group": "Marcar como favorito",
   "unpin_group": "Quitar favorito",
   "theme_automatic": "Automático",
   "theme_light": "Claro",
   "theme_dark": "Oscuro",
-  "developed_by": "Desarrollado por calca",
-  "links": "Enlaces",
-  "daily_expenses_chart": "Gastos diarios",
-  "weekly_expenses_chart": "Gastos semanales",
-  "daily_average_by_category": "Promedio diario por categoría",
   "per_day": "/día",
   "no_expenses_for_statistics": "No hay gastos disponibles para estadísticas",
-  "settlement": "Liquidación",
-  "all_balanced": "¡Todas las cuentas están equilibradas!",
-  "owes_to": " debe a ",
-  "export_csv": "Exportar CSV",
+  "settlement": "Saldar",
+  "all_balanced": "Estáis en paz",
   "no_expenses_to_export": "No hay gastos para exportar",
-  "export_csv_share_text": "Gastos exportados desde ",
-  "export_csv_error": "Error exportando gastos",
   "expense_name": "Descripción",
   "paid_by": "Pagado por",
   "added_by": "Añadido por",
   "edited_by": "Editado por",
-  "expense_added_success": "Gasto agregado",
+  "expense_added_success": "Gasto añadido",
   "expense_updated_success": "Gasto actualizado",
-  "data_refreshing": "Actualizando…",
   "data_refreshed": "Actualizado",
   "refresh": "Actualizar",
-  "group_added_success": "Grupo agregado",
+  "group_added_success": "Grupo añadido",
   "group_deleted_success": "Grupo eliminado",
   "@group_deleted_success": {"description": "Mensaje mostrado después de eliminar un grupo de gastos"},
   "csv_select_directory_title": "Seleccionar carpeta para guardar CSV",
@@ -332,103 +225,67 @@
   "location": "Lugar",
   "location_hint": "Lugar",
   "get_current_location": "Usar ubicación actual",
-  "enter_location_manually": "Ingresar manualmente",
-  "location_permission_denied": "Permiso de ubicación denegado",
-  "location_service_disabled": "Servicio de ubicación deshabilitado",
-  "getting_location": "Obteniendo ubicación...",
-  "location_error": "Error obteniendo ubicación",
-  "resolving_address": "Resolviendo dirección…",
+  "getting_location": "Obteniendo ubicación…",
+  "location_error": "No se pudo obtener la ubicación",
   "address_resolved": "Dirección resuelta",
-  "search_place": "Buscar lugar",
-  "search_place_hint": "Buscar un lugar o dirección",
   "settings_general": "General",
-  "settings_general_desc": "Configuración de idioma y apariencia",
-  "settings_auto_location_section": "Detección de ubicación",
-  "settings_auto_location_section_desc": "Configurar la detección automática de ubicación",
   "settings_auto_location_title": "Ubicación automática",
   "settings_auto_location_desc": "Guarda dónde haces cada gasto",
   "settings_language": "Idioma",
-  "settings_language_desc": "Elige tu idioma preferido",
   "settings_language_it": "Italiano",
   "settings_language_en": "Inglés",
   "settings_language_es": "Español",
   "settings_language_pt": "Portugués",
-  "settings_language_zh": "Chino (Simplificado)",
-  "settings_select_language": "Seleccionar idioma",
+  "settings_language_zh": "Chino (simplificado)",
+  "settings_select_language": "Idioma",
   "settings_theme": "Tema",
-  "settings_theme_desc": "Claro, oscuro o sistema",
-  "settings_select_theme": "Seleccionar tema",
   "settings_appearance": "Apariencia",
   "settings_appearance_desc": "Idioma, tema y color dinámico",
   "settings_dynamic_color": "Color dinámico",
   "settings_dynamic_color_desc": "Usar colores del fondo de pantalla",
   "settings_privacy": "Privacidad",
-  "settings_privacy_desc": "Opciones seguridad y privacidad",
   "settings_data": "Datos",
-  "settings_data_desc": "Administra tu información",
   "settings_data_manage": "Gestión de datos",
   "settings_info": "Información",
-  "settings_info_desc": "Detalles app y soporte",
   "settings_app_version": "Versión de la aplicación",
   "settings_info_card": "Información",
-  "settings_info_card_desc": "Desarrollador, Código fuente y Licencia",
+  "settings_info_card_desc": "Desarrollador, código fuente y licencia",
   "settings_invite_friends": "Invita a tus amigos",
   "settings_invite_friends_desc": "Comparte Caravella con quien quieras",
   "invite_friends_message": "¡Hola! Uso Caravella para dividir los gastos en grupo con amigos, es súper cómoda 🎒💸 Pruébala tú también: https://play.google.com/store/apps/details?id=io.caravella.egm",
   "terms_github_title": "Sitio web: calca",
   "terms_github_desc": "Web del desarrollador",
   "terms_repo_title": "Repositorio GitHub",
-  "terms_repo_desc": "Código fuente de la aplicación.",
+  "terms_repo_desc": "Código fuente de la app",
   "terms_issue_title": "Reportar un problema",
   "terms_issue_desc": "Informa de un problema en GitHub",
-  "terms_license_desc": "Ver la licencia de código abierto.",
+  "terms_license_desc": "Licencia de código abierto MIT",
   "support_developer_title": "Cómprame un café",
-  "support_developer_desc": "Apoya el desarrollo de esta aplicación.",
-  "data_title": "Respaldo y Restauración",
-  "data_backup_title": "Respaldo",
+  "support_developer_desc": "Apoya el desarrollo de la app",
+  "data_title": "Copia de seguridad y restauración",
   "data_backup_desc": "Guarda los gastos en un archivo",
   "data_restore_title": "Restauración",
   "data_restore_desc": "Desde un archivo de copia",
   "auto_backup_title": "Respaldo automático",
   "auto_backup_desc": "Copia del sistema operativo",
-  "info_tab": "Info",
-  "select_paid_by": "Seleccionar pagador",
-  "select_category": "Seleccionar una categoría",
-  "check_form": "Verificar los datos ingresados",
+  "select_category": "Categoría",
   "delete_expense": "Eliminar gasto",
-  "delete_expense_confirm": "¿Estás seguro de que quieres eliminar este gasto?",
+  "delete_expense_confirm": "El gasto se eliminará. No se podrá deshacer.",
   "delete": "Eliminar",
-  "no_results_found": "No se encontraron resultados.",
-  "@no_results_found": {"description": "Mostrado cuando un filtro (no búsqueda) no devuelve grupos"},
-  "try_adjust_filter_or_search": "Intenta ajustar el filtro o la búsqueda.",
-  "@try_adjust_filter_or_search": {"description": "Texto secundario sugiriendo cambiar filtros o búsqueda"},
-  "general_statistics": "Estadísticas generales",
-  "@general_statistics": {"description": "Encabezado para la sección de estadísticas generales"},
-  "add_first_expense": "Agrega el primer gasto para empezar",
-  "@add_first_expense": {"description": "Subtítulo de estado vacío alentando al usuario a agregar el primer gasto"},
-  "overview_and_statistics": "Resumen y estadísticas",
   "daily_average": "Diario",
   "spent_today": "Hoy",
   "monthly_average": "Mensual",
   "@monthly_average": {"description": "Etiqueta mostrada antes del valor promedio mensual"},
   "@daily_average": {"description": "Etiqueta mostrada antes del valor promedio de gasto diario calculado"},
   "@spent_today": {"description": "Etiqueta mostrada antes del monto gastado hoy"},
-  "@overview_and_statistics": {"description": "Texto de tooltip cuando el botón resumen/estadísticas está habilitado"},
-  "average_expense": "Gasto promedio",
-  "welcome_v3_cta": "¡Empezar!",
-  "discard_changes_title": "¿Descartar cambios?",
-  "discard_changes_message": "¿Estás seguro de que quieres descartar los cambios no guardados?",
+  "welcome_v3_cta": "Empezar",
+  "discard_changes_title": "¿Salir sin guardar?",
+  "discard_changes_message": "Los cambios que no has guardado se perderán.",
   "discard": "Descartar",
-  "category_placeholder": "Categoría",
-  "image_requirements": "PNG, JPG, GIF (máx 10MB)",
   "error_saving_group": "Error guardando: {error}",
-  "error_selecting_image": "Error seleccionando imagen",
-  "error_saving_image": "Error guardando imagen",
   "@error_saving_group": {"placeholders": {"error": {}}},
   "already_exists": "ya existe",
   "@already_exists": {"description": "Mostrado después del nombre de una entidad cuando se intenta una entrada duplicada"},
-  "status_all": "Todos",
-  "@status_all": {"description": "Etiqueta de filtro: todos los grupos"},
   "status_active": "Activos",
   "@status_active": {"description": "Etiqueta de filtro: grupos activos"},
   "status_archived": "Archivados",
@@ -436,61 +293,29 @@
   "@no_archived_groups": {"description": "Título estado vacío para grupos archivados"},
   "no_archived_groups_subtitle": "Aún no has archivado ningún grupo",
   "@no_archived_groups_subtitle": {"description": "Subtítulo estado vacío para grupos archivados"},
-  "all_groups_archived_info": "Todos tus grupos están archivados. Puedes restaurarlos desde la sección Archivo o crear otros nuevos.",
+  "all_groups_archived_info": "Todos tus grupos están en el archivo. Puedes recuperarlos desde allí o crear uno nuevo.",
   "@all_groups_archived_info": {"description": "Mensaje mostrado cuando todos los grupos del usuario están archivados"},
   "@status_archived": {"description": "Etiqueta de filtro: grupos archivados"},
-  "filter_status_tooltip": "Filtrar grupos",
-  "@filter_status_tooltip": {"description": "Tooltip para la fila de botones de filtro de estado"},
   "welcome_logo_semantic": "Logo de la aplicación Caravella",
   "@welcome_logo_semantic": {"description": "Etiqueta semántica para el logo de la pantalla de bienvenida"},
   "create_new_group": "Crear nuevo grupo",
   "@create_new_group": {"description": "Etiqueta de acción crear nuevo grupo"},
-  "accessibility_add_new_item": "Agregar nuevo elemento",
-  "@accessibility_add_new_item": {"description": "Etiqueta de accesibilidad predeterminada para botón agregar"},
-  "accessibility_navigation_bar": "Barra de navegación",
-  "@accessibility_navigation_bar": {"description": "Etiqueta de accesibilidad de la barra de navegación"},
   "accessibility_back_button": "Atrás",
   "@accessibility_back_button": {"description": "Etiqueta de accesibilidad del botón atrás"},
-  "accessibility_loading_groups": "Cargando grupos",
-  "@accessibility_loading_groups": {"description": "Etiqueta de accesibilidad del estado de carga"},
-  "accessibility_loading_your_groups": "Cargando tus grupos",
-  "@accessibility_loading_your_groups": {"description": "Etiqueta del indicador de progreso de carga de grupos"},
   "accessibility_groups_list": "Lista de grupos",
   "@accessibility_groups_list": {"description": "Etiqueta de accesibilidad de la sección lista de grupos"},
   "accessibility_welcome_screen": "Pantalla de bienvenida",
   "@accessibility_welcome_screen": {"description": "Etiqueta de accesibilidad de la pantalla de bienvenida"},
-  "accessibility_total_expenses": "Gastos totales: {amount}€",
+  "accessibility_total_expenses": "Gastos totales: {amount}",
   "@accessibility_total_expenses": {"description": "Etiqueta de accesibilidad de gastos totales", "placeholders": {"amount": {}}},
-  "accessibility_add_expense": "Agregar gasto",
+  "accessibility_add_expense": "Añadir gasto",
   "@accessibility_add_expense": {"description": "Etiqueta de accesibilidad del botón agregar gasto"},
-  "accessibility_security_switch": "Interruptor de seguridad - {state}",
-  "@accessibility_security_switch": {"description": "Etiqueta de accesibilidad del interruptor de seguridad", "placeholders": {"state": {}}},
-  "accessibility_switch_on": "Activado",
-  "@accessibility_switch_on": {"description": "Etiqueta de estado activado del interruptor"},
-  "accessibility_switch_off": "Desactivado",
-  "@accessibility_switch_off": {"description": "Etiqueta de estado desactivado del interruptor"},
-  "accessibility_image_source_dialog": "Diálogo de selección de fuente de imagen",
-  "@accessibility_image_source_dialog": {"description": "Etiqueta de accesibilidad del diálogo de selección de fuente de imagen"},
-  "accessibility_currently_enabled": "Actualmente habilitado",
-  "@accessibility_currently_enabled": {"description": "Etiqueta de estado actualmente habilitado"},
   "accessibility_currently_disabled": "Actualmente deshabilitado",
   "@accessibility_currently_disabled": {"description": "Etiqueta de estado actualmente deshabilitado"},
-  "accessibility_double_tap_disable": "Doble toque para deshabilitar la seguridad de pantalla",
-  "@accessibility_double_tap_disable": {"description": "Sugerencia de doble toque para deshabilitar"},
-  "accessibility_double_tap_enable": "Doble toque para habilitar la seguridad de pantalla",
-  "@accessibility_double_tap_enable": {"description": "Sugerencia de doble toque para habilitar"},
-  "accessibility_toast_success": "Éxito",
-  "@accessibility_toast_success": {"description": "Descripción del tipo de toast de éxito"},
-  "accessibility_toast_error": "Error",
-  "@accessibility_toast_error": {"description": "Descripción del tipo de toast de error"},
-  "accessibility_toast_info": "Información",
-  "@accessibility_toast_info": {"description": "Descripción del tipo de toast de información"},
   "accessibility_previous_month": "Mes anterior",
   "@accessibility_previous_month": {"description": "Previous month button accessibility label"},
   "accessibility_next_month": "Mes siguiente",
   "@accessibility_next_month": {"description": "Next month button accessibility label"},
-  "accessibility_cancel_location_hint": "Doble toque para cancelar la obtención de ubicación",
-  "@accessibility_cancel_location_hint": {"description": "Accessibility hint for the cancel-location-retrieval button"},
   "color_suggested_title": "Colores sugeridos",
   "@color_suggested_title": {"description": "Título para la sección de colores sugeridos"},
   "color_suggested_subtitle": "Elige uno de los colores compatibles con el tema",
@@ -655,62 +480,28 @@
   ,"currency_ZAR": "Rand sudafricano"
   ,"currency_ZMW": "Kwacha zambiano"
   ,"currency_ZWL": "Dólar zimbabuense"
-  ,"search_currency": "Buscar moneda..."
-  ,"activity": "Gastos"
-  ,"@activity": {"description": "Título de sección actividad reciente lista de gastos"}
-  ,"search_expenses_hint": "Buscar por nombre o nota..."
-  ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}
-  ,"clear_filters": "Limpiar"
+  ,"search_currency": "Buscar moneda…"
+  ,"clear_filters": "Restablecer"
   ,"@clear_filters": {"description": "Botón para limpiar filtros de gastos"}
   ,"filters": "Filtros"
   ,"@filters": {"description": "Etiqueta de sección para filtros de gastos"}
-  ,"show_filters": "Mostrar filtros"
-  ,"@show_filters": {"description": "Etiqueta para mostrar filtros"}
-  ,"hide_filters": "Ocultar filtros"
-  ,"@hide_filters": {"description": "Etiqueta para ocultar filtros"}
-  ,"all_categories": "Todas"
-  ,"@all_categories": {"description": "Chip para todas las categorías"}
-  ,"all_participants": "Todos"
-  ,"@all_participants": {"description": "Chip para todos los participantes"}
-  ,"no_expenses_with_filters": "Ningún gasto coincide con los filtros seleccionados"
-  ,"@no_expenses_with_filters": {"description": "Estado vacío cuando filtros activos no devuelven gastos"}
-  ,"no_expenses_yet": "Aún no hay gastos"
-  ,"@no_expenses_yet": {"description": "Estado vacío cuando aún no hay gastos"}
-  ,"empty_expenses_title": "¿Listo para empezar?"
+  ,"empty_expenses_title": "Aún no hay gastos"
   ,"@empty_expenses_title": {"description": "Título para estado vacío de gastos"}
-  ,"empty_expenses_subtitle": "¡Agrega tu primer gasto para comenzar con este grupo!"
+  ,"empty_expenses_subtitle": "Añade el primero: lo encontrarás aquí."
   ,"@empty_expenses_subtitle": {"description": "Subtítulo para estado vacío de gastos"}
-  ,"add_first_expense_button": "Agregar Gasto"
+  ,"add_first_expense_button": "Añadir gasto"
   ,"@add_first_expense_button": {"description": "Texto del botón para agregar primer gasto"}
   ,"participant_count": "{count, plural, one {{count} participante} other {{count} participantes}}"
   ,"@participant_count": {"description": "Recuento de participantes con plural", "placeholders": {"count": {}}}
   ,"whats_new_title": "Novedades"
   ,"@whats_new_title": {"description": "Título de la página que muestra el changelog"}
-  ,"whats_new_desc": "Descubre las últimas características y actualizaciones"
-  ,"@whats_new_desc": {"description": "Subtítulo de la página novedades"}
-  ,"whats_new_subtitle": "Lo más destacado reciente"
-  ,"@whats_new_subtitle": {"description": "Subtítulo en la tarjeta de encabezado de la página de novedades"}
-  ,"whats_new_latest": "Mantente al día con las mejoras más recientes"
-  ,"@whats_new_latest": {"description": "Texto descriptivo en la tarjeta de encabezado de la página de novedades"}
   ,"changelog_title": "Registro de cambios"
   ,"@changelog_title": {"description": "Título de la sección de changelog"}
-  ,"changelog_desc": "Historial de versiones y mejoras"
-  ,"@changelog_desc": {"description": "Descripción de la sección de changelog"}
-  ,"average_per_person": "Promedio por persona"
-  ,"@average_per_person": {"description": "Etiqueta mostrada antes del promedio gastado por persona en la pestaña Participantes"}
-  ,"more": "más"
-  ,"@more": {"description": "Etiqueta inline para expandir y mostrar todos los elementos"}
-  ,"less": "menos"
-  ,"@less": {"description": "Etiqueta inline para contraer y mostrar menos elementos"}
-  ,"debt_prefix_to": "a "
-  ,"@debt_prefix_to": {"description": "Prefijo corto mostrado antes del destinatario en una línea de deuda/liquidación (p. ej., 'a Alicia 10€')"}
-  ,"view_on_map": "Ver en el mapa"
-  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
   ,"expenses_map": "Mapa de Gastos"
   ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
-  ,"no_locations_available": "No hay ubicaciones disponibles"
+  ,"no_locations_available": "Sin lugares"
   ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
-  ,"no_locations_subtitle": "Agrega datos de ubicación a tus gastos para verlos en el mapa"
+  ,"no_locations_subtitle": "Añade un lugar a tus gastos para verlos en el mapa"
   ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
   ,"expense_count": "{count, plural, =1{1 gasto} other{{count} gastos}}"
   ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
@@ -724,40 +515,26 @@
   ,"@update_available_desc": {"description": "Descripción cuando hay una actualización disponible"}
   ,"no_update_available": "App actualizada"
   ,"@no_update_available": {"description": "Mensaje cuando no hay actualizaciones"}
-  ,"no_update_available_desc": "Estás usando la última versión"
-  ,"@no_update_available_desc": {"description": "Descripción cuando no hay actualizaciones"}
   ,"update_now": "Actualizar ahora"
   ,"@update_now": {"description": "Botón para iniciar la actualización"}
   ,"update_later": "Más tarde"
   ,"@update_later": {"description": "Botón para posponer la actualización"}
-  ,"checking_for_updates": "Verificando actualizaciones..."
+  ,"checking_for_updates": "Buscando actualizaciones…"
   ,"@checking_for_updates": {"description": "Mensaje durante verificación de actualizaciones"}
-  ,"update_error": "Error al verificar actualizaciones"
+  ,"update_error": "No se pudieron buscar actualizaciones"
   ,"@update_error": {"description": "Mensaje de error durante verificación de actualizaciones"}
-  ,"update_downloading": "Descargando..."
+  ,"update_downloading": "Descargando…"
   ,"@update_downloading": {"description": "Mensaje durante descarga de actualización"}
   ,"update_ready_to_install": "Actualización lista para instalar"
   ,"@update_ready_to_install": {"description": "Título mostrado cuando una actualización flexible terminó de descargarse y está lista para instalar"}
   ,"update_ready_to_install_desc": "La descarga ha finalizado. Instálala para completar la actualización."
   ,"@update_ready_to_install_desc": {"description": "Descripción mostrada cuando una actualización flexible terminó de descargarse y está lista para instalar"}
-  ,"update_installing": "Instalando..."
+  ,"update_installing": "Instalando…"
   ,"@update_installing": {"description": "Mensaje durante instalación de actualización"}
-  ,"update_feature_android_only": "Función disponible solo en Android con Google Play Store"
-  ,"@update_feature_android_only": {"description": "Mensaje que explica que la función es solo para Android"}
-  ,"update_recommendation_title": "Actualización recomendada"
-  ,"@update_recommendation_title": {"description": "Título del bottom sheet para recomendar actualización"}
-  ,"update_recommendation_desc": "Una nueva versión de Caravella está disponible. ¡Actualiza la app para tener siempre las últimas funciones y mejoras!"
-  ,"@update_recommendation_desc": {"description": "Descripción en bottom sheet recomendando actualizar"}
   ,"update_install": "Instalar actualización"
   ,"@update_install": {"description": "Botón para instalar actualización desde bottom sheet"}
-  ,"update_remind_later": "Recuérdamelo después"
-  ,"@update_remind_later": {"description": "Botón para posponer actualización desde bottom sheet"}
   ,"send_reminder": "Enviar recordatorio"
   ,"@send_reminder": {"description": "Etiqueta del botón para enviar un recordatorio de pago a un participante"}
-  ,"reminder_message_single": "¡Hola {participantName}! 👋\n\nQuisiera recordarte que debes {amount} a {creditorName} para el grupo \"{groupName}\".\n\n¡Gracias! 😊"
-  ,"@reminder_message_single": {"description": "Mensaje de recordatorio cuando un participante debe dinero a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
-  ,"reminder_message_multiple": "¡Hola {participantName}! 👋\n\nQuisiera recordarte tus pagos para el grupo \"{groupName}\":\n\n{debtsList}\n\n¡Gracias! 😊"
-  ,"@reminder_message_multiple": {"description": "Mensaje de recordatorio cuando un participante debe dinero a varias personas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
   ,"settings_user_name_title": "Tu nombre"
   ,"@settings_user_name_title": {"description": "Título de la configuración del nombre de usuario"}
   ,"settings_user_name_desc": "Tu nombre en la app"
@@ -765,22 +542,10 @@
   ,"settings_user_name_hint": "Ingresa tu nombre"
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
   ,"default_participant_me": "Yo"
-  ,"notification_enabled": "Notificación persistente"
-  ,"@notification_enabled": {"description": "Etiqueta para la configuración de notificación persistente en el grupo"}
   ,"notification_enabled_desc": "Gastos de hoy en una notificación"
   ,"@notification_enabled_desc": {"description": "Descripción de la configuración de notificación persistente"}
-  ,"notification_daily_spent": "Gasto diario: {amount} {currency}"
-  ,"@notification_daily_spent": {"description": "Texto en la notificación que muestra el gasto diario promedio", "placeholders": {"amount": {}, "currency": {}}}
-  ,"notification_total_spent": "Total: {amount} {currency}"
-  ,"@notification_total_spent": {"description": "Texto en la notificación que muestra el gasto total", "placeholders": {"amount": {}, "currency": {}}}
-  ,"notification_add_expense": "Agregar gasto"
-  ,"@notification_add_expense": {"description": "Etiqueta del botón en la notificación para agregar un nuevo gasto"}
-  ,"notification_close": "Cerrar"
-  ,"@notification_close": {"description": "Etiqueta del botón en la notificación para cerrar la notificación"}
   ,"group_type": "Tipo"
   ,"@group_type": {"description": "Etiqueta para el tipo de grupo de gastos"}
-  ,"group_type_description": "Elige el tipo de grupo"
-  ,"@group_type_description": {"description": "Descripción para la selección del tipo de grupo"}
   ,"group_type_travel": "Viaje"
   ,"@group_type_travel": {"description": "Tipo de grupo: viaje"}
   ,"group_type_personal": "Personal"
@@ -809,150 +574,50 @@
   ,"@category_family_bills": {"description": "Categoría predeterminada para grupo tipo familia"}
   ,"category_other_misc": "Varios"
   ,"@category_other_misc": {"description": "Categoría predeterminada para grupo tipo otro"}
-  ,"category_other_utilities": "Utilidades"
+  ,"category_other_utilities": "Suministros"
   ,"@category_other_utilities": {"description": "Categoría predeterminada para grupo tipo otro"}
   ,"category_other_services": "Servicios"
   ,"@category_other_services": {"description": "Categoría predeterminada para grupo tipo otro"}
   ,"attachments": "Adjuntos"
   ,"@attachments": {"description": "Etiqueta para los adjuntos de gastos"}
-  ,"add_attachment": "Agregar adjunto"
-  ,"@add_attachment": {"description": "Botón para agregar un adjunto"}
-  ,"attachment_limit_reached": "Límite máximo de 5 adjuntos alcanzado"
-  ,"@attachment_limit_reached": {"description": "Mensaje de error al intentar agregar más de 5 adjuntos"}
   ,"delete_attachment": "Eliminar adjunto"
   ,"@delete_attachment": {"description": "Acción para eliminar un adjunto"}
   ,"share_attachment": "Compartir adjunto"
   ,"@share_attachment": {"description": "Acción para compartir un adjunto"}
-  ,"delete_attachment_confirm_title": "Eliminar adjunto"
+  ,"delete_attachment_confirm_title": "¿Eliminar el adjunto?"
   ,"@delete_attachment_confirm_title": {"description": "Título del diálogo de confirmación de eliminación de adjunto"}
-  ,"delete_attachment_confirm_message": "¿Estás seguro de que deseas eliminar este adjunto?"
+  ,"delete_attachment_confirm_message": "El adjunto se eliminará del gasto."
   ,"@delete_attachment_confirm_message": {"description": "Mensaje del diálogo de confirmación de eliminación de adjunto"}
-  ,"attachment_source": "Elegir fuente"
+  ,"attachment_source": "Añadir adjunto"
   ,"@attachment_source": {"description": "Título para elegir la fuente del adjunto"}
-  ,"from_files": "Desde archivos"
+  ,"from_files": "Desde un archivo"
   ,"@from_files": {"description": "Opción para elegir desde archivos"}
-  ,"archived_group_readonly": "Grupo archivado - Solo lectura"
-  ,"@archived_group_readonly": {"description": "Mensaje que indica que un grupo archivado está en modo solo lectura"}
-  ,"archived_group_readonly_desc": "Este grupo está archivado. No puedes modificarlo ni agregar nuevos gastos."
-  ,"@archived_group_readonly_desc": {"description": "Descripción para grupo archivado en modo solo lectura"}
-  ,"expense_readonly": "Gasto - Solo lectura"
-  ,"@expense_readonly": {"description": "Título para un gasto en modo solo lectura"}
-  ,"expense_readonly_archived": "Este gasto pertenece a un grupo archivado y no se puede modificar."
-  ,"@expense_readonly_archived": {"description": "Mensaje que explica que un gasto no se puede modificar porque el grupo está archivado"}
   ,"expense": "Gasto"
   ,"@expense": {"description": "Título genérico para un gasto"}
   ,"notification_enabled": "Notificación persistente"
   ,"@notification_enabled": {"description": "Etiqueta para activar/desactivar la notificación persistente"}
   ,"notification_daily_spent": "Gastos de hoy: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Cantidad gastada en el día actual en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
-  ,"notification_total_spent": "Total: {amount} {currency}"
-  ,"@notification_total_spent": {"description": "Cantidad total gastada en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
-  ,"notification_add_expense": "Añadir Gasto"
+  ,"notification_add_expense": "Añadir gasto"
   ,"@notification_add_expense": {"description": "Botón de acción en la notificación para añadir gasto"}
-  ,"notification_close": "Cerrar"
-  ,"@notification_close": {"description": "Botón de acción en la notificación para cerrar"}
   ,"notification_disable": "Desactivar"
   ,"@notification_disable": {"description": "Botón de acción en la notificación para desactivar notificaciones"}
-  ,"load_more_expenses": "Cargar más gastos"
-  ,"@load_more_expenses": {"description": "Botón para cargar más gastos en la lista paginada"}
-  ,"wizard_group_creation_title": "Nuevo Grupo"
+  ,"wizard_group_creation_title": "Nuevo grupo"
   ,"@wizard_group_creation_title": {"description": "Título del asistente de creación de grupo"}
-  ,"wizard_step_name": "Nombre"
-  ,"@wizard_step_name": {"description": "Título del paso 1 del asistente: nombre del grupo"}
-  ,"wizard_step_type_and_name": "Tipo y Nombre"
-  ,"@wizard_step_type_and_name": {"description": "Título del paso del asistente: tipo y nombre del grupo"}
-  ,"wizard_type_and_name_description": "¿Para qué es este grupo?"
-  ,"@wizard_type_and_name_description": {"description": "Descripción del paso de tipo y nombre en el asistente"}
-  ,"wizard_step_participants": "Participantes"
-  ,"@wizard_step_participants": {"description": "Título del paso 2 del asistente: participantes"}
-  ,"wizard_step_categories": "Categorías"
-  ,"@wizard_step_categories": {"description": "Título del paso 3 del asistente: categorías"}
-  ,"wizard_step_period": "Período"
-  ,"@wizard_step_period": {"description": "Título del paso 4 del asistente: período"}
-  ,"wizard_step_background": "Fondo"
-  ,"@wizard_step_background": {"description": "Título del paso 5 del asistente: color de fondo"}
-  ,"wizard_step_congratulations": "¡Felicitaciones!"
-  ,"@wizard_step_congratulations": {"description": "Título del paso final del asistente: felicitaciones"}
-  ,"wizard_step_of": "de"
-  ,"@wizard_step_of": {"description": "Separador para indicador de progreso (ej. 'Paso 1 de 6')"}
-  ,"wizard_next": "Siguiente"
-  ,"@wizard_next": {"description": "Texto del botón para ir al siguiente paso"}
-  ,"wizard_previous": "Anterior"
-  ,"@wizard_previous": {"description": "Texto del botón para volver al paso anterior"}
   ,"wizard_skip": "Omitir"
   ,"@wizard_skip": {"description": "Texto del botón para omitir un paso opcional"}
-  ,"wizard_finish": "Crear Grupo"
-  ,"@wizard_finish": {"description": "Texto del botón final para crear el grupo"}
-  ,"wizard_name_description": "Nombre"
-  ,"@wizard_name_description": {"description": "Descripción del paso nombre en el asistente"}
-  ,"wizard_participants_description": "Agrega personas que compartirán gastos"
-  ,"@wizard_participants_description": {"description": "Descripción del paso participantes en el asistente"}
-  ,"wizard_categories_description": "Crea categorías para organizar gastos"
-  ,"@wizard_categories_description": {"description": "Descripción del paso categorías en el asistente"}
-  ,"wizard_period_description": "Establece fechas de inicio y fin (opcional)"
-  ,"@wizard_period_description": {"description": "Descripción del paso período en el asistente"}
-  ,"wizard_background_description": "Elige un color de fondo para el grupo"
-  ,"@wizard_background_description": {"description": "Descripción del paso fondo en el asistente"}
-  ,"wizard_congratulations_message": "¡Tu grupo '{groupName}' ha sido creado con éxito!"
-  ,"@wizard_congratulations_message": {"description": "Mensaje de felicitaciones con nombre del grupo", "placeholders": {"groupName": {"type": "String"}}}
-  ,"wizard_group_summary": "Resumen del grupo:"
-  ,"@wizard_group_summary": {"description": "Título del resumen en la pantalla final"}
-  ,"wizard_created_participants": "{count, plural, =1{1 participante} other{{count} participantes}}"
-  ,"@wizard_created_participants": {"description": "Número de participantes en el resumen", "placeholders": {"count": {"type": "int"}}}
-  ,"wizard_created_categories": "{count, plural, =1{1 categoría} other{{count} categorías}}"
-  ,"@wizard_created_categories": {"description": "Número de categorías en el resumen", "placeholders": {"count": {"type": "int"}}}
-  ,"wizard_step_user_name": "Tu nombre"
-  ,"@wizard_step_user_name": {"description": "Título del paso inicial del asistente: nombre de usuario"}
-  ,"wizard_user_name_welcome": "¡Bienvenido!"
+  ,"wizard_user_name_welcome": "¡Hola!"
   ,"@wizard_user_name_welcome": {"description": "Mensaje de bienvenida en el paso del nombre de usuario"}
-  ,"wizard_user_name_description": "Antes de empezar, dínos tu nombre para personalizar tu experiencia"
-  ,"@wizard_user_name_description": {"description": "Descripción del paso del nombre de usuario"}
-  ,"wizard_user_name_local_storage_note": "Tus datos permanecen privados en tu dispositivo"
-  ,"@wizard_user_name_local_storage_note": {"description": "Nota de privacidad para el nombre de usuario"}
   ,"wizard_user_name_label": "Tu nombre (opcional)"
   ,"@wizard_user_name_label": {"description": "Etiqueta del campo de nombre de usuario"}
   ,"wizard_user_name_hint": "ej. Carlos"
   ,"@wizard_user_name_hint": {"description": "Sugerencia para el campo de nombre de usuario"}
-  ,"wizard_step_participants_and_categories": "Quién y qué"
-  ,"@wizard_step_participants_and_categories": {"description": "Título del paso combinado de participantes y categorías"}
-  ,"wizard_participants_and_categories_description": "Define quién participa y qué gastos se compartirán"
-  ,"@wizard_participants_and_categories_description": {"description": "Descripción del paso combinado de participantes y categorías"}
   ,"wizard_participants_section_title": "¿Quién participa?"
   ,"@wizard_participants_section_title": {"description": "Título de la sección de participantes en el paso combinado"}
-  ,"wizard_participants_section_hint": "Agrega amigos o compañeros. Puedes modificarlos después."
+  ,"wizard_participants_section_hint": "Añade amigos o compañeros. Puedes modificarlos después."
   ,"@wizard_participants_section_hint": {"description": "Sugerencia para la sección de participantes"}
-  ,"wizard_categories_section_title": "¿Qué se compartirá?"
-  ,"@wizard_categories_section_title": {"description": "Título de la sección de categorías en el paso combinado"}
-  ,"wizard_categories_section_hint": "Ej. Comida, Alojamiento, Transporte. Puedes agregar o renombrar después."
-  ,"@wizard_categories_section_hint": {"description": "Sugerencia para la sección de categorías"}
-  ,"wizard_step_color_and_final": "Color y confirmar"
-  ,"@wizard_step_color_and_final": {"description": "Título del paso final de color y confirmación"}
-  ,"wizard_color_and_final_description": "Elige un color para el grupo y revisa el resumen"
-  ,"@wizard_color_and_final_description": {"description": "Descripción del paso final"}
-  ,"wizard_preview_title": "Vista previa del grupo"
-  ,"@wizard_preview_title": {"description": "Título de la sección de vista previa"}
-  ,"wizard_success_title": "¡Felicitaciones!"
-  ,"@wizard_success_title": {"description": "Título del diálogo de éxito"}
-  ,"wizard_go_to_group": "Ir al grupo"
-  ,"@wizard_go_to_group": {"description": "Botón para ir al grupo creado"}
-  ,"wizard_go_to_home": "Ir al inicio"
-  ,"@wizard_go_to_home": {"description": "Botón para volver a la página de inicio"}
-  ,"wizard_go_to_settings": "Configuración del grupo"
-  ,"@wizard_go_to_settings": {"description": "Botón para ir a la configuración del grupo"}
-  ,"wizard_completion_what_next": "Lo que puedes hacer ahora:"
-  ,"@wizard_completion_what_next": {"description": "Título de la sección de acciones siguientes"}
-  ,"wizard_completion_add_expenses": "Agregar gastos"
-  ,"@wizard_completion_add_expenses": {"description": "Título de la opción agregar gastos"}
-  ,"wizard_completion_add_expenses_description": "Comienza a rastrear los gastos del grupo"
-  ,"@wizard_completion_add_expenses_description": {"description": "Descripción de la opción agregar gastos"}
-  ,"wizard_completion_customize_group": "Personalizar grupo"
-  ,"@wizard_completion_customize_group": {"description": "Título de la opción personalizar grupo"}
-  ,"wizard_completion_customize_group_description": "Editar participantes, categorías y configuración"
-  ,"@wizard_completion_customize_group_description": {"description": "Descripción de la opción personalizar grupo"}
-  ,"danger_zone": "Zona Peligrosa"
+  ,"danger_zone": "Zona de peligro"
   ,"@danger_zone": {"description": "Título de sección para acciones peligrosas como archivar y eliminar"}
-  ,"danger_zone_desc": "Archivar o eliminar este grupo"
-  ,"@danger_zone_desc": {"description": "Descripción para la sección zona peligrosa"}
   ,"export_options_desc": "Descarga o comparte los gastos"
   ,"@export_options_desc": {"description": "Descripción para las opciones de exportación"}
   ,"export_csv_description": "Formato hoja de cálculo"
@@ -967,7 +632,7 @@
   ,"@sync_title": {"description": "Título para la página de ajustes de sync"}
   ,"sync_settings_desc": "Wi-Fi, Bluetooth o Google Drive"
   ,"@sync_settings_desc": {"description": "Subtítulo para la entrada de sync en ajustes de Datos"}
-  ,"sync_local_title": "Sync local"
+  ,"sync_local_title": "Wi-Fi"
   ,"@sync_local_title": {"description": "Título para la sección de sync LAN local"}
   ,"sync_multiuser_title": "Sincroniza con otros"
   ,"@sync_multiuser_title": {"description": "Título para la entrada a la subpágina de sync Wi-Fi/Bluetooth (dispositivos de otras personas)"}
@@ -979,13 +644,13 @@
   ,"@sync_multidevice_description": {"description": "Descripción para la entrada de sync multidispositivo"}
   ,"sync_local_description": "Automática en la misma Wi-Fi"
   ,"@sync_local_description": {"description": "Descripción para sync LAN"}
-  ,"sync_cloud_title": "Sync en la nube"
+  ,"sync_cloud_title": "Google Drive"
   ,"@sync_cloud_title": {"description": "Título para la sección de sync en la nube"}
   ,"sync_cloud_description": "Sincronización vía Google Drive"
   ,"@sync_cloud_description": {"description": "Descripción para sync en la nube"}
-  ,"sync_cloud_scope_description": "Una vez activada, sincroniza todos tus grupos — no puedes elegirlo grupo por grupo como con la sync Wi-Fi/Bluetooth"
+  ,"sync_cloud_scope_description": "Sincroniza todos tus grupos a la vez (con Wi-Fi y Bluetooth eliges grupo por grupo)"
   ,"@sync_cloud_scope_description": {"description": "Aviso que explica que la sync en la nube se aplica a todos los grupos a la vez, mostrado en la página de sync multidispositivo"}
-  ,"sync_cloud_enable": "Activar sync en la nube"
+  ,"sync_cloud_enable": "Activa la sincronización con Google Drive"
   ,"@sync_cloud_enable": {"description": "Etiqueta para activar sync en la nube"}
   ,"sync_cloud_privacy": "Tus datos se guardan en tu Google Drive personal, no en servidores de terceros."
   ,"@sync_cloud_privacy": {"description": "Aviso de privacidad para sync en la nube"}
@@ -993,35 +658,29 @@
   ,"@sync_cloud_signed_in_as": {"description": "Muestra la cuenta de Google vinculada", "placeholders": {"email": {"type": "String"}}}
   ,"sync_cloud_sign_in_failed": "El inicio de sesión de Google falló o fue cancelado"
   ,"@sync_cloud_sign_in_failed": {"description": "Error mostrado cuando el inicio de sesión de Google falla o se cancela"}
-  ,"sync_history_title": "Historial de sync"
+  ,"sync_history_title": "Historial de sincronizaciones"
   ,"@sync_history_title": {"description": "Título para la sección de historial de sync"}
-  ,"sync_history_group_desc": "Eventos de sync de «{groupTitle}»"
+  ,"sync_history_group_desc": "Sincronizaciones de «{groupTitle}»"
   ,"@sync_history_group_desc": {"description": "Descripción en la página de historial de sync al filtrar por un grupo", "placeholders": {"groupTitle": {"type": "String"}}}
-  ,"sync_status_synced": "Sincronizado"
-  ,"@sync_status_synced": {"description": "Estado cuando sync está actualizado"}
-  ,"sync_status_syncing": "Sincronizando..."
+  ,"sync_status_syncing": "Sincronizando…"
   ,"@sync_status_syncing": {"description": "Estado durante sync activo"}
-  ,"sync_status_error": "Error de sync"
-  ,"@sync_status_error": {"description": "Estado en caso de error de sync"}
-  ,"sync_status_never": "Nunca sincronizado"
-  ,"@sync_status_never": {"description": "Estado cuando no se ha realizado sync"}
   ,"sync_now": "Sincronizar ahora"
   ,"@sync_now": {"description": "Botón para iniciar sync manual"}
-  ,"sync_last_sync": "Último sync: {time}"
+  ,"sync_last_sync": "Última sincronización: {time}"
   ,"@sync_last_sync": {"description": "Muestra la hora del último sync","placeholders": {"time": {"type": "String"}}}
-  ,"sync_bt_title": "Sync Bluetooth"
+  ,"sync_bt_title": "Bluetooth"
   ,"@sync_bt_title": {"description": "Título para sync Bluetooth"}
   ,"sync_bt_description": "Manual, con dispositivos cercanos"
   ,"@sync_bt_description": {"description": "Descripción para sync Bluetooth"}
-  ,"sync_bt_searching": "Buscando dispositivos cercanos..."
+  ,"sync_bt_searching": "Buscando dispositivos cercanos…"
   ,"@sync_bt_searching": {"description": "Estado mientras busca peers BT"}
-  ,"sync_bt_advertise_waiting": "Esperando a que un dispositivo cercano se conecte..."
+  ,"sync_bt_advertise_waiting": "Esperando un dispositivo cercano…"
   ,"@sync_bt_advertise_waiting": {"description": "Estado mientras este dispositivo se anuncia esperando que otro lo descubra y se conecte"}
   ,"sync_bt_sync_with": "Sincronizar"
   ,"@sync_bt_sync_with": {"description": "Botón para sincronizar con un peer BT"}
   ,"sync_bt_completed": "Sincronización completada"
   ,"@sync_bt_completed": {"description": "Estado cuando sync BT completado"}
-  ,"sync_bt_received_sent": "Recibidos {received}, enviados {sent} registros"
+  ,"sync_bt_received_sent": "Recibidos {received} cambios, enviados {sent}"
   ,"@sync_bt_received_sent": {"description": "Resumen después de sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
   ,"sync_bt_error": "Sincronización fallida"
   ,"@sync_bt_error": {"description": "Estado cuando sync BT falla"}
@@ -1029,9 +688,9 @@
   ,"@sync_bt_error_detail": {"description": "Explicación genérica mostrada bajo sync_bt_error para errores de conexión/tiempo de espera/descifrado — deliberadamente no muestra el texto sin procesar de la excepción"}
   ,"sync_bt_retry": "Reintentar"
   ,"@sync_bt_retry": {"description": "Botón para reintentar sync BT"}
-  ,"sync_bt_permission_denied": "Permiso de Bluetooth denegado — actívalo en los ajustes del sistema para sincronizar con dispositivos cercanos"
+  ,"sync_bt_permission_denied": "Bluetooth no permitido: actívalo en los ajustes del teléfono"
   ,"@sync_bt_permission_denied": {"description": "Error mostrado cuando se deniegan los permisos de Bluetooth/dispositivos cercanos"}
-  ,"sync_history_empty": "Sin historial de sync"
+  ,"sync_history_empty": "Sin sincronizaciones"
   ,"@sync_history_empty": {"description": "Estado vacío para historial de sync"}
   ,"sync_channel_lan": "LAN"
   ,"@sync_channel_lan": {"description": "Nombre del canal LAN"}
@@ -1043,20 +702,12 @@
   ,"@sync_records_exchanged": {"description": "Resumen de registros intercambiados","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
   ,"sync_group_shared": "Compartido"
   ,"@sync_group_shared": {"description": "Tooltip para icono de grupo compartido"}
-  ,"sync_group_synced": "Todos los cambios sincronizados"
-  ,"@sync_group_synced": {"description": "Tooltip para estado de grupo sincronizado"}
-  ,"sync_group_pending": "Cambios aún no sincronizados"
-  ,"@sync_group_pending": {"description": "Tooltip para estado de grupo no sincronizado"}
   ,"sync_group_enable": "Compartir este grupo"
   ,"@sync_group_enable": {"description": "Etiqueta para habilitar la sincronización en un grupo"}
   ,"sync_group_enable_desc": "Con los dispositivos vinculados"
   ,"@sync_group_enable_desc": {"description": "Descripción para el interruptor de sincronización del grupo"}
-  ,"sync_group_needs_channel": "Activa la sync de Wi-Fi o Bluetooth en Ajustes para habilitar esto"
+  ,"sync_group_needs_channel": "Activa Wi-Fi o Bluetooth en Sincronización para compartir el grupo"
   ,"@sync_group_needs_channel": {"description": "Se muestra en lugar de sync_group_enable_desc cuando ni Wi-Fi ni Bluetooth sync están activos a nivel de app"}
-  ,"sync_group_manage_pairing_title": "Gestionar el emparejamiento de dispositivos"
-  ,"@sync_group_manage_pairing_title": {"description": "Fila CTA que lleva a los ajustes de sync multiusuario para emparejar dispositivos"}
-  ,"sync_group_manage_pairing_desc": "Activa la sync de Wi-Fi o Bluetooth y empareja dispositivos desde Ajustes"
-  ,"@sync_group_manage_pairing_desc": {"description": "Descripción para la fila CTA de gestión de emparejamiento"}
   ,"sync_qr_show_button": "Mostrar código QR"
   ,"@sync_qr_show_button": {"description": "Botón para mostrar el código QR de emparejamiento de este dispositivo"}
   ,"sync_qr_scan_button": "Escanear código QR"
@@ -1075,9 +726,9 @@
   ,"@sync_qr_expired_desc": {"description": "Descripción mostrada cuando el código QR de emparejamiento ha caducado"}
   ,"sync_qr_regenerate_button": "Generar código nuevo"
   ,"@sync_qr_regenerate_button": {"description": "Botón para generar un nuevo código QR de emparejamiento tras la caducidad del anterior"}
-  ,"sync_qr_no_network": "Conéctate a Wi-Fi para generar un código de emparejamiento"
+  ,"sync_qr_no_network": "Conéctate al Wi-Fi para generar el código de emparejamiento"
   ,"@sync_qr_no_network": {"description": "Se muestra cuando no hay una dirección de red local disponible para el emparejamiento"}
-  ,"sync_qr_scan_title": "Escanear código de emparejamiento"
+  ,"sync_qr_scan_title": "Escanea el código de emparejamiento"
   ,"@sync_qr_scan_title": {"description": "Título para la página de escaneo del QR de emparejamiento"}
   ,"sync_qr_scan_description": "Escanea el QR del otro dispositivo"
   ,"@sync_qr_scan_description": {"description": "Instrucciones para la página de escaneo del QR de emparejamiento"}
@@ -1101,8 +752,6 @@
   ,"@search_expenses": {"description": "Título de la página de búsqueda de gastos"}
   ,"search_in_group": "Buscar en {groupName}"
   ,"@search_in_group": {"description": "Texto de sugerencia para búsqueda usando el nombre del grupo", "placeholders": {"groupName": {"type": "String"}}}
-  ,"search_all_fields_hint": "Buscar en todos los campos..."
-  ,"@search_all_fields_hint": {"description": "Texto de sugerencia para búsqueda en todos los campos"}
   ,"has_attachment": "Con adjunto"
   ,"@has_attachment": {"description": "Etiqueta de filtro para gastos con adjuntos"}
   ,"has_location": "Con ubicación"
@@ -1113,11 +762,11 @@
   ,"@search_no_results_hint": {"description": "Texto de ayuda cuando la búsqueda no tiene resultados"}
   ,"voice_input_button": "Añadir por voz"
   ,"@voice_input_button": {"description": "Etiqueta del botón para activar la entrada de voz"}
-  ,"voice_input_listening": "Escuchando..."
+  ,"voice_input_listening": "Escuchando…"
   ,"@voice_input_listening": {"description": "Mensaje mostrado durante la grabación de voz"}
   ,"voice_input_tap_to_speak": "Toca para hablar"
   ,"@voice_input_tap_to_speak": {"description": "Sugerencia para empezar a hablar"}
-  ,"voice_input_processing": "Procesando..."
+  ,"voice_input_processing": "Procesando…"
   ,"@voice_input_processing": {"description": "Mensaje mostrado durante el procesamiento del texto de voz"}
   ,"voice_input_error": "Error de reconocimiento de voz"
   ,"@voice_input_error": {"description": "Mensaje de error para problemas de reconocimiento de voz"}
@@ -1127,21 +776,21 @@
   ,"@voice_input_not_available": {"description": "Mensaje cuando el reconocimiento de voz no está disponible en el dispositivo"}
   ,"voice_input_no_speech": "No he escuchado nada. Inténtalo de nuevo."
   ,"@voice_input_no_speech": {"description": "Mensaje cuando el reconocimiento de voz no escucha nada o expira sin resultados"}
-  ,"voice_input_hint": "Intenta decir: '50 euros para la cena en el restaurante'"
+  ,"voice_input_hint": "Prueba a decir: «50 euros por la cena en el restaurante»"
   ,"@voice_input_hint": {"description": "Sugerencia de ejemplo para usar la entrada de voz"}
   ,"voice_add_expense": "Añadir por voz"
   ,"@voice_add_expense": {"description": "Etiqueta para la CTA de voz en la tarjeta de inicio"}
-  ,"voice_expense_saved": "¡Gasto guardado!"
+  ,"voice_expense_saved": "Gasto guardado"
   ,"@voice_expense_saved": {"description": "Confirmación cuando el gasto se guarda por voz"}
-  ,"voice_expense_needs_more_info": "Falta información – completa el formulario"
+  ,"voice_expense_needs_more_info": "Faltan algunos datos: completa el gasto"
   ,"@voice_expense_needs_more_info": {"description": "Mensaje cuando faltan datos requeridos"}
   ,"from_unsplash": "Desde Unsplash"
   ,"@from_unsplash": {"description": "Opción para buscar una imagen de fondo en Unsplash"}
-  ,"unsplash_search_hint": "Buscar fotos en Unsplash..."
+  ,"unsplash_search_hint": "Buscar fotos en Unsplash…"
   ,"@unsplash_search_hint": {"description": "Texto de sugerencia en la barra de búsqueda de Unsplash"}
   ,"unsplash_no_results": "No se encontraron imágenes"
   ,"@unsplash_no_results": {"description": "Mensaje cuando la búsqueda en Unsplash no devuelve resultados"}
-  ,"unsplash_downloading": "Descargando imagen..."
+  ,"unsplash_downloading": "Descargando foto…"
   ,"@unsplash_downloading": {"description": "Texto de carga mientras se descarga una foto de Unsplash"}
   ,"unsplash_error": "Error al cargar las imágenes"
   ,"@unsplash_error": {"description": "Mensaje de error cuando la búsqueda o descarga de Unsplash falla"}
@@ -1151,34 +800,31 @@
   ,"@unsplash_use_photo": {"description": "Botón para confirmar la selección de una foto de Unsplash en la hoja de vista previa"}
   ,"scan_receipt": "Escanear recibo"
   ,"@scan_receipt": {"description": "Botón para escanear un recibo con OCR"}
-  ,"scanning_receipt": "Escaneando recibo..."
+  ,"scanning_receipt": "Leyendo el recibo…"
   ,"@scanning_receipt": {"description": "Mensaje durante el escaneo OCR del recibo"}
-  ,"receipt_scan_error": "Error al escanear el recibo"
+  ,"receipt_scan_error": "No se pudo leer el recibo"
   ,"@receipt_scan_error": {"description": "Mensaje de error cuando falla el escaneo OCR"}
-  ,"receipt_scan_permission_denied": "El acceso a la cámara o a las fotos está desactivado. Actívalo en los Ajustes del teléfono para escanear un recibo."
+  ,"receipt_scan_permission_denied": "Cámara no permitida: actívala en los ajustes del teléfono para leer recibos"
   ,"@receipt_scan_permission_denied": {"description": "Mensaje de error cuando se deniega el permiso de cámara o galería"}
   ,"no_text_found": "No se encontró texto en la imagen"
   ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
   ,"receipt_scanned": "Recibo escaneado"
   ,"@receipt_scanned": {"description": "Mensaje de éxito después del escaneo OCR"}
-  ,"settings_group_templates_section_title": "Plantillas de tipo de grupo"
-  ,"settings_group_templates_section_desc": "Personaliza tus preajustes de tipo de grupo"
-  ,"settings_group_templates_manage_title": "Gestionar plantillas"
+  ,"settings_group_templates_manage_title": "Plantillas de grupo"
   ,"settings_group_templates_manage_desc": "Crea y edita tus plantillas"
-  ,"settings_group_templates_page_title": "Plantillas de tipo de grupo"
-  ,"settings_group_templates_empty_state": "Aún no hay plantillas"
-  ,"settings_group_templates_add_title": "Añadir plantilla"
+  ,"settings_group_templates_page_title": "Plantillas de grupo"
+  ,"settings_group_templates_empty_state": "Sin plantillas"
+  ,"settings_group_templates_add_title": "Nueva plantilla"
   ,"settings_group_templates_edit_title": "Editar plantilla"
   ,"settings_group_templates_name_label": "Nombre de la plantilla"
-  ,"settings_group_templates_name_hint": "Introduce un nombre de plantilla"
+  ,"settings_group_templates_name_hint": "Ej. Semana de esquí"
   ,"settings_group_templates_icon_label": "Icono"
   ,"settings_group_templates_categories_label": "Categorías predeterminadas"
-  ,"settings_group_templates_category_hint": "Añadir una categoría"
   ,"settings_group_templates_validation_error": "Se requiere nombre y al menos una categoría"
   ,"settings_group_templates_delete_title": "Eliminar plantilla"
-  ,"settings_group_templates_delete_message": "¿Eliminar la plantilla \"{templateName}\"?"
+  ,"settings_group_templates_delete_message": "¿Eliminar la plantilla «{templateName}»?"
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
-  ,"clear_dates": "Borrar fechas"
+  ,"clear_dates": "Quitar fechas"
   ,"accessibility_map_marker_expense": "{name}, {amount}"
   ,"accessibility_map_marker_group": "{count} gastos, {place}"
   ,"nav_home": "Inicio"
@@ -1226,7 +872,6 @@
   ,"all_groups": "Todos"
   ,"status_label": "Estado"
   ,"show_results": "{count, plural, =0{Sin resultados} =1{Mostrar 1 resultado} other{Mostrar {count} resultados}}"
-  ,"group_count": "{count, plural, =1{1 grupo} other{{count} grupos}}"
   ,"expense_details_section": "Detalles"
   ,"add_expense_button": "Añadir gasto"
   ,"auto_backup_last": "Última copia: {date}"
@@ -1262,7 +907,6 @@
   ,"wizard_details_title": "¿Cómo lo llamamos?"
   ,"wizard_details_note": "Las fechas sirven para el gráfico de gastos. Puedes cambiarlo todo después."
   ,"wizard_people_you": "{name} (tú)"
-  ,"wizard_people_only_me": "Solo yo, por ahora"
   ,"wizard_people_add_hint": "Nombre de un amigo"
   ,"wizard_people_remove": "Quitar a {name}"
   ,"wizard_dates_add": "Fechas"
@@ -1273,4 +917,9 @@
   ,"place_search_action": "Buscar un lugar"
   ,"background_photo": "Foto"
   ,"background_none": "Ninguno"
+  ,"clear": "Quitar"
+  ,"select_period": "Periodo"
+  ,"new_expense": "Nuevo gasto"
+  ,"confirm": "Confirmar"
+  ,"group": "Grupo"
 }

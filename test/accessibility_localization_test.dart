@@ -21,7 +21,7 @@ void main() {
               return Scaffold(
                 body: AddFab(
                   onPressed: () {},
-                  semanticLabel: gloc.accessibility_add_new_item,
+                  semanticLabel: gloc.accessibility_add_expense,
                 ),
               );
             },
@@ -34,7 +34,7 @@ void main() {
         (Widget widget) =>
             widget is Semantics &&
             widget.properties.label != null &&
-            widget.properties.label!.contains('Add new item'),
+            widget.properties.label!.contains('Add expense'),
       );
 
       expect(semanticsWithLabel, findsOneWidget);
@@ -54,7 +54,7 @@ void main() {
               return Scaffold(
                 body: AddFab(
                   onPressed: () {},
-                  semanticLabel: gloc.accessibility_add_new_item,
+                  semanticLabel: gloc.accessibility_add_expense,
                 ),
               );
             },
@@ -69,7 +69,7 @@ void main() {
         (Widget widget) =>
             widget is Semantics &&
             widget.properties.label != null &&
-            widget.properties.label!.contains('Aggiungi nuovo elemento'),
+            widget.properties.label!.contains('Aggiungi spesa'),
       );
 
       expect(semanticsWithLabel, findsOneWidget);
@@ -89,7 +89,7 @@ void main() {
               return Scaffold(
                 body: AddFab(
                   onPressed: () {},
-                  semanticLabel: gloc.accessibility_add_new_item,
+                  semanticLabel: gloc.accessibility_add_expense,
                 ),
               );
             },
@@ -104,7 +104,7 @@ void main() {
         (Widget widget) =>
             widget is Semantics &&
             widget.properties.label != null &&
-            widget.properties.label!.contains('Agregar nuevo elemento'),
+            widget.properties.label!.contains('Añadir gasto'),
       );
 
       expect(semanticsWithLabel, findsOneWidget);
@@ -179,7 +179,7 @@ void main() {
               final gloc = AppLocalizations.of(context);
               return Scaffold(
                 appBar: CaravellaAppBar(
-                  headerSemanticLabel: gloc.accessibility_navigation_bar,
+                  headerSemanticLabel: gloc.accessibility_groups_list,
                 ),
               );
             },
@@ -190,7 +190,7 @@ void main() {
       // Verify navigation bar has English localized label
       final navBarSemantics = find.byWidgetPredicate(
         (Widget widget) =>
-            widget is Semantics && widget.properties.label == 'Navigation bar',
+            widget is Semantics && widget.properties.label == 'Groups list',
       );
 
       expect(navBarSemantics, findsOneWidget);
@@ -209,7 +209,7 @@ void main() {
               final gloc = AppLocalizations.of(context);
               return Scaffold(
                 appBar: CaravellaAppBar(
-                  headerSemanticLabel: gloc.accessibility_navigation_bar,
+                  headerSemanticLabel: gloc.accessibility_groups_list,
                 ),
               );
             },
@@ -223,7 +223,7 @@ void main() {
       final navBarSemantics = find.byWidgetPredicate(
         (Widget widget) =>
             widget is Semantics &&
-            widget.properties.label == 'Barra di navigazione',
+            widget.properties.label == 'Elenco gruppi',
       );
 
       expect(navBarSemantics, findsOneWidget);
@@ -249,7 +249,7 @@ void main() {
                         'Test message',
                         type: ToastType.success,
                         semanticLabel:
-                            '${gloc.accessibility_toast_success}: Test message',
+                            '${gloc.voice_expense_saved}: Test message',
                       );
                     },
                     child: const Text('Show Toast'),
@@ -268,7 +268,7 @@ void main() {
       // Verify localization key is accessible
       final context = tester.element(find.byType(Scaffold));
       final gloc = AppLocalizations.of(context);
-      expect(gloc.accessibility_toast_success, equals('Success'));
+      expect(gloc.voice_expense_saved, equals('Expense saved'));
     });
 
     testWidgets('AppToast shows Italian localized accessibility descriptions', (
@@ -291,7 +291,7 @@ void main() {
                         'Messaggio di test',
                         type: ToastType.success,
                         semanticLabel:
-                            '${gloc.accessibility_toast_success}: Messaggio di test',
+                            '${gloc.voice_expense_saved}: Messaggio di test',
                       );
                     },
                     child: const Text('Mostra Toast'),
@@ -310,55 +310,25 @@ void main() {
       // Verify Italian localization key is accessible
       final context = tester.element(find.byType(Scaffold));
       final gloc = AppLocalizations.of(context);
-      expect(gloc.accessibility_toast_success, equals('Successo'));
+      expect(gloc.voice_expense_saved, equals('Spesa salvata'));
     });
 
     group('Localization Key Validation', () {
       test('English localizations contain all accessibility keys', () {
         const locale = Locale('en');
         final localizations = lookupAppLocalizations(locale);
-
-        // Verify all accessibility keys are present
-        expect(localizations.accessibility_add_new_item, isNotEmpty);
-        expect(localizations.accessibility_navigation_bar, isNotEmpty);
         expect(localizations.accessibility_back_button, isNotEmpty);
-        expect(localizations.accessibility_loading_groups, isNotEmpty);
-        expect(localizations.accessibility_loading_your_groups, isNotEmpty);
         expect(localizations.accessibility_groups_list, isNotEmpty);
         expect(localizations.accessibility_welcome_screen, isNotEmpty);
         expect(localizations.accessibility_add_expense, isNotEmpty);
-        expect(localizations.accessibility_switch_on, isNotEmpty);
-        expect(localizations.accessibility_switch_off, isNotEmpty);
-        expect(localizations.accessibility_toast_success, isNotEmpty);
-        expect(localizations.accessibility_toast_error, isNotEmpty);
-        expect(localizations.accessibility_toast_info, isNotEmpty);
         expect(localizations.accessibility_previous_month, isNotEmpty);
         expect(localizations.accessibility_next_month, isNotEmpty);
-        expect(localizations.accessibility_cancel_location_hint, isNotEmpty);
       });
 
       test('Italian localizations contain all accessibility keys', () {
         const locale = Locale('it');
         final localizations = lookupAppLocalizations(locale);
-
-        // Verify all accessibility keys are present and different from English
-        expect(
-          localizations.accessibility_add_new_item,
-          equals('Aggiungi nuovo elemento'),
-        );
-        expect(
-          localizations.accessibility_navigation_bar,
-          equals('Barra di navigazione'),
-        );
         expect(localizations.accessibility_back_button, equals('Indietro'));
-        expect(
-          localizations.accessibility_loading_groups,
-          equals('Caricamento gruppi'),
-        );
-        expect(
-          localizations.accessibility_loading_your_groups,
-          equals('Caricamento dei tuoi gruppi'),
-        );
         expect(
           localizations.accessibility_groups_list,
           equals('Elenco gruppi'),
@@ -371,11 +341,6 @@ void main() {
           localizations.accessibility_add_expense,
           equals('Aggiungi spesa'),
         );
-        expect(localizations.accessibility_switch_on, equals('Attivo'));
-        expect(localizations.accessibility_switch_off, equals('Inattivo'));
-        expect(localizations.accessibility_toast_success, equals('Successo'));
-        expect(localizations.accessibility_toast_error, equals('Errore'));
-        expect(localizations.accessibility_toast_info, equals('Informazione'));
         expect(
           localizations.accessibility_previous_month,
           equals('Mese precedente'),
@@ -384,34 +349,12 @@ void main() {
           localizations.accessibility_next_month,
           equals('Mese successivo'),
         );
-        expect(
-          localizations.accessibility_cancel_location_hint,
-          equals('Doppio tap per annullare il rilevamento della posizione'),
-        );
       });
 
       test('Spanish localizations contain all accessibility keys', () {
         const locale = Locale('es');
         final localizations = lookupAppLocalizations(locale);
-
-        // Verify all accessibility keys are present and different from English/Italian
-        expect(
-          localizations.accessibility_add_new_item,
-          equals('Agregar nuevo elemento'),
-        );
-        expect(
-          localizations.accessibility_navigation_bar,
-          equals('Barra de navegación'),
-        );
         expect(localizations.accessibility_back_button, equals('Atrás'));
-        expect(
-          localizations.accessibility_loading_groups,
-          equals('Cargando grupos'),
-        );
-        expect(
-          localizations.accessibility_loading_your_groups,
-          equals('Cargando tus grupos'),
-        );
         expect(
           localizations.accessibility_groups_list,
           equals('Lista de grupos'),
@@ -422,13 +365,8 @@ void main() {
         );
         expect(
           localizations.accessibility_add_expense,
-          equals('Agregar gasto'),
+          equals('Añadir gasto'),
         );
-        expect(localizations.accessibility_switch_on, equals('Activado'));
-        expect(localizations.accessibility_switch_off, equals('Desactivado'));
-        expect(localizations.accessibility_toast_success, equals('Éxito'));
-        expect(localizations.accessibility_toast_error, equals('Error'));
-        expect(localizations.accessibility_toast_info, equals('Información'));
         expect(
           localizations.accessibility_previous_month,
           equals('Mes anterior'),
@@ -436,10 +374,6 @@ void main() {
         expect(
           localizations.accessibility_next_month,
           equals('Mes siguiente'),
-        );
-        expect(
-          localizations.accessibility_cancel_location_hint,
-          equals('Doble toque para cancelar la obtención de ubicación'),
         );
       });
 
@@ -454,31 +388,19 @@ void main() {
         // Test English parameterized methods
         expect(
           enLocalizations.accessibility_total_expenses('100.50'),
-          equals('Total expenses: 100.50€'),
-        );
-        expect(
-          enLocalizations.accessibility_security_switch('On'),
-          equals('Security switch - On'),
+          equals('Total expenses: 100.50'),
         );
 
         // Test Italian parameterized methods
         expect(
           itLocalizations.accessibility_total_expenses('100.50'),
-          equals('Spese totali: 100.50€'),
-        );
-        expect(
-          itLocalizations.accessibility_security_switch('Attivo'),
-          equals('Interruttore sicurezza - Attivo'),
+          equals('Spese totali: 100.50'),
         );
 
         // Test Spanish parameterized methods
         expect(
           esLocalizations.accessibility_total_expenses('100.50'),
-          equals('Gastos totales: 100.50€'),
-        );
-        expect(
-          esLocalizations.accessibility_security_switch('Activado'),
-          equals('Interruptor de seguridad - Activado'),
+          equals('Gastos totales: 100.50'),
         );
       });
     });

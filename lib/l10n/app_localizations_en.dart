@@ -9,22 +9,13 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get developer_section_title => 'Developer & Support';
+  String get developer_section_title => 'Developer and support';
 
   @override
-  String get developer_section_desc => 'Support the developer or view profile';
-
-  @override
-  String get repo_section_title => 'Source & Issues';
-
-  @override
-  String get repo_section_desc => 'View source code or report a problem';
+  String get repo_section_title => 'Code and issues';
 
   @override
   String get license_section_title => 'License';
-
-  @override
-  String get license_section_desc => 'View the open source license';
 
   @override
   String get weeklyChartBadge => 'W';
@@ -58,19 +49,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Use Gemini and other AI assistants';
 
   @override
-  String get settings_privacy => 'Privacy';
-
-  @override
-  String get select_currency => 'Select currency';
-
-  @override
-  String get select_period_hint_short => 'Set dates';
-
-  @override
-  String get select_period_hint => 'Select dates';
-
-  @override
-  String get suggested_duration => 'Suggested duration';
+  String get select_currency => 'Currency';
 
   @override
   String days_count(int count) {
@@ -138,31 +117,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get in_group_prefix => 'in';
 
   @override
-  String get save_change_expense => 'Save changes';
-
-  @override
   String get group_total => 'Total';
-
-  @override
-  String get total_spent => 'Total spent';
-
-  @override
-  String get download_all_csv => 'Download all (CSV)';
-
-  @override
-  String get share_all_csv => 'Share all (CSV)';
-
-  @override
-  String get download_all_ofx => 'Download all (OFX)';
-
-  @override
-  String get share_all_ofx => 'Share all (OFX)';
-
-  @override
-  String get download_all_markdown => 'Download all (Markdown)';
-
-  @override
-  String get share_all_markdown => 'Share all (Markdown)';
 
   @override
   String get markdown_select_directory_title =>
@@ -183,41 +138,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share_label => 'Share';
 
   @override
-  String get share_text_label => 'Share text';
+  String get export_share => 'Share and export';
 
   @override
-  String get share_image_label => 'Share image';
-
-  @override
-  String get export_share => 'Share & Export';
-
-  @override
-  String get contribution_percentages => 'Percentages';
-
-  @override
-  String get contribution_percentages_desc =>
-      'Share of total paid by each participant';
-
-  @override
-  String get export_options => 'Export Options';
+  String get export_options => 'Export expenses';
 
   @override
   String get welcome_v3_title => 'Organize.\nShare.\nSettle.\n ';
-
-  @override
-  String get emptyGroupState1 => 'Your **journey** starts here!';
-
-  @override
-  String get emptyGroupState2 => 'Ready to log your **first** expense?';
-
-  @override
-  String get emptyGroupState3 => '**No** expenses... yet!';
-
-  @override
-  String get emptyGroupState4 => 'Let\'s start this **adventure**!';
-
-  @override
-  String get emptyGroupState5 => 'The **first** expense is always special';
 
   @override
   String get good_morning => 'Good morning';
@@ -229,9 +156,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get good_evening => 'Good evening';
 
   @override
-  String get your_groups => 'Your groups';
-
-  @override
   String get see_all => 'See all';
 
   @override
@@ -239,9 +163,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_active_groups => 'No active groups';
-
-  @override
-  String get no_active_groups_subtitle => 'Create an expense group';
 
   @override
   String get create_first_group => 'Create a group';
@@ -253,31 +174,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get new_expense => 'New Expense';
 
   @override
-  String get edit_expense => 'Edit expense';
+  String get image => 'Photo';
 
   @override
-  String get tap_to_create => 'Tap to create';
+  String get change_image => 'Change photo';
 
   @override
-  String get no_expense_label => 'No expenses found';
+  String get from_gallery => 'From gallery';
 
   @override
-  String get image => 'Image';
-
-  @override
-  String get select_image => 'Select Image';
-
-  @override
-  String get change_image => 'Change Image';
-
-  @override
-  String get from_gallery => 'From Gallery';
-
-  @override
-  String get from_camera => 'From Camera';
-
-  @override
-  String get remove_image => 'Remove Image';
+  String get from_camera => 'From camera';
 
   @override
   String get cannot_delete_assigned_participant =>
@@ -291,22 +197,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get color => 'Color';
 
   @override
-  String get remove_color => 'Remove Color';
-
-  @override
-  String get color_alternative => 'Alternative to image';
-
-  @override
   String get background => 'Background';
-
-  @override
-  String get select_background => 'Select Background';
-
-  @override
-  String get background_options => 'Background Options';
-
-  @override
-  String get choose_image_or_color => 'Choose image or color';
 
   @override
   String get participants_description => 'People sharing costs';
@@ -315,42 +206,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categories_description => 'Group expenses by type';
 
   @override
-  String get dates_description => 'Optional start and end';
+  String get dates_description => 'Start and end, optional';
 
   @override
-  String get select_period => 'Select period';
+  String get select_period => 'Period';
 
   @override
-  String get select_period_dates => 'Select the period dates';
-
-  @override
-  String duration_days(int days) {
-    return '$days days';
-  }
-
-  @override
-  String period_from_to(String start, String end, int days) {
-    return 'From $start to $end ($days days)';
-  }
-
-  @override
-  String period_from_select_end(String start) {
-    return 'From $start - Select end';
-  }
-
-  @override
-  String period_to_select_start(String end) {
-    return 'To $end - Select start';
-  }
+  String get suggested_duration => 'Suggested duration';
 
   @override
   String get confirm => 'Confirm';
 
   @override
-  String get clear => 'Clear';
-
-  @override
-  String get currency_description => 'Base currency for group';
+  String get clear => 'Remove';
 
   @override
   String get background_color_selected => 'Color selected';
@@ -362,7 +230,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get background_tap_to_change => 'Tap to change';
 
   @override
-  String get background_select_image_or_color => 'Select image or color';
+  String get background_select_image_or_color => 'Choose a photo or a color';
 
   @override
   String get background_random_color => 'Random color';
@@ -371,19 +239,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get background_remove => 'Remove background';
 
   @override
-  String get crop_image_title => 'Crop image';
+  String get crop_image_title => 'Crop the photo';
 
   @override
   String get crop_confirm => 'Confirm';
 
   @override
-  String get saving => 'Saving...';
-
-  @override
-  String get processing_image => 'Processing image...';
-
-  @override
-  String get no_trips_found => 'Where do you want to go?';
+  String get saving => 'Saving…';
 
   @override
   String get expenses => 'Expenses';
@@ -415,28 +277,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get this_month => 'This month';
 
   @override
-  String get recent_activity => 'Recent activity';
-
-  @override
   String get recent_expenses => 'Recent expenses';
-
-  @override
-  String get about => 'About';
-
-  @override
-  String get license_hint => 'This app is released under the MIT license.';
 
   @override
   String get license_link => 'View MIT License on GitHub';
 
   @override
-  String get license_section => 'License';
-
-  @override
   String get add_trip => 'Add a group';
-
-  @override
-  String get new_group => 'New Group';
 
   @override
   String get group => 'Group';
@@ -451,41 +298,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enter_title => 'Enter a name';
 
   @override
-  String get enter_participant => 'Enter at least one participant';
-
-  @override
-  String get select_start => 'Select start';
-
-  @override
-  String get select_end => 'Select end';
-
-  @override
-  String get start_date_not_selected => 'Select start';
-
-  @override
-  String get end_date_not_selected => 'Select end';
-
-  @override
-  String get select_from_date => 'Select from';
-
-  @override
-  String get select_to_date => 'Select to';
-
-  @override
-  String get date_range_not_selected => 'Select period';
-
-  @override
-  String get date_range_partial => 'Select both dates';
-
-  @override
   String get save => 'Save';
-
-  @override
-  String get delete_trip => 'Delete trip';
-
-  @override
-  String get delete_trip_confirm =>
-      'Are you sure you want to delete this trip?';
 
   @override
   String get cancel => 'Cancel';
@@ -494,12 +307,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String from_to(Object end, Object start) {
-    return '$start - $end';
-  }
+  String get add_expense => 'New expense';
 
   @override
-  String get add_expense => 'New expense';
+  String get edit_expense => 'Edit expense';
 
   @override
   String get expand_form => 'Expand form';
@@ -515,9 +326,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalid_amount => 'Invalid amount';
-
-  @override
-  String get no_categories => 'No categories';
 
   @override
   String get add_category => 'Add category';
@@ -536,20 +344,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'If you select one date, you must select both';
 
   @override
-  String get select_both_dates_or_none =>
-      'Select both dates or leave both empty';
-
-  @override
   String get end_date_after_start => 'End date must be after start date';
-
-  @override
-  String get start_date_optional => 'From';
-
-  @override
-  String get end_date_optional => 'To';
-
-  @override
-  String get dates => 'Period';
 
   @override
   String get expenses_by_participant => 'By participant';
@@ -564,7 +359,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backup => 'Backup';
 
   @override
-  String get no_trips_to_backup => 'No trips to backup';
+  String get no_trips_to_backup => 'No groups to back up';
 
   @override
   String get backup_error => 'Backup failed';
@@ -573,21 +368,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backup_share_message => 'Here is your Caravella backup';
 
   @override
-  String get import => 'Import';
-
-  @override
   String get import_confirm_title => 'Import data';
 
   @override
   String import_confirm_message(Object file) {
-    return 'Are you sure you want to overwrite all trips with the file \"$file\"? This action cannot be undone.';
+    return 'Restore from the file “$file”? Your current groups will be replaced and this can’t be undone.';
   }
 
   @override
-  String get import_success => 'Import successful! Data reloaded.';
+  String get import_success => 'Data restored';
 
   @override
-  String get import_error => 'Import failed. Check the file format.';
+  String get import_error => 'Restore failed: check the file';
 
   @override
   String get settings_flag_secure_error => 'Couldn\'t change screen security';
@@ -602,13 +394,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get developer_link_error => 'Couldn\'t open the link';
 
   @override
-  String get whats_new_load_error => 'Failed to load';
+  String get whats_new_load_error => 'Couldn’t load what’s new';
 
   @override
   String get categories => 'Categories';
-
-  @override
-  String get other_settings => 'Other settings';
 
   @override
   String get other_settings_desc => 'Notification, location';
@@ -632,38 +421,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get participant_name => 'Participant name';
 
   @override
-  String get participant_name_hint => 'Enter participant name';
-
-  @override
   String get edit_participant => 'Edit participant';
-
-  @override
-  String get delete_participant => 'Delete participant';
 
   @override
   String get add_participant => 'Add participant';
 
   @override
-  String get no_participants => 'No participants';
-
-  @override
-  String get category_name_hint => 'Enter category name';
-
-  @override
   String get edit_category => 'Edit category';
-
-  @override
-  String get delete_category => 'Delete category';
-
-  @override
-  String participant_name_semantics(Object name) {
-    return 'Participant: $name';
-  }
-
-  @override
-  String category_name_semantics(Object name) {
-    return 'Category: $name';
-  }
 
   @override
   String get currency => 'Currency';
@@ -672,22 +436,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_tab => 'Settings';
 
   @override
-  String get basic_info => 'Basic Information';
-
-  @override
   String get settings => 'Settings';
 
   @override
   String get history => 'History';
 
   @override
-  String get all => 'ALL';
+  String get all => 'All';
 
   @override
-  String get search_groups => 'Search groups...';
+  String get search_groups => 'Search groups…';
 
   @override
-  String get no_search_results => 'No groups found for';
+  String get no_search_results => 'No groups found';
 
   @override
   String get try_different_search => 'Try searching with different words';
@@ -702,7 +463,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get archive => 'Archive';
 
   @override
-  String get unarchive => 'Unarchive';
+  String get unarchive => 'Remove from archive';
 
   @override
   String get pin => 'Favorite';
@@ -711,16 +472,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unpin => 'Unfavorite';
 
   @override
-  String get delete => 'Delete';
-
-  @override
-  String get undo => 'UNDO';
-
-  @override
   String get archived_with_undo => 'Archived';
 
   @override
-  String get unarchived_with_undo => 'Unarchived';
+  String get unarchived_with_undo => 'Removed from archive';
 
   @override
   String get pinned_with_undo => 'Marked as favorite';
@@ -730,15 +485,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleted_with_undo => 'Deleted';
-
-  @override
-  String get archive_confirm => 'Do you want to archive';
-
-  @override
-  String get unarchive_confirm => 'Do you want to unarchive';
-
-  @override
-  String get overview => 'Overview';
 
   @override
   String get statistics => 'Statistics';
@@ -753,21 +499,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get number_of_expenses => 'Number of expenses';
 
   @override
-  String get options => 'Options';
-
-  @override
-  String get show_overview => 'Show overview';
-
-  @override
-  String get show_statistics => 'Show statistics';
-
-  @override
-  String get no_expenses_to_display => 'No expenses to display';
-
-  @override
-  String get no_expenses_to_analyze => 'No expenses to analyze';
-
-  @override
   String get select_expense_date => 'Select expense date';
 
   @override
@@ -777,25 +508,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get date => 'Date';
 
   @override
-  String get edit_group => 'Edit Group';
-
-  @override
-  String get edit_group_desc =>
-      'Modify group settings, participants, and categories';
-
-  @override
-  String get new_group_desc =>
-      'Create a new expense group with custom settings';
-
-  @override
   String get delete_group => 'Delete group';
 
   @override
   String get delete_group_confirm =>
-      'Are you sure you want to delete this expense group? This action cannot be undone.';
+      'The group and all its expenses will be deleted. This can’t be undone.';
 
   @override
-  String get add_expense_fab => 'Add Expense';
+  String get add_expense_fab => 'Add expense';
 
   @override
   String get pin_group => 'Mark as favorite';
@@ -813,21 +533,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get theme_dark => 'Dark';
 
   @override
-  String get developed_by => 'Developed by calca';
-
-  @override
-  String get links => 'Links';
-
-  @override
-  String get daily_expenses_chart => 'Daily expenses';
-
-  @override
-  String get weekly_expenses_chart => 'Weekly expenses';
-
-  @override
-  String get daily_average_by_category => 'Daily average by category';
-
-  @override
   String get per_day => '/day';
 
   @override
@@ -835,25 +540,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'No expenses available for statistics';
 
   @override
-  String get settlement => 'Settlement';
+  String get settlement => 'Settle up';
 
   @override
-  String get all_balanced => 'All accounts are balanced!';
-
-  @override
-  String get owes_to => ' owes ';
-
-  @override
-  String get export_csv => 'Export CSV';
+  String get all_balanced => 'You’re all square';
 
   @override
   String get no_expenses_to_export => 'No expenses to export';
-
-  @override
-  String get export_csv_share_text => 'Expenses exported from ';
-
-  @override
-  String get export_csv_error => 'Error exporting expenses';
 
   @override
   String get expense_name => 'Description';
@@ -872,9 +565,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get expense_updated_success => 'Expense updated';
-
-  @override
-  String get data_refreshing => 'Refreshing…';
 
   @override
   String get data_refreshed => 'Updated';
@@ -947,44 +637,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_current_location => 'Use current location';
 
   @override
-  String get enter_location_manually => 'Enter manually';
+  String get getting_location => 'Finding location…';
 
   @override
-  String get location_permission_denied => 'Location permission denied';
-
-  @override
-  String get location_service_disabled => 'Location service disabled';
-
-  @override
-  String get getting_location => 'Getting location...';
-
-  @override
-  String get location_error => 'Error getting location';
-
-  @override
-  String get resolving_address => 'Resolving address…';
+  String get location_error => 'Couldn’t find your location';
 
   @override
   String get address_resolved => 'Address resolved';
 
   @override
-  String get search_place => 'Search place';
-
-  @override
-  String get search_place_hint => 'Search for a place or address';
-
-  @override
   String get settings_general => 'General';
-
-  @override
-  String get settings_general_desc => 'Language and appearance settings';
-
-  @override
-  String get settings_auto_location_section => 'Location Detection';
-
-  @override
-  String get settings_auto_location_section_desc =>
-      'Configure automatic location detection';
 
   @override
   String get settings_auto_location_title => 'Automatic location';
@@ -994,9 +656,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_language => 'Language';
-
-  @override
-  String get settings_language_desc => 'Choose your preferred language';
 
   @override
   String get settings_language_it => 'Italian';
@@ -1014,16 +673,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_language_zh => 'Chinese (Simplified)';
 
   @override
-  String get settings_select_language => 'Select language';
+  String get settings_select_language => 'Language';
 
   @override
   String get settings_theme => 'Theme';
-
-  @override
-  String get settings_theme_desc => 'Light, dark or system';
-
-  @override
-  String get settings_select_theme => 'Select theme';
 
   @override
   String get settings_appearance => 'Appearance';
@@ -1038,13 +691,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_dynamic_color_desc => 'Use colors from your wallpaper';
 
   @override
-  String get settings_privacy_desc => 'Security and privacy options';
+  String get settings_privacy => 'Privacy';
 
   @override
   String get settings_data => 'Data';
-
-  @override
-  String get settings_data_desc => 'Manage your information';
 
   @override
   String get settings_data_manage => 'Data management';
@@ -1053,16 +703,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_info => 'Information';
 
   @override
-  String get settings_info_desc => 'App details and support';
-
-  @override
   String get settings_app_version => 'App version';
 
   @override
   String get settings_info_card => 'Information';
 
   @override
-  String get settings_info_card_desc => 'Developer, Source code and License';
+  String get settings_info_card_desc => 'Developer, source code and license';
 
   @override
   String get settings_invite_friends => 'Invite your friends';
@@ -1084,7 +731,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get terms_repo_title => 'GitHub Repository';
 
   @override
-  String get terms_repo_desc => 'Application source code.';
+  String get terms_repo_desc => 'The app’s source code';
 
   @override
   String get terms_issue_title => 'Report a problem';
@@ -1093,19 +740,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get terms_issue_desc => 'Report a problem on GitHub';
 
   @override
-  String get terms_license_desc => 'View the open source license.';
+  String get terms_license_desc => 'MIT open source license';
 
   @override
   String get support_developer_title => 'Buy me a coffee';
 
   @override
-  String get support_developer_desc => 'Support the development of this app.';
+  String get support_developer_desc => 'Support the app’s development';
 
   @override
-  String get data_title => 'Backup & Restore';
-
-  @override
-  String get data_backup_title => 'Backup';
+  String get data_title => 'Backup and restore';
 
   @override
   String get data_backup_desc => 'Save your expenses to a file';
@@ -1135,39 +779,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get default_participant_me => 'Me';
 
   @override
-  String get info_tab => 'Info';
-
-  @override
-  String get select_paid_by => 'Select payer';
-
-  @override
-  String get select_category => 'Select a category';
-
-  @override
-  String get check_form => 'Check the entered data';
+  String get select_category => 'Category';
 
   @override
   String get delete_expense => 'Delete expense';
 
   @override
   String get delete_expense_confirm =>
-      'Are you sure you want to delete this expense?';
+      'The expense will be deleted. This can’t be undone.';
 
   @override
-  String get no_results_found => 'No results found.';
-
-  @override
-  String get try_adjust_filter_or_search =>
-      'Try adjusting the filter or search.';
-
-  @override
-  String get general_statistics => 'General statistics';
-
-  @override
-  String get add_first_expense => 'Add the first expense to get started';
-
-  @override
-  String get overview_and_statistics => 'Overview and statistics';
+  String get delete => 'Delete';
 
   @override
   String get daily_average => 'Daily';
@@ -1179,26 +801,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get monthly_average => 'Monthly';
 
   @override
-  String get average_expense => 'Average expense';
+  String get welcome_v3_cta => 'Get started';
 
   @override
-  String get welcome_v3_cta => 'Get started!';
-
-  @override
-  String get discard_changes_title => 'Discard changes?';
+  String get discard_changes_title => 'Leave without saving?';
 
   @override
   String get discard_changes_message =>
-      'Are you sure you want to discard unsaved changes?';
+      'Changes you haven’t saved will be lost.';
 
   @override
   String get discard => 'Discard';
-
-  @override
-  String get category_placeholder => 'Category';
-
-  @override
-  String get image_requirements => 'PNG, JPG, GIF (max 10MB)';
 
   @override
   String error_saving_group(Object error) {
@@ -1206,16 +819,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get error_selecting_image => 'Error selecting image';
-
-  @override
-  String get error_saving_image => 'Error saving image';
-
-  @override
   String get already_exists => 'already exists';
-
-  @override
-  String get status_all => 'All';
 
   @override
   String get status_active => 'Active';
@@ -1232,10 +836,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get all_groups_archived_info =>
-      'All your groups are archived. You can restore them from the Archive section or create new ones.';
-
-  @override
-  String get filter_status_tooltip => 'Filter groups';
+      'All your groups are archived. You can bring them back from there or create a new one.';
 
   @override
   String get welcome_logo_semantic => 'Caravella app logo';
@@ -1244,19 +845,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get create_new_group => 'Create new group';
 
   @override
-  String get accessibility_add_new_item => 'Add new item';
-
-  @override
-  String get accessibility_navigation_bar => 'Navigation bar';
-
-  @override
   String get accessibility_back_button => 'Back';
-
-  @override
-  String get accessibility_loading_groups => 'Loading groups';
-
-  @override
-  String get accessibility_loading_your_groups => 'Loading your groups';
 
   @override
   String get accessibility_groups_list => 'Groups list';
@@ -1266,59 +855,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String accessibility_total_expenses(Object amount) {
-    return 'Total expenses: $amount€';
+    return 'Total expenses: $amount';
   }
 
   @override
   String get accessibility_add_expense => 'Add expense';
 
   @override
-  String accessibility_security_switch(Object state) {
-    return 'Security switch - $state';
-  }
-
-  @override
-  String get accessibility_switch_on => 'On';
-
-  @override
-  String get accessibility_switch_off => 'Off';
-
-  @override
-  String get accessibility_image_source_dialog =>
-      'Image source selection dialog';
-
-  @override
-  String get accessibility_currently_enabled => 'Currently enabled';
-
-  @override
   String get accessibility_currently_disabled => 'Currently disabled';
-
-  @override
-  String get accessibility_double_tap_disable =>
-      'Double tap to disable screen security';
-
-  @override
-  String get accessibility_double_tap_enable =>
-      'Double tap to enable screen security';
-
-  @override
-  String get accessibility_toast_success => 'Success';
-
-  @override
-  String get accessibility_toast_error => 'Error';
-
-  @override
-  String get accessibility_toast_info => 'Information';
 
   @override
   String get accessibility_previous_month => 'Previous month';
 
   @override
   String get accessibility_next_month => 'Next month';
-
-  @override
-  String get accessibility_cancel_location_hint =>
-      'Double tap to cancel location retrieval';
 
   @override
   String get color_suggested_title => 'Suggested colors';
@@ -1805,103 +1355,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currency_ZWL => 'Zimbabwean Dollar';
 
   @override
-  String get search_currency => 'Search currency...';
+  String get search_currency => 'Search currency…';
 
   @override
-  String get activity => 'Expenses';
-
-  @override
-  String get search_expenses_hint => 'Search by name or note...';
-
-  @override
-  String get clear_filters => 'Clear';
+  String get clear_filters => 'Reset';
 
   @override
   String get filters => 'Filters';
 
   @override
-  String get show_filters => 'Show filters';
-
-  @override
-  String get hide_filters => 'Hide filters';
-
-  @override
-  String get all_categories => 'All';
-
-  @override
-  String get all_participants => 'All';
-
-  @override
-  String get no_expenses_with_filters =>
-      'No expenses match the selected filters';
-
-  @override
-  String get no_expenses_yet => 'No expenses added yet';
-
-  @override
-  String get empty_expenses_title => 'Ready to start tracking?';
+  String get empty_expenses_title => 'No expenses yet';
 
   @override
   String get empty_expenses_subtitle =>
-      'Add your first expense to get started with this group!';
+      'Add the first one: you’ll find it here.';
 
   @override
-  String get add_first_expense_button => 'Add Expense';
+  String get add_first_expense_button => 'Add expense';
 
   @override
   String get show_search => 'Show search bar';
 
   @override
-  String get hide_search => 'Hide search bar';
-
-  @override
-  String get expense_groups_title => 'Expense Groups';
-
-  @override
-  String get expense_groups_desc => 'Manage your expense groups';
-
-  @override
   String get whats_new_title => 'What\'s New';
-
-  @override
-  String get whats_new_desc => 'Discover the latest features and updates';
-
-  @override
-  String get whats_new_subtitle => 'Latest highlights';
-
-  @override
-  String get whats_new_latest => 'Stay up to date with recent improvements';
 
   @override
   String get changelog_title => 'Changelog';
 
   @override
-  String get changelog_desc => 'Version history and improvements';
-
-  @override
-  String get average_per_person => 'Average per person';
-
-  @override
-  String get more => 'more';
-
-  @override
-  String get less => 'less';
-
-  @override
-  String get debt_prefix_to => 'to ';
-
-  @override
-  String get view_on_map => 'View on map';
-
-  @override
   String get expenses_map => 'Expenses Map';
 
   @override
-  String get no_locations_available => 'No locations available';
+  String get no_locations_available => 'No places';
 
   @override
   String get no_locations_subtitle =>
-      'Add location data to your expenses to see them on the map';
+      'Add a place to your expenses to see them on the map';
 
   @override
   String expense_count(int count) {
@@ -1930,22 +1419,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_update_available => 'App up to date';
 
   @override
-  String get no_update_available_desc => 'You\'re using the latest version';
-
-  @override
   String get update_now => 'Update now';
 
   @override
   String get update_later => 'Later';
 
   @override
-  String get checking_for_updates => 'Checking for updates...';
+  String get checking_for_updates => 'Checking for updates…';
 
   @override
-  String get update_error => 'Update check error';
+  String get update_error => 'Couldn’t check for updates';
 
   @override
-  String get update_downloading => 'Downloading...';
+  String get update_downloading => 'Downloading…';
 
   @override
   String get update_ready_to_install => 'Update ready to install';
@@ -1955,74 +1441,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'The update finished downloading. Install it to finish updating.';
 
   @override
-  String get update_installing => 'Installing...';
-
-  @override
-  String get update_feature_android_only =>
-      'Feature only available on Android with Google Play Store';
-
-  @override
-  String get update_recommendation_title => 'Update recommended';
-
-  @override
-  String get update_recommendation_desc =>
-      'A new version of Caravella is available. Update the app to always have the latest features and improvements!';
+  String get update_installing => 'Installing…';
 
   @override
   String get update_install => 'Install update';
 
   @override
-  String get update_remind_later => 'Remind me later';
-
-  @override
   String get send_reminder => 'Send reminder';
-
-  @override
-  String reminder_message_single(
-    Object participantName,
-    Object amount,
-    Object creditorName,
-    Object groupName,
-  ) {
-    return 'Hi $participantName! 👋\n\nJust a friendly reminder that you owe $amount to $creditorName for the group \"$groupName\".\n\nThank you! 😊';
-  }
-
-  @override
-  String reminder_message_multiple(
-    Object participantName,
-    Object groupName,
-    Object debtsList,
-  ) {
-    return 'Hi $participantName! 👋\n\nJust a friendly reminder of your payments for the group \"$groupName\":\n\n$debtsList\n\nThank you! 😊';
-  }
-
-  @override
-  String get notification_enabled => 'Persistent notification';
 
   @override
   String get notification_enabled_desc => 'Today\'s expenses in a notification';
 
   @override
-  String notification_daily_spent(String amount, String currency) {
-    return 'Today\'s expenses: $amount $currency';
-  }
-
-  @override
-  String notification_total_spent(String amount, String currency) {
-    return 'Total: $amount $currency';
-  }
-
-  @override
-  String get notification_add_expense => 'Add Expense';
-
-  @override
-  String get notification_close => 'Close';
-
-  @override
   String get group_type => 'Type';
-
-  @override
-  String get group_type_description => 'Choose the group type';
 
   @override
   String get group_type_travel => 'Travel';
@@ -2076,170 +1507,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get attachments => 'Attachments';
 
   @override
-  String get add_attachment => 'Add attachment';
-
-  @override
-  String get attachment_limit_reached =>
-      'Maximum limit of 5 attachments reached';
-
-  @override
   String get delete_attachment => 'Delete attachment';
 
   @override
   String get share_attachment => 'Share attachment';
 
   @override
-  String get delete_attachment_confirm_title => 'Delete attachment';
+  String get delete_attachment_confirm_title => 'Delete the attachment?';
 
   @override
   String get delete_attachment_confirm_message =>
-      'Are you sure you want to delete this attachment?';
+      'The attachment will be deleted from the expense.';
 
   @override
-  String get attachment_source => 'Choose source';
+  String get attachment_source => 'Add attachment';
 
   @override
-  String get from_files => 'From files';
-
-  @override
-  String get archived_group_readonly => 'Archived Group - Read-only';
-
-  @override
-  String get archived_group_readonly_desc =>
-      'This group is archived. You cannot modify it or add new expenses.';
-
-  @override
-  String get expense_readonly => 'Expense - Read-only';
-
-  @override
-  String get expense_readonly_archived =>
-      'This expense belongs to an archived group and cannot be modified.';
+  String get from_files => 'From a file';
 
   @override
   String get expense => 'Expense';
 
   @override
+  String get notification_enabled => 'Persistent notification';
+
+  @override
+  String notification_daily_spent(String amount, String currency) {
+    return 'Today\'s expenses: $amount $currency';
+  }
+
+  @override
+  String get notification_add_expense => 'Add expense';
+
+  @override
   String get notification_disable => 'Disable';
 
   @override
-  String get load_more_expenses => 'Load more expenses';
-
-  @override
-  String get wizard_group_creation_title => 'New Group';
-
-  @override
-  String get wizard_step_name => 'Name';
-
-  @override
-  String get wizard_step_type_and_name => 'Type and Name';
-
-  @override
-  String get wizard_type_and_name_description => 'What\'s this group for?';
-
-  @override
-  String get wizard_step_participants => 'Participants';
-
-  @override
-  String get wizard_step_categories => 'Categories';
-
-  @override
-  String get wizard_step_period => 'Period';
-
-  @override
-  String get wizard_step_background => 'Background';
-
-  @override
-  String get wizard_step_congratulations => 'Congratulations!';
-
-  @override
-  String get wizard_step_of => 'of';
-
-  @override
-  String get wizard_next => 'Next';
-
-  @override
-  String get wizard_previous => 'Previous';
+  String get wizard_group_creation_title => 'New group';
 
   @override
   String get wizard_skip => 'Skip';
 
   @override
-  String get wizard_finish => 'Create Group';
-
-  @override
-  String get wizard_name_description => 'Name';
-
-  @override
-  String get wizard_participants_description =>
-      'Add people who will share expenses';
-
-  @override
-  String get wizard_categories_description =>
-      'Create categories to organize expenses';
-
-  @override
-  String get wizard_period_description => 'Set start and end dates (optional)';
-
-  @override
-  String get wizard_background_description =>
-      'Choose a background color for the group';
-
-  @override
-  String wizard_congratulations_message(String groupName) {
-    return 'Your group \'$groupName\' has been created successfully!';
-  }
-
-  @override
-  String get wizard_group_summary => 'Group summary:';
-
-  @override
-  String wizard_created_participants(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count participants',
-      one: '1 participant',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String wizard_created_categories(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count categories',
-      one: '1 category',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get wizard_step_user_name => 'Your Name';
-
-  @override
-  String get wizard_user_name_welcome => 'Welcome!';
-
-  @override
-  String get wizard_user_name_description =>
-      'Before we start, tell us your name so we can personalize your experience';
-
-  @override
-  String get wizard_user_name_local_storage_note =>
-      'Your data stays private on your device';
+  String get wizard_user_name_welcome => 'Hi!';
 
   @override
   String get wizard_user_name_label => 'Your name (optional)';
 
   @override
   String get wizard_user_name_hint => 'e.g. Alex';
-
-  @override
-  String get wizard_step_participants_and_categories => 'Who and what';
-
-  @override
-  String get wizard_participants_and_categories_description =>
-      'Define who participates and what expenses will be shared';
 
   @override
   String get wizard_participants_section_title => 'Who\'s participating?';
@@ -2249,56 +1565,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add friends or roommates. You can modify them later.';
 
   @override
-  String get wizard_categories_section_title => 'What will be shared?';
-
-  @override
-  String get wizard_categories_section_hint =>
-      'E.g. Food, Accommodation, Transportation. You can add or rename later.';
-
-  @override
-  String get wizard_step_color_and_final => 'Color and confirm';
-
-  @override
-  String get wizard_color_and_final_description =>
-      'Choose a color for the group and review the summary';
-
-  @override
-  String get wizard_preview_title => 'Group preview';
-
-  @override
-  String get wizard_success_title => 'Congratulations!';
-
-  @override
-  String get wizard_go_to_group => 'Go to group';
-
-  @override
-  String get wizard_go_to_home => 'Go to home';
-
-  @override
-  String get wizard_go_to_settings => 'Group settings';
-
-  @override
-  String get wizard_completion_what_next => 'What you can do now:';
-
-  @override
-  String get wizard_completion_add_expenses => 'Add expenses';
-
-  @override
-  String get wizard_completion_add_expenses_description =>
-      'Start tracking group expenses';
-
-  @override
-  String get wizard_completion_customize_group => 'Customize group';
-
-  @override
-  String get wizard_completion_customize_group_description =>
-      'Edit participants, categories, and settings';
-
-  @override
-  String get danger_zone => 'Danger Zone';
-
-  @override
-  String get danger_zone_desc => 'Archive or delete this group';
+  String get danger_zone => 'Danger zone';
 
   @override
   String get export_options_desc => 'Download or share the expenses';
@@ -2335,23 +1602,23 @@ class AppLocalizationsEn extends AppLocalizations {
       'Keep your devices in step via Drive';
 
   @override
-  String get sync_local_title => 'Local Sync';
+  String get sync_local_title => 'Wi-Fi';
 
   @override
   String get sync_local_description => 'Automatic on the same Wi-Fi';
 
   @override
-  String get sync_cloud_title => 'Cloud Sync';
+  String get sync_cloud_title => 'Google Drive';
 
   @override
   String get sync_cloud_description => 'Sync via Google Drive';
 
   @override
   String get sync_cloud_scope_description =>
-      'Once enabled, this syncs all of your groups — there\'s no per-group choice like with Wi-Fi/Bluetooth sync';
+      'Syncs all your groups together (with Wi-Fi and Bluetooth you choose group by group)';
 
   @override
-  String get sync_cloud_enable => 'Enable cloud sync';
+  String get sync_cloud_enable => 'Turn on synchronization with Google Drive';
 
   @override
   String get sync_cloud_privacy =>
@@ -2367,45 +1634,35 @@ class AppLocalizationsEn extends AppLocalizations {
       'Google sign-in failed or was cancelled';
 
   @override
-  String get sync_history_title => 'Sync History';
+  String get sync_history_title => 'Synchronization history';
 
   @override
   String sync_history_group_desc(String groupTitle) {
-    return 'Sync events for «$groupTitle»';
+    return 'Synchronizations of “$groupTitle”';
   }
 
   @override
-  String get sync_status_synced => 'Synced';
-
-  @override
-  String get sync_status_syncing => 'Syncing...';
-
-  @override
-  String get sync_status_error => 'Sync error';
-
-  @override
-  String get sync_status_never => 'Never synced';
+  String get sync_status_syncing => 'Synchronizing…';
 
   @override
   String get sync_now => 'Sync now';
 
   @override
   String sync_last_sync(String time) {
-    return 'Last sync: $time';
+    return 'Last synchronization: $time';
   }
 
   @override
-  String get sync_bt_title => 'Bluetooth Sync';
+  String get sync_bt_title => 'Bluetooth';
 
   @override
   String get sync_bt_description => 'Manual, with nearby devices';
 
   @override
-  String get sync_bt_searching => 'Searching for nearby devices...';
+  String get sync_bt_searching => 'Looking for nearby devices…';
 
   @override
-  String get sync_bt_advertise_waiting =>
-      'Waiting for a nearby device to connect...';
+  String get sync_bt_advertise_waiting => 'Waiting for a nearby device…';
 
   @override
   String get sync_bt_sync_with => 'Sync';
@@ -2415,7 +1672,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String sync_bt_received_sent(int received, int sent) {
-    return 'Received $received, sent $sent records';
+    return 'Received $received changes, sent $sent';
   }
 
   @override
@@ -2430,10 +1687,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_bt_permission_denied =>
-      'Bluetooth permission denied — enable it in system settings to sync with nearby devices';
+      'Bluetooth not allowed: turn it on in your phone settings';
 
   @override
-  String get sync_history_empty => 'No sync history yet';
+  String get sync_history_empty => 'No synchronizations';
 
   @override
   String get sync_channel_lan => 'LAN';
@@ -2453,12 +1710,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sync_group_shared => 'Shared';
 
   @override
-  String get sync_group_synced => 'All changes synced';
-
-  @override
-  String get sync_group_pending => 'Changes not yet synced';
-
-  @override
   String get sync_group_enable => 'Share this group';
 
   @override
@@ -2466,14 +1717,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_group_needs_channel =>
-      'Turn on Wi-Fi or Bluetooth sync in Settings to enable this';
-
-  @override
-  String get sync_group_manage_pairing_title => 'Manage device pairing';
-
-  @override
-  String get sync_group_manage_pairing_desc =>
-      'Turn on Wi-Fi or Bluetooth sync and pair devices from Settings';
+      'Turn on Wi-Fi or Bluetooth in Synchronization to share the group';
 
   @override
   String get sync_qr_show_button => 'Show QR code';
@@ -2509,10 +1753,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_qr_no_network =>
-      'Connect to Wi-Fi to generate a pairing code';
+      'Connect to Wi-Fi to generate the pairing code';
 
   @override
-  String get sync_qr_scan_title => 'Scan pairing code';
+  String get sync_qr_scan_title => 'Scan the pairing code';
 
   @override
   String get sync_qr_scan_description => 'Scan the QR on the other device';
@@ -2556,9 +1800,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get search_all_fields_hint => 'Search all fields...';
-
-  @override
   String get has_attachment => 'Has attachment';
 
   @override
@@ -2575,13 +1816,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voice_input_button => 'Add by voice';
 
   @override
-  String get voice_input_listening => 'Listening...';
+  String get voice_input_listening => 'Listening…';
 
   @override
   String get voice_input_tap_to_speak => 'Tap to speak';
 
   @override
-  String get voice_input_processing => 'Processing...';
+  String get voice_input_processing => 'Processing…';
 
   @override
   String get voice_input_error => 'Voice recognition error';
@@ -2597,29 +1838,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voice_input_hint =>
-      'Try saying: \'50 dollars for dinner at restaurant\'';
+      'Try saying: “50 dollars for dinner at the restaurant”';
 
   @override
   String get voice_add_expense => 'Add by voice';
 
   @override
-  String get voice_expense_saved => 'Expense saved!';
+  String get voice_expense_saved => 'Expense saved';
 
   @override
   String get voice_expense_needs_more_info =>
-      'Some info missing – fill in the form';
+      'Some details are missing: complete the expense';
 
   @override
   String get from_unsplash => 'From Unsplash';
 
   @override
-  String get unsplash_search_hint => 'Search Unsplash photos...';
+  String get unsplash_search_hint => 'Search photos on Unsplash…';
 
   @override
   String get unsplash_no_results => 'No images found';
 
   @override
-  String get unsplash_downloading => 'Downloading image...';
+  String get unsplash_downloading => 'Downloading photo…';
 
   @override
   String get unsplash_error => 'Failed to load images';
@@ -2634,14 +1875,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scan_receipt => 'Scan receipt';
 
   @override
-  String get scanning_receipt => 'Scanning receipt...';
+  String get scanning_receipt => 'Reading receipt…';
 
   @override
-  String get receipt_scan_error => 'Error scanning receipt';
+  String get receipt_scan_error => 'Couldn’t read the receipt';
 
   @override
   String get receipt_scan_permission_denied =>
-      'Camera or photo access is off. Enable it in your phone\'s Settings to scan a receipt.';
+      'Camera not allowed: turn it on in your phone settings to read receipts';
 
   @override
   String get no_text_found => 'No text found in image';
@@ -2650,27 +1891,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get receipt_scanned => 'Receipt scanned';
 
   @override
-  String get settings_group_templates_section_title => 'Group type templates';
-
-  @override
-  String get settings_group_templates_section_desc =>
-      'Customize your group type presets';
-
-  @override
-  String get settings_group_templates_manage_title => 'Manage templates';
+  String get settings_group_templates_manage_title => 'Group templates';
 
   @override
   String get settings_group_templates_manage_desc =>
       'Create and edit your templates';
 
   @override
-  String get settings_group_templates_page_title => 'Group type templates';
+  String get settings_group_templates_page_title => 'Group templates';
 
   @override
-  String get settings_group_templates_empty_state => 'No templates yet';
+  String get settings_group_templates_empty_state => 'No templates';
 
   @override
-  String get settings_group_templates_add_title => 'Add template';
+  String get settings_group_templates_add_title => 'New template';
 
   @override
   String get settings_group_templates_edit_title => 'Edit template';
@@ -2679,16 +1913,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_group_templates_name_label => 'Template name';
 
   @override
-  String get settings_group_templates_name_hint => 'Enter a template name';
+  String get settings_group_templates_name_hint => 'E.g. Ski week';
 
   @override
   String get settings_group_templates_icon_label => 'Icon';
 
   @override
   String get settings_group_templates_categories_label => 'Default categories';
-
-  @override
-  String get settings_group_templates_category_hint => 'Add a category';
 
   @override
   String get settings_group_templates_validation_error =>
@@ -2699,11 +1930,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String settings_group_templates_delete_message(String templateName) {
-    return 'Delete template \"$templateName\"?';
+    return 'Delete the template “$templateName”?';
   }
 
   @override
-  String get clear_dates => 'Clear dates';
+  String get clear_dates => 'Remove dates';
 
   @override
   String accessibility_map_marker_expense(String name, String amount) {
@@ -2900,17 +2131,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String group_count(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count groups',
-      one: '1 group',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get expense_details_section => 'Details';
 
   @override
@@ -3022,9 +2242,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String wizard_people_you(String name) {
     return '$name (you)';
   }
-
-  @override
-  String get wizard_people_only_me => 'Just me for now';
 
   @override
   String get wizard_people_add_hint => 'A friend\'s name';

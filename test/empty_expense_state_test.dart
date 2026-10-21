@@ -29,14 +29,14 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check that add button is present with Italian text
-      expect(find.text('Aggiungi Spesa'), findsOneWidget);
+      expect(find.text('Aggiungi spesa'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
 
       // A short title and line instead of the old random emoji.
       expect(find.byIcon(Icons.receipt_long_outlined), findsOneWidget);
 
       // Check button functionality
-      final button = find.text('Aggiungi Spesa');
+      final button = find.text('Aggiungi spesa');
       await tester.tap(button);
       await tester.pumpAndSettle();
 
@@ -66,14 +66,14 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check that add button is present with English text
-      expect(find.text('Add Expense'), findsOneWidget);
+      expect(find.text('Add expense'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
 
       // A short title and line instead of the old random emoji.
       expect(find.byIcon(Icons.receipt_long_outlined), findsOneWidget);
 
       // Check button functionality
-      final button = find.text('Add Expense');
+      final button = find.text('Add expense');
       await tester.tap(button);
       await tester.pumpAndSettle();
 
@@ -103,14 +103,14 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check that add button is present with Spanish text
-      expect(find.text('Agregar Gasto'), findsOneWidget);
+      expect(find.text('Añadir gasto'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
 
       // A short title and line instead of the old random emoji.
       expect(find.byIcon(Icons.receipt_long_outlined), findsOneWidget);
 
       // Check button functionality
-      final button = find.text('Agregar Gasto');
+      final button = find.text('Añadir gasto');
       await tester.tap(button);
       await tester.pumpAndSettle();
 
@@ -132,7 +132,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Title and line from the localizations, no emoji.
-      expect(find.text('Ready to start tracking?'), findsOneWidget);
+      expect(find.text('No expenses yet'), findsOneWidget);
 
       // Also verify button is present
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
@@ -154,7 +154,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for button label and icon
-      expect(find.text('Add Expense'), findsOneWidget);
+      expect(find.text('Add expense'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
     });
   });

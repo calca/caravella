@@ -78,7 +78,7 @@ void main() {
                         'Test message',
                         type: ToastType.success,
                         semanticLabel:
-                            '${gloc.accessibility_toast_success}: Test message',
+                            '${gloc.voice_expense_saved}: Test message',
                       );
                     },
                     child: const Text('Show Toast'),
@@ -97,7 +97,7 @@ void main() {
       // Verify localization is properly configured
       final context = tester.element(find.byType(Scaffold));
       final gloc = AppLocalizations.of(context);
-      expect(gloc.accessibility_toast_success, isNotEmpty);
+      expect(gloc.voice_expense_saved, isNotEmpty);
     });
 
     testWidgets('Navigation buttons have proper accessibility labels', (
