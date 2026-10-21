@@ -67,7 +67,8 @@ class GroupPhotoCard extends StatelessWidget {
         // sits on.
         ? PhotoVeil(
             path: file,
-            color: s.surfaceContainerHighest,
+            // The same raised surface as the cards without a photo.
+            color: s.raisedSurface,
             solidExtent: wide ? 72 : 84,
             fadeExtent: wide ? 100 : 110,
           )

@@ -393,7 +393,7 @@ class _Previews extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           flex: 3,
-          child: tile(0.82, s.surfaceContainerHighest, labels[2]),
+          child: tile(0.82, s.raisedSurface, labels[2]),
         ),
       ],
     );
