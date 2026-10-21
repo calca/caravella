@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the unused `android_nav_setting` dependency (it only sized the old carousel)
 
 ### Fixed
+- Settings: the avatar next to your name showed one letter ("G") instead of two ("GI") like the participants everywhere else
 - Settings → Data → Automatic backup: the switch couldn't actually be turned off (Android kept backing up, and the switch came back on). Turning it off now leaves Caravella's data out of the phone's backup (an earlier backup is replaced), and when it's on the row shows when Android last backed up (#123)
 - Settings → your name: saving the dialog (e.g. with the name cleared) crashed the page, because the text field was released while the dialog was still closing
 - Settings → Debug logs showed an error screen ("No MaterialLocalizations found") instead of the logs
