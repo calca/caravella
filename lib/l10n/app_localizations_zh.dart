@@ -602,7 +602,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get other_settings => '其他设置';
 
   @override
-  String get other_settings_desc => '货币、背景、位置';
+  String get other_settings_desc => '通知、位置';
 
   @override
   String get segment_general => '常规';

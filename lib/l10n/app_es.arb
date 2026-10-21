@@ -231,7 +231,7 @@
   "currency": "Moneda",
   "settings_tab": "Configuración",
   "other_settings": "Otras configuraciones",
-  "other_settings_desc": "Moneda, fondo, ubicación",
+  "other_settings_desc": "Notificación, ubicación",
   "segment_general": "General",
   "segment_other": "Otro",
   "basic_info": "Información Básica",

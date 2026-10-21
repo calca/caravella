@@ -612,7 +612,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get other_settings => 'Otras configuraciones';
 
   @override
-  String get other_settings_desc => 'Moneda, fondo, ubicación';
+  String get other_settings_desc => 'Notificación, ubicación';
 
   @override
   String get segment_general => 'General';

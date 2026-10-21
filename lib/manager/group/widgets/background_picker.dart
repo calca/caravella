@@ -148,18 +148,23 @@ class BackgroundPicker extends StatelessWidget {
     );
   }
 
-  void _showPicker(BuildContext context) async {
-    final state = context.read<GroupFormState>();
-    final controller = context.read<GroupFormController>();
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => _BackgroundSheet(
-        state: state,
-        controller: controller,
-        parentContext: context,
-      ),
-    );
-  }
+  void _showPicker(BuildContext context) => showBackgroundPickerSheet(context);
+}
+
+/// Opens the background sheet (gallery, camera, Unsplash, color, remove) for
+/// the [GroupFormState] above [context]; also used by the group settings'
+/// avatar shortcut.
+void showBackgroundPickerSheet(BuildContext context) {
+  final state = context.read<GroupFormState>();
+  final controller = context.read<GroupFormController>();
+  showModalBottomSheet(
+    context: context,
+    builder: (ctx) => _BackgroundSheet(
+      state: state,
+      controller: controller,
+      parentContext: context,
+    ),
+  );
 }
 
 class _BackgroundSheet extends StatelessWidget {

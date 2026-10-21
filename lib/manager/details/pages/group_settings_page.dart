@@ -63,7 +63,16 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
         title: gloc.settings,
         children: [
           SettingsProfileCard(
-            leading: GroupIconAvatar(group: trip, size: 52),
+            // Shortcut: the photo / icon opens the background sheet.
+            leading: Semantics(
+              button: true,
+              label: gloc.background,
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: () => _openGeneralPage(context, openBackground: true),
+                child: GroupIconAvatar(group: trip, size: 52),
+              ),
+            ),
             title: trip.title,
             subtitle: [
               ?dates,
@@ -140,12 +149,16 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     );
   }
 
-  Future<void> _openGeneralPage(BuildContext context) async {
+  Future<void> _openGeneralPage(
+    BuildContext context, {
+    bool openBackground = false,
+  }) async {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (ctx) => ExpenseGroupGeneralPage(
           trip: _currentTrip,
           mode: GroupEditMode.edit,
+          openBackground: openBackground,
         ),
       ),
     );

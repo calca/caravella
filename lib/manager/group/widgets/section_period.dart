@@ -122,7 +122,7 @@ class _PeriodDisplayCard extends StatelessWidget {
       displayText =
           '${formatDate(startDate!, Localizations.localeOf(context))} - ${formatDate(endDate!, Localizations.localeOf(context))}';
       final duration = endDate!.difference(startDate!).inDays + 1;
-      secondaryText = '$duration days';
+      secondaryText = gloc.days_count(duration);
       iconData = Icons.calendar_month;
     } else if (startDate != null) {
       displayText =

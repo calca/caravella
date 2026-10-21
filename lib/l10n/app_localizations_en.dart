@@ -611,7 +611,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get other_settings => 'Other settings';
 
   @override
-  String get other_settings_desc => 'Currency, background, location';
+  String get other_settings_desc => 'Notification, location';
 
   @override
   String get segment_general => 'General';
