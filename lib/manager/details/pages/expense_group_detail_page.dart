@@ -477,10 +477,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     final bandForeground = GroupHeaderBand.foregroundOf(trip, s);
     final barForeground = _barOpaque ? s.onSurface : bandForeground;
     final hasPhoto = GroupHeaderBand.photoOf(trip) != null;
-    final bool? forceStatusBarLight = _barOpaque
+    final bool? forceStatusBarLight = _barOpaque || hasPhoto
         ? null
-        : hasPhoto
-        ? true // light icons on the photo's shaded top
         : bandColor != null
         ? !ExpenseGroupColorPalette.isLightColor(bandColor)
         : null;

@@ -57,11 +57,11 @@ class GroupHeaderBand extends StatelessWidget {
 
     if (photo != null) {
       // Dates, title and figure cards on the page color; the photo melts
-      // into it above them, with a light shade under the status bar.
+      // into it above them, the same all the way up (no shade under the
+      // top bar).
       return PhotoVeil(
         path: photo,
         color: pageColor,
-        topShade: true,
         solidExtent: 160,
         fadeExtent: 160,
       );

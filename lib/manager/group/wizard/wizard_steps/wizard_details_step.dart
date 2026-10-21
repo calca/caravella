@@ -8,6 +8,7 @@ import '../../data/group_form_state.dart';
 import '../../group_type/group_type_localization.dart';
 import '../../pages/group_creation_wizard_page.dart';
 import '../../widgets/currency_selector_sheet.dart';
+import '../../widgets/period_selection_bottom_sheet.dart';
 
 /// The group's name (the only required field), then its dates and currency
 /// as pills, like the expense form's details.
@@ -38,18 +39,15 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
     super.dispose();
   }
 
-  Future<void> _pickDates(GroupFormState state) async {
-    final now = DateTime.now();
-    final range = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(now.year - 5),
-      lastDate: DateTime(now.year + 5),
-      initialDateRange: state.startDate != null && state.endDate != null
-          ? DateTimeRange(start: state.startDate!, end: state.endDate!)
-          : null,
-    );
-    if (range != null) state.setDates(start: range.start, end: range.end);
-  }
+  /// The same calendar sheet as the group's settings.
+  Future<void> _pickDates(GroupFormState state) =>
+      showPeriodSelectionBottomSheet(
+        context: context,
+        initialStartDate: state.startDate,
+        initialEndDate: state.endDate,
+        onSelectionChanged: (start, end) =>
+            state.setDates(start: start, end: end),
+      );
 
   Future<void> _pickCurrency(GroupFormState state) async {
     final selected = await showModalBottomSheet<Map<String, String>>(
@@ -71,7 +69,7 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
     final eyebrow = type != null
         ? GroupTypeLocalization.typeName(gloc, type)
         : gloc.wizard_group_creation_title;
-    final hasDates = state.startDate != null && state.endDate != null;
+    final hasDates = state.startDate != null || state.endDate != null;
     final currency = state.currency;
 
     return WizardStepLayout(
