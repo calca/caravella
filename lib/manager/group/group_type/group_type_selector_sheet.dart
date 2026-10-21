@@ -48,7 +48,10 @@ void showGroupTypeSelectorSheet(BuildContext context) {
   }
   List<String>? previousSelectionCategories() {
     if (currentType != null) {
-      return GroupTypeLocalization.localizedDefaultCategories(gloc, currentType);
+      return GroupTypeLocalization.localizedDefaultCategories(
+        gloc,
+        currentType,
+      );
     }
     if (currentTemplateId != null) {
       for (final template in templates) {
@@ -75,7 +78,11 @@ void showGroupTypeSelectorSheet(BuildContext context) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: SelectionTile(
-                leading: _buildTypeIcon(context, type.icon, isSelected: isSelected),
+                leading: _buildTypeIcon(
+                  context,
+                  type.icon,
+                  isSelected: isSelected,
+                ),
                 title: GroupTypeLocalization.typeName(gloc, type),
                 trailing: isSelected
                     ? Icon(
@@ -122,7 +129,8 @@ void showGroupTypeSelectorSheet(BuildContext context) {
             ),
             const SizedBox(height: 8),
             ...templates.map((template) {
-              final isSelected = currentType == null &&
+              final isSelected =
+                  currentType == null &&
                   currentTemplateId != null &&
                   currentTemplateId == template.id;
               return Padding(

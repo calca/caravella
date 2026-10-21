@@ -5601,6 +5601,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use this photo'**
   String get crop_use_photo;
+
+  /// No description provided for @welcome_tagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses for trips, home and friends, split fairly. Everything stays on your phone.'**
+  String get welcome_tagline;
+
+  /// No description provided for @wizard_name_title.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your name?'**
+  String get wizard_name_title;
+
+  /// No description provided for @wizard_name_note.
+  ///
+  /// In en, this message translates to:
+  /// **'It stays on your phone. You\'ll be the first participant of your groups.'**
+  String get wizard_name_note;
+
+  /// No description provided for @wizard_type_title.
+  ///
+  /// In en, this message translates to:
+  /// **'What kind of group?'**
+  String get wizard_type_title;
+
+  /// No description provided for @wizard_type_note.
+  ///
+  /// In en, this message translates to:
+  /// **'It sets the starting categories: you can change them anytime.'**
+  String get wizard_type_note;
+
+  /// No description provided for @group_type_personal_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Just your own spending'**
+  String get group_type_personal_desc;
+
+  /// No description provided for @group_type_family_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Home, family, flatmates'**
+  String get group_type_family_desc;
+
+  /// No description provided for @group_type_travel_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Holidays, weekends, trips'**
+  String get group_type_travel_desc;
+
+  /// No description provided for @group_type_other_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinners, events, gifts'**
+  String get group_type_other_desc;
+
+  /// No description provided for @wizard_details_title.
+  ///
+  /// In en, this message translates to:
+  /// **'What shall we call it?'**
+  String get wizard_details_title;
+
+  /// No description provided for @wizard_details_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates feed the spending chart. You can change everything later.'**
+  String get wizard_details_note;
+
+  /// No description provided for @wizard_people_you.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (you)'**
+  String wizard_people_you(String name);
+
+  /// No description provided for @wizard_people_only_me.
+  ///
+  /// In en, this message translates to:
+  /// **'Just me for now'**
+  String get wizard_people_only_me;
+
+  /// No description provided for @wizard_people_add_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'A friend\'s name'**
+  String get wizard_people_add_hint;
+
+  /// No description provided for @wizard_people_remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}'**
+  String wizard_people_remove(String name);
+
+  /// No description provided for @wizard_dates_add.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates'**
+  String get wizard_dates_add;
+
+  /// No description provided for @wizard_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get wizard_continue;
+
+  /// No description provided for @wizard_create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create group'**
+  String get wizard_create;
 }
 
 class _AppLocalizationsDelegate

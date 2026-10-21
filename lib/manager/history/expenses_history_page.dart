@@ -136,7 +136,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => const GroupCreationWizardPage()),
     );
-    if (result == true) await _loadTrips();
+    // The wizard returns the new group's id.
+    if (result != null) await _loadTrips();
   }
 
   Widget _buildAnimatedFab(gen.AppLocalizations gloc) {

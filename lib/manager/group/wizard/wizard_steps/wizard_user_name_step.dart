@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -6,8 +5,12 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../pages/group_creation_wizard_page.dart';
 
+/// First start only: the user's name, saved as they type, with their
+/// initials in an avatar that follows along.
 class WizardUserNameStep extends StatefulWidget {
-  const WizardUserNameStep({super.key});
+  final VoidCallback onSubmitted;
+
+  const WizardUserNameStep({super.key, required this.onSubmitted});
 
   @override
   State<WizardUserNameStep> createState() => _WizardUserNameStepState();
@@ -15,30 +18,19 @@ class WizardUserNameStep extends StatefulWidget {
 
 class _WizardUserNameStepState extends State<WizardUserNameStep> {
   final TextEditingController _controller = TextEditingController();
-  late final String _randomEmoji;
-
-  static const _emojis = ['👋', '🙋', '😊', '🎉', '💫', '🌈'];
 
   @override
   void initState() {
     super.initState();
-    _randomEmoji = _emojis[Random().nextInt(_emojis.length)];
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final userNameNotifier = context.read<UserNameNotifier>();
-        if (userNameNotifier.hasName) {
-          _controller.text = userNameNotifier.name;
-        }
-      }
-    });
+    final user = context.read<UserNameNotifier>();
+    if (user.hasName) _controller.text = user.name;
+    _controller.addListener(_save);
+  }
 
-    _controller.addListener(() {
-      // Save name automatically when user types
-      if (_controller.text.trim().isNotEmpty) {
-        final userNameNotifier = context.read<UserNameNotifier>();
-        userNameNotifier.setName(_controller.text.trim());
-      }
-    });
+  void _save() {
+    final name = _controller.text.trim();
+    if (name.isNotEmpty) context.read<UserNameNotifier>().setName(name);
+    setState(() {});
   }
 
   @override
@@ -51,106 +43,57 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final initials = nameInitials(_controller.text);
 
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Friendly emoji icon
-            Text(_randomEmoji, style: AppTextStyles.emojiDisplay),
-
-            const SizedBox(height: 24),
-
-            // Friendly message
-            Text(
-              gloc.wizard_user_name_welcome,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 8),
-
-            // Step description
-            Text(
-              gloc.wizard_user_name_description,
-              style: AppTextStyles.subtle(context),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 12),
-
-            // Input field
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Semantics(
-                textField: true,
-                label: gloc.wizard_user_name_label,
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    labelText: gloc.wizard_user_name_label,
-                    hintText: gloc.wizard_user_name_hint,
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 12.0,
-                      horizontal: 16.0,
-                    ),
-                  ),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w400,
-                  ),
-                  textInputAction: TextInputAction.next,
-                  autofocus: false,
-                  textAlign: TextAlign.center,
-                  onSubmitted: (_) {
-                    // User name step is optional, always proceed to next step
-                    final wizardState = context.read<WizardState>();
-                    wizardState.nextStep();
-                  },
+    return WizardStepLayout(
+      eyebrow: gloc.wizard_user_name_welcome,
+      title: gloc.wizard_name_title,
+      children: [
+        WizardCard(
+          child: Row(
+            children: [
+              ExcludeSemantics(
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: s.surfaceContainerHighest,
+                  foregroundColor: s.onSurface,
+                  child: initials.isEmpty
+                      ? const Icon(Icons.person_outline)
+                      : Text(
+                          initials,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                 ),
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Compact privacy note
-            Container(
-              constraints: const BoxConstraints(maxWidth: 400),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.lock_rounded,
-                    size: 16,
-                    color: theme.colorScheme.onSurfaceVariant,
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  onSubmitted: (_) => widget.onSubmitted(),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      gloc.wizard_user_name_local_storage_note,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                  decoration: InputDecoration(
+                    hintText: gloc.wizard_user_name_hint,
+                    labelText: gloc.wizard_user_name_label,
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+        const SizedBox(height: 16),
+        WizardNote(gloc.wizard_name_note, icon: Icons.lock_outline_rounded),
+      ],
     );
   }
 }

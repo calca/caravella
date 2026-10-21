@@ -7,17 +7,24 @@ import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../group_type/group_type_localization.dart';
-import '../wizard/wizard_step_indicator.dart';
-import '../wizard/wizard_navigation_bar.dart';
 import '../wizard/wizard_steps/wizard_user_name_step.dart';
-import '../wizard/wizard_steps/wizard_type_and_name_step.dart';
-import '../wizard/wizard_steps/wizard_completion_step.dart';
+import '../wizard/wizard_steps/wizard_type_step.dart';
+import '../wizard/wizard_steps/wizard_details_step.dart';
+import '../wizard/wizard_steps/wizard_people_step.dart';
 import '../../details/pages/expense_group_detail_page.dart';
 
+/// The steps of [GroupCreationWizardPage], in order.
+enum WizardStep { userName, type, details, people }
+
+/// Creates a group in short steps, in the app's style (grey page, round back
+/// button, segmented progress, wide green button):
+/// your name (first start only) → what kind of group → its name (dates,
+/// currency) → who shares the expenses. Then it saves and leaves: from the
+/// welcome screen back to Home (which shows the new group with its
+/// getting-started checklist), otherwise into the new group's page.
 class GroupCreationWizardPage extends StatefulWidget {
-  /// If true, shows the user name step when launched from welcome page
-  /// (only if user name is not already set)
-  /// Also affects the completion step navigation behavior
+  /// Launched from the welcome screen: asks for the user's name first (when
+  /// not set yet) and returns to Home with the new group's id.
   final bool fromWelcome;
 
   const GroupCreationWizardPage({super.key, this.fromWelcome = false});
@@ -33,8 +40,7 @@ class _GroupCreationWizardPageState extends State<GroupCreationWizardPage> {
   @override
   void initState() {
     super.initState();
-    // Calculate includeUserNameStep once at initialization and keep it stable
-    // during the wizard execution to avoid PageView structure changes
+    // Decided once, so the steps don't change while the wizard runs.
     final userNameNotifier = context.read<UserNameNotifier>();
     _includeUserNameStep = widget.fromWelcome && !userNameNotifier.hasName;
   }
@@ -63,86 +69,42 @@ class _GroupCreationWizardPageState extends State<GroupCreationWizardPage> {
 
 class WizardState extends ChangeNotifier {
   int _currentStep = 0;
-  late final PageController _pageController;
-  String? _savedGroupId;
+  final PageController pageController = PageController();
   final bool includeUserNameStep;
 
-  WizardState({this.includeUserNameStep = true}) {
-    _pageController = PageController(initialPage: 0);
-  }
+  WizardState({this.includeUserNameStep = true});
+
+  List<WizardStep> get steps => [
+    if (includeUserNameStep) WizardStep.userName,
+    WizardStep.type,
+    WizardStep.details,
+    WizardStep.people,
+  ];
 
   int get currentStep => _currentStep;
-  PageController get pageController => _pageController;
-  String? get savedGroupId => _savedGroupId;
+  int get totalSteps => steps.length;
+  WizardStep get step => steps[_currentStep];
+  bool get isLastStep => _currentStep == totalSteps - 1;
 
-  // Total number of wizard steps (dynamic based on whether user name step is included)
-  int get totalSteps => includeUserNameStep ? 3 : 2;
+  void nextStep() => _goTo(_currentStep + 1);
+  void previousStep() => _goTo(_currentStep - 1);
 
-  void setSavedGroupId(String groupId) {
-    _savedGroupId = groupId;
+  void _goTo(int step) {
+    if (step < 0 || step >= totalSteps || step == _currentStep) return;
+    _currentStep = step;
     notifyListeners();
-  }
-
-  void nextStep() {
-    if (_currentStep < totalSteps - 1) {
-      _currentStep++;
-      notifyListeners();
-      final targetStep = _currentStep;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_pageController.hasClients) {
-          _pageController.animateToPage(
-            targetStep,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
-    }
-  }
-
-  void previousStep() {
-    if (_currentStep > 0) {
-      _currentStep--;
-      notifyListeners();
-      final targetStep = _currentStep;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_pageController.hasClients) {
-          _pageController.animateToPage(
-            targetStep,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
-    }
-  }
-
-  void goToStep(int step) {
-    if (step >= 0 && step < totalSteps) {
-      if (step != _currentStep) {
-        _currentStep = step;
-        if (_pageController.hasClients) {
-          _pageController.animateToPage(
-            step,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }
-        notifyListeners();
-      }
-    }
-  }
-
-  void syncWithPage(int step) {
-    if (step >= 0 && step < totalSteps && step != _currentStep) {
-      _currentStep = step;
-      notifyListeners();
+    if (pageController.hasClients) {
+      pageController.animateToPage(
+        step,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOutCubic,
+      );
     }
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    pageController.dispose();
     super.dispose();
   }
 }
@@ -157,83 +119,116 @@ class _WizardScaffold extends StatefulWidget {
 }
 
 class _WizardScaffoldState extends State<_WizardScaffold> {
+  bool _saving = false;
+
   @override
   void initState() {
     super.initState();
-    // Add user as first participant (using their name if set, or localized "Me")
-    // and initialize default categories based on the default group type
+    // The user is the first participant (their name, or the localized "Me"),
+    // and the default type's categories are there from the start.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final userNameNotifier = context.read<UserNameNotifier>();
-        final state = context.read<GroupFormState>();
-        final controller = context.read<GroupFormController>();
-        final gloc = gen.AppLocalizations.of(context);
+      if (!mounted) return;
+      final userNameNotifier = context.read<UserNameNotifier>();
+      final state = context.read<GroupFormState>();
+      final controller = context.read<GroupFormController>();
+      final gloc = gen.AppLocalizations.of(context);
 
-        final participantName = userNameNotifier.hasName
-            ? userNameNotifier.name
-            : gloc.default_participant_me;
-        state.addParticipant(
-          ExpenseParticipant(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-            name: participantName,
-          ),
-        );
-
-        // Initialize default categories for the default group type
-        if (state.groupType != null) {
-          final defaultCategories = GroupTypeLocalization
-              .localizedDefaultCategories(
+      state.addParticipant(
+        ExpenseParticipant(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: userNameNotifier.hasName
+              ? userNameNotifier.name
+              : gloc.default_participant_me,
+        ),
+      );
+      if (state.groupType != null) {
+        controller.initializeDefaultCategories(
+          GroupTypeLocalization.localizedDefaultCategories(
             gloc,
             state.groupType!,
-          );
-          controller.initializeDefaultCategories(defaultCategories);
-        }
+          ),
+        );
       }
     });
   }
 
-  Future<void> _handleCompletionBackAction(WizardState wizardState) async {
-    // When on completion step, back gesture acts like the CTA button
-    final groupId = wizardState.savedGroupId;
-    if (groupId == null) {
-      Navigator.of(context).pop();
+  bool _canContinue(WizardState wizard, GroupFormState state) =>
+      wizard.step != WizardStep.details || state.title.trim().isNotEmpty;
+
+  /// Leaving the name step: the user's name replaces the "Me" placeholder.
+  void _applyUserName() {
+    final user = context.read<UserNameNotifier>();
+    if (!user.hasName) return;
+    final state = context.read<GroupFormState>();
+    final me = gen.AppLocalizations.of(context).default_participant_me;
+    final i = state.participants.indexWhere(
+      (p) => p.name.trim().toLowerCase() == me.trim().toLowerCase(),
+    );
+    if (i != -1) state.editParticipant(i, user.name);
+  }
+
+  Future<void> _next(WizardState wizard) async {
+    FocusScope.of(context).unfocus();
+    if (wizard.step == WizardStep.userName) _applyUserName();
+    if (!wizard.isLastStep) {
+      wizard.nextStep();
       return;
     }
+    await _create();
+  }
 
-    if (widget.fromWelcome) {
-      // When coming from welcome, pop back with groupId so home can refresh
-      Navigator.of(context).pop(groupId);
-    } else {
-      // When coming from home with existing groups,
-      // navigate to the newly created group detail page
-      final group = await ExpenseGroupStorageV2.getTripById(groupId);
-      if (group != null && mounted) {
-        // Capture navigator before pop to avoid detached context
-        final nav = Navigator.of(context);
-        nav.pop();
+  Future<void> _create() async {
+    if (_saving) return;
+    setState(() => _saving = true);
+    final controller = context.read<GroupFormController>();
+    final gloc = gen.AppLocalizations.of(context);
+    try {
+      final group = await controller.save();
+      await PreferencesService.instance.appState.setIsFirstStart(false);
+      if (!mounted) return;
+      final nav = Navigator.of(context);
+      nav.pop(group.id);
+      // From Groups (or Home's "+"): straight into the new group.
+      if (!widget.fromWelcome) {
         await nav.push(
           MaterialPageRoute(
-            builder: (context) => ExpenseGroupDetailPage(trip: group),
+            builder: (_) => ExpenseGroupDetailPage(trip: group),
           ),
         );
-      } else if (mounted) {
-        Navigator.of(context).pop();
+      }
+    } catch (e, st) {
+      LoggerService.error(
+        'Group creation failed',
+        name: 'manager.group',
+        error: e,
+        stackTrace: st,
+      );
+      if (mounted) {
+        setState(() => _saving = false);
+        AppToast.show(
+          context,
+          gloc.error_saving_group(e.toString()),
+          type: ToastType.error,
+        );
       }
     }
   }
 
-  Future<bool> _onWillPop() async {
-    final wizardState = context.read<WizardState>();
-    // Prevent going back from completion step
-    if (wizardState.currentStep == wizardState.totalSteps - 1) {
-      return false;
+  /// Back: the previous step, or out of the wizard (asking first when
+  /// something was entered).
+  Future<void> _back(WizardState wizard) async {
+    FocusScope.of(context).unfocus();
+    if (wizard.currentStep > 0) {
+      wizard.previousStep();
+      return;
     }
+    if (await _confirmDiscard() && mounted) Navigator.of(context).pop();
+  }
 
-    final gloc = gen.AppLocalizations.of(context);
+  Future<bool> _confirmDiscard() async {
     final controller = context.read<GroupFormController>();
-
     if (!controller.hasChanges) return true;
-
+    final gloc = gen.AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => Material3Dialog(
@@ -260,103 +255,259 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final wizard = context.watch<WizardState>();
 
-    return Consumer<WizardState>(
-      builder: (context, wizardState, child) {
-        final isCompletionStep =
-            wizardState.currentStep == wizardState.totalSteps - 1;
-
-        return AppSystemUI.surface(
-          // Always intercept back and decide in the handler: this Consumer
-          // only rebuilds on WizardState changes, so a canPop derived from
-          // GroupFormController.hasChanges here would go stale as soon as the
-          // user typed a group name (the guard never fired and the input was
-          // silently lost). _onWillPop reads hasChanges live instead.
-          child: PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (didPop, _) async {
-              if (!didPop) {
-                if (isCompletionStep) {
-                  // On completion step, back gesture triggers CTA action
-                  await _handleCompletionBackAction(wizardState);
-                } else {
-                  final shouldPop = await _onWillPop();
-                  if (shouldPop && context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                }
-              }
-            },
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(gloc.wizard_group_creation_title),
-                elevation: 0,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                // Hide back button on completion step
-                automaticallyImplyLeading: !isCompletionStep,
-                leading: isCompletionStep ? const SizedBox.shrink() : null,
-              ),
-              body: Column(
-                children: [
-                  // Step indicator
-                  const WizardStepIndicator(),
-
-                  // Wizard content
-                  Expanded(
-                    child: PageView(
-                      controller: wizardState.pageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      onPageChanged: (index) {
-                        wizardState.syncWithPage(index);
-                      },
-                      children: [
-                        if (wizardState.includeUserNameStep)
-                          _wizardPage(
-                            wizardState,
-                            pageIndex: 0,
-                            child: const WizardUserNameStep(),
-                          ),
-                        _wizardPage(
-                          wizardState,
-                          pageIndex: wizardState.includeUserNameStep ? 1 : 0,
-                          child: const WizardTypeAndNameStep(),
+    return AppSystemUI.surfaceContainer(
+      context: context,
+      // Back is always handled here: the step or the discard question.
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) _back(wizard);
+        },
+        child: Scaffold(
+          backgroundColor: s.surfaceContainer,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 24, 0),
+                  child: Row(
+                    children: [
+                      RoundBackButton(onPressed: () => _back(wizard)),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _StepProgress(
+                          current: wizard.currentStep,
+                          total: wizard.totalSteps,
+                          label:
+                              '${wizard.currentStep + 1}/${wizard.totalSteps}',
                         ),
-                        _wizardPage(
-                          wizardState,
-                          pageIndex: wizardState.includeUserNameStep ? 2 : 1,
-                          child: WizardCompletionStep(
-                            groupId: wizardState.savedGroupId ?? '',
-                            fromWelcome: widget.fromWelcome,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
+                Expanded(
+                  child: PageView(
+                    controller: wizard.pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      for (final (i, step) in wizard.steps.indexed)
+                        // Off-screen steps are out of the focus order.
+                        ExcludeFocus(
+                          excluding: wizard.currentStep != i,
+                          child: FocusTraversalGroup(
+                            child: switch (step) {
+                              WizardStep.userName => WizardUserNameStep(
+                                onSubmitted: () => _next(wizard),
+                              ),
+                              WizardStep.type => const WizardTypeStep(),
+                              WizardStep.details => WizardDetailsStep(
+                                onSubmitted: () => _next(wizard),
+                              ),
+                              WizardStep.people => const WizardPeopleStep(),
+                            },
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                  child: Consumer<GroupFormState>(
+                    builder: (context, state, _) {
+                      final enabled = !_saving && _canContinue(wizard, state);
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          FilledButton(
+                            onPressed: enabled ? () => _next(wizard) : null,
+                            style: FilledButton.styleFrom(
+                              minimumSize: const Size.fromHeight(52),
+                              shape: const StadiumBorder(),
+                              elevation: 0,
+                            ),
+                            child: _saving
+                                ? SizedBox.square(
+                                    dimension: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: s.onPrimary,
+                                    ),
+                                  )
+                                : Text(
+                                    wizard.isLastStep
+                                        ? gloc.wizard_create
+                                        : gloc.wizard_continue,
+                                    style: theme.textTheme.titleSmall?.copyWith(
+                                      color: enabled
+                                          ? s.onPrimary
+                                          : s.onSurfaceVariant,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                          ),
+                          if (wizard.step == WizardStep.userName)
+                            TextButton(
+                              onPressed: () => _next(wizard),
+                              style: TextButton.styleFrom(
+                                minimumSize: const Size.fromHeight(48),
+                              ),
+                              child: Text(gloc.wizard_skip),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-                  // Navigation bar
-                  const WizardNavigationBar(),
-                ],
+/// The wizard's progress: one segment per step, filled up to the current
+/// one; screen readers hear "2/4".
+class _StepProgress extends StatelessWidget {
+  final int current;
+  final int total;
+  final String label;
+
+  const _StepProgress({
+    required this.current,
+    required this.total,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final s = Theme.of(context).colorScheme;
+    return Semantics(
+      label: label,
+      excludeSemantics: true,
+      child: Row(
+        children: [
+          for (var i = 0; i < total; i++) ...[
+            if (i > 0) const SizedBox(width: 6),
+            Expanded(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: 6,
+                decoration: BoxDecoration(
+                  color: i <= current ? s.primary : s.outlineVariant,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Shared layout of a wizard step: a small eyebrow, a big question, then the
+/// step's content; scrolls when the keyboard is up.
+class WizardStepLayout extends StatelessWidget {
+  final String eyebrow;
+  final String title;
+  final List<Widget> children;
+
+  const WizardStepLayout({
+    super.key,
+    required this.eyebrow,
+    required this.title,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(20, 28, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            eyebrow,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Semantics(
+            header: true,
+            child: Text(
+              title,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w800,
               ),
             ),
           ),
-        );
-      },
+          const SizedBox(height: 24),
+          ...children,
+        ],
+      ),
     );
   }
+}
 
-  /// Scopes each wizard step to its own focus-traversal group and excludes
-  /// off-screen steps from focus. `PageView` (unlike `PageView.builder`)
-  /// builds every child eagerly, so without this a keyboard/desktop user
-  /// tabbing through the current step could tab straight into a hidden
-  /// step's fields.
-  Widget _wizardPage(
-    WizardState wizardState, {
-    required int pageIndex,
-    required Widget child,
-  }) {
-    return ExcludeFocus(
-      excluding: wizardState.currentStep != pageIndex,
-      child: FocusTraversalGroup(child: child),
+/// Small grey note under a step's content.
+class WizardNote extends StatelessWidget {
+  final String text;
+  final IconData? icon;
+
+  const WizardNote(this.text, {super.key, this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = theme.colorScheme.onSurfaceVariant;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (icon != null) ...[
+          Icon(icon, size: 16, color: color),
+          const SizedBox(width: 8),
+        ],
+        Expanded(
+          child: Text(
+            text,
+            style: theme.textTheme.bodySmall?.copyWith(color: color),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A raised white card on the wizard's grey page (like the expense form's).
+class WizardCard extends StatelessWidget {
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  const WizardCard({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.fromLTRB(16, 12, 20, 12),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(20);
+    return CardOutline(
+      borderRadius: radius,
+      child: Material(
+        color: Theme.of(context).colorScheme.raisedSurface,
+        borderRadius: radius,
+        child: Padding(padding: padding, child: child),
+      ),
     );
   }
 }

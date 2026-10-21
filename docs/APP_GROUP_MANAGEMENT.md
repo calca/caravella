@@ -15,13 +15,14 @@ Covers `lib/manager/group/**` — group creation wizard, editing pages, backgrou
 
 ## Creation wizard
 
-`GroupCreationWizardPage` (`lib/manager/group/pages/group_creation_wizard_page.dart` + `wizard/`) provisions `GroupFormState`, a `WizardState` (`_currentStep`, `PageController`, `totalSteps` = 2 or 3), and a `GroupFormController` (always `create` mode). Steps run in a `PageView` with `NeverScrollableScrollPhysics` (button navigation only):
+`GroupCreationWizardPage` (`lib/manager/group/pages/group_creation_wizard_page.dart` + `wizard/wizard_steps/`) provisions `GroupFormState`, a `WizardState` (`steps` — a list of `WizardStep` — `currentStep`, `PageController`) and a `GroupFormController` (always `create` mode). It is in the app's style: grey page, `RoundBackButton` and a segmented progress bar (screen readers hear "2/4"), each step a `WizardStepLayout` (eyebrow, big question, content; `WizardCard` for raised white fields, `WizardNote` for the grey note), and a wide stadium button at the bottom. Steps run in a `PageView` with `NeverScrollableScrollPhysics` (button navigation only):
 
-1. **`WizardUserNameStep`** (optional — only shown when launched `fromWelcome` and no user name is set yet) — captures/persists the display name into `UserNameNotifier`.
-2. **`WizardTypeAndNameStep`** — group title + tappable icon opening `showGroupTypeSelectorSheet`.
-3. **`WizardCompletionStep`** — shown after `controller.save()` succeeds; either pops back to the welcome flow with the new group ID or navigates straight into `ExpenseGroupDetailPage`.
+1. **`WizardUserNameStep`** (only when launched `fromWelcome` and no user name is set yet) — "What's your name?", saved into `UserNameNotifier` as you type, with the initials (`nameInitials`) in an avatar; optional ("Skip"). Leaving it renames the "Me" placeholder participant to the name.
+2. **`WizardTypeStep`** — "What kind of group?": the four `ExpenseGroupType`s as big cards (travel, family, personal, other, each with a short description) plus the user's `GroupTypeTemplate`s; picking one calls `setGroupType`/`applyCustomTemplate`, which swaps the starting categories.
+3. **`WizardDetailsStep`** — "What shall we call it?": the title (the only required field — "Continue" stays disabled until it is set, with no error shown before), then dates (`showDateRangePicker`, with a × to clear) and currency (`CurrencySelectorSheet`) as `FormPill`s.
+4. **`WizardPeopleStep`** — "Who's taking part?": the user first ("Gigi (you)", or just the "Me" placeholder), then friends added by name (case-insensitive duplicates ignored), each a pill with initials and a ×; tapping one removes it.
 
-`WizardNavigationBar` gates progression (`_canProceedFromStep`, e.g. non-empty title) and handles promoting the "Me" placeholder participant to the real user name when leaving the name step. `WizardStepIndicator` is a purely visual stepper.
+"Create group" on the last step saves (`controller.save()`), clears the first-start flag and leaves: from the welcome screen back to Home with the new group's id (Home shows it with its getting-started checklist); otherwise it pops with the id and opens the new group's page. There is no completion page any more. Back goes to the previous step; on the first one it leaves the wizard.
 
 Discarding: the wizard shows a discard-confirmation dialog if the user backs out with unsaved changes — this **differs** from the standalone edit pages below, which auto-save on back instead.
 

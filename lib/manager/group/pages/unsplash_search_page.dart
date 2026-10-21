@@ -322,4 +322,3 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
     );
   }
 }
-

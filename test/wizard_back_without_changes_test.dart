@@ -65,8 +65,13 @@ void main() {
     tester,
   ) async {
     final l10n = await openWizard(tester);
+    // Kind of group → name.
+    await tester.tap(find.text(l10n.wizard_continue));
+    await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).first, 'Trip');
     await tester.pumpAndSettle();
+    // Back to the first step, then out: asks first.
+    await goBack(tester);
     await goBack(tester);
 
     expect(find.text(l10n.discard_changes_title), findsOneWidget);

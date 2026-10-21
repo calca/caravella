@@ -2911,4 +2911,62 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get crop_use_photo => '使用这张照片';
+
+  @override
+  String get welcome_tagline => '旅行、家庭和朋友的开销，公平分摊。所有数据都留在你的手机上。';
+
+  @override
+  String get wizard_name_title => '你叫什么名字？';
+
+  @override
+  String get wizard_name_note => '只保存在你的手机上。你将是你群组的第一个成员。';
+
+  @override
+  String get wizard_type_title => '这是什么群组？';
+
+  @override
+  String get wizard_type_note => '它决定初始类别，你可以随时修改。';
+
+  @override
+  String get group_type_personal_desc => '只记录你自己的支出';
+
+  @override
+  String get group_type_family_desc => '家庭、家人、室友';
+
+  @override
+  String get group_type_travel_desc => '度假、周末、出游';
+
+  @override
+  String get group_type_other_desc => '聚餐、活动、礼物';
+
+  @override
+  String get wizard_details_title => '给它起个名字';
+
+  @override
+  String get wizard_details_note => '日期用于支出图表。之后都可以修改。';
+
+  @override
+  String wizard_people_you(String name) {
+    return '$name（你）';
+  }
+
+  @override
+  String get wizard_people_only_me => '暂时只有我';
+
+  @override
+  String get wizard_people_add_hint => '朋友的名字';
+
+  @override
+  String wizard_people_remove(String name) {
+    return '移除 $name';
+  }
+
+  @override
+  String get wizard_dates_add => '日期';
+
+  @override
+  String get wizard_continue => '继续';
+
+  @override
+  String get wizard_create => '创建群组';
 }
