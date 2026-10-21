@@ -4,8 +4,8 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'group_card_get_started.dart';
 import 'group_card_recents.dart';
 
-/// The second card on Home: the last three expenses and "See all", which
-/// opens the group. With no expenses yet, the getting-started checklist.
+/// The second card on Home: the last three expenses, with "See all" (opens
+/// the group) at the end of their label row. With no expenses yet, the getting-started checklist.
 class GroupCardActivity extends StatelessWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
@@ -42,40 +42,35 @@ class GroupCardActivity extends StatelessWidget {
 
     final s = theme.colorScheme;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          GroupCardRecents(
-            key: ValueKey('recents_${group.id}_${group.expenses.length}'),
-            group: group,
-            localizations: localizations,
-            theme: theme,
-            count: GroupCardRecents.maxCount,
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+      child: GroupCardRecents(
+        key: ValueKey('recents_${group.id}_${group.expenses.length}'),
+        group: group,
+        localizations: localizations,
+        theme: theme,
+        count: GroupCardRecents.maxCount,
+        // "See all" on the label row: no footer, so the card stays short.
+        trailing: TextButton(
+          onPressed: onSeeAll,
+          style: TextButton.styleFrom(
+            foregroundColor: s.primary,
+            minimumSize: const Size(48, 48),
+            padding: const EdgeInsets.only(left: 12, right: 4),
           ),
-          Divider(height: 1, color: s.outlineVariant),
-          TextButton(
-            onPressed: onSeeAll,
-            style: TextButton.styleFrom(
-              minimumSize: const Size.fromHeight(48),
-              foregroundColor: s.primary,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  localizations.see_all,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: s.primary,
-                    fontWeight: FontWeight.w700,
-                  ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                localizations.see_all,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: s.primary,
+                  fontWeight: FontWeight.w700,
                 ),
-                const SizedBox(width: 2),
-                Icon(Icons.chevron_right_rounded, size: 20, color: s.primary),
-              ],
-            ),
+              ),
+              Icon(Icons.chevron_right_rounded, size: 20, color: s.primary),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

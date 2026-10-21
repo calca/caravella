@@ -317,6 +317,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
               topSafeArea -
               HomeLayoutConstants.headerHeight -
               FloatingNavBar.reservedHeight -
+              HomeLayoutConstants.navBarGap -
               bottomSafeArea,
         );
         return Stack(
@@ -346,7 +347,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                                 AppShellScope.maybeOf(context) == null,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        // The shortcuts stay under the bar until scrolled.
+                        const SizedBox(
+                          height: 16 + HomeLayoutConstants.navBarGap,
+                        ),
                         GroupQuickActions(
                           group: featured,
                           onExpenseAdded: _handleGroupUpdated,

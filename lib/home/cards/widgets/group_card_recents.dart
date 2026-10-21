@@ -12,6 +12,9 @@ class GroupCardRecents extends StatefulWidget {
   /// How many recent expenses to show (fetched up to [maxCount]).
   final int count;
 
+  /// Shown at the end of the "Recent expenses" label row.
+  final Widget? trailing;
+
   static const int maxCount = 3;
 
   const GroupCardRecents({
@@ -20,6 +23,7 @@ class GroupCardRecents extends StatefulWidget {
     required this.localizations,
     required this.theme,
     this.count = 2,
+    this.trailing,
   });
 
   @override
@@ -114,13 +118,21 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.localizations.recent_expenses.toUpperCase(),
-          style: widget.theme.textTheme.labelSmall?.copyWith(
-            // outline is the AA-compliant secondary text color in both themes.
-            color: widget.theme.colorScheme.outline,
-            fontWeight: FontWeight.w400,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                widget.localizations.recent_expenses.toUpperCase(),
+                style: widget.theme.textTheme.labelSmall?.copyWith(
+                  // outline is the AA-compliant secondary text color in both
+                  // themes.
+                  color: widget.theme.colorScheme.outline,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            ?widget.trailing,
+          ],
         ),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
