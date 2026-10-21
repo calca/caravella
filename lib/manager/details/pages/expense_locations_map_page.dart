@@ -228,34 +228,50 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
     }).toList();
   }
 
+  /// A plain page (loading, error, empty) with the round back button.
+  Widget _plainPage(BuildContext context, Widget body) =>
+      AppSystemUI.edgeToEdge(
+        child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: RoundBackButton(),
+                ),
+                Expanded(child: body),
+              ],
+            ),
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-
-    final appBar = AppBar(backgroundColor: colorScheme.surface);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     if (_isLoading) {
-      return Scaffold(
-        appBar: appBar,
-        body: const Center(child: CircularProgressIndicator()),
+      return _plainPage(
+        context,
+        const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (_errorMessage != null) {
-      return Scaffold(
-        appBar: appBar,
-        body: MapErrorState(
-          title: gloc.location_error,
-          message: _errorMessage!,
-        ),
+      return _plainPage(
+        context,
+        MapErrorState(title: gloc.location_error, message: _errorMessage!),
       );
     }
 
     if (_expensesWithLocation.isEmpty) {
-      return Scaffold(
-        appBar: appBar,
-        body: MapEmptyState(
+      return _plainPage(
+        context,
+        MapEmptyState(
           title: gloc.no_locations_available,
           subtitle: gloc.no_locations_subtitle,
         ),
@@ -273,37 +289,85 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
             _expensesWithLocation.first.location!.longitude!,
           );
 
-    return Scaffold(
-      appBar: appBar,
-      body: Column(
-        children: [
-          SectionHeader(
-            title: widget.group.title,
-            description: gloc.expenses_map,
-            padding: const EdgeInsets.all(16),
-          ),
-          Expanded(
-            child: ErrorBoundary(
-              child: StandardMap(
-                semanticLabel: gloc.expenses_map,
-                mapController: _mapController,
-                initialCenter: center,
-                initialZoom: hasBounds ? 12 : 14,
-                minZoom: 2,
-                maxZoom: 18,
-                layers: [
-                  // Rebuilt on every camera change (MapCamera is inherited),
-                  // so clustering follows the zoom level.
-                  Builder(
-                    builder: (context) => MarkerLayer(
-                      markers: _buildMarkers(MapCamera.of(context)),
+    // The map fills the screen; back and the group's name float over it.
+    return AppSystemUI.edgeToEdge(
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(
+              child: ErrorBoundary(
+                child: StandardMap(
+                  semanticLabel: gloc.expenses_map,
+                  mapController: _mapController,
+                  initialCenter: center,
+                  initialZoom: hasBounds ? 12 : 14,
+                  minZoom: 2,
+                  maxZoom: 18,
+                  layers: [
+                    // Rebuilt on every camera change (MapCamera is
+                    // inherited), so clustering follows the zoom level.
+                    Builder(
+                      builder: (context) => MarkerLayer(
+                        markers: _buildMarkers(MapCamera.of(context)),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: Row(
+                    children: [
+                      const RoundBackButton(),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        child: Material(
+                          color: colorScheme.raisedSurface,
+                          shape: const StadiumBorder(),
+                          elevation: 2,
+                          shadowColor: Colors.black26,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 8,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.group.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                Text(
+                                  gloc.expenses_map,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

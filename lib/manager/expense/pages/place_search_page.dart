@@ -83,73 +83,67 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
     final colorScheme = theme.colorScheme;
     final gloc = gen.AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: CaravellaAppBar(
-        headerSemanticLabel: gloc.location,
-        backButtonSemanticLabel: gloc.cancel,
-      ),
-      body: Column(
-        children: [
-          // Search bar sotto app bar
-          Container(
-            color: colorScheme.surface,
-            padding: const EdgeInsets.all(16),
-            child: _buildSearchBar(theme, colorScheme),
-          ),
-
-          // Mappa
-          Expanded(
-            child: Stack(
-              children: [
-                // Full-screen map background
-                _buildFullScreenMap(colorScheme),
-
-                // Autocomplete results overlay
-                if (_controller.state.hasSearchResults &&
-                    _controller.searchController.text.isNotEmpty)
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: _buildAutocompleteResults(theme, colorScheme),
+    // The map fills the screen; back and the search pill float over it,
+    // the results drop below the pill.
+    final topInset = MediaQuery.paddingOf(context).top;
+    return AppSystemUI.edgeToEdge(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Positioned.fill(child: _buildFullScreenMap(colorScheme)),
+            Positioned(
+              top: topInset + 8,
+              left: 16,
+              right: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Semantics(
+                        label: gloc.cancel,
+                        child: const RoundBackButton(),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(child: _buildSearchBar(theme, colorScheme)),
+                    ],
                   ),
-
-                // Error overlay
-                if (_controller.state.hasError)
-                  Positioned(
-                    top: 16,
-                    left: 16,
-                    right: 16,
-                    child: MapErrorOverlay(
-                      message: _controller.state.errorMessage,
+                  if (_controller.state.hasSearchResults &&
+                      _controller.searchController.text.isNotEmpty)
+                    _buildAutocompleteResults(theme, colorScheme),
+                  if (_controller.state.hasError)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: MapErrorOverlay(
+                        message: _controller.state.errorMessage,
+                      ),
                     ),
-                  ),
-
-                // FAB per centrare su posizione corrente
-                Positioned(
-                  bottom: 16 + MediaQuery.of(context).padding.bottom,
-                  right: 16,
-                  child: FloatingActionButton(
-                    onPressed: _controller.state.isCenteringOnLocation
-                        ? null
-                        : () => _controller.centerOnCurrentLocation(context),
-                    tooltip: gloc.location,
-                    child: _controller.state.isCenteringOnLocation
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: colorScheme.onPrimaryContainer,
-                            ),
-                          )
-                        : const Icon(Icons.my_location),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            // Round button to center on the current position.
+            Positioned(
+              bottom: 16 + MediaQuery.paddingOf(context).bottom,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: _controller.state.isCenteringOnLocation
+                    ? null
+                    : () => _controller.centerOnCurrentLocation(context),
+                tooltip: gloc.get_current_location,
+                child: _controller.state.isCenteringOnLocation
+                    ? SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: colorScheme.onPrimaryContainer,
+                        ),
+                      )
+                    : const Icon(Icons.my_location),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -182,11 +176,10 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
         _controller.searchPlaces(value);
       },
       onSubmitted: (value) => _controller.searchPlaces(value),
-      elevation: WidgetStateProperty.all(0),
-      backgroundColor: WidgetStateProperty.all(colorScheme.surfaceContainer),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
+      elevation: WidgetStateProperty.all(2),
+      shadowColor: WidgetStateProperty.all(Colors.black26),
+      backgroundColor: WidgetStateProperty.all(colorScheme.raisedSurface),
+      shape: WidgetStateProperty.all(const StadiumBorder()),
     );
   }
 
@@ -195,10 +188,11 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.5,
       ),
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(top: 12),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        color: colorScheme.raisedSurface,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -210,7 +204,12 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
       child: ListView.separated(
         shrinkWrap: true,
         itemCount: _controller.state.searchResults.length,
-        separatorBuilder: (context, index) => const Divider(height: 1),
+        padding: EdgeInsets.zero,
+        separatorBuilder: (context, index) => Divider(
+          height: 1,
+          indent: 56,
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
         itemBuilder: (context, index) {
           final place = _controller.state.searchResults[index];
           return ListTile(

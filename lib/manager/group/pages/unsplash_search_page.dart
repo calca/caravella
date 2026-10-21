@@ -148,95 +148,108 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Scaffold(
-      appBar: CaravellaAppBar(
-        headerSemanticLabel: loc.from_unsplash,
-        backButtonSemanticLabel: loc.cancel,
-      ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              // Search bar
-              Container(
-                color: colorScheme.surface,
-                padding: const EdgeInsets.all(16),
-                child: SearchBar(
-                  controller: _searchController,
-                  focusNode: _searchFocus,
-                  hintText: loc.unsplash_search_hint,
-                  leading: const Icon(Icons.search_outlined),
-                  trailing: _isSearching
-                      ? [
-                          const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+    return AppSystemUI.edgeToEdge(
+      child: Scaffold(
+        backgroundColor: colorScheme.surfaceContainer,
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                // Round back button and the search pill, like the other
+                // search pages.
+                SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                    child: Row(
+                      children: [
+                        Semantics(
+                          label: loc.cancel,
+                          child: const RoundBackButton(),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: SearchBar(
+                            controller: _searchController,
+                            focusNode: _searchFocus,
+                            hintText: loc.unsplash_search_hint,
+                            leading: const Icon(Icons.search_outlined),
+                            trailing: _isSearching
+                                ? [
+                                    const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  ]
+                                : _searchController.text.isNotEmpty
+                                ? [
+                                    IconButton(
+                                      tooltip: loc.clear,
+                                      icon: const Icon(Icons.clear_rounded),
+                                      onPressed: () {
+                                        _searchController.clear();
+                                        _onSearchChanged('');
+                                      },
+                                    ),
+                                  ]
+                                : [],
+                            onChanged: _onSearchChanged,
+                            onSubmitted: _search,
+                            elevation: WidgetStateProperty.all(0),
+                            backgroundColor: WidgetStateProperty.all(
+                              colorScheme.raisedSurface,
+                            ),
+                            shape: WidgetStateProperty.all(
+                              const StadiumBorder(),
+                            ),
                           ),
-                        ]
-                      : _searchController.text.isNotEmpty
-                      ? [
-                          IconButton(
-                            tooltip: loc.clear,
-                            icon: const Icon(Icons.clear_rounded),
-                            onPressed: () {
-                              _searchController.clear();
-                              _onSearchChanged('');
-                            },
-                          ),
-                        ]
-                      : [],
-                  onChanged: _onSearchChanged,
-                  onSubmitted: _search,
-                  elevation: WidgetStateProperty.all(0),
-                  backgroundColor: WidgetStateProperty.all(
-                    colorScheme.surfaceContainer,
-                  ),
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ),
 
-              // Results
-              Expanded(child: _buildBody(theme, colorScheme, loc)),
+                // Results
+                Expanded(child: _buildBody(theme, colorScheme, loc)),
 
-              // Attribution footer – always pinned at the bottom of the Column.
-              // ColoredBox + SafeArea ensure it stays above the system nav bar
-              // in edge-to-edge mode and doesn't blend with the content.
-              ColoredBox(
-                color: colorScheme.surface,
-                child: const SafeArea(
-                  top: false,
-                  child: UnsplashAttributionFooter(),
+                // Attribution footer – always pinned at the bottom of the Column.
+                // ColoredBox + SafeArea ensure it stays above the system nav bar
+                // in edge-to-edge mode and doesn't blend with the content.
+                ColoredBox(
+                  color: colorScheme.surfaceContainer,
+                  child: const SafeArea(
+                    top: false,
+                    child: UnsplashAttributionFooter(),
+                  ),
                 ),
-              ),
-            ],
-          ),
-
-          // Download overlay
-          if (_isDownloading)
-            ColoredBox(
-              color: Colors.black38,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 16),
-                    Text(
-                      loc.unsplash_downloading,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-        ],
+
+            // Download overlay
+            if (_isDownloading)
+              ColoredBox(
+                color: Colors.black38,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
+                      Text(
+                        loc.unsplash_downloading,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -92,15 +92,29 @@ class _PairedDevicesListState extends State<PairedDevicesList> {
               label: '${device.deviceName}, ${loc.sync_group_shared}',
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
-                visualDensity: VisualDensity.compact,
-                leading: Icon(
-                  _iconFor(device.platform),
-                  color: colorScheme.primary,
+                // A monochrome icon in a grey circle, like the settings rows.
+                leading: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorScheme.onSurface.withValues(alpha: 0.06),
+                  ),
+                  child: Icon(
+                    _iconFor(device.platform),
+                    size: 20,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
-                title: Text(device.deviceName, style: textTheme.bodyMedium),
+                title: Text(
+                  device.deviceName,
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 trailing: widget.showRemoveAction
                     ? IconButton(
-                        icon: const Icon(Icons.close, size: 18),
+                        icon: const Icon(Icons.close_rounded, size: 20),
                         tooltip: loc.sync_paired_devices_remove,
                         onPressed: () => _remove(device),
                       )

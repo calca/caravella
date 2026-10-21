@@ -106,8 +106,8 @@ Future<void> _executeDeleteAction(
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (context) => Material3Dialog(
-      title: Text(gloc.delete_trip),
-      content: Text(gloc.delete_trip_confirm),
+      title: Text(gloc.delete_group),
+      content: Text(gloc.delete_group_confirm),
       actions: [
         Material3DialogActions.cancel(context, gloc.cancel),
         Material3DialogActions.destructive(
