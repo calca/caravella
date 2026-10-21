@@ -273,17 +273,20 @@ class _PeriodSelectionBottomSheetState
       children: [
         FormSectionLabel(gloc.suggested_duration),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
+        // One row of equal pills: the labels shrink a little rather than
+        // wrapping onto a second line.
+        Row(
           children: [
-            for (final days in _durationPresets)
-              FormPill(
-                label: gloc.days_count(days),
-                style: _isPreset(days)
-                    ? FormPillStyle.selected
-                    : FormPillStyle.normal,
-                onTap: () => _onDurationPresetTapped(days),
+            for (final (i, days) in _durationPresets.indexed) ...[
+              if (i > 0) const SizedBox(width: 8),
+              Expanded(
+                child: _PresetPill(
+                  label: gloc.days_count(days),
+                  selected: _isPreset(days),
+                  onTap: () => _onDurationPresetTapped(days),
+                ),
               ),
+            ],
           ],
         ),
       ],
@@ -391,6 +394,71 @@ class _PeriodSelectionBottomSheetState
           const SizedBox(height: 20),
           _buildActionButtons(),
         ],
+      ),
+    );
+  }
+}
+
+/// A suggested duration: a stadium pill as wide as its share of the row,
+/// styled like [FormPill] (black when selected).
+class _PresetPill extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _PresetPill({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final fg = selected ? s.surface : s.onSurface;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: FormPill.touchMargin),
+        child: Material(
+          color: selected ? s.onSurface : s.raisedSurface,
+          shape: StadiumBorder(
+            side: BorderSide(
+              color: selected
+                  ? s.onSurface
+                  : s.outlineVariant.withValues(alpha: 0.6),
+            ),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onTap,
+            child: SizedBox(
+              height: FormPill.height,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Center(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: fg,
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
