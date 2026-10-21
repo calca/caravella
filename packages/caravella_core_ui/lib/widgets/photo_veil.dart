@@ -54,11 +54,14 @@ class PhotoVeil extends StatelessWidget {
     } else {
       add(clear, 0);
     }
-    add(clear, fadeTop);
-    // Eased: the photo lets go slowly, then the surface takes over.
-    add(color.withValues(alpha: 0.35), fadeTop + fadeExtent * 0.45);
-    add(color.withValues(alpha: 0.8), fadeTop + fadeExtent * 0.8);
-    add(color, solidTop);
+    // Smoothstep: starts and ends gently, so no edge shows where the photo
+    // begins to fade or where the surface takes over.
+    const steps = 8;
+    for (var i = 0; i <= steps; i++) {
+      final t = i / steps;
+      final eased = t * t * (3 - 2 * t);
+      add(color.withValues(alpha: eased), fadeTop + fadeExtent * t);
+    }
     add(color, h);
     return LinearGradient(
       begin: Alignment.topCenter,

@@ -1862,4 +1862,7 @@
   ,"quick_action_photo": "拍照"
   ,"photo_add_expense": "用收据照片新建支出"
   ,"receipt_photo_error": "无法拍摄收据照片"
+  ,"crop_hint": "拖动和双指缩放，选择要保留的部分"
+  ,"crop_preview": "预览"
+  ,"crop_use_photo": "使用这张照片"
 }

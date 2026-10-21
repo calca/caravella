@@ -5583,6 +5583,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t take the receipt photo'**
   String get receipt_photo_error;
+
+  /// Group photo crop page: under the 3:2 frame
+  ///
+  /// In en, this message translates to:
+  /// **'Drag and pinch to choose the part to keep'**
+  String get crop_hint;
+
+  /// No description provided for @crop_preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get crop_preview;
+
+  /// No description provided for @crop_use_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this photo'**
+  String get crop_use_photo;
 }
 
 class _AppLocalizationsDelegate

@@ -62,8 +62,8 @@ class GroupHeaderBand extends StatelessWidget {
         path: photo,
         color: pageColor,
         topShade: true,
-        solidExtent: 170,
-        fadeExtent: 110,
+        solidExtent: 160,
+        fadeExtent: 160,
       );
     }
     return Stack(

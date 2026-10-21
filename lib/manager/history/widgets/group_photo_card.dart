@@ -68,8 +68,8 @@ class GroupPhotoCard extends StatelessWidget {
         ? PhotoVeil(
             path: file,
             color: s.surfaceContainerHighest,
-            solidExtent: wide ? 84 : 96,
-            fadeExtent: 56,
+            solidExtent: wide ? 72 : 84,
+            fadeExtent: wide ? 100 : 110,
           )
         // No photo or color: the same raised surface as the Home card.
         : ColoredBox(color: color ?? s.raisedSurface);

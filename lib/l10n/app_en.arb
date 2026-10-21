@@ -1338,4 +1338,8 @@
   ,"@photo_add_expense": {"description": "Home quick action without receipt reading (F-Droid build)"}
   ,"receipt_photo_error": "Couldn't take the receipt photo"
   ,"@receipt_photo_error": {"description": "Home quick action without receipt reading (F-Droid build)"}
+  ,"crop_hint": "Drag and pinch to choose the part to keep"
+  ,"crop_preview": "Preview"
+  ,"crop_use_photo": "Use this photo"
+  ,"@crop_hint": {"description": "Group photo crop page: under the 3:2 frame"}
 }

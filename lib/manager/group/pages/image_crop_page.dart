@@ -1,16 +1,34 @@
 import 'dart:io';
-import 'dart:ui';
-import 'package:material_ui/material_ui.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:image/image.dart' as img;
+import 'dart:math' as math;
+import 'dart:ui' as ui;
 
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image/image.dart' as img;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:material_ui/material_ui.dart';
+
+/// Crops the group photo: a fixed 3:2 frame (the shape the photo has on the
+/// group page, close to the Home card's) over the photo, which the user
+/// moves by dragging and enlarges by pinching. Below, live previews of the
+/// photo on Home, the group page and a Groups card.
+///
+/// Returns the cropped photo, at most [maxSide] px on its long side.
 class ImageCropPage extends StatefulWidget {
   final File imageFile;
+
+  /// Width / height of the crop.
   final double aspectRatio;
+
+  /// Longest side of the saved photo, in px.
+  final int maxSide;
+
   const ImageCropPage({
     super.key,
     required this.imageFile,
-    this.aspectRatio = 0.56,
+    this.aspectRatio = 3 / 2,
+    this.maxSide = 1600,
   });
 
   @override
@@ -18,338 +36,459 @@ class ImageCropPage extends StatefulWidget {
 }
 
 class _ImageCropPageState extends State<ImageCropPage> {
-  Future<void> _loadImage() async {
-    final bytes = await widget.imageFile.readAsBytes();
-    _decodedImage = img.decodeImage(bytes)!;
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  void _initCropRect(Size displaySize) {
-    // Calcola il massimo crop 2:3 centrato nell'immagine visualizzata
-    final aspect = widget.aspectRatio;
-    double cropW = displaySize.width * 0.8;
-    double cropH = cropW / aspect;
-    if (cropH > displaySize.height * 0.8) {
-      cropH = displaySize.height * 0.8;
-      cropW = cropH * aspect;
-    }
-    final left = (displaySize.width - cropW) / 2;
-    final top = (displaySize.height - cropH) / 2;
-    _cropRectDisplay = Rect.fromLTWH(left, top, cropW, cropH);
-  }
-
-  void _onPanUpdate(DragUpdateDetails details) {
-    if (_cropRectDisplay == null || _imageDisplaySize == null) {
-      return;
-    }
-    final dx = details.delta.dx;
-    final dy = details.delta.dy;
-    double newLeft = _cropRectDisplay!.left + dx;
-    double newTop = _cropRectDisplay!.top + dy;
-    // Clamp to image bounds
-    newLeft = newLeft.clamp(
-      0.0,
-      _imageDisplaySize!.width - _cropRectDisplay!.width,
-    );
-    newTop = newTop.clamp(
-      0.0,
-      _imageDisplaySize!.height - _cropRectDisplay!.height,
-    );
-    setState(() {
-      _cropRectDisplay = Rect.fromLTWH(
-        newLeft,
-        newTop,
-        _cropRectDisplay!.width,
-        _cropRectDisplay!.height,
-      );
-    });
-  }
-
-  late img.Image _decodedImage;
-  bool _loading = true;
-  Rect? _cropRectDisplay; // crop rect in display coordinates
-  Size? _imageDisplaySize; // displayed image size
-  double? _scale; // image pixel / display pixel
+  final _transform = TransformationController();
+  ui.Image? _image;
+  Size _frame = Size.zero;
+  bool _saving = false;
 
   @override
   void initState() {
     super.initState();
-    _loadImage();
+    _load();
   }
 
-  void _onResize(
-    DragUpdateDetails details, {
-    required bool fromLeft,
-    required bool fromTop,
-  }) {
-    if (_cropRectDisplay == null || _imageDisplaySize == null) return;
-    double dx = details.delta.dx * (fromLeft ? -1 : 1);
-    double dy = details.delta.dy * (fromTop ? -1 : 1);
-    // Use the greater movement to resize, keeping aspect ratio
-    double delta = dx.abs() > dy.abs() ? dx : dy;
-    double newWidth = (_cropRectDisplay!.width + delta).clamp(
-      60.0,
-      _imageDisplaySize!.width,
-    );
-    double newHeight = newWidth / widget.aspectRatio;
-    if (newHeight > _imageDisplaySize!.height) {
-      newHeight = _imageDisplaySize!.height;
-      newWidth = newHeight * widget.aspectRatio;
-    }
-    double newLeft = fromLeft
-        ? (_cropRectDisplay!.right - newWidth)
-        : _cropRectDisplay!.left;
-    double newTop = fromTop
-        ? (_cropRectDisplay!.bottom - newHeight)
-        : _cropRectDisplay!.top;
-    // Clamp to image bounds
-    if (newLeft < 0) newLeft = 0;
-    if (newTop < 0) newTop = 0;
-    if (newLeft + newWidth > _imageDisplaySize!.width) {
-      newLeft = _imageDisplaySize!.width - newWidth;
-    }
-    if (newTop + newHeight > _imageDisplaySize!.height) {
-      newTop = _imageDisplaySize!.height - newHeight;
-    }
-    setState(() {
-      _cropRectDisplay = Rect.fromLTWH(newLeft, newTop, newWidth, newHeight);
-    });
+  @override
+  void dispose() {
+    _transform.dispose();
+    _image?.dispose();
+    super.dispose();
   }
 
-  Future<void> _cropAndReturn() async {
-    if (_cropRectDisplay == null || _scale == null) return;
-    // Converti cropRect da display a pixel immagine
-    final crop = img.copyCrop(
-      _decodedImage,
-      x: (_cropRectDisplay!.left * _scale!).round(),
-      y: (_cropRectDisplay!.top * _scale!).round(),
-      width: (_cropRectDisplay!.width * _scale!).round(),
-      height: (_cropRectDisplay!.height * _scale!).round(),
+  Future<void> _load() async {
+    final bytes = await widget.imageFile.readAsBytes();
+    // Decoded by the engine, which applies the EXIF orientation.
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    if (mounted) {
+      setState(() => _image = frame.image);
+    } else {
+      frame.image.dispose();
+    }
+  }
+
+  /// Scale at which the photo just covers the frame.
+  double get _coverScale {
+    final image = _image!;
+    return math.max(_frame.width / image.width, _frame.height / image.height);
+  }
+
+  /// The part of the photo inside the frame, in photo pixels.
+  Rect get _cropRect {
+    final image = _image!;
+    final m = _transform.value;
+    final zoom = m.getMaxScaleOnAxis();
+    final dx = m.storage[12];
+    final dy = m.storage[13];
+    final toImage = 1 / (_coverScale * zoom);
+    final rect = Rect.fromLTWH(
+      -dx * toImage,
+      -dy * toImage,
+      _frame.width * toImage,
+      _frame.height * toImage,
     );
-    final croppedFile = File('${widget.imageFile.path}_cropped.jpg');
-    await croppedFile.writeAsBytes(img.encodeJpg(crop, quality: 85));
-    if (mounted) Navigator.of(context).pop(croppedFile);
+    return rect.intersect(
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+    );
+  }
+
+  /// Starts with the frame on the middle of the photo.
+  void _centre() {
+    final image = _image!;
+    final s = _coverScale;
+    final dx = (_frame.width - image.width * s) / 2;
+    final dy = (_frame.height - image.height * s) / 2;
+    _transform.value = Matrix4.translationValues(dx, dy, 0);
+  }
+
+  Future<void> _save() async {
+    if (_saving || _image == null) return;
+    setState(() => _saving = true);
+    final rect = _cropRect;
+    try {
+      final out = File('${widget.imageFile.path}_cropped.jpg');
+      final jpg = await compute(
+        cropAndResize,
+        CropRequest(
+          path: widget.imageFile.path,
+          rect: rect,
+          maxSide: widget.maxSide,
+        ),
+      );
+      await out.writeAsBytes(jpg);
+      if (mounted) Navigator.of(context).pop(out);
+    } catch (e, st) {
+      LoggerService.error(
+        'Photo crop failed',
+        name: 'manager.group',
+        error: e,
+        stackTrace: st,
+      );
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-    return Scaffold(
-      // backgroundColor centralizzato nel tema
-      appBar: AppBar(
-        title: Text(gen.AppLocalizations.of(context).crop_image_title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: _cropAndReturn,
-            tooltip: gen.AppLocalizations.of(context).crop_confirm,
-          ),
-        ],
-      ),
-      body: Center(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            // Calcola la dimensione massima per l'immagine mantenendo il rapporto
-            final imgW = _decodedImage.width.toDouble();
-            final imgH = _decodedImage.height.toDouble();
-            final maxW = constraints.maxWidth;
-            final maxH = constraints.maxHeight;
-            double displayW = maxW;
-            double displayH = displayW * imgH / imgW;
-            if (displayH > maxH) {
-              displayH = maxH;
-              displayW = displayH * imgW / imgH;
-            }
-            final scale = imgW / displayW;
-            _scale = scale;
-            _imageDisplaySize = Size(displayW, displayH);
-            if (_cropRectDisplay == null) {
-              _initCropRect(_imageDisplaySize!);
-            }
-            return SizedBox(
-              width: displayW,
-              height: displayH,
-              child: Stack(
-                children: [
-                  Image.file(
-                    widget.imageFile,
-                    width: displayW,
-                    height: displayH,
-                    fit: BoxFit.contain,
-                  ),
-                  if (_cropRectDisplay != null) ...[
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: CustomPaint(
-                          painter: _CropOverlayPainter(_cropRectDisplay!),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: _cropRectDisplay!.left,
-                      top: _cropRectDisplay!.top,
-                      child: GestureDetector(
-                        onPanUpdate: _onPanUpdate,
-                        child: SizedBox(
-                          width: _cropRectDisplay!.width,
-                          height: _cropRectDisplay!.height,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              CustomPaint(
-                                painter: _DashedBorderPainter(
-                                  color: Theme.of(context).colorScheme.outline,
-                                  strokeWidth: 3,
-                                ),
-                              ),
-                              // Handle angolo in alto a sinistra
-                              Positioned(
-                                left: 0,
-                                top: 0,
-                                child: _CornerHandle(
-                                  onPanUpdate: (details) => _onResize(
-                                    details,
-                                    fromLeft: true,
-                                    fromTop: true,
-                                  ),
-                                ),
-                              ),
-                              // Handle angolo in alto a destra
-                              Positioned(
-                                right: 0,
-                                top: 0,
-                                child: _CornerHandle(
-                                  onPanUpdate: (details) => _onResize(
-                                    details,
-                                    fromLeft: false,
-                                    fromTop: true,
-                                  ),
-                                ),
-                              ),
-                              // Handle angolo in basso a sinistra
-                              Positioned(
-                                left: 0,
-                                bottom: 0,
-                                child: _CornerHandle(
-                                  onPanUpdate: (details) => _onResize(
-                                    details,
-                                    fromLeft: true,
-                                    fromTop: false,
-                                  ),
-                                ),
-                              ),
-                              // Handle angolo in basso a destra
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: _CornerHandle(
-                                  onPanUpdate: (details) => _onResize(
-                                    details,
-                                    fromLeft: false,
-                                    fromTop: false,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+    final image = _image;
+
+    return AppSystemUI.edgeToEdge(
+      child: Scaffold(
+        backgroundColor: s.surfaceContainer,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    const RoundBackButton(),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        gloc.crop_image_title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 20),
+                if (image == null)
+                  const Expanded(
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else ...[
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final frame = Size(
+                        constraints.maxWidth,
+                        constraints.maxWidth / widget.aspectRatio,
+                      );
+                      if (frame != _frame) {
+                        _frame = frame;
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) _centre();
+                        });
+                      }
+                      return _CropFrame(
+                        image: image,
+                        size: frame,
+                        coverScale: _coverScale,
+                        controller: _transform,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    gloc.crop_hint,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: s.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  FormSectionLabel(gloc.crop_preview),
+                  const SizedBox(height: 8),
+                  AnimatedBuilder(
+                    animation: _transform,
+                    builder: (context, _) => _frame.isEmpty
+                        ? const SizedBox.shrink()
+                        : _Previews(
+                            image: image,
+                            crop: _cropRect,
+                            labels: [
+                              gloc.nav_home,
+                              gloc.group,
+                              gloc.nav_groups,
+                            ],
+                          ),
+                  ),
+                  const Spacer(),
+                  FilledButton(
+                    onPressed: _saving ? null : _save,
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(52),
+                      shape: const StadiumBorder(),
+                      elevation: 0,
+                    ),
+                    child: _saving
+                        ? SizedBox.square(
+                            dimension: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: s.onPrimary,
+                            ),
+                          )
+                        : Text(
+                            gloc.crop_use_photo,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: s.onPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                  ),
                 ],
-              ),
-            );
-          },
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-// --- TOP LEVEL ---
-class _CornerHandle extends StatelessWidget {
-  final void Function(DragUpdateDetails) onPanUpdate;
-  const _CornerHandle({required this.onPanUpdate});
+/// The frame: the photo under it moves and zooms, always covering it.
+class _CropFrame extends StatelessWidget {
+  final ui.Image image;
+  final Size size;
+  final double coverScale;
+  final TransformationController controller;
+
+  const _CropFrame({
+    required this.image,
+    required this.size,
+    required this.coverScale,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onPanUpdate: onPanUpdate,
-      child: const Padding(
-        padding: EdgeInsets.all(3), // distanza dal bordo esterno
-        child: SizedBox(
-          width: 18,
-          height: 18,
-          // Nessun bordo, solo area trasparente per la gesture
-        ),
+    final radius = BorderRadius.circular(24);
+    return SizedBox.fromSize(
+      size: size,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          ClipRRect(
+            borderRadius: radius,
+            child: InteractiveViewer(
+              transformationController: controller,
+              constrained: false,
+              minScale: 1,
+              maxScale: 5,
+              boundaryMargin: EdgeInsets.zero,
+              child: SizedBox(
+                width: image.width * coverScale,
+                height: image.height * coverScale,
+                child: RawImage(image: image, fit: BoxFit.fill),
+              ),
+            ),
+          ),
+          // Corner marks; they let the touches through.
+          IgnorePointer(
+            child: CustomPaint(painter: _CornersPainter(radius: 24)),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _DashedBorderPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  _DashedBorderPainter({required this.color, required this.strokeWidth});
+class _CornersPainter extends CustomPainter {
+  final double radius;
+
+  _CornersPainter({required this.radius});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-    final path = Path()..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
-    _drawDashedPath(canvas, path, paint);
-  }
-
-  void _drawDashedPath(Canvas canvas, Path path, Paint paint) {
-    const double dashLength = 8;
-    const double gapLength = 6;
-    final PathMetrics metrics = path.computeMetrics();
-    for (final metric in metrics) {
-      double distance = 0.0;
-      while (distance < metric.length) {
-        const double len = dashLength;
-        const double gap = gapLength;
-        final double next = distance + len;
-        final extractLen = next < metric.length
-            ? len
-            : metric.length - distance;
-        canvas.drawPath(
-          metric.extractPath(distance, distance + extractLen),
-          paint,
-        );
-        distance += len + gap;
-      }
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round;
+    final r = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      Radius.circular(radius),
+    );
+    canvas.drawRRect(
+      r,
+      Paint()
+        ..color = Colors.white.withValues(alpha: 0.6)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+    const len = 22.0;
+    final w = size.width;
+    final h = size.height;
+    final rr = radius;
+    final corners = [
+      Path()
+        ..moveTo(0, rr + len)
+        ..lineTo(0, rr)
+        ..arcToPoint(Offset(rr, 0), radius: Radius.circular(rr))
+        ..lineTo(rr + len, 0),
+      Path()
+        ..moveTo(w - rr - len, 0)
+        ..lineTo(w - rr, 0)
+        ..arcToPoint(Offset(w, rr), radius: Radius.circular(rr))
+        ..lineTo(w, rr + len),
+      Path()
+        ..moveTo(w, h - rr - len)
+        ..lineTo(w, h - rr)
+        ..arcToPoint(Offset(w - rr, h), radius: Radius.circular(rr))
+        ..lineTo(w - rr - len, h),
+      Path()
+        ..moveTo(rr + len, h)
+        ..lineTo(rr, h)
+        ..arcToPoint(Offset(0, h - rr), radius: Radius.circular(rr))
+        ..lineTo(0, h - rr - len),
+    ];
+    for (final c in corners) {
+      canvas.drawPath(c, paint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(_CornersPainter old) => old.radius != radius;
 }
 
-class _CropOverlayPainter extends CustomPainter {
-  final Rect cropRect;
-  _CropOverlayPainter(this.cropRect);
+/// How the cropped photo will look: on Home, on the group page and on a
+/// Groups card, each melting into the surface like the real ones.
+class _Previews extends StatelessWidget {
+  final ui.Image image;
+  final Rect crop;
+  final List<String> labels;
+
+  const _Previews({
+    required this.image,
+    required this.crop,
+    required this.labels,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    Widget tile(double aspect, Color surface, String label) => Column(
+      children: [
+        AspectRatio(
+          aspectRatio: aspect,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: CustomPaint(
+              painter: _PreviewPainter(image: image, crop: crop, fade: surface),
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: s.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(flex: 5, child: tile(1.7, s.surface, labels[0])),
+        const SizedBox(width: 8),
+        Expanded(flex: 4, child: tile(1.25, s.surfaceContainer, labels[1])),
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 3,
+          child: tile(0.82, s.surfaceContainerHighest, labels[2]),
+        ),
+      ],
+    );
+  }
+}
+
+class _PreviewPainter extends CustomPainter {
+  final ui.Image image;
+  final Rect crop;
+  final Color fade;
+
+  _PreviewPainter({
+    required this.image,
+    required this.crop,
+    required this.fade,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black.withValues(alpha: 0.5);
-    // Usa saveLayer per abilitare BlendMode.clear su tutte le piattaforme
-    canvas.saveLayer(Offset.zero & size, Paint());
-    // Area piena scura
-    canvas.drawRect(Offset.zero & size, paint);
-    // Area di crop "trasparente"
-    paint.blendMode = BlendMode.clear;
-    canvas.drawRect(cropRect, paint);
-    canvas.restore();
+    if (crop.isEmpty) return;
+    // Cover: the middle of the crop in this tile's shape.
+    final aspect = size.width / size.height;
+    var src = crop;
+    if (crop.width / crop.height > aspect) {
+      final w = crop.height * aspect;
+      src = Rect.fromLTWH(crop.center.dx - w / 2, crop.top, w, crop.height);
+    } else {
+      final h = crop.width / aspect;
+      src = Rect.fromLTWH(crop.left, crop.center.dy - h / 2, crop.width, h);
+    }
+    final dst = Offset.zero & size;
+    canvas.drawImageRect(
+      image,
+      src,
+      dst,
+      Paint()..filterQuality = FilterQuality.medium,
+    );
+    canvas.drawRect(
+      dst,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [fade.withValues(alpha: 0), fade],
+          stops: const [0.45, 1],
+        ).createShader(dst),
+    );
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(_PreviewPainter old) =>
+      old.crop != crop || old.image != image || old.fade != fade;
+}
+
+/// What [cropAndResize] crops: the photo file, the part to keep in photo
+/// pixels (as shown, i.e. after EXIF orientation) and the longest side.
+class CropRequest {
+  final String path;
+  final Rect rect;
+  final int maxSide;
+
+  const CropRequest({
+    required this.path,
+    required this.rect,
+    required this.maxSide,
+  });
+}
+
+/// Crops the photo to [CropRequest.rect], scales it down so its longest side
+/// is at most [CropRequest.maxSide] px, and encodes it as JPEG (quality 85).
+/// Runs in an isolate: decoding a camera photo takes a while.
+Future<Uint8List> cropAndResize(CropRequest request) async {
+  final bytes = await File(request.path).readAsBytes();
+  final decoded = img.decodeImage(bytes);
+  if (decoded == null) throw const FormatException('Unreadable photo');
+  final photo = img.bakeOrientation(decoded);
+  final r = request.rect;
+  final x = r.left.round().clamp(0, photo.width - 1);
+  final y = r.top.round().clamp(0, photo.height - 1);
+  final w = r.width.round().clamp(1, photo.width - x);
+  final h = r.height.round().clamp(1, photo.height - y);
+  var cropped = img.copyCrop(photo, x: x, y: y, width: w, height: h);
+  final longest = math.max(cropped.width, cropped.height);
+  if (longest > request.maxSide) {
+    cropped = cropped.width >= cropped.height
+        ? img.copyResize(
+            cropped,
+            width: request.maxSide,
+            interpolation: img.Interpolation.average,
+          )
+        : img.copyResize(
+            cropped,
+            height: request.maxSide,
+            interpolation: img.Interpolation.average,
+          );
+  }
+  return img.encodeJpg(cropped, quality: 85);
 }

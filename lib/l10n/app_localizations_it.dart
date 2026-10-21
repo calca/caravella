@@ -2990,4 +2990,13 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get receipt_photo_error =>
       'Impossibile scattare la foto dello scontrino';
+
+  @override
+  String get crop_hint => 'Trascina e pizzica per scegliere la parte da tenere';
+
+  @override
+  String get crop_preview => 'Anteprima';
+
+  @override
+  String get crop_use_photo => 'Usa questa foto';
 }

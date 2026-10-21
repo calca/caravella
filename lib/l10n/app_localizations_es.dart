@@ -2990,4 +2990,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get receipt_photo_error => 'No se pudo tomar la foto del recibo';
+
+  @override
+  String get crop_hint =>
+      'Arrastra y pellizca para elegir la parte que quieres';
+
+  @override
+  String get crop_preview => 'Vista previa';
+
+  @override
+  String get crop_use_photo => 'Usar esta foto';
 }

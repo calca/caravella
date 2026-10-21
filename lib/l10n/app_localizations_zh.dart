@@ -2902,4 +2902,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get receipt_photo_error => '无法拍摄收据照片';
+
+  @override
+  String get crop_hint => '拖动和双指缩放，选择要保留的部分';
+
+  @override
+  String get crop_preview => '预览';
+
+  @override
+  String get crop_use_photo => '使用这张照片';
 }
