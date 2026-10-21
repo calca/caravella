@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:zentoast/zentoast.dart';
+import '../themes/caravella_themes.dart';
 
 /// Toast type for different message categories
 enum ToastType { info, success, error }
@@ -29,19 +30,19 @@ class AppToast {
 
     switch (type) {
       case ToastType.success:
-        backgroundColor = colorScheme.surfaceContainerHighest;
+        backgroundColor = colorScheme.raisedSurface;
         textColor = colorScheme.onSurface;
         iconColor = colorScheme.primary;
         effectiveIcon = icon ?? Icons.check_circle_outline_rounded;
         break;
       case ToastType.error:
-        backgroundColor = colorScheme.surfaceContainerHighest;
+        backgroundColor = colorScheme.raisedSurface;
         textColor = colorScheme.onSurface;
         iconColor = colorScheme.error;
         effectiveIcon = icon ?? Icons.error_outline_rounded;
         break;
       case ToastType.info:
-        backgroundColor = colorScheme.surfaceContainerHighest;
+        backgroundColor = colorScheme.raisedSurface;
         textColor = colorScheme.onSurface;
         iconColor = colorScheme.primary;
         effectiveIcon = icon ?? Icons.info_outline_rounded;
@@ -53,10 +54,14 @@ class AppToast {
       builder: (toast) => Material(
         color: Colors.transparent,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(12),
+            // A pill, like the app's buttons and chips.
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.1),

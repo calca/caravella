@@ -29,30 +29,27 @@ class Material3Dialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final buttons = actions ?? const <Widget>[];
 
     return AlertDialog(
-      // Material 3 dialog shape with 28dp radius
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.dialog),
       ),
-      // Use M3 surface container high for elevation
-      backgroundColor: colorScheme.surfaceContainerHigh,
-      // Disable the M3 surface-tint elevation overlay so the dialog stays
-      // neutral instead of taking on colorScheme.surfaceTint's hue.
+      // The pages' grey, like the bottom sheets.
+      backgroundColor: colorScheme.surfaceContainer,
       surfaceTintColor: Colors.transparent,
-      // Material 3 elevation for dialogs
       elevation: 6,
-      // Standard M3 content padding
+      icon: icon,
       contentPadding:
-          contentPadding ?? const EdgeInsets.fromLTRB(24, 20, 24, 24),
+          contentPadding ?? const EdgeInsets.fromLTRB(24, 12, 24, 24),
       titlePadding: titlePadding ?? const EdgeInsets.fromLTRB(24, 24, 24, 0),
       actionsPadding:
-          actionsPadding ?? const EdgeInsets.fromLTRB(24, 0, 24, 24),
-      actionsAlignment: actionsAlignment,
+          actionsPadding ?? const EdgeInsets.fromLTRB(20, 0, 20, 20),
       title: title != null
           ? DefaultTextStyle(
               style: theme.textTheme.titleLarge!.copyWith(
                 color: colorScheme.onSurface,
+                fontWeight: FontWeight.w800,
               ),
               child: title!,
             )
@@ -65,7 +62,25 @@ class Material3Dialog extends StatelessWidget {
               child: content!,
             )
           : null,
-      actions: actions,
+      // Buttons stacked full width, the main one on top (callers list them
+      // cancel-first, as Material does side by side).
+      actions: buttons.isEmpty
+          ? null
+          : [
+              SizedBox(
+                width: double.infinity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final (i, b) in buttons.reversed.indexed) ...[
+                      if (i > 0) const SizedBox(height: 4),
+                      b,
+                    ],
+                  ],
+                ),
+              ),
+            ],
     );
   }
 }
@@ -80,6 +95,7 @@ class Material3DialogActions {
   }) {
     return TextButton(
       onPressed: onPressed ?? () => Navigator.of(context).pop(false),
+      style: TextButton.styleFrom(minimumSize: const Size.fromHeight(48)),
       child: Text(text),
     );
   }
@@ -95,12 +111,13 @@ class Material3DialogActions {
 
     return FilledButton(
       onPressed: onPressed,
-      style: isDestructive
-          ? FilledButton.styleFrom(
-              backgroundColor: colorScheme.error,
-              foregroundColor: colorScheme.onError,
-            )
-          : null,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size.fromHeight(52),
+        shape: const StadiumBorder(),
+        elevation: 0,
+        backgroundColor: isDestructive ? colorScheme.error : null,
+        foregroundColor: isDestructive ? colorScheme.onError : null,
+      ),
       child: Text(text),
     );
   }
@@ -111,23 +128,22 @@ class Material3DialogActions {
     String text, {
     VoidCallback? onPressed,
   }) {
-    return OutlinedButton(onPressed: onPressed, child: Text(text));
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size.fromHeight(52),
+        shape: const StadiumBorder(),
+      ),
+      child: Text(text),
+    );
   }
 
-  /// Creates a destructive text button for dangerous actions
+  /// Creates the main button of a dangerous action (wide, red)
   static Widget destructive(
     BuildContext context,
     String text, {
     VoidCallback? onPressed,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(foregroundColor: colorScheme.error),
-      child: Text(text),
-    );
-  }
+  }) => primary(context, text, onPressed: onPressed, isDestructive: true);
 }
 
 /// Helper functions for common dialog patterns

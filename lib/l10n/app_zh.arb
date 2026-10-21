@@ -1883,4 +1883,9 @@
   ,"wizard_dates_add": "日期"
   ,"wizard_continue": "继续"
   ,"wizard_create": "创建群组"
+  ,"attachment_take_photo": "拍照"
+  ,"attachment_record_video": "录制视频"
+  ,"place_search_action": "搜索地点"
+  ,"background_photo": "照片"
+  ,"background_none": "无"
 }

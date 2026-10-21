@@ -109,17 +109,11 @@ Future<void> _executeDeleteAction(
       title: Text(gloc.delete_trip),
       content: Text(gloc.delete_trip_confirm),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: Text(gloc.cancel),
-        ),
-        FilledButton(
+        Material3DialogActions.cancel(context, gloc.cancel),
+        Material3DialogActions.destructive(
+          context,
+          gloc.delete,
           onPressed: () => Navigator.pop(context, true),
-          style: FilledButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
-            foregroundColor: Theme.of(context).colorScheme.onError,
-          ),
-          child: Text(gloc.delete),
         ),
       ],
     ),

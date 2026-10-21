@@ -32,9 +32,8 @@ void main() {
       expect(find.text('Aggiungi Spesa'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
 
-      // Check that emoji is displayed (random emoji from GroupCardEmptyState)
-      final richTextFinder = find.byType(RichText);
-      expect(richTextFinder, findsWidgets);
+      // A short title and line instead of the old random emoji.
+      expect(find.byIcon(Icons.receipt_long_outlined), findsOneWidget);
 
       // Check button functionality
       final button = find.text('Aggiungi Spesa');
@@ -70,9 +69,8 @@ void main() {
       expect(find.text('Add Expense'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
 
-      // Check that emoji is displayed (random emoji from GroupCardEmptyState)
-      final richTextFinder = find.byType(RichText);
-      expect(richTextFinder, findsWidgets);
+      // A short title and line instead of the old random emoji.
+      expect(find.byIcon(Icons.receipt_long_outlined), findsOneWidget);
 
       // Check button functionality
       final button = find.text('Add Expense');
@@ -108,9 +106,8 @@ void main() {
       expect(find.text('Agregar Gasto'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
 
-      // Check that emoji is displayed (random emoji from GroupCardEmptyState)
-      final richTextFinder = find.byType(RichText);
-      expect(richTextFinder, findsWidgets);
+      // A short title and line instead of the old random emoji.
+      expect(find.byIcon(Icons.receipt_long_outlined), findsOneWidget);
 
       // Check button functionality
       final button = find.text('Agregar Gasto');
@@ -134,10 +131,8 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // GroupCardEmptyState displays emoji text, not an image or icon
-      // Check that emoji text is present via RichText widget
-      final richTextFinder = find.byType(RichText);
-      expect(richTextFinder, findsWidgets);
+      // Title and line from the localizations, no emoji.
+      expect(find.text('Ready to start tracking?'), findsOneWidget);
 
       // Also verify button is present
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);

@@ -329,7 +329,7 @@ class _LocationDetailsSheet extends StatelessWidget {
               ),
               SettingsTile(
                 icon: Icons.search_rounded,
-                title: gloc.location_hint,
+                title: gloc.place_search_action,
                 chevron: false,
                 onTap: onSearchPlace,
               ),
