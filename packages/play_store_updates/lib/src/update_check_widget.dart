@@ -60,7 +60,8 @@ class UpdateCheckWidget extends StatelessWidget {
               ),
               subtitle: _buildUpdateSubtitle(context, notifier),
               trailing: _buildUpdateTrailing(context, notifier),
-              onTap: notifier.isChecking ||
+              onTap:
+                  notifier.isChecking ||
                       notifier.isDownloading ||
                       notifier.isInstalling
                   ? null
@@ -153,8 +154,8 @@ class UpdateCheckWidget extends StatelessWidget {
                   onPressed: notifier.isDownloading || notifier.isInstalling
                       ? null
                       : notifier.updateDownloaded
-                          ? () => _handleCompleteUpdate(context, notifier)
-                          : () => _handleStartUpdate(context, notifier),
+                      ? () => _handleCompleteUpdate(context, notifier)
+                      : () => _handleStartUpdate(context, notifier),
                   icon: notifier.isDownloading || notifier.isInstalling
                       ? const SizedBox(
                           width: 16,
@@ -170,10 +171,10 @@ class UpdateCheckWidget extends StatelessWidget {
                     notifier.isDownloading
                         ? localizations.updateDownloading
                         : notifier.isInstalling
-                            ? localizations.updateInstalling
-                            : notifier.updateDownloaded
-                                ? localizations.updateInstall
-                                : localizations.updateNow,
+                        ? localizations.updateInstalling
+                        : notifier.updateDownloaded
+                        ? localizations.updateInstall
+                        : localizations.updateNow,
                   ),
                 ),
               ],
@@ -184,10 +185,7 @@ class UpdateCheckWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildUpdateSubtitle(
-    BuildContext context,
-    UpdateNotifier notifier,
-  ) {
+  Widget _buildUpdateSubtitle(BuildContext context, UpdateNotifier notifier) {
     final textTheme = Theme.of(context).textTheme;
 
     if (notifier.isChecking) {
@@ -223,10 +221,7 @@ class UpdateCheckWidget extends StatelessWidget {
     return Text(localizations.checkForUpdatesDesc, style: textTheme.bodySmall);
   }
 
-  Widget? _buildUpdateTrailing(
-    BuildContext context,
-    UpdateNotifier notifier,
-  ) {
+  Widget? _buildUpdateTrailing(BuildContext context, UpdateNotifier notifier) {
     if (notifier.isChecking ||
         notifier.isDownloading ||
         notifier.isInstalling) {
@@ -256,11 +251,7 @@ class UpdateCheckWidget extends StatelessWidget {
     if (!context.mounted) return;
 
     if (notifier.error != null) {
-      AppToast.show(
-        context,
-        localizations.updateError,
-        type: ToastType.error,
-      );
+      AppToast.show(context, localizations.updateError, type: ToastType.error);
     } else if (!notifier.updateAvailable) {
       AppToast.show(
         context,
@@ -281,11 +272,7 @@ class UpdateCheckWidget extends StatelessWidget {
     if (!context.mounted) return;
 
     if (!success && notifier.error != null) {
-      AppToast.show(
-        context,
-        localizations.updateError,
-        type: ToastType.error,
-      );
+      AppToast.show(context, localizations.updateError, type: ToastType.error);
     }
   }
 
@@ -298,11 +285,7 @@ class UpdateCheckWidget extends StatelessWidget {
     if (!context.mounted) return;
 
     if (!success && notifier.error != null) {
-      AppToast.show(
-        context,
-        localizations.updateError,
-        type: ToastType.error,
-      );
+      AppToast.show(context, localizations.updateError, type: ToastType.error);
     }
   }
 }

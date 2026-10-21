@@ -108,15 +108,15 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
       context: context,
       builder: (context) => CaravellaBottomSheetScaffold(
         title: loc.drive_backup_restore,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: SettingsGroup(
+          topSpacing: 0,
           children: [
             for (final entry in entries!)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.inventory_2_outlined),
-                title: Text(_formatTime(context, entry.createdAt)),
-                subtitle: Text(_formatSize(entry.sizeBytes)),
+              SettingsTile(
+                icon: Icons.inventory_2_outlined,
+                title: _formatTime(context, entry.createdAt),
+                subtitle: _formatSize(entry.sizeBytes),
+                chevron: false,
                 onTap: () => Navigator.of(context).pop(entry),
               ),
           ],

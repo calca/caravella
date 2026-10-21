@@ -97,9 +97,6 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       builder: (_) => QrPairShowSheet(
         orchestrator: orchestrator,
         groupId: _currentTrip.id,
@@ -126,9 +123,6 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       builder: (_) => BluetoothAdvertiseSheet(
         channel: channel,
         groupId: _currentTrip.id,

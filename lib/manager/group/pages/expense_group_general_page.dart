@@ -210,12 +210,13 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                         final selected =
                             await showModalBottomSheet<Map<String, String>>(
                               context: context,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20),
-                                ),
+                              isScrollControlled: true,
+                              useSafeArea: true,
+                              builder: (_) => CurrencySelectorSheet(
+                                selectedCode: context
+                                    .read<GroupFormState>()
+                                    .currency['code'],
                               ),
-                              builder: (_) => const CurrencySelectorSheet(),
                             );
                         if (selected != null && context.mounted) {
                           context.read<GroupFormState>().setCurrency(selected);

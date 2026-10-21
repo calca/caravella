@@ -187,9 +187,6 @@ class _BluetoothSyncSectionState extends State<_BluetoothSyncSection> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       builder: (_) => BluetoothSyncSheet(channel: channel),
     );
   }

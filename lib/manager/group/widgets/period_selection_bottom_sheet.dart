@@ -1,6 +1,7 @@
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 
 /// A Booking.com-style period selector with calendar and duration presets
 class PeriodSelectionBottomSheet extends StatefulWidget {
@@ -256,43 +257,34 @@ class _PeriodSelectionBottomSheetState
     );
   }
 
-  Widget _buildDurationPresets() {
-    final theme = Theme.of(context);
-    final gloc = gen.AppLocalizations.of(context);
+  /// Whether the selection is [days] days from today (a preset's result).
+  bool _isPreset(int days) {
+    final now = DateTime.now();
+    bool same(DateTime? a, DateTime b) =>
+        a != null && a.year == b.year && a.month == b.month && a.day == b.day;
+    return same(_startDate, now) &&
+        same(_endDate, now.add(Duration(days: days - 1)));
+  }
 
+  Widget _buildDurationPresets() {
+    final gloc = gen.AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            gloc.suggested_duration,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 40,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: _durationPresets.length,
-            itemBuilder: (context, index) {
-              final days = _durationPresets[index];
-              return Padding(
-                padding: EdgeInsets.only(
-                  right: index < _durationPresets.length - 1 ? 8 : 0,
-                ),
-                child: FilterChip(
-                  label: Text(gloc.days_count(days)),
-                  onSelected: (selected) => _onDurationPresetTapped(days),
-                  selected: false,
-                  showCheckmark: false,
-                ),
-              );
-            },
-          ),
+        FormSectionLabel(gloc.suggested_duration),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: [
+            for (final days in _durationPresets)
+              FormPill(
+                label: gloc.days_count(days),
+                style: _isPreset(days)
+                    ? FormPillStyle.selected
+                    : FormPillStyle.normal,
+                onTap: () => _onDurationPresetTapped(days),
+              ),
+          ],
         ),
       ],
     );
@@ -300,18 +292,45 @@ class _PeriodSelectionBottomSheetState
 
   Widget _buildActionButtons() {
     final gloc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
     final canConfirm = _startDate != null && _endDate != null;
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SizedBox(
-        width: double.infinity,
-        child: FilledButton(
-          onPressed: canConfirm ? _onConfirm : null,
-          child: Text(gloc.ok),
+    return FilledButton(
+      onPressed: canConfirm ? _onConfirm : null,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size.fromHeight(52),
+        shape: const StadiumBorder(),
+        elevation: 0,
+      ),
+      child: Text(
+        gloc.confirm,
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: canConfirm
+              ? theme.colorScheme.onPrimary
+              : theme.colorScheme.onSurfaceVariant,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
+  }
+
+  /// "11 Oct – 20 Oct · 10 days", or the hint when nothing is chosen.
+  String _summary(gen.AppLocalizations gloc) {
+    if (_startDate == null) return gloc.dates_description;
+    final range = formatDateRange(
+      start: _startDate,
+      end: _endDate,
+      locale: Localizations.localeOf(context),
+    );
+    if (_endDate == null) return range;
+    final days =
+        DateTime(_endDate!.year, _endDate!.month, _endDate!.day)
+            .difference(
+              DateTime(_startDate!.year, _startDate!.month, _startDate!.day),
+            )
+            .inDays +
+        1;
+    return '$range · ${gloc.days_count(days)}';
   }
 
   String _getMonthName(int month) {
@@ -342,16 +361,34 @@ class _PeriodSelectionBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final s = Theme.of(context).colorScheme;
+    final radius = BorderRadius.circular(20);
     return CaravellaBottomSheetScaffold(
-      scrollable: false,
+      title: gloc.period,
+      subtitle: _summary(gloc),
+      scrollable: true,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildCalendarHeader(),
-          _buildCalendarGrid(),
+          CardOutline(
+            borderRadius: radius,
+            child: Material(
+              color: s.raisedSurface,
+              borderRadius: radius,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [_buildCalendarHeader(), _buildCalendarGrid()],
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 16),
           _buildDurationPresets(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           _buildActionButtons(),
         ],
       ),
@@ -370,10 +407,7 @@ Future<void> showPeriodSelectionBottomSheet({
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
+    useSafeArea: true,
     builder: (context) => PeriodSelectionBottomSheet(
       initialStartDate: initialStartDate,
       initialEndDate: initialEndDate,

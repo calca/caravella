@@ -259,6 +259,18 @@ class CaravellaThemes {
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         shape: CircleBorder(),
       ),
+      // Bottom sheets on the pages' grey, with white cards inside.
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: scheme.surfaceContainer,
+        modalBackgroundColor: scheme.surfaceContainer,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        modalElevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        clipBehavior: Clip.antiAlias,
+      ),
       dialogTheme: DialogThemeData(
         backgroundColor: scheme.surfaceContainerHigh,
         surfaceTintColor: scheme.surfaceTint,

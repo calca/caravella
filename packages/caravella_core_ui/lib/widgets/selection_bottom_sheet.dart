@@ -3,6 +3,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'app_toast.dart';
 import '../themes/form_theme.dart';
+import '../themes/caravella_themes.dart';
+import 'card_outline.dart';
+import 'form_pill.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports inline add-item action shown within the sheet.
@@ -11,6 +14,7 @@ Future<T?> showSelectionBottomSheet<T>({
   required List<T> items,
   required T? selected,
   required String Function(T) itemLabel,
+  Widget Function(T)? itemLeading,
   Future<void> Function(String)? onAddItemInline,
   String? addItemHint,
   String? sheetTitle,
@@ -23,11 +27,11 @@ Future<T?> showSelectionBottomSheet<T>({
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
     builder: (ctx) => _SelectionSheet<T>(
       items: items,
       selected: selected,
       itemLabel: itemLabel,
+      itemLeading: itemLeading,
       onAddItemInline: onAddItemInline,
       addItemHint: addItemHint,
       sheetTitle: sheetTitle,
@@ -44,6 +48,7 @@ class _SelectionSheet<T> extends StatefulWidget {
   final List<T> items;
   final T? selected;
   final String Function(T) itemLabel;
+  final Widget Function(T)? itemLeading;
   final Future<void> Function(String)? onAddItemInline;
   final String? addItemHint;
   final String? sheetTitle;
@@ -56,6 +61,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     required this.items,
     required this.selected,
     required this.itemLabel,
+    this.itemLeading,
     this.onAddItemInline,
     this.addItemHint,
     this.sheetTitle,
@@ -76,6 +82,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   final FocusNode _inlineFocus = FocusNode();
   final ScrollController _scrollController = ScrollController();
   late List<T> _currentItems;
+  String _query = '';
   Timer? _focusDelayedScrollTimer;
   Timer? _inputFieldScrollTimer;
 
@@ -265,67 +272,150 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     }
   }
 
+  /// From this many items a search field shows above the list.
+  static const int searchFrom = 9;
+
   Widget _buildInlineAddRow() {
+    final theme = Theme.of(context);
+    final radius = BorderRadius.circular(20);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 4.0,
-              ),
-              child: TextField(
-                controller: _inlineController,
-                focusNode: _inlineFocus,
-                autofocus: true,
-                decoration: FormTheme.getBorderlessDecoration(
-                  hintText: widget.addItemHint,
+      padding: const EdgeInsets.only(top: 12),
+      child: CardOutline(
+        borderRadius: radius,
+        child: Material(
+          color: theme.colorScheme.raisedSurface,
+          borderRadius: radius,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 2, 4, 2),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _inlineController,
+                    focusNode: _inlineFocus,
+                    autofocus: true,
+                    decoration: FormTheme.getBorderlessDecoration(
+                      hintText: widget.addItemHint,
+                    ),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _commitInlineAdd(),
+                  ),
                 ),
-                textInputAction: TextInputAction.done,
-                onSubmitted: (_) => _commitInlineAdd(),
-              ),
+                IconButton(
+                  tooltip: widget.cancelLabel,
+                  icon: const Icon(Icons.close_rounded),
+                  onPressed: _cancelInlineAdd,
+                ),
+                IconButton.filled(
+                  tooltip: widget.addLabel,
+                  icon: const Icon(Icons.check_rounded),
+                  onPressed: _commitInlineAdd,
+                ),
+              ],
             ),
           ),
-          IconButton(
-            tooltip: widget.addLabel,
-            icon: const Icon(Icons.check_rounded),
-            onPressed: _commitInlineAdd,
-          ),
-          IconButton(
-            tooltip: widget.cancelLabel,
-            icon: const Icon(Icons.close_outlined),
-            onPressed: _cancelInlineAdd,
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildInlineAddButton() {
-    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 4.0),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: _startInlineAdd,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14.0),
-          child: Row(
-            children: [
-              Icon(Icons.add, size: 24),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  widget.addCategoryLabel ?? '',
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
-            ],
+      padding: const EdgeInsets.only(top: 8),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: FormPill(
+          icon: Icons.add_rounded,
+          label: widget.addCategoryLabel ?? widget.addLabel ?? '',
+          style: FormPillStyle.add,
+          onTap: _startInlineAdd,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearch() {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: TextField(
+        onChanged: (v) => setState(() => _query = v.trim().toLowerCase()),
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          hintText: MaterialLocalizations.of(context).searchFieldLabel,
+          prefixIcon: const Icon(Icons.search_rounded),
+          filled: true,
+          fillColor: s.raisedSurface,
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(28),
+            borderSide: BorderSide(color: s.outlineVariant),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(28),
+            borderSide: BorderSide(color: s.outlineVariant),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(28),
+            borderSide: BorderSide(color: s.primary, width: 2),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildRow(T item, bool first) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final isSel = widget.selected == item;
+    final leading = widget.itemLeading?.call(item);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (!first)
+          Divider(
+            height: 1,
+            indent: leading != null ? 60 : 16,
+            endIndent: 16,
+            color: s.outlineVariant.withValues(alpha: 0.5),
+          ),
+        Semantics(
+          selected: isSel,
+          button: true,
+          child: InkWell(
+            onTap: () => Navigator.of(context).pop(item),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 52),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                child: Row(
+                  children: [
+                    if (leading != null) ...[
+                      SizedBox.square(dimension: 32, child: leading),
+                      const SizedBox(width: 12),
+                    ],
+                    Expanded(
+                      child: Text(
+                        widget.itemLabel(item),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: isSel ? FontWeight.w700 : FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    if (isSel)
+                      Icon(Icons.check_rounded, color: s.primary, size: 22),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -333,103 +423,77 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final theme = Theme.of(context);
-
-    // Use current items (may have been updated locally)
-    final itemsToShow = _currentItems;
+    final s = theme.colorScheme;
+    final showSearch = _currentItems.length >= searchFrom;
+    final itemsToShow = _query.isEmpty
+        ? _currentItems
+        : _currentItems
+              .where((i) => widget.itemLabel(i).toLowerCase().contains(_query))
+              .toList();
+    final radius = BorderRadius.circular(20);
 
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: keyboardHeight > 0 ? 0.9 : 0.8,
+      initialChildSize: keyboardHeight > 0 || showSearch ? 0.9 : 0.6,
       minChildSize: 0.3,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle
-              Container(
-                width: 40,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: Container(
+                width: 44,
                 height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 8),
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 14),
                 decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  color: s.outlineVariant.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              // Title
-              if (widget.sheetTitle != null) ...[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            ),
+            if (widget.sheetTitle != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                child: Semantics(
+                  header: true,
                   child: Text(
                     widget.sheetTitle!,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
-              ],
-              // List with inline add as last item
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: EdgeInsets.fromLTRB(
-                    16,
-                    0,
-                    16,
-                    16 + MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  itemCount: widget.onAddItemInline != null
-                      ? itemsToShow.length + 1
-                      : itemsToShow.length,
-                  itemBuilder: (ctx, i) {
-                    // Last item: inline add widget
-                    if (widget.onAddItemInline != null &&
-                        i == itemsToShow.length) {
-                      return _inlineAdding
-                          ? _buildInlineAddRow()
-                          : _buildInlineAddButton();
-                    }
-                    final item = itemsToShow[i];
-                    final isSel = widget.selected == item;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(12),
-                        onTap: () => Navigator.of(context).pop(item),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: isSel
-                                ? theme.colorScheme.surfaceContainerHigh
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          child: Text(
-                            widget.itemLabel(item),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: isSel
-                                  ? theme.colorScheme.onPrimaryContainer
-                                  : theme.textTheme.bodyMedium?.color,
-                              fontWeight: isSel ? FontWeight.w600 : null,
-                            ),
-                          ),
+              ),
+            Expanded(
+              child: ListView(
+                controller: _scrollController,
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 24 + keyboardHeight),
+                children: [
+                  if (showSearch) _buildSearch(),
+                  if (itemsToShow.isNotEmpty)
+                    CardOutline(
+                      borderRadius: radius,
+                      child: Material(
+                        color: s.raisedSurface,
+                        borderRadius: radius,
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          children: [
+                            for (final (i, item) in itemsToShow.indexed)
+                              _buildRow(item, i == 0),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  if (widget.onAddItemInline != null)
+                    _inlineAdding
+                        ? _buildInlineAddRow()
+                        : _buildInlineAddButton(),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

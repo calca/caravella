@@ -185,7 +185,16 @@ class SettingsGroup extends StatelessWidget {
   final String? label;
   final List<Widget> children;
 
-  const SettingsGroup({super.key, this.label, required this.children});
+  /// Space above the group (20 between settings sections; 0 as the first
+  /// thing in a bottom sheet).
+  final double topSpacing;
+
+  const SettingsGroup({
+    super.key,
+    this.label,
+    required this.children,
+    this.topSpacing = 20,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +204,7 @@ class SettingsGroup extends StatelessWidget {
     if (visible.isEmpty) return const SizedBox.shrink();
     final radius = BorderRadius.circular(20);
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(top: topSpacing),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -257,6 +266,10 @@ class SettingsTile extends StatelessWidget {
   final ValueChanged<bool>? onSwitch;
   final bool destructive;
 
+  /// Whether a tappable row shows a chevron (off for actions that act right
+  /// away, e.g. in a bottom sheet).
+  final bool chevron;
+
   const SettingsTile({
     super.key,
     required this.icon,
@@ -268,6 +281,7 @@ class SettingsTile extends StatelessWidget {
     this.switchValue,
     this.onSwitch,
     this.destructive = false,
+    this.chevron = true,
   });
 
   @override
@@ -286,7 +300,7 @@ class SettingsTile extends StatelessWidget {
             ? ExcludeSemantics(
                 child: Switch(value: switchValue!, onChanged: onSwitch),
               )
-            : onTap != null
+            : onTap != null && chevron
             ? Icon(Icons.chevron_right_rounded, color: s.onSurfaceVariant)
             : null);
 

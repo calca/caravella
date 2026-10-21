@@ -153,9 +153,6 @@ class BackgroundPicker extends StatelessWidget {
     final controller = context.read<GroupFormController>();
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
       builder: (ctx) => _BackgroundSheet(
         state: state,
         controller: controller,
@@ -180,10 +177,10 @@ class _BackgroundSheet extends StatelessWidget {
     final loc = gen.AppLocalizations.of(context);
     final imagePicker = picker.ImagePicker();
     final tiles = [
-      ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.photo_library_outlined),
-        title: Text(loc.from_gallery),
+      SettingsTile(
+        icon: Icons.photo_library_outlined,
+        title: loc.from_gallery,
+        chevron: false,
         onTap: () async {
           final sheetNav = Navigator.of(context); // navigator della sheet
           // Chiudi SUBITO la sheet per migliorare UX
@@ -217,10 +214,10 @@ class _BackgroundSheet extends StatelessWidget {
           }
         },
       ),
-      ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.photo_camera_outlined),
-        title: Text(loc.from_camera),
+      SettingsTile(
+        icon: Icons.photo_camera_outlined,
+        title: loc.from_camera,
+        chevron: false,
         onTap: () async {
           final sheetNav = Navigator.of(context);
           if (sheetNav.mounted) sheetNav.pop();
@@ -251,10 +248,10 @@ class _BackgroundSheet extends StatelessWidget {
         },
       ),
       if (UnsplashService.isAvailable)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: const Icon(Icons.image_search_outlined),
-          title: Text(loc.from_unsplash),
+        SettingsTile(
+          icon: Icons.image_search_outlined,
+          title: loc.from_unsplash,
+          chevron: false,
           onTap: () async {
             final sheetNav = Navigator.of(context);
             if (sheetNav.mounted) sheetNav.pop();
@@ -284,10 +281,10 @@ class _BackgroundSheet extends StatelessWidget {
             }
           },
         ),
-      ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.color_lens_outlined),
-        title: Text(loc.color),
+      SettingsTile(
+        icon: Icons.color_lens_outlined,
+        title: loc.color,
+        chevron: false,
         onTap: () {
           final sheetNav = Navigator.of(context);
           if (sheetNav.mounted) sheetNav.pop();
@@ -297,11 +294,14 @@ class _BackgroundSheet extends StatelessWidget {
           );
         },
       ),
+    ];
+    final remove = [
       if (state.imagePath != null || state.color != null)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: const Icon(Icons.clear),
-          title: Text(loc.background_remove),
+        SettingsTile(
+          icon: Icons.hide_image_outlined,
+          destructive: true,
+          title: loc.background_remove,
+          chevron: false,
           onTap: () async {
             // Capture the sheet navigator before the async gap to avoid
             // using BuildContext across await (use_build_context_synchronously).
@@ -320,15 +320,11 @@ class _BackgroundSheet extends StatelessWidget {
       title: loc.background,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 4),
-          ...List.generate(
-            tiles.length,
-            (i) => Padding(
-              padding: EdgeInsets.only(bottom: i == tiles.length - 1 ? 0 : 4),
-              child: tiles[i],
-            ),
-          ),
+          SettingsGroup(topSpacing: 0, children: tiles),
+          if (remove.isNotEmpty)
+            SettingsGroup(topSpacing: 12, children: remove),
         ],
       ),
     );

@@ -119,7 +119,7 @@ void main() {
       expect(find.text('Category 3'), findsOneWidget);
 
       // Verify the add button is present (not the legacy one)
-      expect(find.byIcon(Icons.add), findsOneWidget);
+      expect(find.byIcon(Icons.add_rounded), findsOneWidget);
     });
 
     testWidgets('Modal sheet shows inline add functionality', (tester) async {
@@ -156,19 +156,14 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap the add button to activate inline adding
-      await tester.tap(find.byIcon(Icons.add));
+      await tester.tap(find.byIcon(Icons.add_rounded));
       await tester.pumpAndSettle();
 
       // Verify that the input field appears
       expect(find.byType(TextField), findsOneWidget);
-      expect(
-        find.byIcon(Icons.check_rounded),
-        findsOneWidget,
-      ); // Confirm button
-      expect(
-        find.byIcon(Icons.close_outlined),
-        findsOneWidget,
-      ); // Cancel button
+      // Confirm (also the tick on the selected item) and cancel buttons.
+      expect(find.byIcon(Icons.check_rounded), findsAtLeastNWidgets(1));
+      expect(find.byIcon(Icons.close_rounded), findsOneWidget);
     });
 
     testWidgets('Add button is inside the scrollable list, not fixed at bottom',
@@ -252,7 +247,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify that the modal opened and shows the add button even with no items
-      expect(find.byIcon(Icons.add), findsOneWidget);
+      expect(find.byIcon(Icons.add_rounded), findsOneWidget);
     });
 
     testWidgets(

@@ -75,6 +75,7 @@ class ChipSelectorRow<T> extends StatelessWidget {
         selected: selected,
         sheetTitle: sheetTitle,
         itemLabel: itemLabel,
+        itemLeading: itemLeading,
         onAddItemInline: onAddItemInline,
         addItemHint: addItemHint,
         addLabel: addLabel,
