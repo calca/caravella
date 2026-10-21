@@ -14,64 +14,81 @@ class ColorSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
+    final s = Theme.of(context).colorScheme;
+    final radius = BorderRadius.circular(20);
+    Widget card(Widget child) => CardOutline(
+      borderRadius: radius,
+      child: Material(
+        color: s.raisedSurface,
+        borderRadius: radius,
+        child: Padding(padding: const EdgeInsets.all(16), child: child),
+      ),
+    );
     return CaravellaBottomSheetScaffold(
       title: loc.color_suggested_title,
+      subtitle: loc.color_suggested_subtitle,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            loc.color_suggested_subtitle,
-            style: Theme.of(context).textTheme.bodySmall,
+          card(
+            Builder(
+              builder: (ctx) {
+                final scheme = Theme.of(ctx).colorScheme;
+                final palette = ExpenseGroupColorPalette.getPaletteColors(
+                  scheme,
+                );
+                final firstRow = palette.take(6).toList();
+                final secondRow = palette.skip(6).take(6).toList();
+                return Column(
+                  children: [
+                    _ColorPaletteRow(
+                      state: state,
+                      colors: firstRow,
+                      startIndex: 0,
+                    ),
+                    const SizedBox(height: 14),
+                    _ColorPaletteRow(
+                      state: state,
+                      colors: secondRow,
+                      startIndex: 6,
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
-          const SizedBox(height: 20),
-          Builder(
-            builder: (ctx) {
-              final scheme = Theme.of(ctx).colorScheme;
-              final palette = ExpenseGroupColorPalette.getPaletteColors(scheme);
-              final firstRow = palette.take(6).toList();
-              final secondRow = palette.skip(6).take(6).toList();
-              return Column(
-                children: [
-                  _ColorPaletteRow(
-                    state: state,
-                    colors: firstRow,
-                    startIndex: 0,
+          const SizedBox(height: 12),
+          card(
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        loc.background_random_color,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        loc.color_random_subtitle,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: s.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 14),
-                  _ColorPaletteRow(
-                    state: state,
-                    colors: secondRow,
-                    startIndex: 6,
-                  ),
-                ],
-              );
-            },
-          ),
-          const SizedBox(height: 32),
-          Text(
-            loc.background_random_color,
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Text(
-                  loc.color_random_subtitle,
-                  style: Theme.of(context).textTheme.bodySmall,
                 ),
-              ),
-              _RandomColorButton(
-                state: state,
-                semanticLabel: loc.background_random_color,
-              ),
-            ],
+                _RandomColorButton(
+                  state: state,
+                  semanticLabel: loc.background_random_color,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
         ],
       ),
     );

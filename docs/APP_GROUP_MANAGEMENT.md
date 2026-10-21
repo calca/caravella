@@ -30,10 +30,10 @@ Discarding: the wizard shows a discard-confirmation dialog if the user backs out
 
 `ExpensesGroupEditPage` is the "everything in one screen" editor: a 4-tab `TabController` (General / Participants / Categories / Other) with per-tab validation indicators. There are also **single-purpose pages**, each spinning up their own `GroupFormState`/`GroupFormController`, reachable from `GroupSettingsPage` (in `lib/manager/details/pages/group_settings_page.dart` — see [Group Details & Stats](APP_GROUP_DETAILS_STATS.md)):
 
-- `expense_group_general_page.dart` — title, `GroupNameWithIconField` (opens type selector), `PeriodSectionEditor` (start/end dates), currency `SelectionTile` (opens `CurrencySelectorSheet`).
+- `expense_group_general_page.dart` — title, `GroupNameWithIconField` (opens type selector), `PeriodSectionEditor` (start/end dates), currency `SelectionTile` (opens `CurrencySelectorSheet`), `BackgroundPicker` (photo or color). With `openBackground: true` (the settings avatar shortcut) it opens the background sheet (`showBackgroundPickerSheet`) right after loading.
 - `expense_group_participants_page.dart` — wraps `ParticipantsEditor`.
 - `expense_group_categories_page.dart` — wraps `CategoriesEditor`.
-- `expense_group_other_page.dart` — `BackgroundPicker`, a notification-enabled switch (requests OS permission, saves immediately, syncs the persistent notification via `NotificationManager` — see [Notifications](NOTIFICATIONS.md)), an "auto location" switch (saves immediately).
+- `expense_group_other_page.dart` — a notification-enabled switch (requests OS permission, saves immediately, syncs the persistent notification via `NotificationManager` — see [Notifications](NOTIFICATIONS.md)), an "auto location" switch (saves immediately).
 
 All of these standalone pages share a `PopScope` pattern: **if `controller.hasChanges`, they auto-save on back navigation** rather than prompting — the opposite of the wizard's discard-confirmation behavior. Keep this asymmetry in mind when touching either flow.
 

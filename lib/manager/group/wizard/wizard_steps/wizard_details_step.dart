@@ -52,10 +52,11 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
   Future<void> _pickCurrency(GroupFormState state) async {
     final selected = await showModalBottomSheet<Map<String, String>>(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => CurrencySelectorSheet(
+        selectedCode: context.read<GroupFormState>().currency['code'],
       ),
-      builder: (_) => const CurrencySelectorSheet(),
     );
     if (selected != null) state.setCurrency(selected);
   }

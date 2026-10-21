@@ -188,22 +188,26 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
     final source = await showModalBottomSheet<AttachmentSource>(
       context: context,
       builder: (context) => CaravellaBottomSheetScaffold(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        title: loc.attachment_source,
+        child: SettingsGroup(
+          topSpacing: 0,
           children: [
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: Text(loc.from_camera),
+            SettingsTile(
+              icon: Icons.photo_camera_outlined,
+              title: loc.from_camera,
+              chevron: false,
               onTap: () => Navigator.pop(context, AttachmentSource.camera),
             ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: Text(loc.from_gallery),
+            SettingsTile(
+              icon: Icons.photo_library_outlined,
+              title: loc.from_gallery,
+              chevron: false,
               onTap: () => Navigator.pop(context, AttachmentSource.gallery),
             ),
-            ListTile(
-              leading: const Icon(Icons.attach_file),
-              title: Text(loc.from_files),
+            SettingsTile(
+              icon: Icons.attach_file_rounded,
+              title: loc.from_files,
+              chevron: false,
               onTap: () => Navigator.pop(context, AttachmentSource.files),
             ),
           ],

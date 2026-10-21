@@ -19,10 +19,11 @@ class SpendingWave extends StatelessWidget {
 
   final double height;
 
-  /// Fill under the curve; defaults to `surfaceContainerHighest`.
+  /// Fill under the curve, fading out downwards; defaults to a translucent
+  /// `onSurface`, so it takes on the card's color (a group's color too).
   final Color? fillColor;
 
-  /// Curve color; defaults to `outline`.
+  /// Curve color; defaults to a translucent `onSurface`.
   final Color? lineColor;
 
   /// Last point color; defaults to `primary`.
@@ -63,8 +64,8 @@ class SpendingWave extends StatelessWidget {
             child: CustomPaint(
               painter: SpendingWavePainter(
                 values: values,
-                fill: fillColor ?? s.surfaceContainerHighest,
-                line: lineColor ?? s.outline,
+                fill: fillColor ?? s.onSurface.withValues(alpha: 0.12),
+                line: lineColor ?? s.onSurface.withValues(alpha: 0.45),
                 dot: dotColor ?? s.primary,
               ),
             ),
@@ -152,7 +153,16 @@ class SpendingWavePainter extends CustomPainter {
       ..lineTo(points.last.dx, size.height)
       ..lineTo(points.first.dx, size.height)
       ..close();
-    canvas.drawPath(area, Paint()..color = fill);
+    // Translucent and fading downwards: no hard grey block on a colored card.
+    canvas.drawPath(
+      area,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [fill, fill.withValues(alpha: 0)],
+        ).createShader(Offset.zero & size),
+    );
     canvas.drawPath(
       curve,
       Paint()

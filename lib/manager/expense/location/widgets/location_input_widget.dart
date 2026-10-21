@@ -275,8 +275,6 @@ class _LocationDetailsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final gloc = gen.AppLocalizations.of(context);
 
     // Build full address text
@@ -303,84 +301,54 @@ class _LocationDetailsSheet extends StatelessWidget {
       title: gloc.location,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Full address
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(fullAddress, style: theme.textTheme.bodyLarge),
-          ),
-
-          // Coordinates if available
-          if (location.latitude != null && location.longitude != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                '${location.latitude!.toStringAsFixed(6)}, ${location.longitude!.toStringAsFixed(6)}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-
-          const SizedBox(height: 24),
-
-          // Actions
-          Row(
+          // Full address (and coordinates) in a card.
+          SettingsGroup(
+            topSpacing: 0,
             children: [
-              _ActionButton(
-                icon: Icons.delete_outline,
-                tooltip: gloc.cancel,
-                onTap: onClearLocation,
-                destructive: true,
+              SettingsTile(
+                icon: Icons.place_outlined,
+                title: fullAddress,
+                subtitle:
+                    location.latitude != null && location.longitude != null
+                    ? '${location.latitude!.toStringAsFixed(6)}, '
+                          '${location.longitude!.toStringAsFixed(6)}'
+                    : null,
               ),
-              const Spacer(),
-              _ActionButton(
-                icon: Icons.my_location,
-                tooltip: gloc.get_current_location,
+            ],
+          ),
+          SettingsGroup(
+            topSpacing: 12,
+            children: [
+              SettingsTile(
+                icon: Icons.my_location_rounded,
+                title: gloc.get_current_location,
+                chevron: false,
                 onTap: onGetCurrentLocation,
               ),
-              _ActionButton(
-                icon: Icons.search,
-                tooltip: gloc.location_hint,
+              SettingsTile(
+                icon: Icons.search_rounded,
+                title: gloc.location_hint,
+                chevron: false,
                 onTap: onSearchPlace,
+              ),
+            ],
+          ),
+          SettingsGroup(
+            topSpacing: 12,
+            children: [
+              SettingsTile(
+                icon: Icons.delete_outline_rounded,
+                title: gloc.clear,
+                destructive: true,
+                chevron: false,
+                onTap: onClearLocation,
               ),
             ],
           ),
         ],
       ),
-    );
-  }
-}
-
-class _ActionButton extends StatelessWidget {
-  final IconData icon;
-  final String tooltip;
-  final VoidCallback onTap;
-  final bool destructive;
-
-  const _ActionButton({
-    required this.icon,
-    required this.tooltip,
-    required this.onTap,
-    this.destructive = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return IconButton(
-      icon: Icon(icon),
-      iconSize: 28,
-      color: destructive ? colorScheme.error : colorScheme.primary,
-      tooltip: tooltip,
-      onPressed: onTap,
     );
   }
 }

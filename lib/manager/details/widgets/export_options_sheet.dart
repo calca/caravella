@@ -23,48 +23,61 @@ class ExportOptionsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final bottomInset = MediaQuery.of(context).padding.bottom;
+
+    Widget row(
+      IconData icon,
+      String format,
+      String description,
+      VoidCallback onShare,
+      VoidCallback onDownload,
+    ) => SettingsTile(
+      icon: icon,
+      title: format,
+      subtitle: description,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _RoundAction(
+            icon: Icons.share_outlined,
+            tooltip: '${gloc.share_label} $format',
+            onPressed: onShare,
+          ),
+          const SizedBox(width: 4),
+          _RoundAction(
+            icon: Icons.download_rounded,
+            tooltip: '${gloc.save_label} $format',
+            onPressed: onDownload,
+          ),
+        ],
+      ),
+    );
 
     return CaravellaBottomSheetScaffold(
       title: gloc.export_options,
       scrollable: true,
-      padding: EdgeInsets.fromLTRB(
-        20,
-        12,
-        20,
-        bottomInset > 0 ? bottomInset : 12,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: SettingsGroup(
+        topSpacing: 0,
         children: [
-          _ExportFormatRow(
-            icon: Icons.table_chart_outlined,
-            format: 'CSV',
-            description: gloc.export_csv_description,
-            onShare: onShareCsv,
-            onDownload: onDownloadCsv,
-            shareTooltip: gloc.share_label,
-            downloadTooltip: gloc.save_label,
+          row(
+            Icons.table_chart_outlined,
+            'CSV',
+            gloc.export_csv_description,
+            onShareCsv,
+            onDownloadCsv,
           ),
-          const SizedBox(height: 8),
-          _ExportFormatRow(
-            icon: Icons.account_balance_outlined,
-            format: 'OFX',
-            description: gloc.export_ofx_description,
-            onShare: onShareOfx,
-            onDownload: onDownloadOfx,
-            shareTooltip: gloc.share_label,
-            downloadTooltip: gloc.save_label,
+          row(
+            Icons.account_balance_outlined,
+            'OFX',
+            gloc.export_ofx_description,
+            onShareOfx,
+            onDownloadOfx,
           ),
-          const SizedBox(height: 8),
-          _ExportFormatRow(
-            icon: Icons.description_outlined,
-            format: 'Markdown',
-            description: gloc.export_markdown_description,
-            onShare: onShareMarkdown,
-            onDownload: onDownloadMarkdown,
-            shareTooltip: gloc.share_label,
-            downloadTooltip: gloc.save_label,
+          row(
+            Icons.description_outlined,
+            'Markdown',
+            gloc.export_markdown_description,
+            onShareMarkdown,
+            onDownloadMarkdown,
           ),
         ],
       ),
@@ -72,74 +85,28 @@ class ExportOptionsSheet extends StatelessWidget {
   }
 }
 
-class _ExportFormatRow extends StatelessWidget {
+/// Round grey icon button (share, save) at the end of a format's row.
+class _RoundAction extends StatelessWidget {
   final IconData icon;
-  final String format;
-  final String description;
-  final VoidCallback onShare;
-  final VoidCallback onDownload;
-  final String shareTooltip;
-  final String downloadTooltip;
+  final String tooltip;
+  final VoidCallback onPressed;
 
-  const _ExportFormatRow({
+  const _RoundAction({
     required this.icon,
-    required this.format,
-    required this.description,
-    required this.onShare,
-    required this.onDownload,
-    required this.shareTooltip,
-    required this.downloadTooltip,
+    required this.tooltip,
+    required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Card(
-      elevation: 0,
-      color: colorScheme.surfaceContainerLow,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            Icon(icon, color: colorScheme.primary, size: 28),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    format,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    description,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.share_outlined),
-              onPressed: onShare,
-              tooltip: shareTooltip,
-              color: colorScheme.onSurfaceVariant,
-            ),
-            IconButton(
-              icon: const Icon(Icons.save_alt_outlined),
-              onPressed: onDownload,
-              tooltip: downloadTooltip,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ],
-        ),
+    final s = Theme.of(context).colorScheme;
+    return IconButton(
+      icon: Icon(icon, size: 20),
+      tooltip: tooltip,
+      onPressed: onPressed,
+      color: s.onSurface,
+      style: IconButton.styleFrom(
+        backgroundColor: s.onSurface.withValues(alpha: 0.06),
       ),
     );
   }

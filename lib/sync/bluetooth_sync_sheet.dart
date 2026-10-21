@@ -232,7 +232,19 @@ class _BluetoothSyncSheetState extends State<BluetoothSyncSheet> {
           label: '${loc.sync_bt_sync_with} ${peer.name}',
           child: ListTile(
             visualDensity: VisualDensity.compact,
-            leading: Icon(Icons.bluetooth, color: colorScheme.primary),
+            leading: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colorScheme.onSurface.withValues(alpha: 0.06),
+              ),
+              child: Icon(
+                Icons.bluetooth,
+                size: 20,
+                color: colorScheme.onSurface,
+              ),
+            ),
             title: Text(peer.name, style: textTheme.bodyMedium),
             trailing: FilledButton.tonal(
               onPressed: () => _syncWithPeer(peer.endpointId),

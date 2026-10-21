@@ -645,12 +645,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                           gloc.sync_title,
                           _showSyncPage,
                         ),
-                        if (trip.expenses.isNotEmpty)
-                          _MenuItem(
-                            Icons.ios_share_rounded,
-                            gloc.export_share,
-                            () => showExpenseExportOptionsSheet(context, trip),
-                          ),
+                        // Share & export lives in the group's settings
+                        // (rarely used, kept out of this menu).
                         _MenuItem(
                           Icons.settings_outlined,
                           gloc.settings,

@@ -368,8 +368,8 @@ void main() {
       await tester.tap(find.text('Select period'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Suggested duration'), findsOneWidget);
-      expect(find.text('OK'), findsOneWidget);
+      expect(find.text('SUGGESTED DURATION'), findsOneWidget);
+      expect(find.text('Confirm'), findsOneWidget);
     });
   });
 }

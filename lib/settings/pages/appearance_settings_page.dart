@@ -151,57 +151,27 @@ class AppearanceSettingsPage extends StatelessWidget {
     }
   }
 
-  void _showLanguagePicker(
+  Future<void> _showLanguagePicker(
     BuildContext context,
     String currentLocale,
     gen.AppLocalizations loc,
-  ) {
-    showModalBottomSheet(
+  ) async {
+    final names = {
+      'it': loc.settings_language_it,
+      'en': loc.settings_language_en,
+      'es': loc.settings_language_es,
+      'pt': loc.settings_language_pt,
+      'zh': loc.settings_language_zh,
+    };
+    final picked = await showSelectionBottomSheet<String>(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        final entries = [
-          ('it', loc.settings_language_it),
-          ('en', loc.settings_language_en),
-          ('es', loc.settings_language_es),
-          ('pt', loc.settings_language_pt),
-          ('zh', loc.settings_language_zh),
-        ];
-        return CaravellaBottomSheetScaffold(
-          title: loc.settings_select_language,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...entries.map((e) {
-                final selected = e.$1 == currentLocale;
-                return ListTile(
-                  visualDensity: VisualDensity.compact,
-                  title: Text(e.$2),
-                  trailing: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 180),
-                    child: selected
-                        ? Icon(
-                            Icons.check,
-                            key: ValueKey(e.$1),
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  onTap: selected
-                      ? null
-                      : () {
-                          LocaleNotifier.of(context)?.changeLocale(e.$1);
-                          onLocaleChanged?.call(e.$1);
-                          Navigator.of(context).pop();
-                        },
-                );
-              }),
-            ],
-          ),
-        );
-      },
+      items: names.keys.toList(),
+      selected: currentLocale,
+      itemLabel: (code) => names[code]!,
+      sheetTitle: loc.settings_select_language,
     );
+    if (picked == null || picked == currentLocale || !context.mounted) return;
+    LocaleNotifier.of(context)?.changeLocale(picked);
+    onLocaleChanged?.call(picked);
   }
 }

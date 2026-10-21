@@ -9,10 +9,6 @@ class CategoryDialog {
     return showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
       builder: (ctx) => _CategoryBottomSheet(controller: controller),
     );
   }
@@ -36,6 +32,7 @@ class _CategoryBottomSheet extends StatelessWidget {
         padding: EdgeInsets.only(bottom: bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Semantics(
               textField: true,
@@ -43,9 +40,13 @@ class _CategoryBottomSheet extends StatelessWidget {
               child: TextField(
                 controller: controller,
                 autofocus: true,
-                decoration: InputDecoration(
-                  labelText: gloc.category_name,
-                  semanticCounterText: '',
+                textCapitalization: TextCapitalization.sentences,
+                decoration: FormTheme.getCardDecoration(
+                  fillColor: Theme.of(context).colorScheme.raisedSurface,
+                  borderColor: Theme.of(context).colorScheme.outlineVariant,
+                  focusColor: Theme.of(context).colorScheme.primary,
+                  errorColor: Theme.of(context).colorScheme.error,
+                  hintText: gloc.category_name,
                 ),
                 onSubmitted: (val) {
                   if (val.trim().isNotEmpty) {
@@ -55,24 +56,24 @@ class _CategoryBottomSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(gloc.cancel),
-                ),
-                const SizedBox(width: 8),
-                FilledButton.tonal(
-                  onPressed: () {
-                    final val = controller.text.trim();
-                    if (val.isNotEmpty) {
-                      Navigator.of(context).pop(val);
-                    }
-                  },
-                  child: Text(gloc.add),
-                ),
-              ],
+            FilledButton(
+              onPressed: () {
+                final val = controller.text.trim();
+                if (val.isNotEmpty) Navigator.of(context).pop(val);
+              },
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(52),
+                shape: const StadiumBorder(),
+                elevation: 0,
+              ),
+              child: Text(gloc.add),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+              ),
+              child: Text(gloc.cancel),
             ),
           ],
         ),

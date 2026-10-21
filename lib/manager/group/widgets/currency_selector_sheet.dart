@@ -5,7 +5,10 @@ import '../../../l10n/app_localizations.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class CurrencySelectorSheet extends StatefulWidget {
-  const CurrencySelectorSheet({super.key});
+  /// The current currency's code, ticked in the list.
+  final String? selectedCode;
+
+  const CurrencySelectorSheet({super.key, this.selectedCode});
 
   @override
   State<CurrencySelectorSheet> createState() => _CurrencySelectorSheetState();
@@ -93,7 +96,10 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
     return CaravellaBottomSheetScaffold(
       title: l.select_currency,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
+        // Room for the keyboard below the list.
+        height:
+            MediaQuery.sizeOf(context).height * 0.8 -
+            MediaQuery.viewInsetsOf(context).bottom,
         child: Column(
           children: [
             TextField(
@@ -101,7 +107,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
               autofocus: true,
               textInputAction: TextInputAction.search,
               decoration: FormTheme.getSearchPillDecoration(
-                backgroundColor: colorScheme.surface,
+                backgroundColor: colorScheme.raisedSurface,
                 hintText: l.search_currency,
                 prefixIcon: const Icon(Icons.search_outlined),
                 suffixIcon: _query.isEmpty
@@ -130,50 +136,84 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     )
-                  : ListView.builder(
-                      itemCount: filtered.length,
-                      itemBuilder: (c, i) {
-                        final currency = filtered[i];
-                        final name = localizedCurrencyName(
-                          l,
-                          currency['code']!,
-                        );
-                        final query = _query;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: ListTile(
-                            dense: true,
-                            minVerticalPadding: 8,
-                            contentPadding: EdgeInsets.zero,
-                            leading: Text(
-                              currency['symbol'] ?? '',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.w600),
-                              semanticsLabel: currency['symbol'] ?? '',
+                  : CardOutline(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Material(
+                        color: colorScheme.raisedSurface,
+                        borderRadius: BorderRadius.circular(20),
+                        clipBehavior: Clip.antiAlias,
+                        child: ListView.separated(
+                          itemCount: filtered.length,
+                          separatorBuilder: (_, _) => Divider(
+                            height: 1,
+                            indent: 64,
+                            endIndent: 16,
+                            color: colorScheme.outlineVariant.withValues(
+                              alpha: 0.5,
                             ),
-                            title: _buildHighlighted(
-                              name,
-                              query,
-                              Theme.of(context).textTheme.bodyLarge,
-                            ),
-                            subtitle: _buildHighlighted(
-                              '${currency['code']}',
-                              query,
-                              Theme.of(context).textTheme.bodySmall,
-                            ),
-                            onTap: () {
-                              final selected = Map<String, String>.from(
-                                currency,
-                              );
-                              selected['name'] = name;
-                              Navigator.pop<Map<String, String>>(
-                                context,
-                                selected,
-                              );
-                            },
                           ),
-                        );
-                      },
+                          itemBuilder: (c, i) {
+                            final currency = filtered[i];
+                            final name = localizedCurrencyName(
+                              l,
+                              currency['code']!,
+                            );
+                            final query = _query;
+                            final isSelected =
+                                currency['code'] == widget.selectedCode;
+                            return ListTile(
+                              minVerticalPadding: 10,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                              ),
+                              selected: isSelected,
+                              trailing: isSelected
+                                  ? Icon(
+                                      Icons.check_rounded,
+                                      color: colorScheme.primary,
+                                    )
+                                  : null,
+                              leading: Container(
+                                width: 38,
+                                height: 38,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.06,
+                                  ),
+                                ),
+                                child: Text(
+                                  currency['symbol'] ?? '',
+                                  style: Theme.of(context).textTheme.titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.w700),
+                                  semanticsLabel: currency['symbol'] ?? '',
+                                ),
+                              ),
+                              title: _buildHighlighted(
+                                name,
+                                query,
+                                Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              subtitle: _buildHighlighted(
+                                '${currency['code']}',
+                                query,
+                                Theme.of(context).textTheme.bodySmall,
+                              ),
+                              onTap: () {
+                                final selected = Map<String, String>.from(
+                                  currency,
+                                );
+                                selected['name'] = name;
+                                Navigator.pop<Map<String, String>>(
+                                  context,
+                                  selected,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
                     ),
             ),
           ],

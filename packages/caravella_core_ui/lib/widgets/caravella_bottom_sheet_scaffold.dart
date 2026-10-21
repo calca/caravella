@@ -1,9 +1,14 @@
 import 'package:material_ui/material_ui.dart';
 
-/// Standard layout wrapper for bottom sheets in group manager section.
-/// Provides consistent horizontal padding, optional title, and vertical spacing.
+/// The layout of every bottom sheet, in the app's style: a handle, a large
+/// [title] with an optional [subtitle] line of context, then the content —
+/// usually [SettingsGroup] cards of actions or a [showSelectionBottomSheet]
+/// list — on the theme's sheet grey (`bottomSheetTheme`).
 class CaravellaBottomSheetScaffold extends StatelessWidget {
   final String? title;
+
+  /// A line of context under the title (e.g. a group's dates and people).
+  final String? subtitle;
   final Widget child;
   final EdgeInsets padding;
   final double spacing;
@@ -13,6 +18,7 @@ class CaravellaBottomSheetScaffold extends StatelessWidget {
   const CaravellaBottomSheetScaffold({
     super.key,
     this.title,
+    this.subtitle,
     required this.child,
     this.padding = const EdgeInsets.fromLTRB(20, 20, 20, 24),
     this.spacing = 12,
@@ -43,13 +49,25 @@ class CaravellaBottomSheetScaffold extends StatelessWidget {
           ),
         ],
         if (title != null) ...[
-          Text(
-            title!,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          Semantics(
+            header: true,
+            child: Text(
+              title!,
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+            ),
           ),
-          SizedBox(height: spacing),
+          if (subtitle != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              subtitle!,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+          SizedBox(height: spacing + 4),
         ],
         child,
       ],

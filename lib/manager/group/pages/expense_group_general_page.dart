@@ -12,6 +12,7 @@ import '../group_type/group_type_selector_sheet.dart';
 import '../widgets/group_name_with_icon_field.dart';
 import '../widgets/selection_tile.dart';
 import '../widgets/period_section_editor.dart';
+import '../widgets/background_picker.dart';
 import '../widgets/currency_selector_sheet.dart';
 
 class ExpenseGroupGeneralPage extends StatelessWidget {
@@ -19,11 +20,15 @@ class ExpenseGroupGeneralPage extends StatelessWidget {
   final VoidCallback? onTripDeleted;
   final GroupEditMode mode;
 
+  /// Opens the background sheet right away (the settings avatar shortcut).
+  final bool openBackground;
+
   const ExpenseGroupGeneralPage({
     super.key,
     this.trip,
     this.onTripDeleted,
     required this.mode,
+    this.openBackground = false,
   });
 
   @override
@@ -63,6 +68,7 @@ class ExpenseGroupGeneralPage extends StatelessWidget {
         trip: trip,
         onTripDeleted: onTripDeleted,
         mode: mode,
+        openBackground: openBackground,
       ),
     );
   }
@@ -72,11 +78,13 @@ class _GeneralPageScaffold extends StatefulWidget {
   final ExpenseGroup? trip;
   final VoidCallback? onTripDeleted;
   final GroupEditMode mode;
+  final bool openBackground;
 
   const _GeneralPageScaffold({
     required this.trip,
     this.onTripDeleted,
     required this.mode,
+    this.openBackground = false,
   });
 
   @override
@@ -98,6 +106,9 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state.title.isEmpty) {
           _controller.load(widget.trip!);
+        }
+        if (mounted && widget.openBackground) {
+          showBackgroundPickerSheet(context);
         }
       });
     }
@@ -210,12 +221,13 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                         final selected =
                             await showModalBottomSheet<Map<String, String>>(
                               context: context,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20),
-                                ),
+                              isScrollControlled: true,
+                              useSafeArea: true,
+                              builder: (_) => CurrencySelectorSheet(
+                                selectedCode: context
+                                    .read<GroupFormState>()
+                                    .currency['code'],
                               ),
-                              builder: (_) => const CurrencySelectorSheet(),
                             );
                         if (selected != null && context.mounted) {
                           context.read<GroupFormState>().setCurrency(selected);
@@ -231,6 +243,22 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                   ),
                 ],
               ),
+            ],
+          ),
+        ),
+        // Sfondo (foto o colore)
+        card(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SectionHeader(
+                title: gloc.background,
+                description: gloc.choose_image_or_color,
+                padding: EdgeInsets.zero,
+                spacing: 4,
+              ),
+              const SizedBox(height: 12),
+              const BackgroundPicker(),
             ],
           ),
         ),

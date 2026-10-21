@@ -1,5 +1,4 @@
 import 'package:caravella_core/caravella_core.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../settings/state/group_type_templates_notifier.dart';
 import '../../data/group_form_state.dart';
 import '../../group_form_controller.dart';
+import '../../group_type/group_type_card.dart';
 import '../../group_type/group_type_localization.dart';
 import '../../pages/group_creation_wizard_page.dart';
 
@@ -15,7 +15,7 @@ import '../../pages/group_creation_wizard_page.dart';
 class WizardTypeStep extends StatelessWidget {
   const WizardTypeStep({super.key});
 
-  static const _order = [
+  static const order = [
     ExpenseGroupType.travel,
     ExpenseGroupType.family,
     ExpenseGroupType.personal,
@@ -84,8 +84,8 @@ class WizardTypeStep extends StatelessWidget {
     }
 
     final cards = [
-      for (final type in _order)
-        _TypeCard(
+      for (final type in order)
+        GroupTypeCard(
           icon: type.icon,
           title: GroupTypeLocalization.typeName(gloc, type),
           subtitle: description(gloc, type),
@@ -93,7 +93,7 @@ class WizardTypeStep extends StatelessWidget {
           onTap: () => pickType(type),
         ),
       for (final t in templates)
-        _TypeCard(
+        GroupTypeCard(
           icon: GroupTypeLocalization.iconFromCodePoint(t.iconCodePoint),
           title: t.name,
           subtitle: t.defaultCategories.take(3).join(', '),
@@ -118,95 +118,6 @@ class WizardTypeStep extends StatelessWidget {
         const SizedBox(height: 16),
         WizardNote(gloc.wizard_type_note),
       ],
-    );
-  }
-}
-
-class _TypeCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _TypeCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    final radius = BorderRadius.circular(20);
-    return Semantics(
-      button: true,
-      selected: selected,
-      label: '$title, $subtitle',
-      excludeSemantics: true,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: selected ? s.primaryContainer : s.raisedSurface,
-          borderRadius: radius,
-          border: Border.all(
-            color: selected ? s.primary : s.outlineVariant,
-            width: selected ? 2 : 1,
-          ),
-        ),
-        child: Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            borderRadius: radius,
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: selected ? s.primary : s.surfaceContainerHighest,
-                    ),
-                    child: Icon(
-                      icon,
-                      size: 22,
-                      color: selected ? s.onPrimary : s.onSurface,
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: selected ? s.onPrimaryContainer : s.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: selected
-                          ? s.onPrimaryContainer
-                          : s.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

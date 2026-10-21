@@ -70,8 +70,8 @@ class AppUpdateService {
     if (!Platform.isAndroid) {
       return const Stream.empty();
     }
-    return _installUpdateStream ??=
-        InAppUpdate.installUpdateListener.asBroadcastStream();
+    return _installUpdateStream ??= InAppUpdate.installUpdateListener
+        .asBroadcastStream();
   }
 
   static Stream<InstallStatus>? _installUpdateStream;

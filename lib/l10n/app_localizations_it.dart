@@ -614,7 +614,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get other_settings => 'Altre impostazioni';
 
   @override
-  String get other_settings_desc => 'Valuta, sfondo, posizione';
+  String get other_settings_desc => 'Notifica, posizione';
 
   @override
   String get segment_general => 'Generali';

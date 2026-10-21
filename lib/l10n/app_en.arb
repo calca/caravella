@@ -234,7 +234,7 @@
   "whats_new_load_error": "Failed to load",
   "categories": "Categories",
   "other_settings": "Other settings",
-  "other_settings_desc": "Currency, background, location",
+  "other_settings_desc": "Notification, location",
   "segment_general": "General",
   "segment_other": "Other",
   "from": "From",

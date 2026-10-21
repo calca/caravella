@@ -1247,7 +1247,7 @@ abstract class AppLocalizations {
   /// No description provided for @other_settings_desc.
   ///
   /// In en, this message translates to:
-  /// **'Currency, background, location'**
+  /// **'Notification, location'**
   String get other_settings_desc;
 
   /// No description provided for @segment_general.

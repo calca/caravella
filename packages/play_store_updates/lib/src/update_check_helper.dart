@@ -12,7 +12,7 @@ Future<bool?> showUpdateRecommendationSheet(
   BuildContext context,
   UpdateLocalizations localizations,
   Widget Function(BuildContext, {required String title, required Widget child})
-      bottomSheetBuilder,
+  bottomSheetBuilder,
 ) async {
   return showModalBottomSheet<bool>(
     context: context,
@@ -22,27 +22,28 @@ Future<bool?> showUpdateRecommendationSheet(
       title: localizations.updateAvailable,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             localizations.updateAvailableDesc,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text(localizations.updateLater),
-              ),
-              const SizedBox(width: 8),
-              FilledButton.icon(
-                onPressed: () => Navigator.of(context).pop(true),
-                icon: const Icon(Icons.download),
-                label: Text(localizations.updateNow),
-              ),
-            ],
+          FilledButton.icon(
+            onPressed: () => Navigator.of(context).pop(true),
+            icon: const Icon(Icons.download_rounded),
+            label: Text(localizations.updateNow),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+              shape: const StadiumBorder(),
+              elevation: 0,
+            ),
+          ),
+          const SizedBox(height: 4),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            style: TextButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+            child: Text(localizations.updateLater),
           ),
         ],
       ),
@@ -57,7 +58,7 @@ Future<void> _promptInstallReadyUpdate(
   UpdateService updateService,
   UpdateLocalizations localizations,
   Widget Function(BuildContext, {required String title, required Widget child})
-      bottomSheetBuilder,
+  bottomSheetBuilder,
 ) async {
   final shouldInstall = await showModalBottomSheet<bool>(
     context: context,
@@ -67,27 +68,28 @@ Future<void> _promptInstallReadyUpdate(
       title: localizations.updateReadyToInstall,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             localizations.updateReadyToInstallDesc,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text(localizations.updateLater),
-              ),
-              const SizedBox(width: 8),
-              FilledButton.icon(
-                onPressed: () => Navigator.of(context).pop(true),
-                icon: const Icon(Icons.restart_alt),
-                label: Text(localizations.updateInstall),
-              ),
-            ],
+          FilledButton.icon(
+            onPressed: () => Navigator.of(context).pop(true),
+            icon: const Icon(Icons.restart_alt_rounded),
+            label: Text(localizations.updateInstall),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+              shape: const StadiumBorder(),
+              elevation: 0,
+            ),
+          ),
+          const SizedBox(height: 4),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            style: TextButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+            child: Text(localizations.updateLater),
           ),
         ],
       ),
@@ -114,7 +116,7 @@ Future<void> checkAndShowUpdateIfNeeded(
   BuildContext context,
   UpdateLocalizations localizations,
   Widget Function(BuildContext, {required String title, required Widget child})
-      bottomSheetBuilder,
+  bottomSheetBuilder,
 ) async {
   final updateService = UpdateServiceFactory.createUpdateService();
 

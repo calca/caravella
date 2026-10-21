@@ -228,7 +228,7 @@
   "error_saving_image": "Erro ao salvar imagem",
   "already_exists": "já existe",
   "other_settings": "Outras configurações",
-  "other_settings_desc": "Moeda, fundo, localização",
+  "other_settings_desc": "Notificação, localização",
   "segment_general": "Geral",
   "segment_other": "Outro",
   "status_all": "Todos",

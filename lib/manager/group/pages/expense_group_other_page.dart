@@ -8,7 +8,6 @@ import 'package:io_caravella_egm/services/notification_service.dart';
 import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
-import '../widgets/background_picker.dart';
 
 class ExpenseGroupOtherPage extends StatelessWidget {
   final ExpenseGroup? trip;
@@ -206,27 +205,6 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
   List<Widget> _buildOtherContent(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     return [
-      SettingsGroup(
-        label: gloc.background,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  gloc.choose_image_or_color,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                const BackgroundPicker(),
-              ],
-            ),
-          ),
-        ],
-      ),
       SettingsGroup(
         children: [
           Selector<GroupFormState, bool>(

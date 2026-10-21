@@ -3,6 +3,10 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
+import '../../details/pages/tabs/usecase/date_range_formatter.dart';
+
+/// A group's options: favorite and archive in one card, delete in its own
+/// red card below.
 class HistoryOptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
   final VoidCallback onPinToggle;
@@ -20,60 +24,56 @@ class HistoryOptionsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final people = gloc.participant_count(trip.participants.length);
+    final dates = trip.startDate != null || trip.endDate != null
+        ? formatDateRange(
+            start: trip.startDate,
+            end: trip.endDate,
+            locale: Localizations.localeOf(context),
+          )
+        : null;
+
     return CaravellaBottomSheetScaffold(
       title: trip.title,
-      scrollable: false, // dynamic height, no internal scroll
-      padding: EdgeInsets.fromLTRB(
-        20,
-        20,
-        20,
-        bottomInset > 0 ? bottomInset : 12,
-      ),
+      subtitle: dates == null ? people : '$dates · $people',
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ListTile(
-            leading: Icon(
-              trip.pinned ? Icons.favorite : Icons.favorite_border,
-              color: trip.archived
-                  ? Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.38)
-                  : Theme.of(context).colorScheme.onTertiaryContainer,
-            ),
-            title: Text(
-              trip.pinned ? gloc.unpin_group : gloc.pin_group,
-              style: trip.archived
-                  ? TextStyle(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.38),
-                    )
-                  : null,
-            ),
-            onTap: trip.archived ? null : onPinToggle,
+          SettingsGroup(
+            topSpacing: 0,
+            children: [
+              // An archived group can't be the favorite.
+              if (!trip.archived)
+                SettingsTile(
+                  icon: trip.pinned
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border_rounded,
+                  title: trip.pinned ? gloc.unpin_group : gloc.pin_group,
+                  chevron: false,
+                  onTap: onPinToggle,
+                ),
+              SettingsTile(
+                icon: trip.archived
+                    ? Icons.unarchive_outlined
+                    : Icons.archive_outlined,
+                title: trip.archived ? gloc.unarchive : gloc.archive,
+                chevron: false,
+                onTap: onArchiveToggle,
+              ),
+            ],
           ),
-          ListTile(
-            leading: Icon(
-              trip.archived ? Icons.unarchive_outlined : Icons.archive_outlined,
-              color: trip.archived
-                  ? Theme.of(context).colorScheme.onPrimaryContainer
-                  : Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
-            title: Text(trip.archived ? gloc.unarchive : gloc.archive),
-            onTap: onArchiveToggle,
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.delete_outline,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            title: Text(
-              gloc.delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-            onTap: onDelete,
+          SettingsGroup(
+            topSpacing: 12,
+            children: [
+              SettingsTile(
+                icon: Icons.delete_outline_rounded,
+                title: gloc.delete,
+                destructive: true,
+                chevron: false,
+                onTap: onDelete,
+              ),
+            ],
           ),
         ],
       ),
