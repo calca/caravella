@@ -203,8 +203,9 @@ class VoiceInputService {
     // The currency token is optional on either side of the digits, since
     // speech-to-text engines may prefix ("€12") or suffix ("12 euro") it.
     const currencyToken =
-        r'(?:euro|eur|€|dollar|dollaro|dollari|usd|\$|pound|£|'
-        r'real|reais|r\$|peso|pesos|yuan|rmb|元|¥|kr|chf|cad|aud)';
+        // Plurals first, so "dollars" doesn't leave an "s" behind.
+        r'(?:euros|euro|eur|€|dollari|dollaro|dollars|dollar|usd|\$|pounds|'
+        r'pound|£|reais|real|r\$|pesos|peso|yuan|rmb|元|¥|kr|chf|cad|aud)';
     final amountPattern = RegExp(
       '$currencyToken?\\s*(\\d+(?:[.,]\\d{1,2})?)\\s*$currencyToken?',
       caseSensitive: false,
@@ -476,7 +477,11 @@ class VoiceInputService {
 
     // ── 5. DESCRIPTION (name) ────────────────────────────────────────────────
     // Strip consumed tokens before extracting description
-    String cleanText = t.replaceAll(amountPattern, '');
+    // Spending verbs go first: "speso" would otherwise lose "peso" (a
+    // currency word) to the amount.
+    String cleanText = t
+        .replaceAll(_spendingVerbs, ' ')
+        .replaceAll(amountPattern, '');
 
     // Strip all date tokens
     for (final expr in [
@@ -539,6 +544,7 @@ class VoiceInputService {
           .replaceAll(amountPattern, '')
           .trim()
           .replaceAll(RegExp(r'\s+'), ' ');
+      desc = _tidyDescription(desc);
       if (desc.isNotEmpty) result['name'] = _capitalise(desc);
     }
 
@@ -551,6 +557,7 @@ class VoiceInputService {
           )
           .trim()
           .replaceAll(RegExp(r'\s+'), ' ');
+      desc = _tidyDescription(desc);
       if (desc.isNotEmpty) result['name'] = _capitalise(desc);
     }
 
@@ -558,6 +565,62 @@ class VoiceInputService {
   }
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
+
+  /// Spending verbs that open a spoken expense (IT, EN, ES, PT), with their
+  /// subject: removed from the description.
+  static final RegExp _spendingVerbs = RegExp(
+    r'(?<![\p{L}])(?:'
+    // IT
+    r"(?:io |noi )?(?:ho|abbiamo|hai|avete|ha|hanno) (?:speso|pagato|comprato|preso|acquistato|offerto)|"
+    r'(?:speso|spesi|pagato|comprato|acquistato)|'
+    // EN
+    r"(?:i |we |you |they |he |she )?(?:have |'ve )?(?:spent|paid|bought|got)|"
+    // ES
+    r'(?:he|hemos|has|ha|han) (?:gastado|pagado|comprado)|'
+    r'(?:gasté|gastamos|pagué|pagamos|compré|compramos)|'
+    // PT
+    r'(?:gastei|gastamos|paguei|pagamos|comprei|compramos)'
+    r')(?![\p{L}])',
+    caseSensitive: false,
+    unicode: true,
+  );
+
+  /// Articles and prepositions that only link words (IT, EN, ES, PT).
+  static const Set<String> _linkWords = {
+    // IT
+    'a', 'al', 'allo', 'alla', 'ai', 'agli', 'alle', 'in', 'nel', 'nello',
+    'nella', 'nei', 'negli', 'nelle', 'da', 'dal', 'dallo', 'dalla', 'dai',
+    'di', 'del', 'dello', 'della', 'dei', 'degli', 'delle', 'per', 'con',
+    'su', 'un', 'uno', 'una', "un'", 'il', 'lo', 'la', "l'", 'i', 'gli',
+    'le', 'e',
+    // EN
+    'an', 'the', 'at', 'on', 'for', 'of', 'to', 'and', 'some',
+    // ES
+    'el', 'los', 'las', 'en', 'de', 'unos', 'unas', 'y', 'para', 'por',
+    // PT
+    'o', 'os', 'as', 'um', 'uma', 'no', 'na', 'nos', 'nas', 'em', 'do',
+    'dos', 'das',
+  };
+
+  /// The description without leading or trailing link words ("un maglione"
+  /// -> "maglione", "in cartoleria" -> "cartoleria").
+  static String _tidyDescription(String desc) {
+    final words = desc
+        .replaceAllMapped(
+          RegExp(r"\b(l|un)'", caseSensitive: false),
+          (m) => "${m[1]}' ",
+        )
+        .split(RegExp(r'\s+'))
+        .where((w) => w.isNotEmpty)
+        .toList();
+    while (words.isNotEmpty && _linkWords.contains(words.first.toLowerCase())) {
+      words.removeAt(0);
+    }
+    while (words.isNotEmpty && _linkWords.contains(words.last.toLowerCase())) {
+      words.removeLast();
+    }
+    return words.join(' ').replaceAll("' ", "'");
+  }
 
   static bool _containsAny(String text, List<String> terms) =>
       terms.any((t) => text.contains(t));

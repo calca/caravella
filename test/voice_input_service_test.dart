@@ -144,8 +144,36 @@ void main() {
     test('leading currency symbol is not leaked into the description', () {
       final r = parse('€12 dal panettiere');
       expect(r['amount'], equals(12.0));
-      expect(r['name'], equals('Dal panettiere'));
+      expect(r['name'], equals('Panettiere'));
       expect((r['name'] as String).contains('€'), isFalse);
+    });
+
+    test('spending verbs and link words are left out', () {
+      expect(
+        parse('abbiamo speso 15 euro al ristorante')['name'],
+        'Ristorante',
+      );
+      expect(parse('ho speso 12 euro in cartoleria')['name'], 'Cartoleria');
+      expect(parse('ho comprato a 12 euro un maglione')['name'], 'Maglione');
+      expect(parse("ho preso 4 euro di gelato")['name'], 'Gelato');
+      expect(parse('we spent 20 dollars at the cinema')['name'], 'Cinema');
+      expect(parse('I bought a sweater for 30 dollars')['name'], 'Sweater');
+      expect(
+        parse('hemos gastado 15 euros en el restaurante')['name'],
+        'Restaurante',
+      );
+      expect(parse('gastei 10 reais na padaria')['name'], 'Padaria');
+      // "per" still picks the description.
+      expect(
+        parse('ho speso 20 euro per la cena al ristorante')['name'],
+        'Cena',
+      );
+      // The amount is still read.
+      expect(parse('abbiamo speso 15 euro al ristorante')['amount'], 15.0);
+    });
+
+    test("an apostrophe article goes too", () {
+      expect(parse("ho pagato 3 euro l'autobus")['name'], 'Autobus');
     });
 
     test('leading currency symbol with space is not leaked (IT)', () {

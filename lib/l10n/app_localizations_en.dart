@@ -2980,4 +2980,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get crop_use_photo => 'Use this photo';
+
+  @override
+  String get welcome_tagline =>
+      'Expenses for trips, home and friends, split fairly. Everything stays on your phone.';
+
+  @override
+  String get wizard_name_title => 'What\'s your name?';
+
+  @override
+  String get wizard_name_note =>
+      'It stays on your phone. You\'ll be the first participant of your groups.';
+
+  @override
+  String get wizard_type_title => 'What kind of group?';
+
+  @override
+  String get wizard_type_note =>
+      'It sets the starting categories: you can change them anytime.';
+
+  @override
+  String get group_type_personal_desc => 'Just your own spending';
+
+  @override
+  String get group_type_family_desc => 'Home, family, flatmates';
+
+  @override
+  String get group_type_travel_desc => 'Holidays, weekends, trips';
+
+  @override
+  String get group_type_other_desc => 'Dinners, events, gifts';
+
+  @override
+  String get wizard_details_title => 'What shall we call it?';
+
+  @override
+  String get wizard_details_note =>
+      'Dates feed the spending chart. You can change everything later.';
+
+  @override
+  String wizard_people_you(String name) {
+    return '$name (you)';
+  }
+
+  @override
+  String get wizard_people_only_me => 'Just me for now';
+
+  @override
+  String get wizard_people_add_hint => 'A friend\'s name';
+
+  @override
+  String wizard_people_remove(String name) {
+    return 'Remove $name';
+  }
+
+  @override
+  String get wizard_dates_add => 'Dates';
+
+  @override
+  String get wizard_continue => 'Continue';
+
+  @override
+  String get wizard_create => 'Create group';
 }

@@ -14,6 +14,9 @@ class ParticipantSelectorWidget extends StatelessWidget {
   final Future<void> Function(String)? onAddParticipantInline;
   final bool enabled;
 
+  /// One line of pills, the rest behind "+N" (quick-add sheet).
+  final bool singleLine;
+
   const ParticipantSelectorWidget({
     super.key,
     required this.participants,
@@ -21,6 +24,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
     required this.onParticipantSelected,
     this.onAddParticipantInline,
     this.enabled = true,
+    this.singleLine = false,
   });
 
   @override
@@ -47,6 +51,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
           alreadyExistsMessage:
               '${gloc.participant_name} ${gloc.already_exists}',
           sheetTitle: gloc.participants_label,
+          singleLine: singleLine,
         ),
       ],
     );

@@ -2992,4 +2992,66 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get crop_use_photo => 'Usar esta foto';
+
+  @override
+  String get welcome_tagline =>
+      'Despesas de viagens, casa e amigos, divididas de forma justa. Tudo fica no seu telefone.';
+
+  @override
+  String get wizard_name_title => 'Como você se chama?';
+
+  @override
+  String get wizard_name_note =>
+      'Fica no seu telefone. Você será o primeiro participante dos seus grupos.';
+
+  @override
+  String get wizard_type_title => 'Que tipo de grupo?';
+
+  @override
+  String get wizard_type_note =>
+      'Define as categorias iniciais: você pode mudá-las quando quiser.';
+
+  @override
+  String get group_type_personal_desc => 'Só os seus gastos';
+
+  @override
+  String get group_type_family_desc => 'Casa, família, colegas de quarto';
+
+  @override
+  String get group_type_travel_desc => 'Férias, fins de semana, passeios';
+
+  @override
+  String get group_type_other_desc => 'Jantares, eventos, presentes';
+
+  @override
+  String get wizard_details_title => 'Como vamos chamá-lo?';
+
+  @override
+  String get wizard_details_note =>
+      'As datas alimentam o gráfico de gastos. Você pode mudar tudo depois.';
+
+  @override
+  String wizard_people_you(String name) {
+    return '$name (você)';
+  }
+
+  @override
+  String get wizard_people_only_me => 'Só eu, por enquanto';
+
+  @override
+  String get wizard_people_add_hint => 'Nome de um amigo';
+
+  @override
+  String wizard_people_remove(String name) {
+    return 'Remover $name';
+  }
+
+  @override
+  String get wizard_dates_add => 'Datas';
+
+  @override
+  String get wizard_continue => 'Continuar';
+
+  @override
+  String get wizard_create => 'Criar grupo';
 }

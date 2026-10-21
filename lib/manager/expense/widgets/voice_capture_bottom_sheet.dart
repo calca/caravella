@@ -152,7 +152,9 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
       case VoiceInputError.recognitionFailed:
         return gloc.voice_input_error;
       case null:
-        return _isListening ? gloc.voice_input_listening : gloc.voice_input_hint;
+        return _isListening
+            ? gloc.voice_input_listening
+            : gloc.voice_input_hint;
     }
   }
 
@@ -218,7 +220,9 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
     return Semantics(
       button: true,
       label: gloc.voice_input_button,
-      value: _isListening ? gloc.voice_input_listening : gloc.voice_input_tap_to_speak,
+      value: _isListening
+          ? gloc.voice_input_listening
+          : gloc.voice_input_tap_to_speak,
       onTap: _toggleListening,
       child: ExcludeSemantics(
         child: AnimatedBuilder(
@@ -244,9 +248,7 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
                     boxShadow: _isListening
                         ? [
                             BoxShadow(
-                              color: colorScheme.primary.withValues(
-                                alpha: 0.3,
-                              ),
+                              color: colorScheme.primary.withValues(alpha: 0.3),
                               blurRadius: 16 + _pulseController.value * 8,
                               spreadRadius: 2 + _pulseController.value * 4,
                             ),

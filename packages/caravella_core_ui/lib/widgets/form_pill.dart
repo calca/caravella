@@ -29,6 +29,9 @@ class FormPill extends StatelessWidget {
   final String? semanticsLabel;
   final String? tooltip;
 
+  /// Icon after the label (e.g. a small × on a removable pill).
+  final IconData? trailingIcon;
+
   const FormPill({
     super.key,
     required this.label,
@@ -39,6 +42,7 @@ class FormPill extends StatelessWidget {
     this.onLongPress,
     this.semanticsLabel,
     this.tooltip,
+    this.trailingIcon,
   });
 
   /// Visual height; the touch target adds [touchMargin] above and below
@@ -75,7 +79,10 @@ class FormPill extends StatelessWidget {
 
     final hasLeading = leading != null || icon != null;
     final content = Padding(
-      padding: EdgeInsets.only(left: hasLeading ? 6 : 14, right: 14),
+      padding: EdgeInsets.only(
+        left: hasLeading ? 6 : 14,
+        right: trailingIcon != null ? 10 : 14,
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -100,6 +107,10 @@ class FormPill extends StatelessWidget {
               ),
             ),
           ),
+          if (trailingIcon != null) ...[
+            const SizedBox(width: 4),
+            Icon(trailingIcon, size: 18, color: foreground),
+          ],
         ],
       ),
     );

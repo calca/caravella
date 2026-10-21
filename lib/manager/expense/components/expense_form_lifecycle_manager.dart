@@ -155,7 +155,7 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
         location != null &&
         _controller?.state.location == null) {
       _autoRetrievedLocation = location;
-      _controller?.updateLocation(location);
+      _controller?.updateLocation(location, byUser: false);
     }
 
     _setRetrieving(false);

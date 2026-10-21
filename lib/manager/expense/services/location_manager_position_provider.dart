@@ -19,7 +19,10 @@ class LocationManagerPositionProvider implements PositionProvider {
     try {
       return await _channel.invokeMethod<bool>('isLocationEnabled') ?? false;
     } on PlatformException catch (e) {
-      LoggerService.warning('LocationManager unavailable: $e', name: 'location');
+      LoggerService.warning(
+        'LocationManager unavailable: $e',
+        name: 'location',
+      );
       return false;
     }
   }
@@ -39,13 +42,11 @@ class LocationManagerPositionProvider implements PositionProvider {
   }) async {
     if (!Platform.isAndroid) return null;
     try {
-      final result = await _channel.invokeMapMethod<String, dynamic>(
-        'getCurrentPosition',
-        {
-          'fine': accuracy.index >= LocationAccuracy.medium.index,
-          'timeoutMs': timeLimit.inMilliseconds,
-        },
-      );
+      final result = await _channel
+          .invokeMapMethod<String, dynamic>('getCurrentPosition', {
+            'fine': accuracy.index >= LocationAccuracy.medium.index,
+            'timeoutMs': timeLimit.inMilliseconds,
+          });
       if (result == null) return null;
       return LocationPosition(
         latitude: (result['latitude'] as num).toDouble(),

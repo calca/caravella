@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 import 'package:io_caravella_egm/home/navigation_helpers.dart';
 import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
@@ -62,7 +63,7 @@ void main() {
         expect(find.byType(GroupCreationWizardPage), findsOneWidget);
 
         // Tap the back button to cancel the wizard
-        await tester.tap(find.byType(BackButton));
+        await tester.tap(find.byType(RoundBackButton));
         await tester.pumpAndSettle();
 
         // Try to confirm the discard dialog if it appears
@@ -128,7 +129,7 @@ void main() {
         expect(find.byType(GroupCreationWizardPage), findsOneWidget);
 
         // Tap the back button to cancel the wizard
-        await tester.tap(find.byType(BackButton));
+        await tester.tap(find.byType(RoundBackButton));
         await tester.pumpAndSettle();
 
         // Try to confirm the discard dialog if it appears

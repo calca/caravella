@@ -3,260 +3,224 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
+import 'package:io_caravella_egm/manager/group/group_type/group_type_localization.dart';
+import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
+/// The group creation wizard: your name (first start only) → what kind of
+/// group → its name, dates and currency → who shares the expenses.
 void main() {
-  group('Group Creation Wizard Tests', () {
-    testWidgets('Wizard should show all steps in correct order', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
-            ChangeNotifierProvider(create: (_) => UserNameNotifier()),
+  Future<gen.AppLocalizations> open(
+    WidgetTester tester, {
+    bool fromWelcome = false,
+  }) async {
+    await tester.binding.setSurfaceSize(const Size(412, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+          ChangeNotifierProvider(create: (_) => UserNameNotifier()),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: const [
+            gen.AppLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
-          child: MaterialApp(
-            localizationsDelegates: const [
-              gen.AppLocalizations.delegate,
-              ...GlobalMaterialLocalizations.delegates,
-            ],
-            supportedLocales: gen.AppLocalizations.supportedLocales,
-            home: const GroupCreationWizardPage(fromWelcome: true),
-          ),
+          supportedLocales: gen.AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: GroupCreationWizardPage(fromWelcome: fromWelcome),
         ),
-      );
+      ),
+    );
+    await tester.pumpAndSettle();
+    return gen.AppLocalizations.of(
+      tester.element(find.byType(GroupCreationWizardPage)),
+    );
+  }
 
-      await tester.pumpAndSettle();
+  WizardState wizard(WidgetTester tester) => Provider.of<WizardState>(
+    tester.element(find.byType(PageView)),
+    listen: false,
+  );
 
-      // Find a context within the wizard that has access to WizardState
-      // Use a widget that's inside the MultiProvider scope
-      final scaffoldContext = tester.element(find.byType(Scaffold).first);
-      final gloc = gen.AppLocalizations.of(scaffoldContext);
-      final wizardState = Provider.of<WizardState>(
-        scaffoldContext,
-        listen: false,
-      );
-      final currentStepLabel = '1/${wizardState.totalSteps}';
+  GroupFormState form(WidgetTester tester) => Provider.of<GroupFormState>(
+    tester.element(find.byType(PageView)),
+    listen: false,
+  );
 
-      // Should start on step 1 (User Name Welcome)
-      expect(find.text(gloc.wizard_user_name_welcome), findsOneWidget);
-      expect(find.text(currentStepLabel), findsOneWidget);
+  FilledButton mainButton(WidgetTester tester) =>
+      tester.widget<FilledButton>(find.byType(FilledButton));
 
-      // Should show name input field
-      expect(find.byType(TextField), findsOneWidget);
+  Future<void> next(WidgetTester tester, gen.AppLocalizations l10n) async {
+    await tester.tap(find.text(l10n.wizard_continue));
+    await tester.pumpAndSettle();
+  }
 
-      // Next button should always be enabled on user name step (name is optional)
-      expect(find.text(gloc.wizard_next), findsOneWidget);
-      final nextButton = tester.widget<FilledButton>(find.byType(FilledButton));
-      expect(nextButton.onPressed, isNotNull);
-    });
+  testWidgets('from the welcome screen it starts with your name', (
+    tester,
+  ) async {
+    final l10n = await open(tester, fromWelcome: true);
 
-    testWidgets('Should enable finish button when group name is entered', (
-      WidgetTester tester,
-    ) async {
-      // Test without user name step (fromWelcome: false)
-      // With fromWelcome: false, wizard has only 2 steps: TypeAndName -> Completion
-      // So the first step shows "Finish" button, not "Next"
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
-            ChangeNotifierProvider(create: (_) => UserNameNotifier()),
-          ],
-          child: MaterialApp(
-            localizationsDelegates: const [
-              gen.AppLocalizations.delegate,
-              ...GlobalMaterialLocalizations.delegates,
-            ],
-            supportedLocales: gen.AppLocalizations.supportedLocales,
-            home: const GroupCreationWizardPage(fromWelcome: false),
-          ),
-        ),
-      );
+    expect(wizard(tester).totalSteps, 4);
+    expect(find.text(l10n.wizard_name_title), findsOneWidget);
+    expect(find.bySemanticsLabel('1/4'), findsOneWidget);
+    // The name is optional.
+    expect(mainButton(tester).onPressed, isNotNull);
+    expect(find.text(l10n.wizard_skip), findsOneWidget);
 
-      await tester.pumpAndSettle();
-      final pageContext = tester.element(find.byType(GroupCreationWizardPage));
-      final gloc = gen.AppLocalizations.of(pageContext);
-
-      // Should start on Type and Name step (first step when fromWelcome is false)
-      // Finish button should be disabled initially (group name is required)
-      expect(find.text(gloc.wizard_finish), findsOneWidget);
-      var finishButton = tester.widget<FilledButton>(find.byType(FilledButton));
-      expect(finishButton.onPressed, isNull);
-
-      // Enter group name
-      await tester.enterText(find.byType(TextField), 'Test Group');
-      await tester.pump();
-
-      // Finish button should be enabled
-      finishButton = tester.widget<FilledButton>(find.byType(FilledButton));
-      expect(finishButton.onPressed, isNotNull);
-    });
-
-    testWidgets('Create CTA should be full width and title field left-aligned', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
-            ChangeNotifierProvider(create: (_) => UserNameNotifier()),
-          ],
-          child: MaterialApp(
-            localizationsDelegates: const [
-              gen.AppLocalizations.delegate,
-              ...GlobalMaterialLocalizations.delegates,
-            ],
-            supportedLocales: gen.AppLocalizations.supportedLocales,
-            home: const GroupCreationWizardPage(fromWelcome: false),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      final scaffoldWidth = tester.getSize(find.byType(Scaffold).first).width;
-      final finishButtonWidth = tester.getSize(find.byType(FilledButton)).width;
-      expect(finishButtonWidth, closeTo(scaffoldWidth - 40, 0.1));
-
-      final titleField = tester.widget<TextField>(find.byType(TextField).first);
-      expect(titleField.textAlign, TextAlign.start);
-      expect(titleField.style?.fontSize, 18);
-
-      final contentPadding = titleField.decoration?.contentPadding as EdgeInsets;
-      expect(contentPadding.left, 20);
-      expect(contentPadding.right, 20);
-    });
-
-    testWidgets('Wizard should not advance when swiping horizontally', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
-            ChangeNotifierProvider(create: (_) => UserNameNotifier()),
-          ],
-          child: MaterialApp(
-            localizationsDelegates: const [
-              gen.AppLocalizations.delegate,
-              ...GlobalMaterialLocalizations.delegates,
-            ],
-            supportedLocales: gen.AppLocalizations.supportedLocales,
-            home: const GroupCreationWizardPage(fromWelcome: true),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      final pageView = tester.widget<PageView>(find.byType(PageView));
-      expect(pageView.physics, isA<NeverScrollableScrollPhysics>());
-
-      final scaffoldContext = tester.element(find.byType(Scaffold).first);
-      final gloc = gen.AppLocalizations.of(scaffoldContext);
-      final wizardState = Provider.of<WizardState>(
-        scaffoldContext,
-        listen: false,
-      );
-
-      await tester.drag(find.byType(PageView), const Offset(-300, 0));
-      await tester.pumpAndSettle();
-
-      expect(wizardState.currentStep, 0);
-      expect(find.text(gloc.wizard_user_name_welcome), findsOneWidget);
-    });
-
-    testWidgets('Should navigate through all wizard steps', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
-            ChangeNotifierProvider(create: (_) => UserNameNotifier()),
-          ],
-          child: MaterialApp(
-            localizationsDelegates: const [
-              gen.AppLocalizations.delegate,
-              ...GlobalMaterialLocalizations.delegates,
-            ],
-            supportedLocales: gen.AppLocalizations.supportedLocales,
-            home: const GroupCreationWizardPage(fromWelcome: true),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Find a context within the wizard that has access to WizardState
-      final scaffoldContext = tester.element(find.byType(Scaffold).first);
-      final gloc = gen.AppLocalizations.of(scaffoldContext);
-      final wizardState = Provider.of<WizardState>(
-        scaffoldContext,
-        listen: false,
-      );
-      final stepTwoLabel = '2/${wizardState.totalSteps}';
-
-      // Step 1: User Name (Welcome step)
-      expect(find.text(gloc.wizard_user_name_welcome), findsOneWidget);
-      // Enter user name and proceed
-      await tester.enterText(find.byType(TextField), 'Test User');
-      await tester.pump();
-      await tester.tap(find.text(gloc.wizard_next));
-      await tester.pumpAndSettle();
-
-      // Step 2: Type and Name
-      expect(find.text(stepTwoLabel), findsOneWidget);
-
-      // Step 3: Completion (skip further steps for this test)
-    });
+    await tester.enterText(find.byType(TextField), 'Gigi');
+    await tester.pump();
+    expect(find.text('GI'), findsOneWidget);
   });
 
-  group('Wizard State Tests', () {
-    test('WizardState should manage step navigation correctly', () {
-      final wizardState = WizardState();
+  testWidgets('from Groups it starts with the kind of group', (tester) async {
+    final l10n = await open(tester);
 
-      // Should start at step 0
-      expect(wizardState.currentStep, 0);
+    expect(wizard(tester).totalSteps, 3);
+    expect(find.text(l10n.wizard_type_title), findsOneWidget);
+    expect(find.text(l10n.wizard_skip), findsNothing);
+    for (final type in ExpenseGroupType.values) {
+      expect(
+        find.text(GroupTypeLocalization.typeName(l10n, type)),
+        findsOneWidget,
+      );
+    }
+  });
 
-      // Should be able to move to next step
-      wizardState.nextStep();
-      expect(wizardState.currentStep, 1);
+  testWidgets('picking a kind of group swaps the starting categories', (
+    tester,
+  ) async {
+    final l10n = await open(tester);
+    await tester.tap(
+      find.text(GroupTypeLocalization.typeName(l10n, ExpenseGroupType.travel)),
+    );
+    await tester.pump();
 
-      // Should be able to move to previous step
-      wizardState.previousStep();
-      expect(wizardState.currentStep, 0);
+    final state = form(tester);
+    expect(state.groupType, ExpenseGroupType.travel);
+    final names = state.categories.map((c) => c.name).toSet();
+    expect(
+      names,
+      containsAll(
+        GroupTypeLocalization.localizedDefaultCategories(
+          l10n,
+          ExpenseGroupType.travel,
+        ),
+      ),
+    );
+    for (final personal
+        in GroupTypeLocalization.localizedDefaultCategories(
+          l10n,
+          ExpenseGroupType.personal,
+        ).where(
+          (n) => !GroupTypeLocalization.localizedDefaultCategories(
+            l10n,
+            ExpenseGroupType.travel,
+          ).contains(n),
+        )) {
+      expect(names, isNot(contains(personal)));
+    }
+  });
 
-      // Should not go below 0
-      wizardState.previousStep();
-      expect(wizardState.currentStep, 0);
+  testWidgets('the name is required to continue, nothing red before typing', (
+    tester,
+  ) async {
+    final l10n = await open(tester);
+    await next(tester, l10n);
 
-      // Should not go above max steps
-      for (int i = 0; i < 10; i++) {
-        wizardState.nextStep();
+    expect(find.text(l10n.wizard_details_title), findsOneWidget);
+    expect(mainButton(tester).onPressed, isNull);
+    expect(find.text(l10n.enter_title), findsOneWidget); // only as hint
+
+    await tester.enterText(find.byType(TextField), 'Lisbon');
+    await tester.pump();
+    expect(mainButton(tester).onPressed, isNotNull);
+    expect(form(tester).title, 'Lisbon');
+  });
+
+  testWidgets('people: you first, then friends added by name', (tester) async {
+    final l10n = await open(tester);
+    await next(tester, l10n);
+    await tester.enterText(find.byType(TextField), 'Lisbon');
+    await tester.pump();
+    await next(tester, l10n);
+
+    expect(find.text(l10n.wizard_participants_section_title), findsOneWidget);
+    expect(find.text(l10n.wizard_create), findsOneWidget);
+    // No name set: the placeholder "Me", without "(you)".
+    expect(find.text(l10n.default_participant_me), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'Anna');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), 'anna');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+
+    expect(form(tester).participants.map((p) => p.name), [
+      l10n.default_participant_me,
+      'Anna',
+    ]);
+
+    // Tap a friend to remove them; you can't be removed.
+    await tester.tap(find.bySemanticsLabel(l10n.wizard_people_remove('Anna')));
+    await tester.pump();
+    expect(form(tester).participants, hasLength(1));
+  });
+
+  testWidgets('back goes to the previous step', (tester) async {
+    final l10n = await open(tester);
+    await next(tester, l10n);
+    expect(wizard(tester).currentStep, 1);
+
+    await tester.tap(find.byType(RoundBackButton));
+    await tester.pumpAndSettle();
+    expect(wizard(tester).currentStep, 0);
+    expect(find.text(l10n.wizard_type_title), findsOneWidget);
+  });
+
+  testWidgets('swiping does not change step', (tester) async {
+    await open(tester);
+    final pageView = tester.widget<PageView>(find.byType(PageView));
+    expect(pageView.physics, isA<NeverScrollableScrollPhysics>());
+
+    await tester.drag(find.byType(PageView), const Offset(-300, 0));
+    await tester.pumpAndSettle();
+    expect(wizard(tester).currentStep, 0);
+  });
+
+  group('WizardState', () {
+    test('moves between steps within bounds', () {
+      final state = WizardState();
+      expect(state.steps, [
+        WizardStep.userName,
+        WizardStep.type,
+        WizardStep.details,
+        WizardStep.people,
+      ]);
+      expect(state.currentStep, 0);
+      state.nextStep();
+      expect(state.step, WizardStep.type);
+      state.previousStep();
+      state.previousStep();
+      expect(state.currentStep, 0);
+      for (var i = 0; i < 10; i++) {
+        state.nextStep();
       }
-      expect(wizardState.currentStep, wizardState.totalSteps - 1);
+      expect(state.currentStep, state.totalSteps - 1);
+      expect(state.isLastStep, isTrue);
     });
 
-    test('Should validate required steps correctly', () {
-      final formState = GroupFormState();
-
-      // Name step should be invalid when empty
-      expect(formState.title.trim().isEmpty, true);
-
-      // Should be valid when title is set
-      formState.setTitle('Test Group');
-      expect(formState.title.trim().isNotEmpty, true);
-
-      // Participants should be invalid when empty
-      expect(formState.participants.isEmpty, true);
-
-      // Categories should be invalid when empty
-      expect(formState.categories.isEmpty, true);
+    test('without the name step there are three steps', () {
+      final state = WizardState(includeUserNameStep: false);
+      expect(state.steps, [
+        WizardStep.type,
+        WizardStep.details,
+        WizardStep.people,
+      ]);
     });
   });
 }

@@ -37,7 +37,7 @@ Card widgets (`lib/home/cards/widgets/`): `GroupCard` (stateful: keeps the group
 
 ## First-run onboarding
 
-`HomeWelcomeSection` (`lib/home/welcome/home_welcome_section.dart`) is the animated (fade-in, 900ms) first-run screen: title, logo, a "Settings" link, and a circular forward button that pushes `GroupCreationWizardPage(fromWelcome: true)` (see [Group Management](APP_GROUP_MANAGEMENT.md)). It manages its own system-UI overlay colors since it needs different status-bar treatment than the rest of the app.
+`HomeWelcomeSection` (`lib/home/welcome/home_welcome_section.dart`) is the animated (fade-in, 900ms) first-run screen, edge to edge on the app's gradient (`AppSystemUI` with a transparent navigation bar and light icons): a round settings button at the top (language, theme, restoring a backup), the "Organize. Share. Balance." title, the whale, a line on what the app does (`welcome_tagline`) and a wide "Start" button that pushes `GroupCreationWizardPage(fromWelcome: true)` (see [Group Management](APP_GROUP_MANAGEMENT.md)).
 
 ## Android integration bootstrapping
 

@@ -171,9 +171,14 @@ class ExpenseFormController extends ChangeNotifier {
     _updateState(_state.copyWith(date: date, isDirty: !_isInitializing));
   }
 
-  void updateLocation(ExpenseLocation? location) {
+  /// [byUser] false for the place filled in automatically on opening: it
+  /// is not something the user would lose, so it doesn't ask to discard.
+  void updateLocation(ExpenseLocation? location, {bool byUser = true}) {
     _updateState(
-      _state.copyWith(location: location, isDirty: !_isInitializing),
+      _state.copyWith(
+        location: location,
+        isDirty: byUser ? !_isInitializing : _state.isDirty,
+      ),
     );
   }
 

@@ -1342,4 +1342,24 @@
   ,"crop_preview": "Preview"
   ,"crop_use_photo": "Use this photo"
   ,"@crop_hint": {"description": "Group photo crop page: under the 3:2 frame"}
+  ,"welcome_tagline": "Expenses for trips, home and friends, split fairly. Everything stays on your phone."
+  ,"wizard_name_title": "What's your name?"
+  ,"wizard_name_note": "It stays on your phone. You'll be the first participant of your groups."
+  ,"wizard_type_title": "What kind of group?"
+  ,"wizard_type_note": "It sets the starting categories: you can change them anytime."
+  ,"group_type_personal_desc": "Just your own spending"
+  ,"group_type_family_desc": "Home, family, flatmates"
+  ,"group_type_travel_desc": "Holidays, weekends, trips"
+  ,"group_type_other_desc": "Dinners, events, gifts"
+  ,"wizard_details_title": "What shall we call it?"
+  ,"wizard_details_note": "Dates feed the spending chart. You can change everything later."
+  ,"wizard_people_you": "{name} (you)"
+  ,"wizard_people_only_me": "Just me for now"
+  ,"wizard_people_add_hint": "A friend's name"
+  ,"wizard_people_remove": "Remove {name}"
+  ,"wizard_dates_add": "Dates"
+  ,"wizard_continue": "Continue"
+  ,"wizard_create": "Create group"
+  ,"@wizard_people_you": {"placeholders": {"name": {"type": "String"}}}
+  ,"@wizard_people_remove": {"placeholders": {"name": {"type": "String"}}}
 }

@@ -33,19 +33,20 @@ class GroupTypeSelector extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Selector<GroupFormState, (ExpenseGroupType?, String?, int?)>(
-              selector: (context, state) =>
-                  (
-                    state.groupType,
-                    state.customTemplateId,
-                    state.customTemplateIconCodePoint,
-                  ),
+              selector: (context, state) => (
+                state.groupType,
+                state.customTemplateId,
+                state.customTemplateIconCodePoint,
+              ),
               builder: (context, selectedValue, child) {
                 final selectedType = selectedValue.$1;
                 final selectedTemplateId = selectedValue.$2;
                 final selectedTemplateIcon = selectedValue.$3;
                 List<GroupTypeTemplate> templates = const <GroupTypeTemplate>[];
                 try {
-                  templates = context.watch<GroupTypeTemplatesNotifier>().templates;
+                  templates = context
+                      .watch<GroupTypeTemplatesNotifier>()
+                      .templates;
                 } catch (_) {
                   LoggerService.warning(
                     'Group templates notifier is unavailable',

@@ -5,6 +5,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class GroupTitleField extends StatefulWidget {
   final VoidCallback? onSubmitted;
+
   /// Optional localized hint. When omitted, the field is rendered without hint text.
   final String? hintText;
   final TextAlign textAlign;
