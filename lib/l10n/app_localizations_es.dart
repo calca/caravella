@@ -3062,4 +3062,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get wizard_create => 'Crear grupo';
+
+  @override
+  String get attachment_take_photo => 'Hacer una foto';
+
+  @override
+  String get attachment_record_video => 'Grabar un vídeo';
+
+  @override
+  String get place_search_action => 'Buscar un lugar';
+
+  @override
+  String get background_photo => 'Foto';
+
+  @override
+  String get background_none => 'Ninguno';
 }

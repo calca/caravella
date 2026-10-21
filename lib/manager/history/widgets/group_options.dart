@@ -106,20 +106,14 @@ Future<void> _executeDeleteAction(
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (context) => Material3Dialog(
-      title: Text(gloc.delete_trip),
-      content: Text(gloc.delete_trip_confirm),
+      title: Text(gloc.delete_group),
+      content: Text(gloc.delete_group_confirm),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: Text(gloc.cancel),
-        ),
-        FilledButton(
+        Material3DialogActions.cancel(context, gloc.cancel),
+        Material3DialogActions.destructive(
+          context,
+          gloc.delete,
           onPressed: () => Navigator.pop(context, true),
-          style: FilledButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
-            foregroundColor: Theme.of(context).colorScheme.onError,
-          ),
-          child: Text(gloc.delete),
         ),
       ],
     ),

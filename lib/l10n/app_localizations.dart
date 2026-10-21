@@ -5709,6 +5709,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create group'**
   String get wizard_create;
+
+  /// No description provided for @attachment_take_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get attachment_take_photo;
+
+  /// No description provided for @attachment_record_video.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a video'**
+  String get attachment_record_video;
+
+  /// No description provided for @place_search_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a place'**
+  String get place_search_action;
+
+  /// No description provided for @background_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get background_photo;
+
+  /// No description provided for @background_none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get background_none;
 }
 
 class _AppLocalizationsDelegate

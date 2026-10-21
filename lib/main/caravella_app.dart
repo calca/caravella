@@ -145,11 +145,23 @@ class _CaravellaAppState extends State<CaravellaApp> {
                         Positioned.fill(
                           child: AppSystemUI(child: child ?? const SizedBox()),
                         ),
-                        SafeArea(
-                          child: ToastViewer(
-                            alignment: Alignment.topCenter,
-                            delay: const Duration(milliseconds: 2400),
-                            visibleCount: 3,
+                        // Toasts at the bottom, above the floating navigation
+                        // (and the keyboard), so they never cover a page's
+                        // title.
+                        Builder(
+                          builder: (context) => Padding(
+                            padding: EdgeInsets.only(
+                              bottom:
+                                  FloatingNavBar.reservedHeight +
+                                  MediaQuery.viewInsetsOf(context).bottom,
+                            ),
+                            child: SafeArea(
+                              child: ToastViewer(
+                                alignment: Alignment.bottomCenter,
+                                delay: const Duration(milliseconds: 2400),
+                                visibleCount: 3,
+                              ),
+                            ),
                           ),
                         ),
                       ],

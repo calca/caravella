@@ -1268,4 +1268,9 @@
   ,"wizard_dates_add": "Fechas"
   ,"wizard_continue": "Continuar"
   ,"wizard_create": "Crear grupo"
+  ,"attachment_take_photo": "Hacer una foto"
+  ,"attachment_record_video": "Grabar un vídeo"
+  ,"place_search_action": "Buscar un lugar"
+  ,"background_photo": "Foto"
+  ,"background_none": "Ninguno"
 }

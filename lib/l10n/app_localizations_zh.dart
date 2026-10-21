@@ -2969,4 +2969,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wizard_create => '创建群组';
+
+  @override
+  String get attachment_take_photo => '拍照';
+
+  @override
+  String get attachment_record_video => '录制视频';
+
+  @override
+  String get place_search_action => '搜索地点';
+
+  @override
+  String get background_photo => '照片';
+
+  @override
+  String get background_none => '无';
 }

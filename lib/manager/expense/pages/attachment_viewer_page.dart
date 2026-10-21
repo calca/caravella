@@ -59,36 +59,45 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
+    // Full screen, with round buttons floating over the attachment.
+    return AppSystemUI.edgeToEdge(
+      forceStatusBarLight: true,
+      child: Scaffold(
         backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        title: Text(
-          '${_controller.currentIndex + 1} / ${_controller.totalCount}',
-          style: const TextStyle(color: Colors.white),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: _shareAttachment,
-            tooltip: loc.share_attachment,
-          ),
-          if (widget.onDelete != null)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () => _confirmDelete(context),
-              tooltip: loc.delete_attachment,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: _controller.totalCount,
+                onPageChanged: _controller.setCurrentIndex,
+                itemBuilder: (context, index) {
+                  return _buildViewerForAttachment(
+                    _controller.attachments[index],
+                  );
+                },
+              ),
             ),
-        ],
-      ),
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: _controller.totalCount,
-        onPageChanged: _controller.setCurrentIndex,
-        itemBuilder: (context, index) {
-          return _buildViewerForAttachment(_controller.attachments[index]);
-        },
+            MediaTopBar(
+              title: _controller.totalCount > 1
+                  ? '${_controller.currentIndex + 1} / ${_controller.totalCount}'
+                  : null,
+              actions: [
+                MediaRoundButton(
+                  icon: Icons.share_outlined,
+                  onPressed: _shareAttachment,
+                  tooltip: loc.share_attachment,
+                ),
+                if (widget.onDelete != null)
+                  MediaRoundButton(
+                    icon: Icons.delete_outline_rounded,
+                    onPressed: () => _confirmDelete(context),
+                    tooltip: loc.delete_attachment,
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

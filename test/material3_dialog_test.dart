@@ -67,8 +67,9 @@ void main() {
       expect(find.text('Maybe'), findsOneWidget);
 
       // Verify button types
-      expect(find.byType(TextButton), findsNWidgets(2)); // Cancel and Delete
-      expect(find.byType(FilledButton), findsOneWidget); // Primary OK
+      expect(find.byType(TextButton), findsOneWidget); // Cancel
+      // Primary OK and the destructive Delete are both wide filled buttons.
+      expect(find.byType(FilledButton), findsNWidgets(2));
       expect(find.byType(OutlinedButton), findsOneWidget); // Secondary Maybe
     });
   });

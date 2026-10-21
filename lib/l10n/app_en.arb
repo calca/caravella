@@ -1362,4 +1362,9 @@
   ,"wizard_create": "Create group"
   ,"@wizard_people_you": {"placeholders": {"name": {"type": "String"}}}
   ,"@wizard_people_remove": {"placeholders": {"name": {"type": "String"}}}
+  ,"attachment_take_photo": "Take a photo"
+  ,"attachment_record_video": "Record a video"
+  ,"place_search_action": "Search for a place"
+  ,"background_photo": "Photo"
+  ,"background_none": "None"
 }

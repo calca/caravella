@@ -253,33 +253,27 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
   ) async {
     final loc = gen.AppLocalizations.of(context);
 
-    return showDialog<CameraMediaType>(
+    return showModalBottomSheet<CameraMediaType>(
       context: context,
-      barrierDismissible: true,
-      builder: (ctx) => Material3Dialog(
-        title: Text(loc.attachment_source),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
+      builder: (ctx) => CaravellaBottomSheetScaffold(
+        title: loc.from_camera,
+        child: SettingsGroup(
+          topSpacing: 0,
           children: [
-            ListTile(
-              leading: const Icon(Icons.photo_camera),
-              title: const Text('Photo'),
+            SettingsTile(
+              icon: Icons.photo_camera_outlined,
+              title: loc.attachment_take_photo,
+              chevron: false,
               onTap: () => Navigator.of(ctx).pop(CameraMediaType.photo),
             ),
-            ListTile(
-              leading: const Icon(Icons.videocam),
-              title: const Text('Video'),
+            SettingsTile(
+              icon: Icons.videocam_outlined,
+              title: loc.attachment_record_video,
+              chevron: false,
               onTap: () => Navigator.of(ctx).pop(CameraMediaType.video),
             ),
           ],
         ),
-        actions: [
-          Material3DialogActions.cancel(
-            ctx,
-            loc.cancel,
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-        ],
       ),
     );
   }

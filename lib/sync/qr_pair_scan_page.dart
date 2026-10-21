@@ -68,45 +68,45 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
+    return AppSystemUI.edgeToEdge(
+      forceStatusBarLight: true,
+      child: Scaffold(
         backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        title: Text(loc.sync_qr_scan_title),
-        leading: IconButton(
-          tooltip: loc.accessibility_back_button,
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          GmsIntegrations.instance.buildQrScanner(
-                onDetect: _onDetect,
-                paused: _handling,
-              ) ??
-              const SizedBox.shrink(),
-          if (_handling)
-            const ColoredBox(
-              color: Colors.black54,
-              child: Center(child: CircularProgressIndicator()),
-            ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              color: Colors.black54,
-              child: Text(
-                loc.sync_qr_scan_description,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            GmsIntegrations.instance.buildQrScanner(
+                  onDetect: _onDetect,
+                  paused: _handling,
+                ) ??
+                const SizedBox.shrink(),
+            if (_handling)
+              const ColoredBox(
+                color: Colors.black54,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                color: Colors.black54,
+                child: SafeArea(
+                  top: false,
+                  child: Text(
+                    loc.sync_qr_scan_description,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+            MediaTopBar(
+              title: loc.sync_qr_scan_title,
+              backTooltip: loc.accessibility_back_button,
+            ),
+          ],
+        ),
       ),
     );
   }

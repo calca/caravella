@@ -1,3 +1,8 @@
+import '../../details/pages/tabs/usecase/date_range_formatter.dart';
+import '../widgets/period_selection_bottom_sheet.dart';
+import '../widgets/group_title_field.dart';
+import '../group_type/group_type_localization.dart';
+import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -9,9 +14,6 @@ import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../group_type/group_type_selector_sheet.dart';
-import '../widgets/group_name_with_icon_field.dart';
-import '../widgets/selection_tile.dart';
-import '../widgets/period_section_editor.dart';
 import '../widgets/background_picker.dart';
 import '../widgets/currency_selector_sheet.dart';
 
@@ -148,119 +150,125 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
 
   Widget _buildGeneralContent(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    // Each block in a card, like the settings pages.
-    Widget card(Widget child) => SettingsGroup(
-      children: [Padding(padding: const EdgeInsets.all(16), child: child)],
-    );
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final state = context.watch<GroupFormState>();
+    final type = state.groupType;
+    final hasDates = state.startDate != null || state.endDate != null;
+    final days = state.startDate != null && state.endDate != null
+        ? state.endDate!.difference(state.startDate!).inDays + 1
+        : null;
+    final currency = state.currency;
+    final background = state.imagePath != null
+        ? gloc.background_photo
+        : state.color != null
+        ? gloc.color
+        : gloc.background_none;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Nome gruppo con icona categoria
-        card(
-          Column(
-            children: [
-              Selector<GroupFormState, bool>(
-                selector: (context, s) => s.title.trim().isEmpty,
-                builder: (context, isEmpty, child) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SectionHeader(
-                      title: gloc.group_name,
-                      requiredMark: true,
-                      showRequiredHint: isEmpty,
-                      padding: EdgeInsets.zero,
-                      spacing: 4,
-                    ),
-                    const SizedBox(height: 12),
-                    GroupNameWithIconField(
-                      onIconTap: () => _showGroupTypeSelector(context),
-                      hintText: gloc.enter_title,
-                    ),
-                  ],
+        // Name: a big field in its own card, like the creation wizard.
+        SettingsGroup(
+          label: gloc.group_name,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
+              child: GroupTitleField(
+                hintText: gloc.enter_title,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+                decoration: InputDecoration(
+                  hintText: gloc.enter_title,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorText: state.title.trim().isEmpty
+                      ? gloc.enter_title
+                      : null,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        // Periodo
-        card(
-          PeriodSectionEditor(onClearDates: _clearDates, errorText: _dateError),
-        ),
-        // Valuta
-        card(
-          Column(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SectionHeader(
-                    title: gloc.currency,
-                    description: gloc.currency_description,
-                    padding: EdgeInsets.zero,
-                    spacing: 4,
-                  ),
-                  const SizedBox(height: 8),
-                  Selector<GroupFormState, Map<String, String>>(
-                    selector: (context, s) => s.currency,
-                    builder: (context, cur, child) => SelectionTile(
-                      leading: Text(
-                        cur['symbol'] ?? '',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleLarge?.copyWith(fontSize: 28),
-                        semanticsLabel: '${cur['symbol']} ${cur['code']}',
+        SettingsGroup(
+          children: [
+            SettingsTile(
+              icon:
+                  type?.icon ??
+                  (state.customTemplateIconCodePoint != null
+                      ? GroupTypeLocalization.iconFromCodePoint(
+                          state.customTemplateIconCodePoint!,
+                        )
+                      : Icons.category_outlined),
+              title: gloc.group_type,
+              subtitle: type != null
+                  ? GroupTypeLocalization.typeName(gloc, type)
+                  : null,
+              onTap: () => _showGroupTypeSelector(context),
+            ),
+            SettingsTile(
+              icon: Icons.event_outlined,
+              title: gloc.period,
+              subtitle: hasDates
+                  ? [
+                      formatDateRange(
+                        start: state.startDate,
+                        end: state.endDate,
+                        locale: Localizations.localeOf(context),
                       ),
-                      title: cur['name']!,
-                      subtitle: '${cur['code']}',
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        size: 24,
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                      onTap: () async {
-                        final selected =
-                            await showModalBottomSheet<Map<String, String>>(
-                              context: context,
-                              isScrollControlled: true,
-                              useSafeArea: true,
-                              builder: (_) => CurrencySelectorSheet(
-                                selectedCode: context
-                                    .read<GroupFormState>()
-                                    .currency['code'],
-                              ),
-                            );
-                        if (selected != null && context.mounted) {
-                          context.read<GroupFormState>().setCurrency(selected);
-                        }
-                      },
-                      borderRadius: 8,
-                      padding: const EdgeInsets.only(
-                        left: 8,
-                        top: 8,
-                        bottom: 8,
-                      ),
-                    ),
-                  ),
-                ],
+                      ?(days != null ? gloc.days_count(days) : null),
+                    ].join(' · ')
+                  : gloc.dates_description,
+              subtitleWidget: _dateError != null
+                  ? Text(_dateError!, style: TextStyle(color: s.error))
+                  : null,
+              trailing: hasDates
+                  ? IconButton(
+                      icon: const Icon(Icons.close_rounded),
+                      tooltip: gloc.clear_dates,
+                      onPressed: _clearDates,
+                    )
+                  : null,
+              onTap: () => showPeriodSelectionBottomSheet(
+                context: context,
+                initialStartDate: state.startDate,
+                initialEndDate: state.endDate,
+                onSelectionChanged: (start, end) {
+                  state.setDates(start: start, end: end);
+                  _validateDates();
+                },
               ),
-            ],
-          ),
-        ),
-        // Sfondo (foto o colore)
-        card(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SectionHeader(
-                title: gloc.background,
-                description: gloc.choose_image_or_color,
-                padding: EdgeInsets.zero,
-                spacing: 4,
-              ),
-              const SizedBox(height: 12),
-              const BackgroundPicker(),
-            ],
-          ),
+            ),
+            SettingsTile(
+              icon: Icons.payments_outlined,
+              title: gloc.currency,
+              subtitle:
+                  '${currency['symbol'] ?? ''}  ${currency['name'] ?? ''} · '
+                  '${currency['code'] ?? ''}',
+              onTap: () async {
+                final selected =
+                    await showModalBottomSheet<Map<String, String>>(
+                      context: context,
+                      isScrollControlled: true,
+                      useSafeArea: true,
+                      builder: (_) =>
+                          CurrencySelectorSheet(selectedCode: currency['code']),
+                    );
+                if (selected != null && context.mounted) {
+                  context.read<GroupFormState>().setCurrency(selected);
+                }
+              },
+            ),
+            SettingsTile(
+              icon: Icons.image_outlined,
+              title: gloc.background,
+              subtitle: background,
+              trailing: _BackgroundPreview(state: state),
+              onTap: () => showBackgroundPickerSheet(context),
+            ),
+          ],
         ),
         const SizedBox(height: 24),
       ],
@@ -282,6 +290,8 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
             state.endDate,
             state.currency['code'],
             state.groupType,
+            state.imagePath,
+            state.color,
           );
         },
         builder: (context, _, _) {
@@ -367,6 +377,41 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
           );
         },
       ),
+    );
+  }
+}
+
+/// Small preview of the group's background at the end of its row: the photo,
+/// the color, or nothing.
+class _BackgroundPreview extends StatelessWidget {
+  final GroupFormState state;
+
+  const _BackgroundPreview({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    final s = Theme.of(context).colorScheme;
+    final path = state.imagePath;
+    final color = state.color;
+    Widget? child;
+    if (path != null) {
+      child = Image.file(
+        File(path),
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => const SizedBox.shrink(),
+      );
+    } else if (color != null) {
+      final resolved = ExpenseGroupColorPalette.isLegacyColorValue(color)
+          ? Color(color)
+          : ExpenseGroupColorPalette.resolveColor(color, s);
+      if (resolved != null) child = ColoredBox(color: resolved);
+    }
+    if (child == null) {
+      return Icon(Icons.chevron_right_rounded, color: s.onSurfaceVariant);
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: SizedBox(width: 40, height: 40, child: child),
     );
   }
 }
