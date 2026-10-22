@@ -58,41 +58,32 @@ class ColorSheet extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 12),
-          card(
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        loc.background_random_color,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        loc.color_random_subtitle,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: s.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                _RandomColorButton(
-                  state: state,
-                  semanticLabel: loc.background_random_color,
-                ),
-              ],
-            ),
+          SettingsGroup(
+            topSpacing: 12,
+            children: [
+              SettingsTile(
+                icon: Icons.casino_outlined,
+                title: loc.background_random_color,
+                subtitle: loc.color_random_subtitle,
+                chevron: false,
+                onTap: () {
+                  state.setColor(_randomOtherIndex(state.color));
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+}
+
+/// A random palette index, never the group's current one.
+int _randomOtherIndex(int? current) {
+  const size = ExpenseGroupColorPalette.paletteSize;
+  final index = math.Random().nextInt(size - 1);
+  return current != null && index >= current ? index + 1 : index;
 }
 
 class _ColorPaletteRow extends StatelessWidget {
@@ -115,6 +106,7 @@ class _ColorPaletteRow extends StatelessWidget {
         final c = colors[i];
         final colorIndex = startIndex + i;
         final selected = state.color == colorIndex;
+        final mark = ExpenseGroupColorPalette.getContrastingTextColor(c);
         return InkWell(
           onTap: () {
             state.setColor(colorIndex);
@@ -130,7 +122,7 @@ class _ColorPaletteRow extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 color: selected
-                    ? scheme.onPrimary.withValues(alpha: 0.9)
+                    ? scheme.onSurface
                     : scheme.surfaceContainerHighest.withValues(alpha: 0.4),
                 width: selected ? 3 : 1.2,
               ),
@@ -145,107 +137,11 @@ class _ColorPaletteRow extends StatelessWidget {
                   : null,
             ),
             child: selected
-                ? Icon(Icons.check, color: scheme.onPrimary, size: 22)
+                ? Icon(Icons.check_rounded, color: mark, size: 22)
                 : null,
           ),
         );
       }),
-    );
-  }
-}
-
-class _RandomColorButton extends StatefulWidget {
-  final GroupFormState state;
-  final String semanticLabel;
-  const _RandomColorButton({required this.state, required this.semanticLabel});
-
-  @override
-  State<_RandomColorButton> createState() => _RandomColorButtonState();
-}
-
-class _RandomColorButtonState extends State<_RandomColorButton>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _spin;
-  late final Animation<double> _scale;
-  bool _animating = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-    _spin = Tween<double>(
-      begin: 0,
-      end: 2 * math.pi,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-    _scale = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween(
-          begin: 1.0,
-          end: 0.85,
-        ).chain(CurveTween(curve: Curves.easeOut)),
-        weight: 30,
-      ),
-      TweenSequenceItem(
-        tween: Tween(
-          begin: 0.85,
-          end: 1.08,
-        ).chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 40,
-      ),
-      TweenSequenceItem(
-        tween: Tween(
-          begin: 1.08,
-          end: 1.0,
-        ).chain(CurveTween(curve: Curves.easeOutBack)),
-        weight: 30,
-      ),
-    ]).animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Future<void> _roll() async {
-    if (_animating) return;
-    setState(() => _animating = true);
-    _controller.forward(from: 0);
-    await Future.delayed(const Duration(milliseconds: 320));
-    // Pick a random palette index
-    final randomIndex =
-        (DateTime.now().microsecondsSinceEpoch) %
-        ExpenseGroupColorPalette.paletteSize;
-    widget.state.setColor(randomIndex);
-    await _controller.forward();
-    if (mounted) Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final button = IconButton.filled(
-      onPressed: _roll,
-      tooltip: widget.semanticLabel,
-      icon: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return Transform.rotate(
-            angle: _spin.value,
-            child: Transform.scale(scale: _scale.value, child: child),
-          );
-        },
-        child: const Icon(Icons.colorize_outlined),
-      ),
-    );
-    return Semantics(
-      label: widget.semanticLabel,
-      button: true,
-      child: _animating ? ExcludeSemantics(child: button) : button,
     );
   }
 }

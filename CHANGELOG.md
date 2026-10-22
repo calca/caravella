@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pull to refresh on Home: it only reloaded what Home already shows up to date (it updates by itself after every change and after a synchronization) and showed an "Updated" message, without syncing anything
 
 ### Fixed
+- Color sheet: "Random color" reacted only to a small green button with a dropper icon at the end of its card; now the whole row picks a color (always a different one from the current) like the other sheet actions, with a dice icon. The tick on the chosen color is dark on the soft tints instead of white
 - Group templates: the template editor is in the app's style — the name in a big field in its own card (without the character counter), and a wide green "Save" button at the bottom that stays above the keyboard (its text was black, on a white bar hidden by the keyboard). Text fields inside cards (category or participant names, adding an item in a picker) no longer show a green underline while typing
 - Home's getting-started step "Choose a photo or a color" opened the old "Other" page, which no longer has the background: it now opens the group's general settings with the background sheet ready. The background row there shows a smaller preview next to the arrow
 - Group settings: the period showed "10 days" in English in every language
