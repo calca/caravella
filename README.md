@@ -74,7 +74,12 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshots/en/08.jpg" alt="Dark theme" width="200"/>
 </p>
 
-## 🎉 What's New in v2.2.0
+## 🎉 What's New in v2.2.1
+
+- **Swipe Between Tabs**: On the group page, swipe to move between Expenses, Balances and Statistics
+- **One Field Style**: Every text field now looks and behaves the same
+
+### v2.2.0
 
 - **A Fresh New Look**: A floating bar to switch between Home and Groups, and every screen, sheet and dialog redesigned in one calm style
 - **Home in Two Cards**: Your group with its total and today's spending, and the latest expenses right below

@@ -1,3 +1,10 @@
+## 2.2.1 (22.10.2026)
+
+- **New**: On the group page, swipe left or right to move between Expenses, Balances and Statistics
+- **Improvements**: All text fields share one style: adding or renaming categories and people, the people step of group creation and your name in Settings
+- **Improvements**: What's New only lists the versions from 2.0 on
+- **Fixed**: Confirm buttons show a white tick on teal (it was black)
+
 ## 2.2.0 (22.10.2026)
 
 - **New**: A fresh design across the app – a floating bar at the bottom to switch between Home and Groups, grey pages with white cards, and sheets, dialogs and messages in the same style

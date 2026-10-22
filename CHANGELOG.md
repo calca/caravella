@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2026-10-22
+
 ### Changed
 - What's New in Settings lists only the 2.x versions (the older notes were long and out of date)
 - Group page: swipe left or right over the page to move between Expenses, Balances and Statistics, like tabs (the selector follows)
@@ -560,7 +562,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.2.1...HEAD
+[2.2.1]: https://github.com/calca/caravella/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/calca/caravella/compare/v2.0.2...v2.2.0
 [2.0.2]: https://github.com/calca/caravella/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/calca/caravella/compare/v2.0.0...v2.0.1
