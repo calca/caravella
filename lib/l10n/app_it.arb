@@ -307,7 +307,7 @@
   ,"@accessibility_next_month": {"description": "Next month button accessibility label"}
   ,"color_suggested_title": "Colori suggeriti"
   ,"@color_suggested_title": {"description": "Titolo della sezione dei colori suggeriti"}
-  ,"color_suggested_subtitle": "Scegli uno dei colori compatibili col tema"
+  ,"color_suggested_subtitle": "Tinte morbide, si adattano al tema chiaro e scuro"
   ,"@color_suggested_subtitle": {"description": "Sottotitolo che spiega la sezione colori suggeriti"}
   ,"color_random_subtitle": "Lascia che l'app scelga un colore per te"
   ,"@color_random_subtitle": {"description": "Sottotitolo per la sezione colore casuale"}

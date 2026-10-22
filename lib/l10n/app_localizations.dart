@@ -1763,7 +1763,7 @@ abstract class AppLocalizations {
   /// Subtitle explaining the suggested colors section
   ///
   /// In en, this message translates to:
-  /// **'Pick one of the theme compatible colors'**
+  /// **'Soft tints that adapt to the light and dark theme'**
   String get color_suggested_subtitle;
 
   /// Subtitle for the random color section

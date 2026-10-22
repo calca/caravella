@@ -859,7 +859,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get color_suggested_title => '建议的颜色';
 
   @override
-  String get color_suggested_subtitle => '选择主题兼容的颜色之一';
+  String get color_suggested_subtitle => '柔和的色调，适配浅色和深色主题';
 
   @override
   String get color_random_subtitle => '让应用为您选择颜色';

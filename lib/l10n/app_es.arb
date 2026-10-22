@@ -317,7 +317,7 @@
   "@accessibility_next_month": {"description": "Next month button accessibility label"},
   "color_suggested_title": "Colores sugeridos",
   "@color_suggested_title": {"description": "Título para la sección de colores sugeridos"},
-  "color_suggested_subtitle": "Elige uno de los colores compatibles con el tema",
+  "color_suggested_subtitle": "Tonos suaves que se adaptan al tema claro y oscuro",
   "@color_suggested_subtitle": {"description": "Subtítulo explicando la sección de colores sugeridos"},
   "color_random_subtitle": "Deja que la aplicación elija un color por ti",
   "@color_random_subtitle": {"description": "Subtítulo para la sección de color aleatorio"}

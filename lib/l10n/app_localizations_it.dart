@@ -874,7 +874,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get color_suggested_subtitle =>
-      'Scegli uno dei colori compatibili col tema';
+      'Tinte morbide, si adattano al tema chiaro e scuro';
 
   @override
   String get color_random_subtitle =>
