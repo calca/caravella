@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- What's New in Settings lists only the 2.x versions (the older notes were long and out of date)
+
+### Fixed
+- Adding a category or a person from the picker sheets uses the same field as the expense description (white, rounded, with a teal border while typing) instead of a plain one inside a card, and its confirm button shows a white tick on teal (it was black)
+
 ## [2.2.0] - 2026-10-22
 
 ### Changed

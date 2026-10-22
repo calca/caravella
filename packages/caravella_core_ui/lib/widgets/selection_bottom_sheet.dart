@@ -277,44 +277,50 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
   Widget _buildInlineAddRow() {
     final theme = Theme.of(context);
-    final radius = BorderRadius.circular(20);
+    final s = theme.colorScheme;
+    // Same field as the expense description: a raised rounded field with a
+    // hairline that turns into the primary color while typing.
     return Padding(
       padding: const EdgeInsets.only(top: 12),
-      child: CardOutline(
-        borderRadius: radius,
-        child: Material(
-          color: theme.colorScheme.raisedSurface,
-          borderRadius: radius,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 2, 4, 2),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _inlineController,
-                    focusNode: _inlineFocus,
-                    autofocus: true,
-                    decoration: FormTheme.getBorderlessDecoration(
-                      hintText: widget.addItemHint,
+      child: TextField(
+        controller: _inlineController,
+        focusNode: _inlineFocus,
+        autofocus: true,
+        textCapitalization: TextCapitalization.sentences,
+        style: FormTheme.getFieldTextStyle(context),
+        decoration:
+            FormTheme.getCardDecoration(
+              fillColor: s.raisedSurface,
+              borderColor: CardOutline.colorFor(theme.brightness),
+              focusColor: s.primary,
+              errorColor: s.error,
+              hintText: widget.addItemHint,
+            ).copyWith(
+              suffixIcon: Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      tooltip: widget.cancelLabel,
+                      icon: const Icon(Icons.close_rounded),
+                      onPressed: _cancelInlineAdd,
                     ),
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) => _commitInlineAdd(),
-                  ),
+                    IconButton.filled(
+                      tooltip: widget.addLabel,
+                      style: IconButton.styleFrom(
+                        backgroundColor: s.primary,
+                        foregroundColor: s.onPrimary,
+                      ),
+                      icon: const Icon(Icons.check_rounded),
+                      onPressed: _commitInlineAdd,
+                    ),
+                  ],
                 ),
-                IconButton(
-                  tooltip: widget.cancelLabel,
-                  icon: const Icon(Icons.close_rounded),
-                  onPressed: _cancelInlineAdd,
-                ),
-                IconButton.filled(
-                  tooltip: widget.addLabel,
-                  icon: const Icon(Icons.check_rounded),
-                  onPressed: _commitInlineAdd,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+        textInputAction: TextInputAction.done,
+        onSubmitted: (_) => _commitInlineAdd(),
       ),
     );
   }
