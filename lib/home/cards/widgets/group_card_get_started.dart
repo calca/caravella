@@ -3,7 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
 import '../../../manager/group/group_edit_mode.dart';
-import '../../../manager/group/pages/expense_group_other_page.dart';
+import '../../../manager/group/pages/expense_group_general_page.dart';
 import '../../../manager/group/pages/expense_group_participants_page.dart';
 
 /// Getting-started checklist shown on the Home card while the group has no
@@ -52,7 +52,11 @@ class GroupCardGetStarted extends StatelessWidget {
         hasLook,
         () => _open(
           context,
-          ExpenseGroupOtherPage(trip: group, mode: GroupEditMode.edit),
+          ExpenseGroupGeneralPage(
+            trip: group,
+            mode: GroupEditMode.edit,
+            openBackground: true,
+          ),
         ),
       ),
     ];

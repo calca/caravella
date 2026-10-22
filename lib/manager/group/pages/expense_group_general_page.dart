@@ -406,12 +406,21 @@ class _BackgroundPreview extends StatelessWidget {
           : ExpenseGroupColorPalette.resolveColor(color, s);
       if (resolved != null) child = ColoredBox(color: resolved);
     }
-    if (child == null) {
-      return Icon(Icons.chevron_right_rounded, color: s.onSurfaceVariant);
-    }
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: SizedBox(width: 40, height: 40, child: child),
+    final chevron = Icon(
+      Icons.chevron_right_rounded,
+      color: s.onSurfaceVariant,
+    );
+    if (child == null) return chevron;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(width: 28, height: 28, child: child),
+        ),
+        const SizedBox(width: 4),
+        chevron,
+      ],
     );
   }
 }
