@@ -109,14 +109,14 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
               decoration: FormTheme.getSearchPillDecoration(
                 backgroundColor: colorScheme.raisedSurface,
                 hintText: l.search_currency,
-                prefixIcon: const Icon(Icons.search_outlined),
+                prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: _query.isEmpty
                     ? null
                     : IconButton(
                         tooltip: MaterialLocalizations.of(
                           context,
                         ).deleteButtonTooltip,
-                        icon: const Icon(Icons.clear),
+                        icon: const Icon(Icons.close_rounded),
                         onPressed: () {
                           setState(() {
                             _query = '';

@@ -86,7 +86,16 @@ class _NameDialogState extends State<_NameDialog> {
       content: TextField(
         controller: _controller,
         autofocus: true,
-        decoration: InputDecoration(hintText: loc.settings_user_name_hint),
+        style: FormTheme.getFieldTextStyle(context),
+        // Same field as the rest of the app; the 50-character limit stays
+        // without a counter under it.
+        decoration: FormTheme.getCardDecoration(
+          fillColor: Theme.of(context).colorScheme.raisedSurface,
+          borderColor: CardOutline.colorFor(Theme.of(context).brightness),
+          focusColor: Theme.of(context).colorScheme.primary,
+          errorColor: Theme.of(context).colorScheme.error,
+          hintText: loc.settings_user_name_hint,
+        ).copyWith(counterText: ''),
         textCapitalization: TextCapitalization.words,
         maxLength: 50,
         onSubmitted: (_) => _save(),

@@ -92,34 +92,38 @@ class _WizardPeopleStepState extends State<WizardPeopleStep> {
           ],
         ),
         const SizedBox(height: 16),
-        WizardCard(
-          padding: const EdgeInsets.fromLTRB(20, 2, 6, 2),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _name,
-                  focusNode: _focus,
-                  textCapitalization: TextCapitalization.words,
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _add(state),
-                  onChanged: (_) => setState(() {}),
-                  style: theme.textTheme.titleMedium,
-                  decoration: InputDecoration(
-                    hintText: gloc.wizard_people_add_hint,
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
+        // Same field as the expense description and the pickers' add field.
+        TextField(
+          controller: _name,
+          focusNode: _focus,
+          textCapitalization: TextCapitalization.words,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => _add(state),
+          onChanged: (_) => setState(() {}),
+          style: FormTheme.getFieldTextStyle(context),
+          decoration:
+              FormTheme.getCardDecoration(
+                fillColor: theme.colorScheme.raisedSurface,
+                borderColor: CardOutline.colorFor(theme.brightness),
+                focusColor: theme.colorScheme.primary,
+                errorColor: theme.colorScheme.error,
+                hintText: gloc.wizard_people_add_hint,
+              ).copyWith(
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: IconButton.filled(
+                    onPressed: _name.text.trim().isEmpty
+                        ? null
+                        : () => _add(state),
+                    tooltip: gloc.add_participant,
+                    style: IconButton.styleFrom(
+                      backgroundColor: theme.colorScheme.primary,
+                      foregroundColor: theme.colorScheme.onPrimary,
+                    ),
+                    icon: const Icon(Icons.add_rounded),
                   ),
                 ),
               ),
-              IconButton.filled(
-                onPressed: _name.text.trim().isEmpty ? null : () => _add(state),
-                tooltip: gloc.add_participant,
-                icon: const Icon(Icons.add_rounded),
-              ),
-            ],
-          ),
         ),
         const SizedBox(height: 16),
         WizardNote(gloc.wizard_participants_section_hint),

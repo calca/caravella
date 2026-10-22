@@ -189,84 +189,75 @@ class _EditableNameListState extends State<EditableNameList> {
     );
   }
 
-  Widget _buildEditRow() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 4.0,
-                ),
-                child: TextField(
-                  controller: _editController,
-                  focusNode: _editFocus,
-                  autofocus: true,
-                  decoration: FormTheme.getBorderlessDecoration(
-                    hintText: widget.hintLabel,
-                  ),
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _saveEdit(),
-                ),
-              ),
-            ),
-            IconButton(
-              tooltip: widget.saveTooltip,
-              icon: const Icon(Icons.check_rounded),
-              onPressed: _saveEdit,
-            ),
-            IconButton(
-              tooltip: widget.cancelTooltip,
-              icon: const Icon(Icons.close_outlined),
-              onPressed: _cancelEdit,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _buildEditRow() => _buildInputRow(
+    controller: _editController,
+    focusNode: _editFocus,
+    commitTooltip: widget.saveTooltip,
+    onCommit: _saveEdit,
+    onCancel: _cancelEdit,
+  );
 
-  Widget _buildAddRow() {
+  Widget _buildAddRow() => _buildInputRow(
+    controller: _addController,
+    focusNode: _addFocus,
+    commitTooltip: widget.addTooltip,
+    onCommit: _commitAdd,
+    onCancel: _cancelAdd,
+  );
+
+  /// The same field as the expense description and the pickers' add field:
+  /// a rounded field with a hairline that turns primary while typing, then
+  /// cancel and a filled confirm button.
+  Widget _buildInputRow({
+    required TextEditingController controller,
+    required FocusNode focusNode,
+    required String commitTooltip,
+    required VoidCallback onCommit,
+    required VoidCallback onCancel,
+  }) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 4.0,
-                ),
-                child: TextField(
-                  controller: _addController,
-                  focusNode: _addFocus,
-                  autofocus: true,
-                  decoration: FormTheme.getBorderlessDecoration(
-                    hintText: widget.hintLabel,
-                  ),
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _commitAdd(),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        autofocus: true,
+        textCapitalization: TextCapitalization.sentences,
+        style: FormTheme.getFieldTextStyle(context),
+        decoration:
+            FormTheme.getCardDecoration(
+              fillColor: s.raisedSurface,
+              borderColor: CardOutline.colorFor(theme.brightness),
+              focusColor: s.primary,
+              errorColor: s.error,
+              hintText: widget.hintLabel,
+            ).copyWith(
+              suffixIcon: Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      tooltip: widget.cancelTooltip,
+                      icon: const Icon(Icons.close_rounded),
+                      onPressed: onCancel,
+                    ),
+                    IconButton.filled(
+                      tooltip: commitTooltip,
+                      style: IconButton.styleFrom(
+                        backgroundColor: s.primary,
+                        foregroundColor: s.onPrimary,
+                      ),
+                      icon: const Icon(Icons.check_rounded),
+                      onPressed: onCommit,
+                    ),
+                  ],
                 ),
               ),
             ),
-            IconButton(
-              tooltip: widget.addTooltip,
-              icon: const Icon(Icons.check_rounded),
-              onPressed: _commitAdd,
-            ),
-            IconButton(
-              tooltip: widget.cancelTooltip,
-              icon: const Icon(Icons.close_outlined),
-              onPressed: _cancelAdd,
-            ),
-          ],
-        ),
+        textInputAction: TextInputAction.done,
+        onSubmitted: (_) => onCommit(),
       ),
     );
   }

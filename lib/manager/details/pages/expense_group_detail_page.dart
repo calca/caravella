@@ -1,3 +1,4 @@
+import 'section_swipe.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -71,6 +72,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
 
   /// Selected view: 0 expenses, 1 balances, 2 statistics.
   int _section = 0;
+
+  /// Horizontal travel of the current swipe over the content.
+  double _swipeDistance = 0;
 
   /// Scroll offset past which the collapsed title is shown.
   double _collapsedTitleThreshold(BuildContext context) =>
@@ -524,58 +528,76 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
         backgroundColor: pageColor,
         body: Stack(
           children: [
-            CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: GroupHeaderBand(
-                          group: trip,
-                          pageColor: pageColor,
+            // Swipe left / right over the page to move between Expenses,
+            // Balances and Statistics, like tabs.
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onHorizontalDragStart: (_) => _swipeDistance = 0,
+              onHorizontalDragUpdate: (d) => _swipeDistance += d.delta.dx,
+              onHorizontalDragEnd: (d) {
+                if (trip.expenses.isEmpty) return;
+                final next = sectionAfterSwipe(
+                  current: _section,
+                  count: sections.length,
+                  distance: _swipeDistance,
+                  velocity: d.primaryVelocity ?? 0,
+                  rtl: Directionality.of(context) == TextDirection.rtl,
+                );
+                if (next != null) _selectSection(next);
+              },
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: GroupHeaderBand(
+                            group: trip,
+                            pageColor: pageColor,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                          20,
-                          topInset +
-                              _topBarHeight +
-                              4 +
-                              (hasPhoto ? GroupHeaderBand.photoExtraTop : 0),
-                          20,
-                          20,
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                            20,
+                            topInset +
+                                _topBarHeight +
+                                4 +
+                                (hasPhoto ? GroupHeaderBand.photoExtraTop : 0),
+                            20,
+                            20,
+                          ),
+                          child: GroupDetailHeader(
+                            group: trip,
+                            foreground: bandForeground,
+                          ),
                         ),
-                        child: GroupDetailHeader(
-                          group: trip,
-                          foreground: bandForeground,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverToBoxAdapter(
-                    child: PillSegmentedControl(
-                      labels: sections,
-                      selectedIndex: _section,
-                      onChanged: _selectSection,
-                      expand: true,
+                      ],
                     ),
                   ),
-                ),
-                SliverFadeTransition(
-                  opacity: CurvedAnimation(
-                    parent: _sectionFade,
-                    curve: Curves.easeOutCubic,
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    sliver: SliverToBoxAdapter(
+                      child: PillSegmentedControl(
+                        labels: sections,
+                        selectedIndex: _section,
+                        onChanged: _selectSection,
+                        expand: true,
+                      ),
+                    ),
                   ),
-                  sliver: content,
-                ),
-                SliverToBoxAdapter(
-                  child: SizedBox(height: _calculateBottomPadding()),
-                ),
-              ],
+                  SliverFadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: _sectionFade,
+                      curve: Curves.easeOutCubic,
+                    ),
+                    sliver: content,
+                  ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: _calculateBottomPadding()),
+                  ),
+                ],
+              ),
             ),
             // Top bar over the band: round buttons at rest, an opaque bar
             // with the group name once the title has scrolled away.
