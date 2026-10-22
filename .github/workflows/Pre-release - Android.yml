@@ -88,7 +88,7 @@ jobs:
             fi
           done
       - name: Build staging APK (signed)
-        run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+        run: flutter build apk --flavor staging --release --build-name="${TAG#v}" --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
       - name: Publish GitHub pre-release
         run: |
           APK="io_caravella_egm-staging-${TAG#v}.apk"
