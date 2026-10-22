@@ -133,18 +133,26 @@ class _GroupTypeTemplateFormPageState extends State<GroupTypeTemplateFormPage> {
           enabled: !_saving,
         ),
         children: [
+          // Name: a big field in its own card, like the group's settings.
           SettingsGroup(
             label: loc.settings_group_templates_name_label,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
                 child: TextField(
                   controller: _nameController,
-                  style: FormTheme.getFieldTextStyle(context),
-                  decoration: FormTheme.getBorderlessDecoration(
-                    hintText: loc.settings_group_templates_name_hint,
-                  ),
                   maxLength: 40,
+                  textCapitalization: TextCapitalization.sentences,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                  decoration: InputDecoration(
+                    hintText: loc.settings_group_templates_name_hint,
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    counterText: '',
+                  ),
                 ),
               ),
             ],

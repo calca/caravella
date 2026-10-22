@@ -18,7 +18,8 @@ class SettingsScaffold extends StatelessWidget {
   final List<Widget> children;
   final Widget? floatingActionButton;
 
-  /// Fixed bar at the bottom (e.g. a Save button).
+  /// Fixed bar at the bottom (e.g. a Save button); it rides above the
+  /// keyboard while one is open, like the group creation wizard's button.
   final Widget? bottomBar;
 
   const SettingsScaffold({
@@ -39,7 +40,18 @@ class SettingsScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: s.surfaceContainer,
       floatingActionButton: floatingActionButton,
-      bottomNavigationBar: bottomBar,
+      // With a bottom bar the keyboard is made room for by lifting the bar
+      // (below), which also shrinks the body: resizing too would count the
+      // keyboard twice.
+      resizeToAvoidBottomInset: bottomBar == null,
+      bottomNavigationBar: bottomBar == null
+          ? null
+          : Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.viewInsetsOf(context).bottom,
+              ),
+              child: bottomBar,
+            ),
       body: Stack(
         children: [
           ListView(
