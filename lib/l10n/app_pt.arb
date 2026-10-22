@@ -460,7 +460,6 @@
   ,"csv_save_error": "Erro ao salvar arquivo CSV"
   ,"csv_saved_in": "CSV salvo em: {path}"
   ,"currency": "Moeda"
-  ,"data_refreshed": "Atualizado"
   ,"date": "Data"
   ,"delete_group": "Excluir grupo"
   ,"edit_category": "Editar categoria"

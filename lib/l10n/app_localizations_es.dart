@@ -568,9 +568,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get expense_updated_success => 'Gasto actualizado';
 
   @override
-  String get data_refreshed => 'Actualizado';
-
-  @override
   String get refresh => 'Actualizar';
 
   @override

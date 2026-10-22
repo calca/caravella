@@ -36,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics in the dark theme: daily/monthly and details cards no longer darker than the page, and category bars visible (they were dark on dark)
 - Removed the unused `android_nav_setting` dependency (it only sized the old carousel)
 
+### Removed
+- Pull to refresh on Home: it only reloaded what Home already shows up to date (it updates by itself after every change and after a synchronization) and showed an "Updated" message, without syncing anything
+
 ### Fixed
 - Home's getting-started step "Choose a photo or a color" opened the old "Other" page, which no longer has the background: it now opens the group's general settings with the background sheet ready. The background row there shows a smaller preview next to the arrow
 - Group settings: the period showed "10 days" in English in every language
