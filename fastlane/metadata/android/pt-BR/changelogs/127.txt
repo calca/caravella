@@ -1,0 +1,8 @@
+Versão 2.2.1 - Pequenos ajustes
+
+• Deslize entre Despesas, Saldos e Estatísticas na página do grupo
+• Um só estilo para todos os campos de texto
+• Botões de confirmar com o visto branco
+• As novidades começam na versão 2.0
+
+Obrigado por usar o Caravella!

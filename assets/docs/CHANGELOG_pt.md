@@ -1,3 +1,10 @@
+## 2.2.1 (22.10.2026)
+
+- **Novo**: Na página do grupo, deslize para a esquerda ou a direita para alternar entre Despesas, Saldos e Estatísticas
+- **Melhorias**: Todos os campos de texto têm o mesmo estilo: adicionar ou renomear categorias e pessoas, os participantes ao criar um grupo e seu nome nas configurações
+- **Melhorias**: As novidades mostram apenas as versões a partir da 2.0
+- **Correções**: Os botões de confirmar mostram o visto branco sobre verde (era preto)
+
 ## 2.2.0 (22.10.2026)
 
 - **Novo**: Um design novo em todo o app – uma barra flutuante embaixo para alternar entre Início e Grupos, páginas cinza com cartões brancos, e painéis, diálogos e mensagens no mesmo estilo

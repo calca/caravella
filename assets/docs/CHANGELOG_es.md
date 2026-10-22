@@ -1,3 +1,10 @@
+## 2.2.1 (22.10.2026)
+
+- **Nuevo**: En la página del grupo, desliza a la izquierda o a la derecha para pasar entre Gastos, Saldos y Estadísticas
+- **Mejoras**: Todos los campos de texto tienen el mismo estilo: añadir o renombrar categorías y personas, los participantes al crear un grupo y tu nombre en Ajustes
+- **Mejoras**: Las novedades solo muestran las versiones desde la 2.0
+- **Correcciones**: Los botones de confirmar muestran la marca blanca sobre verde (era negra)
+
 ## 2.2.0 (22.10.2026)
 
 - **Nuevo**: Un diseño nuevo en toda la app – una barra flotante abajo para pasar entre Inicio y Grupos, páginas grises con tarjetas blancas, y hojas, diálogos y mensajes con el mismo estilo

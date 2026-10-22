@@ -1,0 +1,8 @@
+Versione 2.2.1 - Piccoli ritocchi
+
+• Scorri tra Spese, Saldi e Statistiche nella pagina del gruppo
+• Uno stile unico per tutti i campi di testo
+• Pulsanti di conferma con la spunta bianca
+• Le Novità partono dalla versione 2.0
+
+Grazie per usare Caravella!

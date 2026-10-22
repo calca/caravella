@@ -1,3 +1,10 @@
+## 2.2.1 (22.10.2026)
+
+- **Novità**: Nella pagina del gruppo scorri a sinistra o a destra per passare tra Spese, Saldi e Statistiche
+- **Miglioramenti**: Tutti i campi di testo hanno lo stesso stile: aggiungere o rinominare categorie e persone, i partecipanti nella creazione del gruppo e il tuo nome nelle impostazioni
+- **Miglioramenti**: Le Novità mostrano solo le versioni dalla 2.0 in poi
+- **Correzioni**: I pulsanti di conferma mostrano la spunta bianca su verde (era nera)
+
 ## 2.2.0 (22.10.2026)
 
 - **Novità**: Nuova grafica in tutta l'app – una barra di navigazione in basso per passare tra Home e Gruppi, pagine grigie con card bianche, fogli, finestre e messaggi nello stesso stile

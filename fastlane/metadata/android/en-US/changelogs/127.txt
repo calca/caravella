@@ -1,0 +1,8 @@
+Version 2.2.1 - Small touches
+
+• Swipe between Expenses, Balances and Statistics on the group page
+• One style for all text fields
+• Confirm buttons with a white tick
+• What's New starts from version 2.0
+
+Thanks for using Caravella!
