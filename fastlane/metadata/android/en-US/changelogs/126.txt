@@ -1,0 +1,8 @@
+Version 2.2.0 - A fresh new look
+
+• A new design everywhere: Home, groups, settings and search
+• Home in two cards: your group and its latest expenses
+• Create a group in a few short steps and add friends right away
+• Softer group colors, vivid photos and clearer texts
+
+Thanks for using Caravella!

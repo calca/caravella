@@ -1,3 +1,15 @@
+## 2.2.0 (22.10.2026)
+
+- **Novità**: Nuova grafica in tutta l'app – una barra di navigazione in basso per passare tra Home e Gruppi, pagine grigie con card bianche, fogli, finestre e messaggi nello stesso stile
+- **Novità**: Home in due card – il gruppo con totale, spesa di oggi e un'onda leggera della spesa nel periodo, e sotto le ultime tre spese con «Vedi tutti». Un gruppo nuovo mostra una breve lista «Per iniziare»
+- **Novità**: Creare un gruppo è più semplice – pochi passi brevi: che tipo di gruppo è, nome, date e valuta, e chi partecipa (puoi aggiungere subito gli amici)
+- **Novità**: Dalla Home puoi leggere uno scontrino con la fotocamera o aggiungere una spesa a voce («ho speso 12 euro in cartoleria»)
+- **Novità**: Backup su Google Drive (versione Play Store) – salva ora, ripristina uno degli ultimi 5 o attiva un backup settimanale
+- **Miglioramenti**: Nuova pagina del gruppo con la foto o il colore in alto, i numeri principali e le schede Spese, Saldi e Statistiche
+- **Miglioramenti**: Aggiungere una spesa è più veloce – importo grande, chi ha pagato e categoria su una riga, i dettagli solo quando servono
+- **Miglioramenti**: Colori dei gruppi più morbidi, foto dei gruppi più vivide e testi rivisti in tutte le lingue
+- **Correzioni**: Le modifiche ricevute dalla sincronizzazione compaiono subito, l'interruttore del backup automatico si spegne davvero e diversi piccoli errori sono stati corretti
+
 ## 2.0.2 (17.10.2026)
 
 - **Correzioni**: L'accesso a Google per la sincronizzazione con Google Drive ora funziona – prima "Sincronizza i tuoi dispositivi" segnalava sempre che l'accesso a Google non era riuscito
