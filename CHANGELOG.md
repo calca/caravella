@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-10-22
+
 ### Changed
 - **Softer group colors**: 12 tints chosen for groups (teal, coral, rose, apricot, sage, sky, lavender, plum, cornflower, slate, sand, wheat) — pastel in the light theme, deep and muted in the dark one — instead of the app's theme colors, which had two duplicates, mostly reds and greens, and strong tones (bright red, the error crimson, solid black). Existing groups move to the closest soft tint, and group colors no longer change with the phone's wallpaper when dynamic colors are on. Text on a color is chosen by real contrast (it could be white on a light color)
 - Test builds (GitHub pre-releases) show which rc they are in Settings › Info, e.g. "2.0.3-rc.31-staging" instead of "2.0.3-staging"
@@ -551,7 +553,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/calca/caravella/compare/v2.0.2...v2.2.0
 [2.0.2]: https://github.com/calca/caravella/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/calca/caravella/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/calca/caravella/compare/v1.8.0...v2.0.0

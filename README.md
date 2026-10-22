@@ -15,13 +15,14 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 ## ✨ Key Features
 
 ### Core Functionality
-- **Group Management**: Create and manage multiple expense groups for different trips or shared living situations
-- **Expense Tracking**: Add, edit, and categorize expenses with detailed participant assignments
+- **Group Management**: Create a group in a few short steps — what kind of group, its name, dates and currency, and who's taking part — and manage as many as you like
+- **Expense Tracking**: Add an expense in seconds — amount, description, who paid and the category — with date, place, attachments and notes when you need them
+- **Voice Input**: Say an expense ("I spent 12 euros at the stationery shop") and the form fills itself
 - **Receipt Scanning with OCR**: Scan receipts using your camera or gallery to automatically extract expense amounts and descriptions (on-device processing, no internet required)
 - **Smart Calculations**: Automatic calculation of who owes what to whom
 - **Participant Management**: Easy addition and management of group members
 - **Data Export**: Export your data to CSV or JSON formats for external analysis
-- **Backup & Restore**: Complete data backup and restore functionality
+- **Backup & Restore**: Back up to a file, or to your Google Drive with an optional weekly backup (Play Store version)
 - **Device Sync (optional)**: Share a group with other people's devices over Wi-Fi or Bluetooth (QR pairing, end-to-end encrypted), or keep your own devices in sync through your personal Google Drive — off by default, enabled per group
 
 ### Location & Maps
@@ -32,7 +33,8 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 
 ### Visual & Personalization
 - **Photo Attachments**: Add photos to group backgrounds and expense records
-- **Theme-Aware Colors**: Expense group colors that adapt to light/dark mode
+- **Soft Group Colors**: 12 tints chosen for groups, pastel in the light theme and deep in the dark one
+- **Clear Home**: Your group with its total, today's spending and a soft spending wave, plus the latest expenses
 - **Dynamic Color Support**: Material 3 colors derived from device wallpaper (Android 12+)
 - **Material Design 3**: Modern interface with smooth animations and transitions
 
@@ -59,30 +61,26 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 ## 📱 Screenshots
 
 <p align="center">
-  <img src="store/screenshot/01 - Welcome - EN.png" alt="Welcome Screen" width="200"/>
-  <img src="store/screenshot/02 - HomePage.png" alt="Home Page" width="200"/>
-  <img src="store/screenshot/03 - HomePage - Add.png" alt="Add Group" width="200"/>
-  <img src="store/screenshot/04 - Group - Expenses - Home.png" alt="Group Expenses Home" width="200"/>
+  <img src="store/screenshots/en/01.jpg" alt="Home with the group and its latest expenses" width="200"/>
+  <img src="store/screenshots/en/02.jpg" alt="Adding an expense" width="200"/>
+  <img src="store/screenshots/en/03.jpg" alt="Balances and settle up" width="200"/>
+  <img src="store/screenshots/en/04.jpg" alt="Pairing devices with a QR code" width="200"/>
 </p>
 
 <p align="center">
-  <img src="store/screenshot/05 - Group - Expenses - Add.png" alt="Add Expense" width="200"/>
-  <img src="store/screenshot/06 - Group - Expenses.png" alt="Group Expenses" width="200"/>
-  <img src="store/screenshot/07 - Group - Partecipants.png" alt="Participants" width="200"/>
-  <img src="store/screenshot/08 - Group - Stats.png" alt="Group Statistics" width="200"/>
+  <img src="store/screenshots/en/05.jpg" alt="Group page with its expenses" width="200"/>
+  <img src="store/screenshots/en/06.jpg" alt="All groups" width="200"/>
+  <img src="store/screenshots/en/07.jpg" alt="Statistics" width="200"/>
+  <img src="store/screenshots/en/08.jpg" alt="Dark theme" width="200"/>
 </p>
 
-<p align="center">
-  <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
-</p>
+## 🎉 What's New in v2.2.0
 
-## 🎉 What's New in v2.0.2
-
-- **Google Drive Sync Works**: Signing in to sync your own devices through Google Drive no longer fails
-- **Smoother Updates**: When an update finishes downloading, Caravella offers to install it right away — no need to restart the app
-- **Easier to Read**: Clearer text over group photos in dark mode, a deeper teal for buttons and links, and better-defined fields
-- **Tidier Map**: Expenses close to each other are grouped into one numbered pin
-- **Your Date Format**: Dates follow your language everywhere in the app
+- **A Fresh New Look**: A floating bar to switch between Home and Groups, and every screen, sheet and dialog redesigned in one calm style
+- **Home in Two Cards**: Your group with its total and today's spending, and the latest expenses right below
+- **Easier Group Creation**: A few short steps, and you can add your friends straight away
+- **Faster Expenses**: Read a receipt or say an expense from Home; the quick form keeps who paid and the category on one line
+- **Softer Colors, Clearer Words**: Gentle group colors, vivid group photos, and texts reviewed in every language
 
 ## 🛠️ Tech Stack & Architecture
 

@@ -8,7 +8,14 @@ Divida despesas em grupo, veja quem deve a quem e sincronize com amigos.
 
 O Caravella é o jeito mais simples de dividir despesas com amigos, família e colegas de casa. Crie um grupo para uma viagem, uma casa compartilhada ou um evento, adicione o que cada um gasta e o Caravella mostra quem deve a quem — sem planilhas e sem discussões.
 
-NOVO NA 2.0: SINCRONIZE COM AMIGOS
+NOVO NA 2.2: UM NOVO VISUAL
+• Um Início mais claro: seu grupo com o total e a evolução dos gastos, e abaixo as últimas despesas
+• Crie um grupo em poucos passos e adicione os amigos na hora
+• Nova página do grupo com despesas, saldos e estatísticas a um toque
+• Cores de grupo suaves e fotos em destaque
+• Backup no Google Drive, também semanal
+
+SINCRONIZE COM AMIGOS
 • Compartilhe um grupo com quem viaja com você por Wi-Fi ou Bluetooth
 • Pareie os dispositivos uma única vez com um QR code — tudo com criptografia de ponta a ponta
 • Mantenha seus celulares e tablets sincronizados pelo seu Google Drive

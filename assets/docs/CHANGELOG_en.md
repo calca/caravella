@@ -1,3 +1,15 @@
+## 2.2.0 (22.10.2026)
+
+- **New**: A fresh design across the app – a floating bar at the bottom to switch between Home and Groups, grey pages with white cards, and sheets, dialogs and messages in the same style
+- **New**: Home in two cards – your group with its total, today's spending and a soft wave of spending over the period, and below it the last three expenses with "See all". A new group shows a short "Getting started" list
+- **New**: Creating a group is simpler – a few short steps: what kind of group, its name, dates and currency, and who's taking part (you can add friends right away)
+- **New**: From Home you can read a receipt with the camera or add an expense by voice ("I spent 12 euros at the stationery shop")
+- **New**: Backup to Google Drive (Play Store version) – back up now, restore one of the last 5, or turn on a weekly backup
+- **Improvements**: A new group page with the photo or color at the top, the key figures and Expenses, Balances and Statistics tabs
+- **Improvements**: Adding an expense is quicker – a big amount, who paid and the category on one line, details only when you need them
+- **Improvements**: Softer group colors, vivid group photos and texts reviewed in every language
+- **Fixed**: Changes received by sync show up right away, the automatic backup switch really turns off, and many small issues are fixed
+
 ## 2.0.2 (17.10.2026)
 
 - **Fixed**: Signing in to Google Drive sync now works – before, "Sync your devices" always reported that Google sign-in had failed

@@ -1,3 +1,15 @@
+## 2.2.0 (22.10.2026)
+
+- **Novo**: Um design novo em todo o app – uma barra flutuante embaixo para alternar entre Início e Grupos, páginas cinza com cartões brancos, e painéis, diálogos e mensagens no mesmo estilo
+- **Novo**: Início em dois cartões – seu grupo com o total, o gasto de hoje e uma onda suave dos gastos no período, e abaixo as três últimas despesas com "Ver todas". Um grupo novo mostra uma pequena lista "Para começar"
+- **Novo**: Criar um grupo ficou mais simples – poucos passos: que tipo de grupo é, nome, datas e moeda, e quem participa (você já pode adicionar os amigos)
+- **Novo**: No Início você pode ler um recibo com a câmera ou adicionar uma despesa por voz ("gastei 12 reais na papelaria")
+- **Novo**: Backup no Google Drive (versão da Play Store) – faça um backup agora, restaure um dos 5 últimos ou ative um backup semanal
+- **Melhorias**: Uma nova página do grupo com a foto ou a cor no topo, os números principais e as abas Despesas, Saldos e Estatísticas
+- **Melhorias**: Adicionar uma despesa ficou mais rápido – valor grande, quem pagou e a categoria em uma linha, e os detalhes só quando precisar
+- **Melhorias**: Cores de grupo mais suaves, fotos de grupo mais vivas e textos revisados em todos os idiomas
+- **Correções**: As alterações recebidas pela sincronização aparecem na hora, o botão de backup automático desliga de verdade e vários pequenos erros foram corrigidos
+
 ## 2.0.2 (17.10.2026)
 
 - **Correções**: Entrar na sincronização com o Google Drive agora funciona – antes, "Sincronizar seus dispositivos" sempre informava que o login com o Google tinha falhado
