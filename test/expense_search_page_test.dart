@@ -233,7 +233,7 @@ void main() {
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Last 7 days'), findsOneWidget);
       expect(find.text('This month'), findsOneWidget);
-      expect(find.text('Select period'), findsOneWidget);
+      expect(find.text('Period'), findsOneWidget);
     });
 
     testWidgets('today chip filters expenses', (tester) async {
@@ -365,7 +365,7 @@ void main() {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Select period'));
+      await tester.tap(find.text('Period'));
       await tester.pumpAndSettle();
 
       expect(find.text('SUGGESTED DURATION'), findsOneWidget);

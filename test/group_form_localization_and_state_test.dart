@@ -40,16 +40,12 @@ void main() {
 
     testWidgets('English keys exist', (tester) async {
       await pumpLocalized(const Locale('en'), tester, (loc) {
-        expect(loc.background_options.isNotEmpty, true);
-        expect(loc.choose_image_or_color.isNotEmpty, true);
         expect(loc.discard_changes_title.isNotEmpty, true);
       });
     });
 
     testWidgets('Italian keys exist', (tester) async {
       await pumpLocalized(const Locale('it'), tester, (loc) {
-        expect(loc.background_options.isNotEmpty, true);
-        expect(loc.choose_image_or_color.isNotEmpty, true);
         expect(loc.discard_changes_title.isNotEmpty, true);
       });
     });
