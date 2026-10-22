@@ -62,14 +62,17 @@ void main() {
       expect(result.color, colorScheme.surfaceContainerLowest);
     });
 
-    test('resolves a palette color index into a theme color with gradient', () {
+    test('resolves a palette color index into its tint with gradient', () {
       final result = GroupBackgroundUtils.resolve(
-        _group(color: 0), // index 0 -> colorScheme.primary
+        _group(color: 0),
         colorScheme,
       );
 
       expect(result.hasImage, isFalse);
-      expect(result.color, colorScheme.primary);
+      expect(
+        result.color,
+        ExpenseGroupColorPalette.resolveColor(0, colorScheme),
+      );
       expect(result.gradient, isNotNull);
     });
 

@@ -35,17 +35,53 @@ void main() {
       const lightScheme = ColorScheme.light();
       const darkScheme = ColorScheme.dark();
 
-      // Index 0 should map to primary color
-      final lightPrimary = ExpenseGroupColorPalette.resolveColor(
-        0,
-        lightScheme,
-      );
-      final darkPrimary = ExpenseGroupColorPalette.resolveColor(0, darkScheme);
+      final light = ExpenseGroupColorPalette.resolveColor(0, lightScheme);
+      final dark = ExpenseGroupColorPalette.resolveColor(0, darkScheme);
 
-      expect(lightPrimary, equals(lightScheme.primary));
-      expect(darkPrimary, equals(darkScheme.primary));
-      // Light and dark primaries should be different (for default schemes)
-      expect(lightPrimary, isNot(equals(darkPrimary)));
+      // Fixed tints, not the scheme's roles: pastel in light, deep in dark.
+      expect(light, isNot(equals(lightScheme.primary)));
+      expect(light, isNot(equals(dark)));
+      expect(ExpenseGroupColorPalette.isLightColor(light!), isTrue);
+      expect(ExpenseGroupColorPalette.isLightColor(dark!), isFalse);
+    });
+
+    test('palette has 12 distinct colors in each theme', () {
+      for (final scheme in const [ColorScheme.light(), ColorScheme.dark()]) {
+        final colors = ExpenseGroupColorPalette.getPaletteColors(scheme);
+        expect(colors.toSet().length, ExpenseGroupColorPalette.paletteSize);
+      }
+    });
+
+    test(
+      'text on each tint follows the theme: dark on light, white on dark',
+      () {
+        for (final c in ExpenseGroupColorPalette.getPaletteColors(
+          const ColorScheme.light(),
+        )) {
+          expect(
+            ExpenseGroupColorPalette.getContrastingTextColor(c),
+            Colors.black87,
+          );
+        }
+        for (final c in ExpenseGroupColorPalette.getPaletteColors(
+          const ColorScheme.dark(),
+        )) {
+          expect(
+            ExpenseGroupColorPalette.getContrastingTextColor(c),
+            Colors.white,
+          );
+        }
+      },
+    );
+
+    test('palette does not follow the color scheme', () {
+      final a = ExpenseGroupColorPalette.getPaletteColors(
+        ColorScheme.fromSeed(seedColor: Colors.purple),
+      );
+      final b = ExpenseGroupColorPalette.getPaletteColors(
+        ColorScheme.fromSeed(seedColor: Colors.orange),
+      );
+      expect(a, equals(b));
     });
 
     test('isLegacyColorValue detects palette indices vs ARGB values', () {

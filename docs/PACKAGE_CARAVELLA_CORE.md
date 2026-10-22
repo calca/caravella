@@ -23,7 +23,7 @@ Full details on both backends, the SQLite schema, the factory, `ExpenseGroupStor
 - **`ExpenseGroupType`** (enum `personal, family, travel, other`) — carries an icon and `defaultCategoryKeys` (i18n keys) used to seed categories for new groups.
 - **`GroupTypeTemplate`** — user-defined custom group type (`iconCodePoint`, `defaultCategories`), persisted separately via `GroupTypeTemplateService`/`PreferencesService`, not in group storage.
 - **`group_settlements.dart`** — `computeBalances(ExpenseGroup) → Map<String, double>` (per participant id: paid minus equal share) and `computeSettlements(ExpenseGroup) → List<Settlement>`: the "who owes whom" algorithm. See [App: Group Details & Stats § Settlements algorithm](APP_GROUP_DETAILS_STATS.md#settlements-algorithm) for the full write-up.
-- **`ExpenseGroupColorPalette`** — theme-aware color resolution (`resolveGroupColor(group, colorScheme)`), 12-color palette mapped onto `ColorScheme` roles so group colors adapt to light/dark mode; also handles legacy ARGB migration and text-contrast helpers.
+- **`ExpenseGroupColorPalette`** — group color resolution (`resolveGroupColor(group, colorScheme)`): 12 fixed soft tints (teal, coral, rose, apricot, sage, sky, lavender, plum, cornflower, slate, sand, wheat), pastel in the light theme and deep/muted in the dark one, picked by `colorScheme.brightness` only — they don't follow the app's or the dynamic (wallpaper) color scheme. Stored as an index 0–11; the order maps the old `ColorScheme`-role palette onto the nearest tint so saved groups keep a similar color. Also handles legacy ARGB migration and text contrast (`isLightColor`: dark text when black gives the higher contrast, luminance > 0.179).
 
 ## State notifiers (`state/`)
 

@@ -1,8 +1,12 @@
 import 'package:material_ui/material_ui.dart';
 import 'expense_group.dart';
 
-/// Defines a theme-aware color palette for expense groups.
-/// Colors are stored as indices and resolved based on the current theme.
+/// The colors a group can have: 12 fixed, soft tints chosen for groups
+/// (teal, coral, rose, apricot, sage, sky, lavender, plum, cornflower, slate,
+/// sand, wheat). Pastel in the light theme (dark text on top), deep and muted
+/// in the dark theme (light text on top). Stored as indices, so a group keeps
+/// its tint across themes; they don't follow the app's or the wallpaper's
+/// color scheme.
 class ExpenseGroupColorPalette {
   static const int paletteSize = 12;
 
@@ -30,11 +34,10 @@ class ExpenseGroupColorPalette {
     return resolveColor(group.color, colorScheme) ?? effectiveFallback;
   }
 
-  /// Determines if the given color is light or dark.
-  ///
-  /// Returns true if the color's luminance is greater than 0.5.
+  /// Whether dark text reads better than white on [color]: true when black
+  /// gives the higher contrast ratio (luminance above ~0.18).
   static bool isLightColor(Color color) {
-    return color.computeLuminance() > 0.5;
+    return color.computeLuminance() > 0.179;
   }
 
   /// Gets the appropriate text color for content displayed on a given background.
@@ -55,23 +58,43 @@ class ExpenseGroupColorPalette {
     return colors[colorIndex];
   }
 
-  /// Get the palette of colors based on the current theme.
-  /// These colors are theme-aware and will adapt to light/dark mode.
+  /// Index order matches the old theme-role palette (primary, secondary,
+  /// tertiary, error, then their containers, inverse primary, inverse
+  /// surface, outline, tint), each mapped to the nearest soft tint, so
+  /// saved groups keep a similar color.
+  static const List<Color> _light = [
+    Color(0xFFA9D8D0), // teal
+    Color(0xFFF4B6A6), // coral
+    Color(0xFFEDB6C4), // rose
+    Color(0xFFF7CB9B), // apricot
+    Color(0xFFC3DDB0), // sage
+    Color(0xFFAED6EE), // sky
+    Color(0xFFC9C3EE), // lavender
+    Color(0xFFDDB8DD), // plum
+    Color(0xFFAFC3F0), // cornflower
+    Color(0xFFB9C3CC), // slate
+    Color(0xFFE3D3B8), // sand
+    Color(0xFFF0DF96), // wheat
+  ];
+
+  static const List<Color> _dark = [
+    Color(0xFF2F5F59), // teal
+    Color(0xFF7A4035), // coral
+    Color(0xFF74404E), // rose
+    Color(0xFF765020), // apricot
+    Color(0xFF45603A), // sage
+    Color(0xFF2E5A72), // sky
+    Color(0xFF4C4777), // lavender
+    Color(0xFF643F66), // plum
+    Color(0xFF34497A), // cornflower
+    Color(0xFF46525C), // slate
+    Color(0xFF625641), // sand
+    Color(0xFF6A5D1E), // wheat
+  ];
+
+  /// The palette for [colorScheme]'s brightness.
   static List<Color> _getPaletteColors(ColorScheme colorScheme) {
-    return [
-      colorScheme.primary,
-      colorScheme.secondary,
-      colorScheme.tertiary,
-      colorScheme.error,
-      colorScheme.primaryContainer,
-      colorScheme.secondaryContainer,
-      colorScheme.tertiaryContainer,
-      colorScheme.errorContainer,
-      colorScheme.inversePrimary,
-      colorScheme.inverseSurface,
-      colorScheme.outline,
-      colorScheme.surfaceTint,
-    ];
+    return colorScheme.brightness == Brightness.dark ? _dark : _light;
   }
 
   /// Get the list of palette colors for display in the color picker.
