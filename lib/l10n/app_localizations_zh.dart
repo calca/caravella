@@ -559,9 +559,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get expense_updated_success => '支出已更新';
 
   @override
-  String get data_refreshed => '已更新';
-
-  @override
   String get refresh => '刷新';
 
   @override

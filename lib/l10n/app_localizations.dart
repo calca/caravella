@@ -1178,12 +1178,6 @@ abstract class AppLocalizations {
   /// **'Expense updated'**
   String get expense_updated_success;
 
-  /// No description provided for @data_refreshed.
-  ///
-  /// In en, this message translates to:
-  /// **'Updated'**
-  String get data_refreshed;
-
   /// No description provided for @refresh.
   ///
   /// In en, this message translates to:

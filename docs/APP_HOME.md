@@ -21,7 +21,7 @@ Covers `lib/home/**`, plus the `lib/main/` wiring that presents the home screen.
 - Listens to `ExpenseGroupNotifier` (`context.read<ExpenseGroupNotifier>().addListener(_onGroupUpdated)`): reads `updatedGroupIds`, triggers `setState`, then calls `clearUpdatedGroups()` and `consumeLastEvent()`.
 - `didPopNext()` (RouteAware) triggers a lighter `_softRefresh()` — no loading flicker — when returning from a pushed page.
 - `_performUpdateCheckIfNeeded()` runs once per session (1s after first frame) and calls `GmsIntegrations.instance.appUpdates?.checkAndShowUpdateIfNeeded(...)` (`play_store_updates` in Play builds; nothing in the F-Droid build) — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) and [caravella_gms](PACKAGE_CARAVELLA_GMS.md).
-- `build()` crossfades (`AnimatedSwitcher`) between a loading placeholder, `HomeWelcomeSection` (first-run/no-groups state), and `HomeCardsSection` wrapped in a pull-to-refresh `RefreshIndicator`.
+- `build()` crossfades (`AnimatedSwitcher`) between a loading placeholder, `HomeWelcomeSection` (first-run/no-groups state), and `HomeCardsSection` (no pull to refresh: Home reloads by itself through `ExpenseGroupNotifier`, including after a synchronization).
 
 ## `HomeCardsSection` and cards
 

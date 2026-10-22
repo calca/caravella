@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
   ExpenseGroup? _pinnedTrip;
   bool _dataLoaded = false;
   ExpenseGroupNotifier? _groupNotifier;
-  bool _refreshing = false;
   bool _updateCheckPerformed = false;
   // Start with null to indicate "unknown" state - prevents showing welcome page
   // before we've verified if groups exist. Only set to true/false after data load.
@@ -173,7 +172,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _archivedGroups = archivedGroups;
       _isFirstStart = shouldShowWelcome;
       _dataLoaded = true;
-      _refreshing = false;
     });
 
     // Update shortcuts after data is loaded
@@ -247,19 +245,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   void _refresh() => _softRefresh();
-
-  Future<void> _handleUserRefresh() async {
-    if (_refreshing) return;
-    setState(() => _refreshing = true);
-    await _loadLocaleAndTrip();
-    if (mounted) {
-      AppToast.show(
-        context,
-        gen.AppLocalizations.of(context).data_refreshed,
-        type: ToastType.info,
-      );
-    }
-  }
 
   Future<void> _handleTripAdded() async {
     final gloc = gen.AppLocalizations.of(context);
@@ -363,38 +348,32 @@ class _HomePageState extends State<HomePage> with RouteAware {
     // Show cards section - either with active groups or empty (when all archived)
     // Note: No SafeArea here - HomeCardsSection handles topSafeArea internally
     if (_activeGroups.isNotEmpty) {
-      return RefreshIndicator(
+      return Semantics(
         key: const ValueKey('cards_active'),
-        onRefresh: _handleUserRefresh,
-        child: Semantics(
-          label: gloc.accessibility_groups_list,
-          child: HomeCardsSection(
-            initialGroups: _activeGroups,
-            onTripAdded: _handleTripAdded,
-            onTripDeleted: _handleTripDeleted,
-            onTripUpdated: _handleTripUpdated,
-            pinnedTrip: _pinnedTrip,
-            allArchived: false,
-          ),
+        label: gloc.accessibility_groups_list,
+        child: HomeCardsSection(
+          initialGroups: _activeGroups,
+          onTripAdded: _handleTripAdded,
+          onTripDeleted: _handleTripDeleted,
+          onTripUpdated: _handleTripUpdated,
+          pinnedTrip: _pinnedTrip,
+          allArchived: false,
         ),
       );
     }
 
     // Note: No SafeArea here - HomeCardsSection handles topSafeArea internally
     if (_archivedGroups.isNotEmpty) {
-      return RefreshIndicator(
+      return Semantics(
         key: const ValueKey('cards_archived'),
-        onRefresh: _handleUserRefresh,
-        child: Semantics(
-          label: gloc.accessibility_groups_list,
-          child: HomeCardsSection(
-            initialGroups: <ExpenseGroup>[],
-            onTripAdded: _handleTripAdded,
-            onTripDeleted: _handleTripDeleted,
-            onTripUpdated: _handleTripUpdated,
-            pinnedTrip: _pinnedTrip,
-            allArchived: true,
-          ),
+        label: gloc.accessibility_groups_list,
+        child: HomeCardsSection(
+          initialGroups: <ExpenseGroup>[],
+          onTripAdded: _handleTripAdded,
+          onTripDeleted: _handleTripDeleted,
+          onTripUpdated: _handleTripUpdated,
+          pinnedTrip: _pinnedTrip,
+          allArchived: true,
         ),
       );
     }
