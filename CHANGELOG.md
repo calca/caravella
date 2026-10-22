@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the unused `android_nav_setting` dependency (it only sized the old carousel)
 
 ### Fixed
+- Home's getting-started step "Choose a photo or a color" opened the old "Other" page, which no longer has the background: it now opens the group's general settings with the background sheet ready. The background row there shows a smaller preview next to the arrow
 - Group settings: the period showed "10 days" in English in every language
 - Adding an expense from Home and going back without typing anything no longer asks to discard changes (the place filled in automatically counted as a change)
 - Voice input: "abbiamo speso 15 euro al ristorante", "ho speso 12 euro in cartoleria", "ho comprato a 12 euro un maglione" now give "Ristorante", "Cartoleria", "Maglione" — the "I spent / we bought" part and leading articles or prepositions no longer end up in the description (Italian, English, Spanish, Portuguese); "20 dollars" no longer leaves an "s" behind
