@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pull to refresh on Home: it only reloaded what Home already shows up to date (it updates by itself after every change and after a synchronization) and showed an "Updated" message, without syncing anything
 
 ### Fixed
+- Group templates: the template editor is in the app's style — the name in a big field in its own card (without the character counter), and a wide green "Save" button at the bottom (its text was black, on a white bar). Text fields inside cards (category or participant names, adding an item in a picker) no longer show a green underline while typing
 - Home's getting-started step "Choose a photo or a color" opened the old "Other" page, which no longer has the background: it now opens the group's general settings with the background sheet ready. The background row there shows a smaller preview next to the arrow
 - Group settings: the period showed "10 days" in English in every language
 - Adding an expense from Home and going back without typing anything no longer asks to discard changes (the place filled in automatically counted as a change)

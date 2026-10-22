@@ -134,7 +134,11 @@ class FormTheme {
       labelText: labelText,
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
+      // All states: the theme draws an underline when enabled or focused.
       border: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      disabledBorder: InputBorder.none,
       isDense: true,
       contentPadding: standardContentPadding,
     );

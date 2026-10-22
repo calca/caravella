@@ -1,14 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 
-/// A standardized bottom action bar with a primary action button.
-/// Used across the app for consistent save/create/add actions.
-///
-/// Features:
-/// - Material 3 styling with surface container
-/// - Border top with outline variant color
-/// - SafeArea padding
-/// - Full-width filled button (FilledButton)
-/// - Disabled state when action is invalid
+/// The primary action of a full page form (e.g. "Save"), pinned at the
+/// bottom: a wide stadium FilledButton straight on the page background, like
+/// the group creation wizard's "Continue". Disabled when [enabled] is false
+/// or [onPressed] is null.
 class BottomActionBar extends StatelessWidget {
   /// The callback to execute when the button is pressed
   final VoidCallback? onPressed;
@@ -28,39 +23,25 @@ class BottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final active = enabled && onPressed != null;
     return SafeArea(
       top: false,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          border: Border(
-            top: BorderSide(
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.3),
-              width: 1,
-            ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+        child: FilledButton(
+          onPressed: active ? onPressed : null,
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(52),
+            shape: const StadiumBorder(),
+            elevation: 0,
           ),
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: enabled ? onPressed : null,
-            style: FilledButton.styleFrom(
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              minimumSize: const Size(48, 48),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            child: Text(
-              label.toUpperCase(),
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-              ),
+          child: Text(
+            label,
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: active ? s.onPrimary : s.onSurfaceVariant,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
