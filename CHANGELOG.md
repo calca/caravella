@@ -9,9 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - What's New in Settings lists only the 2.x versions (the older notes were long and out of date)
+- Group page: swipe left or right over the page to move between Expenses, Balances and Statistics, like tabs (the selector follows)
 
 ### Fixed
-- Adding a category or a person from the picker sheets uses the same field as the expense description (white, rounded, with a teal border while typing) instead of a plain one inside a card, and its confirm button shows a white tick on teal (it was black)
+- Text fields are the same everywhere: adding or renaming a category or a person (pickers, group settings, templates), the people step of group creation and your name in Settings now use the expense description's field (white, rounded, teal border while typing), with "✕" then a white tick on teal to confirm (the tick and the "+" were black on teal, and your name showed a character counter). The search field in long pickers is the same pill as the currency search
 
 ## [2.2.0] - 2026-10-22
 

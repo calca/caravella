@@ -348,25 +348,11 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       child: TextField(
         onChanged: (v) => setState(() => _query = v.trim().toLowerCase()),
         textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
+        // The same search pill as the currency list.
+        decoration: FormTheme.getSearchPillDecoration(
+          backgroundColor: s.raisedSurface,
           hintText: MaterialLocalizations.of(context).searchFieldLabel,
           prefixIcon: const Icon(Icons.search_rounded),
-          filled: true,
-          fillColor: s.raisedSurface,
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(28),
-            borderSide: BorderSide(color: s.outlineVariant),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(28),
-            borderSide: BorderSide(color: s.outlineVariant),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(28),
-            borderSide: BorderSide(color: s.primary, width: 2),
-          ),
         ),
       ),
     );
