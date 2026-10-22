@@ -872,7 +872,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get color_suggested_subtitle =>
-      'Pick one of the theme compatible colors';
+      'Soft tints that adapt to the light and dark theme';
 
   @override
   String get color_random_subtitle => 'Let the app pick a color for you';

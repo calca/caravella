@@ -874,7 +874,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get color_suggested_subtitle =>
-      'Escolha uma das cores compatíveis com o tema';
+      'Tons suaves que se adaptam ao tema claro e escuro';
 
   @override
   String get color_random_subtitle => 'Deixe o app escolher uma cor';
