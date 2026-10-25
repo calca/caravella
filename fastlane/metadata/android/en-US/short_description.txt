@@ -1,1 +1,1 @@
-Modern group expense management app for trips, shared costs, and participants
+Split group expenses and see who owes whom — private, offline, open source

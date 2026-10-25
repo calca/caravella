@@ -23,7 +23,7 @@ Package name: `io.caravella.egm`. F-Droid signs the APK with its own key — the
 ## Metadata locations
 
 - `metadata.yml` (repo root) — F-Droid app metadata: categories, license, links, anti-features, `AutoUpdateMode: Version` / `UpdateCheckMode: Tags` (F-Droid picks up new versions from GitHub release tags in `vX.Y.Z` format).
-- `fastlane/metadata/android/<locale>/` — per-locale store listing (`title.txt`, `short_description.txt`, `full_description.txt`, `changelogs/<versionCode>.txt`, `images/`). As of the last documentation pass, **not every locale directory has a full listing** — some only have `changelogs/` without `title`/`description`/`images`. Check `fastlane/metadata/android/` directly for the current locale coverage rather than trusting a list here; add the missing files for any locale you want fully represented on F-Droid before a submission review.
+- `fastlane/metadata/android/<locale>/` — per-locale store listing (`title.txt`, `short_description.txt`, `full_description.txt`, `changelogs/<versionCode>.txt`, `images/`). Every locale (en-US, it-IT, es-ES, pt-BR, zh-CN) has a full listing: title, short and full description (the Play listing minus what the FOSS build lacks — Google Drive, Bluetooth, receipt reading, Unsplash) and the 8 framed screenshots from `store/screenshots/<lang>/`. Refresh them together with the Play listing.
 
 ## Keeping `metadata.yml` in sync
 
@@ -43,6 +43,7 @@ F-Droid requires no non-free dependencies and no non-free network services.
 - **Prebuilt native libraries**: the test-only dev dependency `sqflite_common_ffi` pulls in `sqlite3`, whose build hook bundles a downloaded `libsqlite3.so` into every APK (it isn't used at runtime — the app uses `sqflite`). The recipe deletes that dev dependency from `pubspec.yaml` before `pub get`. If another package with a native-assets build hook is added, check the APK's `lib/` for prebuilt `.so` files the same way.
 - **OpenStreetMap** tiles and Nominatim place search are free network services and stay enabled.
 - **`bonsoir`** (LAN/mDNS peer-to-peer sync, `packages/caravella_core/lib/sync/channels/lan_sync_channel.dart`) has no Google Play Services dependency and isn't gated by any flag — it runs whenever a group has sync enabled, on every build including F-Droid's.
+- **v2.2.1 build entry**: `metadata.yml` has a second `Builds:` entry for the `v2.2.1` tag with the same recipe as v2.0.1 (kept identical until an fdroiddata CI run shows which workarounds below can go).
 - **Recipe workarounds for v2.0.1**: that tag still uses Android Gradle Plugin 8.11, so the recipe installs `platforms;android-37.0` and `build-tools;35.0.0` up front (AGP 8.11 loses the platform after downloading build-tools mid-build), turns off the release lint check (false "must extend Activity" errors under JDK 21) and removes the release signing config. `main` moved to AGP 9 with signing only when `android/key.properties` exists, so from the next tag the lint and signing `sed` become no-ops and can be dropped from the fdroiddata recipe; re-check whether the up-front `sdkmanager` line is still needed then.
 - The Flutter embedding itself references (but doesn't bundle) Play Core split-install classes for deferred components; F-Droid builds Flutter apps with that as a known case.
 

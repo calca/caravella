@@ -22,41 +22,39 @@ Name: Caravella
 PackageName: io.caravella.egm
 
 # Summary (80 chars max)
-Summary: Modern group expense management app
+Summary: Split group expenses and see who owes whom
 
 # Full description
 Description: |-
-  Caravella is a modern, multi-platform Flutter application designed to simplify 
-  expense management for groups, trips, and events. Built with Material 3, it offers 
-  an intuitive and clean user experience for tracking shared costs, managing 
-  participants, and settling debts.
+  Caravella is the simple way to split expenses with friends, family and roommates. Create a group for a trip, a shared flat or an event, add what everyone spends, and Caravella tells you who owes whom — no spreadsheets, no arguments.
 
-  Whether you're on a group trip, sharing an apartment with roommates, or organizing 
-  an event, Caravella helps you keep everything organized and transparent. All data 
-  is stored locally on your device, ensuring privacy and offline availability.
+  <b>A clear, calm design</b>
+  • Home shows your group with its total, today's spending and your latest expenses
+  • Create a group in a few short steps and add friends right away
+  • Each group has its page with expenses, balances and statistics — swipe between them
+  • Soft group colors or your own photo, light and dark theme
 
-  <b>Key Features:</b>
-  * Group Management - Create and manage distinct groups for trips, events, or shared living
-  * Expense Tracking - Add expenses with categories and participant assignments
-  * Material 3 UI - Beautiful modern interface with light/dark mode support
-  * Dashboard - Quick overview of current group, total expenses, and quick actions
-  * Detailed Summaries - Clear breakdown of who owes what to whom
-  * Data Persistence - Local storage ensures offline availability and privacy
-  * Backup & Restore - Export and import all app data for backups or device migration
-  * CSV Export - Export expense lists for external analysis
-  * Multi-Language Support - Available in English, Italian, and Spanish
-  * Cross-Platform - Designed for Android, iOS, Web, and Desktop
+  <b>Add expenses in seconds</b>
+  • Pick who paid and the category with a single tap
+  • Say it out loud: amount and description are filled in for you
+  • Attach a photo of the receipt, notes and the place where you spent
 
-  <b>Privacy & Security:</b>
-  * All data stored locally on your device
-  * No user accounts or online services required
-  * Optional permissions for enhanced features (camera, location)
-  * Full data export and deletion control
-  * GDPR and privacy compliant
+  <b>Know who owes whom</b>
+  • Automatic balances and settle-up suggestions
+  • Day-by-day, weekly and monthly charts
+  • Breakdown by participant and category
+  • Fast search with filters
 
-  The app requires no internet connection for core functionality and gives you 
-  complete control over your financial data.
+  <b>Sync with friends (optional)</b>
+  • Share a group with devices on the same Wi-Fi, paired with a QR code
+  • End-to-end encrypted, never through a server
 
+  <b>Your data, your rules</b>
+  • Works offline, no account required
+  • Your data stays on your device
+  • Backup, restore and CSV export at any time
+  • Available in English, Italian, Spanish, Portuguese and Chinese
+  • Open source (MIT license)
 # Anti-features (none for this app)
 AntiFeatures: []
 
@@ -111,9 +109,44 @@ Builds:
       - $$flutter$$/bin/flutter build apk --release --flavor prod --dart-define=FLAVOR=prod
     ndk: r28c
 
+
+  - versionName: 2.2.1
+    versionCode: 127
+    commit: cedc4d8f1105a28ed9cb84d4ec52d6314b3c81c7
+    output: build/app/outputs/flutter-apk/app-prod-release.apk
+    srclibs:
+      - flutter@stable
+    rm:
+      - ios
+      - macos
+      - web
+      - windows
+      - packages/caravella_gms
+      - packages/google_drive_sync
+      - packages/play_store_updates
+    prebuild:
+      - sdkmanager 'platforms;android-37.0' 'build-tools;35.0.0'
+      - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml
+        | head -1)
+      - '[[ $flutterVersion ]]'
+      - git -C $$flutter$$ checkout -f $flutterVersion
+      - sed -i -e '/sqflite_common_ffi/d' pubspec.yaml
+      - ./build_variant.sh foss --no-pub-get
+      - sed -i -e 's/^android {$/android { lint { checkReleaseBuilds = false }/' -e
+        '/signingConfig = signingConfigs.getByName("release")/d' android/app/build.gradle.kts
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - $$flutter$$/bin/flutter config --no-analytics
+      - $$flutter$$/bin/flutter pub get
+    scandelete:
+      - .pub-cache
+    build:
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - $$flutter$$/bin/flutter build apk --release --flavor prod --dart-define=FLAVOR=prod
+    ndk: r28c
+
 # Auto-update configuration
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v\d+\.\d+\.\d+$
 UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
-CurrentVersion: 2.0.1
-CurrentVersionCode: 123
+CurrentVersion: 2.2.1
+CurrentVersionCode: 127
