@@ -1,0 +1,29 @@
+Caravella é o jeito mais simples de dividir despesas com amigos, família e colegas de casa. Crie um grupo para uma viagem, uma casa compartilhada ou um evento, adicione o que cada um gasta e o Caravella mostra quem deve a quem, sem planilhas e sem discussões.
+
+<b>Um design claro e tranquilo</b>
+• O Início mostra seu grupo com o total, o gasto de hoje e as últimas despesas
+• Crie um grupo em poucos passos e adicione os amigos na hora
+• Cada grupo tem sua página com despesas, saldos e estatísticas: deslize para alternar
+• Cores suaves ou sua própria foto, tema claro e escuro
+
+<b>Adicione despesas em segundos</b>
+• Escolha quem pagou e a categoria com um toque
+• Fale em voz alta: o valor e a descrição são preenchidos para você
+• Anexe a foto do recibo, notas e o lugar da despesa
+
+<b>Saiba quem deve a quem</b>
+• Saldos e acertos calculados automaticamente
+• Gráficos por dia, semana e mês
+• Detalhamento por participante e categoria
+• Busca rápida com filtros
+
+<b>Sincronize com amigos (opcional)</b>
+• Compartilhe um grupo com dispositivos na mesma rede Wi-Fi, pareados com um QR code
+• Criptografia de ponta a ponta, sem passar por um servidor
+
+<b>Seus dados, suas regras</b>
+• Funciona offline, sem conta
+• Seus dados ficam no seu dispositivo
+• Backup, restauração e exportação CSV quando quiser
+• Em português, inglês, italiano, espanhol e chinês
+• Código aberto (licença MIT)
