@@ -1237,4 +1237,9 @@
   ,"sync_badge_ok": "过去 24 小时内已同步"
   ,"sync_badge_failed": "上次同步失败"
   ,"sync_badge_stale": "过去 24 小时内未同步"
+  ,"sync_group_received": "{from} 与你共享了“{title}”"
+  ,"sync_group_received_anon": "有人与你共享了“{title}”"
+  ,"group_welcome_title": "你已加入该群组"
+  ,"group_welcome_body": "由 {from} 共享：{people}，{expenses}，目前共 {total}。你在这里添加的支出也会同步到其他设备。"
+  ,"group_welcome_body_anon": "{people}，{expenses}，目前共 {total}。你在这里添加的支出也会同步到其他设备。"
 }

@@ -25,6 +25,13 @@ class SyncResult {
   /// at once, so this lets history be filtered down to one group.
   final Set<String> groupIds;
 
+  /// Groups this exchange created here, i.e. shared with this device for
+  /// the first time (a subset of [groupIds]).
+  final Set<String> newGroupIds;
+
+  /// The peer's device name, when the exchange knows it.
+  final String? peerName;
+
   const SyncResult({
     required this.applied,
     required this.skipped,
@@ -33,6 +40,8 @@ class SyncResult {
     required this.peerId,
     required this.syncedAt,
     this.groupIds = const {},
+    this.newGroupIds = const {},
+    this.peerName,
   });
 
   /// An empty result with zeroed counters and placeholder metadata.
@@ -56,6 +65,8 @@ class SyncResult {
     peerId: a.peerId,
     syncedAt: a.syncedAt.isAfter(b.syncedAt) ? a.syncedAt : b.syncedAt,
     groupIds: {...a.groupIds, ...b.groupIds},
+    newGroupIds: {...a.newGroupIds, ...b.newGroupIds},
+    peerName: a.peerName ?? b.peerName,
   );
 
   @override

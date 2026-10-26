@@ -2292,4 +2292,32 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_badge_stale => '过去 24 小时内未同步';
+
+  @override
+  String sync_group_received(String from, String title) {
+    return '$from 与你共享了“$title”';
+  }
+
+  @override
+  String sync_group_received_anon(String title) {
+    return '有人与你共享了“$title”';
+  }
+
+  @override
+  String get group_welcome_title => '你已加入该群组';
+
+  @override
+  String group_welcome_body(
+    String from,
+    String people,
+    String expenses,
+    String total,
+  ) {
+    return '由 $from 共享：$people，$expenses，目前共 $total。你在这里添加的支出也会同步到其他设备。';
+  }
+
+  @override
+  String group_welcome_body_anon(String people, String expenses, String total) {
+    return '$people，$expenses，目前共 $total。你在这里添加的支出也会同步到其他设备。';
+  }
 }

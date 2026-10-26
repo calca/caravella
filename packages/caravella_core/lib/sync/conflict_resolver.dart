@@ -49,6 +49,7 @@ class ConflictResolver {
     int skipped = 0;
     int errors = 0;
     final touchedGroupIds = <String>{};
+    final newGroupIds = <String>{};
 
     LoggerService.info(
       'Applying delta from peer=$peerId ($peerName): '
@@ -128,6 +129,7 @@ class ConflictResolver {
           );
 
           applied++;
+          if (localRows.isEmpty) newGroupIds.add(groupId);
         } catch (e, st) {
           LoggerService.error(
             'Error applying remote group',
@@ -232,6 +234,8 @@ class ConflictResolver {
         isUtc: true,
       ),
       groupIds: touchedGroupIds,
+      newGroupIds: newGroupIds,
+      peerName: parsed['device_name'] as String?,
     );
 
     LoggerService.info('Delta applied: $result', name: _tag);

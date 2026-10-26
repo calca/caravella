@@ -2347,4 +2347,32 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_badge_stale => 'non sincronizzato nelle ultime 24 ore';
+
+  @override
+  String sync_group_received(String from, String title) {
+    return '$from ti ha condiviso “$title”';
+  }
+
+  @override
+  String sync_group_received_anon(String title) {
+    return 'Ti è stato condiviso “$title”';
+  }
+
+  @override
+  String get group_welcome_title => 'Ti sei unito al gruppo';
+
+  @override
+  String group_welcome_body(
+    String from,
+    String people,
+    String expenses,
+    String total,
+  ) {
+    return 'Condiviso da $from: $people, $expenses, $total finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi.';
+  }
+
+  @override
+  String group_welcome_body_anon(String people, String expenses, String total) {
+    return '$people, $expenses, $total finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi.';
+  }
 }

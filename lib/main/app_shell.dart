@@ -1,7 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:provider/provider.dart';
+
+import '../sync/sync_activity.dart';
 
 /// Top-level destinations under the floating navigation.
 enum AppTab { home, groups }
@@ -15,6 +19,9 @@ enum AppTab { home, groups }
 /// Groups' is "new group". A tab can also hide the bar (Home's welcome
 /// screen). Pages pushed on top of the shell (group detail, settings…) cover
 /// it entirely, so the bar only appears on the two tabs.
+///
+/// It also announces groups shared with this device by another one
+/// ([SyncActivity.takeReceived]) with a toast.
 class AppShell extends StatefulWidget {
   final Widget home;
   final Widget groups;
@@ -29,6 +36,41 @@ class _AppShellState extends State<AppShell> {
   final ValueNotifier<AppTab> _tab = ValueNotifier(AppTab.home);
   final Map<AppTab, FloatingNavAction?> _actions = {};
   bool _navVisible = true;
+  SyncActivity? _syncActivity;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    SyncActivity? activity;
+    try {
+      activity = context.read<SyncActivity>();
+    } on ProviderNotFoundException {
+      activity = null; // widget tests without the app's providers
+    }
+    if (identical(activity, _syncActivity)) return;
+    _syncActivity?.removeListener(_announceReceived);
+    _syncActivity = activity?..addListener(_announceReceived);
+  }
+
+  /// "Pixel 9 shared “Norway Road Trip” with you", once per received group.
+  Future<void> _announceReceived() async {
+    final received = _syncActivity?.takeReceived() ?? const [];
+    for (final r in received) {
+      final group = await ExpenseGroupStorageV2.getTripById(r.groupId);
+      if (!mounted || group == null) continue;
+      final gloc = gen.AppLocalizations.of(context);
+      final from = r.from;
+      AppToast.show(
+        context,
+        from == null || from.isEmpty
+            ? gloc.sync_group_received_anon(group.title)
+            : gloc.sync_group_received(from, group.title),
+        type: ToastType.success,
+        icon: Icons.group_add_outlined,
+        duration: const Duration(seconds: 4),
+      );
+    }
+  }
 
   void _setAction(AppTab tab, FloatingNavAction? action) {
     if (_actions[tab] == action) return;
@@ -48,6 +90,7 @@ class _AppShellState extends State<AppShell> {
 
   @override
   void dispose() {
+    _syncActivity?.removeListener(_announceReceived);
     _tab.dispose();
     super.dispose();
   }

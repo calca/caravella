@@ -4416,6 +4416,41 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'not synced in the last 24 hours'**
   String get sync_badge_stale;
+
+  /// Toast when a group arrives from another device for the first time; from is that device's name
+  ///
+  /// In en, this message translates to:
+  /// **'{from} shared “{title}” with you'**
+  String sync_group_received(String from, String title);
+
+  /// Same toast when the sending device's name is unknown
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” was shared with you'**
+  String sync_group_received_anon(String title);
+
+  /// Title of the one-time card on a group received from another device
+  ///
+  /// In en, this message translates to:
+  /// **'You joined this group'**
+  String get group_welcome_title;
+
+  /// Welcome card text; people and expenses are already pluralized ('4 participants', '12 expenses'), total is a formatted amount
+  ///
+  /// In en, this message translates to:
+  /// **'Shared by {from}: {people}, {expenses}, {total} so far. Expenses you add here reach the other devices too.'**
+  String group_welcome_body(
+    String from,
+    String people,
+    String expenses,
+    String total,
+  );
+
+  /// Welcome card text when the sending device's name is unknown
+  ///
+  /// In en, this message translates to:
+  /// **'{people}, {expenses}, {total} so far. Expenses you add here reach the other devices too.'**
+  String group_welcome_body_anon(String people, String expenses, String total);
 }
 
 class _AppLocalizationsDelegate

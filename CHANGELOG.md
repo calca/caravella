@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Groups shared with you from another device: a message says who shared which group, and the first time you open it a card explains where you are — who shared it, how many people and expenses, the total so far — with “Add expense”
 - Shared groups: a dot on the “Shared” badge (Home card and group page) shows how sync is doing — green when synced in the last 24 hours, ochre when the last sync failed (the same color as Home’s sync button), hollow grey when it hasn’t synced for a day or yet. Home’s sync button speaks the same language: plain sync arrows, with an ochre dot after a failure
 - Search now finds expenses too: typing in the groups search lists, under the groups, the expenses of every group (active and archived) whose name, note or place matches, newest first, with their group and date
 - Groups page: swipe left or right to move between Active and Archived, like the sections of a group. With no archived groups it shows a card explaining how to archive one (long press → Archive); with no active groups, a card with a “Create a group” button — the same look as an empty expense list
