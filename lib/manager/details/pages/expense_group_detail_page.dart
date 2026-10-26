@@ -15,9 +15,7 @@ import '../widgets/grouped_expense_list.dart';
 import '../widgets/empty_expense_state.dart';
 import '../widgets/group_balances_view.dart';
 import '../widgets/group_detail_header.dart';
-import '../widgets/group_map_card.dart';
 import '../widgets/group_statistics_view.dart';
-import 'expense_locations_map_page.dart';
 import '../../../services/notification_manager.dart';
 
 import 'group_settings_page.dart';
@@ -589,6 +587,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                           child: GroupDetailHeader(
                             group: trip,
                             foreground: bandForeground,
+                            onOpenSync: _showSyncPage,
                           ),
                         ),
                       ],
@@ -670,17 +669,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                             trip.pinned ? gloc.unpin : gloc.pin,
                             _handlePinToggle,
                           ),
-                        if (groupPlacesCount(trip) > 0)
-                          _MenuItem(
-                            Icons.map_outlined,
-                            gloc.quick_action_map,
-                            () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    ExpenseLocationsMapPage(group: trip),
-                              ),
-                            ),
-                          ),
+                        // The map opens from its card in Statistics.
                         _MenuItem(
                           Icons.sync_rounded,
                           gloc.sync_title,

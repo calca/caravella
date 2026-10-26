@@ -95,10 +95,14 @@ class GroupDetailHeader extends StatelessWidget {
   final ExpenseGroup group;
   final Color foreground;
 
+  /// Opens the group's sync page from the "Shared" badge.
+  final VoidCallback? onOpenSync;
+
   const GroupDetailHeader({
     super.key,
     required this.group,
     required this.foreground,
+    this.onOpenSync,
   });
 
   @override
@@ -148,6 +152,7 @@ class GroupDetailHeader extends StatelessWidget {
                 group: group,
                 background: foreground.withValues(alpha: 0.1),
                 foreground: foreground,
+                onTap: onOpenSync,
               ),
             ],
           ],
