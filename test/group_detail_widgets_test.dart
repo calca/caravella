@@ -173,6 +173,57 @@ void main() {
     expect(mostExpensiveDay(_group([])), isNull);
   });
 
+  group('map card', () {
+    final placed = _expense(
+      'Lunch',
+      10,
+      day1,
+      _anna,
+      location: ExpenseLocation(latitude: 45, longitude: 9),
+    );
+
+    testWidgets('with places: opens the map', (tester) async {
+      await tester.pumpWidget(_wrap(GroupMapCard(group: _group([placed]))));
+      expect(find.text('1 place'), findsOneWidget);
+      expect(find.byIcon(Icons.chevron_right_rounded), findsOneWidget);
+    });
+
+    testWidgets('no places, location off: leads to the setting', (
+      tester,
+    ) async {
+      var opened = 0;
+      await tester.pumpWidget(
+        _wrap(
+          GroupMapCard(
+            group: _group([_expense('Lunch', 10, day1, _anna)]),
+            onEnableLocation: () => opened++,
+          ),
+        ),
+      );
+      expect(find.textContaining('Turn on automatic location'), findsOneWidget);
+      await tester.tap(find.byType(GroupMapCard));
+      expect(opened, 1);
+    });
+
+    testWidgets('no places, location on: a note, not tappable', (tester) async {
+      var opened = 0;
+      await tester.pumpWidget(
+        _wrap(
+          GroupMapCard(
+            group: _group([
+              _expense('Lunch', 10, day1, _anna),
+            ]).copyWith(autoLocationEnabled: true),
+            onEnableLocation: () => opened++,
+          ),
+        ),
+      );
+      expect(find.text('No expenses with a place yet'), findsOneWidget);
+      expect(find.byIcon(Icons.chevron_right_rounded), findsNothing);
+      await tester.tap(find.byType(GroupMapCard));
+      expect(opened, 0);
+    });
+  });
+
   test('most expensive month', () {
     final group = _group([
       _expense('Rent', 500, DateTime(2026, 9, 1), _anna),
@@ -197,9 +248,7 @@ void main() {
       total: 1354.80,
       expenseCount: 14,
     );
-    await tester.pumpWidget(
-      _wrap(SpendingPaceCard(pace: pace, currency: '€')),
-    );
+    await tester.pumpWidget(_wrap(SpendingPaceCard(pace: pace, currency: '€')));
     expect(find.text('SPENDING PACE'), findsOneWidget);
     expect(find.text('per day'), findsOneWidget);
     expect(find.textContaining('Average over 10 days'), findsOneWidget);
@@ -218,9 +267,7 @@ void main() {
       total: 1400,
       expenseCount: 3,
     );
-    await tester.pumpWidget(
-      _wrap(SpendingPaceCard(pace: pace, currency: '€')),
-    );
+    await tester.pumpWidget(_wrap(SpendingPaceCard(pace: pace, currency: '€')));
     expect(find.text('per month'), findsOneWidget);
     expect(find.textContaining('Average over 7 months'), findsOneWidget);
     expect(find.text('3 of 7 months with expenses'), findsOneWidget);

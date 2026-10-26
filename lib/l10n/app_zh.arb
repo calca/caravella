@@ -1231,4 +1231,6 @@
   ,"stats_active_months": "{total} 个月中有 {active} 个月有支出"
   ,"most_expensive_month": "花费最多的月份"
   ,"per_month": "/月"
+  ,"map_location_off": "开启自动定位，即可在地图上查看支出"
+  ,"map_no_places": "还没有带地点的支出"
 }

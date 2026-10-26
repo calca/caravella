@@ -2322,4 +2322,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get per_month => '/mês';
+
+  @override
+  String get map_location_off =>
+      'Ative a localização automática para ver as despesas no mapa';
+
+  @override
+  String get map_no_places => 'Ainda não há despesas com um local';
 }

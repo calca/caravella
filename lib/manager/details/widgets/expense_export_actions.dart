@@ -61,7 +61,11 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
           nav.pop();
         } catch (e) {
           if (!rootContext.mounted) return;
-          AppToast.show(rootContext, gloc.csv_save_error, type: ToastType.error);
+          AppToast.show(
+            rootContext,
+            gloc.csv_save_error,
+            type: ToastType.error,
+          );
         }
       },
       onShareCsv: () async {
@@ -133,7 +137,11 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
           nav.pop();
         } catch (e) {
           if (!rootContext.mounted) return;
-          AppToast.show(rootContext, gloc.ofx_save_error, type: ToastType.error);
+          AppToast.show(
+            rootContext,
+            gloc.ofx_save_error,
+            type: ToastType.error,
+          );
         }
       },
       onShareOfx: () async {

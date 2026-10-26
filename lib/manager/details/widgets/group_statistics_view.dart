@@ -15,7 +15,7 @@ import 'stat_card.dart';
 
 /// Statistics view of the group page: one spending chart over the whole
 /// group ([buildGroupSpendingSeries]), who paid how much,
-/// map, spending pace ([SpendingPaceCard]), highest expense and most
+/// map card ([GroupMapCard]), spending pace ([SpendingPaceCard]), highest expense and most
 /// expensive day (or month, for long groups),
 /// then the categories. The total, period
 /// and participant count are already in the page header, so they aren't
@@ -23,7 +23,15 @@ import 'stat_card.dart';
 class GroupStatisticsView extends StatelessWidget {
   final ExpenseGroup group;
 
-  const GroupStatisticsView({super.key, required this.group});
+  /// Opens the group setting for automatic location (from the map card,
+  /// when no expense has a place and the setting is off).
+  final VoidCallback? onEnableLocation;
+
+  const GroupStatisticsView({
+    super.key,
+    required this.group,
+    this.onEnableLocation,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +82,8 @@ class GroupStatisticsView extends StatelessWidget {
             ),
           title(gloc.participants),
           GroupPayersBubbles(group: group),
-          if (groupPlacesCount(group) > 0) ...[
-            const SizedBox(height: 12),
-            GroupMapCard(group: group),
-          ],
+          const SizedBox(height: 12),
+          GroupMapCard(group: group, onEnableLocation: onEnableLocation),
           if (SpendingPace.of(group) case final pace?) ...[
             const SizedBox(height: 12),
             SpendingPaceCard(pace: pace, currency: group.currency),

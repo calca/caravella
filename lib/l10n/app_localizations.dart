@@ -4380,6 +4380,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'/month'**
   String get per_month;
+
+  /// Statistics map card when no expense has a place and the group's automatic location is off; tapping opens the setting
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on automatic location to see expenses on the map'**
+  String get map_location_off;
+
+  /// Statistics map card when automatic location is on but no expense has a place yet (not tappable)
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses with a place yet'**
+  String get map_no_places;
 }
 
 class _AppLocalizationsDelegate
