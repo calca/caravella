@@ -4457,6 +4457,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{amount} per person'**
   String stats_per_person(String amount);
+
+  /// Balances: title of the card with each participant's equal share of the total
+  ///
+  /// In en, this message translates to:
+  /// **'Share per person'**
+  String get balances_share_per_person;
+
+  /// Balances: how the share is computed; total is a formatted amount, people is already pluralized ('4 participants')
+  ///
+  /// In en, this message translates to:
+  /// **'{total} ÷ {people}'**
+  String balances_share_basis(String total, String people);
 }
 
 class _AppLocalizationsDelegate

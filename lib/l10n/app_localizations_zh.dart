@@ -2325,4 +2325,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String stats_per_person(String amount) {
     return '人均 $amount';
   }
+
+  @override
+  String get balances_share_per_person => '人均分摊';
+
+  @override
+  String balances_share_basis(String total, String people) {
+    return '$total ÷ $people';
+  }
 }

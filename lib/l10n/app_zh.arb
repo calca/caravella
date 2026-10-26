@@ -1243,4 +1243,6 @@
   ,"group_welcome_body_anon": "{people}，{expenses}，目前共 {total}。你在这里添加的支出也会同步到其他设备。"
   ,"toast_open": "打开"
   ,"stats_per_person": "人均 {amount}"
+  ,"balances_share_per_person": "人均分摊"
+  ,"balances_share_basis": "{total} ÷ {people}"
 }
