@@ -288,6 +288,29 @@ void main() {
       expect(devices.last.deviceId, equals('device-a'));
     });
 
+    test('pairings in the same millisecond keep the most recent first',
+        () async {
+      // Two pairings close together can get the same paired_at; insertion
+      // order must decide then.
+      for (final id in ['device-a', 'device-b']) {
+        await syncDao.db.insert(
+          SqliteExpenseGroupRepository.tablePairedDevices,
+          {
+            'device_id': id,
+            'device_name': id,
+            'platform': 'android',
+            'paired_at': 1000,
+          },
+        );
+        await syncDao.grantGroupAccess(id, 'group-1');
+      }
+
+      final devices = await syncDao.getPairedDevices();
+      expect(devices.map((d) => d.deviceId), ['device-b', 'device-a']);
+      final forGroup = await syncDao.getPairedDevicesForGroup('group-1');
+      expect(forGroup.map((d) => d.deviceId), ['device-b', 'device-a']);
+    });
+
     test('addPairedDevice persists the peer public key', () async {
       await syncDao.addPairedDevice(
         deviceId: 'device-a',

@@ -307,7 +307,9 @@ class SyncDao {
   Future<List<PairedDevice>> getPairedDevices() async {
     final rows = await db.query(
       SqliteExpenseGroupRepository.tablePairedDevices,
-      orderBy: 'paired_at DESC',
+      // rowid breaks ties between pairings made in the same millisecond;
+      // a re-pair replaces the row, so it gets a newer rowid too.
+      orderBy: 'paired_at DESC, rowid DESC',
     );
     return rows.map(PairedDevice.fromRow).toList();
   }
@@ -399,7 +401,7 @@ class SyncDao {
       INNER JOIN ${SqliteExpenseGroupRepository.tablePairedDeviceGroups} pdg
         ON pdg.device_id = pd.device_id
       WHERE pdg.group_id = ?
-      ORDER BY pd.paired_at DESC
+      ORDER BY pd.paired_at DESC, pd.rowid DESC
       ''',
       [groupId],
     );
