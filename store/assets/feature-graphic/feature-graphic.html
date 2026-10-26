@@ -22,23 +22,26 @@
       radial-gradient(160px 50px at 120px 140px, rgba(255,255,255,.06) 98%, transparent) repeat-x;
     background-size: 240px 120px, 320px 120px;
   }
-  .copy { position: absolute; left: 64px; top: 0; bottom: 0; width: 520px;
+    /* Play zooms and crops the graphic (rounded card, ~10% off each side in
+     some layouts) and overlays badges bottom-right: keep text and phones in
+     the centre safe area. */
+  .copy { position: absolute; left: 120px; top: 0; bottom: 0; width: 470px;
           display: flex; flex-direction: column; justify-content: center; }
   .brand { display: flex; align-items: center; gap: 16px; }
-  .brand img { width: 72px; height: 72px; }
-  .brand h1 { font-size: 56px; font-weight: 700; letter-spacing: -1px; }
-  .tagline { margin-top: 22px; font-size: 30px; font-weight: 700; line-height: 1.22; }
+  .brand img { width: 64px; height: 64px; }
+  .brand h1 { font-size: 52px; font-weight: 700; letter-spacing: -1px; }
+  .tagline { margin-top: 20px; font-size: 28px; font-weight: 700; line-height: 1.22; }
   .tagline span { display: block; }
   .tagline .soft { font-weight: 400; color: #e0f2f1; }
   .chips { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
   .chip { font-size: 15px; font-weight: 700; padding: 8px 14px; border-radius: 999px;
           background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28); }
   .chip.accent { background: #ff4f58; border-color: #ff4f58; }
-  .phone { position: absolute; width: 214px; height: 440px; border-radius: 34px; padding: 9px;
+  .phone { position: absolute; width: 180px; height: 380px; border-radius: 30px; padding: 8px;
            background: #102a2e; box-shadow: 0 24px 48px rgba(0,0,0,.35); }
-  .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 26px; display: block; }
-  .p1 { left: 640px; top: 40px; transform: rotate(-6deg); }
-  .p2 { left: 790px; top: 78px; transform: rotate(5deg); }
+  .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 23px; display: block; }
+  .p1 { left: 610px; top: 62px; transform: rotate(-6deg); }
+  .p2 { left: 740px; top: 84px; transform: rotate(5deg); }
 </style>
 </head>
 <body>
@@ -47,8 +50,8 @@
     <p class="tagline"><span id="t1"></span><span class="soft" id="t2"></span></p>
     <div class="chips" id="chips"></div>
   </div>
-  <div class="phone p1"><img src="../../screenshot/08 - Group - Stats.png" alt=""></div>
-  <div class="phone p2"><img src="../../screenshot/02 - HomePage.png" alt=""></div>
+  <div class="phone p1"><img src="../../screenshots/raw/05-group.png" alt=""></div>
+  <div class="phone p2"><img src="../../screenshots/raw/01-home.png" alt=""></div>
 <script>
   const texts = {
     en: ["Split group expenses.", "Sync with friends.", ["New: Sync", "No account", "Works offline"]],
