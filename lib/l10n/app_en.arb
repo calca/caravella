@@ -997,4 +997,6 @@
   ,"place_search_action": "Search for a place"
   ,"background_photo": "Photo"
   ,"background_none": "None"
+  ,"export_options_empty": "No expenses to export yet"
+  ,"@export_options_empty": {"description": "Group settings: subtitle of the greyed-out Export row when the group has no expenses"}
 }

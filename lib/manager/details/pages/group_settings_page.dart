@@ -121,8 +121,11 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
               SettingsTile(
                 icon: Icons.ios_share_outlined,
                 title: gloc.export_options,
-                subtitle: gloc.export_options_desc,
-                onTap: hasExpenses ? () => _openExportOptions(context) : null,
+                subtitle: hasExpenses
+                    ? gloc.export_options_desc
+                    : gloc.export_options_empty,
+                enabled: hasExpenses,
+                onTap: () => _openExportOptions(context),
               ),
             ],
           ),

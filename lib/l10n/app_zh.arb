@@ -1226,4 +1226,5 @@
   ,"new_expense": "新建支出"
   ,"confirm": "确认"
   ,"group": "群组"
+  ,"export_options_empty": "还没有可导出的支出"
 }

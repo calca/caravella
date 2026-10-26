@@ -921,4 +921,5 @@
   ,"new_expense": "Nuevo gasto"
   ,"confirm": "Confirmar"
   ,"group": "Grupo"
+  ,"export_options_empty": "Aún no hay gastos para exportar"
 }

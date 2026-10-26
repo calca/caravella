@@ -2228,4 +2228,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get background_none => '无';
+
+  @override
+  String get export_options_empty => '还没有可导出的支出';
 }

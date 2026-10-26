@@ -2271,4 +2271,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get background_none => 'None';
+
+  @override
+  String get export_options_empty => 'No expenses to export yet';
 }

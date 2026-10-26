@@ -893,4 +893,5 @@
   ,"expenses_map": "Mapa das despesas"
   ,"no_locations_available": "Nenhum lugar"
   ,"no_locations_subtitle": "Adicione um lugar às despesas para vê-las no mapa"
+  ,"export_options_empty": "Ainda não há despesas para exportar"
 }
