@@ -43,7 +43,8 @@ F-Droid requires no non-free dependencies and no non-free network services.
 - **Prebuilt native libraries**: the test-only dev dependency `sqflite_common_ffi` pulls in `sqlite3`, whose build hook bundles a downloaded `libsqlite3.so` into every APK (it isn't used at runtime — the app uses `sqflite`). The recipe deletes that dev dependency from `pubspec.yaml` before `pub get`. If another package with a native-assets build hook is added, check the APK's `lib/` for prebuilt `.so` files the same way.
 - **OpenStreetMap** tiles and Nominatim place search are free network services and stay enabled.
 - **`bonsoir`** (LAN/mDNS peer-to-peer sync, `packages/caravella_core/lib/sync/channels/lan_sync_channel.dart`) has no Google Play Services dependency and isn't gated by any flag — it runs whenever a group has sync enabled, on every build including F-Droid's.
-- **v2.2.1 build entry**: `metadata.yml` has a second `Builds:` entry for the `v2.2.1` tag with the same recipe as v2.0.1 (kept identical until an fdroiddata CI run shows which workarounds below can go).
+- **Builds per ABI**: following fdroiddata's [Flutter template](https://gitlab.com/fdroid/fdroiddata/-/blob/master/templates/build-flutter.yml), each release has three `Builds:` entries built with `--split-per-abi` (`android-arm`, `android-arm64`, `android-x64`). Flutter sets each split APK's versionCode to 1000/2000/4000 + the pubspec build number (2.2.1+127 → 1127, 2127, 4127), which is what `VercodeOperation` and `CurrentVersionCode` (the x86_64 code) encode. Only the latest release is listed.
+- **No `--enforce-lockfile`**: the committed `pubspec.lock` describes the Play build. The FOSS variant removes the Play-only packages and `sqflite_common_ffi`, so pub rewrites the lockfile; the changes are removals plus the `caravella_gms` override, and every remaining package keeps its locked version. Committing a FOSS lockfile upstream would allow `--enforce-lockfile` if a reviewer asks for it.
 - **Recipe workarounds for v2.0.1**: that tag still uses Android Gradle Plugin 8.11, so the recipe installs `platforms;android-37.0` and `build-tools;35.0.0` up front (AGP 8.11 loses the platform after downloading build-tools mid-build), turns off the release lint check (false "must extend Activity" errors under JDK 21) and removes the release signing config. `main` moved to AGP 9 with signing only when `android/key.properties` exists, so from the next tag the lint and signing `sed` become no-ops and can be dropped from the fdroiddata recipe; re-check whether the up-front `sdkmanager` line is still needed then.
 - The Flutter embedding itself references (but doesn't bundle) Play Core split-install classes for deferred components; F-Droid builds Flutter apps with that as a known case.
 
@@ -55,6 +56,8 @@ Camera and location are declared `android:required="false"` in `AndroidManifest.
 
 ## Reproducible builds
 
+F-Droid signs the APK with its own key; reproducible builds (F-Droid shipping an APK signed by us) are not enabled, and can't be switched on later without breaking updates for existing installs. They couldn't match anyway: the F-Droid APK is the FOSS variant, the Play/GitHub one isn't.
+
 - `pubspec.lock` is committed — dependency versions are pinned.
 - No build timestamps are embedded; version comes from `pubspec.yaml` only.
 - Confirm the Flutter version F-Droid's build server uses matches (or is compatible with) the version pinned in CI — see [CI Pipelines](CI_PIPELINES.md) for CI's current pin, and re-check this at submission time since both drift independently.
@@ -64,7 +67,7 @@ Camera and location are declared `android:required="false"` in `AndroidManifest.
 - F-Droid docs: https://f-droid.org/docs/
 - Metadata reference: https://f-droid.org/docs/Build_Metadata_Reference/
 - Inclusion policy: https://f-droid.org/docs/Inclusion_Policy/
-- Request for Packaging (first submission): https://gitlab.com/fdroid/rfp/-/issues — Caravella's is [rfp#3406](https://gitlab.com/fdroid/rfp/-/work_items/3406). RFPs are picked up rarely; the faster route is opening a merge request on [fdroiddata](https://gitlab.com/fdroid/fdroiddata) with `metadata/io.caravella.egm.yml` (based on this repo's `metadata.yml`), whose CI builds the app and gets a reviewer.
+- Request for Packaging (first submission): https://gitlab.com/fdroid/rfp/-/issues — Caravella's is [rfp#3406](https://gitlab.com/fdroid/rfp/-/work_items/3406). RFPs are picked up rarely; the faster route is opening a merge request on [fdroiddata](https://gitlab.com/fdroid/fdroiddata) with `metadata/io.caravella.egm.yml` (based on this repo's `metadata.yml`), whose CI builds the app and gets a reviewer. Caravella's is [fdroiddata!52814](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/52814); while it carries the `waiting-on-response` label the reviewer is waiting on us, so answer there promptly.
 
 ## See also
 

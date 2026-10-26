@@ -65,20 +65,26 @@ AntiFeatures: []
 # packages/caravella_gms_foss, so no proprietary library is compiled in, and
 # the packages that only the Play build uses are deleted before the scan.
 # The test-only dev dependency sqflite_common_ffi is dropped too: its sqlite3
-# build hook would bundle a prebuilt libsqlite3.so. Flutter is pinned to the
-# version CI uses. The compileSdk platform and the build-tools AGP 8.11
-# defaults to are installed up front: if AGP downloads build-tools itself
-# mid-build, it reloads the SDK and no longer finds 'android-37'. The recipe
-# also turns off the release lint check (with JDK 21 it reports a false
-# 'MainActivity must extend Activity') and the release signing config, since
-# F-Droid builds unsigned and signs the APK itself. Only tags from v2.0.1 on contain the FOSS variant — older
-# tags can't be built without non-free dependencies. The copy submitted to
-# fdroiddata (metadata/io.caravella.egm.yml) has the same Builds entry.
+# build hook would bundle a prebuilt libsqlite3.so. Because the FOSS variant
+# drops packages, pubspec.lock is rewritten (removals only), so `pub get`
+# runs without --enforce-lockfile. Flutter is pinned to the version CI uses.
+# Following fdroiddata's Flutter template, each release has one build per ABI
+# (--split-per-abi); Flutter numbers them 1000/2000/4000 + versionCode for
+# armeabi-v7a/arm64-v8a/x86_64, hence VercodeOperation. The compileSdk
+# platform and the build-tools AGP 8.11 defaults to are installed up front: if
+# AGP downloads build-tools itself mid-build, it reloads the SDK and no longer
+# finds 'android-37'. The recipe also turns off the release lint check (with
+# JDK 21 it reports a false 'MainActivity must extend Activity') and the
+# release signing config, since F-Droid builds unsigned and signs the APK
+# itself (reproducible builds are off for good: the FOSS APK is a different
+# variant from the Play/GitHub one). Only tags from v2.0.1 on contain the FOSS
+# variant. The copy submitted to fdroiddata (metadata/io.caravella.egm.yml,
+# merge request !52814) has the same Builds entries.
 Builds:
-  - versionName: 2.0.1
-    versionCode: 123
-    commit: 412a722047db68446d791713963bb18ec9e9fd1f
-    output: build/app/outputs/flutter-apk/app-prod-release.apk
+  - versionName: 2.2.1
+    versionCode: 1127
+    commit: cedc4d8f1105a28ed9cb84d4ec52d6314b3c81c7
+    output: build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk
     srclibs:
       - flutter@stable
     rm:
@@ -107,13 +113,13 @@ Builds:
     build:
       - export PUB_CACHE=$(pwd)/.pub-cache
       - $$flutter$$/bin/flutter build apk --release --flavor prod --dart-define=FLAVOR=prod
+        --split-per-abi --target-platform=android-arm
     ndk: r28c
 
-
   - versionName: 2.2.1
-    versionCode: 127
+    versionCode: 2127
     commit: cedc4d8f1105a28ed9cb84d4ec52d6314b3c81c7
-    output: build/app/outputs/flutter-apk/app-prod-release.apk
+    output: build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk
     srclibs:
       - flutter@stable
     rm:
@@ -142,11 +148,51 @@ Builds:
     build:
       - export PUB_CACHE=$(pwd)/.pub-cache
       - $$flutter$$/bin/flutter build apk --release --flavor prod --dart-define=FLAVOR=prod
+        --split-per-abi --target-platform=android-arm64
+    ndk: r28c
+
+  - versionName: 2.2.1
+    versionCode: 4127
+    commit: cedc4d8f1105a28ed9cb84d4ec52d6314b3c81c7
+    output: build/app/outputs/flutter-apk/app-x86_64-prod-release.apk
+    srclibs:
+      - flutter@stable
+    rm:
+      - ios
+      - macos
+      - web
+      - windows
+      - packages/caravella_gms
+      - packages/google_drive_sync
+      - packages/play_store_updates
+    prebuild:
+      - sdkmanager 'platforms;android-37.0' 'build-tools;35.0.0'
+      - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml
+        | head -1)
+      - '[[ $flutterVersion ]]'
+      - git -C $$flutter$$ checkout -f $flutterVersion
+      - sed -i -e '/sqflite_common_ffi/d' pubspec.yaml
+      - ./build_variant.sh foss --no-pub-get
+      - sed -i -e 's/^android {$/android { lint { checkReleaseBuilds = false }/' -e
+        '/signingConfig = signingConfigs.getByName("release")/d' android/app/build.gradle.kts
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - $$flutter$$/bin/flutter config --no-analytics
+      - $$flutter$$/bin/flutter pub get
+    scandelete:
+      - .pub-cache
+    build:
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - $$flutter$$/bin/flutter build apk --release --flavor prod --dart-define=FLAVOR=prod
+        --split-per-abi --target-platform=android-x64
     ndk: r28c
 
 # Auto-update configuration
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v\d+\.\d+\.\d+$
+VercodeOperation:
+  - 1000 + %c
+  - 2000 + %c
+  - 4000 + %c
 UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
 CurrentVersion: 2.2.1
-CurrentVersionCode: 127
+CurrentVersionCode: 4127
