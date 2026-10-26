@@ -15,9 +15,7 @@ import '../widgets/grouped_expense_list.dart';
 import '../widgets/empty_expense_state.dart';
 import '../widgets/group_balances_view.dart';
 import '../widgets/group_detail_header.dart';
-import '../widgets/group_map_card.dart';
 import '../widgets/group_statistics_view.dart';
-import 'expense_locations_map_page.dart';
 import '../../../services/notification_manager.dart';
 
 import 'group_settings_page.dart';
@@ -589,6 +587,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                           child: GroupDetailHeader(
                             group: trip,
                             foreground: bandForeground,
+                            onOpenSync: _showSyncPage,
                           ),
                         ),
                       ],
@@ -670,17 +669,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                             trip.pinned ? gloc.unpin : gloc.pin,
                             _handlePinToggle,
                           ),
-                        if (groupPlacesCount(trip) > 0)
-                          _MenuItem(
-                            Icons.map_outlined,
-                            gloc.quick_action_map,
-                            () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    ExpenseLocationsMapPage(group: trip),
-                              ),
-                            ),
-                          ),
+                        // The map opens from its card in Statistics.
                         _MenuItem(
                           Icons.sync_rounded,
                           gloc.sync_title,
@@ -726,8 +715,13 @@ class _GroupMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = Theme.of(context).colorScheme;
     final gloc = gen.AppLocalizations.of(context);
+    // Items at least [menuWidth] wide give the menu a known width, so its end
+    // lines up with the button's (and the page margin) instead of running to
+    // the screen edge.
+    const menuWidth = 248.0;
+    const buttonSize = 48.0;
     return MenuAnchor(
-      alignmentOffset: const Offset(-140, 4),
+      alignmentOffset: const Offset(buttonSize - menuWidth, 4),
       style: MenuStyle(
         backgroundColor: WidgetStatePropertyAll(s.raisedSurface),
         shape: WidgetStatePropertyAll(
@@ -737,6 +731,9 @@ class _GroupMenuButton extends StatelessWidget {
       menuChildren: [
         for (final item in items)
           MenuItemButton(
+            style: MenuItemButton.styleFrom(
+              minimumSize: const Size(menuWidth, 48),
+            ),
             leadingIcon: Icon(item.icon),
             onPressed: item.onTap,
             child: Padding(
