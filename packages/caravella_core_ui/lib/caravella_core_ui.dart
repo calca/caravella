@@ -22,6 +22,7 @@ export 'widgets/caravella_bottom_sheet_scaffold.dart';
 export 'widgets/caravella_tab_bar.dart';
 export 'widgets/chip_selector_row.dart';
 export 'widgets/currency_display.dart';
+export 'widgets/empty_state_card.dart';
 export 'widgets/empty_state_view.dart';
 export 'widgets/expense_amount_card.dart';
 export 'widgets/floating_nav_bar.dart';

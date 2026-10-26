@@ -290,7 +290,7 @@
   "status_archived": "Archivados",
   "no_archived_groups": "No hay grupos archivados",
   "@no_archived_groups": {"description": "Título estado vacío para grupos archivados"},
-  "no_archived_groups_subtitle": "Aún no has archivado ningún grupo",
+  "no_archived_groups_subtitle": "Mantén pulsado un grupo y elige Archivar: lo encontrarás aquí.",
   "@no_archived_groups_subtitle": {"description": "Subtítulo estado vacío para grupos archivados"},
   "all_groups_archived_info": "Todos tus grupos están en el archivo. Puedes recuperarlos desde allí o crear uno nuevo.",
   "@all_groups_archived_info": {"description": "Mensaje mostrado cuando todos los grupos del usuario están archivados"},
@@ -921,4 +921,5 @@
   ,"new_expense": "Nuevo gasto"
   ,"confirm": "Confirmar"
   ,"group": "Grupo"
+  ,"no_active_groups_subtitle": "Crea uno para un viaje, un piso compartido o un evento."
 }

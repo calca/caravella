@@ -818,7 +818,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get no_archived_groups => '没有已归档的群组';
 
   @override
-  String get no_archived_groups_subtitle => '您还没有归档任何群组';
+  String get no_archived_groups_subtitle => '长按群组并选择“归档”，即可在这里找到它。';
 
   @override
   String get all_groups_archived_info => '你的所有群组都已归档。你可以从归档中恢复，或新建一个群组。';
@@ -2228,4 +2228,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get background_none => '无';
+
+  @override
+  String get no_active_groups_subtitle => '为一次旅行、合租公寓或活动创建一个群组。';
 }

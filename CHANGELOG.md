@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Groups page: swipe left or right to move between Active and Archived, like the sections of a group. With no archived groups it shows a card explaining how to archive one (long press → Archive); with no active groups, a card with a “Create a group” button — the same look as an empty expense list
 - F-Droid listing refreshed for 2.2: new descriptions and screenshots in all five languages (it lists only what the F-Droid build has), and `metadata.yml` builds 2.2.1, with one APK per processor type (smaller downloads) following F-Droid's Flutter template
 - F-Droid and Google Play feature graphic: the text and phones stay clear of the edges Play crops, and the phones show the 2.2 screens; F-Droid gets the banner too
 

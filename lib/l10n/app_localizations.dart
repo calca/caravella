@@ -1685,7 +1685,7 @@ abstract class AppLocalizations {
   /// Empty state subtitle for archived groups
   ///
   /// In en, this message translates to:
-  /// **'You have not archived any groups yet'**
+  /// **'Long-press a group and choose Archive: you’ll find it here.'**
   String get no_archived_groups_subtitle;
 
   /// No description provided for @all_groups_archived_info.
@@ -4332,6 +4332,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'None'**
   String get background_none;
+
+  /// Groups page, Active with no groups: line under the title, above the Create a group button
+  ///
+  /// In en, this message translates to:
+  /// **'Create one for a trip, a shared flat or an event.'**
+  String get no_active_groups_subtitle;
 }
 
 class _AppLocalizationsDelegate

@@ -831,7 +831,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get no_archived_groups_subtitle =>
-      'Non hai ancora archiviato nessun gruppo';
+      'Tieni premuto un gruppo e scegli Archivia: lo ritrovi qui.';
 
   @override
   String get all_groups_archived_info =>
@@ -2281,4 +2281,8 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get background_none => 'Nessuno';
+
+  @override
+  String get no_active_groups_subtitle =>
+      'Creane uno per un viaggio, una casa condivisa o un evento.';
 }
