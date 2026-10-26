@@ -24,7 +24,8 @@ class PillSegmentedControl extends StatelessWidget {
     this.expand = false,
   });
 
-  static const double _height = 44;
+  // 48 dp: Material's minimum touch target.
+  static const double _height = 48;
   static const double _padding = 4;
   static const Duration _duration = Duration(milliseconds: 320);
   static const Curve _curve = Curves.easeOutCubic;

@@ -161,7 +161,9 @@ extension<T> on ChipSelectorRow<T> {
       for (final item in items)
         _pillWidth(context, itemLabel(item), itemLeading != null),
     ];
-    final addWidth = onAddItemInline != null ? FormPill.height + gap : 0.0;
+    final addWidth = onAddItemInline != null
+        ? FormPill.height + 2 * FormPill.touchMargin + gap
+        : 0.0;
     final allWidth =
         widths.fold<double>(0, (a, w) => a + w) +
         gap * (items.length - 1).clamp(0, items.length) +
@@ -241,24 +243,31 @@ class _AddPill extends StatelessWidget {
       label: tooltip,
       excludeSemantics: true,
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: FormPill.touchMargin),
-        child: SizedBox.square(
-          dimension: FormPill.height,
-          child: Material(
-            color: s.raisedSurface,
-            shape: CircleBorder(
-              side: BorderSide(color: s.outlineVariant.withValues(alpha: 0.6)),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: onTap,
-              child: Icon(
-                Icons.add_rounded,
-                size: 20,
-                color: onTap != null
-                    ? s.onSurfaceVariant
-                    : s.onSurfaceVariant.withValues(alpha: 0.4),
+      // The 40 dp circle with a touch margin all round: a 48 x 48 target.
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(FormPill.touchMargin),
+          child: SizedBox.square(
+            dimension: FormPill.height,
+            child: Material(
+              color: s.raisedSurface,
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: s.outlineVariant.withValues(alpha: 0.6),
+                ),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: onTap,
+                child: Icon(
+                  Icons.add_rounded,
+                  size: 20,
+                  color: onTap != null
+                      ? s.onSurfaceVariant
+                      : s.onSurfaceVariant.withValues(alpha: 0.4),
+                ),
               ),
             ),
           ),

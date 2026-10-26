@@ -148,14 +148,7 @@ class _EditableNameListState extends State<EditableNameList> {
         children: [
           _iconCircle(widget.itemIcon),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              name,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ),
+          Expanded(child: _nameText(context, name)),
           IconButton(
             tooltip: widget.editTooltip,
             icon: Icon(
@@ -334,6 +327,20 @@ class _EditableNameListState extends State<EditableNameList> {
           ),
         ),
       ],
+    );
+  }
+
+  /// The item's name: wraps on spaces; a single word too long for the row
+  /// (large text: "Accommodation") shrinks instead of breaking mid-word.
+  Widget _nameText(BuildContext context, String name) {
+    final style = Theme.of(
+      context,
+    ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600);
+    if (name.trim().contains(' ')) return Text(name, style: style);
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Text(name, maxLines: 1, style: style),
     );
   }
 }

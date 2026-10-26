@@ -38,60 +38,61 @@ class GroupQuickActions extends StatelessWidget {
     void push(Widget page) =>
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Without receipt reading (F-Droid) the same spot takes a photo of
-        // the receipt and attaches it, leaving amount and description to
-        // the user.
-        _QuickAction(
-          icon: canScan
-              ? Icons.document_scanner_outlined
-              : Icons.photo_camera_outlined,
-          label: canScan ? gloc.quick_action_scan : gloc.quick_action_photo,
-          semanticLabel: canScan ? gloc.scan_receipt : gloc.photo_add_expense,
-          onTap: () => AddExpenseController(
-            group: group,
-            onExpenseAdded: onExpenseAdded,
-          ).scanReceiptAndAdd(context, readReceipt: canScan),
-        ),
-        // Hidden on devices without speech recognition.
-        GroupCardVoiceButton(
+    final actions = <Widget>[
+      // Without receipt reading (F-Droid) the same spot takes a photo of
+      // the receipt and attaches it, leaving amount and description to
+      // the user.
+      _QuickAction(
+        icon: canScan
+            ? Icons.document_scanner_outlined
+            : Icons.photo_camera_outlined,
+        label: canScan ? gloc.quick_action_scan : gloc.quick_action_photo,
+        semanticLabel: canScan ? gloc.scan_receipt : gloc.photo_add_expense,
+        onTap: () => AddExpenseController(
           group: group,
           onExpenseAdded: onExpenseAdded,
-          builder: (context, onPressed, listening) => _QuickAction(
-            icon: listening ? Icons.mic_rounded : Icons.mic_none_rounded,
-            label: gloc.quick_action_voice,
-            semanticLabel: gloc.voice_add_expense,
-            active: listening,
-            onTap: onPressed,
-          ),
+        ).scanReceiptAndAdd(context, readReceipt: canScan),
+      ),
+      // Hidden on devices without speech recognition.
+      GroupCardVoiceButton(
+        group: group,
+        onExpenseAdded: onExpenseAdded,
+        builder: (context, onPressed, listening) => _QuickAction(
+          icon: listening ? Icons.mic_rounded : Icons.mic_none_rounded,
+          label: gloc.quick_action_voice,
+          semanticLabel: gloc.voice_add_expense,
+          active: listening,
+          onTap: onPressed,
         ),
-        _QuickAction(
-          icon: Icons.map_outlined,
-          label: gloc.quick_action_map,
-          onTap: hasPlaces
-              ? () => push(ExpenseLocationsMapPage(group: group))
-              : null,
-        ),
-        _QuickAction(
-          icon: Icons.search_rounded,
-          label: gloc.quick_action_search,
-          onTap: hasExpenses
-              ? () => ExpenseSearchPage.show(
-                  context,
-                  expenses: group.expenses,
-                  categories: group.categories,
-                  participants: group.participants,
-                  currency: group.currency,
-                  groupName: group.title,
-                  // Expenses are edited from the group page.
-                  onExpenseTap: (_) =>
-                      push(ExpenseGroupDetailPage(trip: group)),
-                )
-              : null,
-        ),
-      ],
+      ),
+      _QuickAction(
+        icon: Icons.map_outlined,
+        label: gloc.quick_action_map,
+        onTap: hasPlaces
+            ? () => push(ExpenseLocationsMapPage(group: group))
+            : null,
+      ),
+      _QuickAction(
+        icon: Icons.search_rounded,
+        label: gloc.quick_action_search,
+        onTap: hasExpenses
+            ? () => ExpenseSearchPage.show(
+                context,
+                expenses: group.expenses,
+                categories: group.categories,
+                participants: group.participants,
+                currency: group.currency,
+                groupName: group.title,
+                // Expenses are edited from the group page.
+                onExpenseTap: (_) => push(ExpenseGroupDetailPage(trip: group)),
+              )
+            : null,
+      ),
+    ];
+    // Each takes up to its 80 dp, less when the four don't fit.
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [for (final a in actions) Flexible(child: a)],
     );
   }
 }
@@ -130,8 +131,9 @@ class _QuickAction extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        child: SizedBox(
-          width: 80,
+        // Up to 80 dp; narrower when the four don't fit (display zoom).
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 80),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -145,11 +147,13 @@ class _QuickAction extends StatelessWidget {
                 child: Icon(icon, color: active ? s.onPrimaryContainer : fg),
               ),
               const SizedBox(height: 6),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelMedium?.copyWith(color: fg),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  style: theme.textTheme.labelMedium?.copyWith(color: fg),
+                ),
               ),
             ],
           ),

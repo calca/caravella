@@ -119,44 +119,29 @@ class GroupCardHeader extends StatelessWidget {
       style: theme.textTheme.bodySmall?.copyWith(color: _fg),
     );
 
-    // Large text: the badges go on their own line under the dates.
-    if (HomeLayoutConstants.isLargeText(context)) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: HomeLayoutConstants.smallSpacing),
-          if (hasDates)
-            Row(
-              children: [
-                Icon(Icons.event_outlined, size: 14, color: _fg),
-                const SizedBox(width: 4),
-                Expanded(child: dates),
-              ],
-            ),
-          if (hasDates && badges.isNotEmpty) const SizedBox(height: 6),
-          if (badges.isNotEmpty)
-            Wrap(spacing: 4, runSpacing: 4, children: badges),
-          const SizedBox(height: HomeLayoutConstants.smallSpacing),
-        ],
-      );
-    }
-
+    // Dates left, badges right; the badges move under the dates when they
+    // don't fit (large text, display zoom, long dates).
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: HomeLayoutConstants.smallSpacing),
-        Row(
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8,
+          runSpacing: 6,
           children: [
-            if (hasDates) ...[
-              Icon(Icons.event_outlined, size: 14, color: _fg),
-              const SizedBox(width: 4),
-              Expanded(child: dates),
-            ] else
-              const Spacer(),
-            for (final (i, b) in badges.indexed) ...[
-              if (i > 0) const SizedBox(width: 4),
-              b,
-            ],
+            if (hasDates)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.event_outlined, size: 14, color: _fg),
+                  const SizedBox(width: 4),
+                  Flexible(child: dates),
+                ],
+              ),
+            if (badges.isNotEmpty)
+              Wrap(spacing: 4, runSpacing: 4, children: badges),
           ],
         ),
         const SizedBox(height: HomeLayoutConstants.smallSpacing),

@@ -7,6 +7,30 @@ import 'package:io_caravella_egm/manager/expense/widgets/amount_input_widget.dar
 
 void main() {
   group('AmountInputWidget Integration Tests', () {
+    testWidgets('screen readers get the label on the text field itself', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: appLocalizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: Scaffold(
+            body: AmountInputWidget(
+              controller: TextEditingController(),
+              label: 'Amount',
+              currency: '€',
+            ),
+          ),
+        ),
+      );
+      final node = tester.getSemantics(find.byType(TextFormField));
+      expect(node.label, contains('Amount (€)'));
+      expect(node, isSemantics(isTextField: true));
+      handle.dispose();
+    });
+
     testWidgets('amount input with simplified formatter', (
       WidgetTester tester,
     ) async {

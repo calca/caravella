@@ -110,10 +110,18 @@ class AppearanceSettingsPage extends StatelessWidget {
                 color: selected ? scheme.onSurface : scheme.onSurfaceVariant,
               ),
               const SizedBox(height: 8),
-              Text(
-                label,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: selected ? scheme.onSurface : scheme.onSurfaceVariant,
+              // Shrinks rather than breaking the word ("Automa / tic")
+              // with large text.
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: selected
+                        ? scheme.onSurface
+                        : scheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ],

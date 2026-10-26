@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group page: tap the “Shared” badge to open the group’s synchronization; the ⋯ menu no longer repeats Map, which opens from its card in Statistics
 
 ### Fixed
+- Accessibility pass at 200% text and maximum display zoom: Home’s dates and badges wrap instead of breaking, the quick actions fit, balances show full names and amounts (bar under them with large text), group-type cards in group creation no longer overflow, “Automatic” and long category names no longer break mid-word; the section switches and the “+” buttons of the expense form have 48 dp touch targets; TalkBack reads “Amount (€)” on the amount field (it read only “0.00”)
 - Large text (Android font size up to 200%): Home’s greeting and group card no longer overflow (the card grows with its content, badges move under the dates), recent expenses and the expense list keep their labels, the statistics records stack one per row, and section labels, participants’ amounts and header figures shrink to fit instead of being cut
 - Home’s sync button no longer turns ochre just because another phone is out of reach (e.g. on a different Wi-Fi) — that’s normal for device-to-device sync; only real failures do
 - The “Shared” badge on a group page is easier to tap (48 dp touch target)
