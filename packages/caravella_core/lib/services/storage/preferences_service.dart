@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Preference keys organized by category for better maintainability
@@ -34,6 +36,9 @@ abstract class _PreferenceKeys {
 
   // Search
   static const String recentGroupSearches = 'recent_group_searches';
+
+  // Groups received from another device, not opened yet
+  static const String pendingGroupWelcomes = 'pending_group_welcomes';
 }
 
 /// Default values for preferences
@@ -158,6 +163,10 @@ class PreferencesService {
   /// Group type templates preferences management
   /// Recent searches (group search suggestions).
   SearchPreferences get search => SearchPreferences._(_prefs);
+
+  /// Groups shared with this device that haven't been opened yet.
+  SharedGroupPreferences get sharedGroups =>
+      SharedGroupPreferences._(_prefs);
 
   GroupTypeTemplatesPreferences get groupTypeTemplates =>
       GroupTypeTemplatesPreferences._(_prefs);
@@ -467,5 +476,43 @@ class SearchPreferences {
   /// Forgets all recent group searches.
   Future<void> clearRecentGroupSearches() async {
     await _prefs.remove(_PreferenceKeys.recentGroupSearches);
+  }
+}
+
+/// Groups received from another device and not opened yet, each with the
+/// name of the device that shared it: the group page welcomes them once.
+class SharedGroupPreferences {
+  SharedGroupPreferences._(this._prefs);
+  final SharedPreferences _prefs;
+
+  Map<String, String> _read() {
+    final raw = _prefs.getString(_PreferenceKeys.pendingGroupWelcomes);
+    if (raw == null) return {};
+    try {
+      return Map<String, String>.from(jsonDecode(raw) as Map);
+    } catch (_) {
+      return {};
+    }
+  }
+
+  /// Remembers that [groupId] was shared by the device named [from].
+  Future<void> addPendingWelcome(String groupId, String from) async {
+    final map = _read()..[groupId] = from;
+    await _prefs.setString(
+      _PreferenceKeys.pendingGroupWelcomes,
+      jsonEncode(map),
+    );
+  }
+
+  /// The device that shared [groupId], while its welcome is pending.
+  String? pendingWelcomeFrom(String groupId) => _read()[groupId];
+
+  /// Drops [groupId]'s welcome (shown and dismissed, or group deleted).
+  Future<void> clearPendingWelcome(String groupId) async {
+    final map = _read()..remove(groupId);
+    await _prefs.setString(
+      _PreferenceKeys.pendingGroupWelcomes,
+      jsonEncode(map),
+    );
   }
 }

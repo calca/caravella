@@ -124,6 +124,46 @@ void main() {
       expect(stored.unwrap()?.title, equals('Test Group'));
     });
 
+    test('a group new here is reported with the sender name', () async {
+      final db = await repository.database;
+      final syncDao = SyncDao(db);
+      final resolver = ConflictResolver(syncDao: syncDao);
+      await syncDao.grantGroupAccess('remote-1', 'new-group');
+      final result = await resolver.applyDelta(
+        db,
+        _buildDelta(
+          deviceId: 'remote-1',
+          deviceName: 'Pixel 9',
+          groups: [
+            _groupToDeltaEntry(
+              _createGroup(id: 'new-group'),
+              updatedAt: SyncClock.nowMs(),
+            ),
+          ],
+        ),
+        'lan',
+      );
+      expect(result.newGroupIds, {'new-group'});
+      expect(result.peerName, 'Pixel 9');
+
+      // The same group again (newer) is an update, not a new group.
+      final again = await resolver.applyDelta(
+        db,
+        _buildDelta(
+          deviceId: 'remote-1',
+          groups: [
+            _groupToDeltaEntry(
+              _createGroup(id: 'new-group', title: 'Renamed'),
+              updatedAt: SyncClock.nowMs() + 10000,
+            ),
+          ],
+        ),
+        'lan',
+      );
+      expect(again.applied, 1);
+      expect(again.newGroupIds, isEmpty);
+    });
+
     test(
       'remote group is rejected when the peer was never granted access to '
       'it — even though pairing exists, being paired alone grants nothing',

@@ -16,6 +16,7 @@ import '../widgets/empty_expense_state.dart';
 import '../widgets/group_balances_view.dart';
 import '../widgets/group_detail_header.dart';
 import '../widgets/group_statistics_view.dart';
+import '../widgets/group_welcome_card.dart';
 import '../../../services/notification_manager.dart';
 
 import 'group_settings_page.dart';
@@ -116,6 +117,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   /// Last [ExpenseGroupNotifier.revision] seen: a newer one (e.g. a sync
   /// that changed groups) reloads this group from storage.
   int _seenRevision = 0;
+
+  /// Name of the device that shared this group, while its one-time welcome
+  /// is pending ('' when unknown); null once dismissed or for own groups.
+  String? get _welcomeFrom => PreferencesService.isInitialized
+      ? PreferencesService.instance.sharedGroups.pendingWelcomeFrom(
+          widget.trip.id,
+        )
+      : null;
+
+  Future<void> _dismissWelcome() async {
+    await PreferencesService.instance.sharedGroups.clearPendingWelcome(
+      widget.trip.id,
+    );
+    if (mounted) setState(() {});
+  }
 
   void _onGroupChanged() {
     final revision = _groupNotifier?.revision ?? 0;
@@ -593,6 +609,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                       ],
                     ),
                   ),
+                  if (_welcomeFrom case final from?)
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                      sliver: SliverToBoxAdapter(
+                        child: GroupWelcomeCard(
+                          group: trip,
+                          from: from,
+                          onDismiss: _dismissWelcome,
+                          onAddExpense: () {
+                            _dismissWelcome();
+                            _showAddExpenseSheet();
+                          },
+                        ),
+                      ),
+                    ),
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     sliver: SliverToBoxAdapter(

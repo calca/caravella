@@ -908,4 +908,9 @@
   ,"sync_badge_ok": "sincronizzato nelle ultime 24 ore"
   ,"sync_badge_failed": "ultima sincronizzazione non riuscita"
   ,"sync_badge_stale": "non sincronizzato nelle ultime 24 ore"
+  ,"sync_group_received": "{from} ti ha condiviso “{title}”"
+  ,"sync_group_received_anon": "Ti è stato condiviso “{title}”"
+  ,"group_welcome_title": "Ti sei unito al gruppo"
+  ,"group_welcome_body": "Condiviso da {from}: {people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
+  ,"group_welcome_body_anon": "{people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
 }
