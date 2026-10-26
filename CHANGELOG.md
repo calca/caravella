@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Group page: the header shows Total and Today side by side at full size (the per-person card was too narrow and shrank its amount); the per-person share moved to Statistics, in the spending pace card
 - Groups shared with you from another device: a message says who shared which group (tap Open to go there), and the first time you open it a card explains where you are — who shared it, how many people and expenses, the total so far — with “Add expense”
 - Shared groups: a dot on the “Shared” badge (Home card and group page) shows how sync is doing — green when synced in the last 24 hours, ochre when the last sync failed (the same color as Home’s sync button), hollow grey when it hasn’t synced for a day or yet. Home’s sync button speaks the same language: plain sync arrows, with an ochre dot after a failure
 - Search now finds expenses too: typing in the groups search lists, under the groups, the expenses of every group (active and archived) whose name, note or place matches, newest first, with their group and date
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group page: tap the “Shared” badge to open the group’s synchronization; the ⋯ menu no longer repeats Map, which opens from its card in Statistics
 
 ### Fixed
+- Accessibility: “Active · Archived” and other section switches split the width evenly when their labels don’t fit, instead of clipping a segment under 48 dp; the group name field is 48 dp tall. Automated accessibility checks (touch targets, labels, text contrast) now run on the main screens in light, dark and 200% text
 - Dark theme: “Delete” and other red text is lighter, readable at 4.7:1 on the cards (it was 3.5:1); the dashed border of the “+” pills is a bit darker (3.8:1)
 - Accessibility pass at 200% text and maximum display zoom: Home’s dates and badges wrap instead of breaking, the quick actions fit, balances show full names and amounts (bar under them with large text), group-type cards in group creation no longer overflow, “Automatic” and long category names no longer break mid-word; the section switches and the “+” buttons of the expense form have 48 dp touch targets; TalkBack reads “Amount (€)” on the amount field (it read only “0.00”)
 - Large text (Android font size up to 200%): Home’s greeting and group card no longer overflow (the card grows with its content, badges move under the dates), recent expenses and the expense list keep their labels, the statistics records stack one per row, and section labels, participants’ amounts and header figures shrink to fit instead of being cut

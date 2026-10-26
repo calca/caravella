@@ -1958,9 +1958,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get balances => '余额';
 
   @override
-  String get per_person => '人均';
-
-  @override
   String get settle_up => '结清方式';
 
   @override
@@ -2323,4 +2320,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get toast_open => '打开';
+
+  @override
+  String stats_per_person(String amount) {
+    return '人均 $amount';
+  }
 }
