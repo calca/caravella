@@ -825,7 +825,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get no_archived_groups_subtitle =>
-      'Você ainda não arquivou nenhum grupo';
+      'Toque e segure um grupo e escolha Arquivar: ele aparece aqui.';
 
   @override
   String get all_groups_archived_info =>
@@ -2329,4 +2329,8 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get map_no_places => 'Ainda não há despesas com um local';
+
+  @override
+  String get no_active_groups_subtitle =>
+      'Crie um para uma viagem, uma casa compartilhada ou um evento.';
 }

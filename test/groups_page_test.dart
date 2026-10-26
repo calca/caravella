@@ -17,6 +17,9 @@ Widget _app() => MaterialApp(
   ),
 );
 
+Finder _inEmptyCard(String text) =>
+    find.descendant(of: find.byType(EmptyStateCard), matching: find.text(text));
+
 /// Groups page: title, search, Active/Archived switch, empty states.
 /// (It replaced the TabBar/TabBarView layout covered by the old
 /// history_tab_scrolling_test.dart.)
@@ -46,6 +49,33 @@ void main() {
     await tester.tap(find.textContaining('Active ·'));
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('No archived groups'), findsNothing);
+  });
+
+  testWidgets('swiping moves between Active and Archived', (tester) async {
+    await tester.pumpWidget(_app());
+    await tester.pump(const Duration(milliseconds: 300));
+    final page = find.byType(CustomScrollView);
+
+    // Towards the start (left): Archived, with its empty card.
+    await tester.fling(page, const Offset(-300, 0), 1000);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('No archived groups'), findsOneWidget);
+    expect(find.byType(EmptyStateCard), findsOneWidget);
+    expect(find.textContaining('Long-press a group'), findsOneWidget);
+
+    // Back towards the end (right): Active.
+    await tester.fling(page, const Offset(300, 0), 1000);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('No archived groups'), findsNothing);
+    expect(_inEmptyCard('No active groups'), findsOneWidget);
+  });
+
+  testWidgets('no active groups: a card with a create button', (tester) async {
+    await tester.pumpWidget(_app());
+    await tester.pump(const Duration(milliseconds: 300));
+    // (The header's count line says "No active groups" too.)
+    expect(_inEmptyCard('No active groups'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Create a group'), findsOneWidget);
   });
 
   testWidgets('the switch exposes the selected state to screen readers', (

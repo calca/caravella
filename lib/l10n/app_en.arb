@@ -304,7 +304,7 @@
   ,"status_archived": "Archived"
   ,"no_archived_groups": "No archived groups"
   ,"@no_archived_groups": {"description": "Empty state title for archived groups"}
-  ,"no_archived_groups_subtitle": "You have not archived any groups yet"
+  ,"no_archived_groups_subtitle": "Long-press a group and choose Archive: you’ll find it here."
   ,"all_groups_archived_info": "All your groups are archived. You can bring them back from there or create a new one."
   ,"@no_archived_groups_subtitle": {"description": "Empty state subtitle for archived groups"}
   ,"@status_archived": {"description": "Filter label: archived groups"}
@@ -1017,4 +1017,6 @@
   ,"map_no_places": "No expenses with a place yet"
   ,"@map_location_off": {"description": "Statistics map card when no expense has a place and the group's automatic location is off; tapping opens the setting"}
   ,"@map_no_places": {"description": "Statistics map card when automatic location is on but no expense has a place yet (not tappable)"}
+  ,"no_active_groups_subtitle": "Create one for a trip, a shared flat or an event."
+  ,"@no_active_groups_subtitle": {"description": "Groups page, Active with no groups: line under the title, above the Create a group button"}
 }
