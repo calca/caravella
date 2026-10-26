@@ -121,6 +121,20 @@ void main() {
     expect(find.bySemanticsLabel('Luca pays Anna 50.00 €'), findsOneWidget);
   });
 
+  testWidgets('balances start from the share per person', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        GroupBalancesView(group: _group([_expense('Hotel', 100, day1, _anna)])),
+      ),
+    );
+    expect(find.text('Share per person'), findsOneWidget);
+    expect(find.textContaining('÷ 2 participants'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp(r'^Share per person: 50')),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('balances say when everyone is even', (tester) async {
     await tester.pumpWidget(
       _wrap(

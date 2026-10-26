@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Group page: the header shows Total and Today side by side at full size (the per-person card was too narrow and shrank its amount); the per-person share moved to Statistics, in the spending pace card
+- Group page: the header shows Total and Today side by side at full size (the per-person card was too narrow and shrank its amount); the per-person share moved to Statistics, in the spending pace card, and opens Balances as a “Share per person” card (total ÷ people), the reference the +/− amounts are measured against
 - Groups shared with you from another device: a message says who shared which group (tap Open to go there), and the first time you open it a card explains where you are — who shared it, how many people and expenses, the total so far — with “Add expense”
 - Shared groups: a dot on the “Shared” badge (Home card and group page) shows how sync is doing — green when synced in the last 24 hours, ochre when the last sync failed (the same color as Home’s sync button), hollow grey when it hasn’t synced for a day or yet. Home’s sync button speaks the same language: plain sync arrows, with an ochre dot after a failure
 - Search now finds expenses too: typing in the groups search lists, under the groups, the expenses of every group (active and archived) whose name, note or place matches, newest first, with their group and date

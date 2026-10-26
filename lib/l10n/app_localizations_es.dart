@@ -2383,4 +2383,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String stats_per_person(String amount) {
     return '$amount por persona';
   }
+
+  @override
+  String get balances_share_per_person => 'Parte por persona';
+
+  @override
+  String balances_share_basis(String total, String people) {
+    return '$total ÷ $people';
+  }
 }

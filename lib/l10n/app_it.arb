@@ -914,4 +914,6 @@
   ,"group_welcome_body_anon": "{people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
   ,"toast_open": "Apri"
   ,"stats_per_person": "{amount} a testa"
+  ,"balances_share_per_person": "Quota a testa"
+  ,"balances_share_basis": "{total} ÷ {people}"
 }
