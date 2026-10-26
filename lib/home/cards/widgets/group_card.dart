@@ -158,13 +158,23 @@ class _GroupCardState extends State<GroupCard> {
       ),
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(child: groupCard),
-        const SizedBox(height: GroupCard.gap),
-        activityCard,
-      ],
+    // Fills the height Home gives it; with large text Home gives none and
+    // the card is as tall as its content.
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
+        mainAxisSize: constraints.hasBoundedHeight
+            ? MainAxisSize.max
+            : MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (constraints.hasBoundedHeight)
+            Expanded(child: groupCard)
+          else
+            groupCard,
+          const SizedBox(height: GroupCard.gap),
+          activityCard,
+        ],
+      ),
     );
   }
 }
