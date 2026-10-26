@@ -2370,4 +2370,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String group_welcome_body_anon(String people, String expenses, String total) {
     return '$people, $expenses, $total até agora. As despesas que você adicionar aqui chegam também aos outros dispositivos.';
   }
+
+  @override
+  String get toast_open => 'Abrir';
 }

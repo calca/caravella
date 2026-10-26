@@ -911,4 +911,5 @@
   ,"group_welcome_title": "Você entrou no grupo"
   ,"group_welcome_body": "Compartilhado por {from}: {people}, {expenses}, {total} até agora. As despesas que você adicionar aqui chegam também aos outros dispositivos."
   ,"group_welcome_body_anon": "{people}, {expenses}, {total} até agora. As despesas que você adicionar aqui chegam também aos outros dispositivos."
+  ,"toast_open": "Abrir"
 }

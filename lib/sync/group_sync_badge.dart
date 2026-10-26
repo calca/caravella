@@ -153,15 +153,28 @@ class _GroupSyncBadgeState extends State<GroupSyncBadge> {
       label: semantics,
       excludeSemantics: true,
       onTap: widget.onTap,
-      child: Material(
-        color: widget.background,
-        borderRadius: radius,
-        child: InkWell(
-          onTap: widget.onTap,
-          borderRadius: radius,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 4, 4, 4),
-            child: content,
+      // The pill stays small; the touch target around it is 48 dp tall
+      // (Material's minimum), centered on it.
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: widget.onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Center(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: Material(
+              color: widget.background,
+              borderRadius: radius,
+              child: InkWell(
+                onTap: widget.onTap,
+                borderRadius: radius,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 4, 4, 4),
+                  child: content,
+                ),
+              ),
+            ),
           ),
         ),
       ),

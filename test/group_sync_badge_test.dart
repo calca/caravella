@@ -37,6 +37,11 @@ void main() {
     expect(find.byIcon(Icons.chevron_right_rounded), findsOneWidget);
     await tester.tap(find.text('Shared'));
     expect(opened, 1);
+    // Touch target of at least 48 dp, though the pill itself is small.
+    expect(tester.getSize(find.byType(GroupSyncBadge)).height, 48);
+    final top = tester.getRect(find.byType(GroupSyncBadge)).topCenter;
+    await tester.tapAt(top + const Offset(0, 2));
+    expect(opened, 2);
   });
 
   testWidgets('without onTap it is a plain label (Home card)', (tester) async {

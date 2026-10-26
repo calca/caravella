@@ -17,6 +17,8 @@ class AppToast {
     ToastType type = ToastType.info,
     IconData? icon,
     String? semanticLabel,
+    String? actionLabel,
+    VoidCallback? onAction,
   }) {
     if (!context.mounted) return;
 
@@ -51,46 +53,66 @@ class AppToast {
 
     Toast(
       height: 56,
-      builder: (toast) => Material(
-        color: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            // A pill, like the app's buttons and chips.
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.6),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+      builder: (toast) => Builder(
+        builder: (toastContext) => Material(
+          color: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              // A pill, like the app's buttons and chips.
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(
+                color: colorScheme.outlineVariant.withValues(alpha: 0.6),
               ),
-            ],
-          ),
-          child: Semantics(
-            liveRegion: true,
-            label: semanticLabel ?? message,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(effectiveIcon, color: iconColor, size: 18),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    message,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: textColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
               ],
+            ),
+            child: Semantics(
+              liveRegion: true,
+              label: semanticLabel ?? message,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(effectiveIcon, color: iconColor, size: 18),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      message,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: textColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  // Optional action (e.g. "Open"): hides the toast, then runs.
+                  if (actionLabel != null && onAction != null)
+                    TextButton(
+                      onPressed: () {
+                        toast.hide(toastContext);
+                        onAction();
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: colorScheme.primary,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        minimumSize: const Size(48, 40),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      child: Text(
+                        actionLabel,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),

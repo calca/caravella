@@ -2320,4 +2320,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String group_welcome_body_anon(String people, String expenses, String total) {
     return '$people，$expenses，目前共 $total。你在这里添加的支出也会同步到其他设备。';
   }
+
+  @override
+  String get toast_open => '打开';
 }
