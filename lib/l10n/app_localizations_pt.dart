@@ -445,10 +445,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get all => 'Todos';
 
   @override
-  String get search_groups => 'Pesquisar grupos…';
+  String get search_groups => 'Pesquisar grupos e despesas…';
 
   @override
-  String get no_search_results => 'Nenhum grupo encontrado';
+  String get no_search_results => 'Nenhum resultado';
 
   @override
   String get try_different_search => 'Tente pesquisar com palavras diferentes';

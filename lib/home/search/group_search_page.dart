@@ -1,6 +1,7 @@
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
@@ -17,9 +18,13 @@ enum GroupSearchStatus { all, active, archived }
 /// searches and the group types present. A filters button opens a sheet
 /// (status, favorites, type); active filters stay as removable pills above
 /// the results, which are listed in Active / Archived cards with the match
-/// highlighted. Tap opens a group, long press its options.
+/// highlighted, then the expenses of every group matching the query (name,
+/// note or place, newest first, at most [maxExpenseResults]). Tap opens a
+/// group (or the group of an expense), long press its options.
 class GroupSearchPage extends StatefulWidget {
   const GroupSearchPage({super.key});
+
+  static const int maxExpenseResults = 50;
 
   /// Pushes [GroupSearchPage] on the navigator stack.
   static Future<void> show(BuildContext context) {
@@ -98,11 +103,35 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
   bool _matches(ExpenseGroup g) {
     final q = _query.trim().toLowerCase();
     if (q.isNotEmpty && !g.title.toLowerCase().contains(q)) return false;
+    return _passesFilters(g);
+  }
+
+  bool _passesFilters(ExpenseGroup g) {
     if (_favoritesOnly && !g.pinned) return false;
     if (_type != null && (g.groupType ?? ExpenseGroupType.other) != _type) {
       return false;
     }
     return true;
+  }
+
+  /// Expenses of the groups the filters allow whose name, note or place
+  /// contains the query, newest first, at most [GroupSearchPage.maxExpenseResults].
+  List<(ExpenseGroup, ExpenseDetails)> get _expenseResults {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return const [];
+    final groups = [
+      if (_status != GroupSearchStatus.archived) ..._active,
+      if (_status != GroupSearchStatus.active) ..._archived,
+    ].where(_passesFilters);
+    final hits = [
+      for (final g in groups)
+        for (final e in g.expenses)
+          if ((e.name ?? '').toLowerCase().contains(q) ||
+              (e.note ?? '').toLowerCase().contains(q) ||
+              (e.location?.displayText ?? '').toLowerCase().contains(q))
+            (g, e),
+    ]..sort((a, b) => b.$2.date.compareTo(a.$2.date));
+    return hits.take(GroupSearchPage.maxExpenseResults).toList();
   }
 
   List<ExpenseGroup> get _activeResults => _status == GroupSearchStatus.archived
@@ -176,7 +205,10 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
             setSheet(() {});
           }
 
-          final count = _activeResults.length + _archivedResults.length;
+          final count =
+              _activeResults.length +
+              _archivedResults.length +
+              _expenseResults.length;
           return SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
@@ -323,6 +355,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
   Widget _buildResults(gen.AppLocalizations gloc) {
     final active = _activeResults;
     final archived = _archivedResults;
+    final expenses = _expenseResults;
     final pills = <Widget>[
       if (_status != GroupSearchStatus.all)
         FilterPill(
@@ -356,7 +389,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
       ),
       children: [
         if (pills.isNotEmpty) Wrap(spacing: 8, runSpacing: 8, children: pills),
-        if (active.isEmpty && archived.isEmpty)
+        if (active.isEmpty && archived.isEmpty && expenses.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 48),
             child: EmptyStateView(
@@ -377,7 +410,79 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
             label: '${gloc.status_archived} · ${archived.length}',
             children: [for (final g in archived) _row(gloc, g)],
           ),
+        if (expenses.isNotEmpty)
+          SettingsGroup(
+            label: '${gloc.expenses} · ${expenses.length}',
+            children: [for (final (g, e) in expenses) _expenseRow(gloc, g, e)],
+          ),
       ],
+    );
+  }
+
+  /// An expense found by the search: its name (match highlighted), its
+  /// group and date (and "Archived"), the amount. Tap opens the group.
+  Widget _expenseRow(
+    gen.AppLocalizations gloc,
+    ExpenseGroup g,
+    ExpenseDetails e,
+  ) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final name = e.name ?? '';
+    final where = [
+      g.title,
+      DateFormat.MMMd(
+        Localizations.localeOf(context).toString(),
+      ).format(e.date),
+      if (g.archived) gloc.status_archived,
+    ].join(' · ');
+    return Semantics(
+      button: true,
+      label:
+          '$name, $where, '
+          '${CurrencyDisplay.formatCurrencyText(e.amount ?? 0, g.currency)}',
+      onTap: () => _open(g),
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: () => _open(g),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 14, 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    HighlightedText(
+                      text: name,
+                      query: _query,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      where,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: s.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              CurrencyDisplay(
+                value: e.amount ?? 0,
+                currency: g.currency,
+                valueFontSize: 16,
+                currencyFontSize: 11,
+                showDecimals: true,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

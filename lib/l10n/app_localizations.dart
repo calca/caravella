@@ -941,13 +941,13 @@ abstract class AppLocalizations {
   /// No description provided for @search_groups.
   ///
   /// In en, this message translates to:
-  /// **'Search groups…'**
+  /// **'Search groups and expenses…'**
   String get search_groups;
 
   /// No description provided for @no_search_results.
   ///
   /// In en, this message translates to:
-  /// **'No groups found'**
+  /// **'No results'**
   String get no_search_results;
 
   /// No description provided for @try_different_search.

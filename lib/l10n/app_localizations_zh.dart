@@ -439,10 +439,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get all => '全部';
 
   @override
-  String get search_groups => '搜索群组…';
+  String get search_groups => '搜索群组和支出…';
 
   @override
-  String get no_search_results => '未找到群组';
+  String get no_search_results => '没有结果';
 
   @override
   String get try_different_search => '尝试使用不同的词搜索';
