@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - F-Droid listing refreshed for 2.2: new descriptions and screenshots in all five languages (it lists only what the F-Droid build has), and `metadata.yml` builds 2.2.1, with one APK per processor type (smaller downloads) following F-Droid's Flutter template
 - F-Droid and Google Play feature graphic: the text and phones stay clear of the edges Play crops, and the phones show the 2.2 screens; F-Droid gets the banner too
+- Group page: tap the “Shared” badge to open the group’s synchronization; the ⋯ menu no longer repeats Map, which opens from its card in Statistics
 
 ### Fixed
 - Group page: the ⋯ menu lines up with its button instead of touching the edge of the screen
