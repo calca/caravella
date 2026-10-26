@@ -931,4 +931,7 @@
   ,"map_no_places": "Aún no hay gastos con un lugar"
   ,"no_active_groups_subtitle": "Crea uno para un viaje, un piso compartido o un evento."
   ,"export_options_empty": "Aún no hay gastos para exportar"
+  ,"sync_badge_ok": "sincronizado en las últimas 24 horas"
+  ,"sync_badge_failed": "la última sincronización falló"
+  ,"sync_badge_stale": "sin sincronizar en las últimas 24 horas"
 }

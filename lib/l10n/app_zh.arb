@@ -1235,4 +1235,7 @@
   ,"map_no_places": "还没有带地点的支出"
   ,"no_active_groups_subtitle": "为一次旅行、合租公寓或活动创建一个群组。"
   ,"export_options_empty": "还没有可导出的支出"
+  ,"sync_badge_ok": "过去 24 小时内已同步"
+  ,"sync_badge_failed": "上次同步失败"
+  ,"sync_badge_stale": "过去 24 小时内未同步"
 }

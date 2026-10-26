@@ -904,4 +904,7 @@
   ,"map_no_places": "Ainda não há despesas com um local"
   ,"no_active_groups_subtitle": "Crie um para uma viagem, uma casa compartilhada ou um evento."
   ,"export_options_empty": "Ainda não há despesas para exportar"
+  ,"sync_badge_ok": "sincronizado nas últimas 24 horas"
+  ,"sync_badge_failed": "a última sincronização falhou"
+  ,"sync_badge_stale": "não sincronizado nas últimas 24 horas"
 }

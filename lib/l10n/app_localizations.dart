@@ -4404,6 +4404,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No expenses to export yet'**
   String get export_options_empty;
+
+  /// Screen reader state of a shared group's Shared badge (green dot)
+  ///
+  /// In en, this message translates to:
+  /// **'synced in the last 24 hours'**
+  String get sync_badge_ok;
+
+  /// Screen reader state of a shared group's Shared badge (ochre dot)
+  ///
+  /// In en, this message translates to:
+  /// **'last sync failed'**
+  String get sync_badge_failed;
+
+  /// Screen reader state of a shared group's Shared badge (hollow grey dot)
+  ///
+  /// In en, this message translates to:
+  /// **'not synced in the last 24 hours'**
+  String get sync_badge_stale;
 }
 
 class _AppLocalizationsDelegate

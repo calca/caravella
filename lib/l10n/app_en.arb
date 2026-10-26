@@ -1021,4 +1021,10 @@
   ,"@no_active_groups_subtitle": {"description": "Groups page, Active with no groups: line under the title, above the Create a group button"}
   ,"export_options_empty": "No expenses to export yet"
   ,"@export_options_empty": {"description": "Group settings: subtitle of the greyed-out Export row when the group has no expenses"}
+  ,"sync_badge_ok": "synced in the last 24 hours"
+  ,"sync_badge_failed": "last sync failed"
+  ,"sync_badge_stale": "not synced in the last 24 hours"
+  ,"@sync_badge_ok": {"description": "Screen reader state of a shared group's Shared badge (green dot)"}
+  ,"@sync_badge_failed": {"description": "Screen reader state of a shared group's Shared badge (ochre dot)"}
+  ,"@sync_badge_stale": {"description": "Screen reader state of a shared group's Shared badge (hollow grey dot)"}
 }

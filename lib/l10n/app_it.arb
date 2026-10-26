@@ -906,4 +906,7 @@
   ,"map_no_places": "Ancora nessuna spesa con un luogo"
   ,"no_active_groups_subtitle": "Creane uno per un viaggio, una casa condivisa o un evento."
   ,"export_options_empty": "Ancora nessuna spesa da esportare"
+  ,"sync_badge_ok": "sincronizzato nelle ultime 24 ore"
+  ,"sync_badge_failed": "ultima sincronizzazione non riuscita"
+  ,"sync_badge_stale": "non sincronizzato nelle ultime 24 ore"
 }
