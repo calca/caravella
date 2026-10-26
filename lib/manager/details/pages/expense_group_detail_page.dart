@@ -21,6 +21,8 @@ import 'expense_locations_map_page.dart';
 import '../../../services/notification_manager.dart';
 
 import 'group_settings_page.dart';
+import '../../group/group_edit_mode.dart';
+import '../../group/pages/expense_group_other_page.dart';
 import 'expense_search_page.dart';
 import '../../group/pages/expense_group_sync_page.dart';
 
@@ -205,6 +207,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     );
 
     // Refresh after returning from sync settings
+    await _refreshGroup();
+  }
+
+  /// The group's "Other" settings, where automatic location is turned on.
+  Future<void> _openLocationSetting() async {
+    if (_trip == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            ExpenseGroupOtherPage(trip: _trip!, mode: GroupEditMode.edit),
+      ),
+    );
     await _refreshGroup();
   }
 
@@ -503,7 +517,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
         highlightedExpenseId: _newlyAddedExpenseId,
       ),
       1 => SliverToBoxAdapter(child: GroupBalancesView(group: trip)),
-      _ => SliverToBoxAdapter(child: GroupStatisticsView(group: trip)),
+      _ => SliverToBoxAdapter(
+        child: GroupStatisticsView(
+          group: trip,
+          onEnableLocation: _openLocationSetting,
+        ),
+      ),
     };
 
     Widget roundButton({

@@ -927,4 +927,6 @@
   ,"stats_active_months": "{active} de {total} meses con gastos"
   ,"most_expensive_month": "Mes más caro"
   ,"per_month": "/mes"
+  ,"map_location_off": "Activa la ubicación automática para ver los gastos en el mapa"
+  ,"map_no_places": "Aún no hay gastos con un lugar"
 }

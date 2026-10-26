@@ -1013,4 +1013,8 @@
   ,"@most_expensive_month": {"description": "Statistics card for long groups: the month with the highest total spending"}
   ,"per_month": "/month"
   ,"@per_month": {"description": "Statistics: unit after a category's average per month, for groups longer than two months"}
+  ,"map_location_off": "Turn on automatic location to see expenses on the map"
+  ,"map_no_places": "No expenses with a place yet"
+  ,"@map_location_off": {"description": "Statistics map card when no expense has a place and the group's automatic location is off; tapping opens the setting"}
+  ,"@map_no_places": {"description": "Statistics map card when automatic location is on but no expense has a place yet (not tappable)"}
 }

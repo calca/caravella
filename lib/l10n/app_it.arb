@@ -902,4 +902,6 @@
   ,"stats_active_months": "{active} mesi su {total} con spese"
   ,"most_expensive_month": "Mese più caro"
   ,"per_month": "/mese"
+  ,"map_location_off": "Attiva la posizione automatica per vedere le spese sulla mappa"
+  ,"map_no_places": "Ancora nessuna spesa con un luogo"
 }
