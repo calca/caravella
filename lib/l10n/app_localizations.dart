@@ -3413,7 +3413,7 @@ abstract class AppLocalizations {
   /// Shows which group this pairing code shares
   ///
   /// In en, this message translates to:
-  /// **'Sharing «{groupTitle}»'**
+  /// **'Sharing “{groupTitle}”'**
   String sync_qr_sharing_group(String groupTitle);
 
   /// Countdown showing how long the pairing QR code remains valid

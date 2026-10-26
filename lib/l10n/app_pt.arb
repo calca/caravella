@@ -683,7 +683,7 @@
   ,"@sync_qr_show_title": {"description": "Título para a folha de exibição do QR de pareamento"}
   ,"sync_qr_show_description": "Escaneie este código a partir de outro dispositivo na mesma rede Wi-Fi para pareá-lo com a sincronização"
   ,"@sync_qr_show_description": {"description": "Instruções para a folha de exibição do QR de pareamento"}
-  ,"sync_qr_sharing_group": "Compartilhando «{groupTitle}»"
+  ,"sync_qr_sharing_group": "Compartilhando “{groupTitle}”"
   ,"@sync_qr_sharing_group": {"description": "Mostra qual grupo este código de pareamento compartilha", "placeholders": {"groupTitle": {"type": "String"}}}
   ,"sync_qr_expires_in": "Expira em {time}"
   ,"@sync_qr_expires_in": {"description": "Contagem regressiva mostrando por quanto tempo o código QR de pareamento continua válido", "placeholders": {"time": {"type": "String"}}}
@@ -829,7 +829,7 @@
   ,"share_balances": "Compartilhar saldos"
   ,"balances_share_title": "{group} · saldos"
   ,"balances_share_footer": "Total {total} · {perPerson} por pessoa"
-  ,"balance_reminder_message": "Oi {from}! No grupo «{group}» você deve {amount} a {to}."
+  ,"balance_reminder_message": "Oi {from}! No grupo “{group}” você deve {amount} a {to}."
   ,"chart_week_by_week": "Semana a semana"
   ,"chart_month_by_month": "Mês a mês"
   ,"edit": "Editar"
