@@ -4,6 +4,7 @@ import '../widgets/group_title_field.dart';
 import '../group_type/group_type_localization.dart';
 import 'dart:io';
 import 'package:material_ui/material_ui.dart';
+import '../../details/pages/tabs/usecase/daily_totals_utils.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
@@ -156,7 +157,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
     final type = state.groupType;
     final hasDates = state.startDate != null || state.endDate != null;
     final days = state.startDate != null && state.endDate != null
-        ? state.endDate!.difference(state.startDate!).inDays + 1
+        ? calendarDaysBetween(state.startDate!, state.endDate!) + 1
         : null;
     final currency = state.currency;
     final background = state.imagePath != null
