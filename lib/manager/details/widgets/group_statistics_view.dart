@@ -145,7 +145,7 @@ class _RecordCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.textScalerOf(context).scale(1) >= 1.3) {
+    if (MediaQuery.textScalerOf(context).scale(14) / 14 >= 1.3) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

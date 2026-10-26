@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
@@ -112,7 +114,10 @@ class WizardTypeStep extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio: 1.15,
+          // Taller cards with larger text, so name and line still fit.
+          childAspectRatio:
+              1.15 /
+              math.max(1.0, MediaQuery.textScalerOf(context).scale(14) / 14),
           children: cards,
         ),
         const SizedBox(height: 16),

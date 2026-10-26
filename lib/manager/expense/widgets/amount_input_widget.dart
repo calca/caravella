@@ -136,24 +136,27 @@ class AmountInputWidget extends StatelessWidget {
       ],
     );
 
-    return Semantics(
-      textField: true,
-      label: label != null
-          ? '${label!.replaceAll(' *', '')} ($currencySymbol)'
-          : '${gloc.amount} ($currencySymbol)',
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(currencySymbol, style: currencyStyle),
-            const SizedBox(width: 10),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 300),
-              child: IntrinsicWidth(child: amountField),
-            ),
-          ],
+    // Merged into the text field's own node, so TalkBack reads "Amount (€)"
+    // on the field instead of only its "0.00" hint.
+    return MergeSemantics(
+      child: Semantics(
+        label: label != null
+            ? '${label!.replaceAll(' *', '')} ($currencySymbol)'
+            : '${gloc.amount} ($currencySymbol)',
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(currencySymbol, style: currencyStyle),
+              const SizedBox(width: 10),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 300),
+                child: IntrinsicWidth(child: amountField),
+              ),
+            ],
+          ),
         ),
       ),
     );

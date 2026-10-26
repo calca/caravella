@@ -237,80 +237,104 @@ class _BalanceRow extends StatelessWidget {
     final textColor = settled || !positive ? s.onSurface : s.primary;
     final fraction = maxAbs == 0 ? 0.0 : balance.abs() / maxAbs;
 
+    final name = Text(
+      participant.name,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+    );
+    final amount = Text(
+      '${settled ? '' : (positive ? '+' : '−')}'
+      '${NumberFormat('#,##0.00', Localizations.localeOf(context).toString()).format(balance.abs())} $currency',
+      textAlign: TextAlign.end,
+      maxLines: 1,
+      style: theme.textTheme.titleSmall?.copyWith(
+        color: textColor,
+        fontWeight: FontWeight.w700,
+        fontFeatures: const [FontFeature.tabularFigures()],
+      ),
+    );
+    // Bar from the center: right = gets back, left = owes.
+    final bar = SizedBox(
+      height: 12,
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final half = c.maxWidth / 2;
+          final w = half * fraction;
+          return Stack(
+            children: [
+              Positioned(
+                left: half - 0.75,
+                top: -2,
+                bottom: -2,
+                // onSurfaceVariant: outlineVariant vanished on the dark card.
+                child: Container(
+                  width: 1.5,
+                  color: s.onSurfaceVariant.withValues(alpha: 0.7),
+                ),
+              ),
+              Positioned(
+                left: positive ? half : half - w,
+                width: w,
+                top: 0,
+                bottom: 0,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: barColor,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+    final avatar = ParticipantAvatar(participant: participant, size: 32);
+
+    // Large text: name and amount on one line, the bar under them, so
+    // neither is cut ("So…", "+217." / "30 €").
+    final large = MediaQuery.textScalerOf(context).scale(14) / 14 >= 1.3;
+
     return Semantics(
       label: semanticLabel,
       excludeSemantics: true,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            ParticipantAvatar(participant: participant, size: 32),
-            const SizedBox(width: 10),
-            SizedBox(
-              width: 64,
-              child: Text(
-                participant.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+        child: large
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      avatar,
+                      const SizedBox(width: 10),
+                      Expanded(child: name),
+                      const SizedBox(width: 8),
+                      amount,
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  bar,
+                ],
+              )
+            : Row(
+                children: [
+                  avatar,
+                  const SizedBox(width: 10),
+                  SizedBox(width: 64, child: name),
+                  Expanded(child: bar),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 92,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: amount,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            // Bar from the center: right = gets back, left = owes.
-            Expanded(
-              child: SizedBox(
-                height: 12,
-                child: LayoutBuilder(
-                  builder: (context, c) {
-                    final half = c.maxWidth / 2;
-                    final w = half * fraction;
-                    return Stack(
-                      children: [
-                        Positioned(
-                          left: half - 0.75,
-                          top: -2,
-                          bottom: -2,
-                          // onSurfaceVariant: outlineVariant vanished on the dark card.
-                          child: Container(
-                            width: 1.5,
-                            color: s.onSurfaceVariant.withValues(alpha: 0.7),
-                          ),
-                        ),
-                        Positioned(
-                          left: positive ? half : half - w,
-                          width: w,
-                          top: 0,
-                          bottom: 0,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: barColor,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            SizedBox(
-              width: 92,
-              child: Text(
-                '${settled ? '' : (positive ? '+' : '−')}'
-                '${NumberFormat('#,##0.00', Localizations.localeOf(context).toString()).format(balance.abs())} $currency',
-                textAlign: TextAlign.end,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: textColor,
-                  fontWeight: FontWeight.w700,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

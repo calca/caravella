@@ -11,7 +11,11 @@ class HomeLayoutConstants {
   static const double largeTextScale = 1.3;
 
   static bool isLargeText(BuildContext context) =>
-      MediaQuery.textScalerOf(context).scale(1) >= largeTextScale;
+      MediaQuery.textScalerOf(context).scale(_bodySize) / _bodySize >=
+      largeTextScale;
+
+  // Android scales text non-linearly: measure on a body-sized font.
+  static const double _bodySize = 14;
 
   HomeLayoutConstants._();
 
