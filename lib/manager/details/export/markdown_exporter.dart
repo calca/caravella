@@ -51,12 +51,16 @@ class MarkdownExporter {
     buffer.writeln('**${loc.number_of_expenses}**: ${group.expenses.length}');
     buffer.writeln();
 
-    // Daily average
-    final dailyAverage = group.getDailyAverage();
-    buffer.writeln(
-      '**${loc.daily_average}**: ${CurrencyDisplay.formatCurrencyText(dailyAverage, group.currency)}',
-    );
-    buffer.writeln();
+    // Spending pace: the average over the whole period, per day or month
+    if (SpendingPace.of(group) case final pace?) {
+      final unit = pace.unit == SpendingPaceUnit.month
+          ? loc.stats_per_month
+          : loc.stats_per_day;
+      buffer.writeln(
+        '**${loc.stats_pace_title}**: ${CurrencyDisplay.formatCurrencyText(pace.average, group.currency)} $unit',
+      );
+      buffer.writeln();
+    }
 
     // Statistics by participant
     buffer.writeln('### ${loc.expenses_by_participant}');

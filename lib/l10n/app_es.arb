@@ -271,11 +271,7 @@
   "delete_expense": "Eliminar gasto",
   "delete_expense_confirm": "El gasto se eliminará. No se podrá deshacer.",
   "delete": "Eliminar",
-  "daily_average": "Diario",
   "spent_today": "Hoy",
-  "monthly_average": "Mensual",
-  "@monthly_average": {"description": "Etiqueta mostrada antes del valor promedio mensual"},
-  "@daily_average": {"description": "Etiqueta mostrada antes del valor promedio de gasto diario calculado"},
   "@spent_today": {"description": "Etiqueta mostrada antes del monto gastado hoy"},
   "welcome_v3_cta": "Empezar",
   "discard_changes_title": "¿Salir sin guardar?",
@@ -921,4 +917,14 @@
   ,"new_expense": "Nuevo gasto"
   ,"confirm": "Confirmar"
   ,"group": "Grupo"
+  ,"stats_pace_title": "Ritmo de gasto"
+  ,"stats_per_day": "al día"
+  ,"stats_per_month": "al mes"
+  ,"stats_pace_days": "{count, plural, =1{En 1 día} other{Media de {count} días}} · {range}"
+  ,"stats_pace_months": "{count, plural, =1{En 1 mes} other{Media de {count} meses}} · {range}"
+  ,"stats_per_expense": "{amount} por gasto"
+  ,"stats_active_days": "{active} de {total} días con gastos"
+  ,"stats_active_months": "{active} de {total} meses con gastos"
+  ,"most_expensive_month": "Mes más caro"
+  ,"per_month": "/mes"
 }

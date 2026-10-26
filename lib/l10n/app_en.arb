@@ -289,11 +289,7 @@
   ,"delete_expense": "Delete expense"
   ,"delete_expense_confirm": "The expense will be deleted. This can’t be undone."
   ,"delete": "Delete"
-  ,"daily_average": "Daily"
   ,"spent_today": "Today"
-  ,"@daily_average": {"description": "Label shown before the computed overall daily average spending value"}
-    ,"monthly_average": "Monthly"
-    ,"@monthly_average": {"description": "Label shown before the computed overall monthly average spending value"}
   ,"@spent_today": {"description": "Label shown before the amount spent today"}
   ,"welcome_v3_cta": "Get started"
   ,"discard_changes_title": "Leave without saving?"
@@ -997,4 +993,24 @@
   ,"place_search_action": "Search for a place"
   ,"background_photo": "Photo"
   ,"background_none": "None"
+  ,"stats_pace_title": "Spending pace"
+  ,"@stats_pace_title": {"description": "Statistics: title of the card with the group's average spending over its whole period"}
+  ,"stats_per_day": "per day"
+  ,"@stats_per_day": {"description": "Statistics pace card: unit after the average amount (e.g. '135.48 € per day')"}
+  ,"stats_per_month": "per month"
+  ,"@stats_per_month": {"description": "Statistics pace card: unit after the average amount for groups longer than two months"}
+  ,"stats_pace_days": "{count, plural, =1{Over 1 day} other{Average over {count} days}} · {range}"
+  ,"@stats_pace_days": {"description": "Statistics pace card: what the daily average is computed over; range is the formatted period", "placeholders": {"count": {"type": "int"}, "range": {"type": "String"}}}
+  ,"stats_pace_months": "{count, plural, =1{Over 1 month} other{Average over {count} months}} · {range}"
+  ,"@stats_pace_months": {"description": "Statistics pace card: what the monthly average is computed over; range is the formatted period", "placeholders": {"count": {"type": "int"}, "range": {"type": "String"}}}
+  ,"stats_per_expense": "{amount} per expense"
+  ,"@stats_per_expense": {"description": "Statistics pace card: average amount of one expense, already formatted with currency", "placeholders": {"amount": {"type": "String"}}}
+  ,"stats_active_days": "{active} of {total} days with expenses"
+  ,"@stats_active_days": {"description": "Statistics pace card: how many days of the period have at least one expense", "placeholders": {"active": {"type": "int"}, "total": {"type": "int"}}}
+  ,"stats_active_months": "{active} of {total} months with expenses"
+  ,"@stats_active_months": {"description": "Statistics pace card: how many months of the period have at least one expense", "placeholders": {"active": {"type": "int"}, "total": {"type": "int"}}}
+  ,"most_expensive_month": "Most expensive month"
+  ,"@most_expensive_month": {"description": "Statistics card for long groups: the month with the highest total spending"}
+  ,"per_month": "/month"
+  ,"@per_month": {"description": "Statistics: unit after a category's average per month, for groups longer than two months"}
 }

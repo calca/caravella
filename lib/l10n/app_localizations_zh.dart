@@ -780,13 +780,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get delete => '删除';
 
   @override
-  String get daily_average => '每日';
-
-  @override
   String get spent_today => '今日支出';
-
-  @override
-  String get monthly_average => '每月';
 
   @override
   String get welcome_v3_cta => '开始';
@@ -2228,4 +2222,56 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get background_none => '无';
+
+  @override
+  String get stats_pace_title => '消费节奏';
+
+  @override
+  String get stats_per_day => '每天';
+
+  @override
+  String get stats_per_month => '每月';
+
+  @override
+  String stats_pace_days(int count, String range) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 天平均',
+      one: '共 1 天',
+    );
+    return '$_temp0 · $range';
+  }
+
+  @override
+  String stats_pace_months(int count, String range) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个月平均',
+      one: '共 1 个月',
+    );
+    return '$_temp0 · $range';
+  }
+
+  @override
+  String stats_per_expense(String amount) {
+    return '每笔 $amount';
+  }
+
+  @override
+  String stats_active_days(int active, int total) {
+    return '$total 天中有 $active 天有支出';
+  }
+
+  @override
+  String stats_active_months(int active, int total) {
+    return '$total 个月中有 $active 个月有支出';
+  }
+
+  @override
+  String get most_expensive_month => '花费最多的月份';
+
+  @override
+  String get per_month => '/月';
 }

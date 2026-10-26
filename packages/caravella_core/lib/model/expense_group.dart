@@ -167,29 +167,6 @@ class ExpenseGroup {
     );
   }
 
-  /// Calcola la media giornaliera delle spese (totale / giorni distinti con spese).
-  /// Restituisce 0.0 se non ci sono spese.
-  double getDailyAverage() {
-    if (expenses.isEmpty) return 0.0;
-    final days = expenses
-        .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
-        .toSet()
-        .length;
-    return days == 0 ? 0.0 : getTotalExpenses() / days;
-  }
-
-  /// Calcola la media mensile delle spese (totale / mesi dal primo all'ultimo).
-  /// Restituisce 0.0 se non ci sono spese.
-  double getMonthlyAverage() {
-    if (expenses.isEmpty) return 0.0;
-    final dates = expenses.map((e) => e.date).toList()..sort();
-    final first = dates.first;
-    final last = dates.last;
-    int months = (last.year - first.year) * 12 + (last.month - first.month) + 1;
-    if (months <= 0) months = 1;
-    return getTotalExpenses() / months;
-  }
-
   /// Restituisce il totale per ogni categoria del gruppo.
   /// La mappa ha come chiave la categoria e come valore il totale delle spese.
   Map<ExpenseCategory, double> getCategoryTotals() {
@@ -252,35 +229,6 @@ class ExpenseGroup {
   double getAveragePerParticipant() {
     if (participants.isEmpty) return 0.0;
     return getTotalExpenses() / participants.length;
-  }
-
-  /// Returns the effective statistics date range for the group.
-  ///
-  /// - If [startDate] and [endDate] are both set, uses them capped at today.
-  /// - Otherwise falls back to [first expense date … today].
-  /// - If there are no expenses and no dates, defaults to the current month.
-  ///
-  /// Accepts an optional [now] reference (defaults to [DateTime.now()]) to aid testability.
-  ({DateTime start, DateTime end}) getEffectiveDateRange([DateTime? now]) {
-    final ref = now ?? DateTime.now();
-    final today = DateTime(ref.year, ref.month, ref.day);
-    if (startDate != null && endDate != null) {
-      final start = DateTime(startDate!.year, startDate!.month, startDate!.day);
-      final end = DateTime(endDate!.year, endDate!.month, endDate!.day);
-      final effectiveEnd = end.isBefore(today) ? end : today;
-      return (start: start, end: effectiveEnd);
-    }
-    if (expenses.isEmpty) {
-      final firstDay = DateTime(today.year, today.month, 1);
-      final lastDay = DateTime(today.year, today.month + 1, 0);
-      return (start: firstDay, end: lastDay);
-    }
-    final sorted = [...expenses]..sort((a, b) => a.date.compareTo(b.date));
-    final first = sorted.first.date;
-    return (
-      start: DateTime(first.year, first.month, first.day),
-      end: today,
-    );
   }
 
   /// Returns participants sorted by number of expenses paid (descending).

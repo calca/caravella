@@ -34,11 +34,13 @@ class CategoriesOverviewTab extends StatelessWidget {
     }
 
     final totalAll = trip.getTotalExpenses();
-    final range = trip.getEffectiveDateRange();
-    final totalDays = (range.end.difference(range.start).inDays + 1).clamp(
-      1,
-      1000000,
-    );
+    // Same period and unit as the spending pace card, so the per-day (or
+    // per-month, for long groups) figures add up to it.
+    final pace = SpendingPace.of(trip);
+    final periods = pace?.periods ?? 1;
+    final perUnit = pace?.unit == SpendingPaceUnit.month
+        ? gloc.per_month
+        : gloc.per_day;
 
     // Build totals per category using model method
     final categoryTotals = trip.getCategoryTotals();
@@ -70,14 +72,14 @@ class CategoriesOverviewTab extends StatelessWidget {
                 ? gloc.uncategorized
                 : entry.key.name;
             final total = entry.value;
-            final perDay = total / totalDays;
+            final perPeriod = total / periods;
             final pct = totalAll == 0 ? 0.0 : (total / totalAll) * 100.0;
             final subtitleSpans = <InlineSpan>[
               WidgetSpan(
                 alignment: PlaceholderAlignment.baseline,
                 baseline: TextBaseline.alphabetic,
                 child: CurrencyDisplay(
-                  value: perDay,
+                  value: perPeriod,
                   currency: trip.currency,
                   showDecimals: true,
                   valueFontSize: 12,
@@ -85,7 +87,7 @@ class CategoriesOverviewTab extends StatelessWidget {
                   alignment: MainAxisAlignment.start,
                 ),
               ),
-              TextSpan(text: ' ${gloc.per_day}'),
+              TextSpan(text: ' $perUnit'),
             ];
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
