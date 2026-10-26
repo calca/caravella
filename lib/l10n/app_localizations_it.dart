@@ -2327,4 +2327,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get per_month => '/mese';
+
+  @override
+  String get map_location_off =>
+      'Attiva la posizione automatica per vedere le spese sulla mappa';
+
+  @override
+  String get map_no_places => 'Ancora nessuna spesa con un luogo';
 }

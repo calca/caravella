@@ -2329,4 +2329,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get per_month => '/mes';
+
+  @override
+  String get map_location_off =>
+      'Activa la ubicación automática para ver los gastos en el mapa';
+
+  @override
+  String get map_no_places => 'Aún no hay gastos con un lugar';
 }

@@ -2274,4 +2274,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get per_month => '/月';
+
+  @override
+  String get map_location_off => '开启自动定位，即可在地图上查看支出';
+
+  @override
+  String get map_no_places => '还没有带地点的支出';
 }

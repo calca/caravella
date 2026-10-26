@@ -14,12 +14,17 @@ int groupPlacesCount(ExpenseGroup group) => {
           '${e.location!.longitude!.toStringAsFixed(3)}',
 }.length;
 
-/// Card opening the map of the group's expenses, shown in its statistics
-/// when some expense has a location.
+/// Map card of the group's statistics. With places it opens the map of the
+/// group's expenses. Without any, it explains why: when the group's
+/// automatic location is off, tapping it opens the setting
+/// ([onEnableLocation]); otherwise it is just a note, not tappable.
 class GroupMapCard extends StatelessWidget {
   final ExpenseGroup group;
 
-  const GroupMapCard({super.key, required this.group});
+  /// Opens the group setting that turns automatic location on.
+  final VoidCallback? onEnableLocation;
+
+  const GroupMapCard({super.key, required this.group, this.onEnableLocation});
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +33,25 @@ class GroupMapCard extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final places = groupPlacesCount(group);
     final radius = BorderRadius.circular(20);
-    void open() => Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => ExpenseLocationsMapPage(group: group)),
-    );
+    final VoidCallback? onTap = places > 0
+        ? () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ExpenseLocationsMapPage(group: group),
+            ),
+          )
+        : group.autoLocationEnabled
+        ? null
+        : onEnableLocation;
+    final subtitle = places > 0
+        ? gloc.places_count(places)
+        : group.autoLocationEnabled
+        ? gloc.map_no_places
+        : gloc.map_location_off;
 
     return Semantics(
-      button: true,
-      label: '${gloc.quick_action_map}, ${gloc.places_count(places)}',
-      onTap: open,
+      button: onTap != null,
+      label: '${gloc.quick_action_map}, $subtitle',
+      onTap: onTap,
       excludeSemantics: true,
       child: CardOutline(
         borderRadius: radius,
@@ -44,7 +60,7 @@ class GroupMapCard extends StatelessWidget {
           borderRadius: radius,
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: open,
+            onTap: onTap,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -56,7 +72,12 @@ class GroupMapCard extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: s.surfaceContainerHighest,
                     ),
-                    child: Icon(Icons.map_outlined, color: s.onSurface),
+                    child: Icon(
+                      places > 0 || group.autoLocationEnabled
+                          ? Icons.map_outlined
+                          : Icons.location_off_outlined,
+                      color: s.onSurface,
+                    ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -70,7 +91,7 @@ class GroupMapCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          gloc.places_count(places),
+                          subtitle,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: s.onSurfaceVariant,
                           ),
@@ -78,7 +99,11 @@ class GroupMapCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Icon(Icons.chevron_right_rounded, color: s.onSurfaceVariant),
+                  if (onTap != null)
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: s.onSurfaceVariant,
+                    ),
                 ],
               ),
             ),
