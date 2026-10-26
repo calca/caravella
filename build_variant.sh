@@ -15,6 +15,11 @@
 #   ./build_variant.sh check      # fail if the Android release classpath
 #                                 # contains a proprietary Google artifact
 #                                 # (meant for the foss variant)
+#   ./build_variant.sh fdroid-lock [--check]
+#                                 # regenerate (or verify) pubspec.fdroid.lock
+#   ./build_variant.sh fdroid-prepare
+#                                 # F-Droid recipe: foss variant pinned to
+#                                 # pubspec.fdroid.lock
 #
 # foss/gms run `flutter pub get` afterwards; pass --no-pub-get to skip it.
 
@@ -22,6 +27,9 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 OVERRIDES=pubspec_overrides.yaml
+# Lockfile of the F-Droid build (foss variant, no sqflite_common_ffi), so its
+# recipe can run `flutter pub get --enforce-lockfile`.
+FDROID_LOCK=pubspec.fdroid.lock
 MARKER='# Written by build_variant.sh'
 # Group IDs F-Droid's scanner rejects as non-free.
 NONFREE='com\.google\.android\.gms|com\.google\.mlkit|com\.google\.firebase|com\.google\.android\.play|com\.google\.android\.datatransport|com\.google\.android\.odml'
@@ -84,8 +92,50 @@ YAML
     fi
     echo "OK: no non-free Google artifacts."
     ;;
+  fdroid-prepare)
+    # What the F-Droid recipe runs before `flutter pub get --enforce-lockfile`:
+    # the foss variant, without the test-only sqflite_common_ffi (its sqlite3
+    # build hook would bundle a prebuilt libsqlite3.so), resolved exactly as
+    # $FDROID_LOCK pins it.
+    "$0" foss --no-pub-get
+    sed -i.bak -e '/sqflite_common_ffi/d' pubspec.yaml && rm pubspec.yaml.bak
+    cp "$FDROID_LOCK" pubspec.lock
+    echo "Prepared for F-Droid: pubspec.lock is now $FDROID_LOCK"
+    ;;
+  fdroid-lock)
+    # Regenerates $FDROID_LOCK from pubspec.yaml + pubspec.lock in a scratch
+    # copy, so the working tree is untouched. Starting from the committed
+    # lockfile keeps every remaining package at its locked version: the
+    # result only drops the packages the F-Droid build doesn't have.
+    # --check fails instead of writing when $FDROID_LOCK is out of date.
+    tmp=$(mktemp -d)
+    trap 'rm -rf "$tmp"' EXIT
+    cp pubspec.yaml pubspec.lock l10n.yaml build_variant.sh "$tmp"/
+    mkdir -p "$tmp/lib"
+    cp -R lib/l10n "$tmp/lib/"
+    rsync -a --exclude .dart_tool --exclude build \
+      --exclude caravella_gms/ --exclude google_drive_sync/ --exclude play_store_updates/ \
+      packages "$tmp"/
+    (
+      cd "$tmp"
+      ./build_variant.sh foss --no-pub-get >/dev/null
+      sed -i.bak -e '/sqflite_common_ffi/d' pubspec.yaml && rm pubspec.yaml.bak
+      flutter pub get >/dev/null
+    )
+    if [[ ${2:-} == --check ]]; then
+      if ! cmp -s "$tmp/pubspec.lock" "$FDROID_LOCK"; then
+        echo "error: $FDROID_LOCK is out of date — run ./build_variant.sh fdroid-lock and commit it" >&2
+        diff "$FDROID_LOCK" "$tmp/pubspec.lock" >&2 || true
+        exit 1
+      fi
+      echo "OK: $FDROID_LOCK matches pubspec.yaml/pubspec.lock."
+    else
+      cp "$tmp/pubspec.lock" "$FDROID_LOCK"
+      echo "Wrote $FDROID_LOCK"
+    fi
+    ;;
   *)
-    echo "usage: $0 [foss|gms|check] [--no-pub-get]" >&2
+    echo "usage: $0 [foss|gms|check|fdroid-prepare|fdroid-lock [--check]] [--no-pub-get]" >&2
     exit 2
     ;;
 esac

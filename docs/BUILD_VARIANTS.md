@@ -75,7 +75,11 @@ flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
 ./build_variant.sh check   # fails if a non-free Google artifact is on the release classpath
 ./build_variant.sh gms     # back to the Play build
 ./build_variant.sh         # prints the current variant
+./build_variant.sh fdroid-lock      # regenerates pubspec.fdroid.lock (--check only verifies it)
+./build_variant.sh fdroid-prepare   # F-Droid recipe: foss variant pinned to pubspec.fdroid.lock
 ```
+
+`pubspec.fdroid.lock` is the lockfile of the F-Droid build: the committed `pubspec.lock` resolved for the foss variant without the test-only `sqflite_common_ffi`. It only drops packages, every other one keeps its locked version, and it lets the F-Droid recipe run `flutter pub get --enforce-lockfile`. Regenerate it whenever `pubspec.yaml` or `pubspec.lock` change; CI fails otherwise.
 
 This has to be a dependency switch rather than another `--dart-define`: a define only picks code paths, while every plugin in the resolved dependency graph is still registered by Flutter and compiled by Gradle, which is what F-Droid's scanner rejects. In the FOSS variant receipt OCR, QR scanning, Bluetooth sync, Google Drive, in-app review and in-app updates are hidden, and the current location comes from the platform `LocationManager` instead of Google's fused provider — see [caravella_gms](PACKAGE_CARAVELLA_GMS.md) for the full feature table.
 
