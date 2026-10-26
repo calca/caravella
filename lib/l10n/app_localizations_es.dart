@@ -446,10 +446,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get all => 'Todos';
 
   @override
-  String get search_groups => 'Buscar grupos…';
+  String get search_groups => 'Buscar grupos y gastos…';
 
   @override
-  String get no_search_results => 'No se encontraron grupos';
+  String get no_search_results => 'Sin resultados';
 
   @override
   String get try_different_search => 'Intenta buscar con palabras diferentes';

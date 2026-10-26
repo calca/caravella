@@ -127,7 +127,7 @@
   "settings_tab": "Configurações",
   "settings": "Configurações",
   "all": "Todos",
-  "no_search_results": "Nenhum grupo encontrado",
+  "no_search_results": "Nenhum resultado",
   "active": "Ativo",
   "archive": "Arquivar",
   "pin": "Favorito",
@@ -488,7 +488,7 @@
   ,"participants": "Participantes"
   ,"per_day": "/dia"
   ,"saving": "Salvando…"
-  ,"search_groups": "Pesquisar grupos…"
+  ,"search_groups": "Pesquisar grupos e despesas…"
   ,"select_expense_date": "Selecionar data da despesa"
   ,"settings_language_es": "Espanhol"
   ,"settings_user_name_title": "Seu nome"
