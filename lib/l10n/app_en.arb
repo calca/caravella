@@ -895,8 +895,6 @@
   ,"@quick_action_voice": {"description": "Home quick action under the group card: add an expense by voice"}
   ,"sync_state_syncing": "syncing"
   ,"@sync_state_syncing": {"description": "Screen reader state of the Shared badge while a sync runs"}
-  ,"sync_state_synced": "up to date"
-  ,"@sync_state_synced": {"description": "Screen reader state of the Shared badge after a successful sync"}
   ,"sync_state_error": "sync failed, tap for details"
   ,"@sync_state_error": {"description": "Screen reader state of the Shared badge after a failed sync; the badge opens the sync page"}
   ,"share_balances": "Share balances"

@@ -2019,9 +2019,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_state_syncing => '正在同步';
 
   @override
-  String get sync_state_synced => '已同步';
-
-  @override
   String get sync_state_error => '同步失败，点按查看详情';
 
   @override

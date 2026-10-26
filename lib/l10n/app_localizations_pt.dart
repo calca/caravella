@@ -2062,9 +2062,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sync_state_syncing => 'sincronizando';
 
   @override
-  String get sync_state_synced => 'atualizado';
-
-  @override
   String get sync_state_error => 'falha na sincronização, toque para detalhes';
 
   @override

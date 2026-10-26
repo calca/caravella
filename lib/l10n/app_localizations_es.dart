@@ -2068,9 +2068,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_state_syncing => 'sincronizando';
 
   @override
-  String get sync_state_synced => 'actualizado';
-
-  @override
   String get sync_state_error =>
       'sincronización fallida, toca para ver detalles';
 

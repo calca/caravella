@@ -3956,12 +3956,6 @@ abstract class AppLocalizations {
   /// **'syncing'**
   String get sync_state_syncing;
 
-  /// Screen reader state of the Shared badge after a successful sync
-  ///
-  /// In en, this message translates to:
-  /// **'up to date'**
-  String get sync_state_synced;
-
   /// Screen reader state of the Shared badge after a failed sync; the badge opens the sync page
   ///
   /// In en, this message translates to:
