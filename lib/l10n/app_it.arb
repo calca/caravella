@@ -277,7 +277,7 @@
   ,"status_archived": "Archiviati"
   ,"no_archived_groups": "Nessun gruppo archiviato"
   ,"@no_archived_groups": {"description": "Titolo stato vuoto per i gruppi archiviati"}
-  ,"no_archived_groups_subtitle": "Non hai ancora archiviato nessun gruppo"
+  ,"no_archived_groups_subtitle": "Tieni premuto un gruppo e scegli Archivia: lo ritrovi qui."
   ,"all_groups_archived_info": "Tutti i tuoi gruppi sono in archivio. Puoi riprenderli da lì o crearne uno nuovo."
   ,"@no_archived_groups_subtitle": {"description": "Sottotitolo stato vuoto per i gruppi archiviati"}
   ,"@status_archived": {"description": "Etichetta filtro: gruppi archiviati"}
@@ -904,4 +904,5 @@
   ,"per_month": "/mese"
   ,"map_location_off": "Attiva la posizione automatica per vedere le spese sulla mappa"
   ,"map_no_places": "Ancora nessuna spesa con un luogo"
+  ,"no_active_groups_subtitle": "Creane uno per un viaggio, una casa condivisa o un evento."
 }

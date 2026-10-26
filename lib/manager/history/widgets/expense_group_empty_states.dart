@@ -1,3 +1,4 @@
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
@@ -64,14 +65,13 @@ class ExpenseGroupEmptyStates extends StatelessWidget {
     );
   }
 
+  // Same card as an empty expense list on the group page.
   Widget _buildArchivedEmptyState(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    return _buildSimpleEmptyState(
-      context,
+    return EmptyStateCard(
       icon: Icons.archive_outlined,
       title: gloc.no_archived_groups,
       subtitle: gloc.no_archived_groups_subtitle,
-      iconColor: Theme.of(context).colorScheme.outline,
     );
   }
 
@@ -93,14 +93,13 @@ class ExpenseGroupEmptyStates extends StatelessWidget {
   }
 
   Widget _buildAllEmptyState(BuildContext context) {
-    // Use a layout similar to archived but for the 'all' state
     final gloc = gen.AppLocalizations.of(context);
-    return _buildSimpleEmptyState(
-      context,
-      icon: Icons.play_circle_outline_outlined,
+    return EmptyStateCard(
+      icon: Icons.folder_outlined,
       title: gloc.no_active_groups,
-      subtitle: gloc.create_first_group,
-      iconColor: Theme.of(context).colorScheme.outline,
+      subtitle: gloc.no_active_groups_subtitle,
+      actionLabel: gloc.create_first_group,
+      onAction: onTripAdded,
     );
   }
 }

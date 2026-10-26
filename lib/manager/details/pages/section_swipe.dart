@@ -1,4 +1,5 @@
-/// Which section a horizontal swipe on the group page leads to, or null to
+/// Which section a horizontal swipe leads to (the group page's Expenses /
+/// Balances / Statistics, the Groups page's Active / Archived), or null to
 /// stay: a swipe towards the start (left in LTR) opens the next section, one
 /// towards the end the previous one. A swipe counts when it travelled
 /// [minDistance] or was flung faster than [minVelocity].

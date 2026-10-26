@@ -154,7 +154,7 @@
   "status_active": "Ativos",
   "status_archived": "Arquivados",
   "no_archived_groups": "Nenhum grupo arquivado",
-  "no_archived_groups_subtitle": "Você ainda não arquivou nenhum grupo",
+  "no_archived_groups_subtitle": "Toque e segure um grupo e escolha Arquivar: ele aparece aqui.",
   "all_groups_archived_info": "Todos os seus grupos estão no arquivo. Você pode recuperá-los de lá ou criar um novo.",
   "welcome_logo_semantic": "Logo do app Caravella",
   "create_new_group": "Criar novo grupo",
@@ -902,4 +902,5 @@
   ,"per_month": "/mês"
   ,"map_location_off": "Ative a localização automática para ver as despesas no mapa"
   ,"map_no_places": "Ainda não há despesas com um local"
+  ,"no_active_groups_subtitle": "Crie um para uma viagem, uma casa compartilhada ou um evento."
 }
