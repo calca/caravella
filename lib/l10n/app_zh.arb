@@ -246,11 +246,6 @@
   "select_category": "类别",
   "delete_expense": "删除支出",
   "delete_expense_confirm": "该支出将被删除，且无法撤销。",
-  "daily_average": "每日",
-  "monthly_average": "每月",
-  "@monthly_average": {
-    "description": "Label shown before the computed overall monthly average spending value"
-  },
   "error_saving_group": "保存错误: {error}",
   "@error_saving_group": {
     "placeholders": {
@@ -1226,4 +1221,14 @@
   ,"new_expense": "新建支出"
   ,"confirm": "确认"
   ,"group": "群组"
+  ,"stats_pace_title": "消费节奏"
+  ,"stats_per_day": "每天"
+  ,"stats_per_month": "每月"
+  ,"stats_pace_days": "{count, plural, =1{共 1 天} other{{count} 天平均}} · {range}"
+  ,"stats_pace_months": "{count, plural, =1{共 1 个月} other{{count} 个月平均}} · {range}"
+  ,"stats_per_expense": "每笔 {amount}"
+  ,"stats_active_days": "{total} 天中有 {active} 天有支出"
+  ,"stats_active_months": "{total} 个月中有 {active} 个月有支出"
+  ,"most_expensive_month": "花费最多的月份"
+  ,"per_month": "/月"
 }

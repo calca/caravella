@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Statistics: the “Daily” and “Monthly” tiles are replaced by a **Spending pace** card — the average per day over the whole period of the group (per month for groups longer than two months), saying what it's averaged over, with the number of expenses, the average expense and how many days had any. The per-day figures of the categories use the same period, and long groups show the most expensive month
 - F-Droid listing refreshed for 2.2: new descriptions and screenshots in all five languages (it lists only what the F-Droid build has), and `metadata.yml` builds 2.2.1, with one APK per processor type (smaller downloads) following F-Droid's Flutter template
 - F-Droid and Google Play feature graphic: the text and phones stay clear of the edges Play crops, and the phones show the 2.2 screens; F-Droid gets the banner too
 - F-Droid build pinned to its own lockfile (`pubspec.fdroid.lock`), so F-Droid compiles exactly the dependency versions we test

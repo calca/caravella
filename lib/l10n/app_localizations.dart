@@ -1610,23 +1610,11 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get delete;
 
-  /// Label shown before the computed overall daily average spending value
-  ///
-  /// In en, this message translates to:
-  /// **'Daily'**
-  String get daily_average;
-
   /// Label shown before the amount spent today
   ///
   /// In en, this message translates to:
   /// **'Today'**
   String get spent_today;
-
-  /// Label shown before the computed overall monthly average spending value
-  ///
-  /// In en, this message translates to:
-  /// **'Monthly'**
-  String get monthly_average;
 
   /// No description provided for @welcome_v3_cta.
   ///
@@ -4332,6 +4320,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'None'**
   String get background_none;
+
+  /// Statistics: title of the card with the group's average spending over its whole period
+  ///
+  /// In en, this message translates to:
+  /// **'Spending pace'**
+  String get stats_pace_title;
+
+  /// Statistics pace card: unit after the average amount (e.g. '135.48 € per day')
+  ///
+  /// In en, this message translates to:
+  /// **'per day'**
+  String get stats_per_day;
+
+  /// Statistics pace card: unit after the average amount for groups longer than two months
+  ///
+  /// In en, this message translates to:
+  /// **'per month'**
+  String get stats_per_month;
+
+  /// Statistics pace card: what the daily average is computed over; range is the formatted period
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Over 1 day} other{Average over {count} days}} · {range}'**
+  String stats_pace_days(int count, String range);
+
+  /// Statistics pace card: what the monthly average is computed over; range is the formatted period
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Over 1 month} other{Average over {count} months}} · {range}'**
+  String stats_pace_months(int count, String range);
+
+  /// Statistics pace card: average amount of one expense, already formatted with currency
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} per expense'**
+  String stats_per_expense(String amount);
+
+  /// Statistics pace card: how many days of the period have at least one expense
+  ///
+  /// In en, this message translates to:
+  /// **'{active} of {total} days with expenses'**
+  String stats_active_days(int active, int total);
+
+  /// Statistics pace card: how many months of the period have at least one expense
+  ///
+  /// In en, this message translates to:
+  /// **'{active} of {total} months with expenses'**
+  String stats_active_months(int active, int total);
+
+  /// Statistics card for long groups: the month with the highest total spending
+  ///
+  /// In en, this message translates to:
+  /// **'Most expensive month'**
+  String get most_expensive_month;
+
+  /// Statistics: unit after a category's average per month, for groups longer than two months
+  ///
+  /// In en, this message translates to:
+  /// **'/month'**
+  String get per_month;
 }
 
 class _AppLocalizationsDelegate

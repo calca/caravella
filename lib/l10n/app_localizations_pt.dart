@@ -791,13 +791,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get delete => 'Excluir';
 
   @override
-  String get daily_average => 'Diário';
-
-  @override
   String get spent_today => 'Hoje';
-
-  @override
-  String get monthly_average => 'Mensal';
 
   @override
   String get welcome_v3_cta => 'Começar';
@@ -2276,4 +2270,56 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get background_none => 'Nenhum';
+
+  @override
+  String get stats_pace_title => 'Ritmo de gastos';
+
+  @override
+  String get stats_per_day => 'por dia';
+
+  @override
+  String get stats_per_month => 'por mês';
+
+  @override
+  String stats_pace_days(int count, String range) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Média de $count dias',
+      one: 'Em 1 dia',
+    );
+    return '$_temp0 · $range';
+  }
+
+  @override
+  String stats_pace_months(int count, String range) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Média de $count meses',
+      one: 'Em 1 mês',
+    );
+    return '$_temp0 · $range';
+  }
+
+  @override
+  String stats_per_expense(String amount) {
+    return '$amount por despesa';
+  }
+
+  @override
+  String stats_active_days(int active, int total) {
+    return '$active de $total dias com despesas';
+  }
+
+  @override
+  String stats_active_months(int active, int total) {
+    return '$active de $total meses com despesas';
+  }
+
+  @override
+  String get most_expensive_month => 'Mês mais caro';
+
+  @override
+  String get per_month => '/mês';
 }

@@ -15,7 +15,8 @@ import 'stat_card.dart';
 
 /// Statistics view of the group page: one spending chart over the whole
 /// group ([buildGroupSpendingSeries]), who paid how much,
-/// map, daily / monthly averages, highest expense and most expensive day,
+/// map, spending pace ([SpendingPaceCard]), highest expense and most
+/// expensive day (or month, for long groups),
 /// then the categories. The total, period
 /// and participant count are already in the page header, so they aren't
 /// repeated here.
@@ -77,48 +78,49 @@ class GroupStatisticsView extends StatelessWidget {
             const SizedBox(height: 12),
             GroupMapCard(group: group),
           ],
-          const SizedBox(height: 12),
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: StatCard(
-                    title: gloc.daily_average,
-                    value: group.getDailyAverage(),
-                    currency: group.currency,
-                    icon: Icons.calendar_today_outlined,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: StatCard(
-                    title: gloc.monthly_average,
-                    value: group.getMonthlyAverage(),
-                    currency: group.currency,
-                    icon: Icons.calendar_month_outlined,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (highestExpense(group) case final top?) ...[
+          if (SpendingPace.of(group) case final pace?) ...[
+            const SizedBox(height: 12),
+            SpendingPaceCard(pace: pace, currency: group.currency),
             const SizedBox(height: 12),
             IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: StatCard(
-                      title: gloc.highest_expense,
-                      value: top.amount ?? 0,
-                      currency: group.currency,
-                      subtitle: top.name ?? '',
-                      icon: Icons.arrow_upward_rounded,
+                  if (highestExpense(group) case final top?)
+                    Expanded(
+                      child: StatCard(
+                        title: gloc.highest_expense,
+                        value: top.amount ?? 0,
+                        currency: group.currency,
+                        subtitle: top.name ?? '',
+                        icon: Icons.arrow_upward_rounded,
+                      ),
                     ),
-                  ),
                   const SizedBox(width: 12),
-                  if (mostExpensiveDay(group) case (final day, final total))
+                  // The record follows the pace's unit: the most expensive
+                  // month says more than a single day in a long group.
+                  if (pace.unit == SpendingPaceUnit.month)
+                    if (mostExpensiveMonth(group) case (
+                      final month,
+                      final total,
+                    ))
+                      Expanded(
+                        child: StatCard(
+                          title: gloc.most_expensive_month,
+                          value: total,
+                          currency: group.currency,
+                          subtitle: DateFormat.yMMMM(
+                            Localizations.localeOf(context).toString(),
+                          ).format(month),
+                          icon: Icons.calendar_month_outlined,
+                        ),
+                      )
+                    else
+                      const SizedBox.shrink()
+                  else if (mostExpensiveDay(group) case (
+                    final day,
+                    final total,
+                  ))
                     Expanded(
                       child: StatCard(
                         title: gloc.most_expensive_day,
@@ -228,6 +230,151 @@ ExpenseDetails? highestExpense(ExpenseGroup group) => group.expenses.isEmpty
     if (best == null || total > best.$2) best = (day, total);
   }
   return best;
+}
+
+/// The calendar month with the highest total (as its first day) and that
+/// total, or null when the group has no expenses.
+(DateTime, double)? mostExpensiveMonth(ExpenseGroup group) {
+  final totals = <DateTime, double>{};
+  for (final e in group.expenses) {
+    final month = DateTime(e.date.year, e.date.month);
+    totals[month] = (totals[month] ?? 0) + (e.amount ?? 0);
+  }
+  (DateTime, double)? best;
+  for (final MapEntry(key: month, value: total) in totals.entries) {
+    if (best == null || total > best.$2) best = (month, total);
+  }
+  return best;
+}
+
+/// The group's average spending over its whole period ([SpendingPace]): the
+/// amount per day (or per month, for long groups), what it is computed over,
+/// then the number of expenses, the average expense and how many days or
+/// months had any.
+class SpendingPaceCard extends StatelessWidget {
+  final SpendingPace pace;
+  final String currency;
+
+  const SpendingPaceCard({
+    super.key,
+    required this.pace,
+    required this.currency,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context);
+    final monthly = pace.unit == SpendingPaceUnit.month;
+    final range = monthly
+        ? _monthRange(pace.start, pace.end, locale)
+        : formatDateRange(start: pace.start, end: pace.end, locale: locale);
+    final unit = monthly ? gloc.stats_per_month : gloc.stats_per_day;
+    final over = monthly
+        ? gloc.stats_pace_months(pace.periods, range)
+        : gloc.stats_pace_days(pace.periods, range);
+    final perExpense = CurrencyDisplay.formatCurrencyText(
+      pace.perExpense,
+      currency,
+    );
+    final radius = BorderRadius.circular(20);
+
+    Widget pill(String text) => Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: s.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(text, style: theme.textTheme.bodySmall),
+    );
+
+    return Semantics(
+      container: true,
+      label:
+          '${gloc.stats_pace_title}: '
+          '${CurrencyDisplay.formatCurrencyText(pace.average, currency)} '
+          '$unit. $over',
+      child: CardOutline(
+        borderRadius: radius,
+        child: Material(
+          color: s.raisedSurface,
+          borderRadius: radius,
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ExcludeSemantics(
+                  child: Text(
+                    gloc.stats_pace_title.toUpperCase(),
+                    // Same label style as Home's "Recent expenses".
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: s.outline,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                ExcludeSemantics(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      CurrencyDisplay(
+                        value: pace.average,
+                        currency: currency,
+                        valueFontSize: 32,
+                        currencyFontSize: 16,
+                        showDecimals: true,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        unit,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: s.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(over, style: AppTextStyles.subtle(context)),
+                const SizedBox(height: 14),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    pill(gloc.expense_count(pace.expenseCount)),
+                    pill(gloc.stats_per_expense(perExpense)),
+                    pill(
+                      monthly
+                          ? gloc.stats_active_months(
+                              pace.activePeriods,
+                              pace.periods,
+                            )
+                          : gloc.stats_active_days(
+                              pace.activePeriods,
+                              pace.periods,
+                            ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static String _monthRange(DateTime start, DateTime end, Locale locale) {
+    final fmt = DateFormat.yMMM(locale.toString());
+    return start.year == end.year && start.month == end.month
+        ? fmt.format(start)
+        : '${fmt.format(start)} – ${fmt.format(end)}';
+  }
 }
 
 /// Who paid how much: one avatar per participant, sized by what they paid

@@ -262,11 +262,7 @@
   ,"discard_changes_title": "Uscire senza salvare?"
   ,"discard_changes_message": "Le modifiche che non hai salvato andranno perse."
   ,"discard": "Scarta"
-  ,"daily_average": "Media"
   ,"spent_today": "Oggi"
-  ,"@daily_average": {"description": "Etichetta mostrata prima del valore di spesa media giornaliera"}
-  ,"monthly_average": "Mensile"
-  ,"@monthly_average": {"description": "Etichetta mostrata prima del valore della media mensile"}
   ,"@spent_today": {"description": "Etichetta mostrata prima dell'importo speso oggi"}
   ,"error_saving_group": "Errore durante il salvataggio: {error}"
   ,"@error_saving_group": {"placeholders": {"error": {}}}
@@ -896,4 +892,14 @@
   ,"background_none": "Nessuno"
   ,"no_locations_available": "Nessun luogo"
   ,"no_locations_subtitle": "Aggiungi un luogo alle spese per vederle sulla mappa"
+  ,"stats_pace_title": "Ritmo di spesa"
+  ,"stats_per_day": "al giorno"
+  ,"stats_per_month": "al mese"
+  ,"stats_pace_days": "{count, plural, =1{Su 1 giorno} other{Media su {count} giorni}} · {range}"
+  ,"stats_pace_months": "{count, plural, =1{Su 1 mese} other{Media su {count} mesi}} · {range}"
+  ,"stats_per_expense": "{amount} a spesa"
+  ,"stats_active_days": "{active} giorni su {total} con spese"
+  ,"stats_active_months": "{active} mesi su {total} con spese"
+  ,"most_expensive_month": "Mese più caro"
+  ,"per_month": "/mese"
 }

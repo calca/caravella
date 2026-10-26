@@ -173,6 +173,59 @@ void main() {
     expect(mostExpensiveDay(_group([])), isNull);
   });
 
+  test('most expensive month', () {
+    final group = _group([
+      _expense('Rent', 500, DateTime(2026, 9, 1), _anna),
+      _expense('Bills', 120, DateTime(2026, 9, 20), _luca),
+      _expense('Rent', 550, DateTime(2026, 10, 1), _anna),
+    ]);
+    final (month, total) = mostExpensiveMonth(group)!;
+    expect(month, DateTime(2026, 9));
+    expect(total, 620);
+    expect(mostExpensiveMonth(_group([])), isNull);
+  });
+
+  testWidgets('spending pace: average per day, over what, and counts', (
+    tester,
+  ) async {
+    final pace = SpendingPace(
+      unit: SpendingPaceUnit.day,
+      start: DateTime(2026, 10, 16),
+      end: DateTime(2026, 10, 25),
+      periods: 10,
+      activePeriods: 8,
+      total: 1354.80,
+      expenseCount: 14,
+    );
+    await tester.pumpWidget(
+      _wrap(SpendingPaceCard(pace: pace, currency: '€')),
+    );
+    expect(find.text('SPENDING PACE'), findsOneWidget);
+    expect(find.text('per day'), findsOneWidget);
+    expect(find.textContaining('Average over 10 days'), findsOneWidget);
+    expect(find.text('14 expenses'), findsOneWidget);
+    expect(find.textContaining('per expense'), findsOneWidget);
+    expect(find.text('8 of 10 days with expenses'), findsOneWidget);
+  });
+
+  testWidgets('spending pace: long groups are per month', (tester) async {
+    final pace = SpendingPace(
+      unit: SpendingPaceUnit.month,
+      start: DateTime(2026, 3, 1),
+      end: DateTime(2026, 9, 30),
+      periods: 7,
+      activePeriods: 3,
+      total: 1400,
+      expenseCount: 3,
+    );
+    await tester.pumpWidget(
+      _wrap(SpendingPaceCard(pace: pace, currency: '€')),
+    );
+    expect(find.text('per month'), findsOneWidget);
+    expect(find.textContaining('Average over 7 months'), findsOneWidget);
+    expect(find.text('3 of 7 months with expenses'), findsOneWidget);
+  });
+
   group('one spending chart, step by length', () {
     final now = DateTime(2026, 10, 19);
     ExpenseGroup span(DateTime from, DateTime to) => _group([

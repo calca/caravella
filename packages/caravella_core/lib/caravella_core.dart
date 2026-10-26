@@ -16,6 +16,7 @@ export 'model/group_type_template.dart';
 export 'model/expense_location.dart';
 export 'model/expense_participant.dart';
 export 'model/group_settlements.dart';
+export 'model/spending_pace.dart';
 
 // Storage and Repository
 export 'data/expense_group_repository.dart';

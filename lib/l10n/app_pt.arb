@@ -141,10 +141,7 @@
   "delete_expense": "Excluir despesa",
   "delete_expense_confirm": "A despesa será excluída. Não será possível desfazer.",
   "delete": "Excluir",
-  "daily_average": "Diário",
   "spent_today": "Hoje",
-  "monthly_average": "Mensal",
-  "@monthly_average": {"description": "Rótulo mostrado antes do valor médio mensal"},
   "welcome_v3_cta": "Começar",
   "discard_changes_title": "Sair sem salvar?",
   "discard_changes_message": "As alterações que você não salvou serão perdidas.",
@@ -893,4 +890,14 @@
   ,"expenses_map": "Mapa das despesas"
   ,"no_locations_available": "Nenhum lugar"
   ,"no_locations_subtitle": "Adicione um lugar às despesas para vê-las no mapa"
+  ,"stats_pace_title": "Ritmo de gastos"
+  ,"stats_per_day": "por dia"
+  ,"stats_per_month": "por mês"
+  ,"stats_pace_days": "{count, plural, =1{Em 1 dia} other{Média de {count} dias}} · {range}"
+  ,"stats_pace_months": "{count, plural, =1{Em 1 mês} other{Média de {count} meses}} · {range}"
+  ,"stats_per_expense": "{amount} por despesa"
+  ,"stats_active_days": "{active} de {total} dias com despesas"
+  ,"stats_active_months": "{active} de {total} meses com despesas"
+  ,"most_expensive_month": "Mês mais caro"
+  ,"per_month": "/mês"
 }
