@@ -1234,4 +1234,5 @@
   ,"map_location_off": "开启自动定位，即可在地图上查看支出"
   ,"map_no_places": "还没有带地点的支出"
   ,"no_active_groups_subtitle": "为一次旅行、合租公寓或活动创建一个群组。"
+  ,"export_options_empty": "还没有可导出的支出"
 }

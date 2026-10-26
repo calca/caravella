@@ -2333,4 +2333,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get no_active_groups_subtitle =>
       'Crie um para uma viagem, uma casa compartilhada ou um evento.';
+
+  @override
+  String get export_options_empty => 'Ainda não há despesas para exportar';
 }

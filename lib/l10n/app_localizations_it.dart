@@ -2338,4 +2338,7 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get no_active_groups_subtitle =>
       'Creane uno per un viaggio, una casa condivisa o un evento.';
+
+  @override
+  String get export_options_empty => 'Ancora nessuna spesa da esportare';
 }

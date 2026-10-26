@@ -2283,4 +2283,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get no_active_groups_subtitle => '为一次旅行、合租公寓或活动创建一个群组。';
+
+  @override
+  String get export_options_empty => '还没有可导出的支出';
 }

@@ -930,4 +930,5 @@
   ,"map_location_off": "Activa la ubicación automática para ver los gastos en el mapa"
   ,"map_no_places": "Aún no hay gastos con un lugar"
   ,"no_active_groups_subtitle": "Crea uno para un viaje, un piso compartido o un evento."
+  ,"export_options_empty": "Aún no hay gastos para exportar"
 }

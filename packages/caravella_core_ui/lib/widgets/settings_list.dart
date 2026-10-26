@@ -266,7 +266,9 @@ class SettingsGroup extends StatelessWidget {
 /// A settings row: a monochrome [icon] in a neutral circle, [title],
 /// optional [subtitle], then a chevron (when [onTap] opens something), a
 /// switch ([switchValue] + [onSwitch]) or a custom [trailing].
-/// [destructive] draws title and icon in the error color.
+/// [destructive] draws title and icon in the error color. With [enabled]
+/// false the row is greyed out (Material's 38% disabled opacity) and does
+/// nothing.
 class SettingsTile extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -282,6 +284,8 @@ class SettingsTile extends StatelessWidget {
   /// away, e.g. in a bottom sheet).
   final bool chevron;
 
+  final bool enabled;
+
   const SettingsTile({
     super.key,
     required this.icon,
@@ -294,6 +298,7 @@ class SettingsTile extends StatelessWidget {
     this.onSwitch,
     this.destructive = false,
     this.chevron = true,
+    this.enabled = true,
   });
 
   @override
@@ -302,9 +307,12 @@ class SettingsTile extends StatelessWidget {
     final s = theme.colorScheme;
     final fg = destructive ? s.error : s.onSurface;
     final isSwitch = switchValue != null;
-    final VoidCallback? tap =
-        onTap ??
-        (isSwitch && onSwitch != null ? () => onSwitch!(!switchValue!) : null);
+    final VoidCallback? tap = !enabled
+        ? null
+        : onTap ??
+              (isSwitch && onSwitch != null
+                  ? () => onSwitch!(!switchValue!)
+                  : null);
 
     final Widget? trail =
         trailing ??
@@ -312,7 +320,7 @@ class SettingsTile extends StatelessWidget {
             ? ExcludeSemantics(
                 child: Switch(value: switchValue!, onChanged: onSwitch),
               )
-            : onTap != null && chevron
+            : onTap != null && chevron && enabled
             ? Icon(Icons.chevron_right_rounded, color: s.onSurfaceVariant)
             : null);
 
@@ -320,56 +328,60 @@ class SettingsTile extends StatelessWidget {
       child: Semantics(
         toggled: isSwitch ? switchValue : null,
         button: !isSwitch && onTap != null,
+        enabled: enabled,
         child: InkWell(
           onTap: tap,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 60),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 10, 12, 10),
-              child: Row(
-                children: [
-                  Container(
-                    width: 38,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: destructive
-                          ? s.error.withValues(alpha: 0.1)
-                          : s.onSurface.withValues(alpha: 0.06),
+          child: Opacity(
+            opacity: enabled ? 1 : 0.38,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 60),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(14, 10, 12, 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: destructive
+                            ? s.error.withValues(alpha: 0.1)
+                            : s.onSurface.withValues(alpha: 0.06),
+                      ),
+                      child: Icon(icon, size: 20, color: fg),
                     ),
-                    child: Icon(icon, size: 20, color: fg),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            color: fg,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        if (subtitleWidget != null)
-                          DefaultTextStyle.merge(
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: s.onSurfaceVariant,
-                            ),
-                            child: subtitleWidget!,
-                          )
-                        else if (subtitle != null)
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            subtitle!,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: s.onSurfaceVariant,
+                            title,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: fg,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                      ],
+                          if (subtitleWidget != null)
+                            DefaultTextStyle.merge(
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: s.onSurfaceVariant,
+                              ),
+                              child: subtitleWidget!,
+                            )
+                          else if (subtitle != null)
+                            Text(
+                              subtitle!,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: s.onSurfaceVariant,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-                  if (trail != null) ...[const SizedBox(width: 8), trail],
-                ],
+                    if (trail != null) ...[const SizedBox(width: 8), trail],
+                  ],
+                ),
               ),
             ),
           ),
