@@ -187,11 +187,11 @@ class _SyncStatusIconState extends State<SyncStatusIcon> with _SyncStatusMixin {
 }
 
 /// Home's sync button, next to the settings gear: a raised round button
-/// whose sync-arrows icon tells the overall sync state — done (arrows with
-/// a check, green), syncing (rotating arrows), failed (arrows with "!",
-/// ochre) — and opens the sync settings. Sync is device to device, so no
-/// cloud icons. Shown only while syncing or after a failure (hidden when
-/// all is fine or no sync channel is enabled).
+/// with the sync arrows (in the text color, like the gear) that turn while
+/// syncing; after a failure an ochre dot in its corner, the same language
+/// as the groups' "Shared" badge ([GroupSyncBadge]). It opens the sync
+/// settings. Shown only while syncing or after a failure (hidden when all
+/// is fine or no sync channel is enabled).
 class HomeSyncButton extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
@@ -235,17 +235,10 @@ class _HomeSyncButtonState extends State<HomeSyncButton>
       _spin.value = 0;
     }
 
-    final (IconData icon, Color color, String state) = syncing
-        ? (Icons.sync_rounded, s.onSurface, gloc.sync_state_syncing)
-        : hasError
-        ? (Icons.sync_problem_rounded, s.warning, gloc.sync_state_error)
-        : (
-            Icons.published_with_changes_rounded,
-            s.success,
-            gloc.sync_state_synced,
-          );
+    // Visible only while syncing or after a failure (see above).
+    final state = syncing ? gloc.sync_state_syncing : gloc.sync_state_error;
 
-    Widget glyph = Icon(icon, color: color);
+    Widget glyph = Icon(Icons.sync_rounded, color: s.onSurface);
     if (syncing) {
       // Material's sync arrows turn counterclockwise.
       glyph = RotationTransition(
@@ -254,21 +247,47 @@ class _HomeSyncButtonState extends State<HomeSyncButton>
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: Material(
-        color: s.raisedSurface,
-        shape: const CircleBorder(),
-        child: IconButton(
-          icon: glyph,
-          tooltip: '${gloc.sync_title}, $state',
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => SyncSettingsScreen(orchestrator: orchestrator),
-            ),
+    final button = Material(
+      color: s.raisedSurface,
+      shape: const CircleBorder(),
+      child: IconButton(
+        icon: glyph,
+        tooltip: '${gloc.sync_title}, $state',
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SyncSettingsScreen(orchestrator: orchestrator),
           ),
         ),
       ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: syncing
+          ? button
+          : Stack(
+              clipBehavior: Clip.none,
+              children: [
+                button,
+                // Failure: ochre dot in the corner, ringed by the button's
+                // surface so it stands off the arrows.
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: IgnorePointer(
+                    child: Container(
+                      width: 14,
+                      height: 14,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: s.warning,
+                        border: Border.all(color: s.raisedSurface, width: 2),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }

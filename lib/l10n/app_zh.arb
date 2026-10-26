@@ -1156,7 +1156,6 @@
   ,"quick_action_scan": "扫描"
   ,"quick_action_voice": "语音"
   ,"sync_state_syncing": "正在同步"
-  ,"sync_state_synced": "已同步"
   ,"sync_state_error": "同步失败，点按查看详情"
   ,"share_balances": "分享余额"
   ,"balances_share_title": "{group} · 余额"

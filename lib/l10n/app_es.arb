@@ -852,7 +852,6 @@
   ,"quick_action_scan": "Escanear"
   ,"quick_action_voice": "Voz"
   ,"sync_state_syncing": "sincronizando"
-  ,"sync_state_synced": "actualizado"
   ,"sync_state_error": "sincronización fallida, toca para ver detalles"
   ,"share_balances": "Compartir saldos"
   ,"balances_share_title": "{group} · saldos"
