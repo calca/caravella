@@ -82,8 +82,8 @@ class GroupBalancesView extends StatelessWidget {
             _FairShareCard(
               share: group.getTotalExpenses() / group.participants.length,
               currency: group.currency,
+              // The total is already in the header above.
               basis: gloc.balances_share_basis(
-                money(group.getTotalExpenses()),
                 gloc.participant_count(group.participants.length),
               ),
             ),

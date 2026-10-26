@@ -1038,7 +1038,7 @@
   ,"stats_per_person": "{amount} per person"
   ,"@stats_per_person": {"description": "Statistics pace card: the group's total divided by its participants, already formatted with currency", "placeholders": {"amount": {"type": "String"}}}
   ,"balances_share_per_person": "Share per person"
-  ,"balances_share_basis": "{total} ÷ {people}"
+  ,"balances_share_basis": "Split equally among {people}"
   ,"@balances_share_per_person": {"description": "Balances: title of the card with each participant's equal share of the total"}
-  ,"@balances_share_basis": {"description": "Balances: how the share is computed; total is a formatted amount, people is already pluralized ('4 participants')", "placeholders": {"total": {"type": "String"}, "people": {"type": "String"}}}
+  ,"@balances_share_basis": {"description": "Balances: under 'Share per person', how it's computed; people is already pluralized ('4 participants')", "placeholders": {"people": {"type": "String"}}}
 }
