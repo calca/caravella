@@ -71,8 +71,8 @@ AntiFeatures: []
 # Following fdroiddata's Flutter template, each release has one build per ABI
 # (--split-per-abi); Flutter numbers them 1000/2000/4000 + versionCode for
 # armeabi-v7a/arm64-v8a/x86_64, hence VercodeOperation. The compileSdk
-# platform and the build-tools AGP 8.11 defaults to are installed up front: if
-# AGP downloads build-tools itself mid-build, it reloads the SDK and no longer
+# platform and the build-tools AGP 9.1 defaults to (36.0.0) are installed up
+# front: if AGP downloads build-tools itself mid-build, it reloads the SDK and no longer
 # finds 'android-37'. The recipe also turns off the release lint check (with
 # JDK 21 it reports a false 'MainActivity must extend Activity') and the
 # release signing config, since F-Droid builds unsigned and signs the APK
@@ -96,7 +96,7 @@ Builds:
       - packages/google_drive_sync
       - packages/play_store_updates
     prebuild:
-      - sdkmanager 'platforms;android-37.0' 'build-tools;35.0.0'
+      - sdkmanager 'platforms;android-37.0' 'build-tools;36.0.0'
       - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml
         | head -1)
       - '[[ $flutterVersion ]]'
@@ -131,7 +131,7 @@ Builds:
       - packages/google_drive_sync
       - packages/play_store_updates
     prebuild:
-      - sdkmanager 'platforms;android-37.0' 'build-tools;35.0.0'
+      - sdkmanager 'platforms;android-37.0' 'build-tools;36.0.0'
       - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml
         | head -1)
       - '[[ $flutterVersion ]]'
@@ -166,7 +166,7 @@ Builds:
       - packages/google_drive_sync
       - packages/play_store_updates
     prebuild:
-      - sdkmanager 'platforms;android-37.0' 'build-tools;35.0.0'
+      - sdkmanager 'platforms;android-37.0' 'build-tools;36.0.0'
       - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/Development*Android.yml
         | head -1)
       - '[[ $flutterVersion ]]'
