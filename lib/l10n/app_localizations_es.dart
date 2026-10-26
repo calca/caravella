@@ -2341,4 +2341,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get no_active_groups_subtitle =>
       'Crea uno para un viaje, un piso compartido o un evento.';
+
+  @override
+  String get export_options_empty => 'Aún no hay gastos para exportar';
 }

@@ -903,4 +903,5 @@
   ,"map_location_off": "Ative a localização automática para ver as despesas no mapa"
   ,"map_no_places": "Ainda não há despesas com um local"
   ,"no_active_groups_subtitle": "Crie um para uma viagem, uma casa compartilhada ou um evento."
+  ,"export_options_empty": "Ainda não há despesas para exportar"
 }

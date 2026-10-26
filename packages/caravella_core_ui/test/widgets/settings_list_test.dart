@@ -64,4 +64,28 @@ void main() {
     );
     expect(find.bySemanticsLabel('Anna, Your name, Edit'), findsOneWidget);
   });
+
+  testWidgets('a disabled tile is greyed out and does nothing', (tester) async {
+    var opened = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SettingsTile(
+            icon: Icons.ios_share_outlined,
+            title: 'Export',
+            subtitle: 'No expenses to export yet',
+            enabled: false,
+            onTap: () => opened++,
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Export'));
+    expect(opened, 0);
+    expect(find.byIcon(Icons.chevron_right_rounded), findsNothing);
+    final opacity = tester.widget<Opacity>(
+      find.ancestor(of: find.text('Export'), matching: find.byType(Opacity)),
+    );
+    expect(opacity.opacity, 0.38);
+  });
 }

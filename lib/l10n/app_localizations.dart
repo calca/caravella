@@ -4398,6 +4398,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create one for a trip, a shared flat or an event.'**
   String get no_active_groups_subtitle;
+
+  /// Group settings: subtitle of the greyed-out Export row when the group has no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses to export yet'**
+  String get export_options_empty;
 }
 
 class _AppLocalizationsDelegate
