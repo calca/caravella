@@ -62,20 +62,29 @@ class ExpenseDayRow extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      top,
-                      maxLines: 1,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: s.onSurfaceVariant,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.4,
+                    // Both shrink to the 36 dp column with large text
+                    // instead of losing letters ("W" for "WED").
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        top,
+                        maxLines: 1,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: s.onSurfaceVariant,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.4,
+                        ),
                       ),
                     ),
-                    Text(
-                      day,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        height: 1.1,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        day,
+                        maxLines: 1,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          height: 1.1,
+                        ),
                       ),
                     ),
                   ],

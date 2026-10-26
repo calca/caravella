@@ -68,9 +68,11 @@ class HomeCardsHeader extends StatelessWidget {
               final name = hasName ? userNameNotifier.name : null;
 
               // Like the Groups page: small greeting over a large name.
-              return SizedBox(
-                height: 64,
+              // At least 64 dp; taller with large text instead of clipping.
+              return ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 64),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

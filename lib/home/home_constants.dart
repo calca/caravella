@@ -5,6 +5,14 @@ import 'package:material_ui/material_ui.dart';
 /// This class contains all hardcoded values related to layout,
 /// spacing, and visual properties used across home widgets.
 class HomeLayoutConstants {
+  /// Text scale from which Home stops fitting the screen: the featured card
+  /// grows with its content (the page scrolls) and its badges move under
+  /// the dates.
+  static const double largeTextScale = 1.3;
+
+  static bool isLargeText(BuildContext context) =>
+      MediaQuery.textScalerOf(context).scale(1) >= largeTextScale;
+
   HomeLayoutConstants._();
 
   // ==================== Border Radius ====================

@@ -224,6 +224,29 @@ void main() {
     });
   });
 
+  testWidgets('statistics at 200% text: no overflow, records stacked', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    final group = _group([
+      _expense('Breakfast', 10, day1, _anna),
+      _expense('Dinner', 35, day2, _luca),
+    ]);
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+        child: _wrap(GroupStatisticsView(group: group)),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    final highest = tester.getTopLeft(find.text('Highest expense'));
+    final day = tester.getTopLeft(find.text('Most expensive day'));
+    expect(day.dy, greaterThan(highest.dy), reason: 'one per row');
+  });
+
   test('most expensive month', () {
     final group = _group([
       _expense('Rent', 500, DateTime(2026, 9, 1), _anna),

@@ -336,7 +336,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: cardHeight,
+                          // Large text: as tall as its content instead.
+                          height: HomeLayoutConstants.isLargeText(context)
+                              ? null
+                              : cardHeight,
                           child: GroupCard(
                             group: featured,
                             localizations: loc,

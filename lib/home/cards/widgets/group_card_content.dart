@@ -56,6 +56,10 @@ class GroupCardContent extends StatelessWidget {
 
   static const double _padding = 24;
 
+  /// Photo shown above the title when the card sizes to its content (large
+  /// text): the photo area is this plus the title block, however tall.
+  static const double _photoAboveTitle = 140;
+
   @override
   Widget build(BuildContext context) {
     final photo = photoPath;
@@ -97,53 +101,73 @@ class GroupCardContent extends StatelessWidget {
             ? _wave(context)
             : null;
 
+        // Unbounded (large text): stacked at their own height, no spacers.
+        final bounded = constraints.hasBoundedHeight;
+        final gap = bounded ? const Spacer() : const SizedBox(height: _padding);
         if (photo == null) {
           return Padding(
             padding: const EdgeInsets.all(_padding),
             child: Column(
+              mainAxisSize: bounded ? MainAxisSize.max : MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                header,
-                const Spacer(),
-                amounts,
-                const Spacer(),
-                ?wave,
-                ?addButton,
-              ],
+              children: [header, gap, amounts, gap, ?wave, ?addButton],
             ),
           );
         }
 
+        final photoArea = Stack(
+          fit: StackFit.expand,
+          children: [
+            PhotoVeil(
+              path: photo,
+              color: theme.colorScheme.surface,
+              // Title and dates sit on the plain surface below.
+              solidExtent: 72,
+              fadeExtent: 180,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                _padding,
+                _padding,
+                _padding,
+                12,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [header],
+              ),
+            ),
+          ],
+        );
         return Column(
+          mainAxisSize: bounded ? MainAxisSize.max : MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Stack(
-                fit: StackFit.expand,
+            if (bounded)
+              Expanded(child: photoArea)
+            else
+              Stack(
                 children: [
-                  PhotoVeil(
-                    path: photo,
-                    color: theme.colorScheme.surface,
-                    // Title and dates sit on the plain surface below.
-                    solidExtent: 72,
-                    fadeExtent: 180,
+                  Positioned.fill(
+                    child: PhotoVeil(
+                      path: photo,
+                      color: theme.colorScheme.surface,
+                      solidExtent: 72,
+                      fadeExtent: 180,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
                       _padding,
-                      _padding,
+                      _photoAboveTitle,
                       _padding,
                       12,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [header],
-                    ),
+                    child: header,
                   ),
                 ],
               ),
-            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 _padding,
