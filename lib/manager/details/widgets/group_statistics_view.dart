@@ -88,63 +88,82 @@ class GroupStatisticsView extends StatelessWidget {
             const SizedBox(height: 12),
             SpendingPaceCard(pace: pace, currency: group.currency),
             const SizedBox(height: 12),
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (highestExpense(group) case final top?)
-                    Expanded(
-                      child: StatCard(
-                        title: gloc.highest_expense,
-                        value: top.amount ?? 0,
-                        currency: group.currency,
-                        subtitle: top.name ?? '',
-                        icon: Icons.arrow_upward_rounded,
-                      ),
-                    ),
-                  const SizedBox(width: 12),
-                  // The record follows the pace's unit: the most expensive
-                  // month says more than a single day in a long group.
-                  if (pace.unit == SpendingPaceUnit.month)
-                    if (mostExpensiveMonth(group) case (
-                      final month,
-                      final total,
-                    ))
-                      Expanded(
-                        child: StatCard(
-                          title: gloc.most_expensive_month,
-                          value: total,
-                          currency: group.currency,
-                          subtitle: DateFormat.yMMMM(
-                            Localizations.localeOf(context).toString(),
-                          ).format(month),
-                          icon: Icons.calendar_month_outlined,
-                        ),
-                      )
-                    else
-                      const SizedBox.shrink()
-                  else if (mostExpensiveDay(group) case (
-                    final day,
-                    final total,
-                  ))
-                    Expanded(
-                      child: StatCard(
-                        title: gloc.most_expensive_day,
-                        value: total,
-                        currency: group.currency,
-                        subtitle: DateFormat(
-                          'EEE d MMM',
-                          Localizations.localeOf(context).toString(),
-                        ).format(day),
-                        icon: Icons.event_rounded,
-                      ),
-                    ),
-                ],
-              ),
+            _RecordCards(
+              cards: [
+                if (highestExpense(group) case final top?)
+                  StatCard(
+                    title: gloc.highest_expense,
+                    value: top.amount ?? 0,
+                    currency: group.currency,
+                    subtitle: top.name ?? '',
+                    icon: Icons.arrow_upward_rounded,
+                  ),
+                // The record follows the pace's unit: the most expensive
+                // month says more than a single day in a long group.
+                if (pace.unit == SpendingPaceUnit.month)
+                  if (mostExpensiveMonth(group) case (final month, final total))
+                    StatCard(
+                      title: gloc.most_expensive_month,
+                      value: total,
+                      currency: group.currency,
+                      subtitle: DateFormat.yMMMM(
+                        Localizations.localeOf(context).toString(),
+                      ).format(month),
+                      icon: Icons.calendar_month_outlined,
+                    )
+                  else
+                    ...[]
+                else if (mostExpensiveDay(group) case (final day, final total))
+                  StatCard(
+                    title: gloc.most_expensive_day,
+                    value: total,
+                    currency: group.currency,
+                    subtitle: DateFormat(
+                      'EEE d MMM',
+                      Localizations.localeOf(context).toString(),
+                    ).format(day),
+                    icon: Icons.event_rounded,
+                  ),
+              ],
             ),
           ],
           title(gloc.categories),
           CategoriesOverviewTab(trip: group, embedded: true),
+        ],
+      ),
+    );
+  }
+}
+
+/// The record cards (highest expense, most expensive day or month): side by
+/// side, or one per row with large text, where side by side they'd break
+/// words and truncate the amounts.
+class _RecordCards extends StatelessWidget {
+  final List<Widget> cards;
+
+  const _RecordCards({required this.cards});
+
+  @override
+  Widget build(BuildContext context) {
+    if (MediaQuery.textScalerOf(context).scale(1) >= 1.3) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (i, c) in cards.indexed) ...[
+            if (i > 0) const SizedBox(height: 12),
+            c,
+          ],
+        ],
+      );
+    }
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (i, c) in cards.indexed) ...[
+            if (i > 0) const SizedBox(width: 12),
+            Expanded(child: c),
+          ],
         ],
       ),
     );
@@ -173,18 +192,19 @@ class _ChartCard extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(6, 4, 6, 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
+          // Title left, period right; the period goes under the title when
+          // they don't fit on one line (large text).
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.end,
+            spacing: 8,
             children: [
-              Expanded(
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+              Semantics(
+                header: true,
+                child: Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
@@ -324,16 +344,19 @@ class SpendingPaceCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 ExcludeSemantics(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
+                  // "per day" goes under the amount if they don't fit.
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.end,
                     children: [
-                      CurrencyDisplay(
-                        value: pace.average,
-                        currency: currency,
-                        valueFontSize: 32,
-                        currencyFontSize: 16,
-                        showDecimals: true,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: CurrencyDisplay(
+                          value: pace.average,
+                          currency: currency,
+                          valueFontSize: 32,
+                          currencyFontSize: 16,
+                          showDecimals: true,
+                        ),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -446,13 +469,17 @@ class GroupPayersBubbles extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        CurrencyDisplay(
-                          value: totals[p.id] ?? 0,
-                          currency: group.currency,
-                          valueFontSize: 15,
-                          currencyFontSize: 11,
-                          showDecimals: true,
-                          color: s.onSurfaceVariant,
+                        // Shrinks rather than truncates with large text.
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: CurrencyDisplay(
+                            value: totals[p.id] ?? 0,
+                            currency: group.currency,
+                            valueFontSize: 15,
+                            currencyFontSize: 11,
+                            showDecimals: true,
+                            color: s.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),

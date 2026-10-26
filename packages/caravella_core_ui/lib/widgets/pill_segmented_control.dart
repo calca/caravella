@@ -143,10 +143,11 @@ class PillSegmentedControl extends StatelessWidget {
                 fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                 color: selected ? s.onSurface : s.onSurfaceVariant,
               ),
-              child: Text(
-                labels[i],
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              // With large text the label shrinks to fit rather than being
+              // cut ("Expen…").
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(labels[i], maxLines: 1),
               ),
             ),
           ),

@@ -92,11 +92,15 @@ class ExpenseAmountCard extends StatelessWidget {
                             color: colorScheme.onSurface,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            category!,
-                            style: textTheme.labelSmall?.copyWith(
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w400,
+                          Flexible(
+                            child: Text(
+                              category!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textTheme.labelSmall?.copyWith(
+                                color: colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                         ],

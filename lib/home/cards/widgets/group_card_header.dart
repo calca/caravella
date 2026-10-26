@@ -44,13 +44,18 @@ class GroupCardHeader extends StatelessWidget {
       crossAxisAlignment: centerTitleHorizontally
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
-      children: [_buildTitle(), if (showDateRange) _buildDateRange(context)],
+      children: [
+        _buildTitle(context),
+        if (showDateRange) _buildDateRange(context),
+      ],
     );
   }
 
-  Widget _buildTitle() {
+  Widget _buildTitle(BuildContext context) {
     final title = Text(
       group.title,
+      // Large text: two lines before the ellipsis.
+      maxLines: HomeLayoutConstants.isLargeText(context) ? 2 : 1,
       textAlign: centerTitleHorizontally ? TextAlign.center : TextAlign.start,
       style: theme.textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.w600,
@@ -95,38 +100,63 @@ class GroupCardHeader extends StatelessWidget {
       return const SizedBox(height: HomeLayoutConstants.smallSpacing);
     }
 
+    final badges = [
+      if (group.pinned && showPinnedBadge) _buildPill(localizations.pin),
+      if (group.syncEnabled)
+        GroupSyncBadge(
+          group: group,
+          background: _fg.withValues(alpha: foreground == null ? 0.05 : 0.18),
+          foreground: _fg,
+        ),
+    ];
+    final hasDates = group.startDate != null || group.endDate != null;
+    final dates = Text(
+      formatDateRange(
+        start: group.startDate,
+        end: group.endDate,
+        locale: Localizations.localeOf(context),
+      ),
+      style: theme.textTheme.bodySmall?.copyWith(color: _fg),
+    );
+
+    // Large text: the badges go on their own line under the dates.
+    if (HomeLayoutConstants.isLargeText(context)) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: HomeLayoutConstants.smallSpacing),
+          if (hasDates)
+            Row(
+              children: [
+                Icon(Icons.event_outlined, size: 14, color: _fg),
+                const SizedBox(width: 4),
+                Expanded(child: dates),
+              ],
+            ),
+          if (hasDates && badges.isNotEmpty) const SizedBox(height: 6),
+          if (badges.isNotEmpty)
+            Wrap(spacing: 4, runSpacing: 4, children: badges),
+          const SizedBox(height: HomeLayoutConstants.smallSpacing),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: HomeLayoutConstants.smallSpacing),
         Row(
           children: [
-            if (group.startDate != null || group.endDate != null) ...[
+            if (hasDates) ...[
               Icon(Icons.event_outlined, size: 14, color: _fg),
               const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  formatDateRange(
-                    start: group.startDate,
-                    end: group.endDate,
-                    locale: Localizations.localeOf(context),
-                  ),
-                  style: theme.textTheme.bodySmall?.copyWith(color: _fg),
-                ),
-              ),
+              Expanded(child: dates),
             ] else
               const Spacer(),
-            if (group.pinned && showPinnedBadge) _buildPill(localizations.pin),
-            if (group.pinned && showPinnedBadge && group.syncEnabled)
-              const SizedBox(width: 4),
-            if (group.syncEnabled)
-              GroupSyncBadge(
-                group: group,
-                background: _fg.withValues(
-                  alpha: foreground == null ? 0.05 : 0.18,
-                ),
-                foreground: _fg,
-              ),
+            for (final (i, b) in badges.indexed) ...[
+              if (i > 0) const SizedBox(width: 4),
+              b,
+            ],
           ],
         ),
         const SizedBox(height: HomeLayoutConstants.smallSpacing),
