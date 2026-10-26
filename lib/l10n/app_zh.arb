@@ -1244,5 +1244,5 @@
   ,"toast_open": "打开"
   ,"stats_per_person": "人均 {amount}"
   ,"balances_share_per_person": "人均分摊"
-  ,"balances_share_basis": "{total} ÷ {people}"
+  ,"balances_share_basis": "{people}平均分摊"
 }

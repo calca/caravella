@@ -2380,7 +2380,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get balances_share_per_person => 'Parte por pessoa';
 
   @override
-  String balances_share_basis(String total, String people) {
-    return '$total ÷ $people';
+  String balances_share_basis(String people) {
+    return 'Dividido igualmente entre $people';
   }
 }

@@ -913,5 +913,5 @@
   ,"toast_open": "Abrir"
   ,"stats_per_person": "{amount} por pessoa"
   ,"balances_share_per_person": "Parte por pessoa"
-  ,"balances_share_basis": "{total} ÷ {people}"
+  ,"balances_share_basis": "Dividido igualmente entre {people}"
 }

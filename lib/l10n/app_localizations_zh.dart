@@ -2330,7 +2330,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get balances_share_per_person => '人均分摊';
 
   @override
-  String balances_share_basis(String total, String people) {
-    return '$total ÷ $people';
+  String balances_share_basis(String people) {
+    return '$people平均分摊';
   }
 }

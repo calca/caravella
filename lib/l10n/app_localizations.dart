@@ -4464,11 +4464,11 @@ abstract class AppLocalizations {
   /// **'Share per person'**
   String get balances_share_per_person;
 
-  /// Balances: how the share is computed; total is a formatted amount, people is already pluralized ('4 participants')
+  /// Balances: under 'Share per person', how it's computed; people is already pluralized ('4 participants')
   ///
   /// In en, this message translates to:
-  /// **'{total} ÷ {people}'**
-  String balances_share_basis(String total, String people);
+  /// **'Split equally among {people}'**
+  String balances_share_basis(String people);
 }
 
 class _AppLocalizationsDelegate
