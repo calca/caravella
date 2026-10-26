@@ -2068,9 +2068,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_state_syncing => 'sincronizando';
 
   @override
-  String get sync_state_synced => 'actualizado';
-
-  @override
   String get sync_state_error =>
       'sincronización fallida, toca para ver detalles';
 
@@ -2344,4 +2341,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get export_options_empty => 'Aún no hay gastos para exportar';
+
+  @override
+  String get sync_badge_ok => 'sincronizado en las últimas 24 horas';
+
+  @override
+  String get sync_badge_failed => 'la última sincronización falló';
+
+  @override
+  String get sync_badge_stale => 'sin sincronizar en las últimas 24 horas';
 }

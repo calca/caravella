@@ -4,6 +4,7 @@ import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/channels/cloud_relay_channel.dart';
 import 'package:caravella_core/sync/channels/lan_sync_channel.dart';
 import 'package:caravella_core/sync/device_identity.dart';
+import 'package:caravella_core/sync/models/group_sync_status.dart';
 import 'package:caravella_core/sync/models/paired_device.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/models/sync_status.dart';
@@ -362,6 +363,31 @@ class SyncOrchestrator {
   /// device list along with every group it was granted.
   Future<void> removePairedDevice(String deviceId) =>
       _syncManager.removePairedDevice(deviceId);
+
+  /// How [groupId]'s sync is doing: from the last exchange that carried it
+  /// in this session (time and errors), else from the sync log (time only,
+  /// so it survives a restart). A peer that can't be reached isn't an error
+  /// here: the group just goes stale.
+  Future<GroupSyncStatus> getGroupSyncStatus(
+    String groupId, {
+    DateTime? now,
+  }) async {
+    final recent = await getHistory(limit: 1, groupId: groupId);
+    final DateTime? at;
+    final bool hadErrors;
+    if (recent.isNotEmpty) {
+      at = DateTime.parse(recent.first['timestamp'] as String);
+      hadErrors = ((recent.first['errors'] as int?) ?? 0) > 0;
+    } else {
+      at = await _syncManager.getLastGroupSyncTime(groupId);
+      hadErrors = false;
+    }
+    return GroupSyncStatus.from(
+      lastSyncAt: at,
+      lastHadErrors: hadErrors,
+      now: now ?? DateTime.now(),
+    );
+  }
 
   /// Returns the devices granted access to [groupId], most recently paired
   /// first.

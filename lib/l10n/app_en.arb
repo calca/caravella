@@ -895,8 +895,6 @@
   ,"@quick_action_voice": {"description": "Home quick action under the group card: add an expense by voice"}
   ,"sync_state_syncing": "syncing"
   ,"@sync_state_syncing": {"description": "Screen reader state of the Shared badge while a sync runs"}
-  ,"sync_state_synced": "up to date"
-  ,"@sync_state_synced": {"description": "Screen reader state of the Shared badge after a successful sync"}
   ,"sync_state_error": "sync failed, tap for details"
   ,"@sync_state_error": {"description": "Screen reader state of the Shared badge after a failed sync; the badge opens the sync page"}
   ,"share_balances": "Share balances"
@@ -1021,4 +1019,10 @@
   ,"@no_active_groups_subtitle": {"description": "Groups page, Active with no groups: line under the title, above the Create a group button"}
   ,"export_options_empty": "No expenses to export yet"
   ,"@export_options_empty": {"description": "Group settings: subtitle of the greyed-out Export row when the group has no expenses"}
+  ,"sync_badge_ok": "synced in the last 24 hours"
+  ,"sync_badge_failed": "last sync failed"
+  ,"sync_badge_stale": "not synced in the last 24 hours"
+  ,"@sync_badge_ok": {"description": "Screen reader state of a shared group's Shared badge (green dot)"}
+  ,"@sync_badge_failed": {"description": "Screen reader state of a shared group's Shared badge (ochre dot)"}
+  ,"@sync_badge_stale": {"description": "Screen reader state of a shared group's Shared badge (hollow grey dot)"}
 }

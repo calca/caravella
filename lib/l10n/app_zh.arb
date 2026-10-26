@@ -1156,7 +1156,6 @@
   ,"quick_action_scan": "扫描"
   ,"quick_action_voice": "语音"
   ,"sync_state_syncing": "正在同步"
-  ,"sync_state_synced": "已同步"
   ,"sync_state_error": "同步失败，点按查看详情"
   ,"share_balances": "分享余额"
   ,"balances_share_title": "{group} · 余额"
@@ -1235,4 +1234,7 @@
   ,"map_no_places": "还没有带地点的支出"
   ,"no_active_groups_subtitle": "为一次旅行、合租公寓或活动创建一个群组。"
   ,"export_options_empty": "还没有可导出的支出"
+  ,"sync_badge_ok": "过去 24 小时内已同步"
+  ,"sync_badge_failed": "上次同步失败"
+  ,"sync_badge_stale": "过去 24 小时内未同步"
 }

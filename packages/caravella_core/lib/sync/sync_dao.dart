@@ -138,6 +138,22 @@ class SyncDao {
     return rows.first['synced_at'] as int;
   }
 
+  /// The most recent `synced_at` with any device granted access to
+  /// [groupId], or `null` if none has synced yet.
+  Future<int?> getLastGroupSyncTime(String groupId) async {
+    final rows = await db.rawQuery(
+      '''
+      SELECT MAX(sl.synced_at) AS last
+      FROM ${SqliteExpenseGroupRepository.tableSyncLog} sl
+      INNER JOIN ${SqliteExpenseGroupRepository.tablePairedDeviceGroups} pdg
+        ON pdg.device_id = sl.peer_id
+      WHERE pdg.group_id = ?
+      ''',
+      [groupId],
+    );
+    return rows.first['last'] as int?;
+  }
+
   /// Records a sync exchange in the `sync_log` table.
   Future<void> insertSyncLog({
     required String peerId,

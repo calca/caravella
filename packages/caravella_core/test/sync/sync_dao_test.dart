@@ -311,6 +311,35 @@ void main() {
       expect(forGroup.map((d) => d.deviceId), ['device-b', 'device-a']);
     });
 
+    test('last group sync time: only devices granted the group', () async {
+      expect(await syncDao.getLastGroupSyncTime('group-1'), isNull);
+      for (final id in ['device-a', 'device-b']) {
+        await syncDao.addPairedDevice(
+          deviceId: id,
+          deviceName: id,
+          platform: 'android',
+        );
+      }
+      await syncDao.grantGroupAccess('device-a', 'group-1');
+      await syncDao.insertSyncLog(
+        peerId: 'device-a',
+        channel: 'lan',
+        deltaSent: 0,
+        deltaRecv: 1,
+      );
+      final granted = await syncDao.getLastGroupSyncTime('group-1');
+      expect(granted, isNotNull);
+      // A later sync with a device that doesn't have the group doesn't count.
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+      await syncDao.insertSyncLog(
+        peerId: 'device-b',
+        channel: 'lan',
+        deltaSent: 0,
+        deltaRecv: 1,
+      );
+      expect(await syncDao.getLastGroupSyncTime('group-1'), granted);
+    });
+
     test('addPairedDevice persists the peer public key', () async {
       await syncDao.addPairedDevice(
         deviceId: 'device-a',
