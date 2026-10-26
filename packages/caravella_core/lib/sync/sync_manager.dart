@@ -199,6 +199,13 @@ class SyncManager {
     return _syncDao.revokeGroupAccess(deviceId, groupId);
   }
 
+  /// When a device granted [groupId] last synced, or null.
+  Future<DateTime?> getLastGroupSyncTime(String groupId) async {
+    _ensureStarted();
+    final ms = await _syncDao.getLastGroupSyncTime(groupId);
+    return ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms);
+  }
+
   /// Returns the devices granted access to [groupId], most recently paired
   /// first.
   Future<List<PairedDevice>> getPairedDevicesForGroup(String groupId) {

@@ -2341,4 +2341,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get export_options_empty => 'Ancora nessuna spesa da esportare';
+
+  @override
+  String get sync_badge_ok => 'sincronizzato nelle ultime 24 ore';
+
+  @override
+  String get sync_badge_failed => 'ultima sincronizzazione non riuscita';
+
+  @override
+  String get sync_badge_stale => 'non sincronizzato nelle ultime 24 ore';
 }

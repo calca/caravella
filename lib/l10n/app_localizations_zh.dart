@@ -2286,4 +2286,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get export_options_empty => '还没有可导出的支出';
+
+  @override
+  String get sync_badge_ok => '过去 24 小时内已同步';
+
+  @override
+  String get sync_badge_failed => '上次同步失败';
+
+  @override
+  String get sync_badge_stale => '过去 24 小时内未同步';
 }
