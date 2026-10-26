@@ -1021,4 +1021,14 @@
   ,"@no_active_groups_subtitle": {"description": "Groups page, Active with no groups: line under the title, above the Create a group button"}
   ,"export_options_empty": "No expenses to export yet"
   ,"@export_options_empty": {"description": "Group settings: subtitle of the greyed-out Export row when the group has no expenses"}
+  ,"sync_group_received": "{from} shared “{title}” with you"
+  ,"@sync_group_received": {"description": "Toast when a group arrives from another device for the first time; from is that device's name", "placeholders": {"from": {"type": "String"}, "title": {"type": "String"}}}
+  ,"sync_group_received_anon": "“{title}” was shared with you"
+  ,"@sync_group_received_anon": {"description": "Same toast when the sending device's name is unknown", "placeholders": {"title": {"type": "String"}}}
+  ,"group_welcome_title": "You joined this group"
+  ,"@group_welcome_title": {"description": "Title of the one-time card on a group received from another device"}
+  ,"group_welcome_body": "Shared by {from}: {people}, {expenses}, {total} so far. Expenses you add here reach the other devices too."
+  ,"@group_welcome_body": {"description": "Welcome card text; people and expenses are already pluralized ('4 participants', '12 expenses'), total is a formatted amount", "placeholders": {"from": {"type": "String"}, "people": {"type": "String"}, "expenses": {"type": "String"}, "total": {"type": "String"}}}
+  ,"group_welcome_body_anon": "{people}, {expenses}, {total} so far. Expenses you add here reach the other devices too."
+  ,"@group_welcome_body_anon": {"description": "Welcome card text when the sending device's name is unknown", "placeholders": {"people": {"type": "String"}, "expenses": {"type": "String"}, "total": {"type": "String"}}}
 }

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Groups shared with you from another device: a message says who shared which group, and the first time you open it a card explains where you are — who shared it, how many people and expenses, the total so far — with “Add expense”
 - Groups page: swipe left or right to move between Active and Archived, like the sections of a group. With no archived groups it shows a card explaining how to archive one (long press → Archive); with no active groups, a card with a “Create a group” button — the same look as an empty expense list
 - Statistics: the Map card is always there. Without places it explains why: with automatic location off it opens the setting to turn it on, otherwise it says no expense has a place yet (and isn't tappable)
 - Statistics: the “Daily” and “Monthly” tiles are replaced by a **Spending pace** card — the average per day over the whole period of the group (per month for groups longer than two months), saying what it's averaged over, with the number of expenses, the average expense and how many days had any. The per-day figures of the categories use the same period, and long groups show the most expensive month

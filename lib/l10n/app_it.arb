@@ -906,4 +906,9 @@
   ,"map_no_places": "Ancora nessuna spesa con un luogo"
   ,"no_active_groups_subtitle": "Creane uno per un viaggio, una casa condivisa o un evento."
   ,"export_options_empty": "Ancora nessuna spesa da esportare"
+  ,"sync_group_received": "{from} ti ha condiviso “{title}”"
+  ,"sync_group_received_anon": "Ti è stato condiviso “{title}”"
+  ,"group_welcome_title": "Ti sei unito al gruppo"
+  ,"group_welcome_body": "Condiviso da {from}: {people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
+  ,"group_welcome_body_anon": "{people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
 }

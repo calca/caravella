@@ -931,4 +931,9 @@
   ,"map_no_places": "Aún no hay gastos con un lugar"
   ,"no_active_groups_subtitle": "Crea uno para un viaje, un piso compartido o un evento."
   ,"export_options_empty": "Aún no hay gastos para exportar"
+  ,"sync_group_received": "{from} ha compartido “{title}” contigo"
+  ,"sync_group_received_anon": "Han compartido “{title}” contigo"
+  ,"group_welcome_title": "Te has unido al grupo"
+  ,"group_welcome_body": "Compartido por {from}: {people}, {expenses}, {total} hasta ahora. Los gastos que añadas aquí llegan también a los otros dispositivos."
+  ,"group_welcome_body_anon": "{people}, {expenses}, {total} hasta ahora. Los gastos que añadas aquí llegan también a los otros dispositivos."
 }

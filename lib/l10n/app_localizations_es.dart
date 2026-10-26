@@ -2344,4 +2344,32 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get export_options_empty => 'Aún no hay gastos para exportar';
+
+  @override
+  String sync_group_received(String from, String title) {
+    return '$from ha compartido “$title” contigo';
+  }
+
+  @override
+  String sync_group_received_anon(String title) {
+    return 'Han compartido “$title” contigo';
+  }
+
+  @override
+  String get group_welcome_title => 'Te has unido al grupo';
+
+  @override
+  String group_welcome_body(
+    String from,
+    String people,
+    String expenses,
+    String total,
+  ) {
+    return 'Compartido por $from: $people, $expenses, $total hasta ahora. Los gastos que añadas aquí llegan también a los otros dispositivos.';
+  }
+
+  @override
+  String group_welcome_body_anon(String people, String expenses, String total) {
+    return '$people, $expenses, $total hasta ahora. Los gastos que añadas aquí llegan también a los otros dispositivos.';
+  }
 }
