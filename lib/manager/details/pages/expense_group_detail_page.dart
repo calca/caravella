@@ -726,8 +726,13 @@ class _GroupMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = Theme.of(context).colorScheme;
     final gloc = gen.AppLocalizations.of(context);
+    // Items at least [menuWidth] wide give the menu a known width, so its end
+    // lines up with the button's (and the page margin) instead of running to
+    // the screen edge.
+    const menuWidth = 248.0;
+    const buttonSize = 48.0;
     return MenuAnchor(
-      alignmentOffset: const Offset(-140, 4),
+      alignmentOffset: const Offset(buttonSize - menuWidth, 4),
       style: MenuStyle(
         backgroundColor: WidgetStatePropertyAll(s.raisedSurface),
         shape: WidgetStatePropertyAll(
@@ -737,6 +742,9 @@ class _GroupMenuButton extends StatelessWidget {
       menuChildren: [
         for (final item in items)
           MenuItemButton(
+            style: MenuItemButton.styleFrom(
+              minimumSize: const Size(menuWidth, 48),
+            ),
             leadingIcon: Icon(item.icon),
             onPressed: item.onTap,
             child: Padding(

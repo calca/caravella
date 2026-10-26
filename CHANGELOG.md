@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - English and Portuguese use typographic quotes (“”) in the QR sharing title and the balance reminder
 
+### Fixed
+- Group page: the ⋯ menu lines up with its button instead of touching the edge of the screen
+
 ## [2.2.1] - 2026-10-22
 
 ### Changed
