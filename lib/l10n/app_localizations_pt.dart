@@ -1734,7 +1734,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String sync_qr_sharing_group(String groupTitle) {
-    return 'Compartilhando «$groupTitle»';
+    return 'Compartilhando “$groupTitle”';
   }
 
   @override
@@ -2093,7 +2093,7 @@ class AppLocalizationsPt extends AppLocalizations {
     String amount,
     String to,
   ) {
-    return 'Oi $from! No grupo «$group» você deve $amount a $to.';
+    return 'Oi $from! No grupo “$group” você deve $amount a $to.';
   }
 
   @override

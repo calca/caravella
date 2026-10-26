@@ -6,7 +6,7 @@ Four GitHub Actions workflows exist under `.github/workflows/`: CI on every push
 
 Triggers: push/PR to `main`.
 
-- **`build` job**: `flutter pub get` → `flutter analyze` → guard scripts (`validate_package_boundaries.sh`, `validate_accessibility.sh --skip-tests`, `validate_design_tokens.sh`) → `flutter test --coverage` (uploads `coverage/lcov.info` as the `coverage-report` artifact — visibility only, no minimum-coverage gate) → `flutter pub get && flutter test` in every `packages/*` → **F-Droid (FOSS) variant guard** (`./build_variant.sh foss`, `flutter analyze`, `./build_variant.sh check` — fails if a non-free Google artifact reaches the release classpath — then `./build_variant.sh gms`; see [caravella_gms](PACKAGE_CARAVELLA_GMS.md)) → build a **signed staging APK**:
+- **`build` job**: `flutter pub get` → `flutter analyze` → guard scripts (`validate_package_boundaries.sh`, `validate_accessibility.sh --skip-tests`, `validate_design_tokens.sh`) → `flutter test --coverage` (uploads `coverage/lcov.info` as the `coverage-report` artifact — visibility only, no minimum-coverage gate) → `flutter pub get && flutter test` in every `packages/*` → **F-Droid (FOSS) variant guard** (`./build_variant.sh fdroid-lock --check` — fails if `pubspec.fdroid.lock` is out of date, run `./build_variant.sh fdroid-lock` and commit it after any dependency change —, `./build_variant.sh foss`, `flutter analyze`, `./build_variant.sh check` — fails if a non-free Google artifact reaches the release classpath — then `./build_variant.sh gms`; see [caravella_gms](PACKAGE_CARAVELLA_GMS.md)) → build a **signed staging APK**:
   ```bash
   flutter build apk --flavor staging --release \
     --dart-define=FLAVOR=staging \

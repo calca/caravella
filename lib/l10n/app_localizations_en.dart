@@ -1731,7 +1731,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String sync_qr_sharing_group(String groupTitle) {
-    return 'Sharing «$groupTitle»';
+    return 'Sharing “$groupTitle”';
   }
 
   @override

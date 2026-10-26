@@ -67,6 +67,7 @@ jobs:
       - name: F-Droid (FOSS) variant guard
         run: |
           set -e
+          ./build_variant.sh fdroid-lock --check
           ./build_variant.sh foss
           flutter analyze
           ./build_variant.sh check
