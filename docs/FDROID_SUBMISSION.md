@@ -23,7 +23,9 @@ Package name: `io.caravella.egm`. F-Droid signs the APK with its own key — the
 ## Metadata locations
 
 - `metadata.yml` (repo root) — F-Droid app metadata: categories, license, links, anti-features, `AutoUpdateMode: Version` / `UpdateCheckMode: Tags` (F-Droid picks up new versions from GitHub release tags in `vX.Y.Z` format).
-- `fastlane/metadata/android/<locale>/` — per-locale store listing (`title.txt`, `short_description.txt`, `full_description.txt`, `changelogs/<versionCode>.txt`, `images/`). Every locale (en-US, it-IT, es-ES, pt-BR, zh-CN) has a full listing: title, short and full description (the Play listing minus what the FOSS build lacks — Google Drive, Bluetooth, receipt reading, Unsplash) and the 8 framed screenshots from `store/screenshots/<lang>/`. Refresh them together with the Play listing.
+- `fastlane/metadata/android/<locale>/` — per-locale store listing (`title.txt`, `short_description.txt`, `full_description.txt`, `changelogs/<versionCode>.txt`, `images/`). Every locale (en-US, it-IT, es-ES, pt-BR, zh-CN) has a full listing: title, short and full description (the Play listing minus what the FOSS build lacks — Google Drive, Bluetooth, receipt reading, Unsplash) the 8 framed screenshots from `store/screenshots/<lang>/` and `images/featureGraphic.png`, the same 1024x500 banner as Play's `store/assets/feature-graphic/<lang>.png` (some clients, like Droid-ify and Neo Store, show it on top of the app page; its chips must stay true for the FOSS build). Refresh them together with the Play listing.
+
+F-Droid reads this listing from the source at the commit of the latest build, not from `main`: a listing change shows up only once a newer tag is built.
 
 ## Keeping `metadata.yml` in sync
 
