@@ -86,7 +86,11 @@ class GroupStatisticsView extends StatelessWidget {
           GroupMapCard(group: group, onEnableLocation: onEnableLocation),
           if (SpendingPace.of(group) case final pace?) ...[
             const SizedBox(height: 12),
-            SpendingPaceCard(pace: pace, currency: group.currency),
+            SpendingPaceCard(
+              pace: pace,
+              currency: group.currency,
+              participants: group.participants.length,
+            ),
             const SizedBox(height: 12),
             _RecordCards(
               cards: [
@@ -275,16 +279,20 @@ ExpenseDetails? highestExpense(ExpenseGroup group) => group.expenses.isEmpty
 
 /// The group's average spending over its whole period ([SpendingPace]): the
 /// amount per day (or per month, for long groups), what it is computed over,
-/// then the number of expenses, the average expense and how many days or
-/// months had any.
+/// then the number of expenses, the average expense, the share per person
+/// and how many days or months had any.
 class SpendingPaceCard extends StatelessWidget {
   final SpendingPace pace;
   final String currency;
+
+  /// For the "per person" pill (hidden with fewer than two people).
+  final int participants;
 
   const SpendingPaceCard({
     super.key,
     required this.pace,
     required this.currency,
+    this.participants = 0,
   });
 
   @override
@@ -377,6 +385,15 @@ class SpendingPaceCard extends StatelessWidget {
                   children: [
                     pill(gloc.expense_count(pace.expenseCount)),
                     pill(gloc.stats_per_expense(perExpense)),
+                    if (participants > 1)
+                      pill(
+                        gloc.stats_per_person(
+                          CurrencyDisplay.formatCurrencyText(
+                            pace.total / participants,
+                            currency,
+                          ),
+                        ),
+                      ),
                     pill(
                       monthly
                           ? gloc.stats_active_months(

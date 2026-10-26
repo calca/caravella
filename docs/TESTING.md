@@ -35,6 +35,10 @@ cd packages/caravella_core && flutter test test/sync/conflict_resolver_test.dart
 cd packages/caravella_core && flutter test test/sync/
 ```
 
+## Accessibility Guideline Tests
+
+`test/a11y/accessibility_guidelines_test.dart` pumps the main screens (group page and its three sections, Home, Groups, group search, new and edit expense, group creation, settings, appearance, group settings and its editors) with a seeded group, in the light theme, the dark theme and at 200% text, and runs Flutter's guidelines on each: `androidTapTargetGuideline` (48×48 dp), `labeledTapTargetGuideline` (every tappable node has a label) and `textContrastGuideline` (text contrast as drawn). When adding a screen, add it to `_screens`; a failure there is a real accessibility regression, not a flaky test. Theme-level contrast is pinned separately by `packages/caravella_core_ui/test/themes/contrast_test.dart`.
+
 ## Sync Subsystem Tests
 
 The P2P sync tests live in `packages/caravella_core/test/sync/` — they test classes under `packages/caravella_core/lib/sync/` and only depend on `caravella_core` itself, so they were moved out of the root `test/` in the technical-debt pass that added the CI step above (see `plan.todo.md`), to actually run as part of that package's own `flutter test`:

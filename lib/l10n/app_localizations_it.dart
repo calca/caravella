@@ -2003,9 +2003,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get balances => 'Saldi';
 
   @override
-  String get per_person => 'A testa';
-
-  @override
   String get settle_up => 'Per pareggiare';
 
   @override
@@ -2378,4 +2375,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get toast_open => 'Apri';
+
+  @override
+  String stats_per_person(String amount) {
+    return '$amount a testa';
+  }
 }

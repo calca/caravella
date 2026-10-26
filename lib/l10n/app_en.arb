@@ -863,8 +863,6 @@
   ,"@get_started_step_done": {"description": "Screen reader label of a completed getting-started step", "placeholders": {"step": {"type": "String"}}}
   ,"balances": "Balances"
   ,"@balances": {"description": "Group page view: what each participant gets back or owes"}
-  ,"per_person": "Per person"
-  ,"@per_person": {"description": "Group page key figure: total divided by the number of participants"}
   ,"settle_up": "Settle up"
   ,"@settle_up": {"description": "Heading of the suggested payments that settle the group"}
   ,"all_settled_up": "All settled up"
@@ -1037,4 +1035,6 @@
   ,"@group_welcome_body_anon": {"description": "Welcome card text when the sending device's name is unknown", "placeholders": {"people": {"type": "String"}, "expenses": {"type": "String"}, "total": {"type": "String"}}}
   ,"toast_open": "Open"
   ,"@toast_open": {"description": "Action on a toast that opens what it talks about (e.g. a group shared with you)"}
+  ,"stats_per_person": "{amount} per person"
+  ,"@stats_per_person": {"description": "Statistics pace card: the group's total divided by its participants, already formatted with currency", "placeholders": {"amount": {"type": "String"}}}
 }
