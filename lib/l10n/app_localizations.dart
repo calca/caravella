@@ -4451,6 +4451,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{people}, {expenses}, {total} so far. Expenses you add here reach the other devices too.'**
   String group_welcome_body_anon(String people, String expenses, String total);
+
+  /// Action on a toast that opens what it talks about (e.g. a group shared with you)
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get toast_open;
 }
 
 class _AppLocalizationsDelegate

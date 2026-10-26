@@ -1242,4 +1242,5 @@
   ,"group_welcome_title": "你已加入该群组"
   ,"group_welcome_body": "由 {from} 共享：{people}，{expenses}，目前共 {total}。你在这里添加的支出也会同步到其他设备。"
   ,"group_welcome_body_anon": "{people}，{expenses}，目前共 {total}。你在这里添加的支出也会同步到其他设备。"
+  ,"toast_open": "打开"
 }

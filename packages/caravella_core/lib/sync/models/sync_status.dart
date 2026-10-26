@@ -35,8 +35,13 @@ class SyncFailed extends SyncEvent {
   /// Human-readable error description.
   final String error;
 
-  const SyncFailed(this.error);
+  /// The peer couldn't be reached (offline, another network): the normal
+  /// state of device-to-device sync, not something to warn about.
+  final bool unreachable;
+
+  const SyncFailed(this.error, {this.unreachable = false});
 
   @override
-  String toString() => 'SyncFailed(error: $error)';
+  String toString() =>
+      'SyncFailed(error: $error${unreachable ? ', unreachable' : ''})';
 }

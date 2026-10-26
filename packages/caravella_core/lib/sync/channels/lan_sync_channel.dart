@@ -581,7 +581,9 @@ class LanSyncChannel {
           'Ping failed for peer $peerId at $host:$port — skipping sync',
           name: _tag,
         );
-        _eventController.add(const SyncFailed('Peer unreachable'));
+        _eventController.add(
+          const SyncFailed('Peer unreachable', unreachable: true),
+        );
         return;
       }
 

@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 
+import '../manager/details/pages/expense_group_detail_page.dart';
 import '../sync/sync_activity.dart';
 
 /// Top-level destinations under the floating navigation.
@@ -52,7 +53,8 @@ class _AppShellState extends State<AppShell> {
     _syncActivity = activity?..addListener(_announceReceived);
   }
 
-  /// "Pixel 9 shared “Norway Road Trip” with you", once per received group.
+  /// "Pixel 9 shared “Norway Road Trip” with you · Open", once per received
+  /// group.
   Future<void> _announceReceived() async {
     final received = _syncActivity?.takeReceived() ?? const [];
     for (final r in received) {
@@ -68,6 +70,12 @@ class _AppShellState extends State<AppShell> {
         type: ToastType.success,
         icon: Icons.group_add_outlined,
         duration: const Duration(seconds: 4),
+        actionLabel: gloc.toast_open,
+        onAction: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ExpenseGroupDetailPage(trip: group),
+          ),
+        ),
       );
     }
   }

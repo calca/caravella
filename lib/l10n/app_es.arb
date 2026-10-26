@@ -938,4 +938,5 @@
   ,"group_welcome_title": "Te has unido al grupo"
   ,"group_welcome_body": "Compartido por {from}: {people}, {expenses}, {total} hasta ahora. Los gastos que añadas aquí llegan también a los otros dispositivos."
   ,"group_welcome_body_anon": "{people}, {expenses}, {total} hasta ahora. Los gastos que añadas aquí llegan también a los otros dispositivos."
+  ,"toast_open": "Abrir"
 }

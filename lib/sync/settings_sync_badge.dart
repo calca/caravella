@@ -67,7 +67,8 @@ mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
       if (event is SyncStarted) syncing = true;
       if (event is SyncFailed) {
         syncing = false;
-        hasError = true;
+        // A peer out of reach is normal for device-to-device sync.
+        if (!event.unreachable) hasError = true;
       }
       if (event is SyncCompleted) {
         syncing = false;

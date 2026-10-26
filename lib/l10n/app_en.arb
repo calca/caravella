@@ -1035,4 +1035,6 @@
   ,"@group_welcome_body": {"description": "Welcome card text; people and expenses are already pluralized ('4 participants', '12 expenses'), total is a formatted amount", "placeholders": {"from": {"type": "String"}, "people": {"type": "String"}, "expenses": {"type": "String"}, "total": {"type": "String"}}}
   ,"group_welcome_body_anon": "{people}, {expenses}, {total} so far. Expenses you add here reach the other devices too."
   ,"@group_welcome_body_anon": {"description": "Welcome card text when the sending device's name is unknown", "placeholders": {"people": {"type": "String"}, "expenses": {"type": "String"}, "total": {"type": "String"}}}
+  ,"toast_open": "Open"
+  ,"@toast_open": {"description": "Action on a toast that opens what it talks about (e.g. a group shared with you)"}
 }

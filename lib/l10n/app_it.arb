@@ -913,4 +913,5 @@
   ,"group_welcome_title": "Ti sei unito al gruppo"
   ,"group_welcome_body": "Condiviso da {from}: {people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
   ,"group_welcome_body_anon": "{people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
+  ,"toast_open": "Apri"
 }
