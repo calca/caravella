@@ -1,5 +1,3 @@
-import 'dart:ui' show SemanticsFlag;
-
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -29,7 +27,7 @@ void main() {
       );
       final node = tester.getSemantics(find.byType(TextFormField));
       expect(node.label, contains('Amount (€)'));
-      expect(node.hasFlag(SemanticsFlag.isTextField), isTrue);
+      expect(node, isSemantics(isTextField: true));
       handle.dispose();
     });
 
