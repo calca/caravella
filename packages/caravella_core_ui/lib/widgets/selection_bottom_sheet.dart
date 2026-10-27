@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'app_toast.dart';
@@ -414,6 +416,13 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    // Room under the last row (the "Add …" pill in long lists): above the
+    // keyboard when it's open, otherwise above the system navigation bar —
+    // the sheet is edge to edge, and the pill used to end under the bar.
+    final bottomInset = math.max(
+      keyboardHeight,
+      MediaQuery.viewPaddingOf(context).bottom,
+    );
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final showSearch = _currentItems.length >= searchFrom;
@@ -460,7 +469,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
             Expanded(
               child: ListView(
                 controller: _scrollController,
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 24 + keyboardHeight),
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 24 + bottomInset),
                 children: [
                   if (showSearch) _buildSearch(),
                   if (itemsToShow.isNotEmpty)
