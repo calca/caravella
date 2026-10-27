@@ -103,7 +103,7 @@ void main() {
       ),
     );
 
-    expect(find.text(l10n.attachments), findsOneWidget);
+    expect(find.text(l10n.attachments.toUpperCase()), findsOneWidget);
     expect(find.text('1/5'), findsOneWidget);
     expect(
       find.widgetWithText(FormPill, l10n.expense_more_details),

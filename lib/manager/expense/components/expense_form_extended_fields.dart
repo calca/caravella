@@ -13,8 +13,9 @@ import '../state/expense_form_controller.dart';
 
 /// The "Details" part of the expense form: date, place, attachments and
 /// note as pills. A pill is dashed while its value is still to add; the
-/// attachments strip and the note field appear below once there is
-/// something in them (or the note pill is tapped).
+/// attachments list and the note field appear below, each under its own
+/// section label, once there is something in them (or the note pill is
+/// tapped — left empty, the note folds back into its pill).
 class ExpenseFormExtendedFields extends StatefulWidget {
   final ExpenseFormController controller;
   final DateTime? tripStartDate;
@@ -55,6 +56,28 @@ class _ExpenseFormExtendedFieldsState extends State<ExpenseFormExtendedFields> {
 
   ExpenseFormController get _controller => widget.controller;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller.noteFocus.addListener(_onNoteFocus);
+  }
+
+  @override
+  void dispose() {
+    _controller.noteFocus.removeListener(_onNoteFocus);
+    super.dispose();
+  }
+
+  // Leaving the note empty folds it back into the "Note" pill.
+  void _onNoteFocus() {
+    if (!_controller.noteFocus.hasFocus &&
+        _noteOpened &&
+        _controller.noteController.text.trim().isEmpty &&
+        mounted) {
+      setState(() => _noteOpened = false);
+    }
+  }
+
   void _openNote() {
     setState(() => _noteOpened = true);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -86,7 +109,6 @@ class _ExpenseFormExtendedFieldsState extends State<ExpenseFormExtendedFields> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (hasAttachments) ...[
-            const SizedBox(height: AppSpacing.md),
             AttachmentInputWidget(
               groupId: widget.groupId,
               groupName: widget.groupName,
@@ -158,8 +180,7 @@ class _ExpenseFormExtendedFieldsState extends State<ExpenseFormExtendedFields> {
           runSpacing: 0,
           children: pills,
         ),
-        if (hasAttachments) ...[
-          const SizedBox(height: AppSpacing.md),
+        if (hasAttachments)
           AttachmentInputWidget(
             groupId: widget.groupId,
             groupName: widget.groupName,
@@ -169,9 +190,8 @@ class _ExpenseFormExtendedFieldsState extends State<ExpenseFormExtendedFields> {
             onAttachmentTapped: (path) => _openAttachmentViewer(context, path),
             enabled: enabled,
           ),
-        ],
         if (showNote) ...[
-          const SizedBox(height: AppSpacing.md),
+          FormSectionLabel(gloc.note),
           KeyedSubtree(
             key: _controller.noteFieldKey,
             child: NoteInputWidget(

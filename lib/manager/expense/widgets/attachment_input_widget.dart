@@ -1,13 +1,13 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'attachments/attachment_slot.dart';
+import 'attachments/attachment_row.dart';
 import 'attachments/attachment_state_manager.dart';
 import '../errors/expense_error_handler.dart';
 
-/// Refactored attachment input widget with improved architecture
-/// Now uses AttachmentStateManager for business logic and AttachmentSlot for UI
-/// Reduces complexity from 406 lines to ~200 lines
+/// The expense's attachments: an "Attachments" section label with the count,
+/// one [AttachmentRow] per file in a card, then an "Add attachment" pill
+/// while there's room. [AttachmentStateManager] holds the logic.
 class AttachmentInputWidget extends StatefulWidget {
   final String groupId;
   final String groupName;
@@ -88,89 +88,80 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
       );
     }
 
+    final attachments = _stateManager.attachments;
+    final busy = _stateManager.isProcessing;
+    final radius = BorderRadius.circular(16);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.attach_file_rounded,
-                  size: 20,
+            Expanded(child: FormSectionLabel(loc.attachments)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
+              child: Text(
+                '${_stateManager.count}/${_stateManager.maxAttachments}',
+                style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
-                const SizedBox(width: 8),
-                Text(loc.attachments, style: theme.textTheme.titleSmall),
-              ],
-            ),
-            Text(
-              '${_stateManager.count}/${_stateManager.maxAttachments}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 100,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: _stateManager.maxAttachments,
-            itemBuilder: (context, index) {
-              final attachments = _stateManager.attachments;
-              if (index < attachments.length) {
-                return AttachmentSlot(
-                  filePath: attachments[index],
-                  onTap: () => widget.onAttachmentTapped(attachments[index]),
-                  onRemove: widget.enabled
-                      ? () {
-                          _stateManager.removeAttachment(index);
-                          widget.onAttachmentRemoved(index);
-                        }
-                      : null,
-                );
-              } else if (index == attachments.length &&
-                  _stateManager.isProcessing) {
-                // Show loading slot while processing
-                return _buildLoadingSlot(theme);
-              } else {
-                return AttachmentSlot(
-                  onTap: (widget.enabled && !_stateManager.isProcessing)
-                      ? () => _showAttachmentSourcePicker(context)
-                      : () {}, // no-op when disabled
-                );
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoadingSlot(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 12),
-      child: Container(
-        width: 100,
-        height: 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: theme.colorScheme.surfaceContainerHighest,
-        ),
-        child: Center(
-          child: SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              color: theme.colorScheme.surfaceContainerLow,
+        CardOutline(
+          borderRadius: radius,
+          child: Material(
+            color: theme.colorScheme.raisedSurface,
+            borderRadius: radius,
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                for (var i = 0; i < attachments.length; i++) ...[
+                  if (i > 0)
+                    Divider(
+                      height: 1,
+                      indent: 68,
+                      endIndent: 16,
+                      color: CardOutline.colorFor(theme.brightness),
+                    ),
+                  AttachmentRow(
+                    filePath: attachments[i],
+                    onTap: () => widget.onAttachmentTapped(attachments[i]),
+                    onRemove: widget.enabled
+                        ? () {
+                            _stateManager.removeAttachment(i);
+                            widget.onAttachmentRemoved(i);
+                          }
+                        : null,
+                  ),
+                ],
+              ],
             ),
           ),
         ),
-      ),
+        if (widget.enabled && (_stateManager.canAddMore || busy))
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: FormPill(
+                icon: busy ? null : Icons.attach_file_rounded,
+                leading: busy
+                    ? SizedBox.square(
+                        dimension: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      )
+                    : null,
+                label: loc.attachment_source,
+                style: FormPillStyle.add,
+                onTap: busy ? null : () => _showAttachmentSourcePicker(context),
+              ),
+            ),
+          ),
+      ],
     );
   }
 

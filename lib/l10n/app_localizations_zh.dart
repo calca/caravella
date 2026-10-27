@@ -2333,4 +2333,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String balances_share_basis(String people) {
     return '$people平均分摊';
   }
+
+  @override
+  String attachment_remove(String name) {
+    return '移除 $name';
+  }
 }

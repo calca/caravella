@@ -1041,4 +1041,6 @@
   ,"balances_share_basis": "Split equally among {people}"
   ,"@balances_share_per_person": {"description": "Balances: title of the card with each participant's equal share of the total"}
   ,"@balances_share_basis": {"description": "Balances: under 'Share per person', how it's computed; people is already pluralized ('4 participants')", "placeholders": {"people": {"type": "String"}}}
+  ,"attachment_remove": "Remove {name}"
+  ,"@attachment_remove": {"description": "Accessibility label of the button removing an attachment from an expense", "placeholders": {"name": {"type": "String"}}}
 }

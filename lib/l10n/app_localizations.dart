@@ -4469,6 +4469,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Split equally among {people}'**
   String balances_share_basis(String people);
+
+  /// Accessibility label of the button removing an attachment from an expense
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}'**
+  String attachment_remove(String name);
 }
 
 class _AppLocalizationsDelegate
