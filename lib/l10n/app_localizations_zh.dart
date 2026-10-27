@@ -2338,4 +2338,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String attachment_remove(String name) {
     return '移除 $name';
   }
+
+  @override
+  String get keep_editing => '继续编辑';
 }

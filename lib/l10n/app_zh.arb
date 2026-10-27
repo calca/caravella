@@ -1246,4 +1246,5 @@
   ,"balances_share_per_person": "人均分摊"
   ,"balances_share_basis": "{people}平均分摊"
   ,"attachment_remove": "移除 {name}"
+  ,"keep_editing": "继续编辑"
 }

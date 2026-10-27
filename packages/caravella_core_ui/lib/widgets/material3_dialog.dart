@@ -144,6 +144,25 @@ class Material3DialogActions {
     String text, {
     VoidCallback? onPressed,
   }) => primary(context, text, onPressed: onPressed, isDestructive: true);
+
+  /// A destructive choice that isn't the one to encourage — e.g. "Discard"
+  /// when leaving unsaved changes, under a filled "Keep editing": red text,
+  /// no fill, so the safe action stands out. Keep [destructive] for real
+  /// deletions.
+  static Widget destructiveText(
+    BuildContext context,
+    String text, {
+    VoidCallback? onPressed,
+  }) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        minimumSize: const Size.fromHeight(48),
+        foregroundColor: Theme.of(context).colorScheme.error,
+      ),
+      child: Text(text),
+    );
+  }
 }
 
 /// Helper functions for common dialog patterns

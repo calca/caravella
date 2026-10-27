@@ -4475,6 +4475,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove {name}'**
   String attachment_remove(String name);
+
+  /// Safe main button of the leave-without-saving dialog: stays on the form
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get keep_editing;
 }
 
 class _AppLocalizationsDelegate

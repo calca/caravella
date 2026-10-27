@@ -2396,4 +2396,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String attachment_remove(String name) {
     return 'Quitar $name';
   }
+
+  @override
+  String get keep_editing => 'Seguir editando';
 }

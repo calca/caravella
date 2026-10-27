@@ -234,19 +234,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     return await showDialog<bool>(
           context: context,
           builder: (ctx) => Material3Dialog(
-            icon: Icon(
-              Icons.warning_amber_outlined,
-              color: Theme.of(context).colorScheme.error,
-              size: 24,
-            ),
             title: Text(gloc.discard_changes_title),
             content: Text(gloc.discard_changes_message),
+            // Leaving is a choice, not a danger: the safe action is the
+            // filled one, Discard is red text (no warning icon).
             actions: [
-              Material3DialogActions.cancel(ctx, gloc.cancel),
-              Material3DialogActions.destructive(
+              Material3DialogActions.destructiveText(
                 ctx,
                 gloc.discard,
                 onPressed: () => Navigator.of(ctx).pop(true),
+              ),
+              Material3DialogActions.primary(
+                ctx,
+                gloc.keep_editing,
+                onPressed: () => Navigator.of(ctx).pop(false),
               ),
             ],
           ),
