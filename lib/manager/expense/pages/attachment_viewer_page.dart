@@ -79,23 +79,29 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
                 },
               ),
             ),
-            MediaTopBar(
-              title: _controller.totalCount > 1
-                  ? '${_controller.currentIndex + 1} / ${_controller.totalCount}'
-                  : null,
-              actions: [
-                MediaRoundButton(
-                  icon: Icons.share_outlined,
-                  onPressed: _shareAttachment,
-                  tooltip: loc.share_attachment,
-                ),
-                if (widget.onDelete != null)
+            // Pinned to the top; the photo fills the screen under it.
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: MediaTopBar(
+                title: _controller.totalCount > 1
+                    ? '${_controller.currentIndex + 1} / ${_controller.totalCount}'
+                    : null,
+                actions: [
                   MediaRoundButton(
-                    icon: Icons.delete_outline_rounded,
-                    onPressed: () => _confirmDelete(context),
-                    tooltip: loc.delete_attachment,
+                    icon: Icons.share_outlined,
+                    onPressed: _shareAttachment,
+                    tooltip: loc.share_attachment,
                   ),
-              ],
+                  if (widget.onDelete != null)
+                    MediaRoundButton(
+                      icon: Icons.delete_outline_rounded,
+                      onPressed: () => _confirmDelete(context),
+                      tooltip: loc.delete_attachment,
+                    ),
+                ],
+              ),
             ),
           ],
         ),
