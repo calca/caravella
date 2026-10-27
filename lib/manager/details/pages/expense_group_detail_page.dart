@@ -141,8 +141,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     }
     final currentGroup = _groupNotifier?.currentGroup;
 
-    // Se il gruppo corrente nel notifier è lo stesso che stiamo visualizzando, aggiorna
-    if (currentGroup != null && _trip != null && currentGroup.id == _trip!.id) {
+    // Se il gruppo corrente nel notifier è lo stesso che stiamo visualizzando, aggiorna.
+    // Opening the expense form sets this very group as current: nothing
+    // changed, and rebuilding the page under the incoming one made it stutter.
+    if (currentGroup != null &&
+        _trip != null &&
+        currentGroup.id == _trip!.id &&
+        !identical(currentGroup, _trip)) {
       if (mounted) {
         setState(() {
           _trip = currentGroup;
