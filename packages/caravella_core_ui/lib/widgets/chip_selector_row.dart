@@ -11,8 +11,9 @@ import 'form_pill.dart';
 /// caller decides the order, e.g. last-used-first). When there are more
 /// than [maxVisibleItems] + 1 items, the remainder is collapsed behind a
 /// trailing "..." pill that opens [showSelectionBottomSheet] to browse the
-/// full list. If [selected] is hidden behind that overflow, the "..." pill
-/// shows its label instead, so the current selection always stays visible.
+/// full list. If [selected] is hidden behind that overflow, it shows as an
+/// extra selected pill before "...", so the current selection always stays
+/// visible and the list stays reachable.
 /// An optional trailing "+" pill opens the same sheet in inline-add mode
 /// when [onAddItemInline] is provided. [itemLeading] puts a widget (e.g.
 /// an avatar) before each label.
@@ -104,14 +105,21 @@ class ChipSelectorRow<T> extends StatelessWidget {
               : FormPillStyle.normal,
           onTap: enabled ? () => onSelected(item) : null,
         ),
+      // A choice from the full list shows as its own pill, and "..." stays
+      // after it: it used to take the choice's label, so the way back to
+      // the list disappeared.
+      if (selectedIsHidden)
+        FormPill(
+          label: itemLabel(selected as T),
+          leading: itemLeading?.call(selected as T),
+          style: FormPillStyle.selected,
+          onTap: enabled ? () => onSelected(selected as T) : null,
+        ),
       if (_hasOverflow)
         FormPill(
-          label: selectedIsHidden ? itemLabel(selected as T) : _moreLabel,
-          leading: selectedIsHidden ? itemLeading?.call(selected as T) : null,
-          style: selectedIsHidden
-              ? FormPillStyle.selected
-              : FormPillStyle.normal,
-          semanticsLabel: selectedIsHidden ? null : sheetTitle,
+          label: _moreLabel,
+          semanticsLabel: sheetTitle,
+          tooltip: sheetTitle,
           onTap: enabled ? openPicker : null,
         ),
       if (onAddItemInline != null)

@@ -48,7 +48,7 @@ void main() {
     expect(find.widgetWithText(FormPill, '...'), findsOneWidget);
   });
 
-  testWidgets('shows the hidden selection label on the "..." chip', (
+  testWidgets('shows a hidden selection as its own chip, keeping "..."', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -63,8 +63,9 @@ void main() {
     );
 
     expect(find.text('+2'), findsNothing);
-    expect(find.widgetWithText(FormPill, '...'), findsNothing);
     expect(find.widgetWithText(FormPill, 'F'), findsOneWidget);
+    // The way back to the full list stays.
+    expect(find.widgetWithText(FormPill, '...'), findsOneWidget);
   });
 
   testWidgets('renders an add chip when onAddItemInline is provided', (
