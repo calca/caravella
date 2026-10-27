@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group page: tap the “Shared” badge to open the group’s synchronization; the ⋯ menu no longer repeats Map, which opens from its card in Statistics
 
 ### Fixed
+- Labels reviewed in all five languages: currency names translated in Portuguese (they were in English); “Place” used consistently for an expense’s place (search filter “With a place”); same wording for favorites, save errors and permission messages; sentence case and typographic apostrophes in English; « » quotes in Italian; full-width punctuation in Chinese; Italian “Vedi tutte” for recent expenses and a gender-neutral welcome to a shared group
 - Error messages about attachments and location are in your language (they were in English) and say what went wrong in plain words, without technical details: attachment limit, adding or sharing an attachment, a file that can’t be opened, location off or not allowed
 - Group photos are decoded at the size they’re shown: less memory with photos chosen before cropping existed
 - An expense's place keeps its name after saving: a place found by the automatic location (e.g. “Sovico”) showed only its coordinates when the expense was opened again. Places saved before this fix keep only their coordinates

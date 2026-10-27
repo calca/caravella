@@ -132,7 +132,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get markdown_save_cancelled => 'Exportação Markdown cancelada';
 
   @override
-  String get markdown_save_error => 'Erro ao salvar arquivo Markdown';
+  String get markdown_save_error =>
+      'Não foi possível salvar o arquivo Markdown';
 
   @override
   String get share_label => 'Compartilhar';
@@ -156,7 +157,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get good_evening => 'Boa noite';
 
   @override
-  String get see_all => 'Ver todos';
+  String get see_all => 'Ver todas';
 
   @override
   String get view_all_groups => 'Ver todos os grupos';
@@ -280,7 +281,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get recent_expenses => 'Despesas recentes';
 
   @override
-  String get license_link => 'Ver Licença MIT no GitHub';
+  String get license_link => 'Ver a licença MIT no GitHub';
 
   @override
   String get add_trip => 'Adicionar grupo';
@@ -316,7 +317,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get expand_form => 'Expandir formulário';
 
   @override
-  String get expand_form_tooltip => 'Adicionar data, localização e notas';
+  String get expand_form_tooltip => 'Adicionar data, local e nota';
 
   @override
   String get category => 'Categoria';
@@ -469,7 +470,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pin => 'Favorito';
 
   @override
-  String get unpin => 'Desfavorito';
+  String get unpin => 'Remover favorito';
 
   @override
   String get archived_with_undo => 'Arquivado';
@@ -587,7 +588,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get csv_save_cancelled => 'Exportação cancelada';
 
   @override
-  String get csv_save_error => 'Erro ao salvar arquivo CSV';
+  String get csv_save_error => 'Não foi possível salvar o arquivo CSV';
 
   @override
   String get ofx_select_directory_title =>
@@ -602,7 +603,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ofx_save_cancelled => 'Exportação OFX cancelada';
 
   @override
-  String get ofx_save_error => 'Erro ao salvar arquivo OFX';
+  String get ofx_save_error => 'Não foi possível salvar o arquivo OFX';
 
   @override
   String get csv_expense_name => 'Descrição';
@@ -874,478 +875,478 @@ class AppLocalizationsPt extends AppLocalizations {
   String get color_random_subtitle => 'Deixe o app escolher uma cor';
 
   @override
-  String get currency_AED => 'United Arab Emirates Dirham';
+  String get currency_AED => 'Dirham dos Emirados Árabes Unidos';
 
   @override
-  String get currency_AFN => 'Afghan Afghani';
+  String get currency_AFN => 'Afegane afegão';
 
   @override
-  String get currency_ALL => 'Albanian Lek';
+  String get currency_ALL => 'Lek albanês';
 
   @override
-  String get currency_AMD => 'Armenian Dram';
+  String get currency_AMD => 'Dram armênio';
 
   @override
-  String get currency_ANG => 'Netherlands Antillean Guilder';
+  String get currency_ANG => 'Florim das Antilhas Holandesas';
 
   @override
-  String get currency_AOA => 'Angolan Kwanza';
+  String get currency_AOA => 'Kwanza angolano';
 
   @override
-  String get currency_ARS => 'Argentine Peso';
+  String get currency_ARS => 'Peso argentino';
 
   @override
-  String get currency_AUD => 'Australian Dollar';
+  String get currency_AUD => 'Dólar australiano';
 
   @override
-  String get currency_AWG => 'Aruban Florin';
+  String get currency_AWG => 'Florim arubano';
 
   @override
-  String get currency_AZN => 'Azerbaijani Manat';
+  String get currency_AZN => 'Manat azerbaijano';
 
   @override
-  String get currency_BAM => 'Bosnia and Herzegovina Convertible Mark';
+  String get currency_BAM => 'Marco conversível da Bósnia e Herzegovina';
 
   @override
-  String get currency_BBD => 'Barbadian Dollar';
+  String get currency_BBD => 'Dólar barbadense';
 
   @override
-  String get currency_BDT => 'Bangladeshi Taka';
+  String get currency_BDT => 'Taka bengalês';
 
   @override
-  String get currency_BGN => 'Bulgarian Lev';
+  String get currency_BGN => 'Lev búlgaro';
 
   @override
-  String get currency_BHD => 'Bahraini Dinar';
+  String get currency_BHD => 'Dinar bareinita';
 
   @override
-  String get currency_BIF => 'Burundian Franc';
+  String get currency_BIF => 'Franco burundiano';
 
   @override
-  String get currency_BMD => 'Bermudian Dollar';
+  String get currency_BMD => 'Dólar bermudense';
 
   @override
-  String get currency_BND => 'Brunei Dollar';
+  String get currency_BND => 'Dólar bruneano';
 
   @override
-  String get currency_BOB => 'Bolivian Boliviano';
+  String get currency_BOB => 'Boliviano';
 
   @override
-  String get currency_BRL => 'Brazilian Real';
+  String get currency_BRL => 'Real brasileiro';
 
   @override
-  String get currency_BSD => 'Bahamian Dollar';
+  String get currency_BSD => 'Dólar bahamense';
 
   @override
-  String get currency_BTN => 'Bhutanese Ngultrum';
+  String get currency_BTN => 'Ngultrum butanês';
 
   @override
-  String get currency_BWP => 'Botswana Pula';
+  String get currency_BWP => 'Pula de Botsuana';
 
   @override
-  String get currency_BYN => 'Belarusian Ruble';
+  String get currency_BYN => 'Rublo bielorrusso';
 
   @override
-  String get currency_BZD => 'Belize Dollar';
+  String get currency_BZD => 'Dólar belizenho';
 
   @override
-  String get currency_CAD => 'Canadian Dollar';
+  String get currency_CAD => 'Dólar canadense';
 
   @override
-  String get currency_CDF => 'Congolese Franc';
+  String get currency_CDF => 'Franco congolês';
 
   @override
-  String get currency_CHF => 'Swiss Franc';
+  String get currency_CHF => 'Franco suíço';
 
   @override
-  String get currency_CLP => 'Chilean Peso';
+  String get currency_CLP => 'Peso chileno';
 
   @override
-  String get currency_CNY => 'Chinese Yuan';
+  String get currency_CNY => 'Yuan chinês';
 
   @override
-  String get currency_COP => 'Colombian Peso';
+  String get currency_COP => 'Peso colombiano';
 
   @override
-  String get currency_CRC => 'Costa Rican Colón';
+  String get currency_CRC => 'Colón costarriquenho';
 
   @override
-  String get currency_CUP => 'Cuban Peso';
+  String get currency_CUP => 'Peso cubano';
 
   @override
-  String get currency_CVE => 'Cape Verdean Escudo';
+  String get currency_CVE => 'Escudo cabo-verdiano';
 
   @override
-  String get currency_CZK => 'Czech Koruna';
+  String get currency_CZK => 'Coroa tcheca';
 
   @override
-  String get currency_DJF => 'Djiboutian Franc';
+  String get currency_DJF => 'Franco djiboutiano';
 
   @override
-  String get currency_DKK => 'Danish Krone';
+  String get currency_DKK => 'Coroa dinamarquesa';
 
   @override
-  String get currency_DOP => 'Dominican Peso';
+  String get currency_DOP => 'Peso dominicano';
 
   @override
-  String get currency_DZD => 'Algerian Dinar';
+  String get currency_DZD => 'Dinar argelino';
 
   @override
-  String get currency_EGP => 'Egyptian Pound';
+  String get currency_EGP => 'Libra egípcia';
 
   @override
-  String get currency_ERN => 'Eritrean Nakfa';
+  String get currency_ERN => 'Nakfa eritreia';
 
   @override
-  String get currency_ETB => 'Ethiopian Birr';
+  String get currency_ETB => 'Birr etíope';
 
   @override
   String get currency_EUR => 'Euro';
 
   @override
-  String get currency_FJD => 'Fiji Dollar';
+  String get currency_FJD => 'Dólar fijiano';
 
   @override
-  String get currency_FKP => 'Falkland Islands Pound';
+  String get currency_FKP => 'Libra das Ilhas Malvinas';
 
   @override
-  String get currency_GBP => 'Pound Sterling';
+  String get currency_GBP => 'Libra esterlina';
 
   @override
-  String get currency_GEL => 'Georgian Lari';
+  String get currency_GEL => 'Lari georgiano';
 
   @override
-  String get currency_GHS => 'Ghanaian Cedi';
+  String get currency_GHS => 'Cedi ganês';
 
   @override
-  String get currency_GIP => 'Gibraltar Pound';
+  String get currency_GIP => 'Libra de Gibraltar';
 
   @override
-  String get currency_GMD => 'Gambian Dalasi';
+  String get currency_GMD => 'Dalasi gambiano';
 
   @override
-  String get currency_GNF => 'Guinean Franc';
+  String get currency_GNF => 'Franco guineano';
 
   @override
-  String get currency_GTQ => 'Guatemalan Quetzal';
+  String get currency_GTQ => 'Quetzal guatemalteco';
 
   @override
-  String get currency_GYD => 'Guyanese Dollar';
+  String get currency_GYD => 'Dólar guianense';
 
   @override
-  String get currency_HKD => 'Hong Kong Dollar';
+  String get currency_HKD => 'Dólar de Hong Kong';
 
   @override
-  String get currency_HNL => 'Honduran Lempira';
+  String get currency_HNL => 'Lempira hondurenha';
 
   @override
-  String get currency_HTG => 'Haitian Gourde';
+  String get currency_HTG => 'Gourde haitiano';
 
   @override
-  String get currency_HUF => 'Hungarian Forint';
+  String get currency_HUF => 'Florim húngaro';
 
   @override
-  String get currency_IDR => 'Indonesian Rupiah';
+  String get currency_IDR => 'Rupia indonésia';
 
   @override
-  String get currency_ILS => 'Israeli New Shekel';
+  String get currency_ILS => 'Novo shekel israelense';
 
   @override
-  String get currency_INR => 'Indian Rupee';
+  String get currency_INR => 'Rupia indiana';
 
   @override
-  String get currency_IQD => 'Iraqi Dinar';
+  String get currency_IQD => 'Dinar iraquiano';
 
   @override
-  String get currency_IRR => 'Iranian Rial';
+  String get currency_IRR => 'Rial iraniano';
 
   @override
-  String get currency_ISK => 'Icelandic Króna';
+  String get currency_ISK => 'Coroa islandesa';
 
   @override
-  String get currency_JMD => 'Jamaican Dollar';
+  String get currency_JMD => 'Dólar jamaicano';
 
   @override
-  String get currency_JOD => 'Jordanian Dinar';
+  String get currency_JOD => 'Dinar jordaniano';
 
   @override
-  String get currency_JPY => 'Japanese Yen';
+  String get currency_JPY => 'Iene japonês';
 
   @override
-  String get currency_KES => 'Kenyan Shilling';
+  String get currency_KES => 'Xelim queniano';
 
   @override
-  String get currency_KGS => 'Kyrgyzstani Som';
+  String get currency_KGS => 'Som quirguiz';
 
   @override
-  String get currency_KHR => 'Cambodian Riel';
+  String get currency_KHR => 'Riel cambojano';
 
   @override
-  String get currency_KID => 'Kiribati Dollar';
+  String get currency_KID => 'Dólar de Kiribati';
 
   @override
-  String get currency_KMF => 'Comorian Franc';
+  String get currency_KMF => 'Franco comoriano';
 
   @override
-  String get currency_KPW => 'North Korean Won';
+  String get currency_KPW => 'Won norte-coreano';
 
   @override
-  String get currency_KRW => 'South Korean Won';
+  String get currency_KRW => 'Won sul-coreano';
 
   @override
-  String get currency_KWD => 'Kuwaiti Dinar';
+  String get currency_KWD => 'Dinar kuwaitiano';
 
   @override
-  String get currency_KYD => 'Cayman Islands Dollar';
+  String get currency_KYD => 'Dólar das Ilhas Cayman';
 
   @override
-  String get currency_KZT => 'Kazakhstani Tenge';
+  String get currency_KZT => 'Tenge cazaque';
 
   @override
-  String get currency_LAK => 'Lao Kip';
+  String get currency_LAK => 'Kip laosiano';
 
   @override
-  String get currency_LBP => 'Lebanese Pound';
+  String get currency_LBP => 'Libra libanesa';
 
   @override
-  String get currency_LKR => 'Sri Lankan Rupee';
+  String get currency_LKR => 'Rupia do Sri Lanka';
 
   @override
-  String get currency_LRD => 'Liberian Dollar';
+  String get currency_LRD => 'Dólar liberiano';
 
   @override
-  String get currency_LSL => 'Lesotho Loti';
+  String get currency_LSL => 'Loti do Lesoto';
 
   @override
-  String get currency_LYD => 'Libyan Dinar';
+  String get currency_LYD => 'Dinar líbio';
 
   @override
-  String get currency_MAD => 'Moroccan Dirham';
+  String get currency_MAD => 'Dirham marroquino';
 
   @override
-  String get currency_MDL => 'Moldovan Leu';
+  String get currency_MDL => 'Leu moldávio';
 
   @override
-  String get currency_MGA => 'Malagasy Ariary';
+  String get currency_MGA => 'Ariary malgaxe';
 
   @override
-  String get currency_MKD => 'Macedonian Denar';
+  String get currency_MKD => 'Dinar macedônio';
 
   @override
-  String get currency_MMK => 'Myanmar Kyat';
+  String get currency_MMK => 'Kyat de Mianmar';
 
   @override
-  String get currency_MNT => 'Mongolian Tögrög';
+  String get currency_MNT => 'Tugrik mongol';
 
   @override
-  String get currency_MOP => 'Macanese Pataca';
+  String get currency_MOP => 'Pataca macaense';
 
   @override
-  String get currency_MRU => 'Mauritanian Ouguiya';
+  String get currency_MRU => 'Ouguiya mauritana';
 
   @override
-  String get currency_MUR => 'Mauritian Rupee';
+  String get currency_MUR => 'Rupia mauriciana';
 
   @override
-  String get currency_MVR => 'Maldivian Rufiyaa';
+  String get currency_MVR => 'Rufiyaa maldiva';
 
   @override
-  String get currency_MWK => 'Malawian Kwacha';
+  String get currency_MWK => 'Kwacha malawiana';
 
   @override
-  String get currency_MXN => 'Mexican Peso';
+  String get currency_MXN => 'Peso mexicano';
 
   @override
-  String get currency_MYR => 'Malaysian Ringgit';
+  String get currency_MYR => 'Ringgit malaio';
 
   @override
-  String get currency_MZN => 'Mozambican Metical';
+  String get currency_MZN => 'Metical moçambicano';
 
   @override
-  String get currency_NAD => 'Namibian Dollar';
+  String get currency_NAD => 'Dólar namibiano';
 
   @override
-  String get currency_NGN => 'Nigerian Naira';
+  String get currency_NGN => 'Naira nigeriana';
 
   @override
-  String get currency_NIO => 'Nicaraguan Córdoba';
+  String get currency_NIO => 'Córdoba nicaraguense';
 
   @override
-  String get currency_NOK => 'Norwegian Krone';
+  String get currency_NOK => 'Coroa norueguesa';
 
   @override
-  String get currency_NPR => 'Nepalese Rupee';
+  String get currency_NPR => 'Rupia nepalesa';
 
   @override
-  String get currency_NZD => 'New Zealand Dollar';
+  String get currency_NZD => 'Dólar neozelandês';
 
   @override
-  String get currency_OMR => 'Omani Rial';
+  String get currency_OMR => 'Rial omanense';
 
   @override
-  String get currency_PAB => 'Panamanian Balboa';
+  String get currency_PAB => 'Balboa panamenho';
 
   @override
-  String get currency_PEN => 'Peruvian Sol';
+  String get currency_PEN => 'Sol peruano';
 
   @override
-  String get currency_PGK => 'Papua New Guinean Kina';
+  String get currency_PGK => 'Kina papuásia';
 
   @override
-  String get currency_PHP => 'Philippine Peso';
+  String get currency_PHP => 'Peso filipino';
 
   @override
-  String get currency_PKR => 'Pakistani Rupee';
+  String get currency_PKR => 'Rupia paquistanesa';
 
   @override
-  String get currency_PLN => 'Polish Zloty';
+  String get currency_PLN => 'Zloty polonês';
 
   @override
-  String get currency_PYG => 'Paraguayan Guaraní';
+  String get currency_PYG => 'Guarani paraguaio';
 
   @override
-  String get currency_QAR => 'Qatari Riyal';
+  String get currency_QAR => 'Rial catariano';
 
   @override
-  String get currency_RON => 'Romanian Leu';
+  String get currency_RON => 'Leu romeno';
 
   @override
-  String get currency_RSD => 'Serbian Dinar';
+  String get currency_RSD => 'Dinar sérvio';
 
   @override
-  String get currency_RUB => 'Russian Ruble';
+  String get currency_RUB => 'Rublo russo';
 
   @override
-  String get currency_RWF => 'Rwandan Franc';
+  String get currency_RWF => 'Franco ruandês';
 
   @override
-  String get currency_SAR => 'Saudi Riyal';
+  String get currency_SAR => 'Rial saudita';
 
   @override
-  String get currency_SBD => 'Solomon Islands Dollar';
+  String get currency_SBD => 'Dólar das Ilhas Salomão';
 
   @override
-  String get currency_SCR => 'Seychellois Rupee';
+  String get currency_SCR => 'Rupia seichelense';
 
   @override
-  String get currency_SDG => 'Sudanese Pound';
+  String get currency_SDG => 'Libra sudanesa';
 
   @override
-  String get currency_SEK => 'Swedish Krona';
+  String get currency_SEK => 'Coroa sueca';
 
   @override
-  String get currency_SGD => 'Singapore Dollar';
+  String get currency_SGD => 'Dólar de Singapura';
 
   @override
-  String get currency_SHP => 'Saint Helena Pound';
+  String get currency_SHP => 'Libra de Santa Helena';
 
   @override
-  String get currency_SLE => 'Sierra Leonean Leone (new)';
+  String get currency_SLE => 'Leone de Serra Leoa (novo)';
 
   @override
-  String get currency_SLL => 'Sierra Leonean Leone (old)';
+  String get currency_SLL => 'Leone de Serra Leoa (antigo)';
 
   @override
-  String get currency_SOS => 'Somali Shilling';
+  String get currency_SOS => 'Xelim somali';
 
   @override
-  String get currency_SRD => 'Surinamese Dollar';
+  String get currency_SRD => 'Dólar surinamês';
 
   @override
-  String get currency_SSP => 'South Sudanese Pound';
+  String get currency_SSP => 'Libra sul-sudanesa';
 
   @override
-  String get currency_STN => 'São Tomé and Príncipe Dobra';
+  String get currency_STN => 'Dobra de São Tomé e Príncipe';
 
   @override
-  String get currency_SVC => 'Salvadoran Colón (historic)';
+  String get currency_SVC => 'Colón salvadorenho (histórico)';
 
   @override
-  String get currency_SYP => 'Syrian Pound';
+  String get currency_SYP => 'Libra síria';
 
   @override
-  String get currency_SZL => 'Eswatini Lilangeni';
+  String get currency_SZL => 'Lilangeni suazi';
 
   @override
-  String get currency_THB => 'Thai Baht';
+  String get currency_THB => 'Baht tailandês';
 
   @override
-  String get currency_TJS => 'Tajikistani Somoni';
+  String get currency_TJS => 'Somoni tadjique';
 
   @override
-  String get currency_TMT => 'Turkmenistan Manat';
+  String get currency_TMT => 'Manat turcomeno';
 
   @override
-  String get currency_TND => 'Tunisian Dinar';
+  String get currency_TND => 'Dinar tunisiano';
 
   @override
-  String get currency_TOP => 'Tongan Paʻanga';
+  String get currency_TOP => 'Paʻanga tonganesa';
 
   @override
-  String get currency_TRY => 'Turkish Lira';
+  String get currency_TRY => 'Lira turca';
 
   @override
-  String get currency_TTD => 'Trinidad and Tobago Dollar';
+  String get currency_TTD => 'Dólar de Trinidad e Tobago';
 
   @override
-  String get currency_TVD => 'Tuvaluan Dollar';
+  String get currency_TVD => 'Dólar tuvaluano';
 
   @override
-  String get currency_TWD => 'New Taiwan Dollar';
+  String get currency_TWD => 'Novo dólar taiwanês';
 
   @override
-  String get currency_TZS => 'Tanzanian Shilling';
+  String get currency_TZS => 'Xelim tanzaniano';
 
   @override
-  String get currency_UAH => 'Ukrainian Hryvnia';
+  String get currency_UAH => 'Hryvnia ucraniana';
 
   @override
-  String get currency_UGX => 'Ugandan Shilling';
+  String get currency_UGX => 'Xelim ugandense';
 
   @override
-  String get currency_USD => 'United States Dollar';
+  String get currency_USD => 'Dólar americano';
 
   @override
-  String get currency_UYU => 'Uruguayan Peso';
+  String get currency_UYU => 'Peso uruguaio';
 
   @override
-  String get currency_UZS => 'Uzbekistani So\'m';
+  String get currency_UZS => 'Som uzbeque';
 
   @override
-  String get currency_VED => 'Venezuelan Digital Bolívar';
+  String get currency_VED => 'Bolívar digital venezuelano';
 
   @override
-  String get currency_VES => 'Venezuelan Bolívar';
+  String get currency_VES => 'Bolívar venezuelano';
 
   @override
-  String get currency_VND => 'Vietnamese Đồng';
+  String get currency_VND => 'Dong vietnamita';
 
   @override
-  String get currency_VUV => 'Vanuatu Vatu';
+  String get currency_VUV => 'Vatu de Vanuatu';
 
   @override
-  String get currency_WST => 'Samoan Tala';
+  String get currency_WST => 'Tala samoano';
 
   @override
-  String get currency_XAF => 'CFA Franc BEAC';
+  String get currency_XAF => 'Franco CFA (BEAC)';
 
   @override
-  String get currency_XOF => 'CFA Franc BCEAO';
+  String get currency_XOF => 'Franco CFA (BCEAO)';
 
   @override
-  String get currency_XPF => 'CFP Franc';
+  String get currency_XPF => 'Franco CFP';
 
   @override
-  String get currency_YER => 'Yemeni Rial';
+  String get currency_YER => 'Rial iemenita';
 
   @override
-  String get currency_ZAR => 'South African Rand';
+  String get currency_ZAR => 'Rand sul-africano';
 
   @override
-  String get currency_ZMW => 'Zambian Kwacha';
+  String get currency_ZMW => 'Kwacha zambiano';
 
   @override
-  String get currency_ZWL => 'Zimbabwean Dollar';
+  String get currency_ZWL => 'Dólar zimbabuano';
 
   @override
   String get search_currency => 'Pesquisar moeda…';
@@ -1549,7 +1550,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get wizard_user_name_label => 'Seu nome (opcional)';
 
   @override
-  String get wizard_user_name_hint => 'ex. Pedro';
+  String get wizard_user_name_hint => 'Ex. Pedro';
 
   @override
   String get wizard_participants_section_title => 'Quem está participando?';
@@ -1670,7 +1671,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get sync_bt_error => 'Sincronização falhou';
+  String get sync_bt_error => 'Não foi possível sincronizar';
 
   @override
   String get sync_bt_error_detail =>
@@ -1798,7 +1799,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get has_attachment => 'Com anexo';
 
   @override
-  String get has_location => 'Com localização';
+  String get has_location => 'Com local';
 
   @override
   String get search_no_results => 'Nenhuma despesa encontrada';
@@ -1823,7 +1824,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get voice_input_error => 'Erro de reconhecimento de voz';
 
   @override
-  String get voice_input_permission_denied => 'Permissão do microfone negada';
+  String get voice_input_permission_denied =>
+      'Microfone não permitido: ative-o nas configurações do telefone';
 
   @override
   String get voice_input_not_available =>

@@ -164,8 +164,8 @@ void main() {
       expect(find.text('Bob'), findsOneWidget);
 
       // Special filter chips
-      expect(find.text('Has attachment'), findsOneWidget);
-      expect(find.text('Has location'), findsOneWidget);
+      expect(find.text('With attachment'), findsOneWidget);
+      expect(find.text('With a place'), findsOneWidget);
     });
 
     testWidgets('category chip filters expenses', (tester) async {
@@ -200,8 +200,8 @@ void main() {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
-      // Tap "Has attachment" chip
-      await tester.tap(find.text('Has attachment'));
+      // Tap "With attachment" chip
+      await tester.tap(find.text('With attachment'));
       await tester.pumpAndSettle();
 
       // Only Pizza dinner has an attachment
@@ -214,10 +214,10 @@ void main() {
       await tester.pumpWidget(buildSearchPage());
       await tester.pumpAndSettle();
 
-      // Tap "Has location" chip (may be outside the visible viewport; scroll it into view first)
-      await tester.ensureVisible(find.text('Has location'));
+      // Tap "With a place" chip (may be outside the visible viewport; scroll it into view first)
+      await tester.ensureVisible(find.text('With a place'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Has location'));
+      await tester.tap(find.text('With a place'));
       await tester.pumpAndSettle();
 
       // Only Pizza dinner has a location

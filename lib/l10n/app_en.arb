@@ -62,7 +62,7 @@
   "markdown_saved_in": "Markdown saved in: {path}",
   "@markdown_saved_in": {"description": "Toast message when Markdown export is saved", "placeholders": {"path": {"type": "String"}}},
   "markdown_save_cancelled": "Markdown export cancelled",
-  "markdown_save_error": "Error saving Markdown file",
+  "markdown_save_error": "Couldn’t save the Markdown file",
   "share_label": "Share",
   "export_share": "Share and export",
   "export_options": "Export expenses",
@@ -77,14 +77,14 @@
   "no_active_groups": "No active groups",
   "create_first_group": "Create a group",
   "new_expense_group": "New",
-  "new_expense": "New Expense",
+  "new_expense": "New expense",
   "image": "Photo",
   "change_image": "Change photo",
   "from_gallery": "From gallery",
   "from_camera": "From camera",
-  "cannot_delete_assigned_participant": "Cannot delete participant: it's assigned to one or more expenses",
+  "cannot_delete_assigned_participant": "Can’t delete the participant: they’re in one or more expenses",
   "@cannot_delete_assigned_participant": {"description": "Shown when attempting to delete a participant that is used by existing expenses"},
-  "cannot_delete_assigned_category": "Cannot delete category: it's assigned to one or more expenses",
+  "cannot_delete_assigned_category": "Can’t delete the category: it’s used by one or more expenses",
   "@cannot_delete_assigned_category": {"description": "Shown when attempting to delete a category that is used by existing expenses"},
   "color": "Color",
   "background": "Background",
@@ -114,7 +114,7 @@
   "this_month": "This month",
   "recent_expenses": "Recent expenses",
   "@recent_expenses": {"description": "Label for recent expenses section"},
-  "license_link": "View MIT License on GitHub",
+  "license_link": "View the MIT License on GitHub",
   "add_trip": "Add a group",
   "group": "Group",
   "create": "Create",
@@ -126,7 +126,7 @@
   "add_expense": "New expense",
   "edit_expense": "Edit expense",
   "expand_form": "Expand form",
-  "expand_form_tooltip": "Add date, location and notes",
+  "expand_form_tooltip": "Add date, place and note",
   "category": "Category",
   "amount": "Amount",
   "invalid_amount": "Invalid amount",
@@ -147,10 +147,10 @@
   "import_confirm_message": "Restore from the file “{file}”? Your current groups will be replaced and this can’t be undone.",
   "import_success": "Data restored",
   "import_error": "Restore failed: check the file",
-  "settings_flag_secure_error": "Couldn't change screen security",
-  "settings_debug_logs_title": "Debug Logs",
+  "settings_flag_secure_error": "Couldn’t change screen security",
+  "settings_debug_logs_title": "Debug logs",
   "settings_debug_logs_desc": "App logs and errors",
-  "developer_link_error": "Couldn't open the link",
+  "developer_link_error": "Couldn’t open the link",
   "whats_new_load_error": "Couldn’t load what’s new",
   "categories": "Categories",
   "other_settings_desc": "Notification, location",
@@ -177,7 +177,7 @@
   "unarchive": "Remove from archive",
   "pin": "Favorite",
   "@pin": {"description": "Action to mark a group as favorite"},
-  "unpin": "Unfavorite",
+  "unpin": "Remove favorite",
   "@unpin": {"description": "Action to remove favorite mark from a group"},
   "@delete": {"description": "Action to delete a group"},
   "archived_with_undo": "Archived",
@@ -223,11 +223,11 @@
   "csv_select_directory_title": "Select folder to save CSV",
   "csv_saved_in": "CSV saved in: {path}",
   "csv_save_cancelled": "Export cancelled",
-  "csv_save_error": "Error saving CSV file",
+  "csv_save_error": "Couldn’t save the CSV file",
   "ofx_select_directory_title": "Select folder to save OFX",
   "ofx_saved_in": "OFX saved in: {path}",
   "ofx_save_cancelled": "OFX export cancelled",
-  "ofx_save_error": "Error saving OFX file",
+  "ofx_save_error": "Couldn’t save the OFX file",
   "csv_expense_name": "Description",
   "csv_amount": "Amount",
   "csv_paid_by": "Paid by",
@@ -265,10 +265,10 @@
   "settings_info_card_desc": "Developer, source code and license",
   "settings_invite_friends": "Invite your friends",
   "settings_invite_friends_desc": "Share Caravella with anyone",
-  "invite_friends_message": "Hey! I use Caravella to split group expenses with friends, it's super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm",
+  "invite_friends_message": "Hey! I use Caravella to split group expenses with friends, it’s super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm",
   "terms_github_title": "Website: calca",
-  "terms_github_desc": "Developer's website",
-  "terms_repo_title": "GitHub Repository",
+  "terms_github_desc": "Developer’s website",
+  "terms_repo_title": "GitHub repository",
   "terms_repo_desc": "The app’s source code",
   "terms_issue_title": "Report a problem",
   "terms_issue_desc": "Report a problem on GitHub",
@@ -280,7 +280,7 @@
   "data_restore_title": "Restore",
   "data_restore_desc": "From a backup file",
   "auto_backup_title": "Automatic backup",
-  "auto_backup_desc": "Your phone's system backup",
+  "auto_backup_desc": "Your phone’s system backup",
   "settings_user_name_title": "Your name",
   "settings_user_name_desc": "Your name in the app",
   "settings_user_name_hint": "Enter your name"
@@ -479,7 +479,7 @@
   ,"currency_UGX": "Ugandan Shilling"
   ,"currency_USD": "United States Dollar"
   ,"currency_UYU": "Uruguayan Peso"
-  ,"currency_UZS": "Uzbekistani So'm"
+  ,"currency_UZS": "Uzbekistani So’m"
   ,"currency_VED": "Venezuelan Digital Bolívar"
   ,"currency_VES": "Venezuelan Bolívar"
   ,"currency_VND": "Vietnamese Đồng"
@@ -505,11 +505,11 @@
   ,"@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"}
   ,"show_search": "Show search bar"
   ,"@show_search": {"description": "Tooltip to show the group search bar"}
-  ,"whats_new_title": "What's New"
+  ,"whats_new_title": "What’s new"
   ,"@whats_new_title": {"description": "Title of the page showing the changelog"}
   ,"changelog_title": "Changelog"
   ,"@changelog_title": {"description": "Title for the changelog section"}
-  ,"expenses_map": "Expenses Map"
+  ,"expenses_map": "Expenses map"
   ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
   ,"no_locations_available": "No places"
   ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
@@ -547,7 +547,7 @@
   ,"@update_install": {"description": "Button to install update from bottom sheet"}
   ,"send_reminder": "Send reminder"
   ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
-  ,"notification_enabled_desc": "Today's expenses in a notification"
+  ,"notification_enabled_desc": "Today’s expenses in a notification"
   ,"@notification_enabled_desc": {"description": "Description of the persistent notification setting"}
   ,"group_type": "Type"
   ,"@group_type": {"description": "Label for expense group type"}
@@ -601,7 +601,7 @@
   ,"@expense": {"description": "Generic title for an expense"}
   ,"notification_enabled": "Persistent notification"
   ,"@notification_enabled": {"description": "Label for persistent notification toggle"}
-  ,"notification_daily_spent": "Today's expenses: {amount} {currency}"
+  ,"notification_daily_spent": "Today’s expenses: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Today's spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_add_expense": "Add expense"
   ,"@notification_add_expense": {"description": "Action button in notification to add expense"}
@@ -615,9 +615,9 @@
   ,"@wizard_user_name_welcome": {"description": "Welcome message in user name step"}
   ,"wizard_user_name_label": "Your name (optional)"
   ,"@wizard_user_name_label": {"description": "Label for user name field"}
-  ,"wizard_user_name_hint": "e.g. Alex"
+  ,"wizard_user_name_hint": "E.g. Alex"
   ,"@wizard_user_name_hint": {"description": "Hint for user name field"}
-  ,"wizard_participants_section_title": "Who's participating?"
+  ,"wizard_participants_section_title": "Who’s participating?"
   ,"@wizard_participants_section_title": {"description": "Title of participants section in combined step"}
   ,"wizard_participants_section_hint": "Add friends or roommates. You can modify them later."
   ,"@wizard_participants_section_hint": {"description": "Hint for participants section"}
@@ -743,9 +743,9 @@
   ,"@sync_qr_pair_failed": {"description": "Error message when QR pairing fails"}
   ,"sync_qr_pair_expired": "This pairing code has expired — ask the other device to show a new one"
   ,"@sync_qr_pair_expired": {"description": "Error message when a scanned pairing QR code is past its validity window"}
-  ,"sync_qr_pair_emulator_host": "This code was generated on an Android emulator, which can't be reached from other devices — pair using two physical devices on the same Wi-Fi network instead"
+  ,"sync_qr_pair_emulator_host": "This code was generated on an Android emulator, which can’t be reached from other devices — pair using two physical devices on the same Wi-Fi network instead"
   ,"@sync_qr_pair_emulator_host": {"description": "Error message when a scanned pairing QR code's host is an Android emulator's unreachable NAT address"}
-  ,"sync_qr_emulator_warning": "This device is an Android emulator — its address usually isn't reachable from other devices, so pairing may fail"
+  ,"sync_qr_emulator_warning": "This device is an Android emulator — its address usually isn’t reachable from other devices, so pairing may fail"
   ,"@sync_qr_emulator_warning": {"description": "Inline warning on the QR display sheet when this device's own address is an Android emulator's NAT address"}
   ,"sync_paired_devices_title": "Paired devices"
   ,"@sync_paired_devices_title": {"description": "Title for the list of devices paired for LAN sync"}
@@ -757,9 +757,9 @@
   ,"@search_expenses": {"description": "Title for the expense search page"}
   ,"search_in_group": "Search in {groupName}"
   ,"@search_in_group": {"description": "Hint text for search input using the group name", "placeholders": {"groupName": {"type": "String"}}}
-  ,"has_attachment": "Has attachment"
+  ,"has_attachment": "With attachment"
   ,"@has_attachment": {"description": "Filter label for expenses with attachments"}
-  ,"has_location": "Has location"
+  ,"has_location": "With a place"
   ,"@has_location": {"description": "Filter label for expenses with location data"}
   ,"search_no_results": "No expenses found"
   ,"@search_no_results": {"description": "Shown when search returns no matching expenses"}
@@ -775,11 +775,11 @@
   ,"@voice_input_processing": {"description": "Message shown during voice text processing"}
   ,"voice_input_error": "Voice recognition error"
   ,"@voice_input_error": {"description": "Error message for voice recognition issues"}
-  ,"voice_input_permission_denied": "Microphone permission denied"
+  ,"voice_input_permission_denied": "Microphone not allowed: turn it on in your phone settings"
   ,"@voice_input_permission_denied": {"description": "Message when user denies microphone permission"}
   ,"voice_input_not_available": "Voice recognition not available"
   ,"@voice_input_not_available": {"description": "Message when voice recognition is not available on the device"}
-  ,"voice_input_no_speech": "I didn't catch that. Try again."
+  ,"voice_input_no_speech": "I didn’t catch that. Try again."
   ,"@voice_input_no_speech": {"description": "Message when voice recognition heard nothing or timed out with no match"}
   ,"voice_input_hint": "Try saying: “50 dollars for dinner at the restaurant”"
   ,"@voice_input_hint": {"description": "Example hint for using voice input"}
@@ -951,7 +951,7 @@
   ,"@drive_backup_disconnect": {"description": "Settings → Data, Google Drive backup"}
   ,"drive_backup_saved": "Backup saved to Google Drive"
   ,"@drive_backup_saved": {"description": "Settings → Data, Google Drive backup"}
-  ,"drive_backup_error": "Couldn't reach Google Drive"
+  ,"drive_backup_error": "Couldn’t reach Google Drive"
   ,"@drive_backup_error": {"description": "Settings → Data, Google Drive backup"}
   ,"expense_more_details": "More details"
   ,"@expense_more_details": {"description": "Quick-add sheet: opens the full expense page (date, place, attachments, note)"}
@@ -959,15 +959,15 @@
   ,"@quick_action_photo": {"description": "Home quick action without receipt reading (F-Droid build)"}
   ,"photo_add_expense": "New expense from a receipt photo"
   ,"@photo_add_expense": {"description": "Home quick action without receipt reading (F-Droid build)"}
-  ,"receipt_photo_error": "Couldn't take the receipt photo"
+  ,"receipt_photo_error": "Couldn’t take the receipt photo"
   ,"@receipt_photo_error": {"description": "Home quick action without receipt reading (F-Droid build)"}
   ,"crop_hint": "Drag and pinch to choose the part to keep"
   ,"crop_preview": "Preview"
   ,"crop_use_photo": "Use this photo"
   ,"@crop_hint": {"description": "Group photo crop page: under the 3:2 frame"}
   ,"welcome_tagline": "Expenses for trips, home and friends, split fairly. Everything stays on your phone."
-  ,"wizard_name_title": "What's your name?"
-  ,"wizard_name_note": "It stays on your phone. You'll be the first participant of your groups."
+  ,"wizard_name_title": "What’s your name?"
+  ,"wizard_name_note": "It stays on your phone. You’ll be the first participant of your groups."
   ,"wizard_type_title": "What kind of group?"
   ,"wizard_type_note": "It sets the starting categories: you can change them anytime."
   ,"group_type_personal_desc": "Just your own spending"
@@ -977,7 +977,7 @@
   ,"wizard_details_title": "What shall we call it?"
   ,"wizard_details_note": "Dates feed the spending chart. You can change everything later."
   ,"wizard_people_you": "{name} (you)"
-  ,"wizard_people_add_hint": "A friend's name"
+  ,"wizard_people_add_hint": "A friend’s name"
   ,"wizard_people_remove": "Remove {name}"
   ,"wizard_dates_add": "Dates"
   ,"wizard_continue": "Continue"

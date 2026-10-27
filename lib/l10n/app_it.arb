@@ -43,14 +43,14 @@
   "markdown_select_directory_title": "Seleziona cartella per salvare Markdown",
   "markdown_saved_in": "Markdown salvato in: {path}",
   "markdown_save_cancelled": "Esportazione Markdown annullata",
-  "markdown_save_error": "Errore nel salvataggio del file Markdown",
+  "markdown_save_error": "Impossibile salvare il file Markdown",
   "share_label": "Condividi",
   "export_share": "Condividi ed esporta",
   "export_options": "Esporta le spese",
   "good_morning": "Buongiorno",
   "good_afternoon": "Buon pomeriggio",
   "good_evening": "Buonasera",
-  "see_all": "Vedi tutti",
+  "see_all": "Vedi tutte",
   "@see_all": {"description": "Etichetta CTA per aprire la pagina cronologia e vedere tutti i gruppi"},
   "no_active_groups": "Nessun gruppo attivo",
   "create_first_group": "Crea un gruppo",
@@ -125,7 +125,7 @@
   "import_error": "Ripristino non riuscito: controlla il file",
   "settings_flag_secure_error": "Impossibile modificare la protezione schermo",
   "settings_debug_logs_title": "Log di debug",
-  "settings_debug_logs_desc": "Log dell'app ed errori",
+  "settings_debug_logs_desc": "Log dell’app ed errori",
   "developer_link_error": "Impossibile aprire il link",
   "whats_new_load_error": "Impossibile caricare le novità",
   "categories": "Categorie",
@@ -152,19 +152,19 @@
   "delete_expense_confirm": "La spesa verrà eliminata. Non si potrà annullare.",
   "no_expenses_for_statistics": "Nessuna spesa disponibile per le statistiche",
   "per_day": "/giorno",
-  "settlement": "Salda",
+  "settlement": "Per pareggiare",
   "all_balanced": "Siete pari",
   "welcome_v3_title": "Organizza.\nCondividi.\nBilancia.\n ",
   "welcome_v3_cta": "Inizia",
   "active": "Attivo",
   "archived": "Archiviato",
   "archive": "Archivia",
-  "unarchive": "Togli dall'archivio",
+  "unarchive": "Togli dall’archivio",
   "pin": "Preferito",
   "unpin": "Rimuovi preferito",
   "delete": "Elimina",
   "archived_with_undo": "Archiviato",
-  "unarchived_with_undo": "Tolto dall'archivio",
+  "unarchived_with_undo": "Tolto dall’archivio",
   "pinned_with_undo": "Segnato come preferito",
   "unpinned_with_undo": "Preferito rimosso",
   "deleted_with_undo": "Eliminato",
@@ -197,11 +197,11 @@
   "csv_select_directory_title": "Seleziona cartella per salvare CSV",
   "csv_saved_in": "CSV salvato in: {path}",
   "csv_save_cancelled": "Esportazione annullata",
-  "csv_save_error": "Errore nel salvataggio del file CSV",
+  "csv_save_error": "Impossibile salvare il file CSV",
   "ofx_select_directory_title": "Seleziona cartella per salvare OFX",
   "ofx_saved_in": "OFX salvato in: {path}",
   "ofx_save_cancelled": "Esportazione OFX annullata",
-  "ofx_save_error": "Errore nel salvataggio del file OFX",
+  "ofx_save_error": "Impossibile salvare il file OFX",
   "csv_expense_name": "Descrizione",
   "csv_amount": "Importo",
   "csv_paid_by": "Pagato da",
@@ -234,7 +234,7 @@
   "settings_data": "Dati",
   "settings_data_manage": "Gestione dati",
   "settings_info": "Informazioni",
-  "settings_app_version": "Versione dell'app",
+  "settings_app_version": "Versione dell’app",
   "settings_info_card": "Informazioni",
   "settings_info_card_desc": "Sviluppatore, codice sorgente e licenza",
   "settings_invite_friends": "Invita i tuoi amici",
@@ -243,12 +243,12 @@
   "terms_github_title": "Sito web: calca",
   "terms_github_desc": "Sito dello sviluppatore",
   "terms_repo_title": "Repository GitHub",
-  "terms_repo_desc": "Codice sorgente dell'app",
+  "terms_repo_desc": "Codice sorgente dell’app",
   "terms_issue_title": "Segnala un problema",
   "terms_issue_desc": "Segnala un problema su GitHub",
   "terms_license_desc": "Licenza open source MIT",
   "support_developer_title": "Offrimi un caffè",
-  "support_developer_desc": "Sostieni lo sviluppo dell'app",
+  "support_developer_desc": "Sostieni lo sviluppo dell’app",
   "data_title": "Backup e ripristino",
   "data_backup_desc": "Salva le spese in un file",
   "data_restore_title": "Ripristino",
@@ -256,7 +256,7 @@
   "auto_backup_title": "Backup automatico",
   "auto_backup_desc": "Backup del sistema operativo",
   "settings_user_name_title": "Il tuo nome",
-  "settings_user_name_desc": "Il tuo nome nell'app",
+  "settings_user_name_desc": "Il tuo nome nell’app",
   "settings_user_name_hint": "Inserisci il tuo nome"
   ,"default_participant_me": "Io"
   ,"discard_changes_title": "Uscire senza salvare?"
@@ -281,7 +281,7 @@
   ,"all_groups_archived_info": "Tutti i tuoi gruppi sono in archivio. Puoi riprenderli da lì o crearne uno nuovo."
   ,"@no_archived_groups_subtitle": {"description": "Sottotitolo stato vuoto per i gruppi archiviati"}
   ,"@status_archived": {"description": "Etichetta filtro: gruppi archiviati"}
-  ,"welcome_logo_semantic": "Logo dell'app Caravella"
+  ,"welcome_logo_semantic": "Logo dell’app Caravella"
   ,"@welcome_logo_semantic": {"description": "Semantic label for the welcome screen logo"}
   ,"create_new_group": "Crea nuovo gruppo"
   ,"@create_new_group": {"description": "Create new group action label"}
@@ -305,7 +305,7 @@
   ,"@color_suggested_title": {"description": "Titolo della sezione dei colori suggeriti"}
   ,"color_suggested_subtitle": "Tinte morbide, si adattano al tema chiaro e scuro"
   ,"@color_suggested_subtitle": {"description": "Sottotitolo che spiega la sezione colori suggeriti"}
-  ,"color_random_subtitle": "Lascia che l'app scelga un colore per te"
+  ,"color_random_subtitle": "Lascia che l’app scelga un colore per te"
   ,"@color_random_subtitle": {"description": "Sottotitolo per la sezione colore casuale"}
   ,"currency_AED": "Dirham Emirati Arabi Uniti"
   ,"currency_AFN": "Afghani afghano"
@@ -488,7 +488,7 @@
   ,"@check_for_updates_desc": {"description": "Descrizione per controllo aggiornamenti"}
   ,"update_available": "Aggiornamento disponibile"
   ,"@update_available": {"description": "Titolo quando è disponibile un aggiornamento"}
-  ,"update_available_desc": "È disponibile una nuova versione dell'app"
+  ,"update_available_desc": "È disponibile una nuova versione dell’app"
   ,"@update_available_desc": {"description": "Descrizione quando è disponibile un aggiornamento"}
   ,"no_update_available": "App aggiornata"
   ,"@no_update_available": {"description": "Messaggio quando non ci sono aggiornamenti"}
@@ -502,9 +502,9 @@
   ,"@update_error": {"description": "Messaggio di errore durante verifica aggiornamenti"}
   ,"update_downloading": "Download in corso…"
   ,"@update_downloading": {"description": "Messaggio durante download aggiornamento"}
-  ,"update_ready_to_install": "Aggiornamento pronto per l'installazione"
+  ,"update_ready_to_install": "Aggiornamento pronto per l’installazione"
   ,"@update_ready_to_install": {"description": "Titolo mostrato quando un aggiornamento flessibile ha terminato il download ed è pronto per l'installazione"}
-  ,"update_ready_to_install_desc": "Il download è stato completato. Installalo per completare l'aggiornamento."
+  ,"update_ready_to_install_desc": "Il download è stato completato. Installalo per completare l’aggiornamento."
   ,"@update_ready_to_install_desc": {"description": "Descrizione mostrata quando un aggiornamento flessibile ha terminato il download ed è pronto per l'installazione"}
   ,"update_installing": "Installazione in corso…"
   ,"@update_installing": {"description": "Messaggio durante installazione aggiornamento"}
@@ -530,9 +530,9 @@
   ,"@delete_attachment": {"description": "Azione per eliminare un allegato"}
   ,"share_attachment": "Condividi allegato"
   ,"@share_attachment": {"description": "Azione per condividere un allegato"}
-  ,"delete_attachment_confirm_title": "Eliminare l'allegato?"
+  ,"delete_attachment_confirm_title": "Eliminare l’allegato?"
   ,"@delete_attachment_confirm_title": {"description": "Titolo dialogo conferma eliminazione allegato"}
-  ,"delete_attachment_confirm_message": "L'allegato verrà eliminato dalla spesa."
+  ,"delete_attachment_confirm_message": "L’allegato verrà eliminato dalla spesa."
   ,"@delete_attachment_confirm_message": {"description": "Messaggio dialogo conferma eliminazione allegato"}
   ,"attachment_source": "Aggiungi allegato"
   ,"@attachment_source": {"description": "Titolo per scegliere la sorgente dell'allegato"}
@@ -582,7 +582,7 @@
   ,"@wizard_user_name_welcome": {"description": "Messaggio di benvenuto nello step nome utente"}
   ,"wizard_user_name_label": "Il tuo nome (facoltativo)"
   ,"@wizard_user_name_label": {"description": "Etichetta del campo nome utente"}
-  ,"wizard_user_name_hint": "es. Marco"
+  ,"wizard_user_name_hint": "Es. Marco"
   ,"@wizard_user_name_hint": {"description": "Suggerimento per il campo nome utente"}
   ,"wizard_participants_section_title": "Chi partecipa?"
   ,"@wizard_participants_section_title": {"description": "Titolo sezione partecipanti nello step combinato"}
@@ -654,7 +654,7 @@
   ,"@sync_bt_completed": {"description": "Stato quando sync BT completato"}
   ,"sync_bt_received_sent": "Ricevute {received} modifiche, inviate {sent}"
   ,"@sync_bt_received_sent": {"description": "Riepilogo dopo sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
-  ,"sync_bt_error": "Sincronizzazione fallita"
+  ,"sync_bt_error": "Sincronizzazione non riuscita"
   ,"@sync_bt_error": {"description": "Stato quando sync BT fallisce"}
   ,"sync_bt_error_detail": "Qualcosa è andato storto durante la connessione. Riprova."
   ,"@sync_bt_error_detail": {"description": "Spiegazione generica mostrata sotto sync_bt_error per errori di connessione/timeout/decrittazione — non mostra intenzionalmente il testo grezzo dell'eccezione"}
@@ -694,7 +694,7 @@
   ,"@sync_qr_expires_in": {"description": "Conto alla rovescia che mostra per quanto tempo il codice QR di pairing resta valido", "placeholders": {"time": {"type": "String"}}}
   ,"sync_qr_expired_title": "Codice scaduto"
   ,"@sync_qr_expired_title": {"description": "Titolo mostrato quando il codice QR di pairing è scaduto"}
-  ,"sync_qr_expired_desc": "Genera un nuovo codice per continuare l'abbinamento"
+  ,"sync_qr_expired_desc": "Genera un nuovo codice per continuare l’abbinamento"
   ,"@sync_qr_expired_desc": {"description": "Descrizione mostrata quando il codice QR di pairing è scaduto"}
   ,"sync_qr_regenerate_button": "Genera nuovo codice"
   ,"@sync_qr_regenerate_button": {"description": "Pulsante per generare un nuovo codice QR di pairing dopo la scadenza del precedente"}
@@ -702,17 +702,17 @@
   ,"@sync_qr_no_network": {"description": "Mostrato quando non è disponibile un indirizzo di rete locale per il pairing"}
   ,"sync_qr_scan_title": "Scansiona il codice di abbinamento"
   ,"@sync_qr_scan_title": {"description": "Titolo per la pagina di scansione QR di pairing"}
-  ,"sync_qr_scan_description": "Inquadra il QR dell'altro dispositivo"
+  ,"sync_qr_scan_description": "Inquadra il QR dell’altro dispositivo"
   ,"@sync_qr_scan_description": {"description": "Istruzioni per la pagina di scansione QR di pairing"}
   ,"sync_qr_pair_success": "Abbinato con {deviceName}"
   ,"@sync_qr_pair_success": {"description": "Messaggio di successo dopo l'abbinamento con un dispositivo scansionato", "placeholders": {"deviceName": {"type": "String"}}}
   ,"sync_qr_pair_failed": "Abbinamento non riuscito — assicurati che entrambi i dispositivi siano sulla stessa rete Wi-Fi"
   ,"@sync_qr_pair_failed": {"description": "Messaggio di errore quando l'abbinamento QR fallisce"}
-  ,"sync_qr_pair_expired": "Questo codice di abbinamento è scaduto — chiedi all'altro dispositivo di mostrarne uno nuovo"
+  ,"sync_qr_pair_expired": "Questo codice di abbinamento è scaduto — chiedi all’altro dispositivo di mostrarne uno nuovo"
   ,"@sync_qr_pair_expired": {"description": "Messaggio di errore quando un codice QR scansionato ha superato la sua finestra di validità"}
   ,"sync_qr_pair_emulator_host": "Questo codice è stato generato su un emulatore Android, non raggiungibile da altri dispositivi — usa due dispositivi fisici sulla stessa rete Wi-Fi"
   ,"@sync_qr_pair_emulator_host": {"description": "Messaggio di errore quando l'host di un codice QR scansionato è l'indirizzo NAT non raggiungibile di un emulatore Android"}
-  ,"sync_qr_emulator_warning": "Questo dispositivo è un emulatore Android — il suo indirizzo di solito non è raggiungibile da altri dispositivi, quindi l'abbinamento potrebbe fallire"
+  ,"sync_qr_emulator_warning": "Questo dispositivo è un emulatore Android — il suo indirizzo di solito non è raggiungibile da altri dispositivi, quindi l’abbinamento potrebbe fallire"
   ,"@sync_qr_emulator_warning": {"description": "Avviso mostrato nel foglio del QR quando l'indirizzo di questo dispositivo è quello NAT di un emulatore Android"}
   ,"sync_paired_devices_title": "Dispositivi abbinati"
   ,"@sync_paired_devices_title": {"description": "Titolo per l'elenco dei dispositivi abbinati per la sincronizzazione LAN"}
@@ -726,7 +726,7 @@
   ,"@search_in_group": {"description": "Testo suggerimento per input ricerca con il nome del gruppo", "placeholders": {"groupName": {"type": "String"}}}
   ,"has_attachment": "Con allegato"
   ,"@has_attachment": {"description": "Etichetta filtro per spese con allegati"}
-  ,"has_location": "Con posizione"
+  ,"has_location": "Con luogo"
   ,"@has_location": {"description": "Etichetta filtro per spese con dati di posizione"}
   ,"search_no_results": "Nessuna spesa trovata"
   ,"@search_no_results": {"description": "Mostrato quando la ricerca non trova spese"}
@@ -742,7 +742,7 @@
   ,"@voice_input_processing": {"description": "Messaggio mostrato durante l'elaborazione del testo vocale"}
   ,"voice_input_error": "Errore nel riconoscimento vocale"
   ,"@voice_input_error": {"description": "Messaggio di errore per problemi con il riconoscimento vocale"}
-  ,"voice_input_permission_denied": "Permesso microfono negato"
+  ,"voice_input_permission_denied": "Microfono non consentito: attivalo nelle impostazioni del telefono"
   ,"@voice_input_permission_denied": {"description": "Messaggio quando l'utente nega il permesso del microfono"}
   ,"voice_input_not_available": "Riconoscimento vocale non disponibile"
   ,"@voice_input_not_available": {"description": "Messaggio quando il riconoscimento vocale non è disponibile sul dispositivo"}
@@ -778,7 +778,7 @@
   ,"@receipt_scan_error": {"description": "Messaggio di errore quando la scansione OCR fallisce"}
   ,"receipt_scan_permission_denied": "Fotocamera non consentita: attivala nelle impostazioni del telefono per leggere gli scontrini"
   ,"@receipt_scan_permission_denied": {"description": "Messaggio di errore quando il permesso di fotocamera o galleria viene negato"}
-  ,"no_text_found": "Nessun testo trovato nell'immagine"
+  ,"no_text_found": "Nessun testo trovato nell’immagine"
   ,"@no_text_found": {"description": "Messaggio quando l'OCR non trova testo nell'immagine"}
   ,"receipt_scanned": "Scontrino scansionato"
   ,"@receipt_scanned": {"description": "Messaggio di successo dopo la scansione OCR"}
@@ -855,7 +855,7 @@
   ,"drive_backup_restore": "Ripristina da Drive"
   ,"drive_backup_restore_desc": "Scegli uno degli ultimi 5 backup"
   ,"drive_backup_weekly": "Backup settimanale"
-  ,"drive_backup_weekly_desc": "Ogni settimana, all'apertura"
+  ,"drive_backup_weekly_desc": "Ogni settimana, all’apertura"
   ,"drive_backup_disconnect": "Scollega"
   ,"drive_backup_saved": "Backup salvato su Google Drive"
   ,"drive_backup_error": "Impossibile raggiungere Google Drive"
@@ -907,9 +907,9 @@
   ,"sync_badge_ok": "sincronizzato nelle ultime 24 ore"
   ,"sync_badge_failed": "ultima sincronizzazione non riuscita"
   ,"sync_badge_stale": "non sincronizzato nelle ultime 24 ore"
-  ,"sync_group_received": "{from} ti ha condiviso “{title}”"
-  ,"sync_group_received_anon": "Ti è stato condiviso “{title}”"
-  ,"group_welcome_title": "Ti sei unito al gruppo"
+  ,"sync_group_received": "{from} ti ha condiviso «{title}»"
+  ,"sync_group_received_anon": "Ti è stato condiviso «{title}»"
+  ,"group_welcome_title": "Ora fai parte del gruppo"
   ,"group_welcome_body": "Condiviso da {from}: {people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
   ,"group_welcome_body_anon": "{people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
   ,"toast_open": "Apri"
