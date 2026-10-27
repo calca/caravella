@@ -35,7 +35,11 @@ class MediaTopBar extends StatelessWidget {
             Expanded(
               child: title == null
                   ? const SizedBox.shrink()
+                  // heightFactor 1: a plain Center grows to the height it's
+                  // given, which stretched the row — and centered every
+                  // button — down the middle of the attachment viewer.
                   : Center(
+                      heightFactor: 1,
                       child: DecoratedBox(
                         decoration: ShapeDecoration(
                           shape: const StadiumBorder(),

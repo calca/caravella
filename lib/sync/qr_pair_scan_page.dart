@@ -101,9 +101,14 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
                 ),
               ),
             ),
-            MediaTopBar(
-              title: loc.sync_qr_scan_title,
-              backTooltip: loc.accessibility_back_button,
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: MediaTopBar(
+                title: loc.sync_qr_scan_title,
+                backTooltip: loc.accessibility_back_button,
+              ),
             ),
           ],
         ),
