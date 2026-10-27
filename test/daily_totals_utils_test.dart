@@ -27,6 +27,39 @@ ExpenseDetails _exp(String id, DateTime d, double amt) => ExpenseDetails(
 
 void main() {
   group('daily_totals_utils', () {
+    test('calendar days ignore time of day and daylight saving', () {
+      // Europe's clocks go back on 25 Oct 2026 and forward on 29 Mar 2026.
+      expect(
+        calendarDaysBetween(
+          DateTime(2026, 10, 25),
+          DateTime(2026, 10, 26, 23, 53),
+        ),
+        1,
+      );
+      expect(
+        calendarDaysBetween(DateTime(2026, 3, 29), DateTime(2026, 3, 30)),
+        1,
+      );
+      expect(
+        calendarDaysBetween(DateTime(2026, 3, 1), DateTime(2026, 3, 31)),
+        30,
+      );
+    });
+
+    test('a late-evening expense lands on its own day', () {
+      final g = _group(
+        expenses: [
+          _exp('a', DateTime(2026, 10, 25, 0, 53), 86),
+          _exp('b', DateTime(2026, 10, 26, 23, 53), 54.5),
+        ],
+      );
+      final s = buildGroupSpendingSeries(
+        g,
+        now: DateTime(2026, 10, 26, 23, 53),
+      )!;
+      expect(s.values, [86, 54.5]);
+    });
+
     test('calculateDailyTotalsOptimized single day', () {
       final day = DateTime(2025, 9, 5);
       final g = _group(expenses: [_exp('e1', day, 10)], start: day, end: day);

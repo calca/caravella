@@ -1,8 +1,17 @@
 import 'package:caravella_core/caravella_core.dart';
 
+/// Calendar days from [a] to [b] (dates only): counted in UTC, so the 23 or
+/// 25 hours of a daylight-saving change don't shift the result, and the time
+/// of day is ignored.
+int calendarDaysBetween(DateTime a, DateTime b) => DateTime.utc(
+  b.year,
+  b.month,
+  b.day,
+).difference(DateTime.utc(a.year, a.month, a.day)).inDays;
+
 /// Optimized calculation of daily totals for a given range starting at
-/// [startDate] and spanning [days] days. The [startDate] is normalized to
-/// midnight to avoid time-of-day skew when computing `inDays` differences.
+/// [startDate] and spanning [days] days, bucketing each expense by its
+/// calendar day ([calendarDaysBetween]).
 List<double> calculateDailyTotalsOptimized(
   ExpenseGroup group,
   DateTime startDate,
@@ -12,7 +21,7 @@ List<double> calculateDailyTotalsOptimized(
   final dailyTotals = List<double>.filled(days, 0.0);
   for (final expense in group.expenses) {
     final expenseDate = expense.date;
-    final dayDiff = expenseDate.difference(baseStart).inDays;
+    final dayDiff = calendarDaysBetween(baseStart, expenseDate);
     if (dayDiff >= 0 && dayDiff < days) {
       dailyTotals[dayDiff] += expense.amount ?? 0;
     }
@@ -49,7 +58,7 @@ List<double> buildAdaptiveDateRangeSeries(ExpenseGroup group) {
   final start = DateTime(rawStart.year, rawStart.month, rawStart.day);
   final end = DateTime(rawEnd.year, rawEnd.month, rawEnd.day);
   if (end.isBefore(start)) return const [];
-  final duration = end.difference(start).inDays + 1;
+  final duration = calendarDaysBetween(start, end) + 1;
   if (duration > 30) return const [];
   return calculateDailyTotalsOptimized(group, start, duration);
 }
@@ -66,7 +75,7 @@ List<double> buildExpenseRangeSeries(ExpenseGroup group) {
   final start = DateTime(firstDate.year, firstDate.month, firstDate.day);
   final end = DateTime(lastDate.year, lastDate.month, lastDate.day);
 
-  final duration = end.difference(start).inDays + 1;
+  final duration = calendarDaysBetween(start, end) + 1;
   if (duration > 30) return const [];
 
   return calculateDailyTotalsOptimized(group, start, duration);
@@ -95,7 +104,7 @@ bool shouldShowDateRangeChart(ExpenseGroup group) {
 
   // Se ci sono date impostate, mostra solo se <= 30 giorni
   if (end.isBefore(start)) return false; // dati incoerenti
-  final inclusiveDays = end.difference(start).inDays + 1; // inclusive span
+  final inclusiveDays = calendarDaysBetween(start, end) + 1; // inclusive span
   return inclusiveDays <= 30;
 }
 
@@ -137,7 +146,7 @@ SpendingSeries? buildGroupSpendingSeries(ExpenseGroup group, {DateTime? now}) {
   if (end.isAfter(latest)) end = latest;
   if (last.isAfter(end)) end = last;
 
-  final days = end.difference(start).inDays + 1;
+  final days = calendarDaysBetween(start, end) + 1;
   if (days <= 31) {
     return SpendingSeries(
       step: SpendingStep.day,
@@ -148,10 +157,10 @@ SpendingSeries? buildGroupSpendingSeries(ExpenseGroup group, {DateTime? now}) {
   }
   if (days <= 183) {
     final monday = start.subtract(Duration(days: start.weekday - 1));
-    final weeks = (end.difference(monday).inDays ~/ 7) + 1;
+    final weeks = (calendarDaysBetween(monday, end) ~/ 7) + 1;
     final values = List<double>.filled(weeks, 0);
     for (final e in group.expenses) {
-      final i = day(e.date).difference(monday).inDays ~/ 7;
+      final i = calendarDaysBetween(monday, e.date) ~/ 7;
       if (i >= 0 && i < weeks) values[i] += e.amount ?? 0;
     }
     return SpendingSeries(

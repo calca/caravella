@@ -133,11 +133,15 @@ class NotificationService {
       final start = group.startDate!;
       final end = group.endDate!;
 
-      // Total days in the trip (inclusive)
-      final totalDays = end.difference(start).inDays + 1;
-
-      // Days elapsed from start to now (clamped between 0 and totalDays)
-      final elapsedDays = now.difference(start).inDays + 1;
+      // Calendar days (UTC, so a daylight-saving change in between doesn't
+      // drop one): in the trip, inclusive, and elapsed from its start.
+      int days(DateTime a, DateTime b) => DateTime.utc(
+        b.year,
+        b.month,
+        b.day,
+      ).difference(DateTime.utc(a.year, a.month, a.day)).inDays;
+      final totalDays = days(start, end) + 1;
+      final elapsedDays = days(start, now) + 1;
 
       if (totalDays > 0) {
         maxProgress = totalDays;
