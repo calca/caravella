@@ -17,6 +17,9 @@ jobs:
         with:
           flutter-version: '3.47.6'
           channel: 'stable'
+          # Flutter SDK and pub packages from the Actions cache.
+          cache: true
+      - uses: ./.github/actions/android-ndk
       - name: Decode keystore from secret
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks

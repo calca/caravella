@@ -1,0 +1,46 @@
+name: Android NDK
+description: >-
+  Installs the NDK version pinned in android/app/build.gradle.kts before the
+  build, from the Actions cache or with sdkmanager (retried). Left to Gradle,
+  a single failed download ("Failed to install the following SDK components:
+  ndk;…") failed the whole run.
+
+runs:
+  using: composite
+  steps:
+    - name: Read pinned NDK version
+      id: ndk
+      shell: bash
+      run: |
+        VERSION=$(sed -n 's/.*ndkVersion = "\(.*\)".*/\1/p' android/app/build.gradle.kts)
+        test -n "$VERSION"
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        echo "path=$ANDROID_HOME/ndk/$VERSION" >> "$GITHUB_OUTPUT"
+    - name: Restore NDK from cache
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.ndk.outputs.path }}
+        key: android-ndk-${{ runner.os }}-${{ steps.ndk.outputs.version }}
+    - name: Install NDK (3 attempts)
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        NDK="${{ steps.ndk.outputs.version }}"
+        if [ -f "${{ steps.ndk.outputs.path }}/source.properties" ]; then
+          echo "NDK $NDK already on the runner"; exit 0
+        fi
+        SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+        for attempt in 1 2 3; do
+          echo "Installing NDK $NDK (attempt $attempt)"
+          # `yes` answers the license prompts; it dies of SIGPIPE when
+          # sdkmanager exits, which pipefail would report as a failure — so
+          # success is the NDK being there, not the pipeline's status.
+          (yes || true) | "$SDKMANAGER" --install "ndk;$NDK" > /dev/null || true
+          if [ -f "${{ steps.ndk.outputs.path }}/source.properties" ]; then
+            echo "NDK $NDK installed"; exit 0
+          fi
+          sleep $((attempt * 30))
+        done
+        echo "::error::Could not install NDK $NDK after 3 attempts"
+        exit 1
