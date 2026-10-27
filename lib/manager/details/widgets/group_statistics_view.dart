@@ -37,6 +37,7 @@ class GroupStatisticsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
+    final pace = SpendingPace.of(group);
 
     Widget title(String text) => Padding(
       padding: const EdgeInsets.fromLTRB(6, 24, 6, 10),
@@ -56,6 +57,14 @@ class GroupStatisticsView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (pace != null) ...[
+            SpendingPaceCard(
+              pace: pace,
+              currency: group.currency,
+              participants: group.participants.length,
+            ),
+            const SizedBox(height: 12),
+          ],
           // One chart over the whole group, step chosen by its length.
           if (buildGroupSpendingSeries(group) case final series?
               when _hasSpending(series.values))
@@ -80,17 +89,7 @@ class GroupStatisticsView extends StatelessWidget {
                 color: theme.colorScheme.primary,
               ),
             ),
-          title(gloc.participants),
-          GroupPayersBubbles(group: group),
-          const SizedBox(height: 12),
-          GroupMapCard(group: group, onEnableLocation: onEnableLocation),
-          if (SpendingPace.of(group) case final pace?) ...[
-            const SizedBox(height: 12),
-            SpendingPaceCard(
-              pace: pace,
-              currency: group.currency,
-              participants: group.participants.length,
-            ),
+          if (pace != null) ...[
             const SizedBox(height: 12),
             _RecordCards(
               cards: [
@@ -131,6 +130,10 @@ class GroupStatisticsView extends StatelessWidget {
               ],
             ),
           ],
+          title(gloc.participants),
+          GroupPayersBubbles(group: group),
+          const SizedBox(height: 12),
+          GroupMapCard(group: group, onEnableLocation: onEnableLocation),
           title(gloc.categories),
           CategoriesOverviewTab(trip: group, embedded: true),
         ],
