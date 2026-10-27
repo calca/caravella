@@ -69,7 +69,7 @@
   "view_all_groups": "查看所有群组",
   "@view_all_groups": {"description": "从空状态查看所有已归档群组的 CTA 标签"},
   "markdown_select_directory_title": "选择保存 Markdown 的文件夹",
-  "markdown_saved_in": "Markdown 已保存至: {path}",
+  "markdown_saved_in": "Markdown 已保存至：{path}",
   "markdown_save_cancelled": "Markdown 导出已取消",
   "markdown_save_error": "保存 Markdown 文件时出错",
   "share_label": "分享",
@@ -83,8 +83,8 @@
   "@see_all": {"description": "CTA 标签，用于打开历史页面并查看所有分组"},
   "no_active_groups": "没有活跃的群组",
   "create_first_group": "创建您的第一个群组",
-  "cannot_delete_assigned_participant": "无法删除参与者: 已分配给一个或多个支出",
-  "cannot_delete_assigned_category": "无法删除类别: 已分配给一个或多个支出",
+  "cannot_delete_assigned_participant": "无法删除参与者：已分配给一个或多个支出",
+  "cannot_delete_assigned_category": "无法删除类别：已分配给一个或多个支出",
   "participants_description": "共享费用的人员",
   "categories_description": "按类型对群组支出进行分组",
   "dates_description": "开始和结束日期（可选）",
@@ -102,7 +102,7 @@
   "add_expense": "添加支出",
   "edit_expense": "编辑支出",
   "expand_form": "展开表单",
-  "expand_form_tooltip": "添加日期, 位置和备注",
+  "expand_form_tooltip": "添加日期、位置和备注",
   "category": "类别",
   "amount": "金额",
   "invalid_amount": "无效金额",
@@ -110,7 +110,7 @@
   "category_name": "类别名称",
   "note": "备注",
   "note_hint": "备注",
-  "select_both_dates": "如果选择一个日期, 则必须选择两个日期",
+  "select_both_dates": "如果选择一个日期，则必须选择两个日期",
   "end_date_after_start": "结束日期必须在开始日期之后",
   "expenses_by_participant": "按参与者",
   "import_confirm_title": "替换现有数据？",
@@ -224,7 +224,7 @@
   "settings_invite_friends": "邀请好友",
   "settings_invite_friends_desc": "把 Caravella 分享给你的朋友",
   "invite_friends_message": "嗨！我在用 Caravella 和朋友们一起记账分摊费用，非常方便 🎒💸 你也来试试吧：https://play.google.com/store/apps/details?id=io.caravella.egm",
-  "terms_github_title": "网站: calca",
+  "terms_github_title": "网站：calca",
   "terms_github_desc": "开发者网站",
   "terms_repo_title": "GitHub仓库",
   "terms_repo_desc": "应用源代码",
@@ -246,7 +246,7 @@
   "select_category": "类别",
   "delete_expense": "删除支出",
   "delete_expense_confirm": "该支出将被删除，且无法撤销。",
-  "error_saving_group": "保存错误: {error}",
+  "error_saving_group": "保存错误：{error}",
   "@error_saving_group": {
     "placeholders": {
       "error": {}
@@ -644,7 +644,7 @@
   "@notification_enabled": {
     "description": "持久通知切换标签"
   },
-  "notification_daily_spent": "今日消费: {amount} {currency}",
+  "notification_daily_spent": "今日消费：{amount} {currency}",
   "@notification_daily_spent": {
     "description": "通知中今日的花费金额",
     "placeholders": {
@@ -1041,7 +1041,7 @@
   "@voice_input_error": {
     "description": "语音识别问题的错误消息"
   },
-  "voice_input_permission_denied": "麦克风权限被拒绝",
+  "voice_input_permission_denied": "麦克风未获允许：请在手机设置中开启",
   "@voice_input_permission_denied": {
     "description": "用户拒绝麦克风权限时的消息"
   },
@@ -1251,4 +1251,11 @@
   ,"delete_group_confirm_title": "删除这个群组？"
   ,"settings_group_templates_delete_confirm_title": "删除这个模板？"
   ,"import_replace": "替换"
+  ,"attachment_limit": "最多可添加 {count} 个附件"
+  ,"attachment_add_error": "无法添加附件"
+  ,"attachment_share_error": "无法分享附件"
+  ,"attachment_open_error": "无法打开文件"
+  ,"location_permission_denied": "请允许访问位置以添加地点"
+  ,"location_permission_denied_forever": "Caravella 的位置权限已关闭：请在系统设置中开启"
+  ,"location_service_disabled": "定位服务已关闭：请开启以添加地点"
 }

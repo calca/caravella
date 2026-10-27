@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:material_ui/material_ui.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:path/path.dart' as path;
 import 'package:video_player/video_player.dart';
@@ -87,7 +88,10 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         children: [
           const Icon(Icons.error_outline, size: 64, color: Colors.white54),
           const SizedBox(height: 16),
-          Text('Error loading video', style: AppTextStyles.mediaOverlayMessage),
+          Text(
+            gen.AppLocalizations.of(context).attachment_open_error,
+            style: AppTextStyles.mediaOverlayMessage,
+          ),
           const SizedBox(height: 8),
           Text(
             path.basename(widget.filePath),

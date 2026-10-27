@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import '../errors/expense_error_handler.dart';
 import 'package:path/path.dart' as path;
 import 'viewers/attachment_viewer_controller.dart';
 import 'viewers/pdf_viewer_page.dart';
@@ -148,7 +149,7 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
       );
     } catch (e) {
       if (!mounted) return;
-      AppToast.show(context, 'Error sharing: $e', type: ToastType.error);
+      ExpenseErrorHandler.showAttachmentShareError(context, e);
     }
   }
 

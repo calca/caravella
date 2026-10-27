@@ -234,7 +234,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
       }
     } catch (e) {
       if (context.mounted) {
-        AppToast.show(context, 'Error: $e', type: ToastType.error);
+        ExpenseErrorHandler.showAttachmentAddError(context, e);
       }
     }
   }

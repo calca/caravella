@@ -341,7 +341,7 @@ abstract class AppLocalizations {
   /// No description provided for @markdown_save_error.
   ///
   /// In en, this message translates to:
-  /// **'Error saving Markdown file'**
+  /// **'Couldn’t save the Markdown file'**
   String get markdown_save_error;
 
   /// No description provided for @share_label.
@@ -419,7 +419,7 @@ abstract class AppLocalizations {
   /// No description provided for @new_expense.
   ///
   /// In en, this message translates to:
-  /// **'New Expense'**
+  /// **'New expense'**
   String get new_expense;
 
   /// No description provided for @image.
@@ -449,13 +449,13 @@ abstract class AppLocalizations {
   /// Shown when attempting to delete a participant that is used by existing expenses
   ///
   /// In en, this message translates to:
-  /// **'Cannot delete participant: it\'s assigned to one or more expenses'**
+  /// **'Can’t delete the participant: they’re in one or more expenses'**
   String get cannot_delete_assigned_participant;
 
   /// Shown when attempting to delete a category that is used by existing expenses
   ///
   /// In en, this message translates to:
-  /// **'Cannot delete category: it\'s assigned to one or more expenses'**
+  /// **'Can’t delete the category: it’s used by one or more expenses'**
   String get cannot_delete_assigned_category;
 
   /// No description provided for @color.
@@ -617,7 +617,7 @@ abstract class AppLocalizations {
   /// No description provided for @license_link.
   ///
   /// In en, this message translates to:
-  /// **'View MIT License on GitHub'**
+  /// **'View the MIT License on GitHub'**
   String get license_link;
 
   /// No description provided for @add_trip.
@@ -689,7 +689,7 @@ abstract class AppLocalizations {
   /// No description provided for @expand_form_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'Add date, location and notes'**
+  /// **'Add date, place and note'**
   String get expand_form_tooltip;
 
   /// No description provided for @category.
@@ -815,13 +815,13 @@ abstract class AppLocalizations {
   /// No description provided for @settings_flag_secure_error.
   ///
   /// In en, this message translates to:
-  /// **'Couldn\'t change screen security'**
+  /// **'Couldn’t change screen security'**
   String get settings_flag_secure_error;
 
   /// No description provided for @settings_debug_logs_title.
   ///
   /// In en, this message translates to:
-  /// **'Debug Logs'**
+  /// **'Debug logs'**
   String get settings_debug_logs_title;
 
   /// No description provided for @settings_debug_logs_desc.
@@ -833,7 +833,7 @@ abstract class AppLocalizations {
   /// No description provided for @developer_link_error.
   ///
   /// In en, this message translates to:
-  /// **'Couldn\'t open the link'**
+  /// **'Couldn’t open the link'**
   String get developer_link_error;
 
   /// No description provided for @whats_new_load_error.
@@ -989,7 +989,7 @@ abstract class AppLocalizations {
   /// Action to remove favorite mark from a group
   ///
   /// In en, this message translates to:
-  /// **'Unfavorite'**
+  /// **'Remove favorite'**
   String get unpin;
 
   /// Snackbar message when group is archived
@@ -1217,7 +1217,7 @@ abstract class AppLocalizations {
   /// No description provided for @csv_save_error.
   ///
   /// In en, this message translates to:
-  /// **'Error saving CSV file'**
+  /// **'Couldn’t save the CSV file'**
   String get csv_save_error;
 
   /// No description provided for @ofx_select_directory_title.
@@ -1241,7 +1241,7 @@ abstract class AppLocalizations {
   /// No description provided for @ofx_save_error.
   ///
   /// In en, this message translates to:
-  /// **'Error saving OFX file'**
+  /// **'Couldn’t save the OFX file'**
   String get ofx_save_error;
 
   /// No description provided for @csv_expense_name.
@@ -1469,7 +1469,7 @@ abstract class AppLocalizations {
   /// No description provided for @invite_friends_message.
   ///
   /// In en, this message translates to:
-  /// **'Hey! I use Caravella to split group expenses with friends, it\'s super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm'**
+  /// **'Hey! I use Caravella to split group expenses with friends, it’s super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm'**
   String get invite_friends_message;
 
   /// No description provided for @terms_github_title.
@@ -1481,13 +1481,13 @@ abstract class AppLocalizations {
   /// No description provided for @terms_github_desc.
   ///
   /// In en, this message translates to:
-  /// **'Developer\'s website'**
+  /// **'Developer’s website'**
   String get terms_github_desc;
 
   /// No description provided for @terms_repo_title.
   ///
   /// In en, this message translates to:
-  /// **'GitHub Repository'**
+  /// **'GitHub repository'**
   String get terms_repo_title;
 
   /// No description provided for @terms_repo_desc.
@@ -1559,7 +1559,7 @@ abstract class AppLocalizations {
   /// No description provided for @auto_backup_desc.
   ///
   /// In en, this message translates to:
-  /// **'Your phone\'s system backup'**
+  /// **'Your phone’s system backup'**
   String get auto_backup_desc;
 
   /// No description provided for @settings_user_name_title.
@@ -2633,7 +2633,7 @@ abstract class AppLocalizations {
   /// No description provided for @currency_UZS.
   ///
   /// In en, this message translates to:
-  /// **'Uzbekistani So\'m'**
+  /// **'Uzbekistani So’m'**
   String get currency_UZS;
 
   /// No description provided for @currency_VED.
@@ -2753,7 +2753,7 @@ abstract class AppLocalizations {
   /// Title of the page showing the changelog
   ///
   /// In en, this message translates to:
-  /// **'What\'s New'**
+  /// **'What’s new'**
   String get whats_new_title;
 
   /// Title for the changelog section
@@ -2765,7 +2765,7 @@ abstract class AppLocalizations {
   /// Title of the page showing expenses on a map
   ///
   /// In en, this message translates to:
-  /// **'Expenses Map'**
+  /// **'Expenses map'**
   String get expenses_map;
 
   /// Message shown when no expenses have location data
@@ -2879,7 +2879,7 @@ abstract class AppLocalizations {
   /// Description of the persistent notification setting
   ///
   /// In en, this message translates to:
-  /// **'Today\'s expenses in a notification'**
+  /// **'Today’s expenses in a notification'**
   String get notification_enabled_desc;
 
   /// Label for expense group type
@@ -3041,7 +3041,7 @@ abstract class AppLocalizations {
   /// Today's spent amount in notification
   ///
   /// In en, this message translates to:
-  /// **'Today\'s expenses: {amount} {currency}'**
+  /// **'Today’s expenses: {amount} {currency}'**
   String notification_daily_spent(String amount, String currency);
 
   /// Action button in notification to add expense
@@ -3083,13 +3083,13 @@ abstract class AppLocalizations {
   /// Hint for user name field
   ///
   /// In en, this message translates to:
-  /// **'e.g. Alex'**
+  /// **'E.g. Alex'**
   String get wizard_user_name_hint;
 
   /// Title of participants section in combined step
   ///
   /// In en, this message translates to:
-  /// **'Who\'s participating?'**
+  /// **'Who’s participating?'**
   String get wizard_participants_section_title;
 
   /// Hint for participants section
@@ -3467,13 +3467,13 @@ abstract class AppLocalizations {
   /// Error message when a scanned pairing QR code's host is an Android emulator's unreachable NAT address
   ///
   /// In en, this message translates to:
-  /// **'This code was generated on an Android emulator, which can\'t be reached from other devices — pair using two physical devices on the same Wi-Fi network instead'**
+  /// **'This code was generated on an Android emulator, which can’t be reached from other devices — pair using two physical devices on the same Wi-Fi network instead'**
   String get sync_qr_pair_emulator_host;
 
   /// Inline warning on the QR display sheet when this device's own address is an Android emulator's NAT address
   ///
   /// In en, this message translates to:
-  /// **'This device is an Android emulator — its address usually isn\'t reachable from other devices, so pairing may fail'**
+  /// **'This device is an Android emulator — its address usually isn’t reachable from other devices, so pairing may fail'**
   String get sync_qr_emulator_warning;
 
   /// Title for the list of devices paired for LAN sync
@@ -3509,13 +3509,13 @@ abstract class AppLocalizations {
   /// Filter label for expenses with attachments
   ///
   /// In en, this message translates to:
-  /// **'Has attachment'**
+  /// **'With attachment'**
   String get has_attachment;
 
   /// Filter label for expenses with location data
   ///
   /// In en, this message translates to:
-  /// **'Has location'**
+  /// **'With a place'**
   String get has_location;
 
   /// Shown when search returns no matching expenses
@@ -3563,7 +3563,7 @@ abstract class AppLocalizations {
   /// Message when user denies microphone permission
   ///
   /// In en, this message translates to:
-  /// **'Microphone permission denied'**
+  /// **'Microphone not allowed: turn it on in your phone settings'**
   String get voice_input_permission_denied;
 
   /// Message when voice recognition is not available on the device
@@ -3575,7 +3575,7 @@ abstract class AppLocalizations {
   /// Message when voice recognition heard nothing or timed out with no match
   ///
   /// In en, this message translates to:
-  /// **'I didn\'t catch that. Try again.'**
+  /// **'I didn’t catch that. Try again.'**
   String get voice_input_no_speech;
 
   /// Example hint for using voice input
@@ -4132,7 +4132,7 @@ abstract class AppLocalizations {
   /// Settings → Data, Google Drive backup
   ///
   /// In en, this message translates to:
-  /// **'Couldn\'t reach Google Drive'**
+  /// **'Couldn’t reach Google Drive'**
   String get drive_backup_error;
 
   /// Quick-add sheet: opens the full expense page (date, place, attachments, note)
@@ -4156,7 +4156,7 @@ abstract class AppLocalizations {
   /// Home quick action without receipt reading (F-Droid build)
   ///
   /// In en, this message translates to:
-  /// **'Couldn\'t take the receipt photo'**
+  /// **'Couldn’t take the receipt photo'**
   String get receipt_photo_error;
 
   /// Group photo crop page: under the 3:2 frame
@@ -4186,13 +4186,13 @@ abstract class AppLocalizations {
   /// No description provided for @wizard_name_title.
   ///
   /// In en, this message translates to:
-  /// **'What\'s your name?'**
+  /// **'What’s your name?'**
   String get wizard_name_title;
 
   /// No description provided for @wizard_name_note.
   ///
   /// In en, this message translates to:
-  /// **'It stays on your phone. You\'ll be the first participant of your groups.'**
+  /// **'It stays on your phone. You’ll be the first participant of your groups.'**
   String get wizard_name_note;
 
   /// No description provided for @wizard_type_title.
@@ -4252,7 +4252,7 @@ abstract class AppLocalizations {
   /// No description provided for @wizard_people_add_hint.
   ///
   /// In en, this message translates to:
-  /// **'A friend\'s name'**
+  /// **'A friend’s name'**
   String get wizard_people_add_hint;
 
   /// No description provided for @wizard_people_remove.
@@ -4505,6 +4505,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Replace'**
   String get import_replace;
+
+  /// Toast when trying to add more attachments than allowed
+  ///
+  /// In en, this message translates to:
+  /// **'You can add up to {count} attachments'**
+  String attachment_limit(int count);
+
+  /// Toast when adding an attachment fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t add the attachment'**
+  String get attachment_add_error;
+
+  /// Toast when sharing an attachment fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t share the attachment'**
+  String get attachment_share_error;
+
+  /// Shown in the attachment viewer when an image, PDF or video cannot be opened
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t open the file'**
+  String get attachment_open_error;
+
+  /// Toast when the location permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Allow location access to add the place'**
+  String get location_permission_denied;
+
+  /// Toast when the location permission is permanently denied
+  ///
+  /// In en, this message translates to:
+  /// **'Location access is off for Caravella: turn it on in the system settings'**
+  String get location_permission_denied_forever;
+
+  /// Toast when the device location service is off
+  ///
+  /// In en, this message translates to:
+  /// **'Location is off: turn it on to add the place'**
+  String get location_service_disabled;
 }
 
 class _AppLocalizationsDelegate

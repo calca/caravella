@@ -89,6 +89,8 @@ class BackgroundPicker extends StatelessWidget {
               width: 48,
               height: 48,
               fit: BoxFit.cover,
+              // Decode a thumbnail, not the whole photo.
+              cacheWidth: 180,
               // The photo file may be gone (deleted, restored backup):
               // show a placeholder instead of Flutter's error box.
               errorBuilder: (_, _, _) => Container(

@@ -123,7 +123,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String markdown_saved_in(String path) {
-    return 'Markdown 已保存至: $path';
+    return 'Markdown 已保存至：$path';
   }
 
   @override
@@ -184,10 +184,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get from_camera => '拍照';
 
   @override
-  String get cannot_delete_assigned_participant => '无法删除参与者: 已分配给一个或多个支出';
+  String get cannot_delete_assigned_participant => '无法删除参与者：已分配给一个或多个支出';
 
   @override
-  String get cannot_delete_assigned_category => '无法删除类别: 已分配给一个或多个支出';
+  String get cannot_delete_assigned_category => '无法删除类别：已分配给一个或多个支出';
 
   @override
   String get color => '颜色';
@@ -311,7 +311,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get expand_form => '展开表单';
 
   @override
-  String get expand_form_tooltip => '添加日期, 位置和备注';
+  String get expand_form_tooltip => '添加日期、位置和备注';
 
   @override
   String get category => '类别';
@@ -335,7 +335,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get note_hint => '备注';
 
   @override
-  String get select_both_dates => '如果选择一个日期, 则必须选择两个日期';
+  String get select_both_dates => '如果选择一个日期，则必须选择两个日期';
 
   @override
   String get end_date_after_start => '结束日期必须在开始日期之后';
@@ -711,7 +711,7 @@ class AppLocalizationsZh extends AppLocalizations {
       '嗨！我在用 Caravella 和朋友们一起记账分摊费用，非常方便 🎒💸 你也来试试吧：https://play.google.com/store/apps/details?id=io.caravella.egm';
 
   @override
-  String get terms_github_title => '网站: calca';
+  String get terms_github_title => '网站：calca';
 
   @override
   String get terms_github_desc => '开发者网站';
@@ -796,7 +796,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String error_saving_group(Object error) {
-    return '保存错误: $error';
+    return '保存错误：$error';
   }
 
   @override
@@ -1507,7 +1507,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String notification_daily_spent(String amount, String currency) {
-    return '今日消费: $amount $currency';
+    return '今日消费：$amount $currency';
   }
 
   @override
@@ -1789,7 +1789,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get voice_input_error => '语音识别错误';
 
   @override
-  String get voice_input_permission_denied => '麦克风权限被拒绝';
+  String get voice_input_permission_denied => '麦克风未获允许：请在手机设置中开启';
 
   @override
   String get voice_input_not_available => '语音识别不可用';
@@ -2353,4 +2353,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get import_replace => '替换';
+
+  @override
+  String attachment_limit(int count) {
+    return '最多可添加 $count 个附件';
+  }
+
+  @override
+  String get attachment_add_error => '无法添加附件';
+
+  @override
+  String get attachment_share_error => '无法分享附件';
+
+  @override
+  String get attachment_open_error => '无法打开文件';
+
+  @override
+  String get location_permission_denied => '请允许访问位置以添加地点';
+
+  @override
+  String get location_permission_denied_forever =>
+      'Caravella 的位置权限已关闭：请在系统设置中开启';
+
+  @override
+  String get location_service_disabled => '定位服务已关闭：请开启以添加地点';
 }

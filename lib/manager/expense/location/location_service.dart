@@ -52,13 +52,13 @@ class LocationService {
       );
 
       if (location == null && context.mounted) {
-        ExpenseErrorHandler.showLocationTimeoutError(context);
+        ExpenseErrorHandler.showLocationRetrievalError(context);
       }
 
       return location;
     } catch (e) {
       if (context.mounted) {
-        ExpenseErrorHandler.showLocationRetrievalError(context, e.toString());
+        ExpenseErrorHandler.showLocationRetrievalError(context, e);
       }
       return null;
     } finally {

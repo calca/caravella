@@ -132,7 +132,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get markdown_save_cancelled => 'Markdown export cancelled';
 
   @override
-  String get markdown_save_error => 'Error saving Markdown file';
+  String get markdown_save_error => 'Couldn’t save the Markdown file';
 
   @override
   String get share_label => 'Share';
@@ -171,7 +171,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get new_expense_group => 'New';
 
   @override
-  String get new_expense => 'New Expense';
+  String get new_expense => 'New expense';
 
   @override
   String get image => 'Photo';
@@ -187,11 +187,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cannot_delete_assigned_participant =>
-      'Cannot delete participant: it\'s assigned to one or more expenses';
+      'Can’t delete the participant: they’re in one or more expenses';
 
   @override
   String get cannot_delete_assigned_category =>
-      'Cannot delete category: it\'s assigned to one or more expenses';
+      'Can’t delete the category: it’s used by one or more expenses';
 
   @override
   String get color => 'Color';
@@ -280,7 +280,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recent_expenses => 'Recent expenses';
 
   @override
-  String get license_link => 'View MIT License on GitHub';
+  String get license_link => 'View the MIT License on GitHub';
 
   @override
   String get add_trip => 'Add a group';
@@ -316,7 +316,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get expand_form => 'Expand form';
 
   @override
-  String get expand_form_tooltip => 'Add date, location and notes';
+  String get expand_form_tooltip => 'Add date, place and note';
 
   @override
   String get category => 'Category';
@@ -382,16 +382,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get import_error => 'Restore failed: check the file';
 
   @override
-  String get settings_flag_secure_error => 'Couldn\'t change screen security';
+  String get settings_flag_secure_error => 'Couldn’t change screen security';
 
   @override
-  String get settings_debug_logs_title => 'Debug Logs';
+  String get settings_debug_logs_title => 'Debug logs';
 
   @override
   String get settings_debug_logs_desc => 'App logs and errors';
 
   @override
-  String get developer_link_error => 'Couldn\'t open the link';
+  String get developer_link_error => 'Couldn’t open the link';
 
   @override
   String get whats_new_load_error => 'Couldn’t load what’s new';
@@ -469,7 +469,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pin => 'Favorite';
 
   @override
-  String get unpin => 'Unfavorite';
+  String get unpin => 'Remove favorite';
 
   @override
   String get archived_with_undo => 'Archived';
@@ -587,7 +587,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get csv_save_cancelled => 'Export cancelled';
 
   @override
-  String get csv_save_error => 'Error saving CSV file';
+  String get csv_save_error => 'Couldn’t save the CSV file';
 
   @override
   String get ofx_select_directory_title => 'Select folder to save OFX';
@@ -601,7 +601,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ofx_save_cancelled => 'OFX export cancelled';
 
   @override
-  String get ofx_save_error => 'Error saving OFX file';
+  String get ofx_save_error => 'Couldn’t save the OFX file';
 
   @override
   String get csv_expense_name => 'Description';
@@ -716,16 +716,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invite_friends_message =>
-      'Hey! I use Caravella to split group expenses with friends, it\'s super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm';
+      'Hey! I use Caravella to split group expenses with friends, it’s super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm';
 
   @override
   String get terms_github_title => 'Website: calca';
 
   @override
-  String get terms_github_desc => 'Developer\'s website';
+  String get terms_github_desc => 'Developer’s website';
 
   @override
-  String get terms_repo_title => 'GitHub Repository';
+  String get terms_repo_title => 'GitHub repository';
 
   @override
   String get terms_repo_desc => 'The app’s source code';
@@ -761,7 +761,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auto_backup_title => 'Automatic backup';
 
   @override
-  String get auto_backup_desc => 'Your phone\'s system backup';
+  String get auto_backup_desc => 'Your phone’s system backup';
 
   @override
   String get settings_user_name_title => 'Your name';
@@ -1307,7 +1307,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currency_UYU => 'Uruguayan Peso';
 
   @override
-  String get currency_UZS => 'Uzbekistani So\'m';
+  String get currency_UZS => 'Uzbekistani So’m';
 
   @override
   String get currency_VED => 'Venezuelan Digital Bolívar';
@@ -1368,13 +1368,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get show_search => 'Show search bar';
 
   @override
-  String get whats_new_title => 'What\'s New';
+  String get whats_new_title => 'What’s new';
 
   @override
   String get changelog_title => 'Changelog';
 
   @override
-  String get expenses_map => 'Expenses Map';
+  String get expenses_map => 'Expenses map';
 
   @override
   String get no_locations_available => 'No places';
@@ -1441,7 +1441,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get send_reminder => 'Send reminder';
 
   @override
-  String get notification_enabled_desc => 'Today\'s expenses in a notification';
+  String get notification_enabled_desc => 'Today’s expenses in a notification';
 
   @override
   String get group_type => 'Type';
@@ -1524,7 +1524,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String notification_daily_spent(String amount, String currency) {
-    return 'Today\'s expenses: $amount $currency';
+    return 'Today’s expenses: $amount $currency';
   }
 
   @override
@@ -1546,10 +1546,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wizard_user_name_label => 'Your name (optional)';
 
   @override
-  String get wizard_user_name_hint => 'e.g. Alex';
+  String get wizard_user_name_hint => 'E.g. Alex';
 
   @override
-  String get wizard_participants_section_title => 'Who\'s participating?';
+  String get wizard_participants_section_title => 'Who’s participating?';
 
   @override
   String get wizard_participants_section_hint =>
@@ -1767,11 +1767,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_qr_pair_emulator_host =>
-      'This code was generated on an Android emulator, which can\'t be reached from other devices — pair using two physical devices on the same Wi-Fi network instead';
+      'This code was generated on an Android emulator, which can’t be reached from other devices — pair using two physical devices on the same Wi-Fi network instead';
 
   @override
   String get sync_qr_emulator_warning =>
-      'This device is an Android emulator — its address usually isn\'t reachable from other devices, so pairing may fail';
+      'This device is an Android emulator — its address usually isn’t reachable from other devices, so pairing may fail';
 
   @override
   String get sync_paired_devices_title => 'Paired devices';
@@ -1791,10 +1791,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get has_attachment => 'Has attachment';
+  String get has_attachment => 'With attachment';
 
   @override
-  String get has_location => 'Has location';
+  String get has_location => 'With a place';
 
   @override
   String get search_no_results => 'No expenses found';
@@ -1819,13 +1819,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voice_input_error => 'Voice recognition error';
 
   @override
-  String get voice_input_permission_denied => 'Microphone permission denied';
+  String get voice_input_permission_denied =>
+      'Microphone not allowed: turn it on in your phone settings';
 
   @override
   String get voice_input_not_available => 'Voice recognition not available';
 
   @override
-  String get voice_input_no_speech => 'I didn\'t catch that. Try again.';
+  String get voice_input_no_speech => 'I didn’t catch that. Try again.';
 
   @override
   String get voice_input_hint =>
@@ -2163,7 +2164,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drive_backup_saved => 'Backup saved to Google Drive';
 
   @override
-  String get drive_backup_error => 'Couldn\'t reach Google Drive';
+  String get drive_backup_error => 'Couldn’t reach Google Drive';
 
   @override
   String get expense_more_details => 'More details';
@@ -2175,7 +2176,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get photo_add_expense => 'New expense from a receipt photo';
 
   @override
-  String get receipt_photo_error => 'Couldn\'t take the receipt photo';
+  String get receipt_photo_error => 'Couldn’t take the receipt photo';
 
   @override
   String get crop_hint => 'Drag and pinch to choose the part to keep';
@@ -2191,11 +2192,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Expenses for trips, home and friends, split fairly. Everything stays on your phone.';
 
   @override
-  String get wizard_name_title => 'What\'s your name?';
+  String get wizard_name_title => 'What’s your name?';
 
   @override
   String get wizard_name_note =>
-      'It stays on your phone. You\'ll be the first participant of your groups.';
+      'It stays on your phone. You’ll be the first participant of your groups.';
 
   @override
   String get wizard_type_title => 'What kind of group?';
@@ -2229,7 +2230,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get wizard_people_add_hint => 'A friend\'s name';
+  String get wizard_people_add_hint => 'A friend’s name';
 
   @override
   String wizard_people_remove(String name) {
@@ -2399,4 +2400,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get import_replace => 'Replace';
+
+  @override
+  String attachment_limit(int count) {
+    return 'You can add up to $count attachments';
+  }
+
+  @override
+  String get attachment_add_error => 'Couldn’t add the attachment';
+
+  @override
+  String get attachment_share_error => 'Couldn’t share the attachment';
+
+  @override
+  String get attachment_open_error => 'Couldn’t open the file';
+
+  @override
+  String get location_permission_denied =>
+      'Allow location access to add the place';
+
+  @override
+  String get location_permission_denied_forever =>
+      'Location access is off for Caravella: turn it on in the system settings';
+
+  @override
+  String get location_service_disabled =>
+      'Location is off: turn it on to add the place';
 }

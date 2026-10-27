@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:material_ui/material_ui.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Standalone image viewer with pinch-to-zoom
@@ -18,21 +19,24 @@ class ImageViewerPage extends StatelessWidget {
           File(filePath),
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
-            return _buildErrorWidget();
+            return _buildErrorWidget(context);
           },
         ),
       ),
     );
   }
 
-  Widget _buildErrorWidget() {
-    return const Center(
+  Widget _buildErrorWidget(BuildContext context) {
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline, size: 64, color: Colors.white54),
-          SizedBox(height: 16),
-          Text('Error loading image', style: AppTextStyles.mediaOverlayMessage),
+          const Icon(Icons.error_outline, size: 64, color: Colors.white54),
+          const SizedBox(height: 16),
+          Text(
+            gen.AppLocalizations.of(context).attachment_open_error,
+            style: AppTextStyles.mediaOverlayMessage,
+          ),
         ],
       ),
     );

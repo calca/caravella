@@ -62,7 +62,7 @@
   "markdown_select_directory_title": "Seleccionar carpeta para guardar Markdown",
   "markdown_saved_in": "Markdown guardado en: {path}",
   "markdown_save_cancelled": "Exportación Markdown cancelada",
-  "markdown_save_error": "Error al guardar el archivo Markdown",
+  "markdown_save_error": "No se pudo guardar el archivo Markdown",
   "share_label": "Compartir",
   "export_share": "Compartir y exportar",
   "export_options": "Exportar gastos",
@@ -118,7 +118,7 @@
   "add_expense": "Nuevo gasto",
   "edit_expense": "Editar gasto",
   "expand_form": "Expandir formulario",
-  "expand_form_tooltip": "Añadir fecha, ubicación y notas",
+  "expand_form_tooltip": "Añadir fecha, lugar y nota",
   "category": "Categoría",
   "amount": "Cantidad",
   "invalid_amount": "Cantidad inválida",
@@ -170,7 +170,7 @@
   "archive": "Archivar",
   "unarchive": "Sacar del archivo",
   "pin": "Favorito",
-  "unpin": "Desfavorito",
+  "unpin": "Quitar favorito",
   "archived_with_undo": "Archivado",
   "unarchived_with_undo": "Sacado del archivo",
   "pinned_with_undo": "Marcado como favorito",
@@ -209,11 +209,11 @@
   "csv_select_directory_title": "Seleccionar carpeta para guardar CSV",
   "csv_saved_in": "CSV guardado en: {path}",
   "csv_save_cancelled": "Exportación cancelada",
-  "csv_save_error": "Error guardando archivo CSV",
+  "csv_save_error": "No se pudo guardar el archivo CSV",
   "ofx_select_directory_title": "Seleccionar carpeta para guardar OFX",
   "ofx_saved_in": "OFX guardado en: {path}",
   "ofx_save_cancelled": "Exportación OFX cancelada",
-  "ofx_save_error": "Error guardando archivo OFX",
+  "ofx_save_error": "No se pudo guardar el archivo OFX",
   "csv_expense_name": "Descripción",
   "csv_amount": "Cantidad",
   "csv_paid_by": "Pagado por",
@@ -452,7 +452,7 @@
   ,"currency_TJS": "Somoni tayiko"
   ,"currency_TMT": "Manat turkmeno"
   ,"currency_TND": "Dinar tunecino"
-  ,"currency_TOP": "Pa'anga tongano"
+  ,"currency_TOP": "Pa’anga tongano"
   ,"currency_TRY": "Lira turca"
   ,"currency_TTD": "Dólar trinitense"
   ,"currency_TVD": "Dólar tuvaluano"
@@ -492,7 +492,7 @@
   ,"@whats_new_title": {"description": "Título de la página que muestra el changelog"}
   ,"changelog_title": "Registro de cambios"
   ,"@changelog_title": {"description": "Título de la sección de changelog"}
-  ,"expenses_map": "Mapa de Gastos"
+  ,"expenses_map": "Mapa de gastos"
   ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
   ,"no_locations_available": "Sin lugares"
   ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
@@ -605,7 +605,7 @@
   ,"@wizard_user_name_welcome": {"description": "Mensaje de bienvenida en el paso del nombre de usuario"}
   ,"wizard_user_name_label": "Tu nombre (opcional)"
   ,"@wizard_user_name_label": {"description": "Etiqueta del campo de nombre de usuario"}
-  ,"wizard_user_name_hint": "ej. Carlos"
+  ,"wizard_user_name_hint": "Ej. Carlos"
   ,"@wizard_user_name_hint": {"description": "Sugerencia para el campo de nombre de usuario"}
   ,"wizard_participants_section_title": "¿Quién participa?"
   ,"@wizard_participants_section_title": {"description": "Título de la sección de participantes en el paso combinado"}
@@ -677,7 +677,7 @@
   ,"@sync_bt_completed": {"description": "Estado cuando sync BT completado"}
   ,"sync_bt_received_sent": "Recibidos {received} cambios, enviados {sent}"
   ,"@sync_bt_received_sent": {"description": "Resumen después de sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
-  ,"sync_bt_error": "Sincronización fallida"
+  ,"sync_bt_error": "No se pudo sincronizar"
   ,"@sync_bt_error": {"description": "Estado cuando sync BT falla"}
   ,"sync_bt_error_detail": "Algo salió mal durante la conexión. Inténtalo de nuevo."
   ,"@sync_bt_error_detail": {"description": "Explicación genérica mostrada bajo sync_bt_error para errores de conexión/tiempo de espera/descifrado — deliberadamente no muestra el texto sin procesar de la excepción"}
@@ -749,7 +749,7 @@
   ,"@search_in_group": {"description": "Texto de sugerencia para búsqueda usando el nombre del grupo", "placeholders": {"groupName": {"type": "String"}}}
   ,"has_attachment": "Con adjunto"
   ,"@has_attachment": {"description": "Etiqueta de filtro para gastos con adjuntos"}
-  ,"has_location": "Con ubicación"
+  ,"has_location": "Con lugar"
   ,"@has_location": {"description": "Etiqueta de filtro para gastos con datos de ubicación"}
   ,"search_no_results": "No se encontraron gastos"
   ,"@search_no_results": {"description": "Mostrado cuando la búsqueda no encuentra gastos"}
@@ -765,7 +765,7 @@
   ,"@voice_input_processing": {"description": "Mensaje mostrado durante el procesamiento del texto de voz"}
   ,"voice_input_error": "Error de reconocimiento de voz"
   ,"@voice_input_error": {"description": "Mensaje de error para problemas de reconocimiento de voz"}
-  ,"voice_input_permission_denied": "Permiso de micrófono denegado"
+  ,"voice_input_permission_denied": "Micrófono no permitido: actívalo en los ajustes del teléfono"
   ,"@voice_input_permission_denied": {"description": "Mensaje cuando el usuario deniega el permiso del micrófono"}
   ,"voice_input_not_available": "Reconocimiento de voz no disponible"
   ,"@voice_input_not_available": {"description": "Mensaje cuando el reconocimiento de voz no está disponible en el dispositivo"}
@@ -947,4 +947,11 @@
   ,"delete_group_confirm_title": "¿Eliminar el grupo?"
   ,"settings_group_templates_delete_confirm_title": "¿Eliminar la plantilla?"
   ,"import_replace": "Reemplazar"
+  ,"attachment_limit": "Puedes añadir hasta {count} adjuntos"
+  ,"attachment_add_error": "No se pudo añadir el adjunto"
+  ,"attachment_share_error": "No se pudo compartir el adjunto"
+  ,"attachment_open_error": "No se pudo abrir el archivo"
+  ,"location_permission_denied": "Permite el acceso a la ubicación para añadir el lugar"
+  ,"location_permission_denied_forever": "El acceso a la ubicación está desactivado para Caravella: actívalo en los ajustes del sistema"
+  ,"location_service_disabled": "La ubicación está desactivada: actívala para añadir el lugar"
 }

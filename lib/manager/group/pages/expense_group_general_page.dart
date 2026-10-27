@@ -401,6 +401,8 @@ class _BackgroundPreview extends StatelessWidget {
       child = Image.file(
         File(path),
         fit: BoxFit.cover,
+        // A 28 dp preview: decode a thumbnail, not the whole photo.
+        cacheWidth: 120,
         errorBuilder: (_, _, _) => const SizedBox.shrink(),
       );
     } else if (color != null) {

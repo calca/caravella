@@ -131,7 +131,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get markdown_save_cancelled => 'Exportación Markdown cancelada';
 
   @override
-  String get markdown_save_error => 'Error al guardar el archivo Markdown';
+  String get markdown_save_error => 'No se pudo guardar el archivo Markdown';
 
   @override
   String get share_label => 'Compartir';
@@ -315,7 +315,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get expand_form => 'Expandir formulario';
 
   @override
-  String get expand_form_tooltip => 'Añadir fecha, ubicación y notas';
+  String get expand_form_tooltip => 'Añadir fecha, lugar y nota';
 
   @override
   String get category => 'Categoría';
@@ -470,7 +470,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get pin => 'Favorito';
 
   @override
-  String get unpin => 'Desfavorito';
+  String get unpin => 'Quitar favorito';
 
   @override
   String get archived_with_undo => 'Archivado';
@@ -589,7 +589,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get csv_save_cancelled => 'Exportación cancelada';
 
   @override
-  String get csv_save_error => 'Error guardando archivo CSV';
+  String get csv_save_error => 'No se pudo guardar el archivo CSV';
 
   @override
   String get ofx_select_directory_title =>
@@ -604,7 +604,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ofx_save_cancelled => 'Exportación OFX cancelada';
 
   @override
-  String get ofx_save_error => 'Error guardando archivo OFX';
+  String get ofx_save_error => 'No se pudo guardar el archivo OFX';
 
   @override
   String get csv_expense_name => 'Descripción';
@@ -1284,7 +1284,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get currency_TND => 'Dinar tunecino';
 
   @override
-  String get currency_TOP => 'Pa\'anga tongano';
+  String get currency_TOP => 'Pa’anga tongano';
 
   @override
   String get currency_TRY => 'Lira turca';
@@ -1381,7 +1381,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get changelog_title => 'Registro de cambios';
 
   @override
-  String get expenses_map => 'Mapa de Gastos';
+  String get expenses_map => 'Mapa de gastos';
 
   @override
   String get no_locations_available => 'Sin lugares';
@@ -1554,7 +1554,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_user_name_label => 'Tu nombre (opcional)';
 
   @override
-  String get wizard_user_name_hint => 'ej. Carlos';
+  String get wizard_user_name_hint => 'Ej. Carlos';
 
   @override
   String get wizard_participants_section_title => '¿Quién participa?';
@@ -1675,7 +1675,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get sync_bt_error => 'Sincronización fallida';
+  String get sync_bt_error => 'No se pudo sincronizar';
 
   @override
   String get sync_bt_error_detail =>
@@ -1803,7 +1803,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get has_attachment => 'Con adjunto';
 
   @override
-  String get has_location => 'Con ubicación';
+  String get has_location => 'Con lugar';
 
   @override
   String get search_no_results => 'No se encontraron gastos';
@@ -1828,7 +1828,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get voice_input_error => 'Error de reconocimiento de voz';
 
   @override
-  String get voice_input_permission_denied => 'Permiso de micrófono denegado';
+  String get voice_input_permission_denied =>
+      'Micrófono no permitido: actívalo en los ajustes del teléfono';
 
   @override
   String get voice_input_not_available => 'Reconocimiento de voz no disponible';
@@ -2412,4 +2413,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get import_replace => 'Reemplazar';
+
+  @override
+  String attachment_limit(int count) {
+    return 'Puedes añadir hasta $count adjuntos';
+  }
+
+  @override
+  String get attachment_add_error => 'No se pudo añadir el adjunto';
+
+  @override
+  String get attachment_share_error => 'No se pudo compartir el adjunto';
+
+  @override
+  String get attachment_open_error => 'No se pudo abrir el archivo';
+
+  @override
+  String get location_permission_denied =>
+      'Permite el acceso a la ubicación para añadir el lugar';
+
+  @override
+  String get location_permission_denied_forever =>
+      'El acceso a la ubicación está desactivado para Caravella: actívalo en los ajustes del sistema';
+
+  @override
+  String get location_service_disabled =>
+      'La ubicación está desactivada: actívala para añadir el lugar';
 }

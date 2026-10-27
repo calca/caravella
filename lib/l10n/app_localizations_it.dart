@@ -131,7 +131,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get markdown_save_cancelled => 'Esportazione Markdown annullata';
 
   @override
-  String get markdown_save_error => 'Errore nel salvataggio del file Markdown';
+  String get markdown_save_error => 'Impossibile salvare il file Markdown';
 
   @override
   String get share_label => 'Condividi';
@@ -155,7 +155,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get good_evening => 'Buonasera';
 
   @override
-  String get see_all => 'Vedi tutti';
+  String get see_all => 'Vedi tutte';
 
   @override
   String get view_all_groups => 'Vedi tutti i gruppi';
@@ -389,7 +389,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_debug_logs_title => 'Log di debug';
 
   @override
-  String get settings_debug_logs_desc => 'Log dell\'app ed errori';
+  String get settings_debug_logs_desc => 'Log dell’app ed errori';
 
   @override
   String get developer_link_error => 'Impossibile aprire il link';
@@ -464,7 +464,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get archive => 'Archivia';
 
   @override
-  String get unarchive => 'Togli dall\'archivio';
+  String get unarchive => 'Togli dall’archivio';
 
   @override
   String get pin => 'Preferito';
@@ -476,7 +476,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get archived_with_undo => 'Archiviato';
 
   @override
-  String get unarchived_with_undo => 'Tolto dall\'archivio';
+  String get unarchived_with_undo => 'Tolto dall’archivio';
 
   @override
   String get pinned_with_undo => 'Segnato come preferito';
@@ -541,7 +541,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nessuna spesa disponibile per le statistiche';
 
   @override
-  String get settlement => 'Salda';
+  String get settlement => 'Per pareggiare';
 
   @override
   String get all_balanced => 'Siete pari';
@@ -588,7 +588,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get csv_save_cancelled => 'Esportazione annullata';
 
   @override
-  String get csv_save_error => 'Errore nel salvataggio del file CSV';
+  String get csv_save_error => 'Impossibile salvare il file CSV';
 
   @override
   String get ofx_select_directory_title => 'Seleziona cartella per salvare OFX';
@@ -602,7 +602,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ofx_save_cancelled => 'Esportazione OFX annullata';
 
   @override
-  String get ofx_save_error => 'Errore nel salvataggio del file OFX';
+  String get ofx_save_error => 'Impossibile salvare il file OFX';
 
   @override
   String get csv_expense_name => 'Descrizione';
@@ -701,7 +701,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_info => 'Informazioni';
 
   @override
-  String get settings_app_version => 'Versione dell\'app';
+  String get settings_app_version => 'Versione dell’app';
 
   @override
   String get settings_info_card => 'Informazioni';
@@ -730,7 +730,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get terms_repo_title => 'Repository GitHub';
 
   @override
-  String get terms_repo_desc => 'Codice sorgente dell\'app';
+  String get terms_repo_desc => 'Codice sorgente dell’app';
 
   @override
   String get terms_issue_title => 'Segnala un problema';
@@ -745,7 +745,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get support_developer_title => 'Offrimi un caffè';
 
   @override
-  String get support_developer_desc => 'Sostieni lo sviluppo dell\'app';
+  String get support_developer_desc => 'Sostieni lo sviluppo dell’app';
 
   @override
   String get data_title => 'Backup e ripristino';
@@ -769,7 +769,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_user_name_title => 'Il tuo nome';
 
   @override
-  String get settings_user_name_desc => 'Il tuo nome nell\'app';
+  String get settings_user_name_desc => 'Il tuo nome nell’app';
 
   @override
   String get settings_user_name_hint => 'Inserisci il tuo nome';
@@ -832,7 +832,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Tutti i tuoi gruppi sono in archivio. Puoi riprenderli da lì o crearne uno nuovo.';
 
   @override
-  String get welcome_logo_semantic => 'Logo dell\'app Caravella';
+  String get welcome_logo_semantic => 'Logo dell’app Caravella';
 
   @override
   String get create_new_group => 'Crea nuovo gruppo';
@@ -872,7 +872,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get color_random_subtitle =>
-      'Lascia che l\'app scelga un colore per te';
+      'Lascia che l’app scelga un colore per te';
 
   @override
   String get currency_AED => 'Dirham Emirati Arabi Uniti';
@@ -1407,7 +1407,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get update_available_desc =>
-      'È disponibile una nuova versione dell\'app';
+      'È disponibile una nuova versione dell’app';
 
   @override
   String get no_update_available => 'App aggiornata';
@@ -1429,11 +1429,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get update_ready_to_install =>
-      'Aggiornamento pronto per l\'installazione';
+      'Aggiornamento pronto per l’installazione';
 
   @override
   String get update_ready_to_install_desc =>
-      'Il download è stato completato. Installalo per completare l\'aggiornamento.';
+      'Il download è stato completato. Installalo per completare l’aggiornamento.';
 
   @override
   String get update_installing => 'Installazione in corso…';
@@ -1508,11 +1508,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get share_attachment => 'Condividi allegato';
 
   @override
-  String get delete_attachment_confirm_title => 'Eliminare l\'allegato?';
+  String get delete_attachment_confirm_title => 'Eliminare l’allegato?';
 
   @override
   String get delete_attachment_confirm_message =>
-      'L\'allegato verrà eliminato dalla spesa.';
+      'L’allegato verrà eliminato dalla spesa.';
 
   @override
   String get attachment_source => 'Aggiungi allegato';
@@ -1550,7 +1550,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get wizard_user_name_label => 'Il tuo nome (facoltativo)';
 
   @override
-  String get wizard_user_name_hint => 'es. Marco';
+  String get wizard_user_name_hint => 'Es. Marco';
 
   @override
   String get wizard_participants_section_title => 'Chi partecipa?';
@@ -1671,7 +1671,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get sync_bt_error => 'Sincronizzazione fallita';
+  String get sync_bt_error => 'Sincronizzazione non riuscita';
 
   @override
   String get sync_bt_error_detail =>
@@ -1742,7 +1742,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_qr_expired_desc =>
-      'Genera un nuovo codice per continuare l\'abbinamento';
+      'Genera un nuovo codice per continuare l’abbinamento';
 
   @override
   String get sync_qr_regenerate_button => 'Genera nuovo codice';
@@ -1756,7 +1756,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_qr_scan_description =>
-      'Inquadra il QR dell\'altro dispositivo';
+      'Inquadra il QR dell’altro dispositivo';
 
   @override
   String sync_qr_pair_success(String deviceName) {
@@ -1769,7 +1769,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_qr_pair_expired =>
-      'Questo codice di abbinamento è scaduto — chiedi all\'altro dispositivo di mostrarne uno nuovo';
+      'Questo codice di abbinamento è scaduto — chiedi all’altro dispositivo di mostrarne uno nuovo';
 
   @override
   String get sync_qr_pair_emulator_host =>
@@ -1777,7 +1777,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_qr_emulator_warning =>
-      'Questo dispositivo è un emulatore Android — il suo indirizzo di solito non è raggiungibile da altri dispositivi, quindi l\'abbinamento potrebbe fallire';
+      'Questo dispositivo è un emulatore Android — il suo indirizzo di solito non è raggiungibile da altri dispositivi, quindi l’abbinamento potrebbe fallire';
 
   @override
   String get sync_paired_devices_title => 'Dispositivi abbinati';
@@ -1800,7 +1800,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get has_attachment => 'Con allegato';
 
   @override
-  String get has_location => 'Con posizione';
+  String get has_location => 'Con luogo';
 
   @override
   String get search_no_results => 'Nessuna spesa trovata';
@@ -1825,7 +1825,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get voice_input_error => 'Errore nel riconoscimento vocale';
 
   @override
-  String get voice_input_permission_denied => 'Permesso microfono negato';
+  String get voice_input_permission_denied =>
+      'Microfono non consentito: attivalo nelle impostazioni del telefono';
 
   @override
   String get voice_input_not_available =>
@@ -1883,7 +1884,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Fotocamera non consentita: attivala nelle impostazioni del telefono per leggere gli scontrini';
 
   @override
-  String get no_text_found => 'Nessun testo trovato nell\'immagine';
+  String get no_text_found => 'Nessun testo trovato nell’immagine';
 
   @override
   String get receipt_scanned => 'Scontrino scansionato';
@@ -2163,7 +2164,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get drive_backup_weekly => 'Backup settimanale';
 
   @override
-  String get drive_backup_weekly_desc => 'Ogni settimana, all\'apertura';
+  String get drive_backup_weekly_desc => 'Ogni settimana, all’apertura';
 
   @override
   String get drive_backup_disconnect => 'Scollega';
@@ -2347,16 +2348,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String sync_group_received(String from, String title) {
-    return '$from ti ha condiviso “$title”';
+    return '$from ti ha condiviso «$title»';
   }
 
   @override
   String sync_group_received_anon(String title) {
-    return 'Ti è stato condiviso “$title”';
+    return 'Ti è stato condiviso «$title»';
   }
 
   @override
-  String get group_welcome_title => 'Ti sei unito al gruppo';
+  String get group_welcome_title => 'Ora fai parte del gruppo';
 
   @override
   String group_welcome_body(
@@ -2409,4 +2410,30 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get import_replace => 'Sostituisci';
+
+  @override
+  String attachment_limit(int count) {
+    return 'Puoi aggiungere al massimo $count allegati';
+  }
+
+  @override
+  String get attachment_add_error => 'Impossibile aggiungere l’allegato';
+
+  @override
+  String get attachment_share_error => 'Impossibile condividere l’allegato';
+
+  @override
+  String get attachment_open_error => 'Impossibile aprire il file';
+
+  @override
+  String get location_permission_denied =>
+      'Consenti l’accesso alla posizione per aggiungere il luogo';
+
+  @override
+  String get location_permission_denied_forever =>
+      'L’accesso alla posizione è disattivato per Caravella: attivalo nelle impostazioni di sistema';
+
+  @override
+  String get location_service_disabled =>
+      'La localizzazione è disattivata: attivala per aggiungere il luogo';
 }
