@@ -79,6 +79,12 @@ class PhotoVeil extends StatelessWidget {
         Image.file(
           File(path),
           fit: BoxFit.cover,
+          // Decoded at the width it's shown at: photos picked before the
+          // crop (which keeps 1600 px) can be full camera resolution.
+          cacheWidth: constraints.maxWidth.isFinite
+              ? (constraints.maxWidth * MediaQuery.devicePixelRatioOf(context))
+                    .round()
+              : null,
           // A photo that can't be read (deleted, moved) leaves the surface.
           errorBuilder: (_, _, _) => ColoredBox(color: color),
         ),

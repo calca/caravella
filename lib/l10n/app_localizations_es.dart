@@ -2412,4 +2412,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get import_replace => 'Reemplazar';
+
+  @override
+  String attachment_limit(int count) {
+    return 'Puedes añadir hasta $count adjuntos';
+  }
+
+  @override
+  String get attachment_add_error => 'No se pudo añadir el adjunto';
+
+  @override
+  String get attachment_share_error => 'No se pudo compartir el adjunto';
+
+  @override
+  String get attachment_open_error => 'No se pudo abrir el archivo';
+
+  @override
+  String get location_permission_denied =>
+      'Permite el acceso a la ubicación para añadir el lugar';
+
+  @override
+  String get location_permission_denied_forever =>
+      'El acceso a la ubicación está desactivado para Caravella: actívalo en los ajustes del sistema';
+
+  @override
+  String get location_service_disabled =>
+      'La ubicación está desactivada: actívala para añadir el lugar';
 }

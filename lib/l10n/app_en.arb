@@ -1053,4 +1053,18 @@
   ,"@settings_group_templates_delete_confirm_title": {"description": "Title of the dialog confirming a group template deletion"}
   ,"import_replace": "Replace"
   ,"@import_replace": {"description": "Red button confirming a backup restore, which replaces all current groups"}
+  ,"attachment_limit": "You can add up to {count} attachments"
+  ,"@attachment_limit": {"description": "Toast when trying to add more attachments than allowed", "placeholders": {"count": {"type": "int"}}}
+  ,"attachment_add_error": "Couldn’t add the attachment"
+  ,"@attachment_add_error": {"description": "Toast when adding an attachment fails"}
+  ,"attachment_share_error": "Couldn’t share the attachment"
+  ,"@attachment_share_error": {"description": "Toast when sharing an attachment fails"}
+  ,"attachment_open_error": "Couldn’t open the file"
+  ,"@attachment_open_error": {"description": "Shown in the attachment viewer when an image, PDF or video cannot be opened"}
+  ,"location_permission_denied": "Allow location access to add the place"
+  ,"@location_permission_denied": {"description": "Toast when the location permission is denied"}
+  ,"location_permission_denied_forever": "Location access is off for Caravella: turn it on in the system settings"
+  ,"@location_permission_denied_forever": {"description": "Toast when the location permission is permanently denied"}
+  ,"location_service_disabled": "Location is off: turn it on to add the place"
+  ,"@location_service_disabled": {"description": "Toast when the device location service is off"}
 }

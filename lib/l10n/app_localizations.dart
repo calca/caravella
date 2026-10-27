@@ -4505,6 +4505,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Replace'**
   String get import_replace;
+
+  /// Toast when trying to add more attachments than allowed
+  ///
+  /// In en, this message translates to:
+  /// **'You can add up to {count} attachments'**
+  String attachment_limit(int count);
+
+  /// Toast when adding an attachment fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t add the attachment'**
+  String get attachment_add_error;
+
+  /// Toast when sharing an attachment fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t share the attachment'**
+  String get attachment_share_error;
+
+  /// Shown in the attachment viewer when an image, PDF or video cannot be opened
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t open the file'**
+  String get attachment_open_error;
+
+  /// Toast when the location permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Allow location access to add the place'**
+  String get location_permission_denied;
+
+  /// Toast when the location permission is permanently denied
+  ///
+  /// In en, this message translates to:
+  /// **'Location access is off for Caravella: turn it on in the system settings'**
+  String get location_permission_denied_forever;
+
+  /// Toast when the device location service is off
+  ///
+  /// In en, this message translates to:
+  /// **'Location is off: turn it on to add the place'**
+  String get location_service_disabled;
 }
 
 class _AppLocalizationsDelegate

@@ -2353,4 +2353,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get import_replace => '替换';
+
+  @override
+  String attachment_limit(int count) {
+    return '最多可添加 $count 个附件';
+  }
+
+  @override
+  String get attachment_add_error => '无法添加附件';
+
+  @override
+  String get attachment_share_error => '无法分享附件';
+
+  @override
+  String get attachment_open_error => '无法打开文件';
+
+  @override
+  String get location_permission_denied => '请允许访问位置以添加地点';
+
+  @override
+  String get location_permission_denied_forever =>
+      'Caravella 的位置权限已关闭：请在系统设置中开启';
+
+  @override
+  String get location_service_disabled => '定位服务已关闭：请开启以添加地点';
 }

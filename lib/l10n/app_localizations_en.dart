@@ -2399,4 +2399,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get import_replace => 'Replace';
+
+  @override
+  String attachment_limit(int count) {
+    return 'You can add up to $count attachments';
+  }
+
+  @override
+  String get attachment_add_error => 'Couldn’t add the attachment';
+
+  @override
+  String get attachment_share_error => 'Couldn’t share the attachment';
+
+  @override
+  String get attachment_open_error => 'Couldn’t open the file';
+
+  @override
+  String get location_permission_denied =>
+      'Allow location access to add the place';
+
+  @override
+  String get location_permission_denied_forever =>
+      'Location access is off for Caravella: turn it on in the system settings';
+
+  @override
+  String get location_service_disabled =>
+      'Location is off: turn it on to add the place';
 }

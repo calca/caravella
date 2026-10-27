@@ -947,4 +947,11 @@
   ,"delete_group_confirm_title": "¿Eliminar el grupo?"
   ,"settings_group_templates_delete_confirm_title": "¿Eliminar la plantilla?"
   ,"import_replace": "Reemplazar"
+  ,"attachment_limit": "Puedes añadir hasta {count} adjuntos"
+  ,"attachment_add_error": "No se pudo añadir el adjunto"
+  ,"attachment_share_error": "No se pudo compartir el adjunto"
+  ,"attachment_open_error": "No se pudo abrir el archivo"
+  ,"location_permission_denied": "Permite el acceso a la ubicación para añadir el lugar"
+  ,"location_permission_denied_forever": "El acceso a la ubicación está desactivado para Caravella: actívalo en los ajustes del sistema"
+  ,"location_service_disabled": "La ubicación está desactivada: actívala para añadir el lugar"
 }

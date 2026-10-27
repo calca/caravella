@@ -920,4 +920,11 @@
   ,"delete_group_confirm_title": "Excluir o grupo?"
   ,"settings_group_templates_delete_confirm_title": "Excluir o modelo?"
   ,"import_replace": "Substituir"
+  ,"attachment_limit": "Você pode adicionar até {count} anexos"
+  ,"attachment_add_error": "Não foi possível adicionar o anexo"
+  ,"attachment_share_error": "Não foi possível compartilhar o anexo"
+  ,"attachment_open_error": "Não foi possível abrir o arquivo"
+  ,"location_permission_denied": "Permita o acesso à localização para adicionar o lugar"
+  ,"location_permission_denied_forever": "O acesso à localização está desativado para o Caravella: ative-o nas configurações do sistema"
+  ,"location_service_disabled": "A localização está desativada: ative-a para adicionar o lugar"
 }
