@@ -74,7 +74,8 @@ class FormPill extends StatelessWidget {
     final borderColor = switch (style) {
       FormPillStyle.selected => s.onSurface,
       FormPillStyle.normal => s.outlineVariant.withValues(alpha: 0.6),
-      FormPillStyle.add => s.outline.withValues(alpha: 0.7),
+      // >=3:1 (WCAG 1.4.11) on the page and the cards; 0.7 read 2.9:1.
+      FormPillStyle.add => s.outline.withValues(alpha: 0.85),
     };
 
     final hasLeading = leading != null || icon != null;

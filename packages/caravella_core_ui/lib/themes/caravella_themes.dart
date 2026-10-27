@@ -90,7 +90,9 @@ const ColorScheme darkColorScheme = ColorScheme(
   tertiaryFixedDim: Color(0xFFE0B0B3),
   onTertiaryFixed: Color(0xFF571F22),
   onTertiaryFixedVariant: Color(0xFF642427),
-  error: Color(0xFFCF6679),
+  // Destructive text ("Delete group") sits on raised dark cards: #CF6679
+  // read 3.5:1 there; this keeps the hue at >=4.7:1 on every dark surface.
+  error: Color(0xFFE57F91),
   onError: Color(0xFF000000),
   errorContainer: Color(0xFFB1384E),
   onErrorContainer: Color(0xFFFFFFFF),

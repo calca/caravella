@@ -813,7 +813,6 @@
   ,"get_started_look": "Scegli una foto o un colore"
   ,"get_started_step_done": "{step}, fatto"
   ,"balances": "Saldi"
-  ,"per_person": "A testa"
   ,"settle_up": "Per pareggiare"
   ,"all_settled_up": "Siete pari"
   ,"balance_gets_back": "{name} deve ricevere {amount}"
@@ -914,4 +913,7 @@
   ,"group_welcome_body": "Condiviso da {from}: {people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
   ,"group_welcome_body_anon": "{people}, {expenses}, {total} finora. Le spese che aggiungi qui arrivano anche sugli altri dispositivi."
   ,"toast_open": "Apri"
+  ,"stats_per_person": "{amount} a testa"
+  ,"balances_share_per_person": "Quota a testa"
+  ,"balances_share_basis": "Divisa in parti uguali tra {people}"
 }

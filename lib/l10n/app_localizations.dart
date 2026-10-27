@@ -3860,12 +3860,6 @@ abstract class AppLocalizations {
   /// **'Balances'**
   String get balances;
 
-  /// Group page key figure: total divided by the number of participants
-  ///
-  /// In en, this message translates to:
-  /// **'Per person'**
-  String get per_person;
-
   /// Heading of the suggested payments that settle the group
   ///
   /// In en, this message translates to:
@@ -4457,6 +4451,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open'**
   String get toast_open;
+
+  /// Statistics pace card: the group's total divided by its participants, already formatted with currency
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} per person'**
+  String stats_per_person(String amount);
+
+  /// Balances: title of the card with each participant's equal share of the total
+  ///
+  /// In en, this message translates to:
+  /// **'Share per person'**
+  String get balances_share_per_person;
+
+  /// Balances: under 'Share per person', how it's computed; people is already pluralized ('4 participants')
+  ///
+  /// In en, this message translates to:
+  /// **'Split equally among {people}'**
+  String balances_share_basis(String people);
 }
 
 class _AppLocalizationsDelegate

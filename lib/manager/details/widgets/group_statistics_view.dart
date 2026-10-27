@@ -37,6 +37,7 @@ class GroupStatisticsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
+    final pace = SpendingPace.of(group);
 
     Widget title(String text) => Padding(
       padding: const EdgeInsets.fromLTRB(6, 24, 6, 10),
@@ -56,6 +57,14 @@ class GroupStatisticsView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (pace != null) ...[
+            SpendingPaceCard(
+              pace: pace,
+              currency: group.currency,
+              participants: group.participants.length,
+            ),
+            const SizedBox(height: 12),
+          ],
           // One chart over the whole group, step chosen by its length.
           if (buildGroupSpendingSeries(group) case final series?
               when _hasSpending(series.values))
@@ -80,13 +89,7 @@ class GroupStatisticsView extends StatelessWidget {
                 color: theme.colorScheme.primary,
               ),
             ),
-          title(gloc.participants),
-          GroupPayersBubbles(group: group),
-          const SizedBox(height: 12),
-          GroupMapCard(group: group, onEnableLocation: onEnableLocation),
-          if (SpendingPace.of(group) case final pace?) ...[
-            const SizedBox(height: 12),
-            SpendingPaceCard(pace: pace, currency: group.currency),
+          if (pace != null) ...[
             const SizedBox(height: 12),
             _RecordCards(
               cards: [
@@ -127,6 +130,10 @@ class GroupStatisticsView extends StatelessWidget {
               ],
             ),
           ],
+          title(gloc.participants),
+          GroupPayersBubbles(group: group),
+          const SizedBox(height: 12),
+          GroupMapCard(group: group, onEnableLocation: onEnableLocation),
           title(gloc.categories),
           CategoriesOverviewTab(trip: group, embedded: true),
         ],
@@ -275,16 +282,20 @@ ExpenseDetails? highestExpense(ExpenseGroup group) => group.expenses.isEmpty
 
 /// The group's average spending over its whole period ([SpendingPace]): the
 /// amount per day (or per month, for long groups), what it is computed over,
-/// then the number of expenses, the average expense and how many days or
-/// months had any.
+/// then the number of expenses, the average expense, the share per person
+/// and how many days or months had any.
 class SpendingPaceCard extends StatelessWidget {
   final SpendingPace pace;
   final String currency;
+
+  /// For the "per person" pill (hidden with fewer than two people).
+  final int participants;
 
   const SpendingPaceCard({
     super.key,
     required this.pace,
     required this.currency,
+    this.participants = 0,
   });
 
   @override
@@ -377,6 +388,15 @@ class SpendingPaceCard extends StatelessWidget {
                   children: [
                     pill(gloc.expense_count(pace.expenseCount)),
                     pill(gloc.stats_per_expense(perExpense)),
+                    if (participants > 1)
+                      pill(
+                        gloc.stats_per_person(
+                          CurrencyDisplay.formatCurrencyText(
+                            pace.total / participants,
+                            currency,
+                          ),
+                        ),
+                      ),
                     pill(
                       monthly
                           ? gloc.stats_active_months(

@@ -836,7 +836,6 @@
   ,"get_started_look": "Elige una foto o un color"
   ,"get_started_step_done": "{step}, hecho"
   ,"balances": "Saldos"
-  ,"per_person": "Por persona"
   ,"settle_up": "Para saldar"
   ,"all_settled_up": "Todo saldado"
   ,"balance_gets_back": "{name} recupera {amount}"
@@ -939,4 +938,7 @@
   ,"group_welcome_body": "Compartido por {from}: {people}, {expenses}, {total} hasta ahora. Los gastos que añadas aquí llegan también a los otros dispositivos."
   ,"group_welcome_body_anon": "{people}, {expenses}, {total} hasta ahora. Los gastos que añadas aquí llegan también a los otros dispositivos."
   ,"toast_open": "Abrir"
+  ,"stats_per_person": "{amount} por persona"
+  ,"balances_share_per_person": "Parte por persona"
+  ,"balances_share_basis": "A partes iguales entre {people}"
 }

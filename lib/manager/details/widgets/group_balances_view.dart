@@ -76,6 +76,19 @@ class GroupBalancesView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // What the balances are measured against: everyone owes the
+          // same share of the total.
+          if (group.participants.length > 1) ...[
+            _FairShareCard(
+              share: group.getTotalExpenses() / group.participants.length,
+              currency: group.currency,
+              // The total is already in the header above.
+              basis: gloc.balances_share_basis(
+                gloc.participant_count(group.participants.length),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
           card([
             for (final p in rows)
               _BalanceRow(
@@ -201,6 +214,93 @@ class GroupBalancesView extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// The share each participant owes (total ÷ people), the reference the
+/// balances below are measured against.
+class _FairShareCard extends StatelessWidget {
+  final double share;
+  final String currency;
+  final String basis;
+
+  const _FairShareCard({
+    required this.share,
+    required this.currency,
+    required this.basis,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+    final radius = BorderRadius.circular(20);
+    final amount = CurrencyDisplay(
+      value: share,
+      currency: currency,
+      valueFontSize: 22,
+      currencyFontSize: 13,
+      showDecimals: true,
+    );
+    // Large text: the amount under the title instead of beside it.
+    final large = MediaQuery.textScalerOf(context).scale(14) / 14 >= 1.3;
+    return Semantics(
+      container: true,
+      label:
+          '${gloc.balances_share_per_person}: '
+          '${CurrencyDisplay.formatCurrencyText(share, currency)}, $basis',
+      excludeSemantics: true,
+      child: CardOutline(
+        borderRadius: radius,
+        child: Material(
+          color: s.raisedSurface,
+          borderRadius: radius,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: s.surfaceContainerHighest,
+                  ),
+                  child: Icon(Icons.call_split_rounded, color: s.onSurface),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        gloc.balances_share_per_person,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      if (large) ...[
+                        const SizedBox(height: 4),
+                        amount,
+                        const SizedBox(height: 2),
+                      ],
+                      Text(
+                        basis,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: s.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (!large) ...[const SizedBox(width: 8), amount],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -117,10 +117,6 @@ class GroupDetailHeader extends StatelessWidget {
             locale: Localizations.localeOf(context),
           )
         : null;
-    final perPerson = group.participants.isEmpty
-        ? 0.0
-        : group.getTotalExpenses() / group.participants.length;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -169,39 +165,41 @@ class GroupDetailHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                flex: 4,
-                child: _Figure(
-                  label: gloc.group_total,
-                  value: group.getTotalExpenses(),
-                  currency: group.currency,
-                  big: true,
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final total = _Figure(
+              label: gloc.group_total,
+              value: group.getTotalExpenses(),
+              currency: group.currency,
+              big: true,
+            );
+            final today = _Figure(
+              label: gloc.today,
+              value: group.getTodaySpendingSync(),
+              currency: group.currency,
+            );
+            // Side by side when "Today" has room for its amount at full
+            // size; one under the other with large text, rather than
+            // shrinking them. (The per-person figure is in Statistics.)
+            final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+            final todayWidth = (constraints.maxWidth - 8) * 3 / 7;
+            if (todayWidth >= _Figure.minSmallWidth * scale) {
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(flex: 4, child: total),
+                    const SizedBox(width: 8),
+                    Expanded(flex: 3, child: today),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                flex: 3,
-                child: _Figure(
-                  label: gloc.today,
-                  value: group.getTodaySpendingSync(),
-                  currency: group.currency,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                flex: 3,
-                child: _Figure(
-                  label: gloc.per_person,
-                  value: perPerson,
-                  currency: group.currency,
-                ),
-              ),
-            ],
-          ),
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [total, const SizedBox(height: 8), today],
+            );
+          },
         ),
       ],
     );
@@ -209,6 +207,9 @@ class GroupDetailHeader extends StatelessWidget {
 }
 
 class _Figure extends StatelessWidget {
+  /// Width a small figure needs for a four-digit amount at full size.
+  static const double minSmallWidth = 128;
+
   final String label;
   final double value;
   final String currency;

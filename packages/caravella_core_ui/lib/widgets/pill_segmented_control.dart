@@ -106,11 +106,14 @@ class PillSegmentedControl extends StatelessWidget {
       );
     }
 
-    if (!expand) return pill(natural);
     return LayoutBuilder(
       builder: (context, constraints) {
         final available = constraints.maxWidth - 2 * _padding;
         final each = available / labels.length;
+        // Natural widths when they fit; otherwise (large text) equal shares
+        // of the width, so no segment gets clipped below its touch target.
+        final fits = natural.fold<double>(0, (a, w) => a + w) <= available;
+        if (!expand && fits) return pill(natural);
         return pill([for (final _ in labels) each]);
       },
     );

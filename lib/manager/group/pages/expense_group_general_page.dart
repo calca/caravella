@@ -182,6 +182,8 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                 ),
                 decoration: InputDecoration(
                   hintText: gloc.enter_title,
+                  // 48 dp touch target (dense borderless fields are 44).
+                  constraints: const BoxConstraints(minHeight: 48),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,

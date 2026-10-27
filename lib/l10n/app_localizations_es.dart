@@ -2006,9 +2006,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get balances => 'Saldos';
 
   @override
-  String get per_person => 'Por persona';
-
-  @override
   String get settle_up => 'Para saldar';
 
   @override
@@ -2381,4 +2378,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get toast_open => 'Abrir';
+
+  @override
+  String stats_per_person(String amount) {
+    return '$amount por persona';
+  }
+
+  @override
+  String get balances_share_per_person => 'Parte por persona';
+
+  @override
+  String balances_share_basis(String people) {
+    return 'A partes iguales entre $people';
+  }
 }
