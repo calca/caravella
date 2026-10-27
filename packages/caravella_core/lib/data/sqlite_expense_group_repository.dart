@@ -25,7 +25,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 6;
+  static const int _databaseVersion = 7;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -246,6 +246,20 @@ class SqliteExpenseGroupRepository
 
       LoggerService.info(
         'Database migration to v6 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 7) {
+      // The whole place as JSON (locality, address, street, …): only
+      // latitude, longitude and name had columns, so a place found by the
+      // automatic location — which has a locality but no name — came back
+      // as bare coordinates. Existing rows keep what they had.
+      await db.execute(
+        'ALTER TABLE $kTableExpenses ADD COLUMN location_details TEXT',
+      );
+      LoggerService.info(
+        'Database migration to v7 complete',
         name: 'storage.sqlite',
       );
     }
