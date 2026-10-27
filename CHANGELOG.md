@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- “Leave without saving?” (expense form, new group) is calmer: no warning icon, “Keep editing” is the main button and “Discard” is red text below it — the big red button stays for real deletions
+- Dialogs are calmer and consistent: no icons; deletions ask a question (“Delete the expense?”, “Delete the group?”) with the red Delete button, the same wherever you delete from; “Leave without saving?” makes “Keep editing” the main button and “Discard” red text below it; restoring a backup, which replaces all your groups, asks “Replace your data?” with a red Replace button
 - Expense form: attachments are a list in a card, like the rest of the app — each file with a small preview (the photo, or a plain grey icon for PDFs and other files instead of the big colored one), its name, type and size, and a larger remove button; “Add attachment” below instead of empty slots. The note has its own “Note” label, is 4 lines tall, and folds back into its pill if left empty
 - Group page: the header shows Total and Today side by side at full size (the per-person card was too narrow and shrank its amount); the per-person share moved to Statistics, in the spending pace card, and opens Balances as a “Share per person” card (split equally among the people), the reference the +/− amounts are measured against
 - Groups shared with you from another device: a message says who shared which group (tap Open to go there), and the first time you open it a card explains where you are — who shared it, how many people and expenses, the total so far — with “Add expense”

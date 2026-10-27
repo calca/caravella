@@ -362,7 +362,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get backup_share_message => '这是您的Caravella备份';
 
   @override
-  String get import_confirm_title => '导入数据';
+  String get import_confirm_title => '替换现有数据？';
 
   @override
   String import_confirm_message(Object file) {
@@ -1886,7 +1886,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String settings_group_templates_delete_message(String templateName) {
-    return '删除模板“$templateName”？';
+    return '模板“$templateName”将被删除。';
   }
 
   @override
@@ -2341,4 +2341,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get keep_editing => '继续编辑';
+
+  @override
+  String get delete_expense_confirm_title => '删除这笔支出？';
+
+  @override
+  String get delete_group_confirm_title => '删除这个群组？';
+
+  @override
+  String get settings_group_templates_delete_confirm_title => '删除这个模板？';
+
+  @override
+  String get import_replace => '替换';
 }

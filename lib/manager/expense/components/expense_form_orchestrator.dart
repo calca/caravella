@@ -123,12 +123,7 @@ class ExpenseFormOrchestrator {
     return showDialog<bool>(
       context: context,
       builder: (ctx) => Material3Dialog(
-        icon: Icon(
-          Icons.warning_amber_outlined,
-          color: Theme.of(context).colorScheme.error,
-          size: 24,
-        ),
-        title: Text(loc.delete_expense),
+        title: Text(loc.delete_expense_confirm_title),
         content: Text(loc.delete_expense_confirm),
         actions: [
           Material3DialogActions.cancel(ctx, loc.cancel),

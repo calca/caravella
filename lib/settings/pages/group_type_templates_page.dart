@@ -82,15 +82,11 @@ class GroupTypeTemplatesPage extends StatelessWidget {
     final loc = gen.AppLocalizations.of(context);
     final shouldDelete = await Material3Dialogs.showConfirmation(
       context,
-      title: loc.settings_group_templates_delete_title,
+      title: loc.settings_group_templates_delete_confirm_title,
       content: loc.settings_group_templates_delete_message(template.name),
       confirmText: loc.delete,
       cancelText: loc.cancel,
       isDestructive: true,
-      icon: Icon(
-        Icons.delete_outline,
-        color: Theme.of(context).colorScheme.error,
-      ),
     );
 
     if (shouldDelete != true) return;

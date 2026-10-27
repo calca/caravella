@@ -62,18 +62,15 @@ Future<bool> confirmRestore(
     await showDialog<bool>(
       context: context,
       builder: (context) => Material3Dialog(
-        icon: Icon(
-          Icons.upload_file_outlined,
-          color: Theme.of(context).colorScheme.primary,
-          size: 24,
-        ),
         title: Text(loc.import_confirm_title),
         content: Text(loc.import_confirm_message(name)),
         actions: [
           Material3DialogActions.cancel(context, loc.cancel),
-          Material3DialogActions.primary(
+          // Replaces every group and can't be undone: the one red button
+          // outside deletions.
+          Material3DialogActions.destructive(
             context,
-            loc.ok,
+            loc.import_replace,
             onPressed: () => Navigator.of(context).pop(true),
           ),
         ],

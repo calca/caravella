@@ -313,12 +313,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogCtx) => Material3Dialog(
-        icon: Icon(
-          Icons.delete_outline,
-          color: Theme.of(context).colorScheme.error,
-          size: 24,
-        ),
-        title: Text(gloc.delete_group),
+        title: Text(gloc.delete_group_confirm_title),
         content: Text(gloc.delete_group_confirm),
         actions: [
           Material3DialogActions.cancel(dialogCtx, gloc.cancel),

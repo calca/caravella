@@ -3,11 +3,12 @@ import '../themes/app_radius.dart';
 
 /// A Material 3 styled dialog wrapper that provides consistent styling
 /// for all AlertDialogs in the app according to M3 design specifications.
+/// No icon on purpose: title, text and buttons say it all, and an icon
+/// above the title distracted.
 class Material3Dialog extends StatelessWidget {
   final Widget? title;
   final Widget? content;
   final List<Widget>? actions;
-  final Widget? icon;
   final MainAxisAlignment actionsAlignment;
   final EdgeInsetsGeometry? contentPadding;
   final EdgeInsetsGeometry? titlePadding;
@@ -18,7 +19,6 @@ class Material3Dialog extends StatelessWidget {
     this.title,
     this.content,
     this.actions,
-    this.icon,
     this.actionsAlignment = MainAxisAlignment.end,
     this.contentPadding,
     this.titlePadding,
@@ -39,7 +39,6 @@ class Material3Dialog extends StatelessWidget {
       backgroundColor: colorScheme.surfaceContainer,
       surfaceTintColor: Colors.transparent,
       elevation: 6,
-      icon: icon,
       contentPadding:
           contentPadding ?? const EdgeInsets.fromLTRB(24, 12, 24, 24),
       titlePadding: titlePadding ?? const EdgeInsets.fromLTRB(24, 24, 24, 0),
@@ -175,14 +174,12 @@ class Material3Dialogs {
     String? confirmText,
     String? cancelText,
     bool isDestructive = false,
-    Widget? icon,
   }) {
     final localizations = MaterialLocalizations.of(context);
 
     return showDialog<bool>(
       context: context,
       builder: (context) => Material3Dialog(
-        icon: icon,
         title: Text(title),
         content: Text(content),
         actions: [
@@ -207,14 +204,12 @@ class Material3Dialogs {
     required String title,
     required String content,
     String? buttonText,
-    Widget? icon,
   }) {
     final localizations = MaterialLocalizations.of(context);
 
     return showDialog<void>(
       context: context,
       builder: (context) => Material3Dialog(
-        icon: icon,
         title: Text(title),
         content: Text(content),
         actions: [
