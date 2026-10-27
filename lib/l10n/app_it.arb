@@ -916,4 +916,5 @@
   ,"stats_per_person": "{amount} a testa"
   ,"balances_share_per_person": "Quota a testa"
   ,"balances_share_basis": "Divisa in parti uguali tra {people}"
+  ,"attachment_remove": "Rimuovi {name}"
 }

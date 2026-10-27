@@ -2391,4 +2391,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String balances_share_basis(String people) {
     return 'A partes iguales entre $people';
   }
+
+  @override
+  String attachment_remove(String name) {
+    return 'Quitar $name';
+  }
 }

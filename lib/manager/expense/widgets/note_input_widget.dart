@@ -33,7 +33,8 @@ class NoteInputWidget extends StatelessWidget {
         focusNode: focusNode,
         enabled: enabled,
         maxLines: null,
-        minLines: 3,
+        // Longer than the description: room for a few lines at a glance.
+        minLines: 4,
         style: textStyle ?? FormTheme.getMultilineTextStyle(context),
         decoration: FormTheme.getCardDecoration(
           fillColor: s.raisedSurface,
