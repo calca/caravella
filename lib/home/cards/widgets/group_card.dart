@@ -79,7 +79,12 @@ class _GroupCardState extends State<GroupCard> {
 
   void _onNotifierChanged() {
     final current = _notifier?.currentGroup;
-    if (current != null && current.id == widget.group.id && mounted) {
+    // Opening the add sheet sets this very group as current: nothing changed,
+    // and rebuilding the card under the sliding sheet made it stutter.
+    if (current != null &&
+        current.id == widget.group.id &&
+        !identical(current, _group) &&
+        mounted) {
       setState(() => _group = current);
     }
   }

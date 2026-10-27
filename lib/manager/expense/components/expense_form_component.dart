@@ -12,6 +12,7 @@ import '../widgets/expense_form_actions_widget.dart';
 import '../widgets/voice_capture_bottom_sheet.dart';
 import '../state/expense_form_controller.dart';
 import '../state/expense_form_state.dart';
+import '../coordination/route_settled.dart';
 import 'expense_form_config.dart';
 import 'expense_form_lifecycle_manager.dart';
 import 'expense_form_orchestrator.dart';
@@ -146,16 +147,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         // Setup focus listeners for scroll coordination
         _setupFocusListeners();
 
-        // Autofocus the amount after the first frame when adding; when
+        // Autofocus the amount when adding, once the sheet (or page) has
+        // slid in: the keyboard rising during the slide made it jerky. When
         // editing, show the whole expense instead of the keyboard.
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted && !widget.config.isEditMode) {
-            _controller.amountFocus.requestFocus();
-            _lifecycleManager.scrollCoordinator?.scrollToField(
-              _controller.amountFieldKey,
-            );
-          }
-        });
+        if (!widget.config.isEditMode) {
+          routeSettled(context).then((_) {
+            if (mounted) _controller.amountFocus.requestFocus();
+          });
+        }
       },
     );
 

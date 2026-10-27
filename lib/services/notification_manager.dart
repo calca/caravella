@@ -353,6 +353,7 @@ class NotificationManager {
       // Taller now that the details are always there: keep it below the
       // status bar.
       useSafeArea: true,
+      sheetAnimationStyle: AppMotion.sheet,
       builder: (sheetContext) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;

@@ -3,6 +3,7 @@
 
 // Themes
 export 'themes/app_dimens.dart';
+export 'themes/app_motion.dart';
 export 'themes/app_radius.dart';
 export 'themes/app_spacing.dart';
 export 'themes/app_text_styles.dart';

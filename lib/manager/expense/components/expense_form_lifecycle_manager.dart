@@ -4,6 +4,7 @@ import 'expense_form_config.dart';
 import '../state/expense_form_controller.dart';
 import '../state/expense_form_state.dart';
 import '../coordination/form_scroll_coordinator.dart';
+import '../coordination/route_settled.dart';
 import '../location/location_service.dart';
 
 /// Manages lifecycle events for ExpenseFormComponent
@@ -77,8 +78,11 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
       await _handleNewlyAddedCategory();
     }
 
-    // Auto-retrieve location if enabled
+    // Auto-retrieve location if enabled, once the sheet has slid in: the
+    // place pill updating mid-slide made the opening jerky.
     if (_shouldAutoRetrieveLocation() && context.mounted) {
+      await routeSettled(context);
+      if (!context.mounted || !_shouldAutoRetrieveLocation()) return;
       await _retrieveAutoLocation(context);
     }
   }

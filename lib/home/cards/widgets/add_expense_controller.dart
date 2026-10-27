@@ -48,6 +48,7 @@ class AddExpenseController {
       // Taller now that the details are always there: keep it below the
       // status bar.
       useSafeArea: true,
+      sheetAnimationStyle: AppMotion.sheet,
       builder: (context) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;
