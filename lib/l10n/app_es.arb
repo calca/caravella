@@ -135,7 +135,7 @@
   "no_trips_to_backup": "No hay grupos para guardar",
   "backup_error": "Error en el respaldo",
   "backup_share_message": "Aquí está tu respaldo de Caravella",
-  "import_confirm_title": "Importar datos",
+  "import_confirm_title": "¿Reemplazar tus datos?",
   "import_confirm_message": "¿Restaurar desde el archivo «{file}»? Los grupos actuales se sustituirán y no se podrá deshacer.",
   "import_success": "Datos restaurados",
   "import_error": "No se pudo restaurar: revisa el archivo",
@@ -817,7 +817,7 @@
   ,"settings_group_templates_categories_label": "Categorías predeterminadas"
   ,"settings_group_templates_validation_error": "Se requiere nombre y al menos una categoría"
   ,"settings_group_templates_delete_title": "Eliminar plantilla"
-  ,"settings_group_templates_delete_message": "¿Eliminar la plantilla «{templateName}»?"
+  ,"settings_group_templates_delete_message": "La plantilla «{templateName}» se eliminará."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
   ,"clear_dates": "Quitar fechas"
   ,"accessibility_map_marker_expense": "{name}, {amount}"
@@ -942,4 +942,9 @@
   ,"balances_share_per_person": "Parte por persona"
   ,"balances_share_basis": "A partes iguales entre {people}"
   ,"attachment_remove": "Quitar {name}"
+  ,"keep_editing": "Seguir editando"
+  ,"delete_expense_confirm_title": "¿Eliminar el gasto?"
+  ,"delete_group_confirm_title": "¿Eliminar el grupo?"
+  ,"settings_group_templates_delete_confirm_title": "¿Eliminar la plantilla?"
+  ,"import_replace": "Reemplazar"
 }

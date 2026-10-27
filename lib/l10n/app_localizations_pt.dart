@@ -367,7 +367,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get backup_share_message => 'Aqui está o seu backup do Caravella';
 
   @override
-  String get import_confirm_title => 'Importar dados';
+  String get import_confirm_title => 'Substituir seus dados?';
 
   @override
   String import_confirm_message(Object file) {
@@ -1926,7 +1926,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String settings_group_templates_delete_message(String templateName) {
-    return 'Excluir o modelo “$templateName”?';
+    return 'O modelo “$templateName” será excluído.';
   }
 
   @override
@@ -2388,4 +2388,20 @@ class AppLocalizationsPt extends AppLocalizations {
   String attachment_remove(String name) {
     return 'Remover $name';
   }
+
+  @override
+  String get keep_editing => 'Continuar editando';
+
+  @override
+  String get delete_expense_confirm_title => 'Excluir a despesa?';
+
+  @override
+  String get delete_group_confirm_title => 'Excluir o grupo?';
+
+  @override
+  String get settings_group_templates_delete_confirm_title =>
+      'Excluir o modelo?';
+
+  @override
+  String get import_replace => 'Substituir';
 }

@@ -159,11 +159,6 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => Material3Dialog(
-        icon: Icon(
-          Icons.warning_amber_outlined,
-          color: Theme.of(context).colorScheme.error,
-          size: 24,
-        ),
         title: Text(loc.delete_attachment_confirm_title),
         content: Text(loc.delete_attachment_confirm_message),
         actions: [

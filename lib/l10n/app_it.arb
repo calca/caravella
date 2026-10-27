@@ -119,7 +119,7 @@
   "no_trips_to_backup": "Nessun gruppo da salvare",
   "backup_error": "Backup non riuscito",
   "backup_share_message": "Ecco il backup di Caravella",
-  "import_confirm_title": "Importa dati",
+  "import_confirm_title": "Sostituire i dati?",
   "import_confirm_message": "Ripristinare dal file «{file}»? I gruppi attuali verranno sostituiti e non si potrà annullare.",
   "import_success": "Dati ripristinati",
   "import_error": "Ripristino non riuscito: controlla il file",
@@ -794,7 +794,7 @@
   ,"settings_group_templates_categories_label": "Categorie predefinite"
   ,"settings_group_templates_validation_error": "Nome e almeno una categoria sono obbligatori"
   ,"settings_group_templates_delete_title": "Elimina modello"
-  ,"settings_group_templates_delete_message": "Eliminare il modello «{templateName}»?"
+  ,"settings_group_templates_delete_message": "Il modello «{templateName}» verrà eliminato."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
   ,"clear_dates": "Rimuovi date"
   ,"accessibility_map_marker_expense": "{name}, {amount}"
@@ -917,4 +917,9 @@
   ,"balances_share_per_person": "Quota a testa"
   ,"balances_share_basis": "Divisa in parti uguali tra {people}"
   ,"attachment_remove": "Rimuovi {name}"
+  ,"keep_editing": "Continua a modificare"
+  ,"delete_expense_confirm_title": "Eliminare la spesa?"
+  ,"delete_group_confirm_title": "Eliminare il gruppo?"
+  ,"settings_group_templates_delete_confirm_title": "Eliminare il modello?"
+  ,"import_replace": "Sostituisci"
 }

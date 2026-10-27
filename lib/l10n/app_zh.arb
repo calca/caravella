@@ -113,7 +113,7 @@
   "select_both_dates": "如果选择一个日期, 则必须选择两个日期",
   "end_date_after_start": "结束日期必须在开始日期之后",
   "expenses_by_participant": "按参与者",
-  "import_confirm_title": "导入数据",
+  "import_confirm_title": "替换现有数据？",
   "import_confirm_message": "从文件“{file}”恢复？当前群组将被替换，且无法撤销。",
   "import_success": "数据已恢复",
   "import_error": "恢复失败：请检查文件",
@@ -1121,7 +1121,7 @@
   ,"settings_group_templates_categories_label": "默认分类"
   ,"settings_group_templates_validation_error": "必须填写名称且至少添加一个分类"
   ,"settings_group_templates_delete_title": "删除模板"
-  ,"settings_group_templates_delete_message": "删除模板“{templateName}”？"
+  ,"settings_group_templates_delete_message": "模板“{templateName}”将被删除。"
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
   ,"clear_dates": "移除日期"
   ,"accessibility_map_marker_expense": "{name}，{amount}"
@@ -1246,4 +1246,9 @@
   ,"balances_share_per_person": "人均分摊"
   ,"balances_share_basis": "{people}平均分摊"
   ,"attachment_remove": "移除 {name}"
+  ,"keep_editing": "继续编辑"
+  ,"delete_expense_confirm_title": "删除这笔支出？"
+  ,"delete_group_confirm_title": "删除这个群组？"
+  ,"settings_group_templates_delete_confirm_title": "删除这个模板？"
+  ,"import_replace": "替换"
 }

@@ -791,7 +791,7 @@ abstract class AppLocalizations {
   /// No description provided for @import_confirm_title.
   ///
   /// In en, this message translates to:
-  /// **'Import data'**
+  /// **'Replace your data?'**
   String get import_confirm_title;
 
   /// No description provided for @import_confirm_message.
@@ -3755,7 +3755,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_group_templates_delete_message.
   ///
   /// In en, this message translates to:
-  /// **'Delete the template “{templateName}”?'**
+  /// **'The template “{templateName}” will be deleted.'**
   String settings_group_templates_delete_message(String templateName);
 
   /// Tooltip/semantics label of the button that clears a group's start and end dates
@@ -4475,6 +4475,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove {name}'**
   String attachment_remove(String name);
+
+  /// Safe main button of the leave-without-saving dialog: stays on the form
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get keep_editing;
+
+  /// Title of the dialog confirming an expense deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the expense?'**
+  String get delete_expense_confirm_title;
+
+  /// Title of the dialog confirming a group deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the group?'**
+  String get delete_group_confirm_title;
+
+  /// Title of the dialog confirming a group template deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the template?'**
+  String get settings_group_templates_delete_confirm_title;
+
+  /// Red button confirming a backup restore, which replaces all current groups
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get import_replace;
 }
 
 class _AppLocalizationsDelegate

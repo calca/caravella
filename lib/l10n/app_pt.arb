@@ -117,7 +117,7 @@
   "uncategorized": "Sem categoria",
   "no_trips_to_backup": "Nenhum grupo para salvar",
   "backup_share_message": "Aqui está o seu backup do Caravella",
-  "import_confirm_title": "Importar dados",
+  "import_confirm_title": "Substituir seus dados?",
   "import_success": "Dados restaurados",
   "categories": "Categorias",
   "to": "Até",
@@ -786,7 +786,7 @@
   ,"settings_group_templates_categories_label": "Categorias padrão"
   ,"settings_group_templates_validation_error": "Nome e pelo menos uma categoria são obrigatórios"
   ,"settings_group_templates_delete_title": "Excluir modelo"
-  ,"settings_group_templates_delete_message": "Excluir o modelo “{templateName}”?"
+  ,"settings_group_templates_delete_message": "O modelo “{templateName}” será excluído."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
   ,"clear_dates": "Remover datas"
   ,"accessibility_map_marker_expense": "{name}, {amount}"
@@ -915,4 +915,9 @@
   ,"balances_share_per_person": "Parte por pessoa"
   ,"balances_share_basis": "Dividido igualmente entre {people}"
   ,"attachment_remove": "Remover {name}"
+  ,"keep_editing": "Continuar editando"
+  ,"delete_expense_confirm_title": "Excluir a despesa?"
+  ,"delete_group_confirm_title": "Excluir o grupo?"
+  ,"settings_group_templates_delete_confirm_title": "Excluir o modelo?"
+  ,"import_replace": "Substituir"
 }

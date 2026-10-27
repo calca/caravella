@@ -18,12 +18,7 @@ class DeleteExpenseDialog extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
 
     return Material3Dialog(
-      icon: Icon(
-        Icons.delete_outline,
-        color: Theme.of(context).colorScheme.error,
-        size: 24,
-      ),
-      title: Text(gloc.delete_expense),
+      title: Text(gloc.delete_expense_confirm_title),
       content: Text(gloc.delete_expense_confirm),
       actions: [
         Material3DialogActions.cancel(context, gloc.cancel),
