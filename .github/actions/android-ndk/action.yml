@@ -33,7 +33,13 @@ runs:
         SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
         for attempt in 1 2 3; do
           echo "Installing NDK $NDK (attempt $attempt)"
-          if yes | "$SDKMANAGER" --install "ndk;$NDK" > /dev/null; then exit 0; fi
+          # `yes` answers the license prompts; it dies of SIGPIPE when
+          # sdkmanager exits, which pipefail would report as a failure — so
+          # success is the NDK being there, not the pipeline's status.
+          (yes || true) | "$SDKMANAGER" --install "ndk;$NDK" > /dev/null || true
+          if [ -f "${{ steps.ndk.outputs.path }}/source.properties" ]; then
+            echo "NDK $NDK installed"; exit 0
+          fi
           sleep $((attempt * 30))
         done
         echo "::error::Could not install NDK $NDK after 3 attempts"
