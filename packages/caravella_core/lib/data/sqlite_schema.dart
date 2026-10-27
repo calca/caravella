@@ -61,6 +61,7 @@ Future<void> createSqliteSchema(Database db) async {
       location_latitude REAL,
       location_longitude REAL,
       location_name TEXT,
+      location_details TEXT,
       note TEXT,
       created_by_device_id TEXT,
       created_by_device_name TEXT,

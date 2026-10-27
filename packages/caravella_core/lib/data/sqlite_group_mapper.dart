@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:sqflite/sqflite.dart';
 import '../model/expense_group.dart';
 import '../model/expense_details.dart';
@@ -200,15 +202,7 @@ class SqliteGroupMapper {
       category: category,
       paidBy: paidBy,
       note: map['note'] as String?,
-      location:
-          (map['location_latitude'] != null &&
-              map['location_longitude'] != null)
-          ? ExpenseLocation(
-              latitude: map['location_latitude'] as double,
-              longitude: map['location_longitude'] as double,
-              name: map['location_name'] as String?,
-            )
-          : null,
+      location: _locationFromMap(map),
       attachments: attachments,
       createdBy: map['created_by_device_id'] != null
           ? ExpenseAuthor(
@@ -227,6 +221,32 @@ class SqliteGroupMapper {
     );
   }
 
+  /// The expense's place: the full one from `location_details` when saved
+  /// (v7+), else just the coordinates and name of older rows.
+  ExpenseLocation? _locationFromMap(Map<String, dynamic> map) {
+    if (map['location_details'] case final String details) {
+      try {
+        return ExpenseLocation.fromJson(
+          jsonDecode(details) as Map<String, dynamic>,
+        );
+      } catch (e) {
+        LoggerService.warning(
+          'Unreadable location details, using the coordinates: $e',
+          name: 'storage.sqlite',
+        );
+      }
+    }
+    if (map['location_latitude'] == null ||
+        map['location_longitude'] == null) {
+      return null;
+    }
+    return ExpenseLocation(
+      latitude: map['location_latitude'] as double,
+      longitude: map['location_longitude'] as double,
+      name: map['location_name'] as String?,
+    );
+  }
+
   /// Convert ExpenseDetails to database map
   Map<String, dynamic> expenseToMap(ExpenseDetails expense, String groupId) {
     return {
@@ -241,6 +261,10 @@ class SqliteGroupMapper {
       'location_latitude': expense.location?.latitude,
       'location_longitude': expense.location?.longitude,
       'location_name': expense.location?.name,
+      'location_details': switch (expense.location) {
+        final location? => jsonEncode(location.toJson()),
+        null => null,
+      },
       'created_by_device_id': expense.createdBy?.deviceId,
       'created_by_device_name': expense.createdBy?.deviceName,
       'created_by_user_name': expense.createdBy?.userName,

@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group page: tap the “Shared” badge to open the group’s synchronization; the ⋯ menu no longer repeats Map, which opens from its card in Statistics
 
 ### Fixed
+- An expense's place keeps its name after saving: a place found by the automatic location (e.g. “Sovico”) showed only its coordinates when the expense was opened again. Places saved before this fix keep only their coordinates
 - Adding an expense from Home or from a group opens smoothly: the sheet slides in first and the keyboard rises after it (they used to move together, making the opening jerky); the page underneath no longer redraws and the automatic location waits for the sheet to settle
 - Charts and day counts around a daylight-saving change: an expense made late in the evening in the week the clocks change could drop out of the spending chart (Home’s wave, Statistics), and a group’s period or the trip notification could count a day less; days are now counted on the calendar date
 - Accessibility: “Active · Archived” and other section switches split the width evenly when their labels don’t fit, instead of clipping a segment under 48 dp; the group name field is 48 dp tall. Automated accessibility checks (touch targets, labels, text contrast) now run on the main screens in light, dark and 200% text

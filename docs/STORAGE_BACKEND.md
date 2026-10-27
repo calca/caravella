@@ -12,7 +12,7 @@ For where this fits in the wider codebase, see [caravella_core reference § Stor
 
 ## Backend 1: SQLite (default) — `SqliteExpenseGroupRepository`
 
-`packages/caravella_core/lib/data/sqlite_expense_group_repository.dart`. Uses `sqflite`, database file `expense_groups.db`, `_databaseVersion = 6`. Schema creation lives in `sqlite_schema.dart` (`createSqliteSchema`), table name constants in `sqlite_tables.dart`. No in-memory caching — every call reconstructs full `ExpenseGroup` objects via `_loadAllGroups`/`_loadGroupById`/`_mapToGroup`.
+`packages/caravella_core/lib/data/sqlite_expense_group_repository.dart`. Uses `sqflite`, database file `expense_groups.db`, `_databaseVersion = 7`. Schema creation lives in `sqlite_schema.dart` (`createSqliteSchema`), table name constants in `sqlite_tables.dart`. No in-memory caching — every call reconstructs full `ExpenseGroup` objects via `_loadAllGroups`/`_loadGroupById`/`_mapToGroup`.
 
 **Schema** (from `createSqliteSchema`):
 
@@ -31,7 +31,7 @@ categories(id TEXT PK, group_id TEXT NOT NULL, name TEXT NOT NULL,
 
 expenses(id TEXT PK, group_id TEXT NOT NULL, name TEXT NOT NULL, amount REAL, date INTEGER NOT NULL,
          category_id TEXT NOT NULL, paid_by_id TEXT NOT NULL,
-         location_latitude REAL, location_longitude REAL, location_name TEXT, note TEXT,
+         location_latitude REAL, location_longitude REAL, location_name TEXT, location_details TEXT, note TEXT,
          created_by_device_id TEXT, created_by_device_name TEXT, created_by_user_name TEXT,
          updated_by_device_id TEXT, updated_by_device_name TEXT, updated_by_user_name TEXT,
          FK group_id -> groups CASCADE, FK category_id -> categories, FK paid_by_id -> participants)
@@ -54,6 +54,8 @@ paired_device_groups(device_id TEXT NOT NULL, group_id TEXT NOT NULL, granted_at
 ```
 
 **Schema v6** adds the six `created_by_*`/`updated_by_*` columns on `expenses` above — a snapshot (device id, device name, personal "name" setting) of who created the expense and who last modified it, taken at save time by `ExpenseGroupStorageV2.addExpenseToGroup`/`updateExpenseToGroup` (see `ExpenseAuthor`, `packages/caravella_core/lib/model/expense_author.dart`). Nullable and never backfilled — pre-v6 rows simply have no attribution history. `createdBy` is immutable once set (editing an expense preserves it and only re-stamps `updatedBy`).
+
+**Schema v7** adds `expenses.location_details`: the whole `ExpenseLocation` as JSON (`toJson`: address, street, locality, postal code, country, …). The three `location_*` columns held only coordinates and name, so a place from the automatic location — a locality but no name — read back as bare coordinates. `SqliteGroupMapper` reads the JSON when present and falls back to the three columns (still written, for older readers and for rows saved before v7, which keep what they had).
 
 Indexes: `idx_groups_timestamp(timestamp DESC)`, `idx_groups_pinned(pinned, archived)`, `idx_participants_group`, `idx_categories_group`, `idx_expenses_group`, `idx_expenses_date(date DESC)`, `idx_groups_updated_at`, `idx_groups_deleted`.
 
