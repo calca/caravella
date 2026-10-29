@@ -8,6 +8,7 @@ import '../themes/form_theme.dart';
 import '../themes/caravella_themes.dart';
 import 'card_outline.dart';
 import 'form_pill.dart';
+import 'inline_entry_field.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports inline add-item action shown within the sheet.
@@ -216,9 +217,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     });
   }
 
-  Future<void> _commitInlineAdd() async {
-    final val = _inlineController.text.trim();
-    if (val.isEmpty || widget.onAddItemInline == null) return;
+  /// Adds [val] (already trimmed by the field); false keeps it in the field.
+  Future<bool> _commitInlineAdd(String val) async {
+    if (widget.onAddItemInline == null) return false;
 
     // Check for duplicates (case-insensitive)
     final lower = val.toLowerCase();
@@ -234,7 +235,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
           type: ToastType.info,
         );
       }
-      return;
+      return false;
     }
 
     try {
@@ -257,10 +258,12 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         // Selection is handled by the onAddItemInline callback chain.
         await _closeSheetSafely();
       }
+      return true;
     } catch (e) {
       if (mounted) {
         AppToast.show(context, 'Error adding item: $e', type: ToastType.error);
       }
+      return false;
     }
   }
 
@@ -278,51 +281,18 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   static const int searchFrom = 9;
 
   Widget _buildInlineAddRow() {
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    // Same field as the expense description: a raised rounded field with a
-    // hairline that turns into the primary color while typing.
     return Padding(
       padding: const EdgeInsets.only(top: 12),
-      child: TextField(
+      child: InlineEntryField(
         controller: _inlineController,
         focusNode: _inlineFocus,
-        autofocus: true,
-        textCapitalization: TextCapitalization.sentences,
-        style: FormTheme.getFieldTextStyle(context),
-        decoration:
-            FormTheme.getCardDecoration(
-              fillColor: s.raisedSurface,
-              borderColor: CardOutline.colorFor(theme.brightness),
-              focusColor: s.primary,
-              errorColor: s.error,
-              hintText: widget.addItemHint,
-            ).copyWith(
-              suffixIcon: Padding(
-                padding: const EdgeInsets.only(right: 6),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      tooltip: widget.cancelLabel,
-                      icon: const Icon(Icons.close_rounded),
-                      onPressed: _cancelInlineAdd,
-                    ),
-                    IconButton.filled(
-                      tooltip: widget.addLabel,
-                      style: IconButton.styleFrom(
-                        backgroundColor: s.primary,
-                        foregroundColor: s.onPrimary,
-                      ),
-                      icon: const Icon(Icons.check_rounded),
-                      onPressed: _commitInlineAdd,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        textInputAction: TextInputAction.done,
-        onSubmitted: (_) => _commitInlineAdd(),
+        hintText: widget.addItemHint ?? '',
+        commitTooltip: widget.addLabel ?? '',
+        cancelTooltip:
+            widget.cancelLabel ??
+            MaterialLocalizations.of(context).cancelButtonLabel,
+        onCommit: _commitInlineAdd,
+        onCancel: _cancelInlineAdd,
       ),
     );
   }

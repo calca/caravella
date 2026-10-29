@@ -32,6 +32,11 @@ class FormPill extends StatelessWidget {
   /// Icon after the label (e.g. a small × on a removable pill).
   final IconData? trailingIcon;
 
+  /// A value shown as it is, with no action (e.g. "Anna (you)" among the
+  /// people): full strength instead of greyed out like a choice that can't
+  /// be picked right now.
+  final bool inert;
+
   const FormPill({
     super.key,
     required this.label,
@@ -43,6 +48,7 @@ class FormPill extends StatelessWidget {
     this.semanticsLabel,
     this.tooltip,
     this.trailingIcon,
+    this.inert = false,
   });
 
   /// Visual height; the touch target adds [touchMargin] above and below
@@ -68,7 +74,7 @@ class FormPill extends StatelessWidget {
       FormPillStyle.normal => s.onSurface,
       FormPillStyle.add => s.onSurfaceVariant,
     };
-    if (!enabled && !selected) {
+    if (!enabled && !selected && !inert) {
       foreground = foreground.withValues(alpha: 0.6);
     }
     final borderColor = switch (style) {
@@ -143,7 +149,8 @@ class FormPill extends StatelessWidget {
     return Semantics(
       button: enabled,
       selected: selected,
-      enabled: enabled,
+      // An inert pill is plain text to TalkBack, not a disabled button.
+      enabled: inert ? null : enabled,
       label: semanticsLabel ?? label,
       excludeSemantics: true,
       onTap: onTap,
