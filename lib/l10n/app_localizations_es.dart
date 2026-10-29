@@ -2439,4 +2439,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get location_service_disabled =>
       'La ubicación está desactivada: actívala para añadir el lugar';
+
+  @override
+  String get unsplash_load_more_error => 'No se pudieron cargar más fotos';
+
+  @override
+  String get unsplash_retry => 'Reintentar';
 }

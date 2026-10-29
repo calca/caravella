@@ -4547,6 +4547,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Location is off: turn it on to add the place'**
   String get location_service_disabled;
+
+  /// Shown at the end of the Unsplash results when loading the next page fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t load more photos'**
+  String get unsplash_load_more_error;
+
+  /// Button to retry loading the next page of Unsplash results
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get unsplash_retry;
 }
 
 class _AppLocalizationsDelegate

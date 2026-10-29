@@ -2426,4 +2426,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get location_service_disabled =>
       'Location is off: turn it on to add the place';
+
+  @override
+  String get unsplash_load_more_error => 'Couldn’t load more photos';
+
+  @override
+  String get unsplash_retry => 'Retry';
 }

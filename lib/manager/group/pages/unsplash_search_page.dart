@@ -13,10 +13,16 @@ import '../widgets/unsplash_photo_widgets.dart';
 /// Returns the downloaded [File] when the user selects a photo, or null
 /// if cancelled.
 class UnsplashSearchPage extends StatefulWidget {
-  const UnsplashSearchPage({super.key, this.initialQuery});
+  const UnsplashSearchPage({super.key, this.initialQuery, this.search});
 
   /// Optional query to pre-fill and auto-search when the page opens.
   final String? initialQuery;
+
+  /// Fetches one page of results: [UnsplashService.searchPhotos] unless a
+  /// test supplies another.
+  @visibleForTesting
+  final Future<UnsplashSearchResults> Function(String query, {int page})?
+  search;
 
   @override
   State<UnsplashSearchPage> createState() => _UnsplashSearchPageState();
@@ -34,6 +40,7 @@ class UnsplashSearchPage extends StatefulWidget {
 class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
   final _searchController = TextEditingController();
   final _searchFocus = FocusNode();
+  final _scrollController = ScrollController();
   Timer? _debounce;
 
   List<UnsplashPhoto> _results = [];
@@ -42,9 +49,27 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
   String? _errorMessage;
   bool _hasSearched = false;
 
+  /// The query [_results] belong to, the last page loaded and how many the
+  /// search has: scrolling near the end loads the next one.
+  String _query = '';
+  int _page = 0;
+  int _totalPages = 0;
+  bool _isLoadingMore = false;
+  bool _loadMoreFailed = false;
+
+  /// Bumped by every new search, so a page that arrives for an older query
+  /// is dropped.
+  int _generation = 0;
+
+  bool get _hasMore => _page < _totalPages;
+
+  Future<UnsplashSearchResults> _fetch(String query, int page) =>
+      (widget.search ?? UnsplashService.searchPhotos)(query, page: page);
+
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     final initial = widget.initialQuery?.trim() ?? '';
     if (initial.isNotEmpty) {
       _searchController.text = initial;
@@ -63,14 +88,18 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
     _debounce?.cancel();
     _searchController.dispose();
     _searchFocus.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   void _onSearchChanged(String query) {
     _debounce?.cancel();
     if (query.trim().length < 2) {
+      _generation++;
       setState(() {
         _results = [];
+        _page = _totalPages = 0;
+        _isSearching = _isLoadingMore = _loadMoreFailed = false;
         _errorMessage = null;
         _hasSearched = false;
       });
@@ -83,28 +112,85 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
 
   Future<void> _search(String query) async {
     if (query.trim().isEmpty) return;
+    final generation = ++_generation;
     setState(() {
       _isSearching = true;
       _errorMessage = null;
+      _isLoadingMore = _loadMoreFailed = false;
     });
     try {
-      final results = await UnsplashService.searchPhotos(query);
-      if (mounted) {
-        setState(() {
-          _results = results;
-          _isSearching = false;
-          _hasSearched = true;
-        });
-      }
+      final results = await _fetch(query, 1);
+      if (!mounted || generation != _generation) return;
+      setState(() {
+        _query = query;
+        _results = results.photos;
+        _page = 1;
+        _totalPages = results.totalPages;
+        _isSearching = false;
+        _hasSearched = true;
+      });
+      if (_scrollController.hasClients) _scrollController.jumpTo(0);
+      _checkLoadMoreAfterLayout();
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isSearching = false;
-          _hasSearched = true;
-          _errorMessage = e.toString();
-        });
-      }
+      if (!mounted || generation != _generation) return;
+      setState(() {
+        _isSearching = false;
+        _hasSearched = true;
+        _errorMessage = e.toString();
+      });
     }
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.position.extentAfter < 400) _loadMore();
+  }
+
+  /// A page that doesn't fill the screen can't be scrolled to its end, so
+  /// check again once it's laid out.
+  void _checkLoadMoreAfterLayout() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _onScroll();
+    });
+  }
+
+  Future<void> _loadMore() async {
+    if (_isSearching || _isLoadingMore || _loadMoreFailed || !_hasMore) {
+      return;
+    }
+    final generation = _generation;
+    setState(() => _isLoadingMore = true);
+    try {
+      final results = await _fetch(_query, _page + 1);
+      if (!mounted || generation != _generation) return;
+      // Pages can overlap when Unsplash reorders results in between.
+      final seen = {for (final photo in _results) photo.id};
+      setState(() {
+        _results = [
+          ..._results,
+          ...results.photos.where((photo) => seen.add(photo.id)),
+        ];
+        _page++;
+        _totalPages = results.totalPages;
+        _isLoadingMore = false;
+      });
+      _checkLoadMoreAfterLayout();
+    } catch (e) {
+      if (!mounted || generation != _generation) return;
+      LoggerService.warning(
+        'Failed to load Unsplash page ${_page + 1}: $e',
+        name: 'api.unsplash',
+      );
+      setState(() {
+        _isLoadingMore = false;
+        _loadMoreFailed = true;
+      });
+    }
+  }
+
+  void _retryLoadMore() {
+    setState(() => _loadMoreFailed = false);
+    _loadMore();
   }
 
   Future<void> _previewPhoto(UnsplashPhoto photo) async {
@@ -320,18 +406,52 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
       );
     }
 
-    return GridView.builder(
-      padding: const EdgeInsets.all(8),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 4,
-        crossAxisSpacing: 4,
-      ),
-      itemCount: _results.length,
-      itemBuilder: (context, index) {
-        final photo = _results[index];
-        return PhotoTile(photo: photo, onTap: () => _previewPhoto(photo));
-      },
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.all(8),
+          sliver: SliverGrid.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+            ),
+            itemCount: _results.length,
+            itemBuilder: (context, index) {
+              final photo = _results[index];
+              return PhotoTile(photo: photo, onTap: () => _previewPhoto(photo));
+            },
+          ),
+        ),
+        if (_isLoadingMore || _loadMoreFailed)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+              child: Center(
+                child: _loadMoreFailed
+                    ? Column(
+                        children: [
+                          Text(
+                            loc.unsplash_load_more_error,
+                            style: AppTextStyles.subtle(context),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 4),
+                          TextButton(
+                            onPressed: _retryLoadMore,
+                            child: Text(loc.unsplash_retry),
+                          ),
+                        ],
+                      )
+                    : const SizedBox.square(
+                        dimension: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
