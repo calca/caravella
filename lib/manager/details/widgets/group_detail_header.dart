@@ -62,8 +62,8 @@ class GroupHeaderBand extends StatelessWidget {
       return PhotoVeil(
         path: photo,
         color: pageColor,
-        solidExtent: 160,
-        fadeExtent: 160,
+        solidExtent: PhotoVeilSpot.groupPage.solidExtent,
+        fadeExtent: PhotoVeilSpot.groupPage.fadeExtent,
       );
     }
     return Stack(

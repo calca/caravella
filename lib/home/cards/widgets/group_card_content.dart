@@ -122,8 +122,8 @@ class GroupCardContent extends StatelessWidget {
               path: photo,
               color: theme.colorScheme.surface,
               // Title and dates sit on the plain surface below.
-              solidExtent: 72,
-              fadeExtent: 180,
+              solidExtent: PhotoVeilSpot.home.solidExtent,
+              fadeExtent: PhotoVeilSpot.home.fadeExtent,
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(
@@ -153,8 +153,8 @@ class GroupCardContent extends StatelessWidget {
                     child: PhotoVeil(
                       path: photo,
                       color: theme.colorScheme.surface,
-                      solidExtent: 72,
-                      fadeExtent: 180,
+                      solidExtent: PhotoVeilSpot.home.solidExtent,
+                      fadeExtent: PhotoVeilSpot.home.fadeExtent,
                     ),
                   ),
                   Padding(

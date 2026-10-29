@@ -97,3 +97,57 @@ class PhotoVeil extends StatelessWidget {
     ),
   );
 }
+
+/// Where a group photo shows with its [PhotoVeil]: the veil's extents and
+/// the size of the photo area on a 412dp-wide phone. The screens build
+/// their veils from these, and the crop page previews each spot with the
+/// same shape and fade, so what it shows is what the app shows.
+class PhotoVeilSpot {
+  final double width;
+  final double height;
+  final double solidExtent;
+  final double fadeExtent;
+
+  const PhotoVeilSpot({
+    required this.width,
+    required this.height,
+    required this.solidExtent,
+    required this.fadeExtent,
+  });
+
+  double get aspectRatio => width / height;
+
+  /// The Home card's photo area (above the figures); title and dates sit
+  /// on the solid part.
+  static const home = PhotoVeilSpot(
+    width: 370,
+    height: 242,
+    solidExtent: 72,
+    fadeExtent: 180,
+  );
+
+  /// The group page's band, from the top of the screen to below the
+  /// figure cards.
+  static const groupPage = PhotoVeilSpot(
+    width: 412,
+    height: 385,
+    solidExtent: 160,
+    fadeExtent: 160,
+  );
+
+  /// A Groups grid card.
+  static const groupsCard = PhotoVeilSpot(
+    width: 179,
+    height: 218,
+    solidExtent: 84,
+    fadeExtent: 110,
+  );
+
+  /// The favorite group's wide card at the top of Groups.
+  static const groupsWideCard = PhotoVeilSpot(
+    width: 372,
+    height: 196,
+    solidExtent: 72,
+    fadeExtent: 100,
+  );
+}

@@ -38,6 +38,7 @@ class GroupPhotoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
+    final spot = wide ? PhotoVeilSpot.groupsWideCard : PhotoVeilSpot.groupsCard;
     final gloc = gen.AppLocalizations.of(context);
 
     final file = group.file;
@@ -69,8 +70,8 @@ class GroupPhotoCard extends StatelessWidget {
             path: file,
             // The same raised surface as the cards without a photo.
             color: s.raisedSurface,
-            solidExtent: wide ? 72 : 84,
-            fadeExtent: wide ? 100 : 110,
+            solidExtent: spot.solidExtent,
+            fadeExtent: spot.fadeExtent,
           )
         // No photo or color: the same raised surface as the Home card.
         : ColoredBox(color: color ?? s.raisedSurface);

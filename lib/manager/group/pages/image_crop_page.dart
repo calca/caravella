@@ -349,6 +349,9 @@ class _CornersPainter extends CustomPainter {
 
 /// How the cropped photo will look: on Home, on the group page and on a
 /// Groups card, each melting into the surface like the real ones.
+/// The cropped photo as each screen shows it: the same shape and the same
+/// [PhotoVeil] fade as the Home card, the group page and a Groups card
+/// ([PhotoVeilSpot]), with bars where the title and dates sit.
 class _Previews extends StatelessWidget {
   final ui.Image image;
   final Rect crop;
@@ -364,14 +367,20 @@ class _Previews extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
-    Widget tile(double aspect, Color surface, String label) => Column(
+    Widget tile(PhotoVeilSpot spot, Color surface, String label) => Column(
       children: [
         AspectRatio(
-          aspectRatio: aspect,
+          aspectRatio: spot.aspectRatio,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: CustomPaint(
-              painter: _PreviewPainter(image: image, crop: crop, fade: surface),
+              painter: _PreviewPainter(
+                image: image,
+                crop: crop,
+                spot: spot,
+                surface: surface,
+                ink: s.onSurface,
+              ),
             ),
           ),
         ),
@@ -387,11 +396,20 @@ class _Previews extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Expanded(flex: 5, child: tile(1.7, s.surface, labels[0])),
+        Expanded(
+          flex: 5,
+          child: tile(PhotoVeilSpot.home, s.surface, labels[0]),
+        ),
         const SizedBox(width: 8),
-        Expanded(flex: 4, child: tile(1.25, s.surfaceContainer, labels[1])),
+        Expanded(
+          flex: 4,
+          child: tile(PhotoVeilSpot.groupPage, s.surfaceContainer, labels[1]),
+        ),
         const SizedBox(width: 8),
-        Expanded(flex: 3, child: tile(0.82, s.raisedSurface, labels[2])),
+        Expanded(
+          flex: 3,
+          child: tile(PhotoVeilSpot.groupsCard, s.raisedSurface, labels[2]),
+        ),
       ],
     );
   }
@@ -400,18 +418,25 @@ class _Previews extends StatelessWidget {
 class _PreviewPainter extends CustomPainter {
   final ui.Image image;
   final Rect crop;
-  final Color fade;
+  final PhotoVeilSpot spot;
+  final Color surface;
+
+  /// Color of the title and dates bars.
+  final Color ink;
 
   _PreviewPainter({
     required this.image,
     required this.crop,
-    required this.fade,
+    required this.spot,
+    required this.surface,
+    required this.ink,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     if (crop.isEmpty) return;
-    // Cover: the middle of the crop in this tile's shape.
+    // Cover, as Image.file with BoxFit.cover: the middle of the crop in
+    // this spot's shape.
     final aspect = size.width / size.height;
     var src = crop;
     if (crop.width / crop.height > aspect) {
@@ -428,21 +453,53 @@ class _PreviewPainter extends CustomPainter {
       dst,
       Paint()..filterQuality = FilterQuality.medium,
     );
+
+    // The screen's own veil, scaled down to the tile.
+    final k = size.height / spot.height;
+    final veil = PhotoVeil(
+      path: '',
+      color: surface,
+      solidExtent: spot.solidExtent * k,
+      fadeExtent: spot.fadeExtent * k,
+    );
     canvas.drawRect(
       dst,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [fade.withValues(alpha: 0), fade],
-          stops: const [0.45, 1],
-        ).createShader(dst),
+      Paint()..shader = veil.gradientFor(size.height).createShader(dst),
+    );
+
+    // Title and dates on the solid part.
+    final bar = Paint()..color = ink.withValues(alpha: 0.16);
+    final top = size.height - spot.solidExtent * k;
+    final left = size.width * 0.08;
+    final barHeight = math.max(3.0, spot.solidExtent * k * 0.16);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(left, top + barHeight, size.width * 0.55, barHeight),
+        Radius.circular(barHeight / 2),
+      ),
+      bar,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(
+          left,
+          top + barHeight * 2.6,
+          size.width * 0.35,
+          barHeight * 0.7,
+        ),
+        Radius.circular(barHeight / 2),
+      ),
+      bar,
     );
   }
 
   @override
   bool shouldRepaint(_PreviewPainter old) =>
-      old.crop != crop || old.image != image || old.fade != fade;
+      old.crop != crop ||
+      old.image != image ||
+      old.spot != spot ||
+      old.surface != surface ||
+      old.ink != ink;
 }
 
 /// What [cropAndResize] crops: the photo file, the part to keep in photo
