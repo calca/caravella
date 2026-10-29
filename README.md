@@ -74,7 +74,15 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshots/en/08.jpg" alt="Dark theme" width="200"/>
 </p>
 
-## 🎉 What's New in v2.2.1
+## 🎉 What's New in v2.3.0
+
+- **Spending Pace**: Statistics start with your average per day (or per month), how many expenses and each person's share
+- **Search Every Expense**: Search finds expenses across all your groups, by name, note or place
+- **Shared Groups, Clearer**: See who shared a group with you, and a dot on the "Shared" badge tells you how sync is doing
+- **Calmer and Consistent**: Dialogs without icons, a tidy list of attachments, and adding people that works the same everywhere
+- **Steadier**: Places keep their name, charts are right around daylight saving time, and the app reads better with large text and TalkBack
+
+### v2.2.1
 
 - **Swipe Between Tabs**: On the group page, swipe to move between Expenses, Balances and Statistics
 - **One Field Style**: Every text field now looks and behaves the same

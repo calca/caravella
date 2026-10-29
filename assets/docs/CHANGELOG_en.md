@@ -1,3 +1,13 @@
+## 2.3.0 (30.10.2026)
+
+- **New**: Statistics open with your spending pace — the average per day (per month for long groups), how many expenses and each person's share — then the chart, the records, who paid, the map and the categories
+- **New**: Search finds expenses too, across all your groups, by name, note or place
+- **New**: A group shared with you says who shared it and welcomes you the first time; a dot on the "Shared" badge shows how sync is doing
+- **Improvements**: Calmer dialogs without icons, and deletions that ask a clear question
+- **Improvements**: Attachments are a tidy list with small previews, and the note has its own space
+- **Improvements**: Adding a person or a category works the same everywhere, and a new expense opens more smoothly
+- **Fixes**: A place found automatically keeps its name; days and charts are right around the change to daylight saving time; better with large text and TalkBack; texts reviewed in every language
+
 ## 2.2.1 (22.10.2026)
 
 - **New**: On the group page, swipe left or right to move between Expenses, Balances and Statistics

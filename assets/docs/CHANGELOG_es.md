@@ -1,3 +1,13 @@
+## 2.3.0 (30.10.2026)
+
+- **Nuevo**: Las Estadísticas empiezan por tu ritmo de gasto – la media por día (por mes en los grupos largos), cuántos gastos y la parte de cada persona – y luego el gráfico, los récords, quién pagó, el mapa y las categorías
+- **Nuevo**: La búsqueda también encuentra gastos, en todos tus grupos, por nombre, nota o lugar
+- **Nuevo**: Un grupo compartido contigo dice quién lo compartió y te da la bienvenida la primera vez; un punto en la etiqueta «Compartido» muestra cómo va la sincronización
+- **Mejoras**: Diálogos más tranquilos, sin iconos, y borrados que hacen una pregunta clara
+- **Mejoras**: Los adjuntos son una lista ordenada con pequeñas vistas previas, y la nota tiene su propio espacio
+- **Mejoras**: Añadir una persona o una categoría funciona igual en todas partes, y un gasto nuevo se abre con más fluidez
+- **Correcciones**: Un lugar encontrado automáticamente conserva su nombre; días y gráficos correctos con el cambio de hora; mejor con texto grande y TalkBack; textos revisados en todos los idiomas
+
 ## 2.2.1 (22.10.2026)
 
 - **Nuevo**: En la página del grupo, desliza a la izquierda o a la derecha para pasar entre Gastos, Saldos y Estadísticas

@@ -1,3 +1,13 @@
+## 2.3.0 (30.10.2026)
+
+- **Novità**: Le Statistiche partono dal ritmo di spesa – la media al giorno (al mese per i gruppi lunghi), quante spese e la quota di ciascuno – poi il grafico, i record, chi ha pagato, la mappa e le categorie
+- **Novità**: La ricerca trova anche le spese, in tutti i tuoi gruppi, per nome, nota o luogo
+- **Novità**: Un gruppo condiviso con te dice chi l'ha condiviso e ti accoglie la prima volta; un pallino sul badge «Condiviso» mostra come va la sincronizzazione
+- **Miglioramenti**: Finestre più calme, senza icone, e cancellazioni che fanno una domanda chiara
+- **Miglioramenti**: Gli allegati sono un elenco ordinato con piccole anteprime, e la nota ha il suo spazio
+- **Miglioramenti**: Aggiungere una persona o una categoria funziona ovunque allo stesso modo, e una nuova spesa si apre in modo più fluido
+- **Correzioni**: Un luogo trovato in automatico mantiene il suo nome; giorni e grafici corretti al cambio dell'ora legale; meglio con testo grande e TalkBack; testi rivisti in tutte le lingue
+
 ## 2.2.1 (22.10.2026)
 
 - **Novità**: Nella pagina del gruppo scorri a sinistra o a destra per passare tra Spese, Saldi e Statistiche
