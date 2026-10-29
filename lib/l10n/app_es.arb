@@ -954,4 +954,6 @@
   ,"location_permission_denied": "Permite el acceso a la ubicación para añadir el lugar"
   ,"location_permission_denied_forever": "El acceso a la ubicación está desactivado para Caravella: actívalo en los ajustes del sistema"
   ,"location_service_disabled": "La ubicación está desactivada: actívala para añadir el lugar"
+  ,"unsplash_load_more_error": "No se pudieron cargar más fotos"
+  ,"unsplash_retry": "Reintentar"
 }

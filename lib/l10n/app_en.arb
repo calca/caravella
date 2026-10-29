@@ -1067,4 +1067,8 @@
   ,"@location_permission_denied_forever": {"description": "Toast when the location permission is permanently denied"}
   ,"location_service_disabled": "Location is off: turn it on to add the place"
   ,"@location_service_disabled": {"description": "Toast when the device location service is off"}
+  ,"unsplash_load_more_error": "Couldn’t load more photos"
+  ,"unsplash_retry": "Retry"
+  ,"@unsplash_load_more_error": {"description": "Shown at the end of the Unsplash results when loading the next page fails"}
+  ,"@unsplash_retry": {"description": "Button to retry loading the next page of Unsplash results"}
 }
