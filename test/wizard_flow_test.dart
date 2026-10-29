@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:zentoast/zentoast.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
@@ -24,14 +25,23 @@ void main() {
           ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
           ChangeNotifierProvider(create: (_) => UserNameNotifier()),
         ],
-        child: MaterialApp(
-          localizationsDelegates: const [
-            gen.AppLocalizations.delegate,
-            ...GlobalMaterialLocalizations.delegates,
-          ],
-          supportedLocales: gen.AppLocalizations.supportedLocales,
-          locale: const Locale('en'),
-          home: GroupCreationWizardPage(fromWelcome: fromWelcome),
+        // Toasts (e.g. "already exists") need their provider, as in the app.
+        child: ToastProvider.create(
+          child: MaterialApp(
+            localizationsDelegates: const [
+              gen.AppLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
+            ],
+            supportedLocales: gen.AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            builder: (context, child) => Stack(
+              children: [
+                ?child,
+                const ToastViewer(alignment: Alignment.bottomCenter),
+              ],
+            ),
+            home: GroupCreationWizardPage(fromWelcome: fromWelcome),
+          ),
         ),
       ),
     );
@@ -153,12 +163,20 @@ void main() {
     // No name set: the placeholder "Me", without "(you)".
     expect(find.text(l10n.default_participant_me), findsOneWidget);
 
+    // The same add flow as the pickers: a pill opens the name field, which
+    // stays open for the next name.
+    expect(find.byType(TextField), findsNothing);
+    await tester.tap(find.text(l10n.add_participant));
+    await tester.pump();
     await tester.enterText(find.byType(TextField), 'Anna');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
+    expect(find.byType(TextField), findsOneWidget);
+    // A name already there is refused and stays in the field.
     await tester.enterText(find.byType(TextField), 'anna');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
+    expect(find.widgetWithText(TextField, 'anna'), findsOneWidget);
 
     expect(form(tester).participants.map((p) => p.name), [
       l10n.default_participant_me,

@@ -58,28 +58,11 @@ class EditableNameList extends StatefulWidget {
 class _EditableNameListState extends State<EditableNameList> {
   int? _editingIndex;
   bool _adding = false;
-  final TextEditingController _editController = TextEditingController();
-  final TextEditingController _addController = TextEditingController();
-  final FocusNode _editFocus = FocusNode();
-  final FocusNode _addFocus = FocusNode();
-
-  @override
-  void dispose() {
-    _editController.dispose();
-    _addController.dispose();
-    _editFocus.dispose();
-    _addFocus.dispose();
-    super.dispose();
-  }
 
   void _startEdit(int index) {
     setState(() {
       _adding = false;
       _editingIndex = index;
-      _editController.text = widget.items[index];
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _editFocus.requestFocus(),
-      );
     });
   }
 
@@ -88,9 +71,8 @@ class _EditableNameListState extends State<EditableNameList> {
     FocusScope.of(context).unfocus();
   }
 
-  void _saveEdit() {
-    final val = _editController.text.trim();
-    if (val.isEmpty || _editingIndex == null) return;
+  bool _saveEdit(String val) {
+    if (_editingIndex == null) return false;
     // Prevent duplicates (case-insensitive) against other items, excluding
     // the item being edited itself (so re-saving with just a case change,
     // e.g. "Mario" -> "mario", isn't flagged as colliding with itself).
@@ -101,21 +83,18 @@ class _EditableNameListState extends State<EditableNameList> {
     );
     if (duplicate) {
       AppToast.show(context, widget.duplicateError, type: ToastType.info);
-      return;
+      return false;
     }
     widget.onEdit(_editingIndex!, val);
     setState(() => _editingIndex = null);
     FocusScope.of(context).unfocus();
+    return true;
   }
 
   void _startAdd() {
     setState(() {
       _editingIndex = null;
       _adding = true;
-      _addController.clear();
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _addFocus.requestFocus(),
-      );
     });
   }
 
@@ -124,20 +103,15 @@ class _EditableNameListState extends State<EditableNameList> {
     FocusScope.of(context).unfocus();
   }
 
-  void _commitAdd() {
-    final val = _addController.text.trim();
-    if (val.isEmpty) return;
+  /// Adds [val]; the field stays open for the next name.
+  bool _commitAdd(String val) {
     final lower = val.toLowerCase();
     if (widget.items.any((e) => e.toLowerCase() == lower)) {
       AppToast.show(context, widget.duplicateError, type: ToastType.info);
-      return;
+      return false;
     }
     widget.onAdd(val);
-    setState(() {
-      _adding = false;
-      _addController.clear();
-    });
-    FocusScope.of(context).unfocus();
+    return true;
   }
 
   Widget _buildStaticRow(int index, String name) {
@@ -182,85 +156,38 @@ class _EditableNameListState extends State<EditableNameList> {
     );
   }
 
-  Widget _buildEditRow() => _buildInputRow(
-    controller: _editController,
-    focusNode: _editFocus,
-    commitTooltip: widget.saveTooltip,
-    onCommit: _saveEdit,
-    onCancel: _cancelEdit,
+  Widget _buildEditRow(int index) => Padding(
+    padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+    child: InlineEntryField(
+      key: ValueKey('edit-$index'),
+      initialText: widget.items[index],
+      hintText: widget.hintLabel,
+      commitTooltip: widget.saveTooltip,
+      cancelTooltip: widget.cancelTooltip,
+      onCommit: _saveEdit,
+      onCancel: _cancelEdit,
+    ),
   );
 
-  Widget _buildAddRow() => _buildInputRow(
-    controller: _addController,
-    focusNode: _addFocus,
-    commitTooltip: widget.addTooltip,
-    onCommit: _commitAdd,
-    onCancel: _cancelAdd,
+  Widget _buildAddRow() => Padding(
+    padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+    child: InlineEntryField(
+      key: const ValueKey('add'),
+      hintText: widget.hintLabel,
+      commitTooltip: widget.addTooltip,
+      cancelTooltip: widget.cancelTooltip,
+      keepOpen: true,
+      onCommit: _commitAdd,
+      onCancel: _cancelAdd,
+    ),
   );
-
-  /// The same field as the expense description and the pickers' add field:
-  /// a rounded field with a hairline that turns primary while typing, then
-  /// cancel and a filled confirm button.
-  Widget _buildInputRow({
-    required TextEditingController controller,
-    required FocusNode focusNode,
-    required String commitTooltip,
-    required VoidCallback onCommit,
-    required VoidCallback onCancel,
-  }) {
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        autofocus: true,
-        textCapitalization: TextCapitalization.sentences,
-        style: FormTheme.getFieldTextStyle(context),
-        decoration:
-            FormTheme.getCardDecoration(
-              fillColor: s.raisedSurface,
-              borderColor: CardOutline.colorFor(theme.brightness),
-              focusColor: s.primary,
-              errorColor: s.error,
-              hintText: widget.hintLabel,
-            ).copyWith(
-              suffixIcon: Padding(
-                padding: const EdgeInsets.only(right: 6),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      tooltip: widget.cancelTooltip,
-                      icon: const Icon(Icons.close_rounded),
-                      onPressed: onCancel,
-                    ),
-                    IconButton.filled(
-                      tooltip: commitTooltip,
-                      style: IconButton.styleFrom(
-                        backgroundColor: s.primary,
-                        foregroundColor: s.onPrimary,
-                      ),
-                      icon: const Icon(Icons.check_rounded),
-                      onPressed: onCommit,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        textInputAction: TextInputAction.done,
-        onSubmitted: (_) => onCommit(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final s = Theme.of(context).colorScheme;
     final rows = <Widget>[
       ...List.generate(widget.items.length, (index) {
-        if (_editingIndex == index) return _buildEditRow();
+        if (_editingIndex == index) return _buildEditRow(index);
         return _buildStaticRow(index, widget.items[index]);
       }),
       if (_adding)

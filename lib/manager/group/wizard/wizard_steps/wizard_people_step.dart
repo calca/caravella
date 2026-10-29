@@ -17,26 +17,21 @@ class WizardPeopleStep extends StatefulWidget {
 }
 
 class _WizardPeopleStepState extends State<WizardPeopleStep> {
-  final _name = TextEditingController();
-  final _focus = FocusNode();
+  /// Whether the name field is open (after "Add participant").
+  bool _adding = false;
 
-  @override
-  void dispose() {
-    _name.dispose();
-    _focus.dispose();
-    super.dispose();
-  }
-
-  void _add(GroupFormState state) {
-    final name = _name.text.trim();
-    if (name.isEmpty) return;
+  /// Adds [name] unless someone already has it; the field stays open for
+  /// the next one.
+  bool _add(GroupFormState state, String name, String duplicateMessage) {
     final exists = state.participants.any(
       (p) => p.name.trim().toLowerCase() == name.toLowerCase(),
     );
-    if (!exists) state.addParticipant(ExpenseParticipant(name: name));
-    _name.clear();
-    // Ready for the next name.
-    _focus.requestFocus();
+    if (exists) {
+      AppToast.show(context, duplicateMessage, type: ToastType.info);
+      return false;
+    }
+    state.addParticipant(ExpenseParticipant(name: name));
+    return true;
   }
 
   @override
@@ -91,35 +86,32 @@ class _WizardPeopleStepState extends State<WizardPeopleStep> {
           ],
         ),
         const SizedBox(height: 16),
-        // Same field as the expense description and the pickers' add field.
-        TextField(
-          controller: _name,
-          focusNode: _focus,
-          textCapitalization: TextCapitalization.words,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => _add(state),
-          onChanged: (_) => setState(() {}),
-          style: FormTheme.getFieldTextStyle(context),
-          decoration:
-              FormTheme.getCardDecoration(
-                fillColor: theme.colorScheme.raisedSurface,
-                borderColor: CardOutline.colorFor(theme.brightness),
-                focusColor: theme.colorScheme.primary,
-                errorColor: theme.colorScheme.error,
-                hintText: gloc.wizard_people_add_hint,
-              ).copyWith(
-                suffixIcon: Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: FieldActionButton(
-                    icon: Icons.add_rounded,
-                    tooltip: gloc.add_participant,
-                    onPressed: _name.text.trim().isEmpty
-                        ? null
-                        : () => _add(state),
-                  ),
-                ),
-              ),
-        ),
+        // The same add flow as the pickers and the group's participants:
+        // a dashed pill that opens the name field.
+        if (_adding)
+          InlineEntryField(
+            hintText: gloc.wizard_people_add_hint,
+            commitTooltip: gloc.add,
+            cancelTooltip: gloc.cancel,
+            textCapitalization: TextCapitalization.words,
+            keepOpen: true,
+            onCommit: (name) => _add(
+              state,
+              name,
+              '${gloc.participant_name} ${gloc.already_exists}',
+            ),
+            onCancel: () => setState(() => _adding = false),
+          )
+        else
+          Align(
+            alignment: Alignment.centerLeft,
+            child: FormPill(
+              icon: Icons.add_rounded,
+              label: gloc.add_participant,
+              style: FormPillStyle.add,
+              onTap: () => setState(() => _adding = true),
+            ),
+          ),
         const SizedBox(height: 16),
         WizardNote(gloc.wizard_participants_section_hint),
       ],
