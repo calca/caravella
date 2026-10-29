@@ -169,31 +169,36 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Name: a big field in its own card, like the creation wizard.
-        SettingsGroup(
-          label: gloc.group_name,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
-              child: GroupTitleField(
+        // Name: the same outlined field as an expense's description,
+        // green while editing and red when empty.
+        Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SettingsLabel(gloc.group_name),
+              GroupTitleField(
                 hintText: gloc.enter_title,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
-                decoration: InputDecoration(
-                  hintText: gloc.enter_title,
-                  // 48 dp touch target (dense borderless fields are 44).
-                  constraints: const BoxConstraints(minHeight: 48),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  errorText: state.title.trim().isEmpty
-                      ? gloc.enter_title
-                      : null,
-                ),
+                decoration:
+                    FormTheme.getCardDecoration(
+                      fillColor: theme.colorScheme.raisedSurface,
+                      borderColor: CardOutline.colorFor(theme.brightness),
+                      focusColor: theme.colorScheme.primary,
+                      errorColor: theme.colorScheme.error,
+                      hintText: gloc.enter_title,
+                    ).copyWith(
+                      // Red border only: the hint inside already says
+                      // what's missing.
+                      error: state.title.trim().isEmpty
+                          ? const SizedBox.shrink()
+                          : null,
+                    ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         SettingsGroup(
           children: [

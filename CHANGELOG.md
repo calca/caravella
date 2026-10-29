@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Group name: in group settings → General and in the “What shall we call it?” step of group creation it’s an outlined field like an expense’s description — green border while editing, red border when left empty (instead of a red message inside the card)
 - Group expenses: a week with a single expense no longer repeats its amount as the week’s total
 - Dialogs are calmer and consistent: no icons; deletions ask a question (“Delete the expense?”, “Delete the group?”) with the red Delete button, the same wherever you delete from; “Leave without saving?” makes “Keep editing” the main button and “Discard” red text below it; restoring a backup, which replaces all your groups, asks “Replace your data?” with a red Replace button
 - Expense form: attachments are a list in a card, like the rest of the app — each file with a small preview (the photo, or a plain grey icon for PDFs and other files instead of the big colored one), its name, type and size, and a larger remove button; “Add attachment” below instead of empty slots. The note has its own “Note” label, is 4 lines tall, and folds back into its pill if left empty

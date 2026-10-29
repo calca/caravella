@@ -220,21 +220,7 @@ class SettingsGroup extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (label != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-              child: Semantics(
-                header: true,
-                child: Text(
-                  label!.toUpperCase(),
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: s.onSurfaceVariant,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.6,
-                  ),
-                ),
-              ),
-            ),
+          if (label != null) SettingsLabel(label!),
           CardOutline(
             borderRadius: radius,
             child: Material(
@@ -258,6 +244,33 @@ class SettingsGroup extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// The small uppercase heading above a [SettingsGroup], also for a field
+/// that stands on its own (e.g. a name field) between groups.
+class SettingsLabel extends StatelessWidget {
+  final String text;
+
+  const SettingsLabel(this.text, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      child: Semantics(
+        header: true,
+        child: Text(
+          text.toUpperCase(),
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.6,
+          ),
+        ),
       ),
     );
   }
