@@ -49,16 +49,14 @@ class UpdateCheckWidget extends StatelessWidget {
             );
           }
 
-          // Show compact card for normal state
+          // Show compact card for normal state: a settings row, so its
+          // pressed highlight fills the rounded card like the other rows.
           return cardBuilder(
             context,
-            ListTile(
-              leading: const Icon(Icons.system_update_outlined),
-              title: Text(
-                localizations.checkForUpdates,
-                style: textTheme.titleMedium,
-              ),
-              subtitle: _buildUpdateSubtitle(context, notifier),
+            SettingsTile(
+              icon: Icons.system_update_outlined,
+              title: localizations.checkForUpdates,
+              subtitleWidget: _buildUpdateSubtitle(context, notifier),
               trailing: _buildUpdateTrailing(context, notifier),
               onTap:
                   notifier.isChecking ||
@@ -186,39 +184,33 @@ class UpdateCheckWidget extends StatelessWidget {
   }
 
   Widget _buildUpdateSubtitle(BuildContext context, UpdateNotifier notifier) {
-    final textTheme = Theme.of(context).textTheme;
-
     if (notifier.isChecking) {
-      return Text(localizations.checkingForUpdates, style: textTheme.bodySmall);
+      return Text(localizations.checkingForUpdates);
     }
 
     if (notifier.isDownloading) {
-      return Text(localizations.updateDownloading, style: textTheme.bodySmall);
+      return Text(localizations.updateDownloading);
     }
 
     if (notifier.isInstalling) {
-      return Text(localizations.updateInstalling, style: textTheme.bodySmall);
+      return Text(localizations.updateInstalling);
     }
 
     if (notifier.error != null) {
       return Text(
         localizations.updateError,
-        style: textTheme.bodySmall?.copyWith(
-          color: Theme.of(context).colorScheme.error,
-        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
       );
     }
 
     if (notifier.updateAvailable) {
       return Text(
         localizations.updateAvailableDesc,
-        style: textTheme.bodySmall?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
       );
     }
 
-    return Text(localizations.checkForUpdatesDesc, style: textTheme.bodySmall);
+    return Text(localizations.checkForUpdatesDesc);
   }
 
   Widget? _buildUpdateTrailing(BuildContext context, UpdateNotifier notifier) {
@@ -239,7 +231,8 @@ class UpdateCheckWidget extends StatelessWidget {
       );
     }
 
-    return const Icon(Icons.arrow_forward_ios, size: 16);
+    // null: the row draws its usual chevron.
+    return null;
   }
 
   Future<void> _handleUpdateCheck(

@@ -122,9 +122,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       if (Platform.isAndroid && GmsIntegrations.instance.appUpdates != null)
         GmsIntegrations.instance.appUpdates!.buildUpdateCheckWidget(
           localizations: AppUpdateLocalizations(loc),
-          cardBuilder: (context, child) => SettingsGroup(
-            children: [Padding(padding: const EdgeInsets.all(4), child: child)],
-          ),
+          cardBuilder: (context, child) => SettingsGroup(children: [child]),
         ),
       SettingsGroup(
         label: loc.changelog_title,
