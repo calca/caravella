@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Group settings → General: the name is an outlined field like an expense’s description — green border while editing, red border when left empty (instead of a red message inside the card)
+- Group expenses: a week with a single expense no longer repeats its amount as the week’s total
 - Dialogs are calmer and consistent: no icons; deletions ask a question (“Delete the expense?”, “Delete the group?”) with the red Delete button, the same wherever you delete from; “Leave without saving?” makes “Keep editing” the main button and “Discard” red text below it; restoring a backup, which replaces all your groups, asks “Replace your data?” with a red Replace button
 - Expense form: attachments are a list in a card, like the rest of the app — each file with a small preview (the photo, or a plain grey icon for PDFs and other files instead of the big colored one), its name, type and size, and a larger remove button; “Add attachment” below instead of empty slots. The note has its own “Note” label, is 4 lines tall, and folds back into its pill if left empty
 - Group page: the header shows Total and Today side by side at full size (the per-person card was too narrow and shrank its amount); the per-person share moved to Statistics, in the spending pace card, and opens Balances as a “Share per person” card (split equally among the people), the reference the +/− amounts are measured against
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group page: tap the “Shared” badge to open the group’s synchronization; the ⋯ menu no longer repeats Map, which opens from its card in Statistics
 
 ### Fixed
+- Unsplash photo search showed only the first 30 results: more photos now load as you scroll down, with a “Retry” button if the connection drops
 - Settings → What’s new: “Check for updates” is a settings row like the others (icon in a circle, bold title); when pressed, its highlight fills the rounded card instead of a square grey box inside it
 - Long lists of people or categories: the “Add participant” / “Add category” button at the end sat under the system navigation bar; it now has room below it
 - Attachment viewer: with more than one attachment the buttons (back, “1 / 2”, share, delete) sat in the middle of the photo; they’re back at the top

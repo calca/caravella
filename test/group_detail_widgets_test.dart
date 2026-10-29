@@ -1,4 +1,5 @@
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
@@ -106,6 +107,30 @@ void main() {
       ),
     );
     expect(find.text('THIS WEEK'), findsOneWidget);
+  });
+
+  testWidgets('a week total shows only with more than one expense', (
+    tester,
+  ) async {
+    bool isAmount(Widget w, double v) => w is CurrencyDisplay && w.value == v;
+    await tester.pumpWidget(
+      _wrap(
+        WeekGroupedExpenseSliver(
+          expenses: [
+            _expense('Breakfast', 10, DateTime(2025, 3, 4), _anna),
+            _expense('Lunch', 20, DateTime(2025, 3, 6), _luca),
+            _expense('Taxi', 15, DateTime(2025, 3, 12), _luca),
+          ],
+          currency: '€',
+          onExpenseTap: (_) {},
+        ),
+        sliver: true,
+      ),
+    );
+    // Two expenses: the week shows 30.
+    expect(find.byWidgetPredicate((w) => isAmount(w, 30)), findsOneWidget);
+    // One expense: 15 only on its row, not again as the week's total.
+    expect(find.byWidgetPredicate((w) => isAmount(w, 15)), findsOneWidget);
   });
 
   testWidgets('balances show who gets back, who owes and how to settle', (

@@ -2377,4 +2377,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get location_service_disabled => '定位服务已关闭：请开启以添加地点';
+
+  @override
+  String get unsplash_load_more_error => '无法加载更多照片';
+
+  @override
+  String get unsplash_retry => '重试';
 }

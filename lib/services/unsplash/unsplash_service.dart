@@ -6,6 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'unsplash_photo.dart';
 
+/// One page of an Unsplash search, with the search's page count.
+typedef UnsplashSearchResults = ({List<UnsplashPhoto> photos, int totalPages});
+
 /// Service for searching and downloading photos from the Unsplash API.
 ///
 /// Requires an API access key provided via `--dart-define=UNSPLASH_ACCESS_KEY=...`.
@@ -26,20 +29,22 @@ class UnsplashService {
 
   /// Searches Unsplash for photos matching [query].
   ///
-  /// Returns a list of [UnsplashPhoto] results (up to [perPage] items).
+  /// Returns one [page] of [UnsplashPhoto] results (up to [perPage] items,
+  /// 30 is the API maximum) and how many pages the search has in all.
   /// Throws on network errors or invalid responses.
-  static Future<List<UnsplashPhoto>> searchPhotos(
+  static Future<UnsplashSearchResults> searchPhotos(
     String query, {
     int page = 1,
     int perPage = 30,
   }) async {
-    if (query.trim().isEmpty) return [];
+    const empty = (photos: <UnsplashPhoto>[], totalPages: 0);
+    if (query.trim().isEmpty) return empty;
     if (!isAvailable) {
       LoggerService.warning(
         'Unsplash access key not configured',
         name: 'api.unsplash',
       );
-      return [];
+      return empty;
     }
 
     final url = Uri.parse(
@@ -61,11 +66,13 @@ class UnsplashService {
         final photos = results
             .map((e) => UnsplashPhoto.fromJson(e as Map<String, dynamic>))
             .toList();
+        final totalPages = (body['total_pages'] as num?)?.toInt() ?? page;
         LoggerService.info(
-          'Unsplash search for "$query" returned ${photos.length} results',
+          'Unsplash search for "$query" page $page/$totalPages returned '
+          '${photos.length} results',
           name: 'api.unsplash',
         );
-        return photos;
+        return (photos: photos, totalPages: totalPages);
       } else if (response.statusCode == 401) {
         LoggerService.warning(
           'Unsplash access key is invalid or unauthorized',

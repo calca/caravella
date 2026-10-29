@@ -7,7 +7,8 @@ import 'package:material_ui/material_ui.dart';
 import 'expense_day_row.dart';
 
 /// Expenses of a group as a sliver: one card per calendar week (Monday to
-/// Sunday, newest first) with the week and its total above it; each row
+/// Sunday, newest first) with the week and, when it has more than one
+/// expense, its total above it; each row
 /// ([ExpenseDayRow]) shows its day like a calendar. Rows open
 /// [onExpenseTap].
 class WeekGroupedExpenseSliver extends StatelessWidget {
@@ -131,15 +132,18 @@ class _WeekSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                CurrencyDisplay(
-                  value: total,
-                  currency: currency,
-                  valueFontSize: 13,
-                  currencyFontSize: 11,
-                  showDecimals: true,
-                  color: s.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
-                ),
+                // With one expense the total is that expense's amount,
+                // already on its row.
+                if (expenses.length > 1)
+                  CurrencyDisplay(
+                    value: total,
+                    currency: currency,
+                    valueFontSize: 13,
+                    currencyFontSize: 11,
+                    showDecimals: true,
+                    color: s.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
               ],
             ),
           ),
