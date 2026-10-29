@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group page: tap the “Shared” badge to open the group’s synchronization; the ⋯ menu no longer repeats Map, which opens from its card in Statistics
 
 ### Fixed
+- Settings → What’s new: “Check for updates” is a settings row like the others (icon in a circle, bold title); when pressed, its highlight fills the rounded card instead of a square grey box inside it
 - Long lists of people or categories: the “Add participant” / “Add category” button at the end sat under the system navigation bar; it now has room below it
 - Attachment viewer: with more than one attachment the buttons (back, “1 / 2”, share, delete) sat in the middle of the photo; they’re back at the top
 - Expense form: in groups with more than five people or categories, picking one from the full list made the “...” pill disappear (it took the choice’s name), leaving no way back to the list; the choice now shows as its own pill and “...” stays
