@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group page: tap the “Shared” badge to open the group’s synchronization; the ⋯ menu no longer repeats Map, which opens from its card in Statistics
 
 ### Fixed
+- Group creation, “Who’s participating?”: the “+” at the end of the name field is a small round button inside the field (it was a tall shape sticking out of it); people are white pills with their initials in a light circle, like the app’s other choices, instead of black ones, and “Anna (you)” no longer looks greyed out. The “✓” of the add field in the people and category pickers gets the same round button
 - Unsplash photo search showed only the first 30 results: more photos now load as you scroll down, with a “Retry” button if the connection drops
 - Settings → What’s new: “Check for updates” is a settings row like the others (icon in a circle, bold title); when pressed, its highlight fills the rounded card instead of a square grey box inside it
 - Long lists of people or categories: the “Add participant” / “Add category” button at the end sat under the system navigation bar; it now has room below it

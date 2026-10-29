@@ -32,6 +32,7 @@ export 'widgets/photo_veil.dart';
 export 'widgets/media_top_bar.dart';
 export 'widgets/pill_segmented_control.dart';
 export 'widgets/status_bar_fade.dart';
+export 'widgets/field_action_button.dart';
 export 'widgets/settings_list.dart';
 export 'widgets/search_widgets.dart';
 export 'widgets/round_back_button.dart';

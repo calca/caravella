@@ -8,6 +8,7 @@ import '../themes/form_theme.dart';
 import '../themes/caravella_themes.dart';
 import 'card_outline.dart';
 import 'form_pill.dart';
+import 'field_action_button.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports inline add-item action shown within the sheet.
@@ -308,13 +309,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
                       icon: const Icon(Icons.close_rounded),
                       onPressed: _cancelInlineAdd,
                     ),
-                    IconButton.filled(
+                    FieldActionButton(
+                      icon: Icons.check_rounded,
                       tooltip: widget.addLabel,
-                      style: IconButton.styleFrom(
-                        backgroundColor: s.primary,
-                        foregroundColor: s.onPrimary,
-                      ),
-                      icon: const Icon(Icons.check_rounded),
                       onPressed: _commitInlineAdd,
                     ),
                   ],

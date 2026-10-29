@@ -96,4 +96,27 @@ void main() {
     await tester.tapAt(Offset(rect.center.dx, rect.top + 1));
     expect(taps, 1);
   });
+
+  testWidgets('an inert pill is full strength, not a disabled choice', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    Color labelColor() => tester.widget<Text>(find.text('Anna')).style!.color!;
+
+    await tester.pumpWidget(wrap(const FormPill(label: 'Anna')));
+    final disabled = labelColor();
+    expect(
+      tester.getSemantics(find.byType(FormPill)),
+      isSemantics(label: 'Anna', hasEnabledState: true, isEnabled: false),
+    );
+
+    await tester.pumpWidget(wrap(const FormPill(label: 'Anna', inert: true)));
+    expect(labelColor().a, 1);
+    expect(labelColor().a, greaterThan(disabled.a));
+    expect(
+      tester.getSemantics(find.byType(FormPill)),
+      isSemantics(label: 'Anna', hasEnabledState: false),
+    );
+    handle.dispose();
+  });
 }

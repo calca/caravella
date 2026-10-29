@@ -51,9 +51,7 @@ void main() {
   });
 
   testWidgets('without an action there is no button', (tester) async {
-    await tester.pumpWidget(
-      _app((context) => AppToast.show(context, 'Saved')),
-    );
+    await tester.pumpWidget(_app((context) => AppToast.show(context, 'Saved')));
     await tester.tap(find.text('show'));
     await tester.pumpAndSettle();
     expect(find.text('Saved'), findsOneWidget);

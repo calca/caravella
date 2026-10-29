@@ -47,16 +47,15 @@ class _WizardPeopleStepState extends State<WizardPeopleStep> {
     final state = context.watch<GroupFormState>();
     final people = state.participants;
 
-    Widget avatar(String name, {required bool selected}) => CircleAvatar(
+    // Initials in a neutral circle, like the settings rows' icons.
+    Widget avatar(String name) => CircleAvatar(
       radius: 13,
-      backgroundColor: selected
-          ? s.onPrimary.withValues(alpha: 0.2)
-          : s.surfaceContainerHighest,
+      backgroundColor: s.onSurface.withValues(alpha: 0.06),
       child: Text(
         nameInitials(name),
         style: theme.textTheme.labelSmall?.copyWith(
           fontWeight: FontWeight.w800,
-          color: selected ? s.onPrimary : s.onSurface,
+          color: s.onSurface,
         ),
       ),
     );
@@ -73,18 +72,18 @@ class _WizardPeopleStepState extends State<WizardPeopleStep> {
             for (final (i, p) in people.indexed)
               i == 0
                   ? FormPill(
-                      leading: avatar(p.name, selected: true),
+                      leading: avatar(p.name),
                       // "Me" stays "Me"; a real name gets "(you)".
                       label: p.name == gloc.default_participant_me
                           ? p.name
                           : gloc.wizard_people_you(p.name),
-                      style: FormPillStyle.selected,
+                      // Not removable, but not a disabled choice either.
+                      inert: true,
                     )
                   : FormPill(
-                      leading: avatar(p.name, selected: true),
+                      leading: avatar(p.name),
                       label: p.name,
                       trailingIcon: Icons.close_rounded,
-                      style: FormPillStyle.selected,
                       semanticsLabel: gloc.wizard_people_remove(p.name),
                       tooltip: gloc.wizard_people_remove(p.name),
                       onTap: () => state.removeParticipant(i),
@@ -111,16 +110,12 @@ class _WizardPeopleStepState extends State<WizardPeopleStep> {
               ).copyWith(
                 suffixIcon: Padding(
                   padding: const EdgeInsets.only(right: 6),
-                  child: IconButton.filled(
+                  child: FieldActionButton(
+                    icon: Icons.add_rounded,
+                    tooltip: gloc.add_participant,
                     onPressed: _name.text.trim().isEmpty
                         ? null
                         : () => _add(state),
-                    tooltip: gloc.add_participant,
-                    style: IconButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: theme.colorScheme.onPrimary,
-                    ),
-                    icon: const Icon(Icons.add_rounded),
                   ),
                 ),
               ),
