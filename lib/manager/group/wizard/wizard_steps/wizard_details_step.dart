@@ -77,25 +77,25 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
       eyebrow: eyebrow,
       title: gloc.wizard_details_title,
       children: [
-        WizardCard(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-          child: TextField(
-            controller: _title,
-            autofocus: true,
-            textCapitalization: TextCapitalization.sentences,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (_) {
-              if (_title.text.trim().isNotEmpty) widget.onSubmitted();
-            },
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-            decoration: InputDecoration(
-              hintText: gloc.enter_title,
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-            ),
+        // Same outlined field as the group's General settings and an
+        // expense's description.
+        TextField(
+          controller: _title,
+          autofocus: true,
+          textCapitalization: TextCapitalization.sentences,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) {
+            if (_title.text.trim().isNotEmpty) widget.onSubmitted();
+          },
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+          decoration: FormTheme.getCardDecoration(
+            fillColor: theme.colorScheme.raisedSurface,
+            borderColor: CardOutline.colorFor(theme.brightness),
+            focusColor: theme.colorScheme.primary,
+            errorColor: theme.colorScheme.error,
+            hintText: gloc.enter_title,
           ),
         ),
         const SizedBox(height: 20),
