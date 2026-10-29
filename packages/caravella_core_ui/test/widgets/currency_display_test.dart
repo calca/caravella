@@ -31,10 +31,14 @@ void main() {
   });
 
   group('CurrencyDisplay widget', () {
-    testWidgets('renders the integer part and currency code', (tester) async {
+    testWidgets('renders the integer part and currency code', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(body: CurrencyDisplay(value: 42.5, currency: 'EUR')),
+          home: Scaffold(
+            body: CurrencyDisplay(value: 42.5, currency: 'EUR'),
+          ),
         ),
       );
 
