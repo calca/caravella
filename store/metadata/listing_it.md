@@ -8,7 +8,13 @@ Dividi le spese di gruppo, scopri chi deve a chi e sincronizza con gli amici.
 
 Caravella è il modo più semplice per dividere le spese con amici, famiglia e coinquilini. Crea un gruppo per un viaggio, una casa condivisa o un evento, aggiungi quello che spende ognuno e Caravella ti dice chi deve a chi — senza fogli di calcolo e senza discussioni.
 
-NOVITÀ 2.2: UN NUOVO LOOK
+NOVITÀ 2.3: PIÙ FLUIDA E PIÙ CHIARA
+• Le Statistiche partono dal ritmo di spesa: la media al giorno, quante spese e la quota di ciascuno
+• La ricerca trova le spese in tutti i tuoi gruppi, per nome, nota o luogo
+• I gruppi condivisi con te dicono chi li ha condivisi, e un pallino mostra come va la sincronizzazione
+• Finestre più calme, allegati in un elenco ordinato e un solo modo per aggiungere persone
+
+UN DESIGN CHIARO E CALMO
 • Una Home più chiara: il tuo gruppo con il totale e l'andamento della spesa, e sotto le ultime spese
 • Crei un gruppo in pochi passi e aggiungi subito gli amici
 • Nuova pagina del gruppo con spese, saldi e statistiche a portata di tocco
@@ -29,9 +35,9 @@ AGGIUNGI SPESE IN UN ATTIMO
 
 SAPPI CHI DEVE A CHI
 • Saldi e conguagli calcolati automaticamente
-• Grafici settimanali e mensili per ogni gruppo
+• Ritmo di spesa, grafici e record per ogni gruppo
 • Ripartizione per partecipante e categoria
-• Ricerca veloce con filtri e vista calendario
+• Cerca gruppi e spese, con filtri e vista calendario
 
 PENSATA PER VIAGGI, CASE ED EVENTI
 • Più gruppi con categorie personalizzate e modelli di gruppo
