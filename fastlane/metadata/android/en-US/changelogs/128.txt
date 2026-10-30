@@ -1,0 +1,8 @@
+Version 2.3.0 - Smoother and clearer
+
+• Statistics start with your spending pace and each person's share
+• Search finds expenses across all your groups
+• Calmer dialogs and a tidy list of attachments
+• Adding people works the same everywhere
+
+Thanks for using Caravella!

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-10-30
+
 ### Changed
 - Group name: in group settings → General and in the “What shall we call it?” step of group creation it’s an outlined field like an expense’s description — green border while editing, red border when left empty (instead of a red message inside the card)
 - Group expenses: a week with a single expense no longer repeats its amount as the week’s total
@@ -604,7 +606,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.2.1...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/calca/caravella/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/calca/caravella/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/calca/caravella/compare/v2.0.2...v2.2.0
 [2.0.2]: https://github.com/calca/caravella/compare/v2.0.1...v2.0.2
