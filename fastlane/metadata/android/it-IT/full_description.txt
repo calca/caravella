@@ -13,9 +13,9 @@ Caravella è il modo più semplice per dividere le spese con amici, famiglia e c
 
 <b>Sappi chi deve a chi</b>
 • Saldi e pareggi calcolati automaticamente
-• Grafici giorno per giorno, settimanali e mensili
+• Ritmo di spesa, grafici giorno per giorno e mensili
 • Ripartizione per partecipante e categoria
-• Ricerca veloce con filtri
+• Cerca gruppi e spese, con filtri
 
 <b>Sincronizza con gli amici (facoltativo)</b>
 • Condividi un gruppo con i dispositivi sulla stessa rete Wi-Fi, abbinati con un QR code

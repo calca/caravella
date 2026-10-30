@@ -13,9 +13,9 @@ Caravella is the simple way to split expenses with friends, family and roommates
 
 <b>Know who owes whom</b>
 • Automatic balances and settle-up suggestions
-• Day-by-day, weekly and monthly charts
+• Spending pace, day-by-day and monthly charts
 • Breakdown by participant and category
-• Fast search with filters
+• Search groups and expenses, with filters
 
 <b>Sync with friends (optional)</b>
 • Share a group with devices on the same Wi-Fi, paired with a QR code
