@@ -121,7 +121,7 @@ void main() {
     await tester.pump();
     expect(find.text('Amount?'), findsOneWidget);
 
-    await tester.tap(find.text('Open the full form'));
+    await tester.tap(find.byTooltip('Open the full form'));
     expect(calls.opened.single.name, 'Dinner at the port');
   });
 }

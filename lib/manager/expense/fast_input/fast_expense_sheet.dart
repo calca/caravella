@@ -204,31 +204,48 @@ class _FastExpenseSheetState extends State<FastExpenseSheet> {
                 onPayerTap: () => _startMarker('+'),
               ),
             const SizedBox(height: 20),
-            FilledButton(
-              onPressed: input.isComplete && !_saving ? _save : null,
-              style: FilledButton.styleFrom(
-                backgroundColor: s.primary,
-                foregroundColor: s.onPrimary,
-                disabledBackgroundColor: s.surfaceContainerHighest,
-                disabledForegroundColor: s.onSurfaceVariant,
-                elevation: 0,
-                minimumSize: const Size(52, 52),
-                shape: const StadiumBorder(),
-              ),
-              child: Text(
-                buttonLabel,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: input.isComplete ? s.onPrimary : s.onSurfaceVariant,
-                  fontWeight: FontWeight.w700,
+            Row(
+              children: [
+                // The usual form, with what was understood so far: round
+                // like the buttons left of Save in the expense form.
+                IconButton(
+                  tooltip: gloc.fast_input_open_form,
+                  onPressed: () => widget.onOpenForm(input),
+                  icon: const Icon(Icons.arrow_circle_up_outlined, size: 24),
+                  style: IconButton.styleFrom(
+                    backgroundColor: s.raisedSurface,
+                    foregroundColor: s.onSurface,
+                    side: BorderSide(color: CardOutline.colorFor(s.brightness)),
+                    minimumSize: const Size(52, 52),
+                    padding: EdgeInsets.zero,
+                  ),
                 ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(height: 4),
-            TextButton(
-              onPressed: () => widget.onOpenForm(input),
-              style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
-              child: Text(gloc.fast_input_open_form),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: input.isComplete && !_saving ? _save : null,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: s.primary,
+                      foregroundColor: s.onPrimary,
+                      disabledBackgroundColor: s.surfaceContainerHighest,
+                      disabledForegroundColor: s.onSurfaceVariant,
+                      elevation: 0,
+                      minimumSize: const Size(52, 52),
+                      shape: const StadiumBorder(),
+                    ),
+                    child: Text(
+                      buttonLabel,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: input.isComplete
+                            ? s.onPrimary
+                            : s.onSurfaceVariant,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
