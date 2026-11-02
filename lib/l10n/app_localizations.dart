@@ -4565,6 +4565,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get unsplash_retry;
+
+  /// No description provided for @fast_input_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'coffee 5.50 @yesterday #food +Anna'**
+  String get fast_input_hint;
+
+  /// No description provided for @fast_input_field_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense in one line'**
+  String get fast_input_field_label;
+
+  /// No description provided for @fast_input_understood.
+  ///
+  /// In en, this message translates to:
+  /// **'Here’s what I got'**
+  String get fast_input_understood;
+
+  /// No description provided for @fast_input_amount_missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount?'**
+  String get fast_input_amount_missing;
+
+  /// No description provided for @fast_input_new_category.
+  ///
+  /// In en, this message translates to:
+  /// **'New: {name}'**
+  String fast_input_new_category(String name);
+
+  /// No description provided for @fast_input_new_category_note.
+  ///
+  /// In en, this message translates to:
+  /// **'“{name}” isn’t in the group yet: it’s created with the expense'**
+  String fast_input_new_category_note(String name);
+
+  /// No description provided for @fast_input_paid_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid by {name}'**
+  String fast_input_paid_by(String name);
+
+  /// No description provided for @fast_input_unknown_payer.
+  ///
+  /// In en, this message translates to:
+  /// **'+{name} isn’t in the group'**
+  String fast_input_unknown_payer(String name);
+
+  /// No description provided for @fast_input_invalid_date.
+  ///
+  /// In en, this message translates to:
+  /// **'@{word}: not a date'**
+  String fast_input_invalid_date(String word);
+
+  /// No description provided for @fast_input_split_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Split equally between everyone'**
+  String get fast_input_split_all;
+
+  /// No description provided for @fast_input_add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {amount}'**
+  String fast_input_add(String amount);
+
+  /// No description provided for @fast_input_need_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the amount to add'**
+  String get fast_input_need_amount;
+
+  /// No description provided for @fast_input_fix_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix the parts in red'**
+  String get fast_input_fix_first;
+
+  /// No description provided for @fast_input_open_form.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the full form'**
+  String get fast_input_open_form;
+
+  /// No description provided for @fast_input_suggest_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Group categories'**
+  String get fast_input_suggest_categories;
+
+  /// No description provided for @fast_input_suggest_dates.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get fast_input_suggest_dates;
+
+  /// No description provided for @fast_input_suggest_payers.
+  ///
+  /// In en, this message translates to:
+  /// **'Who paid'**
+  String get fast_input_suggest_payers;
+
+  /// No description provided for @fast_input_token_today.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get fast_input_token_today;
+
+  /// No description provided for @fast_input_token_yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'yesterday'**
+  String get fast_input_token_yesterday;
+
+  /// No description provided for @fast_input_yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get fast_input_yesterday;
+
+  /// No description provided for @fast_input_fab_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Write an expense in {group}'**
+  String fast_input_fab_label(String group);
 }
 
 class _AppLocalizationsDelegate

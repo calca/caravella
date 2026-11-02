@@ -4,22 +4,22 @@ import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import '../../../manager/details/pages/expense_group_detail_page.dart';
-import '../../../manager/details/pages/expense_locations_map_page.dart';
 import '../../../manager/details/pages/expense_search_page.dart';
 import '../../../services/receipt_scanner_service.dart';
 import 'add_expense_controller.dart';
 import 'group_card_voice_button.dart';
 
-/// Row of shortcuts under the featured group card on Home: new expense from
-/// a receipt scan (a receipt photo without reading it where scanning isn't
-/// available, e.g. F-Droid), new expense by voice, the group's map and
-/// search. They sit below the floating navigation and are reached by
-/// scrolling (#529). Voice only appears where the device supports it; map
-/// and search are disabled until the group has places / expenses.
+/// Row of shortcuts under the featured group card on Home: the usual
+/// new-expense form (Home's "+" takes the expense in one line, #623), new
+/// expense from a receipt scan (a receipt photo without reading it where
+/// scanning isn't available, e.g. F-Droid), new expense by voice and search.
+/// They sit below the floating navigation and are reached by scrolling
+/// (#529). Voice only appears where the device supports it; search is
+/// disabled until the group has expenses. The map is on the group page.
 class GroupQuickActions extends StatelessWidget {
   final ExpenseGroup group;
 
-  /// Called after an expense is added by scan or voice.
+  /// Called after an expense is added from one of the shortcuts.
   final VoidCallback onExpenseAdded;
 
   const GroupQuickActions({
@@ -32,13 +32,21 @@ class GroupQuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final hasExpenses = group.expenses.isNotEmpty;
-    final hasPlaces = group.expenses.any((e) => e.location != null);
     final canScan = ReceiptScannerService().isAvailable;
 
     void push(Widget page) =>
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
 
     final actions = <Widget>[
+      // The usual form: Home's "+" takes the expense in one line (#623).
+      _QuickAction(
+        icon: Icons.note_add_outlined,
+        label: gloc.add_expense,
+        onTap: () => AddExpenseController(
+          group: group,
+          onExpenseAdded: onExpenseAdded,
+        ).showAddExpenseSheet(context, group),
+      ),
       // Without receipt reading (F-Droid) the same spot takes a photo of
       // the receipt and attaches it, leaving amount and description to
       // the user.
@@ -64,13 +72,6 @@ class GroupQuickActions extends StatelessWidget {
           active: listening,
           onTap: onPressed,
         ),
-      ),
-      _QuickAction(
-        icon: Icons.map_outlined,
-        label: gloc.quick_action_map,
-        onTap: hasPlaces
-            ? () => push(ExpenseLocationsMapPage(group: group))
-            : null,
       ),
       _QuickAction(
         icon: Icons.search_rounded,

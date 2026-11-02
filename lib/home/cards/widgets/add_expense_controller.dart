@@ -9,6 +9,8 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
+import '../../../manager/expense/fast_input/fast_expense_sheet.dart';
+import '../../../manager/expense/fast_input/fast_input_parser.dart';
 import '../../../manager/expense/pages/expense_form_page.dart';
 import '../../../manager/expense/state/expense_form_state.dart';
 import '../../../services/notification_manager.dart';
@@ -104,6 +106,116 @@ class AddExpenseController {
     ).whenComplete(() {
       notifier.clearCurrentGroup();
     });
+  }
+
+  /// Home's "+": the expense in one line (#623). "Open the full form" goes
+  /// on in the usual sheet with what was understood so far.
+  void showFastExpenseSheet(BuildContext context, ExpenseGroup currentGroup) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      useSafeArea: true,
+      sheetAnimationStyle: AppMotion.sheet,
+      builder: (sheetContext) => FastExpenseSheet(
+        group: currentGroup,
+        onSave: (input) => _saveFastExpense(context, currentGroup, input),
+        onOpenForm: (input) {
+          Navigator.of(sheetContext).pop();
+          showAddExpenseSheet(
+            context,
+            currentGroup,
+            initialExpense: ExpenseDetails(
+              id: '',
+              name: input.name,
+              amount: input.amount,
+              paidBy: input.paidBy ?? ExpenseParticipant(name: ''),
+              // A new category is created from the form's own picker.
+              category: input.category ?? ExpenseCategory(name: ''),
+              date: _withTimeNow(input.date),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /// Saves a complete fast-input line, creating its new category first.
+  Future<bool> _saveFastExpense(
+    BuildContext context,
+    ExpenseGroup group,
+    FastInput input,
+  ) async {
+    final gloc = gen.AppLocalizations.of(context);
+    final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
+    try {
+      var category = input.category;
+      if (category == null && input.newCategory != null) {
+        notifier.setCurrentGroup(group);
+        await notifier.addCategory(input.newCategory!);
+        onCategoryAdded?.call();
+        category = notifier.currentGroup?.categories
+            .where((c) => c.name == input.newCategory)
+            .firstOrNull;
+        notifier.clearCurrentGroup();
+      }
+      if (category == null || input.paidBy == null || !input.hasAmount) {
+        return false;
+      }
+      final expense = ExpenseDetails(
+        amount: input.amount,
+        paidBy: input.paidBy!,
+        category: category,
+        date: _withTimeNow(input.date),
+        name: input.name,
+      );
+      await ExpenseGroupStorageV2.addExpenseToGroup(group.id, expense);
+      await notifier.refreshGroup();
+      notifier.notifyGroupUpdated(group.id);
+      await NotificationManager().updateNotificationForGroupById(
+        group.id,
+        gloc,
+      );
+      if (context.mounted) {
+        AppToast.show(
+          context,
+          gloc.expense_added_success,
+          type: ToastType.success,
+        );
+      }
+      RatingService.checkAndPromptForRating();
+      onExpenseAdded();
+      return true;
+    } catch (e, st) {
+      LoggerService.error(
+        'Fast input: failed to save the expense',
+        name: 'manager.expense',
+        error: e,
+        stackTrace: st,
+      );
+      if (context.mounted) {
+        AppToast.show(
+          context,
+          gloc.error_saving_group(e.toString()),
+          type: ToastType.error,
+        );
+      }
+      return false;
+    }
+  }
+
+  /// [day] at the current time of day, so expenses of the same day keep the
+  /// order they were added in.
+  static DateTime _withTimeNow(DateTime day) {
+    final now = DateTime.now();
+    return DateTime(
+      day.year,
+      day.month,
+      day.day,
+      now.hour,
+      now.minute,
+      now.second,
+    );
   }
 
   /// Home's "Scan": opens the camera right away, reads the receipt, then

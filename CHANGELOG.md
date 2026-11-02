@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Write an expense in one line: Home’s “+” opens a field where “coffee 5.50 @yesterday #food +Anna” becomes an expense — the amount, @ for the day (today, yesterday, a weekday, 28/10), # for the category (a new one is created) and + for who paid. While you type @, # or + it suggests the days, the group’s categories and people; under the field it shows what it understood, and “Open the full form” continues in the usual form
+
+### Changed
+- Home shortcuts: “New expense” (the usual form) takes the place of “Map”, which stays on the group page
+
 ### Fixed
 - Group settings → General: going back with the name left empty no longer saves a group without a name — you stay on the page, the name field is focused and a message says the group needs a name
 

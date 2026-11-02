@@ -2448,4 +2448,81 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get unsplash_retry => 'Reintentar';
+
+  @override
+  String get fast_input_hint => 'café 5,50 @ayer #comida +Ana';
+
+  @override
+  String get fast_input_field_label => 'Gasto en una línea';
+
+  @override
+  String get fast_input_understood => 'Lo he entendido así';
+
+  @override
+  String get fast_input_amount_missing => '¿Importe?';
+
+  @override
+  String fast_input_new_category(String name) {
+    return 'Nueva: $name';
+  }
+
+  @override
+  String fast_input_new_category_note(String name) {
+    return '«$name» no está en el grupo: se creará junto con el gasto';
+  }
+
+  @override
+  String fast_input_paid_by(String name) {
+    return 'Pagado por $name';
+  }
+
+  @override
+  String fast_input_unknown_payer(String name) {
+    return '+$name no está en el grupo';
+  }
+
+  @override
+  String fast_input_invalid_date(String word) {
+    return '@$word: fecha no válida';
+  }
+
+  @override
+  String get fast_input_split_all => 'Dividido a partes iguales entre todos';
+
+  @override
+  String fast_input_add(String amount) {
+    return 'Añadir $amount';
+  }
+
+  @override
+  String get fast_input_need_amount => 'Escribe el importe para añadir';
+
+  @override
+  String get fast_input_fix_first => 'Corrige las partes en rojo';
+
+  @override
+  String get fast_input_open_form => 'Abrir el formulario completo';
+
+  @override
+  String get fast_input_suggest_categories => 'Categorías del grupo';
+
+  @override
+  String get fast_input_suggest_dates => 'Cuándo';
+
+  @override
+  String get fast_input_suggest_payers => 'Quién pagó';
+
+  @override
+  String get fast_input_token_today => 'hoy';
+
+  @override
+  String get fast_input_token_yesterday => 'ayer';
+
+  @override
+  String get fast_input_yesterday => 'Ayer';
+
+  @override
+  String fast_input_fab_label(String group) {
+    return 'Escribir un gasto en $group';
+  }
 }

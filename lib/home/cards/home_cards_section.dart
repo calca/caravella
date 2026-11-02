@@ -250,12 +250,14 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             )
           : FloatingNavAction(
               icon: Icons.add_rounded,
-              label: loc.new_expense_in_group(featured.title),
+              label: loc.fast_input_fab_label(featured.title),
+              // Home is for adding fast: the "+" takes the expense in one
+              // line; the usual form is Home's "New expense" quick action.
               onPressed: () => AddExpenseController(
                 group: featured,
                 onExpenseAdded: _handleGroupUpdated,
                 onCategoryAdded: _softLoadActiveGroups,
-              ).showAddExpenseSheet(context, featured),
+              ).showFastExpenseSheet(context, featured),
             ),
     );
   }

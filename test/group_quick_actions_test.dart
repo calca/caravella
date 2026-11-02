@@ -6,7 +6,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
-  testWidgets('home shortcuts: map and search, no overview or share', (
+  testWidgets('home shortcuts: the usual form and search, no map', (
     tester,
   ) async {
     final group = ExpenseGroup(
@@ -26,7 +26,9 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('Map'), findsOneWidget);
+    // Home's "+" writes the expense in one line: the form is a shortcut.
+    expect(find.text('New expense'), findsOneWidget);
+    expect(find.text('Map'), findsNothing);
     expect(find.text('Search'), findsOneWidget);
     expect(find.text('Overview'), findsNothing);
     expect(find.text('Share'), findsNothing);
