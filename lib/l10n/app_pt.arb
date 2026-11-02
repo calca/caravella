@@ -103,6 +103,7 @@
   "@recent_expenses": {"description": "Rótulo para a seção de despesas recentes"},
   "create": "Criar",
   "enter_title": "Digite um nome",
+  "group_name_required": "O grupo precisa de um nome",
   "save": "Salvar",
   "ok": "OK",
   "add_expense": "Nova despesa",

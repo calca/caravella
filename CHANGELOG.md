@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Group settings → General: going back with the name left empty no longer saves a group without a name — you stay on the page, the name field is focused and a message says the group needs a name
+
 ## [2.3.0] - 2026-10-30
 
 ### Changed

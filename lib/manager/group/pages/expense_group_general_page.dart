@@ -97,6 +97,7 @@ class _GeneralPageScaffold extends StatefulWidget {
 class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
   String? _dateError;
   final _formKey = GlobalKey<FormState>();
+  final _titleFocus = FocusNode();
 
   GroupFormState get _state => context.read<GroupFormState>();
   GroupFormController get _controller => context.read<GroupFormController>();
@@ -115,6 +116,12 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
         }
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _titleFocus.dispose();
+    super.dispose();
   }
 
   void _clearDates() {
@@ -178,6 +185,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
             children: [
               SettingsLabel(gloc.group_name),
               GroupTitleField(
+                focusNode: _titleFocus,
                 hintText: gloc.enter_title,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
@@ -305,9 +313,20 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
         builder: (context, _, _) {
           final controller = context.read<GroupFormController>();
           return PopScope(
-            canPop: !controller.hasChanges,
+            canPop: !controller.hasChanges && _state.title.trim().isNotEmpty,
             onPopInvokedWithResult: (didPop, result) async {
               if (didPop) return;
+              // A group can't be left without a name: stay here, point at
+              // the field (already red) and say why.
+              if (_state.title.trim().isEmpty) {
+                _titleFocus.requestFocus();
+                AppToast.show(
+                  context,
+                  gen.AppLocalizations.of(context).group_name_required,
+                  type: ToastType.error,
+                );
+                return;
+              }
               if (controller.hasChanges) {
                 final navigator = Navigator.of(context);
                 ExpenseGroupNotifier? notifier;

@@ -96,6 +96,7 @@
   "create": "Crea",
   "group_name": "Nome",
   "enter_title": "Inserisci un nome",
+  "group_name_required": "Il gruppo ha bisogno di un nome",
   "save": "Salva",
   "cancel": "Annulla",
   "ok": "OK",

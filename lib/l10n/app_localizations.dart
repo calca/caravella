@@ -650,6 +650,12 @@ abstract class AppLocalizations {
   /// **'Enter a name'**
   String get enter_title;
 
+  /// No description provided for @group_name_required.
+  ///
+  /// In en, this message translates to:
+  /// **'The group needs a name'**
+  String get group_name_required;
+
   /// No description provided for @save.
   ///
   /// In en, this message translates to:

@@ -293,6 +293,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enter_title => '输入名称';
 
   @override
+  String get group_name_required => '群组需要一个名称';
+
+  @override
   String get save => '保存';
 
   @override

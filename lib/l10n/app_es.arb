@@ -112,6 +112,7 @@
   "create": "Crear",
   "group_name": "Nombre",
   "enter_title": "Introducir un nombre",
+  "group_name_required": "El grupo necesita un nombre",
   "save": "Guardar",
   "cancel": "Cancelar",
   "ok": "OK",
