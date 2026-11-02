@@ -1072,4 +1072,32 @@
   ,"unsplash_retry": "Retry"
   ,"@unsplash_load_more_error": {"description": "Shown at the end of the Unsplash results when loading the next page fails"}
   ,"@unsplash_retry": {"description": "Button to retry loading the next page of Unsplash results"}
+  ,"fast_input_hint": "coffee 5.50 @yesterday #food +Anna"
+  ,"fast_input_field_label": "Expense in one line"
+  ,"fast_input_understood": "Here’s what I got"
+  ,"fast_input_amount_missing": "Amount?"
+  ,"fast_input_new_category": "New: {name}"
+  ,"@fast_input_new_category": {"placeholders": {"name": {"type": "String"}}}
+  ,"fast_input_new_category_note": "“{name}” isn’t in the group yet: it’s created with the expense"
+  ,"@fast_input_new_category_note": {"placeholders": {"name": {"type": "String"}}}
+  ,"fast_input_paid_by": "Paid by {name}"
+  ,"@fast_input_paid_by": {"placeholders": {"name": {"type": "String"}}}
+  ,"fast_input_unknown_payer": "+{name} isn’t in the group"
+  ,"@fast_input_unknown_payer": {"placeholders": {"name": {"type": "String"}}}
+  ,"fast_input_invalid_date": "@{word}: not a date"
+  ,"@fast_input_invalid_date": {"placeholders": {"word": {"type": "String"}}}
+  ,"fast_input_split_all": "Split equally between everyone"
+  ,"fast_input_add": "Add {amount}"
+  ,"@fast_input_add": {"placeholders": {"amount": {"type": "String"}}}
+  ,"fast_input_need_amount": "Type the amount to add"
+  ,"fast_input_fix_first": "Fix the parts in red"
+  ,"fast_input_open_form": "Open the full form"
+  ,"fast_input_suggest_categories": "Group categories"
+  ,"fast_input_suggest_dates": "When"
+  ,"fast_input_suggest_payers": "Who paid"
+  ,"fast_input_token_today": "today"
+  ,"fast_input_token_yesterday": "yesterday"
+  ,"fast_input_yesterday": "Yesterday"
+  ,"fast_input_fab_label": "Write an expense in {group}"
+  ,"@fast_input_fab_label": {"placeholders": {"group": {"type": "String"}}}
 }

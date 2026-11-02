@@ -2386,4 +2386,81 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get unsplash_retry => '重试';
+
+  @override
+  String get fast_input_hint => '咖啡 5.50 @昨天 #餐饮 +安娜';
+
+  @override
+  String get fast_input_field_label => '一行记一笔支出';
+
+  @override
+  String get fast_input_understood => '识别结果';
+
+  @override
+  String get fast_input_amount_missing => '金额？';
+
+  @override
+  String fast_input_new_category(String name) {
+    return '新建：$name';
+  }
+
+  @override
+  String fast_input_new_category_note(String name) {
+    return '群组中没有“$name”：将随这笔支出一起创建';
+  }
+
+  @override
+  String fast_input_paid_by(String name) {
+    return '由$name支付';
+  }
+
+  @override
+  String fast_input_unknown_payer(String name) {
+    return '+$name 不在群组中';
+  }
+
+  @override
+  String fast_input_invalid_date(String word) {
+    return '@$word：日期无效';
+  }
+
+  @override
+  String get fast_input_split_all => '所有人平摊';
+
+  @override
+  String fast_input_add(String amount) {
+    return '添加 $amount';
+  }
+
+  @override
+  String get fast_input_need_amount => '输入金额后即可添加';
+
+  @override
+  String get fast_input_fix_first => '请修改红色部分';
+
+  @override
+  String get fast_input_open_form => '打开完整表单';
+
+  @override
+  String get fast_input_suggest_categories => '群组类别';
+
+  @override
+  String get fast_input_suggest_dates => '日期';
+
+  @override
+  String get fast_input_suggest_payers => '付款人';
+
+  @override
+  String get fast_input_token_today => '今天';
+
+  @override
+  String get fast_input_token_yesterday => '昨天';
+
+  @override
+  String get fast_input_yesterday => '昨天';
+
+  @override
+  String fast_input_fab_label(String group) {
+    return '在$group中记一笔支出';
+  }
 }
