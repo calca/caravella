@@ -120,6 +120,7 @@
   "create": "Create",
   "group_name": "Name",
   "enter_title": "Enter a name",
+  "group_name_required": "The group needs a name",
   "save": "Save",
   "cancel": "Cancel",
   "ok": "OK",

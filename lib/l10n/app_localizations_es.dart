@@ -297,6 +297,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enter_title => 'Introducir un nombre';
 
   @override
+  String get group_name_required => 'El grupo necesita un nombre';
+
+  @override
   String get save => 'Guardar';
 
   @override

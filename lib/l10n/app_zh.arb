@@ -455,6 +455,7 @@
   ,"today": "今天"
   ,"this_month": "本月"
   ,"enter_title": "输入名称"
+  ,"group_name_required": "群组需要一个名称"
   ,"delete_group": "删除群组"
   ,"delete_group_confirm": "该群组及其所有支出将被删除，且无法撤销。"
   ,"add_expense_fab": "添加支出"

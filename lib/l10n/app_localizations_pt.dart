@@ -299,6 +299,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get enter_title => 'Digite um nome';
 
   @override
+  String get group_name_required => 'O grupo precisa de um nome';
+
+  @override
   String get save => 'Salvar';
 
   @override

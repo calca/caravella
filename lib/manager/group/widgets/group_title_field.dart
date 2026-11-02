@@ -11,6 +11,7 @@ class GroupTitleField extends StatefulWidget {
   final TextAlign textAlign;
   final TextStyle? style;
   final InputDecoration? decoration;
+  final FocusNode? focusNode;
 
   const GroupTitleField({
     super.key,
@@ -19,6 +20,7 @@ class GroupTitleField extends StatefulWidget {
     this.textAlign = TextAlign.start,
     this.style,
     this.decoration,
+    this.focusNode,
   });
 
   @override
@@ -79,6 +81,7 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
       label: widget.hintText,
       child: TextField(
         controller: _controller,
+        focusNode: widget.focusNode,
         style: widget.style ?? FormTheme.getFieldTextStyle(context),
         textAlign: widget.textAlign,
         textInputAction: TextInputAction.next,

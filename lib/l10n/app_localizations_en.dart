@@ -298,6 +298,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enter_title => 'Enter a name';
 
   @override
+  String get group_name_required => 'The group needs a name';
+
+  @override
   String get save => 'Save';
 
   @override
