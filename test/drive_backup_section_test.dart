@@ -7,8 +7,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _FakeStore implements CloudBackupStore {
-  _FakeStore({required this.linked});
+  _FakeStore({required this.linked, this.reachable = true});
   bool linked;
+  bool reachable;
 
   @override
   String get providerName => 'Google Drive';
@@ -27,12 +28,14 @@ class _FakeStore implements CloudBackupStore {
     int keep = 5,
   }) => throw UnimplementedError();
   @override
-  Future<List<CloudBackupEntry>> list() async => const [];
+  Future<List<CloudBackupEntry>> list() async =>
+      reachable ? const [] : throw Exception('offline');
   @override
   Future<List<int>> download(String id) => throw UnimplementedError();
 }
 
-/// Settings → Data, Google Drive section.
+/// Settings → Data, Google Drive section. Outcomes show in the rows, not in
+/// toasts (#618).
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
   tearDown(() => DriveBackupService.debugSetStore(null));
@@ -76,7 +79,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(l10n.drive_backup_now), findsOneWidget);
-    expect(find.text(l10n.drive_backup_none), findsOneWidget);
+    // No groups in this test's storage: nothing to back up yet.
+    expect(find.text(l10n.no_trips_to_backup), findsOneWidget);
     expect(find.text(l10n.drive_backup_restore), findsOneWidget);
     expect(find.text(l10n.drive_backup_weekly), findsOneWidget);
     expect(find.text('me@example.com'), findsOneWidget);
@@ -90,5 +94,36 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(await DriveBackupService.isWeekly(), isTrue);
+  });
+
+  testWidgets('Restore with nothing on Drive says so in its row', (
+    tester,
+  ) async {
+    DriveBackupService.debugSetStore(_FakeStore(linked: true));
+    final l10n = await pump(tester);
+    expect(find.text(l10n.drive_backup_none), findsNothing);
+
+    await tester.tap(find.text(l10n.drive_backup_restore));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.drive_backup_none), findsOneWidget);
+  });
+
+  testWidgets('Drive unreachable: the row that failed says it, in red', (
+    tester,
+  ) async {
+    final store = _FakeStore(linked: true, reachable: false);
+    DriveBackupService.debugSetStore(store);
+    final l10n = await pump(tester);
+
+    await tester.tap(find.text(l10n.drive_backup_restore));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.drive_backup_error), findsOneWidget);
+    expect(find.text(l10n.drive_backup_restore_desc), findsNothing);
+
+    // Tapping again retries; reachable now, the error goes.
+    store.reachable = true;
+    await tester.tap(find.text(l10n.drive_backup_restore));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.drive_backup_error), findsNothing);
   });
 }

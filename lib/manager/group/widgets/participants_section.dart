@@ -9,6 +9,9 @@ class ParticipantsSection extends StatelessWidget {
   final void Function(int, String) onEditParticipant;
   final void Function(int) onRemoveParticipant;
 
+  /// See [EditableNameList.deleteBlockedReason].
+  final String? Function(int index)? deleteBlockedReason;
+
   /// See [EditableNameList.showHeader].
   final bool showHeader;
 
@@ -18,6 +21,7 @@ class ParticipantsSection extends StatelessWidget {
     required this.onAddParticipant,
     required this.onEditParticipant,
     required this.onRemoveParticipant,
+    this.deleteBlockedReason,
     this.showHeader = true,
   });
 
@@ -41,6 +45,7 @@ class ParticipantsSection extends StatelessWidget {
       onAdd: onAddParticipant,
       onEdit: onEditParticipant,
       onDelete: onRemoveParticipant,
+      deleteBlockedReason: deleteBlockedReason,
       itemIcon: AppIcons.participant,
       showEmptyHint: participants.isEmpty,
     );

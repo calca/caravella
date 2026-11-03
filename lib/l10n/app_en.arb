@@ -75,10 +75,6 @@
   "change_image": "Change photo",
   "from_gallery": "From gallery",
   "from_camera": "From camera",
-  "cannot_delete_assigned_participant": "Can’t delete the participant: they’re in one or more expenses",
-  "@cannot_delete_assigned_participant": {"description": "Shown when attempting to delete a participant that is used by existing expenses"},
-  "cannot_delete_assigned_category": "Can’t delete the category: it’s used by one or more expenses",
-  "@cannot_delete_assigned_category": {"description": "Shown when attempting to delete a category that is used by existing expenses"},
   "color": "Color",
   "background": "Background",
   "participants_description": "People sharing costs",
@@ -921,8 +917,6 @@
   ,"@drive_backup_weekly_desc": {"description": "Settings → Data, Google Drive backup"}
   ,"drive_backup_disconnect": "Disconnect"
   ,"@drive_backup_disconnect": {"description": "Settings → Data, Google Drive backup"}
-  ,"drive_backup_saved": "Backup saved to Google Drive"
-  ,"@drive_backup_saved": {"description": "Settings → Data, Google Drive backup"}
   ,"drive_backup_error": "Couldn’t reach Google Drive"
   ,"@drive_backup_error": {"description": "Settings → Data, Google Drive backup"}
   ,"expense_more_details": "More details"
@@ -1059,4 +1053,15 @@
   ,"@invite_friends_message": {"description": "Shared invite text; {link} is the store page of this build (Google Play or F-Droid)", "placeholders": {"link": {"type": "String"}}}
   ,"duplicate_participant_name": "There’s already someone with this name"
   ,"duplicate_category_name": "There’s already a category with this name"
+  ,"cannot_delete_participant_paid": "{count, plural, =1{Paid for 1 expense, so can’t be deleted} other{Paid for {count} expenses, so can’t be deleted}}"
+  ,"cannot_delete_category_used": "{count, plural, =1{Used by 1 expense, so can’t be deleted} other{Used by {count} expenses, so can’t be deleted}}"
+  ,"@cannot_delete_participant_paid": {"description": "Under a person in group settings whose delete button is greyed out: they paid some expenses", "placeholders": {"count": {"type": "int"}}}
+  ,"@cannot_delete_category_used": {"description": "Under a category in group settings whose delete button is greyed out: some expenses use it", "placeholders": {"count": {"type": "int"}}}
+  ,"location_off_short": "Location is off"
+  ,"location_not_allowed_short": "Location not allowed"
+  ,"location_not_found_short": "Location not found"
+  ,"sync_qr_scan_again": "Scan again"
+  ,"@location_off_short": {"description": "In the expense's empty Place pill, after trying to get the current location: device location is off. Keep it short"}
+  ,"@location_not_allowed_short": {"description": "In the expense's empty Place pill: location permission not given. Keep it short"}
+  ,"@location_not_found_short": {"description": "In the expense's empty Place pill: no position found. Keep it short"}
 }

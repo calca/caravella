@@ -173,14 +173,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get from_camera => 'Dalla fotocamera';
 
   @override
-  String get cannot_delete_assigned_participant =>
-      'Impossibile eliminare il partecipante: è assegnato a una o più spese';
-
-  @override
-  String get cannot_delete_assigned_category =>
-      'Impossibile eliminare la categoria: è assegnata a una o più spese';
-
-  @override
   String get color => 'Colore';
 
   @override
@@ -2109,9 +2101,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get drive_backup_disconnect => 'Scollega';
 
   @override
-  String get drive_backup_saved => 'Backup salvato su Google Drive';
-
-  @override
   String get drive_backup_error => 'Impossibile raggiungere Google Drive';
 
   @override
@@ -2424,4 +2413,38 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get duplicate_category_name => 'C’è già una categoria con questo nome';
+
+  @override
+  String cannot_delete_participant_paid(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ha pagato $count spese: non si può eliminare',
+      one: 'Ha pagato 1 spesa: non si può eliminare',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cannot_delete_category_used(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Usata in $count spese: non si può eliminare',
+      one: 'Usata in 1 spesa: non si può eliminare',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get location_off_short => 'Localizzazione disattivata';
+
+  @override
+  String get location_not_allowed_short => 'Posizione non consentita';
+
+  @override
+  String get location_not_found_short => 'Posizione non trovata';
+
+  @override
+  String get sync_qr_scan_again => 'Scansiona di nuovo';
 }

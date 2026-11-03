@@ -247,10 +247,6 @@
   ,"@spent_today": {"description": "Etichetta mostrata prima dell'importo speso oggi"}
   ,"error_saving_group": "Errore durante il salvataggio: {error}"
   ,"@error_saving_group": {"placeholders": {"error": {}}}
-  ,"cannot_delete_assigned_participant": "Impossibile eliminare il partecipante: è assegnato a una o più spese"
-  ,"@cannot_delete_assigned_participant": {"description": "Errore mostrato quando si prova a eliminare un partecipante che ha spese assegnate"}
-  ,"cannot_delete_assigned_category": "Impossibile eliminare la categoria: è assegnata a una o più spese"
-  ,"@cannot_delete_assigned_category": {"description": "Errore mostrato quando si prova a eliminare una categoria che è assegnata a spese"}
   ,"status_active": "Attivi"
   ,"@status_active": {"description": "Etichetta filtro: gruppi attivi"}
   ,"status_archived": "Archiviati"
@@ -831,7 +827,6 @@
   ,"drive_backup_weekly": "Backup settimanale"
   ,"drive_backup_weekly_desc": "Ogni settimana, all’apertura"
   ,"drive_backup_disconnect": "Scollega"
-  ,"drive_backup_saved": "Backup salvato su Google Drive"
   ,"drive_backup_error": "Impossibile raggiungere Google Drive"
   ,"expense_more_details": "Altri dettagli"
   ,"quick_action_photo": "Foto"
@@ -917,4 +912,10 @@
   ,"settings_made_by": "Fatta da {name}"
   ,"duplicate_participant_name": "C’è già una persona con questo nome"
   ,"duplicate_category_name": "C’è già una categoria con questo nome"
+  ,"cannot_delete_participant_paid": "{count, plural, =1{Ha pagato 1 spesa: non si può eliminare} other{Ha pagato {count} spese: non si può eliminare}}"
+  ,"cannot_delete_category_used": "{count, plural, =1{Usata in 1 spesa: non si può eliminare} other{Usata in {count} spese: non si può eliminare}}"
+  ,"location_off_short": "Localizzazione disattivata"
+  ,"location_not_allowed_short": "Posizione non consentita"
+  ,"location_not_found_short": "Posizione non trovata"
+  ,"sync_qr_scan_again": "Scansiona di nuovo"
 }

@@ -9,6 +9,9 @@ class CategoriesSection extends StatelessWidget {
   final void Function(int, String) onEditCategory;
   final void Function(int) onRemoveCategory;
 
+  /// See [EditableNameList.deleteBlockedReason].
+  final String? Function(int index)? deleteBlockedReason;
+
   /// See [EditableNameList.showHeader].
   final bool showHeader;
 
@@ -18,6 +21,7 @@ class CategoriesSection extends StatelessWidget {
     required this.onAddCategory,
     required this.onEditCategory,
     required this.onRemoveCategory,
+    this.deleteBlockedReason,
     this.showHeader = true,
   });
 
@@ -41,6 +45,7 @@ class CategoriesSection extends StatelessWidget {
       onAdd: onAddCategory,
       onEdit: onEditCategory,
       onDelete: onRemoveCategory,
+      deleteBlockedReason: deleteBlockedReason,
       itemIcon: AppIcons.category,
       showEmptyHint: categories.isEmpty,
     );

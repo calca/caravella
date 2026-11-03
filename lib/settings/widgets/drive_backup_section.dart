@@ -11,6 +11,13 @@ import '../backup/restore_groups.dart';
 /// export. Hidden in builds without it (F-Droid). Not linked: one row to
 /// connect. Linked: back up now (with the last backup time), restore one of
 /// the kept backups, the weekly backup switch, and disconnect.
+///
+/// What happened shows in the row itself, not in a toast: the new backup
+/// time, "Couldn't reach Google Drive" in red on the row that failed (tap
+/// it again to retry), "No backup on Drive yet" on Restore, and both backup
+/// rows greyed out while there are no groups.
+enum _DriveRow { connect, backup, restore }
+
 class DriveBackupSection extends StatefulWidget {
   const DriveBackupSection({super.key});
 
@@ -25,6 +32,13 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
   bool _busy = false;
   bool _weekly = false;
   DateTime? _last;
+  bool _hasGroups = true;
+
+  /// The row whose last action failed (Drive unreachable).
+  _DriveRow? _failed;
+
+  /// Restore found nothing to restore.
+  bool _noBackups = false;
 
   @override
   void initState() {
@@ -35,10 +49,12 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
   Future<void> _load() async {
     final weekly = await DriveBackupService.isWeekly();
     final last = await DriveBackupService.lastBackup();
+    final groups = await ExpenseGroupStorageV2.getAllGroups();
     if (!mounted) return;
     setState(() {
       _weekly = weekly;
       _last = last;
+      _hasGroups = groups.isNotEmpty;
       _linked = _store!.accountName != null;
     });
     if (!_linked) {
@@ -47,9 +63,12 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
     }
   }
 
-  Future<void> _run(Future<void> Function() action) async {
+  Future<void> _run(_DriveRow row, Future<void> Function() action) async {
     if (_busy) return;
-    setState(() => _busy = true);
+    setState(() {
+      _busy = true;
+      _failed = null;
+    });
     try {
       await action();
     } catch (e, st) {
@@ -59,51 +78,48 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
         error: e,
         stackTrace: st,
       );
-      if (mounted) {
-        final loc = gen.AppLocalizations.of(context);
-        AppToast.show(context, loc.drive_backup_error, type: ToastType.error);
-      }
+      if (mounted) setState(() => _failed = row);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
-  Future<void> _connect() => _run(() async {
+  Future<void> _connect() => _run(_DriveRow.connect, () async {
     final linked = await _store!.signIn();
     if (!mounted) return;
-    setState(() => _linked = linked);
-    if (!linked) {
-      final loc = gen.AppLocalizations.of(context);
-      AppToast.show(context, loc.drive_backup_error, type: ToastType.error);
-    }
+    setState(() {
+      _linked = linked;
+      if (!linked) _failed = _DriveRow.connect;
+    });
   });
 
-  Future<void> _disconnect() => _run(() async {
+  Future<void> _disconnect() => _run(_DriveRow.connect, () async {
     await _store!.signOut();
     if (mounted) setState(() => _linked = false);
   });
 
-  Future<void> _backupNow(gen.AppLocalizations loc) => _run(() async {
+  Future<void> _backupNow() => _run(_DriveRow.backup, () async {
     final entry = await DriveBackupService.backupNow();
     if (!mounted) return;
     if (entry == null) {
-      AppToast.show(context, loc.no_trips_to_backup, type: ToastType.info);
+      setState(() => _hasGroups = false);
       return;
     }
     final last = await DriveBackupService.lastBackup();
     if (!mounted) return;
-    setState(() => _last = last);
-    AppToast.show(context, loc.drive_backup_saved, type: ToastType.success);
+    // The row's "Last backup" time is the confirmation.
+    setState(() {
+      _last = last;
+      _noBackups = false;
+    });
   });
 
   Future<void> _restore(gen.AppLocalizations loc) async {
     List<CloudBackupEntry>? entries;
-    await _run(() async => entries = await _store!.list());
+    await _run(_DriveRow.restore, () async => entries = await _store!.list());
     if (!mounted || entries == null) return;
-    if (entries!.isEmpty) {
-      AppToast.show(context, loc.drive_backup_none, type: ToastType.info);
-      return;
-    }
+    setState(() => _noBackups = entries!.isEmpty);
+    if (entries!.isEmpty) return;
     final picked = await showModalBottomSheet<CloudBackupEntry>(
       context: context,
       builder: (context) => CaravellaBottomSheetScaffold(
@@ -128,7 +144,7 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
     if (!await confirmRestore(context, loc, name) || !mounted) return;
 
     List<ExpenseGroup>? groups;
-    await _run(() async {
+    await _run(_DriveRow.restore, () async {
       groups = BackupArchive.decode(await _store!.download(picked.id));
     });
     if (groups != null && mounted) {
@@ -156,6 +172,12 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
     if (store == null) return const SizedBox.shrink();
     final loc = gen.AppLocalizations.of(context);
     final enabled = !_busy;
+    final error = Theme.of(context).colorScheme.error;
+
+    /// In place of [row]'s subtitle after a failure: the reason, in red.
+    Widget? failure(_DriveRow row) => _failed == row
+        ? Text(loc.drive_backup_error, style: TextStyle(color: error))
+        : null;
 
     if (!_linked) {
       return SettingsGroup(
@@ -165,6 +187,7 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
             icon: Icons.add_to_drive_outlined,
             title: loc.drive_backup_connect,
             subtitle: loc.drive_backup_connect_desc,
+            subtitleWidget: failure(_DriveRow.connect),
             onTap: enabled ? _connect : null,
           ),
         ],
@@ -178,21 +201,28 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
         SettingsTile(
           icon: Icons.cloud_upload_outlined,
           title: loc.drive_backup_now,
-          subtitle: last == null
+          subtitle: !_hasGroups
+              ? loc.no_trips_to_backup
+              : last == null
               ? loc.drive_backup_none
               : loc.auto_backup_last(_formatTime(context, last)),
+          subtitleWidget: failure(_DriveRow.backup),
           trailing: _busy
               ? const SizedBox.square(
                   dimension: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
               : null,
-          onTap: enabled ? () => _backupNow(loc) : null,
+          enabled: _hasGroups,
+          onTap: enabled ? _backupNow : null,
         ),
         SettingsTile(
           icon: Icons.cloud_download_outlined,
           title: loc.drive_backup_restore,
-          subtitle: loc.drive_backup_restore_desc,
+          subtitle: _noBackups
+              ? loc.drive_backup_none
+              : loc.drive_backup_restore_desc,
+          subtitleWidget: failure(_DriveRow.restore),
           onTap: enabled ? () => _restore(loc) : null,
         ),
         SettingsTile(

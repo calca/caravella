@@ -5,7 +5,6 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'categories_section.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../group_form_controller.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class CategoriesEditor extends StatelessWidget {
   const CategoriesEditor({super.key});
@@ -25,15 +24,15 @@ class CategoriesEditor extends StatelessWidget {
           onAddCategory: (name) =>
               state.addCategory(ExpenseCategory(name: name)),
           onEditCategory: (i, name) => state.editCategory(i, name),
-          onRemoveCategory: (i) async {
-            final removed = await controller.removeCategoryIfUnused(i);
-            if (!removed && context.mounted) {
-              AppToast.show(
-                context,
-                loc.cannot_delete_assigned_category,
-                type: ToastType.info,
-              );
-            }
+          onRemoveCategory: controller.removeCategoryIfUnused,
+          // A category some expenses use stays: the bin says why.
+          deleteBlockedReason: (i) {
+            final id = state.categories[i].id;
+            final used =
+                (state.originalGroup?.expenses ?? const <ExpenseDetails>[])
+                    .where((e) => e.category.id == id)
+                    .length;
+            return used == 0 ? null : loc.cannot_delete_category_used(used);
           },
         ),
       ],

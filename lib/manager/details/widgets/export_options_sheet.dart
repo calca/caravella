@@ -10,8 +10,13 @@ class ExportOptionsSheet extends StatelessWidget {
   final VoidCallback onDownloadMarkdown;
   final VoidCallback onShareMarkdown;
 
+  /// The group has no expenses: each format says so and its buttons are
+  /// off (instead of a toast after tapping one).
+  final bool empty;
+
   const ExportOptionsSheet({
     super.key,
+    this.empty = false,
     required this.onDownloadCsv,
     required this.onShareCsv,
     required this.onDownloadOfx,
@@ -33,20 +38,20 @@ class ExportOptionsSheet extends StatelessWidget {
     ) => SettingsTile(
       icon: icon,
       title: format,
-      subtitle: description,
+      subtitle: empty ? gloc.no_expenses_to_export : description,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           _RoundAction(
             icon: Icons.share_outlined,
             tooltip: '${gloc.share_label} $format',
-            onPressed: onShare,
+            onPressed: empty ? null : onShare,
           ),
           const SizedBox(width: 4),
           _RoundAction(
             icon: Icons.download_rounded,
             tooltip: '${gloc.save_label} $format',
-            onPressed: onDownload,
+            onPressed: empty ? null : onDownload,
           ),
         ],
       ),
@@ -89,7 +94,7 @@ class ExportOptionsSheet extends StatelessWidget {
 class _RoundAction extends StatelessWidget {
   final IconData icon;
   final String tooltip;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const _RoundAction({
     required this.icon,

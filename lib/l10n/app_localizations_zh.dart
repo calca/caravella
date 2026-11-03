@@ -172,12 +172,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get from_camera => '拍照';
 
   @override
-  String get cannot_delete_assigned_participant => '无法删除参与者：已分配给一个或多个支出';
-
-  @override
-  String get cannot_delete_assigned_category => '无法删除类别：已分配给一个或多个支出';
-
-  @override
   String get color => '颜色';
 
   @override
@@ -2062,9 +2056,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get drive_backup_disconnect => '断开连接';
 
   @override
-  String get drive_backup_saved => '备份已保存到 Google 云端硬盘';
-
-  @override
   String get drive_backup_error => '无法连接 Google 云端硬盘';
 
   @override
@@ -2366,4 +2357,36 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get duplicate_category_name => '已有同名的类别';
+
+  @override
+  String cannot_delete_participant_paid(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已支付 $count 笔支出，无法删除',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cannot_delete_category_used(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已用于 $count 笔支出，无法删除',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get location_off_short => '定位已关闭';
+
+  @override
+  String get location_not_allowed_short => '未允许定位';
+
+  @override
+  String get location_not_found_short => '未找到位置';
+
+  @override
+  String get sync_qr_scan_again => '重新扫描';
 }

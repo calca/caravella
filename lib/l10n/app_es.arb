@@ -74,10 +74,6 @@
   "change_image": "Cambiar foto",
   "from_gallery": "Desde la galería",
   "from_camera": "Desde la cámara",
-  "cannot_delete_assigned_participant": "No se puede eliminar el participante: está asignado a uno o más gastos",
-  "@cannot_delete_assigned_participant": {"description": "Se muestra al intentar eliminar un participante que está en uso por gastos existentes"},
-  "cannot_delete_assigned_category": "No se puede eliminar la categoría: está asignada a uno o más gastos",
-  "@cannot_delete_assigned_category": {"description": "Se muestra al intentar eliminar una categoría que está en uso por gastos existentes"},
   "color": "Color",
   "background": "Fondo",
   "participants_description": "Personas que comparten costos",
@@ -853,7 +849,6 @@
   ,"drive_backup_weekly": "Copia semanal"
   ,"drive_backup_weekly_desc": "Cada semana, al abrir la app"
   ,"drive_backup_disconnect": "Desconectar"
-  ,"drive_backup_saved": "Copia guardada en Google Drive"
   ,"drive_backup_error": "No se pudo conectar con Google Drive"
   ,"expense_more_details": "Más detalles"
   ,"quick_action_photo": "Foto"
@@ -942,4 +937,10 @@
   ,"settings_made_by": "Hecha por {name}"
   ,"duplicate_participant_name": "Ya hay alguien con este nombre"
   ,"duplicate_category_name": "Ya hay una categoría con este nombre"
+  ,"cannot_delete_participant_paid": "{count, plural, =1{Pagó 1 gasto: no se puede eliminar} other{Pagó {count} gastos: no se puede eliminar}}"
+  ,"cannot_delete_category_used": "{count, plural, =1{Usada en 1 gasto: no se puede eliminar} other{Usada en {count} gastos: no se puede eliminar}}"
+  ,"location_off_short": "Ubicación desactivada"
+  ,"location_not_allowed_short": "Ubicación no permitida"
+  ,"location_not_found_short": "Ubicación no encontrada"
+  ,"sync_qr_scan_again": "Escanear de nuevo"
 }

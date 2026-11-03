@@ -8,7 +8,9 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 /// The camera view comes from [GmsIntegrations.buildQrScanner] (ML Kit);
 /// only reachable when [GmsIntegrations.supportsQrScanning] is true.
 ///
-/// Pops with `true` if pairing succeeded, `false` otherwise.
+/// Pops with `true` if pairing succeeded. A code that can't be used
+/// (expired, from an emulator, pairing failed) is explained in the panel
+/// at the bottom, with "Scan again"; back leaves with `false`.
 class QrPairScanPage extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
@@ -21,8 +23,11 @@ class QrPairScanPage extends StatefulWidget {
 class _QrPairScanPageState extends State<QrPairScanPage> {
   bool _handling = false;
 
+  /// Why the last scanned code didn't pair, shown in the bottom panel.
+  String? _problem;
+
   Future<void> _onDetect(String raw) async {
-    if (_handling) return;
+    if (_handling || _problem != null) return;
 
     final payload = PairingPayload.tryParse(raw);
     if (payload == null) return; // Not a pairing QR — keep scanning.
@@ -34,18 +39,12 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
     final loc = gen.AppLocalizations.of(context);
 
     if (payload.isExpired) {
-      AppToast.show(context, loc.sync_qr_pair_expired, type: ToastType.error);
-      Navigator.of(context).pop(false);
+      _fail(loc.sync_qr_pair_expired);
       return;
     }
 
     if (payload.isLikelyUnreachableEmulatorHost) {
-      AppToast.show(
-        context,
-        loc.sync_qr_pair_emulator_host,
-        type: ToastType.error,
-      );
-      Navigator.of(context).pop(false);
+      _fail(loc.sync_qr_pair_emulator_host);
       return;
     }
 
@@ -53,16 +52,23 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
 
     if (!mounted) return;
 
+    if (!success) {
+      _fail(loc.sync_qr_pair_failed);
+      return;
+    }
+    // Leaving the page: the toast is what's left to say it worked.
     AppToast.show(
       context,
-      success
-          ? loc.sync_qr_pair_success(payload.deviceName)
-          : loc.sync_qr_pair_failed,
-      type: success ? ToastType.success : ToastType.error,
+      loc.sync_qr_pair_success(payload.deviceName),
+      type: ToastType.success,
     );
-
-    Navigator.of(context).pop(success);
+    Navigator.of(context).pop(true);
   }
+
+  void _fail(String problem) => setState(() {
+    _handling = false;
+    _problem = problem;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +83,7 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
           children: [
             GmsIntegrations.instance.buildQrScanner(
                   onDetect: _onDetect,
-                  paused: _handling,
+                  paused: _handling || _problem != null,
                 ) ??
                 const SizedBox.shrink(),
             if (_handling)
@@ -93,11 +99,36 @@ class _QrPairScanPageState extends State<QrPairScanPage> {
                 color: Colors.black54,
                 child: SafeArea(
                   top: false,
-                  child: Text(
-                    loc.sync_qr_scan_description,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                  child: _problem == null
+                      ? Text(
+                          loc.sync_qr_scan_description,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.white),
+                        )
+                      : Semantics(
+                          liveRegion: true,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.error_outline_rounded,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(height: AppSpacing.sm),
+                              Text(
+                                _problem!,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              const SizedBox(height: AppSpacing.md),
+                              FilledButton(
+                                onPressed: () =>
+                                    setState(() => _problem = null),
+                                child: Text(loc.sync_qr_scan_again),
+                              ),
+                            ],
+                          ),
+                        ),
                 ),
               ),
             ),

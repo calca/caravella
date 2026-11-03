@@ -422,18 +422,6 @@ abstract class AppLocalizations {
   /// **'From camera'**
   String get from_camera;
 
-  /// Shown when attempting to delete a participant that is used by existing expenses
-  ///
-  /// In en, this message translates to:
-  /// **'Can’t delete the participant: they’re in one or more expenses'**
-  String get cannot_delete_assigned_participant;
-
-  /// Shown when attempting to delete a category that is used by existing expenses
-  ///
-  /// In en, this message translates to:
-  /// **'Can’t delete the category: it’s used by one or more expenses'**
-  String get cannot_delete_assigned_category;
-
   /// No description provided for @color.
   ///
   /// In en, this message translates to:
@@ -4006,12 +3994,6 @@ abstract class AppLocalizations {
   /// Settings → Data, Google Drive backup
   ///
   /// In en, this message translates to:
-  /// **'Backup saved to Google Drive'**
-  String get drive_backup_saved;
-
-  /// Settings → Data, Google Drive backup
-  ///
-  /// In en, this message translates to:
   /// **'Couldn’t reach Google Drive'**
   String get drive_backup_error;
 
@@ -4511,6 +4493,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There’s already a category with this name'**
   String get duplicate_category_name;
+
+  /// Under a person in group settings whose delete button is greyed out: they paid some expenses
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Paid for 1 expense, so can’t be deleted} other{Paid for {count} expenses, so can’t be deleted}}'**
+  String cannot_delete_participant_paid(int count);
+
+  /// Under a category in group settings whose delete button is greyed out: some expenses use it
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Used by 1 expense, so can’t be deleted} other{Used by {count} expenses, so can’t be deleted}}'**
+  String cannot_delete_category_used(int count);
+
+  /// In the expense's empty Place pill, after trying to get the current location: device location is off. Keep it short
+  ///
+  /// In en, this message translates to:
+  /// **'Location is off'**
+  String get location_off_short;
+
+  /// In the expense's empty Place pill: location permission not given. Keep it short
+  ///
+  /// In en, this message translates to:
+  /// **'Location not allowed'**
+  String get location_not_allowed_short;
+
+  /// In the expense's empty Place pill: no position found. Keep it short
+  ///
+  /// In en, this message translates to:
+  /// **'Location not found'**
+  String get location_not_found_short;
+
+  /// No description provided for @sync_qr_scan_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan again'**
+  String get sync_qr_scan_again;
 }
 
 class _AppLocalizationsDelegate

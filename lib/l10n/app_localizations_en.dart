@@ -174,14 +174,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get from_camera => 'From camera';
 
   @override
-  String get cannot_delete_assigned_participant =>
-      'Can’t delete the participant: they’re in one or more expenses';
-
-  @override
-  String get cannot_delete_assigned_category =>
-      'Can’t delete the category: it’s used by one or more expenses';
-
-  @override
   String get color => 'Color';
 
   @override
@@ -2101,9 +2093,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drive_backup_disconnect => 'Disconnect';
 
   @override
-  String get drive_backup_saved => 'Backup saved to Google Drive';
-
-  @override
   String get drive_backup_error => 'Couldn’t reach Google Drive';
 
   @override
@@ -2416,4 +2405,38 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get duplicate_category_name =>
       'There’s already a category with this name';
+
+  @override
+  String cannot_delete_participant_paid(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Paid for $count expenses, so can’t be deleted',
+      one: 'Paid for 1 expense, so can’t be deleted',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cannot_delete_category_used(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Used by $count expenses, so can’t be deleted',
+      one: 'Used by 1 expense, so can’t be deleted',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get location_off_short => 'Location is off';
+
+  @override
+  String get location_not_allowed_short => 'Location not allowed';
+
+  @override
+  String get location_not_found_short => 'Location not found';
+
+  @override
+  String get sync_qr_scan_again => 'Scan again';
 }
