@@ -10,6 +10,10 @@ class SpendingPace {
   /// Groups longer than this many days are measured per month.
   static const int monthlyAfterDays = 62;
 
+  /// A group still open whose last expense is older than this many days
+  /// counts as finished: its period ends at that expense, not today.
+  static const int activeWithinDays = 14;
+
   final SpendingPaceUnit unit;
 
   /// First and last day the average is spread over (calendar days).
@@ -44,8 +48,11 @@ class SpendingPace {
   /// The pace of [group], or null when it has no expenses.
   ///
   /// The period runs from the group's start date (or its first expense) to
-  /// its end date (or [today], for a group without one or still running),
-  /// and always covers every expense.
+  /// its end date, and always covers every expense. A group without an end
+  /// date, or still running, counts up to [today] while it's active (an
+  /// expense in the last [activeWithinDays] days), up to its last expense
+  /// otherwise — a weekend from months ago stays a weekend, not a long
+  /// period of nothing.
   static SpendingPace? of(ExpenseGroup group, {DateTime? today}) {
     if (group.expenses.isEmpty) return null;
     final days = group.expenses.map((e) => _day(e.date)).toList()..sort();
@@ -56,7 +63,9 @@ class SpendingPace {
       start = _day(s);
     }
     var end = group.endDate == null ? now : _day(group.endDate!);
-    if (end.isAfter(now)) end = now;
+    if (!end.isBefore(now)) {
+      end = _daysBetween(days.last, now) > activeWithinDays ? days.last : now;
+    }
     if (days.last.isAfter(end)) end = days.last;
     if (end.isBefore(start)) end = start;
 
