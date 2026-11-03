@@ -17,7 +17,7 @@ Lets users scan a receipt (camera or gallery) to auto-fill an expense's amount a
 
 The scan action is a document-scanner icon button in `ExpenseFormActionsWidget` (part of [Expense Entry](APP_EXPENSE_ENTRY.md)), shown only in **add mode** (not when editing an existing expense). Tapping it opens a bottom sheet (camera vs. gallery), shows a "scanning" toast while processing, then:
 
-- **Success** — prefills the amount and name/description fields, shows a success toast.
+- **Success** — prefills the amount and name/description fields (no toast: the filled fields are the feedback).
 - **No text found** — shows an informational toast, no fields changed.
 - **Error** — shows an error toast (image read failure, OCR exception, etc).
 

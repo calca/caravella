@@ -120,9 +120,6 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get markdown_save_cancelled => 'Exportação Markdown cancelada';
-
-  @override
   String get markdown_save_error =>
       'Não foi possível salvar o arquivo Markdown';
 
@@ -473,12 +470,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get unarchived_with_undo => 'Retirado do arquivo';
 
   @override
-  String get pinned_with_undo => 'Marcado como favorito';
-
-  @override
-  String get unpinned_with_undo => 'Favorito removido';
-
-  @override
   String get deleted_with_undo => 'Excluído';
 
   @override
@@ -558,13 +549,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get expense_added_success => 'Despesa adicionada';
 
   @override
-  String get expense_updated_success => 'Despesa atualizada';
-
-  @override
   String get refresh => 'Atualizar';
-
-  @override
-  String get group_added_success => 'Grupo adicionado';
 
   @override
   String get group_deleted_success => 'Grupo excluído';
@@ -579,9 +564,6 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get csv_save_cancelled => 'Exportação cancelada';
-
-  @override
   String get csv_save_error => 'Não foi possível salvar o arquivo CSV';
 
   @override
@@ -592,9 +574,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String ofx_saved_in(Object path) {
     return 'OFX salvo em: $path';
   }
-
-  @override
-  String get ofx_save_cancelled => 'Exportação OFX cancelada';
 
   @override
   String get ofx_save_error => 'Não foi possível salvar o arquivo OFX';
@@ -828,9 +807,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get accessibility_add_expense => 'Adicionar despesa';
-
-  @override
-  String get accessibility_currently_disabled => 'Atualmente desativado';
 
   @override
   String get accessibility_previous_month => 'Mês anterior';
@@ -1858,9 +1834,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get no_text_found => 'Nenhum texto encontrado na imagem';
-
-  @override
-  String get receipt_scanned => 'Recibo escaneado';
 
   @override
   String get settings_group_templates_manage_title => 'Modelos de grupo';

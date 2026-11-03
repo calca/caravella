@@ -247,15 +247,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
   void _refresh() => _softRefresh();
 
   Future<void> _handleTripAdded() async {
-    final gloc = gen.AppLocalizations.of(context);
     // Use full reload to properly update _isFirstStart based on actual data
     // This ensures the welcome→cards transition happens correctly
     await _loadLocaleAndTrip();
-    if (!mounted) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      AppToast.show(context, gloc.group_added_success, type: ToastType.success);
-    });
   }
 
   void _handleTripDeleted() {

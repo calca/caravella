@@ -83,16 +83,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         _currentLocation = location;
       });
 
-      // Optional lightweight feedback when an address gets resolved
-      if (location.address != null) {
-        final gloc = gen.AppLocalizations.of(context);
-        AppToast.show(
-          context,
-          gloc.address_resolved,
-          duration: const Duration(seconds: 2),
-        );
-      }
-
       widget.onLocationChanged(location);
     }
 
@@ -171,14 +161,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         });
 
         widget.onLocationChanged(location);
-
-        if (mounted) {
-          AppToast.show(
-            context,
-            gloc.address_resolved,
-            duration: const Duration(seconds: 2),
-          );
-        }
       } catch (e) {
         if (mounted) {
           setState(() {

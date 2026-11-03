@@ -35,22 +35,6 @@ class ExpenseGroupCategoriesPage extends StatelessWidget {
             state,
             mode,
             notifier,
-            () {
-              final gloc = gen.AppLocalizations.of(context);
-              AppToast.show(
-                context,
-                gloc.group_added_success,
-                type: ToastType.success,
-              );
-            },
-            (error) {
-              final gloc = gen.AppLocalizations.of(context);
-              AppToast.show(
-                context,
-                gloc.error_saving_group(error.toString()),
-                type: ToastType.error,
-              );
-            },
           ),
         ),
       ],

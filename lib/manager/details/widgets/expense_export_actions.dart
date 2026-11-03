@@ -43,15 +43,7 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
         } catch (_) {
           dirPath = null;
         }
-        if (dirPath == null) {
-          if (!rootContext.mounted) return;
-          AppToast.show(
-            rootContext,
-            gloc.csv_save_cancelled,
-            type: ToastType.info,
-          );
-          return;
-        }
+        if (dirPath == null) return;
         try {
           final file = File('$dirPath/$filename');
           await file.writeAsString(csv);
@@ -119,15 +111,7 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
         } catch (_) {
           dirPath = null;
         }
-        if (dirPath == null) {
-          if (!rootContext.mounted) return;
-          AppToast.show(
-            rootContext,
-            gloc.ofx_save_cancelled,
-            type: ToastType.info,
-          );
-          return;
-        }
+        if (dirPath == null) return;
         try {
           final file = File('$dirPath/$filename');
           await file.writeAsString(ofx);
@@ -195,15 +179,7 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
         } catch (_) {
           dirPath = null;
         }
-        if (dirPath == null) {
-          if (!rootContext.mounted) return;
-          AppToast.show(
-            rootContext,
-            gloc.markdown_save_cancelled,
-            type: ToastType.info,
-          );
-          return;
-        }
+        if (dirPath == null) return;
         try {
           final file = File('$dirPath/$filename');
           await file.writeAsString(markdown);

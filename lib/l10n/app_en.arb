@@ -55,7 +55,6 @@
   "markdown_select_directory_title": "Select folder to save Markdown",
   "markdown_saved_in": "Markdown saved in: {path}",
   "@markdown_saved_in": {"description": "Toast message when Markdown export is saved", "placeholders": {"path": {"type": "String"}}},
-  "markdown_save_cancelled": "Markdown export cancelled",
   "markdown_save_error": "Couldn’t save the Markdown file",
   "share_label": "Share",
   "export_share": "Share and export",
@@ -179,10 +178,6 @@
   "@archived_with_undo": {"description": "Snackbar message when group is archived"},
   "unarchived_with_undo": "Removed from archive",
   "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
-  "pinned_with_undo": "Marked as favorite",
-  "@pinned_with_undo": {"description": "Snackbar message when group is marked as favorite"},
-  "unpinned_with_undo": "Favorite removed",
-  "@unpinned_with_undo": {"description": "Snackbar message when favorite mark is removed from group"},
   "deleted_with_undo": "Deleted",
   "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "statistics": "Statistics",
@@ -210,18 +205,14 @@
   "added_by": "Added by",
   "edited_by": "Edited by",
   "expense_added_success": "Expense added",
-  "expense_updated_success": "Expense updated",
   "refresh": "Refresh",
-  "group_added_success": "Group added",
   "group_deleted_success": "Group deleted",
   "@group_deleted_success": {"description": "Toast shown after deleting an expense group"},
   "csv_select_directory_title": "Select folder to save CSV",
   "csv_saved_in": "CSV saved in: {path}",
-  "csv_save_cancelled": "Export cancelled",
   "csv_save_error": "Couldn’t save the CSV file",
   "ofx_select_directory_title": "Select folder to save OFX",
   "ofx_saved_in": "OFX saved in: {path}",
-  "ofx_save_cancelled": "OFX export cancelled",
   "ofx_save_error": "Couldn’t save the OFX file",
   "csv_expense_name": "Description",
   "csv_amount": "Amount",
@@ -310,8 +301,6 @@
   ,"@accessibility_total_expenses": {"description": "Total expenses accessibility label", "placeholders": {"amount": {}}}
   ,"accessibility_add_expense": "Add expense"
   ,"@accessibility_add_expense": {"description": "Add expense button accessibility label"}
-  ,"accessibility_currently_disabled": "Currently disabled"
-  ,"@accessibility_currently_disabled": {"description": "Currently disabled state label"}
   ,"accessibility_previous_month": "Previous month"
   ,"@accessibility_previous_month": {"description": "Previous month button accessibility label"}
   ,"accessibility_next_month": "Next month"
@@ -801,8 +790,6 @@
   ,"@receipt_scan_permission_denied": {"description": "Error message when camera or photo library permission is denied"}
   ,"no_text_found": "No text found in image"
   ,"@no_text_found": {"description": "Message when OCR finds no text in the image"}
-  ,"receipt_scanned": "Receipt scanned"
-  ,"@receipt_scanned": {"description": "Success message after OCR scanning"}
   ,"settings_group_templates_manage_title": "Group templates"
   ,"settings_group_templates_manage_desc": "Create and edit your templates"
   ,"settings_group_templates_page_title": "Group templates"

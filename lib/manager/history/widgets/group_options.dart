@@ -48,8 +48,6 @@ Future<void> _executePinAction(
   VoidCallback? onPin,
 ) async {
   final isPinned = trip.pinned;
-  final gloc = gen.AppLocalizations.of(context);
-  final actionText = isPinned ? gloc.unpinned_with_undo : gloc.pinned_with_undo;
 
   // Use notifier to update pin state (handles storage + shortcuts)
   final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
@@ -57,14 +55,6 @@ Future<void> _executePinAction(
 
   // Trigger reload callback if provided
   onPin?.call();
-
-  if (!context.mounted) return;
-  AppToast.show(
-    context,
-    '$actionText • ${trip.title}',
-    type: ToastType.info,
-    duration: const Duration(seconds: 4),
-  );
 }
 
 Future<void> _executeArchiveAction(

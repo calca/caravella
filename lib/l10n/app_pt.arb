@@ -55,7 +55,6 @@
   "group_total": "Total",
   "markdown_select_directory_title": "Selecionar pasta para salvar Markdown",
   "markdown_saved_in": "Markdown salvo em: {path}",
-  "markdown_save_cancelled": "Exportação Markdown cancelada",
   "markdown_save_error": "Não foi possível salvar o arquivo Markdown",
   "share_label": "Compartilhar",
   "export_share": "Compartilhar e exportar",
@@ -129,8 +128,6 @@
   "unpin": "Remover favorito",
   "archived_with_undo": "Arquivado",
   "unarchived_with_undo": "Retirado do arquivo",
-  "pinned_with_undo": "Marcado como favorito",
-  "unpinned_with_undo": "Favorito removido",
   "deleted_with_undo": "Excluído",
   "select_category": "Categoria",
   "delete_expense": "Excluir despesa",
@@ -158,7 +155,6 @@
   "accessibility_welcome_screen": "Tela de boas-vindas",
   "accessibility_total_expenses": "Despesas totais: {amount}",
   "accessibility_add_expense": "Adicionar despesa",
-  "accessibility_currently_disabled": "Atualmente desativado",
   "accessibility_previous_month": "Mês anterior",
   "accessibility_next_month": "Próximo mês",
   "color_suggested_title": "Cores sugeridas",
@@ -173,13 +169,10 @@
   "expense_name": "Descrição",
   "expense_added_success": "Despesa adicionada",
   "refresh": "Atualizar",
-  "group_added_success": "Grupo adicionado",
   "group_deleted_success": "Grupo excluído",
   "@group_deleted_success": {"description": "Mensagem exibida após excluir um grupo de despesas"},
   "csv_select_directory_title": "Selecione a pasta para salvar o CSV",
-  "csv_save_cancelled": "Exportação cancelada",
   "ofx_select_directory_title": "Selecione a pasta para salvar o OFX",
-  "ofx_save_cancelled": "Exportação OFX cancelada",
   "csv_expense_name": "Descrição",
   "csv_paid_by": "Pago por",
   "csv_date": "Data",
@@ -450,7 +443,6 @@
   ,"edit_category": "Editar categoria"
   ,"edit_expense": "Editar despesa"
   ,"expand_form_tooltip": "Adicionar data, local e nota"
-  ,"expense_updated_success": "Despesa atualizada"
   ,"expenses_by_category": "Por categoria"
   ,"from": "De"
   ,"group_name": "Nome"
@@ -760,8 +752,6 @@
   ,"@receipt_scan_permission_denied": {"description": "Mensagem de erro quando a permissão de câmera ou galeria é negada"}
   ,"no_text_found": "Nenhum texto encontrado na imagem"
   ,"@no_text_found": {"description": "Mensagem quando o OCR não encontra texto na imagem"}
-  ,"receipt_scanned": "Recibo escaneado"
-  ,"@receipt_scanned": {"description": "Mensagem de sucesso após o escaneamento OCR"}
   ,"settings_group_templates_manage_title": "Modelos de grupo"
   ,"settings_group_templates_manage_desc": "Crie e edite seus modelos"
   ,"settings_group_templates_page_title": "Modelos de grupo"

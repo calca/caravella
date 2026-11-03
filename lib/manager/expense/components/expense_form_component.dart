@@ -468,15 +468,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         _controller.nameController.text = description;
       }
       _controller.markDirty();
-
-      if (mounted) {
-        AppToast.show(
-          context,
-          gloc.receipt_scanned,
-          type: ToastType.success,
-          duration: const Duration(seconds: 2),
-        );
-      }
     } on PlatformException catch (e) {
       if (!mounted) return;
       final isPermissionDenied =

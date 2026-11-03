@@ -120,9 +120,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get markdown_save_cancelled => 'Markdown export cancelled';
-
-  @override
   String get markdown_save_error => 'Couldn’t save the Markdown file';
 
   @override
@@ -472,12 +469,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unarchived_with_undo => 'Removed from archive';
 
   @override
-  String get pinned_with_undo => 'Marked as favorite';
-
-  @override
-  String get unpinned_with_undo => 'Favorite removed';
-
-  @override
   String get deleted_with_undo => 'Deleted';
 
   @override
@@ -558,13 +549,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get expense_added_success => 'Expense added';
 
   @override
-  String get expense_updated_success => 'Expense updated';
-
-  @override
   String get refresh => 'Refresh';
-
-  @override
-  String get group_added_success => 'Group added';
 
   @override
   String get group_deleted_success => 'Group deleted';
@@ -578,9 +563,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get csv_save_cancelled => 'Export cancelled';
-
-  @override
   String get csv_save_error => 'Couldn’t save the CSV file';
 
   @override
@@ -590,9 +572,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String ofx_saved_in(Object path) {
     return 'OFX saved in: $path';
   }
-
-  @override
-  String get ofx_save_cancelled => 'OFX export cancelled';
 
   @override
   String get ofx_save_error => 'Couldn’t save the OFX file';
@@ -825,9 +804,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accessibility_add_expense => 'Add expense';
-
-  @override
-  String get accessibility_currently_disabled => 'Currently disabled';
 
   @override
   String get accessibility_previous_month => 'Previous month';
@@ -1852,9 +1828,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_text_found => 'No text found in image';
-
-  @override
-  String get receipt_scanned => 'Receipt scanned';
 
   @override
   String get settings_group_templates_manage_title => 'Group templates';
