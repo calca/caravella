@@ -128,4 +128,83 @@ void main() {
     expect(pace.periods, SpendingPace.monthlyAfterDays);
     expect(pace.unit, SpendingPaceUnit.day);
   });
+
+  group('a group still open (#608)', () {
+    final now = DateTime(2026, 11, 3);
+
+    test('inactive for weeks: the period ends at its last expense', () {
+      // A weekend in August, no end date: three days, not three months.
+      final pace = SpendingPace.of(
+        _group([
+          _expense(100, DateTime(2026, 8, 1)),
+          _expense(100, DateTime(2026, 8, 2)),
+          _expense(100, DateTime(2026, 8, 3)),
+        ]),
+        today: now,
+      )!;
+      expect(pace.end, DateTime(2026, 8, 3));
+      expect(pace.unit, SpendingPaceUnit.day);
+      expect(pace.periods, 3);
+      expect(pace.average, 100);
+    });
+
+    test('a flat that stopped in June is measured until June', () {
+      final pace = SpendingPace.of(
+        _group([
+          _expense(600, DateTime(2026, 1, 10)),
+          _expense(600, DateTime(2026, 6, 15)),
+        ]),
+        today: now,
+      )!;
+      expect(pace.unit, SpendingPaceUnit.month);
+      expect(pace.end, DateTime(2026, 6, 15));
+      expect(pace.periods, 6);
+      expect(pace.average, 200);
+    });
+
+    test('an expense in the last two weeks: up to today', () {
+      final pace = SpendingPace.of(
+        _group([
+          _expense(10, DateTime(2026, 10, 1)),
+          _expense(10, DateTime(2026, 10, 20)), // 14 days before today
+        ]),
+        today: now,
+      )!;
+      expect(pace.end, now);
+    });
+
+    test('15 days without expenses: ends at the last one', () {
+      final pace = SpendingPace.of(
+        _group([_expense(10, DateTime(2026, 10, 19))]),
+        today: now,
+      )!;
+      expect(pace.end, DateTime(2026, 10, 19));
+      expect(pace.periods, 1);
+    });
+
+    test('an end date still ahead, inactive: ends at the last expense', () {
+      final pace = SpendingPace.of(
+        _group(
+          [_expense(70, DateTime(2026, 9, 1))],
+          start: DateTime(2026, 9, 1),
+          end: DateTime(2026, 12, 31),
+        ),
+        today: now,
+      )!;
+      expect(pace.end, DateTime(2026, 9, 1));
+    });
+
+    test('an end date already past is kept, however quiet', () {
+      final pace = SpendingPace.of(
+        _group(
+          [_expense(70, DateTime(2026, 9, 1))],
+          start: DateTime(2026, 9, 1),
+          end: DateTime(2026, 9, 10),
+        ),
+        today: now,
+      )!;
+      expect(pace.end, DateTime(2026, 9, 10));
+      expect(pace.periods, 10);
+    });
+  });
 }
