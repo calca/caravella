@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../model/expense_group.dart';
 import '../model/expense_details.dart';
+import '../model/expense_location.dart';
 import '../services/storage/attachments_storage_service.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
@@ -562,6 +563,31 @@ class FileBasedExpenseGroupRepository
   }
 
   @override
+  Future<StorageResult<void>> fillExpenseLocation(
+    String groupId,
+    String expenseId,
+    ExpenseLocation location,
+  ) async {
+    final result = await _loadGroups();
+    if (result.isFailure) return StorageResult.failure(result.error!);
+
+    final groups = List<ExpenseGroup>.from(result.data!);
+    final index = groups.indexWhere((g) => g.id == groupId);
+    if (index == -1) {
+      return StorageResult.failure(
+        EntityNotFoundError('ExpenseGroup', groupId),
+      );
+    }
+    groups[index] = groups[index].copyWith(
+      expenses: [
+        for (final e in groups[index].expenses)
+          e.id == expenseId ? e.copyWith(location: location) : e,
+      ],
+    );
+    return await _saveGroups(groups);
+  }
+
+  @override
   Future<StorageResult<void>> unarchiveGroup(String groupId) async {
     final result = await _loadGroups();
     if (result.isFailure) return StorageResult.failure(result.error!);
@@ -621,30 +647,26 @@ class FileBasedExpenseGroupRepository
   Future<StorageResult<List<ExpenseGroup>>> getGroupsByParticipant(
     String participantId,
   ) async {
-    return await measureOperation(
-      'getGroupsByParticipant',
-      () async {
-        await _loadGroups(); // Ensure index is loaded
+    return await measureOperation('getGroupsByParticipant', () async {
+      await _loadGroups(); // Ensure index is loaded
 
-        if (!_groupIndex.isEmpty) {
-          final groups = _groupIndex.getGroupsByParticipant(participantId);
-          return StorageResult.success(groups);
-        }
-
-        // Fallback to manual filtering
-        final allResult = await getAllGroups();
-        if (allResult.isFailure) return allResult;
-
-        final groups = allResult.data!
-            .where(
-              (group) => group.participants.any((p) => p.id == participantId),
-            )
-            .toList();
-
+      if (!_groupIndex.isEmpty) {
+        final groups = _groupIndex.getGroupsByParticipant(participantId);
         return StorageResult.success(groups);
-      },
-      wasFromCache: _isCacheValid() && !_groupIndex.isEmpty,
-    );
+      }
+
+      // Fallback to manual filtering
+      final allResult = await getAllGroups();
+      if (allResult.isFailure) return allResult;
+
+      final groups = allResult.data!
+          .where(
+            (group) => group.participants.any((p) => p.id == participantId),
+          )
+          .toList();
+
+      return StorageResult.success(groups);
+    }, wasFromCache: _isCacheValid() && !_groupIndex.isEmpty);
   }
 
   /// Gets groups by category ID (indexed query)

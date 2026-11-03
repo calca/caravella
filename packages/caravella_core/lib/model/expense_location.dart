@@ -68,6 +68,14 @@ class ExpenseLocation {
 
   bool get hasLocation => latitude != null && longitude != null;
 
+  /// Only coordinates, nothing to call the place by: how places were saved
+  /// before SQLite v7 (2.3.0), which kept just latitude, longitude and name.
+  bool get isBareCoordinates =>
+      hasLocation &&
+      (name ?? '').isEmpty &&
+      (address ?? '').isEmpty &&
+      (locality ?? '').isEmpty;
+
   String get displayText {
     if (name != null && name!.isNotEmpty) return name!;
     if (address != null && address!.isNotEmpty) return address!;

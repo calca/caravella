@@ -2,6 +2,10 @@
 
 Covers the geocoding/search pipeline (`lib/manager/expense/location/**`) and the map building blocks it renders on (`caravella_core_ui/lib/map/**`). Two independent geocoding paths exist for two different purposes — don't conflate them.
 
+## Places saved as bare coordinates
+
+Before SQLite v7 (2.3.0) a place kept only latitude, longitude and name, so one from the automatic location — a locality but no name — reads back as coordinates (`ExpenseLocation.isBareCoordinates`). When such an expense is opened in the form, `ExpenseFormComponent._nameBarePlace` asks `LocationService.name` (→ `LocationRepository.describe`, the platform geocoder, the same as for the current location) in the background; with an answer, and the place untouched meanwhile, it shows it (`updateLocation(byUser: false)`: no "discard changes?") and keeps it with `ExpenseGroupStorageV2.fillExpenseLocation` — a local fix, not an edit: no "modified by", the group's `updated_at` unchanged, nothing synced (each device names its own copy). Offline or without a geocoder nothing happens, and it tries again the next time the expense is opened. Places still bare elsewhere (search, CSV export) show coordinates until their expense is opened.
+
 ## Path 1: "use my current location" (device GPS + platform geocoder)
 
 Entry point: `LocationService.getCurrentLocation(context, ...)` (`location/location_service.dart`).

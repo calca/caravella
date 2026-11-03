@@ -1,5 +1,6 @@
 import '../model/expense_group.dart';
 import '../model/expense_details.dart';
+import '../model/expense_location.dart';
 import 'storage_errors.dart';
 
 /// Result wrapper for storage operations that can fail
@@ -84,6 +85,16 @@ abstract class IExpenseGroupRepository {
 
   /// Unarchives a group
   Future<StorageResult<void>> unarchiveGroup(String groupId);
+
+  /// Replaces an expense's place with [location] as a local fix, not an
+  /// edit: no "modified by", and the group's `updated_at` stays, so sync
+  /// (last writer wins per group) doesn't take it for a newer version.
+  /// Used to name a place saved as bare coordinates (#607).
+  Future<StorageResult<void>> fillExpenseLocation(
+    String groupId,
+    String expenseId,
+    ExpenseLocation location,
+  );
 
   /// Validates that a group is consistent and valid
   StorageResult<void> validateGroup(ExpenseGroup group);
