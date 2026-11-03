@@ -780,8 +780,6 @@
   ,"@scanning_receipt": {"description": "Message during OCR receipt scanning"}
   ,"receipt_scan_error": "Couldn’t read the receipt"
   ,"@receipt_scan_error": {"description": "Error message when OCR scanning fails"}
-  ,"receipt_scan_permission_denied": "Camera not allowed: turn it on in your phone settings to read receipts"
-  ,"@receipt_scan_permission_denied": {"description": "Error message when camera or photo library permission is denied"}
   ,"no_text_found": "No text found in image"
   ,"@no_text_found": {"description": "Message when OCR finds no text in the image"}
   ,"settings_group_templates_manage_title": "Group templates"
@@ -1029,8 +1027,6 @@
   ,"@attachment_open_error": {"description": "Shown in the attachment viewer when an image, PDF or video cannot be opened"}
   ,"location_permission_denied": "Allow location access to add the place"
   ,"@location_permission_denied": {"description": "Toast when the location permission is denied"}
-  ,"location_permission_denied_forever": "Location access is off for Caravella: turn it on in the system settings"
-  ,"@location_permission_denied_forever": {"description": "Toast when the location permission is permanently denied"}
   ,"location_service_disabled": "Location is off: turn it on to add the place"
   ,"@location_service_disabled": {"description": "Toast when the device location service is off"}
   ,"unsplash_load_more_error": "Couldn’t load more photos"
@@ -1064,4 +1060,14 @@
   ,"@location_off_short": {"description": "In the expense's empty Place pill, after trying to get the current location: device location is off. Keep it short"}
   ,"@location_not_allowed_short": {"description": "In the expense's empty Place pill: location permission not given. Keep it short"}
   ,"@location_not_found_short": {"description": "In the expense's empty Place pill: no position found. Keep it short"}
+  ,"permission_camera_title": "Allow the camera?"
+  ,"permission_camera_message": "Caravella uses the camera to read receipts. Access is turned off: you can turn it on in your phone’s settings."
+  ,"permission_photos_title": "Allow access to photos?"
+  ,"permission_photos_message": "Caravella needs your photos to read a receipt you already took. Access is turned off: you can turn it on in your phone’s settings."
+  ,"permission_notifications_title": "Allow notifications?"
+  ,"permission_notifications_message": "To keep the group in your notifications Caravella needs to show them. They’re turned off: you can turn them on in your phone’s settings."
+  ,"permission_location_title": "Allow location?"
+  ,"permission_location_message": "Caravella uses your location to add where an expense happened. Access is turned off: you can turn it on in your phone’s settings."
+  ,"permission_open_settings": "Open settings"
+  ,"permission_not_now": "Not now"
 }

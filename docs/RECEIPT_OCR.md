@@ -19,9 +19,9 @@ The scan action is a document-scanner icon button in `ExpenseFormActionsWidget` 
 
 - **Success** — prefills the amount and name/description fields and the line goes (the filled fields are the feedback).
 - **No text found** — the line says so (× closes it), no fields changed.
-- **Error** — the line says "Couldn’t read the receipt" in red (image read failure, OCR exception, etc). Camera/photo permission denied is still a toast.
+- **Error** — the line says "Couldn’t read the receipt" in red (image read failure, OCR exception, etc). Camera/photo permission refused: `showPermissionDeniedDialog` (`lib/services/permission_dialog.dart`) — “Allow the camera?” with **Open settings** (`permission_handler`’s `openAppSettings`) and **Not now**.
 
-Home's receipt button (`AddExpenseController.scanReceiptAndAdd`) reads the photo before the quick-add sheet opens, so there the "reading" and "no text found" messages stay toasts.
+Home's receipt button (`AddExpenseController.scanReceiptAndAdd`) reads the photo before the quick-add sheet opens, so there the "reading" and "no text found" messages stay toasts; a refused permission opens the same dialog.
 
 ## Permissions
 
@@ -43,4 +43,4 @@ flutter test test/services/receipt_scanner_service_test.dart
 ## See also
 
 - [App: Expense Entry](APP_EXPENSE_ENTRY.md)
-- [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md) — `AppToast` for the scan feedback that has no place on screen (Home's scan, permission denied)
+- [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md) — `AppToast` for the scan feedback that has no place on screen (Home's scan)

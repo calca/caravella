@@ -40,13 +40,6 @@ class ExpenseErrorHandler {
     );
   }
 
-  static void showLocationPermissionDeniedForever(BuildContext context) {
-    _showLocationError(
-      context,
-      gen.AppLocalizations.of(context).location_permission_denied_forever,
-    );
-  }
-
   static void showLocationServiceDisabled(BuildContext context) {
     _showLocationError(
       context,

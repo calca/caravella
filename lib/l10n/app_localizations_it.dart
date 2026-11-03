@@ -1818,10 +1818,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get receipt_scan_error => 'Impossibile leggere lo scontrino';
 
   @override
-  String get receipt_scan_permission_denied =>
-      'Fotocamera non consentita: attivala nelle impostazioni del telefono per leggere gli scontrini';
-
-  @override
   String get no_text_found => 'Nessun testo trovato nell’immagine';
 
   @override
@@ -2358,10 +2354,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Consenti l’accesso alla posizione per aggiungere il luogo';
 
   @override
-  String get location_permission_denied_forever =>
-      'L’accesso alla posizione è disattivato per Caravella: attivalo nelle impostazioni di sistema';
-
-  @override
   String get location_service_disabled =>
       'La localizzazione è disattivata: attivala per aggiungere il luogo';
 
@@ -2447,4 +2439,38 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_qr_scan_again => 'Scansiona di nuovo';
+
+  @override
+  String get permission_camera_title => 'Consentire la fotocamera?';
+
+  @override
+  String get permission_camera_message =>
+      'Caravella usa la fotocamera per leggere gli scontrini. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono.';
+
+  @override
+  String get permission_photos_title => 'Consentire l’accesso alle foto?';
+
+  @override
+  String get permission_photos_message =>
+      'Caravella usa le tue foto per leggere uno scontrino già fotografato. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono.';
+
+  @override
+  String get permission_notifications_title => 'Consentire le notifiche?';
+
+  @override
+  String get permission_notifications_message =>
+      'Per tenere il gruppo tra le notifiche Caravella deve poterle mostrare. Sono disattivate: puoi attivarle nelle impostazioni del telefono.';
+
+  @override
+  String get permission_location_title => 'Consentire la posizione?';
+
+  @override
+  String get permission_location_message =>
+      'Caravella usa la posizione per aggiungere dove hai fatto una spesa. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono.';
+
+  @override
+  String get permission_open_settings => 'Apri impostazioni';
+
+  @override
+  String get permission_not_now => 'Non ora';
 }

@@ -1818,10 +1818,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get receipt_scan_error => 'Não foi possível ler o recibo';
 
   @override
-  String get receipt_scan_permission_denied =>
-      'Câmera não permitida: ative-a nas configurações do telefone para ler recibos';
-
-  @override
   String get no_text_found => 'Nenhum texto encontrado na imagem';
 
   @override
@@ -2355,10 +2351,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'Permita o acesso à localização para adicionar o lugar';
 
   @override
-  String get location_permission_denied_forever =>
-      'O acesso à localização está desativado para o Caravella: ative-o nas configurações do sistema';
-
-  @override
   String get location_service_disabled =>
       'A localização está desativada: ative-a para adicionar o lugar';
 
@@ -2443,4 +2435,38 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sync_qr_scan_again => 'Ler de novo';
+
+  @override
+  String get permission_camera_title => 'Permitir a câmera?';
+
+  @override
+  String get permission_camera_message =>
+      'O Caravella usa a câmera para ler recibos. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
+
+  @override
+  String get permission_photos_title => 'Permitir acesso às fotos?';
+
+  @override
+  String get permission_photos_message =>
+      'O Caravella usa suas fotos para ler um recibo já fotografado. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
+
+  @override
+  String get permission_notifications_title => 'Permitir notificações?';
+
+  @override
+  String get permission_notifications_message =>
+      'Para manter o grupo nas notificações, o Caravella precisa poder mostrá-las. Elas estão desativadas: você pode ativá-las nas configurações do celular.';
+
+  @override
+  String get permission_location_title => 'Permitir a localização?';
+
+  @override
+  String get permission_location_message =>
+      'O Caravella usa a localização para adicionar onde você fez uma despesa. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
+
+  @override
+  String get permission_open_settings => 'Abrir configurações';
+
+  @override
+  String get permission_not_now => 'Agora não';
 }

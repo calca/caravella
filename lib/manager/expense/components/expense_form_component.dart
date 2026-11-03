@@ -1,5 +1,6 @@
 library;
 
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show PlatformException;
@@ -436,10 +437,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   /// action) picks an existing photo instead. No intermediate chooser sheet.
   ///
   /// Progress and problems show in a line above the fields
-  /// ([_ReceiptScanLine]); a good read just fills the fields.
+  /// ([_ReceiptScanLine]); a good read just fills the fields. A refused
+  /// camera or photos permission opens [showPermissionDeniedDialog].
   Future<void> _scanReceipt({required ImageSource source}) async {
-    final gloc = gen.AppLocalizations.of(context);
-
     try {
       final pickedFile = await _imagePicker.pickImage(source: source);
       if (pickedFile == null || !mounted) return;
@@ -470,16 +470,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _controller.markDirty();
     } on PlatformException catch (e) {
       if (!mounted) return;
-      final isPermissionDenied =
-          e.code == 'camera_access_denied' || e.code == 'photo_access_denied';
-      if (isPermissionDenied) {
+      final denied = switch (e.code) {
+        'camera_access_denied' => DeniedPermission.camera,
+        'photo_access_denied' => DeniedPermission.photos,
+        _ => null,
+      };
+      if (denied != null) {
         setState(() => _scanLine = null);
-        AppToast.show(
-          context,
-          gloc.receipt_scan_permission_denied,
-          type: ToastType.error,
-          duration: const Duration(seconds: 3),
-        );
+        await showPermissionDeniedDialog(context, denied);
       } else {
         setState(() => _scanLine = _ScanLine.failed);
       }

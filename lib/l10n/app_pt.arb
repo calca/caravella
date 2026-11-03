@@ -743,8 +743,6 @@
   ,"@scanning_receipt": {"description": "Mensagem durante o escaneamento OCR do recibo"}
   ,"receipt_scan_error": "Não foi possível ler o recibo"
   ,"@receipt_scan_error": {"description": "Mensagem de erro quando o escaneamento OCR falha"}
-  ,"receipt_scan_permission_denied": "Câmera não permitida: ative-a nas configurações do telefone para ler recibos"
-  ,"@receipt_scan_permission_denied": {"description": "Mensagem de erro quando a permissão de câmera ou galeria é negada"}
   ,"no_text_found": "Nenhum texto encontrado na imagem"
   ,"@no_text_found": {"description": "Mensagem quando o OCR não encontra texto na imagem"}
   ,"settings_group_templates_manage_title": "Modelos de grupo"
@@ -896,7 +894,6 @@
   ,"attachment_share_error": "Não foi possível compartilhar o anexo"
   ,"attachment_open_error": "Não foi possível abrir o arquivo"
   ,"location_permission_denied": "Permita o acesso à localização para adicionar o lugar"
-  ,"location_permission_denied_forever": "O acesso à localização está desativado para o Caravella: ative-o nas configurações do sistema"
   ,"location_service_disabled": "A localização está desativada: ative-a para adicionar o lugar"
   ,"unsplash_load_more_error": "Não foi possível carregar mais fotos"
   ,"unsplash_retry": "Tentar novamente"
@@ -918,4 +915,14 @@
   ,"location_not_allowed_short": "Localização não permitida"
   ,"location_not_found_short": "Localização não encontrada"
   ,"sync_qr_scan_again": "Ler de novo"
+  ,"permission_camera_title": "Permitir a câmera?"
+  ,"permission_camera_message": "O Caravella usa a câmera para ler recibos. O acesso está desativado: você pode ativá-lo nas configurações do celular."
+  ,"permission_photos_title": "Permitir acesso às fotos?"
+  ,"permission_photos_message": "O Caravella usa suas fotos para ler um recibo já fotografado. O acesso está desativado: você pode ativá-lo nas configurações do celular."
+  ,"permission_notifications_title": "Permitir notificações?"
+  ,"permission_notifications_message": "Para manter o grupo nas notificações, o Caravella precisa poder mostrá-las. Elas estão desativadas: você pode ativá-las nas configurações do celular."
+  ,"permission_location_title": "Permitir a localização?"
+  ,"permission_location_message": "O Caravella usa a localização para adicionar onde você fez uma despesa. O acesso está desativado: você pode ativá-lo nas configurações do celular."
+  ,"permission_open_settings": "Abrir configurações"
+  ,"permission_not_now": "Agora não"
 }

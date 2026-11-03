@@ -1,3 +1,4 @@
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'repository/location_repository.dart';
@@ -41,7 +42,7 @@ class LocationService {
         case LocationProblem.permissionDenied:
           ExpenseErrorHandler.showLocationPermissionDenied(context);
         case LocationProblem.deniedForever:
-          ExpenseErrorHandler.showLocationPermissionDeniedForever(context);
+          showPermissionDeniedDialog(context, DeniedPermission.location);
         case LocationProblem.notFound:
           ExpenseErrorHandler.showLocationRetrievalError(context);
       }

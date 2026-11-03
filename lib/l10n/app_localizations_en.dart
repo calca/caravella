@@ -1812,10 +1812,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get receipt_scan_error => 'Couldn’t read the receipt';
 
   @override
-  String get receipt_scan_permission_denied =>
-      'Camera not allowed: turn it on in your phone settings to read receipts';
-
-  @override
   String get no_text_found => 'No text found in image';
 
   @override
@@ -2349,10 +2345,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Allow location access to add the place';
 
   @override
-  String get location_permission_denied_forever =>
-      'Location access is off for Caravella: turn it on in the system settings';
-
-  @override
   String get location_service_disabled =>
       'Location is off: turn it on to add the place';
 
@@ -2439,4 +2431,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_qr_scan_again => 'Scan again';
+
+  @override
+  String get permission_camera_title => 'Allow the camera?';
+
+  @override
+  String get permission_camera_message =>
+      'Caravella uses the camera to read receipts. Access is turned off: you can turn it on in your phone’s settings.';
+
+  @override
+  String get permission_photos_title => 'Allow access to photos?';
+
+  @override
+  String get permission_photos_message =>
+      'Caravella needs your photos to read a receipt you already took. Access is turned off: you can turn it on in your phone’s settings.';
+
+  @override
+  String get permission_notifications_title => 'Allow notifications?';
+
+  @override
+  String get permission_notifications_message =>
+      'To keep the group in your notifications Caravella needs to show them. They’re turned off: you can turn them on in your phone’s settings.';
+
+  @override
+  String get permission_location_title => 'Allow location?';
+
+  @override
+  String get permission_location_message =>
+      'Caravella uses your location to add where an expense happened. Access is turned off: you can turn it on in your phone’s settings.';
+
+  @override
+  String get permission_open_settings => 'Open settings';
+
+  @override
+  String get permission_not_now => 'Not now';
 }

@@ -1,3 +1,4 @@
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -87,7 +88,10 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
     if (value) {
       final granted = await notificationService.requestPermissions();
       if (!granted && context.mounted) {
-        AppToast.show(context, gloc.notification_enabled, type: ToastType.info);
+        await showPermissionDeniedDialog(
+          context,
+          DeniedPermission.notifications,
+        );
         return;
       }
     }

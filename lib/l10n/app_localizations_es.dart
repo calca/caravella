@@ -1821,10 +1821,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get receipt_scan_error => 'No se pudo leer el recibo';
 
   @override
-  String get receipt_scan_permission_denied =>
-      'Cámara no permitida: actívala en los ajustes del teléfono para leer recibos';
-
-  @override
   String get no_text_found => 'No se encontró texto en la imagen';
 
   @override
@@ -2361,10 +2357,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Permite el acceso a la ubicación para añadir el lugar';
 
   @override
-  String get location_permission_denied_forever =>
-      'El acceso a la ubicación está desactivado para Caravella: actívalo en los ajustes del sistema';
-
-  @override
   String get location_service_disabled =>
       'La ubicación está desactivada: actívala para añadir el lugar';
 
@@ -2450,4 +2442,38 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sync_qr_scan_again => 'Escanear de nuevo';
+
+  @override
+  String get permission_camera_title => '¿Permitir la cámara?';
+
+  @override
+  String get permission_camera_message =>
+      'Caravella usa la cámara para leer los tickets. El acceso está desactivado: puedes activarlo en los ajustes del teléfono.';
+
+  @override
+  String get permission_photos_title => '¿Permitir el acceso a las fotos?';
+
+  @override
+  String get permission_photos_message =>
+      'Caravella usa tus fotos para leer un ticket que ya fotografiaste. El acceso está desactivado: puedes activarlo en los ajustes del teléfono.';
+
+  @override
+  String get permission_notifications_title => '¿Permitir las notificaciones?';
+
+  @override
+  String get permission_notifications_message =>
+      'Para mantener el grupo en las notificaciones, Caravella tiene que poder mostrarlas. Están desactivadas: puedes activarlas en los ajustes del teléfono.';
+
+  @override
+  String get permission_location_title => '¿Permitir la ubicación?';
+
+  @override
+  String get permission_location_message =>
+      'Caravella usa la ubicación para añadir dónde hiciste un gasto. El acceso está desactivado: puedes activarlo en los ajustes del teléfono.';
+
+  @override
+  String get permission_open_settings => 'Abrir ajustes';
+
+  @override
+  String get permission_not_now => 'Ahora no';
 }

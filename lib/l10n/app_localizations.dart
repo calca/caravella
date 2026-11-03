@@ -3542,12 +3542,6 @@ abstract class AppLocalizations {
   /// **'Couldn’t read the receipt'**
   String get receipt_scan_error;
 
-  /// Error message when camera or photo library permission is denied
-  ///
-  /// In en, this message translates to:
-  /// **'Camera not allowed: turn it on in your phone settings to read receipts'**
-  String get receipt_scan_permission_denied;
-
   /// Message when OCR finds no text in the image
   ///
   /// In en, this message translates to:
@@ -4398,12 +4392,6 @@ abstract class AppLocalizations {
   /// **'Allow location access to add the place'**
   String get location_permission_denied;
 
-  /// Toast when the location permission is permanently denied
-  ///
-  /// In en, this message translates to:
-  /// **'Location access is off for Caravella: turn it on in the system settings'**
-  String get location_permission_denied_forever;
-
   /// Toast when the device location service is off
   ///
   /// In en, this message translates to:
@@ -4529,6 +4517,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan again'**
   String get sync_qr_scan_again;
+
+  /// No description provided for @permission_camera_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow the camera?'**
+  String get permission_camera_title;
+
+  /// No description provided for @permission_camera_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella uses the camera to read receipts. Access is turned off: you can turn it on in your phone’s settings.'**
+  String get permission_camera_message;
+
+  /// No description provided for @permission_photos_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow access to photos?'**
+  String get permission_photos_title;
+
+  /// No description provided for @permission_photos_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella needs your photos to read a receipt you already took. Access is turned off: you can turn it on in your phone’s settings.'**
+  String get permission_photos_message;
+
+  /// No description provided for @permission_notifications_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications?'**
+  String get permission_notifications_title;
+
+  /// No description provided for @permission_notifications_message.
+  ///
+  /// In en, this message translates to:
+  /// **'To keep the group in your notifications Caravella needs to show them. They’re turned off: you can turn them on in your phone’s settings.'**
+  String get permission_notifications_message;
+
+  /// No description provided for @permission_location_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow location?'**
+  String get permission_location_title;
+
+  /// No description provided for @permission_location_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella uses your location to add where an expense happened. Access is turned off: you can turn it on in your phone’s settings.'**
+  String get permission_location_message;
+
+  /// No description provided for @permission_open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get permission_open_settings;
+
+  /// No description provided for @permission_not_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get permission_not_now;
 }
 
 class _AppLocalizationsDelegate

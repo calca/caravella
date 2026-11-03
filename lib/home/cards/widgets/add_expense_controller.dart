@@ -1,3 +1,4 @@
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -175,13 +176,16 @@ class AddExpenseController {
       );
     } on PlatformException catch (e) {
       if (!context.mounted) return;
-      final denied =
-          e.code == 'camera_access_denied' || e.code == 'photo_access_denied';
-      AppToast.show(
-        context,
-        denied ? gloc.receipt_scan_permission_denied : failure,
-        type: ToastType.error,
-      );
+      final denied = switch (e.code) {
+        'camera_access_denied' => DeniedPermission.camera,
+        'photo_access_denied' => DeniedPermission.photos,
+        _ => null,
+      };
+      if (denied != null) {
+        await showPermissionDeniedDialog(context, denied);
+      } else {
+        AppToast.show(context, failure, type: ToastType.error);
+      }
     } catch (e, st) {
       LoggerService.error(
         'Receipt scan from Home failed',

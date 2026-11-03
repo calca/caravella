@@ -1781,9 +1781,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get receipt_scan_error => '无法读取收据';
 
   @override
-  String get receipt_scan_permission_denied => '未允许相机：请在手机设置中开启以读取收据';
-
-  @override
   String get no_text_found => '图像中未找到文本';
 
   @override
@@ -2304,10 +2301,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get location_permission_denied => '请允许访问位置以添加地点';
 
   @override
-  String get location_permission_denied_forever =>
-      'Caravella 的位置权限已关闭：请在系统设置中开启';
-
-  @override
   String get location_service_disabled => '定位服务已关闭：请开启以添加地点';
 
   @override
@@ -2389,4 +2382,38 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_qr_scan_again => '重新扫描';
+
+  @override
+  String get permission_camera_title => '允许使用相机？';
+
+  @override
+  String get permission_camera_message =>
+      'Caravella 使用相机读取收据。访问已关闭：你可以在手机设置中开启。';
+
+  @override
+  String get permission_photos_title => '允许访问照片？';
+
+  @override
+  String get permission_photos_message =>
+      'Caravella 使用你的照片读取已拍摄的收据。访问已关闭：你可以在手机设置中开启。';
+
+  @override
+  String get permission_notifications_title => '允许通知？';
+
+  @override
+  String get permission_notifications_message =>
+      '要在通知中保留该群组，Caravella 需要能够显示通知。通知已关闭：你可以在手机设置中开启。';
+
+  @override
+  String get permission_location_title => '允许定位？';
+
+  @override
+  String get permission_location_message =>
+      'Caravella 使用位置记录支出发生的地点。访问已关闭：你可以在手机设置中开启。';
+
+  @override
+  String get permission_open_settings => '打开设置';
+
+  @override
+  String get permission_not_now => '暂不';
 }
