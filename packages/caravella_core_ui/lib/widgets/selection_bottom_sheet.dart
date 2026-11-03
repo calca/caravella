@@ -25,6 +25,7 @@ Future<T?> showSelectionBottomSheet<T>({
   String? cancelLabel,
   String? addCategoryLabel,
   String? alreadyExistsMessage,
+  String? addErrorMessage,
   bool autoStartAdd = false,
 }) async {
   return showModalBottomSheet<T>(
@@ -42,6 +43,7 @@ Future<T?> showSelectionBottomSheet<T>({
       cancelLabel: cancelLabel,
       addCategoryLabel: addCategoryLabel,
       alreadyExistsMessage: alreadyExistsMessage,
+      addErrorMessage: addErrorMessage,
       autoStartAdd: autoStartAdd,
     ),
   );
@@ -59,6 +61,9 @@ class _SelectionSheet<T> extends StatefulWidget {
   final String? cancelLabel;
   final String? addCategoryLabel;
   final String? alreadyExistsMessage;
+
+  /// Toast when [onAddItemInline] throws (the details go to the log).
+  final String? addErrorMessage;
   final bool autoStartAdd;
   const _SelectionSheet({
     required this.items,
@@ -72,6 +77,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     this.cancelLabel,
     this.addCategoryLabel,
     this.alreadyExistsMessage,
+    this.addErrorMessage,
     this.autoStartAdd = false,
   });
 
@@ -221,23 +227,6 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   Future<bool> _commitInlineAdd(String val) async {
     if (widget.onAddItemInline == null) return false;
 
-    // Check for duplicates (case-insensitive)
-    final lower = val.toLowerCase();
-    final isDuplicate = _currentItems.any(
-      (item) => widget.itemLabel(item).toLowerCase() == lower,
-    );
-
-    if (isDuplicate) {
-      if (widget.alreadyExistsMessage != null) {
-        AppToast.show(
-          context,
-          widget.alreadyExistsMessage!,
-          type: ToastType.info,
-        );
-      }
-      return false;
-    }
-
     try {
       await widget.onAddItemInline!(val);
 
@@ -260,8 +249,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       }
       return true;
     } catch (e) {
-      if (mounted) {
-        AppToast.show(context, 'Error adding item: $e', type: ToastType.error);
+      LoggerService.warning('Adding "$val" failed: $e', name: 'ui.sheet');
+      if (mounted && widget.addErrorMessage != null) {
+        AppToast.show(context, widget.addErrorMessage!, type: ToastType.error);
       }
       return false;
     }
@@ -280,6 +270,18 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   /// From this many items a search field shows above the list.
   static const int searchFrom = 9;
 
+  /// [InlineEntryField.validator]: the "already exists" message when an item
+  /// has [val] (case-insensitive).
+  String? _duplicate(String val) {
+    final lower = val.toLowerCase();
+    final isDuplicate = _currentItems.any(
+      (item) => widget.itemLabel(item).toLowerCase() == lower,
+    );
+    if (!isDuplicate) return null;
+    // Without a message, still refused: red border only.
+    return widget.alreadyExistsMessage ?? '';
+  }
+
   Widget _buildInlineAddRow() {
     return Padding(
       padding: const EdgeInsets.only(top: 12),
@@ -291,6 +293,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         cancelTooltip:
             widget.cancelLabel ??
             MaterialLocalizations.of(context).cancelButtonLabel,
+        validator: _duplicate,
         onCommit: _commitInlineAdd,
         onCancel: _cancelInlineAdd,
       ),

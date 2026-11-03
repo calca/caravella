@@ -182,7 +182,7 @@ class NotificationManager {
         if (currentContext != null && currentContext.mounted) {
           AppToast.show(
             currentContext,
-            'Gruppo non trovato',
+            gen.AppLocalizations.of(currentContext).group_not_found_toast,
             type: ToastType.error,
           );
         }
@@ -305,7 +305,7 @@ class NotificationManager {
         if (currentContext != null && currentContext.mounted) {
           AppToast.show(
             currentContext,
-            'Gruppo non trovato',
+            gen.AppLocalizations.of(currentContext).group_not_found_toast,
             type: ToastType.error,
           );
         }

@@ -1,3 +1,4 @@
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -31,11 +32,8 @@ class ExpenseGroupOtherPage extends StatelessWidget {
           ExpenseGroupNotifier,
           GroupFormController
         >(
-          update: (context, state, notifier, previous) => GroupFormController(
-            state,
-            mode,
-            notifier,
-          ),
+          update: (context, state, notifier, previous) =>
+              GroupFormController(state, mode, notifier),
         ),
       ],
       child: _OtherPageScaffold(
@@ -90,7 +88,10 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
     if (value) {
       final granted = await notificationService.requestPermissions();
       if (!granted && context.mounted) {
-        AppToast.show(context, gloc.notification_enabled, type: ToastType.info);
+        await showPermissionDeniedDialog(
+          context,
+          DeniedPermission.notifications,
+        );
         return;
       }
     }
@@ -132,11 +133,7 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
       );
 
       if (context.mounted) {
-        AppToast.show(
-          context,
-          gloc.error_saving_group(e.toString()),
-          type: ToastType.error,
-        );
+        AppToast.show(context, gloc.group_save_error, type: ToastType.error);
       }
     }
   }
@@ -161,11 +158,7 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
       );
 
       if (context.mounted) {
-        AppToast.show(
-          context,
-          gloc.error_saving_group(e.toString()),
-          type: ToastType.error,
-        );
+        AppToast.show(context, gloc.group_save_error, type: ToastType.error);
       }
     }
   }
@@ -264,7 +257,7 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
                 if (context.mounted) {
                   AppToast.show(
                     context,
-                    gloc.error_saving_group(e.toString()),
+                    gloc.group_save_error,
                     type: ToastType.error,
                   );
                 }

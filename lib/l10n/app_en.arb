@@ -53,8 +53,6 @@
   "in_group_prefix": "in",
   "group_total": "Total",
   "markdown_select_directory_title": "Select folder to save Markdown",
-  "markdown_saved_in": "Markdown saved in: {path}",
-  "@markdown_saved_in": {"description": "Toast message when Markdown export is saved", "placeholders": {"path": {"type": "String"}}},
   "markdown_save_error": "Couldn’t save the Markdown file",
   "share_label": "Share",
   "export_share": "Share and export",
@@ -75,10 +73,6 @@
   "change_image": "Change photo",
   "from_gallery": "From gallery",
   "from_camera": "From camera",
-  "cannot_delete_assigned_participant": "Can’t delete the participant: they’re in one or more expenses",
-  "@cannot_delete_assigned_participant": {"description": "Shown when attempting to delete a participant that is used by existing expenses"},
-  "cannot_delete_assigned_category": "Can’t delete the category: it’s used by one or more expenses",
-  "@cannot_delete_assigned_category": {"description": "Shown when attempting to delete a category that is used by existing expenses"},
   "color": "Color",
   "background": "Background",
   "participants_description": "People sharing costs",
@@ -174,12 +168,6 @@
   "unpin": "Remove favorite",
   "@unpin": {"description": "Action to remove favorite mark from a group"},
   "@delete": {"description": "Action to delete a group"},
-  "archived_with_undo": "Archived",
-  "@archived_with_undo": {"description": "Snackbar message when group is archived"},
-  "unarchived_with_undo": "Removed from archive",
-  "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
-  "deleted_with_undo": "Deleted",
-  "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "statistics": "Statistics",
   "period": "Period",
   "total_expenses": "Total expenses",
@@ -209,10 +197,8 @@
   "group_deleted_success": "Group deleted",
   "@group_deleted_success": {"description": "Toast shown after deleting an expense group"},
   "csv_select_directory_title": "Select folder to save CSV",
-  "csv_saved_in": "CSV saved in: {path}",
   "csv_save_error": "Couldn’t save the CSV file",
   "ofx_select_directory_title": "Select folder to save OFX",
-  "ofx_saved_in": "OFX saved in: {path}",
   "ofx_save_error": "Couldn’t save the OFX file",
   "csv_expense_name": "Description",
   "csv_amount": "Amount",
@@ -274,10 +260,6 @@
   ,"discard_changes_title": "Leave without saving?"
   ,"discard_changes_message": "Changes you haven’t saved will be lost."
   ,"discard": "Discard"
-  ,"error_saving_group": "Error saving: {error}"
-  ,"@error_saving_group": {"placeholders": {"error": {}}}
-  ,"already_exists": "already exists"
-  ,"@already_exists": {"description": "Shown after an entity name when a duplicate entry is attempted"}
   ,"status_active": "Active"
   ,"@status_active": {"description": "Filter label: active groups"}
   ,"status_archived": "Archived"
@@ -774,7 +756,7 @@
   ,"@unsplash_no_results": {"description": "Message when Unsplash search returns no results"}
   ,"unsplash_downloading": "Downloading photo…"
   ,"@unsplash_downloading": {"description": "Loading label while downloading an Unsplash photo"}
-  ,"unsplash_error": "Failed to load images"
+  ,"unsplash_error": "Couldn’t load the images"
   ,"@unsplash_error": {"description": "Error message when Unsplash search or download fails"}
   ,"unsplash_photos_by": "Photos by"
   ,"@unsplash_photos_by": {"description": "Attribution prefix before the Unsplash brand link at the bottom of the search page"}
@@ -786,8 +768,6 @@
   ,"@scanning_receipt": {"description": "Message during OCR receipt scanning"}
   ,"receipt_scan_error": "Couldn’t read the receipt"
   ,"@receipt_scan_error": {"description": "Error message when OCR scanning fails"}
-  ,"receipt_scan_permission_denied": "Camera not allowed: turn it on in your phone settings to read receipts"
-  ,"@receipt_scan_permission_denied": {"description": "Error message when camera or photo library permission is denied"}
   ,"no_text_found": "No text found in image"
   ,"@no_text_found": {"description": "Message when OCR finds no text in the image"}
   ,"settings_group_templates_manage_title": "Group templates"
@@ -800,7 +780,6 @@
   ,"settings_group_templates_name_hint": "E.g. Ski week"
   ,"settings_group_templates_icon_label": "Icon"
   ,"settings_group_templates_categories_label": "Default categories"
-  ,"settings_group_templates_validation_error": "Name and at least one category are required"
   ,"settings_group_templates_delete_title": "Delete template"
   ,"settings_group_templates_delete_message": "The template “{templateName}” will be deleted."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
@@ -924,8 +903,6 @@
   ,"@drive_backup_weekly_desc": {"description": "Settings → Data, Google Drive backup"}
   ,"drive_backup_disconnect": "Disconnect"
   ,"@drive_backup_disconnect": {"description": "Settings → Data, Google Drive backup"}
-  ,"drive_backup_saved": "Backup saved to Google Drive"
-  ,"@drive_backup_saved": {"description": "Settings → Data, Google Drive backup"}
   ,"drive_backup_error": "Couldn’t reach Google Drive"
   ,"@drive_backup_error": {"description": "Settings → Data, Google Drive backup"}
   ,"expense_more_details": "More details"
@@ -1038,8 +1015,6 @@
   ,"@attachment_open_error": {"description": "Shown in the attachment viewer when an image, PDF or video cannot be opened"}
   ,"location_permission_denied": "Allow location access to add the place"
   ,"@location_permission_denied": {"description": "Toast when the location permission is denied"}
-  ,"location_permission_denied_forever": "Location access is off for Caravella: turn it on in the system settings"
-  ,"@location_permission_denied_forever": {"description": "Toast when the location permission is permanently denied"}
   ,"location_service_disabled": "Location is off: turn it on to add the place"
   ,"@location_service_disabled": {"description": "Toast when the device location service is off"}
   ,"unsplash_load_more_error": "Couldn’t load more photos"
@@ -1060,4 +1035,42 @@
   ,"@settings_footer_version": {"placeholders": {"version": {"type": "String"}}}
   ,"@settings_made_by": {"placeholders": {"name": {"type": "String"}}}
   ,"@invite_friends_message": {"description": "Shared invite text; {link} is the store page of this build (Google Play or F-Droid)", "placeholders": {"link": {"type": "String"}}}
+  ,"duplicate_participant_name": "There’s already someone with this name"
+  ,"duplicate_category_name": "There’s already a category with this name"
+  ,"cannot_delete_participant_paid": "{count, plural, =1{Paid for 1 expense, so can’t be deleted} other{Paid for {count} expenses, so can’t be deleted}}"
+  ,"cannot_delete_category_used": "{count, plural, =1{Used by 1 expense, so can’t be deleted} other{Used by {count} expenses, so can’t be deleted}}"
+  ,"@cannot_delete_participant_paid": {"description": "Under a person in group settings whose delete button is greyed out: they paid some expenses", "placeholders": {"count": {"type": "int"}}}
+  ,"@cannot_delete_category_used": {"description": "Under a category in group settings whose delete button is greyed out: some expenses use it", "placeholders": {"count": {"type": "int"}}}
+  ,"location_off_short": "Location is off"
+  ,"location_not_allowed_short": "Location not allowed"
+  ,"location_not_found_short": "Location not found"
+  ,"sync_qr_scan_again": "Scan again"
+  ,"@location_off_short": {"description": "In the expense's empty Place pill, after trying to get the current location: device location is off. Keep it short"}
+  ,"@location_not_allowed_short": {"description": "In the expense's empty Place pill: location permission not given. Keep it short"}
+  ,"@location_not_found_short": {"description": "In the expense's empty Place pill: no position found. Keep it short"}
+  ,"permission_camera_title": "Allow the camera?"
+  ,"permission_camera_message": "Caravella uses the camera to read receipts. Access is turned off: you can turn it on in your phone’s settings."
+  ,"permission_photos_title": "Allow access to photos?"
+  ,"permission_photos_message": "Caravella needs your photos to read a receipt you already took. Access is turned off: you can turn it on in your phone’s settings."
+  ,"permission_notifications_title": "Allow notifications?"
+  ,"permission_notifications_message": "To keep the group in your notifications Caravella needs to show them. They’re turned off: you can turn them on in your phone’s settings."
+  ,"permission_location_title": "Allow location?"
+  ,"permission_location_message": "Caravella uses your location to add where an expense happened. Access is turned off: you can turn it on in your phone’s settings."
+  ,"permission_open_settings": "Open settings"
+  ,"permission_not_now": "Not now"
+  ,"undo": "Undo"
+  ,"group_archived_toast": "“{title}” archived"
+  ,"group_unarchived_toast": "“{title}” is back from the archive"
+  ,"group_deleted_toast": "“{title}” deleted"
+  ,"group_save_error": "Couldn’t save the group"
+  ,"template_save_error": "Couldn’t save the template"
+  ,"template_delete_error": "Couldn’t delete the template"
+  ,"groups_load_error": "Couldn’t load the groups"
+  ,"group_not_found_toast": "This group isn’t here any more"
+  ,"add_name_error": "Couldn’t add it, try again"
+  ,"file_saved_in": "“{file}” saved in {folder}"
+  ,"@group_archived_toast": {"placeholders": {"title": {"type": "String"}}}
+  ,"@group_unarchived_toast": {"placeholders": {"title": {"type": "String"}}}
+  ,"@group_deleted_toast": {"placeholders": {"title": {"type": "String"}}}
+  ,"@file_saved_in": {"description": "Toast after an export is saved: the file's name and the folder's name (not the full path)", "placeholders": {"file": {"type": "String"}, "folder": {"type": "String"}}}
 }

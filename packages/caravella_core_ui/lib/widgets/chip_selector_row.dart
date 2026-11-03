@@ -40,6 +40,9 @@ class ChipSelectorRow<T> extends StatelessWidget {
   final String? addCategoryLabel;
   final String? alreadyExistsMessage;
 
+  /// See [showSelectionBottomSheet]'s `addErrorMessage`.
+  final String? addErrorMessage;
+
   /// One line only, the rest behind a trailing "+N" pill.
   final bool singleLine;
 
@@ -58,6 +61,7 @@ class ChipSelectorRow<T> extends StatelessWidget {
     this.cancelLabel,
     this.addCategoryLabel,
     this.alreadyExistsMessage,
+    this.addErrorMessage,
     this.singleLine = false,
   });
 
@@ -83,6 +87,7 @@ class ChipSelectorRow<T> extends StatelessWidget {
         cancelLabel: cancelLabel,
         addCategoryLabel: addCategoryLabel,
         alreadyExistsMessage: alreadyExistsMessage,
+        addErrorMessage: addErrorMessage,
         autoStartAdd: autoStartAdd,
       );
       if (picked != null) onSelected(picked);

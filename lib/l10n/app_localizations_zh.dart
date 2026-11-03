@@ -113,11 +113,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get markdown_select_directory_title => '选择保存 Markdown 的文件夹';
 
   @override
-  String markdown_saved_in(String path) {
-    return 'Markdown 已保存至：$path';
-  }
-
-  @override
   String get markdown_save_error => '保存 Markdown 文件时出错';
 
   @override
@@ -170,12 +165,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get from_camera => '拍照';
-
-  @override
-  String get cannot_delete_assigned_participant => '无法删除参与者：已分配给一个或多个支出';
-
-  @override
-  String get cannot_delete_assigned_category => '无法删除类别：已分配给一个或多个支出';
 
   @override
   String get color => '颜色';
@@ -457,15 +446,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unpin => '取消收藏';
 
   @override
-  String get archived_with_undo => '已归档';
-
-  @override
-  String get unarchived_with_undo => '已移出归档';
-
-  @override
-  String get deleted_with_undo => '已删除';
-
-  @override
   String get statistics => '统计';
 
   @override
@@ -550,20 +530,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get csv_select_directory_title => '选择保存 CSV 的文件夹';
 
   @override
-  String csv_saved_in(Object path) {
-    return 'CSV 已保存在：$path';
-  }
-
-  @override
   String get csv_save_error => '保存 CSV 文件时出错';
 
   @override
   String get ofx_select_directory_title => '选择保存 OFX 的文件夹';
-
-  @override
-  String ofx_saved_in(Object path) {
-    return 'OFX 已保存在：$path';
-  }
 
   @override
   String get ofx_save_error => '保存 OFX 文件时出错';
@@ -746,14 +716,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get discard => '舍弃';
-
-  @override
-  String error_saving_group(Object error) {
-    return '保存错误：$error';
-  }
-
-  @override
-  String get already_exists => '已存在';
 
   @override
   String get status_active => '活跃';
@@ -1790,9 +1752,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get receipt_scan_error => '无法读取收据';
 
   @override
-  String get receipt_scan_permission_denied => '未允许相机：请在手机设置中开启以读取收据';
-
-  @override
   String get no_text_found => '图像中未找到文本';
 
   @override
@@ -1824,9 +1783,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_group_templates_categories_label => '默认分类';
-
-  @override
-  String get settings_group_templates_validation_error => '必须填写名称且至少添加一个分类';
 
   @override
   String get settings_group_templates_delete_title => '删除模板';
@@ -2066,9 +2022,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get drive_backup_disconnect => '断开连接';
-
-  @override
-  String get drive_backup_saved => '备份已保存到 Google 云端硬盘';
 
   @override
   String get drive_backup_error => '无法连接 Google 云端硬盘';
@@ -2319,10 +2272,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get location_permission_denied => '请允许访问位置以添加地点';
 
   @override
-  String get location_permission_denied_forever =>
-      'Caravella 的位置权限已关闭：请在系统设置中开启';
-
-  @override
   String get location_service_disabled => '定位服务已关闭：请开启以添加地点';
 
   @override
@@ -2365,5 +2314,118 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String settings_made_by(String name) {
     return '由 $name 开发';
+  }
+
+  @override
+  String get duplicate_participant_name => '已有同名的人';
+
+  @override
+  String get duplicate_category_name => '已有同名的类别';
+
+  @override
+  String cannot_delete_participant_paid(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已支付 $count 笔支出，无法删除',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cannot_delete_category_used(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已用于 $count 笔支出，无法删除',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get location_off_short => '定位已关闭';
+
+  @override
+  String get location_not_allowed_short => '未允许定位';
+
+  @override
+  String get location_not_found_short => '未找到位置';
+
+  @override
+  String get sync_qr_scan_again => '重新扫描';
+
+  @override
+  String get permission_camera_title => '允许使用相机？';
+
+  @override
+  String get permission_camera_message =>
+      'Caravella 使用相机读取收据。访问已关闭：你可以在手机设置中开启。';
+
+  @override
+  String get permission_photos_title => '允许访问照片？';
+
+  @override
+  String get permission_photos_message =>
+      'Caravella 使用你的照片读取已拍摄的收据。访问已关闭：你可以在手机设置中开启。';
+
+  @override
+  String get permission_notifications_title => '允许通知？';
+
+  @override
+  String get permission_notifications_message =>
+      '要在通知中保留该群组，Caravella 需要能够显示通知。通知已关闭：你可以在手机设置中开启。';
+
+  @override
+  String get permission_location_title => '允许定位？';
+
+  @override
+  String get permission_location_message =>
+      'Caravella 使用位置记录支出发生的地点。访问已关闭：你可以在手机设置中开启。';
+
+  @override
+  String get permission_open_settings => '打开设置';
+
+  @override
+  String get permission_not_now => '暂不';
+
+  @override
+  String get undo => '撤销';
+
+  @override
+  String group_archived_toast(String title) {
+    return '“$title”已归档';
+  }
+
+  @override
+  String group_unarchived_toast(String title) {
+    return '“$title”已移出归档';
+  }
+
+  @override
+  String group_deleted_toast(String title) {
+    return '“$title”已删除';
+  }
+
+  @override
+  String get group_save_error => '无法保存群组';
+
+  @override
+  String get template_save_error => '无法保存模板';
+
+  @override
+  String get template_delete_error => '无法删除模板';
+
+  @override
+  String get groups_load_error => '无法加载群组';
+
+  @override
+  String get group_not_found_toast => '此群组已不存在';
+
+  @override
+  String get add_name_error => '无法添加，请重试';
+
+  @override
+  String file_saved_in(String file, String folder) {
+    return '“$file”已保存到 $folder';
   }
 }

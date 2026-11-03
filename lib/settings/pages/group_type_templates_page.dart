@@ -103,7 +103,7 @@ class GroupTypeTemplatesPage extends StatelessWidget {
       if (context.mounted) {
         AppToast.show(
           context,
-          loc.error_saving_group(e),
+          loc.template_delete_error,
           type: ToastType.error,
         );
       }

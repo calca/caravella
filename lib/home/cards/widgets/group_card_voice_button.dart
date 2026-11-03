@@ -356,7 +356,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
 
   void _showSnack(String message) {
     if (!mounted) return;
-    AppToast.show(context, message, duration: const Duration(seconds: 3));
+    AppToast.show(context, message);
   }
 
   // ── Build ─────────────────────────────────────────────────────────────────

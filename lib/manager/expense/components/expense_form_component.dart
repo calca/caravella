@@ -1,5 +1,6 @@
 library;
 
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show PlatformException;
@@ -101,6 +102,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   // Receipt scanner
   final _receiptScanner = ReceiptScannerService();
+
+  /// The receipt scan's line above the fields, while there's one to show.
+  _ScanLine? _scanLine;
   final _imagePicker = ImagePicker();
 
   /// The quick-add sheet: no details section, just "More details" opening
@@ -271,6 +275,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               groupTitle: widget.config.groupTitle,
               showGroupHeader: widget.config.showGroupHeader,
             ),
+            if (_scanLine != null)
+              _ReceiptScanLine(
+                line: _scanLine!,
+                onClose: () => setState(() => _scanLine = null),
+              ),
             ExpenseFormFields(
               controller: _controller,
               participants: _lifecycleManager.participants,
@@ -426,20 +435,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   /// the scan button goes straight to the camera (the common case right
   /// after paying), long-pressing it (or the "from gallery" accessibility
   /// action) picks an existing photo instead. No intermediate chooser sheet.
+  ///
+  /// Progress and problems show in a line above the fields
+  /// ([_ReceiptScanLine]); a good read just fills the fields. A refused
+  /// camera or photos permission opens [showPermissionDeniedDialog].
   Future<void> _scanReceipt({required ImageSource source}) async {
-    final gloc = gen.AppLocalizations.of(context);
-
     try {
       final pickedFile = await _imagePicker.pickImage(source: source);
       if (pickedFile == null || !mounted) return;
 
-      if (mounted) {
-        AppToast.show(
-          context,
-          gloc.scanning_receipt,
-          duration: const Duration(seconds: 2),
-        );
-      }
+      setState(() => _scanLine = _ScanLine.reading);
 
       final imageFile = File(pickedFile.path);
       final result = await _receiptScanner.scanReceipt(imageFile);
@@ -450,15 +455,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       final description = result['description'] as String?;
 
       if (amount == null && description == null) {
-        if (mounted) {
-          AppToast.show(
-            context,
-            gloc.no_text_found,
-            duration: const Duration(seconds: 2),
-          );
-        }
+        setState(() => _scanLine = _ScanLine.noText);
         return;
       }
+      setState(() => _scanLine = null);
 
       if (amount != null) {
         _controller.amountController.text =
@@ -470,25 +470,19 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _controller.markDirty();
     } on PlatformException catch (e) {
       if (!mounted) return;
-      final isPermissionDenied =
-          e.code == 'camera_access_denied' || e.code == 'photo_access_denied';
-      AppToast.show(
-        context,
-        isPermissionDenied
-            ? gloc.receipt_scan_permission_denied
-            : gloc.receipt_scan_error,
-        type: ToastType.error,
-        duration: const Duration(seconds: 3),
-      );
-    } catch (e) {
-      if (mounted) {
-        AppToast.show(
-          context,
-          gloc.receipt_scan_error,
-          type: ToastType.error,
-          duration: const Duration(seconds: 2),
-        );
+      final denied = switch (e.code) {
+        'camera_access_denied' => DeniedPermission.camera,
+        'photo_access_denied' => DeniedPermission.photos,
+        _ => null,
+      };
+      if (denied != null) {
+        setState(() => _scanLine = null);
+        await showPermissionDeniedDialog(context, denied);
+      } else {
+        setState(() => _scanLine = _ScanLine.failed);
       }
+    } catch (e) {
+      if (mounted) setState(() => _scanLine = _ScanLine.failed);
     }
   }
 
@@ -580,5 +574,68 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();
+  }
+}
+
+/// Where a receipt scan is: reading, nothing found, or failed.
+enum _ScanLine { reading, noText, failed }
+
+/// The receipt scan's line above the form's fields: a spinner while the
+/// photo is read, then what went wrong (with × to close) if nothing could
+/// be filled in. A good read leaves no line: the filled fields say it.
+class _ReceiptScanLine extends StatelessWidget {
+  final _ScanLine line;
+  final VoidCallback onClose;
+
+  const _ReceiptScanLine({required this.line, required this.onClose});
+
+  @override
+  Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final reading = line == _ScanLine.reading;
+    final text = switch (line) {
+      _ScanLine.reading => gloc.scanning_receipt,
+      _ScanLine.noText => gloc.no_text_found,
+      _ScanLine.failed => gloc.receipt_scan_error,
+    };
+    final color = line == _ScanLine.failed ? s.error : s.onSurfaceVariant;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Semantics(
+        liveRegion: true,
+        child: Row(
+          children: [
+            SizedBox.square(
+              dimension: 20,
+              child: reading
+                  ? CircularProgressIndicator(strokeWidth: 2, color: s.primary)
+                  : Icon(
+                      line == _ScanLine.failed
+                          ? Icons.error_outline_rounded
+                          : Icons.receipt_long_outlined,
+                      size: 20,
+                      color: color,
+                    ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                text,
+                style: theme.textTheme.bodyMedium?.copyWith(color: color),
+              ),
+            ),
+            if (!reading)
+              IconButton(
+                tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+                icon: const Icon(Icons.close_rounded, size: 20),
+                color: s.onSurfaceVariant,
+                onPressed: onClose,
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }

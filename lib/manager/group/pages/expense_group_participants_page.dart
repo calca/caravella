@@ -31,11 +31,8 @@ class ExpenseGroupParticipantsPage extends StatelessWidget {
           ExpenseGroupNotifier,
           GroupFormController
         >(
-          update: (context, state, notifier, previous) => GroupFormController(
-            state,
-            mode,
-            notifier,
-          ),
+          update: (context, state, notifier, previous) =>
+              GroupFormController(state, mode, notifier),
         ),
       ],
       child: _ParticipantsPageScaffold(
@@ -141,7 +138,7 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
                 if (context.mounted) {
                   AppToast.show(
                     context,
-                    gloc.error_saving_group(e.toString()),
+                    gloc.group_save_error,
                     type: ToastType.error,
                   );
                 }

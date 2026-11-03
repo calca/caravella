@@ -54,7 +54,6 @@
   "in_group_prefix": "en",
   "group_total": "Total",
   "markdown_select_directory_title": "Seleccionar carpeta para guardar Markdown",
-  "markdown_saved_in": "Markdown guardado en: {path}",
   "markdown_save_error": "No se pudo guardar el archivo Markdown",
   "share_label": "Compartir",
   "export_share": "Compartir y exportar",
@@ -74,10 +73,6 @@
   "change_image": "Cambiar foto",
   "from_gallery": "Desde la galería",
   "from_camera": "Desde la cámara",
-  "cannot_delete_assigned_participant": "No se puede eliminar el participante: está asignado a uno o más gastos",
-  "@cannot_delete_assigned_participant": {"description": "Se muestra al intentar eliminar un participante que está en uso por gastos existentes"},
-  "cannot_delete_assigned_category": "No se puede eliminar la categoría: está asignada a uno o más gastos",
-  "@cannot_delete_assigned_category": {"description": "Se muestra al intentar eliminar una categoría que está en uso por gastos existentes"},
   "color": "Color",
   "background": "Fondo",
   "participants_description": "Personas que comparten costos",
@@ -165,9 +160,6 @@
   "unarchive": "Sacar del archivo",
   "pin": "Favorito",
   "unpin": "Quitar favorito",
-  "archived_with_undo": "Archivado",
-  "unarchived_with_undo": "Sacado del archivo",
-  "deleted_with_undo": "Eliminado",
   "statistics": "Estadísticas",
   "period": "Período",
   "total_expenses": "Total de gastos",
@@ -197,10 +189,8 @@
   "group_deleted_success": "Grupo eliminado",
   "@group_deleted_success": {"description": "Mensaje mostrado después de eliminar un grupo de gastos"},
   "csv_select_directory_title": "Seleccionar carpeta para guardar CSV",
-  "csv_saved_in": "CSV guardado en: {path}",
   "csv_save_error": "No se pudo guardar el archivo CSV",
   "ofx_select_directory_title": "Seleccionar carpeta para guardar OFX",
-  "ofx_saved_in": "OFX guardado en: {path}",
   "ofx_save_error": "No se pudo guardar el archivo OFX",
   "csv_expense_name": "Descripción",
   "csv_amount": "Cantidad",
@@ -258,10 +248,6 @@
   "discard_changes_title": "¿Salir sin guardar?",
   "discard_changes_message": "Los cambios que no has guardado se perderán.",
   "discard": "Descartar",
-  "error_saving_group": "Error guardando: {error}",
-  "@error_saving_group": {"placeholders": {"error": {}}},
-  "already_exists": "ya existe",
-  "@already_exists": {"description": "Mostrado después del nombre de una entidad cuando se intenta una entrada duplicada"},
   "status_active": "Activos",
   "@status_active": {"description": "Etiqueta de filtro: grupos activos"},
   "status_archived": "Archivados",
@@ -778,8 +764,6 @@
   ,"@scanning_receipt": {"description": "Mensaje durante el escaneo OCR del recibo"}
   ,"receipt_scan_error": "No se pudo leer el recibo"
   ,"@receipt_scan_error": {"description": "Mensaje de error cuando falla el escaneo OCR"}
-  ,"receipt_scan_permission_denied": "Cámara no permitida: actívala en los ajustes del teléfono para leer recibos"
-  ,"@receipt_scan_permission_denied": {"description": "Mensaje de error cuando se deniega el permiso de cámara o galería"}
   ,"no_text_found": "No se encontró texto en la imagen"
   ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
   ,"settings_group_templates_manage_title": "Plantillas de grupo"
@@ -792,7 +776,6 @@
   ,"settings_group_templates_name_hint": "Ej. Semana de esquí"
   ,"settings_group_templates_icon_label": "Icono"
   ,"settings_group_templates_categories_label": "Categorías predeterminadas"
-  ,"settings_group_templates_validation_error": "Se requiere nombre y al menos una categoría"
   ,"settings_group_templates_delete_title": "Eliminar plantilla"
   ,"settings_group_templates_delete_message": "La plantilla «{templateName}» se eliminará."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
@@ -856,7 +839,6 @@
   ,"drive_backup_weekly": "Copia semanal"
   ,"drive_backup_weekly_desc": "Cada semana, al abrir la app"
   ,"drive_backup_disconnect": "Desconectar"
-  ,"drive_backup_saved": "Copia guardada en Google Drive"
   ,"drive_backup_error": "No se pudo conectar con Google Drive"
   ,"expense_more_details": "Más detalles"
   ,"quick_action_photo": "Foto"
@@ -929,7 +911,6 @@
   ,"attachment_share_error": "No se pudo compartir el adjunto"
   ,"attachment_open_error": "No se pudo abrir el archivo"
   ,"location_permission_denied": "Permite el acceso a la ubicación para añadir el lugar"
-  ,"location_permission_denied_forever": "El acceso a la ubicación está desactivado para Caravella: actívalo en los ajustes del sistema"
   ,"location_service_disabled": "La ubicación está desactivada: actívala para añadir el lugar"
   ,"unsplash_load_more_error": "No se pudieron cargar más fotos"
   ,"unsplash_retry": "Reintentar"
@@ -943,4 +924,33 @@
   ,"settings_whats_new_desc": "Qué ha cambiado en esta versión"
   ,"settings_footer_version": "Caravella {version}"
   ,"settings_made_by": "Hecha por {name}"
+  ,"duplicate_participant_name": "Ya hay alguien con este nombre"
+  ,"duplicate_category_name": "Ya hay una categoría con este nombre"
+  ,"cannot_delete_participant_paid": "{count, plural, =1{Pagó 1 gasto: no se puede eliminar} other{Pagó {count} gastos: no se puede eliminar}}"
+  ,"cannot_delete_category_used": "{count, plural, =1{Usada en 1 gasto: no se puede eliminar} other{Usada en {count} gastos: no se puede eliminar}}"
+  ,"location_off_short": "Ubicación desactivada"
+  ,"location_not_allowed_short": "Ubicación no permitida"
+  ,"location_not_found_short": "Ubicación no encontrada"
+  ,"sync_qr_scan_again": "Escanear de nuevo"
+  ,"permission_camera_title": "¿Permitir la cámara?"
+  ,"permission_camera_message": "Caravella usa la cámara para leer los tickets. El acceso está desactivado: puedes activarlo en los ajustes del teléfono."
+  ,"permission_photos_title": "¿Permitir el acceso a las fotos?"
+  ,"permission_photos_message": "Caravella usa tus fotos para leer un ticket que ya fotografiaste. El acceso está desactivado: puedes activarlo en los ajustes del teléfono."
+  ,"permission_notifications_title": "¿Permitir las notificaciones?"
+  ,"permission_notifications_message": "Para mantener el grupo en las notificaciones, Caravella tiene que poder mostrarlas. Están desactivadas: puedes activarlas en los ajustes del teléfono."
+  ,"permission_location_title": "¿Permitir la ubicación?"
+  ,"permission_location_message": "Caravella usa la ubicación para añadir dónde hiciste un gasto. El acceso está desactivado: puedes activarlo en los ajustes del teléfono."
+  ,"permission_open_settings": "Abrir ajustes"
+  ,"permission_not_now": "Ahora no"
+  ,"undo": "Deshacer"
+  ,"group_archived_toast": "«{title}» archivado"
+  ,"group_unarchived_toast": "«{title}» sacado del archivo"
+  ,"group_deleted_toast": "«{title}» eliminado"
+  ,"group_save_error": "No se pudo guardar el grupo"
+  ,"template_save_error": "No se pudo guardar la plantilla"
+  ,"template_delete_error": "No se pudo eliminar la plantilla"
+  ,"groups_load_error": "No se pudieron cargar los grupos"
+  ,"group_not_found_toast": "Este grupo ya no está"
+  ,"add_name_error": "No se pudo añadir, inténtalo de nuevo"
+  ,"file_saved_in": "«{file}» guardado en {folder}"
 }

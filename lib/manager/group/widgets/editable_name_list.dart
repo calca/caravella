@@ -19,6 +19,11 @@ class EditableNameList extends StatefulWidget {
   final void Function(String) onAdd;
   final void Function(int, String) onEdit;
   final void Function(int) onDelete;
+
+  /// Why item `index` can't be deleted (e.g. it's in some expenses), or
+  /// null when it can: its bin is greyed out and tapping it shows the
+  /// reason under the row.
+  final String? Function(int index)? deleteBlockedReason;
   final IconData itemIcon;
   final Color? borderColor;
   final String? description;
@@ -43,6 +48,7 @@ class EditableNameList extends StatefulWidget {
     required this.onAdd,
     required this.onEdit,
     required this.onDelete,
+    this.deleteBlockedReason,
     this.requiredMark = false,
     this.itemIcon = Icons.label_outline,
     this.borderColor,
@@ -59,6 +65,9 @@ class _EditableNameListState extends State<EditableNameList> {
   int? _editingIndex;
   bool _adding = false;
 
+  /// The row whose [EditableNameList.deleteBlockedReason] is showing.
+  int? _explainedIndex;
+
   void _startEdit(int index) {
     setState(() {
       _adding = false;
@@ -71,20 +80,20 @@ class _EditableNameListState extends State<EditableNameList> {
     FocusScope.of(context).unfocus();
   }
 
-  bool _saveEdit(String val) {
-    if (_editingIndex == null) return false;
-    // Prevent duplicates (case-insensitive) against other items, excluding
-    // the item being edited itself (so re-saving with just a case change,
-    // e.g. "Mario" -> "mario", isn't flagged as colliding with itself).
+  /// [InlineEntryField.validator] for both fields: [widget.duplicateError]
+  /// when another item has [val] (case-insensitive). The item being edited
+  /// doesn't count, so a case-only change ("Mario" → "mario") is fine.
+  String? _duplicate(String val) {
     final lower = val.toLowerCase();
     final duplicate = widget.items.asMap().entries.any(
       (entry) =>
           entry.key != _editingIndex && entry.value.toLowerCase() == lower,
     );
-    if (duplicate) {
-      AppToast.show(context, widget.duplicateError, type: ToastType.info);
-      return false;
-    }
+    return duplicate ? widget.duplicateError : null;
+  }
+
+  bool _saveEdit(String val) {
+    if (_editingIndex == null) return false;
     widget.onEdit(_editingIndex!, val);
     setState(() => _editingIndex = null);
     FocusScope.of(context).unfocus();
@@ -105,18 +114,14 @@ class _EditableNameListState extends State<EditableNameList> {
 
   /// Adds [val]; the field stays open for the next name.
   bool _commitAdd(String val) {
-    final lower = val.toLowerCase();
-    if (widget.items.any((e) => e.toLowerCase() == lower)) {
-      AppToast.show(context, widget.duplicateError, type: ToastType.info);
-      return false;
-    }
     widget.onAdd(val);
     return true;
   }
 
   Widget _buildStaticRow(int index, String name) {
     final s = Theme.of(context).colorScheme;
-    return Padding(
+    final blocked = widget.deleteBlockedReason?.call(index);
+    final row = Padding(
       padding: const EdgeInsets.fromLTRB(14, 6, 6, 6),
       child: Row(
         children: [
@@ -133,12 +138,45 @@ class _EditableNameListState extends State<EditableNameList> {
             onPressed: () => _startEdit(index),
           ),
           IconButton(
-            tooltip: widget.deleteTooltip,
-            icon: Icon(Icons.delete_outline, size: 20, color: s.error),
-            onPressed: () => widget.onDelete(index),
+            tooltip: blocked == null
+                ? widget.deleteTooltip
+                : '${widget.deleteTooltip}: $blocked',
+            icon: Icon(
+              Icons.delete_outline,
+              size: 20,
+              color: blocked == null
+                  ? s.error
+                  : s.onSurfaceVariant.withValues(alpha: 0.38),
+            ),
+            onPressed: blocked == null
+                ? () => widget.onDelete(index)
+                : () => setState(
+                    () => _explainedIndex = _explainedIndex == index
+                        ? null
+                        : index,
+                  ),
           ),
         ],
       ),
+    );
+    if (blocked == null || _explainedIndex != index) return row;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        row,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(64, 0, 16, 10),
+          child: Semantics(
+            liveRegion: true,
+            child: Text(
+              blocked,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: s.onSurfaceVariant),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -164,6 +202,7 @@ class _EditableNameListState extends State<EditableNameList> {
       hintText: widget.hintLabel,
       commitTooltip: widget.saveTooltip,
       cancelTooltip: widget.cancelTooltip,
+      validator: _duplicate,
       onCommit: _saveEdit,
       onCancel: _cancelEdit,
     ),
@@ -177,6 +216,7 @@ class _EditableNameListState extends State<EditableNameList> {
       commitTooltip: widget.addTooltip,
       cancelTooltip: widget.cancelTooltip,
       keepOpen: true,
+      validator: _duplicate,
       onCommit: _commitAdd,
       onCancel: _cancelAdd,
     ),

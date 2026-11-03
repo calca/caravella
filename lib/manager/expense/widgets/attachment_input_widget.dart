@@ -7,7 +7,7 @@ import '../errors/expense_error_handler.dart';
 
 /// The expense's attachments: an "Attachments" section label with the count,
 /// one [AttachmentRow] per file in a card, then an "Add attachment" pill
-/// while there's room. [AttachmentStateManager] holds the logic.
+/// while there's room, or the limit once it's full. [AttachmentStateManager] holds the logic.
 class AttachmentInputWidget extends StatefulWidget {
   final String groupId;
   final String groupName;
@@ -160,6 +160,16 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
                 onTap: busy ? null : () => _showAttachmentSourcePicker(context),
               ),
             ),
+          )
+        else if (widget.enabled)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
+            child: Text(
+              loc.attachment_limit(_stateManager.maxAttachments),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
       ],
     );
@@ -168,13 +178,8 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
   Future<void> _showAttachmentSourcePicker(BuildContext context) async {
     final loc = gen.AppLocalizations.of(context);
 
-    if (!_stateManager.canAddMore) {
-      ExpenseErrorHandler.showAttachmentLimitError(
-        context,
-        maxCount: _stateManager.maxAttachments,
-      );
-      return;
-    }
+    // Full: the pill is gone and the limit shows in its place.
+    if (!_stateManager.canAddMore) return;
 
     final source = await showModalBottomSheet<AttachmentSource>(
       context: context,

@@ -5,12 +5,14 @@ import 'package:material_ui/material_ui.dart';
 /// The shared field for adding a name in place (group creation, pickers,
 /// group settings): ✓ greyed out while empty, Enter or ✓ confirms, a
 /// refused name stays, and with keepOpen the field is ready for the next.
+/// A validator's message shows under the field until the text changes.
 void main() {
   Future<List<String>> pump(
     WidgetTester tester, {
     bool keepOpen = false,
     Set<String> refuse = const {},
     VoidCallback? onCancel,
+    String? Function(String)? validator,
   }) async {
     final taken = <String>[];
     await tester.pumpWidget(
@@ -24,6 +26,7 @@ void main() {
               commitTooltip: 'Add',
               cancelTooltip: 'Cancel',
               keepOpen: keepOpen,
+              validator: validator,
               onCommit: (value) {
                 if (refuse.contains(value)) return false;
                 taken.add(value);
@@ -84,6 +87,30 @@ void main() {
     await tester.pump();
     expect(taken, isEmpty);
     expect(find.text('Anna'), findsOneWidget);
+  });
+
+  testWidgets('a validator message shows under the field until edited', (
+    tester,
+  ) async {
+    final taken = await pump(
+      tester,
+      keepOpen: true,
+      validator: (v) => v == 'Anna' ? 'Already there' : null,
+    );
+    await tester.enterText(find.byType(TextField), 'Anna');
+    await tester.pump();
+    await tester.tap(find.byTooltip('Add'));
+    await tester.pump();
+    expect(taken, isEmpty);
+    expect(find.text('Already there'), findsOneWidget);
+    expect(find.text('Anna'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'Annalisa');
+    await tester.pump();
+    expect(find.text('Already there'), findsNothing);
+    await tester.tap(find.byTooltip('Add'));
+    await tester.pump();
+    expect(taken, ['Annalisa']);
   });
 
   testWidgets('× cancels', (tester) async {

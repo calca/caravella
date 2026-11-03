@@ -308,12 +308,6 @@ abstract class AppLocalizations {
   /// **'Select folder to save Markdown'**
   String get markdown_select_directory_title;
 
-  /// Toast message when Markdown export is saved
-  ///
-  /// In en, this message translates to:
-  /// **'Markdown saved in: {path}'**
-  String markdown_saved_in(String path);
-
   /// No description provided for @markdown_save_error.
   ///
   /// In en, this message translates to:
@@ -421,18 +415,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'From camera'**
   String get from_camera;
-
-  /// Shown when attempting to delete a participant that is used by existing expenses
-  ///
-  /// In en, this message translates to:
-  /// **'Can’t delete the participant: they’re in one or more expenses'**
-  String get cannot_delete_assigned_participant;
-
-  /// Shown when attempting to delete a category that is used by existing expenses
-  ///
-  /// In en, this message translates to:
-  /// **'Can’t delete the category: it’s used by one or more expenses'**
-  String get cannot_delete_assigned_category;
 
   /// No description provided for @color.
   ///
@@ -974,24 +956,6 @@ abstract class AppLocalizations {
   /// **'Remove favorite'**
   String get unpin;
 
-  /// Snackbar message when group is archived
-  ///
-  /// In en, this message translates to:
-  /// **'Archived'**
-  String get archived_with_undo;
-
-  /// Snackbar message when group is unarchived
-  ///
-  /// In en, this message translates to:
-  /// **'Removed from archive'**
-  String get unarchived_with_undo;
-
-  /// Snackbar message when group is deleted
-  ///
-  /// In en, this message translates to:
-  /// **'Deleted'**
-  String get deleted_with_undo;
-
   /// No description provided for @statistics.
   ///
   /// In en, this message translates to:
@@ -1160,12 +1124,6 @@ abstract class AppLocalizations {
   /// **'Select folder to save CSV'**
   String get csv_select_directory_title;
 
-  /// No description provided for @csv_saved_in.
-  ///
-  /// In en, this message translates to:
-  /// **'CSV saved in: {path}'**
-  String csv_saved_in(Object path);
-
   /// No description provided for @csv_save_error.
   ///
   /// In en, this message translates to:
@@ -1177,12 +1135,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select folder to save OFX'**
   String get ofx_select_directory_title;
-
-  /// No description provided for @ofx_saved_in.
-  ///
-  /// In en, this message translates to:
-  /// **'OFX saved in: {path}'**
-  String ofx_saved_in(Object path);
 
   /// No description provided for @ofx_save_error.
   ///
@@ -1543,18 +1495,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discard'**
   String get discard;
-
-  /// No description provided for @error_saving_group.
-  ///
-  /// In en, this message translates to:
-  /// **'Error saving: {error}'**
-  String error_saving_group(Object error);
-
-  /// Shown after an entity name when a duplicate entry is attempted
-  ///
-  /// In en, this message translates to:
-  /// **'already exists'**
-  String get already_exists;
 
   /// Filter label: active groups
   ///
@@ -3527,7 +3467,7 @@ abstract class AppLocalizations {
   /// Error message when Unsplash search or download fails
   ///
   /// In en, this message translates to:
-  /// **'Failed to load images'**
+  /// **'Couldn’t load the images'**
   String get unsplash_error;
 
   /// Attribution prefix before the Unsplash brand link at the bottom of the search page
@@ -3559,12 +3499,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn’t read the receipt'**
   String get receipt_scan_error;
-
-  /// Error message when camera or photo library permission is denied
-  ///
-  /// In en, this message translates to:
-  /// **'Camera not allowed: turn it on in your phone settings to read receipts'**
-  String get receipt_scan_permission_denied;
 
   /// Message when OCR finds no text in the image
   ///
@@ -3631,12 +3565,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Default categories'**
   String get settings_group_templates_categories_label;
-
-  /// No description provided for @settings_group_templates_validation_error.
-  ///
-  /// In en, this message translates to:
-  /// **'Name and at least one category are required'**
-  String get settings_group_templates_validation_error;
 
   /// No description provided for @settings_group_templates_delete_title.
   ///
@@ -4014,12 +3942,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Disconnect'**
   String get drive_backup_disconnect;
-
-  /// Settings → Data, Google Drive backup
-  ///
-  /// In en, this message translates to:
-  /// **'Backup saved to Google Drive'**
-  String get drive_backup_saved;
 
   /// Settings → Data, Google Drive backup
   ///
@@ -4428,12 +4350,6 @@ abstract class AppLocalizations {
   /// **'Allow location access to add the place'**
   String get location_permission_denied;
 
-  /// Toast when the location permission is permanently denied
-  ///
-  /// In en, this message translates to:
-  /// **'Location access is off for Caravella: turn it on in the system settings'**
-  String get location_permission_denied_forever;
-
   /// Toast when the device location service is off
   ///
   /// In en, this message translates to:
@@ -4511,6 +4427,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Made by {name}'**
   String settings_made_by(String name);
+
+  /// No description provided for @duplicate_participant_name.
+  ///
+  /// In en, this message translates to:
+  /// **'There’s already someone with this name'**
+  String get duplicate_participant_name;
+
+  /// No description provided for @duplicate_category_name.
+  ///
+  /// In en, this message translates to:
+  /// **'There’s already a category with this name'**
+  String get duplicate_category_name;
+
+  /// Under a person in group settings whose delete button is greyed out: they paid some expenses
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Paid for 1 expense, so can’t be deleted} other{Paid for {count} expenses, so can’t be deleted}}'**
+  String cannot_delete_participant_paid(int count);
+
+  /// Under a category in group settings whose delete button is greyed out: some expenses use it
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Used by 1 expense, so can’t be deleted} other{Used by {count} expenses, so can’t be deleted}}'**
+  String cannot_delete_category_used(int count);
+
+  /// In the expense's empty Place pill, after trying to get the current location: device location is off. Keep it short
+  ///
+  /// In en, this message translates to:
+  /// **'Location is off'**
+  String get location_off_short;
+
+  /// In the expense's empty Place pill: location permission not given. Keep it short
+  ///
+  /// In en, this message translates to:
+  /// **'Location not allowed'**
+  String get location_not_allowed_short;
+
+  /// In the expense's empty Place pill: no position found. Keep it short
+  ///
+  /// In en, this message translates to:
+  /// **'Location not found'**
+  String get location_not_found_short;
+
+  /// No description provided for @sync_qr_scan_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan again'**
+  String get sync_qr_scan_again;
+
+  /// No description provided for @permission_camera_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow the camera?'**
+  String get permission_camera_title;
+
+  /// No description provided for @permission_camera_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella uses the camera to read receipts. Access is turned off: you can turn it on in your phone’s settings.'**
+  String get permission_camera_message;
+
+  /// No description provided for @permission_photos_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow access to photos?'**
+  String get permission_photos_title;
+
+  /// No description provided for @permission_photos_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella needs your photos to read a receipt you already took. Access is turned off: you can turn it on in your phone’s settings.'**
+  String get permission_photos_message;
+
+  /// No description provided for @permission_notifications_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications?'**
+  String get permission_notifications_title;
+
+  /// No description provided for @permission_notifications_message.
+  ///
+  /// In en, this message translates to:
+  /// **'To keep the group in your notifications Caravella needs to show them. They’re turned off: you can turn them on in your phone’s settings.'**
+  String get permission_notifications_message;
+
+  /// No description provided for @permission_location_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow location?'**
+  String get permission_location_title;
+
+  /// No description provided for @permission_location_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella uses your location to add where an expense happened. Access is turned off: you can turn it on in your phone’s settings.'**
+  String get permission_location_message;
+
+  /// No description provided for @permission_open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get permission_open_settings;
+
+  /// No description provided for @permission_not_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get permission_not_now;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @group_archived_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” archived'**
+  String group_archived_toast(String title);
+
+  /// No description provided for @group_unarchived_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” is back from the archive'**
+  String group_unarchived_toast(String title);
+
+  /// No description provided for @group_deleted_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” deleted'**
+  String group_deleted_toast(String title);
+
+  /// No description provided for @group_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t save the group'**
+  String get group_save_error;
+
+  /// No description provided for @template_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t save the template'**
+  String get template_save_error;
+
+  /// No description provided for @template_delete_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t delete the template'**
+  String get template_delete_error;
+
+  /// No description provided for @groups_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t load the groups'**
+  String get groups_load_error;
+
+  /// No description provided for @group_not_found_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'This group isn’t here any more'**
+  String get group_not_found_toast;
+
+  /// No description provided for @add_name_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t add it, try again'**
+  String get add_name_error;
+
+  /// Toast after an export is saved: the file's name and the folder's name (not the full path)
+  ///
+  /// In en, this message translates to:
+  /// **'“{file}” saved in {folder}'**
+  String file_saved_in(String file, String folder);
 }
 
 class _AppLocalizationsDelegate

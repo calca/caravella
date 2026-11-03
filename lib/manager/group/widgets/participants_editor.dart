@@ -5,7 +5,6 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'participants_section.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../group_form_controller.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class ParticipantsEditor extends StatelessWidget {
   const ParticipantsEditor({super.key});
@@ -14,22 +13,21 @@ class ParticipantsEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<GroupFormState>();
     final controller = context.read<GroupFormController>();
+    final loc = gen.AppLocalizations.of(context);
     return ParticipantsSection(
       showHeader: false,
       participants: state.participants,
       onAddParticipant: (name) =>
           state.addParticipant(ExpenseParticipant(name: name)),
       onEditParticipant: (i, name) => state.editParticipant(i, name),
-      onRemoveParticipant: (i) async {
-        final loc = gen.AppLocalizations.of(context);
-        final removed = await controller.removeParticipantIfUnused(i);
-        if (!removed && context.mounted) {
-          AppToast.show(
-            context,
-            loc.cannot_delete_assigned_participant,
-            type: ToastType.info,
-          );
-        }
+      onRemoveParticipant: controller.removeParticipantIfUnused,
+      // Someone who paid an expense stays: the bin says why.
+      deleteBlockedReason: (i) {
+        final id = state.participants[i].id;
+        final paid = (state.originalGroup?.expenses ?? const <ExpenseDetails>[])
+            .where((e) => e.paidBy.id == id)
+            .length;
+        return paid == 0 ? null : loc.cannot_delete_participant_paid(paid);
       },
     );
   }

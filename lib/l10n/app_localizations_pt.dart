@@ -115,11 +115,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'Selecionar pasta para salvar Markdown';
 
   @override
-  String markdown_saved_in(String path) {
-    return 'Markdown salvo em: $path';
-  }
-
-  @override
   String get markdown_save_error =>
       'Não foi possível salvar o arquivo Markdown';
 
@@ -173,14 +168,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get from_camera => 'Da câmera';
-
-  @override
-  String get cannot_delete_assigned_participant =>
-      'Não é possível excluir o participante: ele está atribuído a uma ou mais despesas';
-
-  @override
-  String get cannot_delete_assigned_category =>
-      'Não é possível excluir a categoria: ela está atribuída a uma ou mais despesas';
 
   @override
   String get color => 'Cor';
@@ -464,15 +451,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get unpin => 'Remover favorito';
 
   @override
-  String get archived_with_undo => 'Arquivado';
-
-  @override
-  String get unarchived_with_undo => 'Retirado do arquivo';
-
-  @override
-  String get deleted_with_undo => 'Excluído';
-
-  @override
   String get statistics => 'Estatísticas';
 
   @override
@@ -559,21 +537,11 @@ class AppLocalizationsPt extends AppLocalizations {
       'Selecione a pasta para salvar o CSV';
 
   @override
-  String csv_saved_in(Object path) {
-    return 'CSV salvo em: $path';
-  }
-
-  @override
   String get csv_save_error => 'Não foi possível salvar o arquivo CSV';
 
   @override
   String get ofx_select_directory_title =>
       'Selecione a pasta para salvar o OFX';
-
-  @override
-  String ofx_saved_in(Object path) {
-    return 'OFX salvo em: $path';
-  }
 
   @override
   String get ofx_save_error => 'Não foi possível salvar o arquivo OFX';
@@ -759,14 +727,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get discard => 'Descartar';
-
-  @override
-  String error_saving_group(Object error) {
-    return 'Erro ao salvar: $error';
-  }
-
-  @override
-  String get already_exists => 'já existe';
 
   @override
   String get status_active => 'Ativos';
@@ -1829,10 +1789,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get receipt_scan_error => 'Não foi possível ler o recibo';
 
   @override
-  String get receipt_scan_permission_denied =>
-      'Câmera não permitida: ative-a nas configurações do telefone para ler recibos';
-
-  @override
   String get no_text_found => 'Nenhum texto encontrado na imagem';
 
   @override
@@ -1865,10 +1821,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settings_group_templates_categories_label => 'Categorias padrão';
-
-  @override
-  String get settings_group_templates_validation_error =>
-      'Nome e pelo menos uma categoria são obrigatórios';
 
   @override
   String get settings_group_templates_delete_title => 'Excluir modelo';
@@ -2112,9 +2064,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get drive_backup_disconnect => 'Desligar';
-
-  @override
-  String get drive_backup_saved => 'Backup guardado no Google Drive';
 
   @override
   String get drive_backup_error => 'Não foi possível aceder ao Google Drive';
@@ -2373,10 +2322,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'Permita o acesso à localização para adicionar o lugar';
 
   @override
-  String get location_permission_denied_forever =>
-      'O acesso à localização está desativado para o Caravella: ative-o nas configurações do sistema';
-
-  @override
   String get location_service_disabled =>
       'A localização está desativada: ative-a para adicionar o lugar';
 
@@ -2420,5 +2365,120 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String settings_made_by(String name) {
     return 'Feito por $name';
+  }
+
+  @override
+  String get duplicate_participant_name => 'Já existe alguém com este nome';
+
+  @override
+  String get duplicate_category_name => 'Já existe uma categoria com este nome';
+
+  @override
+  String cannot_delete_participant_paid(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Pagou $count despesas: não pode ser excluído',
+      one: 'Pagou 1 despesa: não pode ser excluído',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cannot_delete_category_used(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Usada em $count despesas: não pode ser excluída',
+      one: 'Usada em 1 despesa: não pode ser excluída',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get location_off_short => 'Localização desativada';
+
+  @override
+  String get location_not_allowed_short => 'Localização não permitida';
+
+  @override
+  String get location_not_found_short => 'Localização não encontrada';
+
+  @override
+  String get sync_qr_scan_again => 'Ler de novo';
+
+  @override
+  String get permission_camera_title => 'Permitir a câmera?';
+
+  @override
+  String get permission_camera_message =>
+      'O Caravella usa a câmera para ler recibos. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
+
+  @override
+  String get permission_photos_title => 'Permitir acesso às fotos?';
+
+  @override
+  String get permission_photos_message =>
+      'O Caravella usa suas fotos para ler um recibo já fotografado. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
+
+  @override
+  String get permission_notifications_title => 'Permitir notificações?';
+
+  @override
+  String get permission_notifications_message =>
+      'Para manter o grupo nas notificações, o Caravella precisa poder mostrá-las. Elas estão desativadas: você pode ativá-las nas configurações do celular.';
+
+  @override
+  String get permission_location_title => 'Permitir a localização?';
+
+  @override
+  String get permission_location_message =>
+      'O Caravella usa a localização para adicionar onde você fez uma despesa. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
+
+  @override
+  String get permission_open_settings => 'Abrir configurações';
+
+  @override
+  String get permission_not_now => 'Agora não';
+
+  @override
+  String get undo => 'Desfazer';
+
+  @override
+  String group_archived_toast(String title) {
+    return '“$title” arquivado';
+  }
+
+  @override
+  String group_unarchived_toast(String title) {
+    return '“$title” saiu do arquivo';
+  }
+
+  @override
+  String group_deleted_toast(String title) {
+    return '“$title” excluído';
+  }
+
+  @override
+  String get group_save_error => 'Não foi possível salvar o grupo';
+
+  @override
+  String get template_save_error => 'Não foi possível salvar o modelo';
+
+  @override
+  String get template_delete_error => 'Não foi possível excluir o modelo';
+
+  @override
+  String get groups_load_error => 'Não foi possível carregar os grupos';
+
+  @override
+  String get group_not_found_toast => 'Este grupo não existe mais';
+
+  @override
+  String get add_name_error => 'Não foi possível adicionar, tente de novo';
+
+  @override
+  String file_saved_in(String file, String folder) {
+    return '“$file” salvo em $folder';
   }
 }

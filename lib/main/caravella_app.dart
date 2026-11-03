@@ -156,9 +156,11 @@ class _CaravellaAppState extends State<CaravellaApp> {
                                   MediaQuery.viewInsetsOf(context).bottom,
                             ),
                             child: SafeArea(
+                              // No viewer delay: each AppToast hides itself
+                              // after its type's time.
                               child: ToastViewer(
                                 alignment: Alignment.bottomCenter,
-                                delay: const Duration(milliseconds: 2400),
+                                delay: null,
                                 visibleCount: 3,
                               ),
                             ),

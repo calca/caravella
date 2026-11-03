@@ -19,21 +19,14 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
     context: context,
     isScrollControlled: true,
     builder: (sheetCtx) => ExportOptionsSheet(
+      // No expenses: the formats say so and their buttons are off.
+      empty: trip == null || trip.expenses.isEmpty,
       onDownloadCsv: () async {
         final gloc = gen.AppLocalizations.of(context);
         final nav = Navigator.of(sheetCtx);
         final rootContext = context; // capture for toasts
         final csv = CsvExporter.generate(trip, gloc);
-        if (csv.isEmpty) {
-          if (rootContext.mounted) {
-            AppToast.show(
-              rootContext,
-              gloc.no_expenses_to_export,
-              type: ToastType.info,
-            );
-          }
-          return;
-        }
+        if (csv.isEmpty) return;
         final filename = CsvExporter.buildFilename(trip);
         String? dirPath;
         try {
@@ -48,7 +41,10 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
           final file = File('$dirPath/$filename');
           await file.writeAsString(csv);
           if (!rootContext.mounted) return;
-          final msg = gloc.csv_saved_in(file.path);
+          final msg = gloc.file_saved_in(
+            filename,
+            dirPath.split(Platform.pathSeparator).last,
+          );
           AppToast.show(rootContext, msg, type: ToastType.success);
           nav.pop();
         } catch (e) {
@@ -65,16 +61,7 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
         final nav = Navigator.of(sheetCtx);
         final rootContext = context;
         final csv = CsvExporter.generate(trip, gloc);
-        if (csv.isEmpty) {
-          if (rootContext.mounted) {
-            AppToast.show(
-              rootContext,
-              gloc.no_expenses_to_export,
-              type: ToastType.info,
-            );
-          }
-          return;
-        }
+        if (csv.isEmpty) return;
         final tempDir = await getTemporaryDirectory();
         final file = await File(
           '${tempDir.path}/${CsvExporter.buildFilename(trip)}',
@@ -92,16 +79,7 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
         final nav = Navigator.of(sheetCtx);
         final rootContext = context; // capture for toasts
         final ofx = OfxExporter.generate(trip);
-        if (ofx.isEmpty) {
-          if (rootContext.mounted) {
-            AppToast.show(
-              rootContext,
-              gloc.no_expenses_to_export,
-              type: ToastType.info,
-            );
-          }
-          return;
-        }
+        if (ofx.isEmpty) return;
         final filename = OfxExporter.buildFilename(trip);
         String? dirPath;
         try {
@@ -116,7 +94,10 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
           final file = File('$dirPath/$filename');
           await file.writeAsString(ofx);
           if (!rootContext.mounted) return;
-          final msg = gloc.ofx_saved_in(file.path);
+          final msg = gloc.file_saved_in(
+            filename,
+            dirPath.split(Platform.pathSeparator).last,
+          );
           AppToast.show(rootContext, msg, type: ToastType.success);
           nav.pop();
         } catch (e) {
@@ -129,20 +110,10 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
         }
       },
       onShareOfx: () async {
-        final gloc = gen.AppLocalizations.of(context);
         final nav = Navigator.of(sheetCtx);
         final rootContext = context;
         final ofx = OfxExporter.generate(trip);
-        if (ofx.isEmpty) {
-          if (rootContext.mounted) {
-            AppToast.show(
-              rootContext,
-              gloc.no_expenses_to_export,
-              type: ToastType.info,
-            );
-          }
-          return;
-        }
+        if (ofx.isEmpty) return;
         final tempDir = await getTemporaryDirectory();
         final file = await File(
           '${tempDir.path}/${OfxExporter.buildFilename(trip)}',
@@ -160,16 +131,7 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
         final nav = Navigator.of(sheetCtx);
         final rootContext = context;
         final markdown = MarkdownExporter.generate(trip, gloc);
-        if (markdown.isEmpty) {
-          if (rootContext.mounted) {
-            AppToast.show(
-              rootContext,
-              gloc.no_expenses_to_export,
-              type: ToastType.info,
-            );
-          }
-          return;
-        }
+        if (markdown.isEmpty) return;
         final filename = MarkdownExporter.buildFilename(trip);
         String? dirPath;
         try {
@@ -184,7 +146,10 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
           final file = File('$dirPath/$filename');
           await file.writeAsString(markdown);
           if (!rootContext.mounted) return;
-          final msg = gloc.markdown_saved_in(file.path);
+          final msg = gloc.file_saved_in(
+            filename,
+            dirPath.split(Platform.pathSeparator).last,
+          );
           AppToast.show(rootContext, msg, type: ToastType.success);
           nav.pop();
         } catch (e) {
@@ -201,16 +166,7 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
         final nav = Navigator.of(sheetCtx);
         final rootContext = context;
         final markdown = MarkdownExporter.generate(trip, gloc);
-        if (markdown.isEmpty) {
-          if (rootContext.mounted) {
-            AppToast.show(
-              rootContext,
-              gloc.no_expenses_to_export,
-              type: ToastType.info,
-            );
-          }
-          return;
-        }
+        if (markdown.isEmpty) return;
         final tempDir = await getTemporaryDirectory();
         final file = await File(
           '${tempDir.path}/${MarkdownExporter.buildFilename(trip)}',

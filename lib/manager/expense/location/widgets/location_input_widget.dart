@@ -38,6 +38,10 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   bool _isResolvingAddress = false;
   ExpenseLocation? _currentLocation;
 
+  /// Why the last "current location" found nothing: the empty pill says
+  /// it instead of "Place" (tap it to search, or try again from there).
+  LocationProblem? _problem;
+
   @override
   void initState() {
     super.initState();
@@ -62,12 +66,16 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   Future<void> _getCurrentLocation() async {
     setState(() {
       _isGettingLocation = true;
+      _problem = null;
     });
     widget.onRetrievalStatusChanged?.call(true);
 
     final location = await LocationService.getCurrentLocation(
       context,
       resolveAddress: true,
+      onProblem: (problem) {
+        if (mounted) setState(() => _problem = problem);
+      },
       onStatusChanged: (status) {
         if (mounted) {
           setState(() {
@@ -133,6 +141,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     if (result != null && mounted) {
       setState(() {
         _isResolvingAddress = true;
+        _problem = null;
       });
 
       try {
@@ -233,9 +242,20 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       );
     }
 
+    final problem = _problem;
+    final label = switch (problem) {
+      null => gloc.location,
+      LocationProblem.serviceDisabled => gloc.location_off_short,
+      LocationProblem.permissionDenied ||
+      LocationProblem.deniedForever => gloc.location_not_allowed_short,
+      LocationProblem.notFound => gloc.location_not_found_short,
+    };
     return FormPill(
-      icon: Icons.place_outlined,
-      label: gloc.location,
+      icon: problem == null
+          ? Icons.place_outlined
+          : Icons.location_disabled_outlined,
+      label: label,
+      semanticsLabel: problem == null ? null : '${gloc.location}: $label',
       style: FormPillStyle.add,
       onTap: widget.enabled ? _showPlaceSearch : null,
     );

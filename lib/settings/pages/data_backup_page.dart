@@ -11,8 +11,16 @@ import 'package:provider/provider.dart';
 import '../backup/restore_groups.dart';
 import '../widgets/drive_backup_section.dart';
 
-class DataBackupPage extends StatelessWidget {
+class DataBackupPage extends StatefulWidget {
   const DataBackupPage({super.key});
+
+  @override
+  State<DataBackupPage> createState() => _DataBackupPageState();
+}
+
+class _DataBackupPageState extends State<DataBackupPage> {
+  final Future<List<ExpenseGroup>> _groups =
+      ExpenseGroupStorageV2.getAllGroups();
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +49,21 @@ class DataBackupPage extends StatelessWidget {
             SettingsGroup(
               label: gloc.data_title,
               children: [
-                SettingsTile(
-                  icon: Icons.upload_outlined,
-                  title: gloc.backup,
-                  subtitle: gloc.data_backup_desc,
-                  onTap: () => _backupTrips(context, gloc),
+                // Greyed out, saying why, while there's nothing to back up.
+                FutureBuilder<List<ExpenseGroup>>(
+                  future: _groups,
+                  builder: (context, snapshot) {
+                    final none = snapshot.data?.isEmpty ?? false;
+                    return SettingsTile(
+                      icon: Icons.upload_outlined,
+                      title: gloc.backup,
+                      subtitle: none
+                          ? gloc.no_trips_to_backup
+                          : gloc.data_backup_desc,
+                      enabled: !none,
+                      onTap: () => _backupTrips(context, gloc),
+                    );
+                  },
                 ),
                 SettingsTile(
                   icon: Icons.download_outlined,
@@ -83,11 +101,7 @@ class DataBackupPage extends StatelessWidget {
   ) async {
     try {
       final bytes = await BackupArchive.createFromStorage();
-      if (bytes == null) {
-        if (!context.mounted) return;
-        AppToast.show(context, loc.no_trips_to_backup, type: ToastType.info);
-        return;
-      }
+      if (bytes == null) return;
 
       final tempDir = await getTemporaryDirectory();
       final zipPath =

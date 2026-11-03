@@ -13,17 +13,6 @@ class ExpenseErrorHandler {
 
   // Attachment errors
 
-  static void showAttachmentLimitError(
-    BuildContext context, {
-    required int maxCount,
-  }) {
-    AppToast.show(
-      context,
-      gen.AppLocalizations.of(context).attachment_limit(maxCount),
-      type: ToastType.error,
-    );
-  }
-
   static void showAttachmentAddError(BuildContext context, Object error) {
     LoggerService.warning('Adding an attachment failed: $error', name: 'ui');
     AppToast.show(
@@ -51,13 +40,6 @@ class ExpenseErrorHandler {
     );
   }
 
-  static void showLocationPermissionDeniedForever(BuildContext context) {
-    _showLocationError(
-      context,
-      gen.AppLocalizations.of(context).location_permission_denied_forever,
-    );
-  }
-
   static void showLocationServiceDisabled(BuildContext context) {
     _showLocationError(
       context,
@@ -81,11 +63,6 @@ class ExpenseErrorHandler {
   }
 
   static void _showLocationError(BuildContext context, String message) {
-    AppToast.show(
-      context,
-      message,
-      type: ToastType.error,
-      duration: const Duration(seconds: 5),
-    );
+    AppToast.show(context, message, type: ToastType.error);
   }
 }
