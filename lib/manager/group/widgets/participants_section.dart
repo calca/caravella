@@ -37,7 +37,7 @@ class ParticipantsSection extends StatelessWidget {
       saveTooltip: loc.save,
       cancelTooltip: loc.cancel,
       addTooltip: loc.add,
-      duplicateError: '${loc.participant_name} ${loc.already_exists}',
+      duplicateError: loc.duplicate_participant_name,
       onAdd: onAddParticipant,
       onEdit: onEditParticipant,
       onDelete: onRemoveParticipant,

@@ -71,20 +71,20 @@ class _EditableNameListState extends State<EditableNameList> {
     FocusScope.of(context).unfocus();
   }
 
-  bool _saveEdit(String val) {
-    if (_editingIndex == null) return false;
-    // Prevent duplicates (case-insensitive) against other items, excluding
-    // the item being edited itself (so re-saving with just a case change,
-    // e.g. "Mario" -> "mario", isn't flagged as colliding with itself).
+  /// [InlineEntryField.validator] for both fields: [widget.duplicateError]
+  /// when another item has [val] (case-insensitive). The item being edited
+  /// doesn't count, so a case-only change ("Mario" → "mario") is fine.
+  String? _duplicate(String val) {
     final lower = val.toLowerCase();
     final duplicate = widget.items.asMap().entries.any(
       (entry) =>
           entry.key != _editingIndex && entry.value.toLowerCase() == lower,
     );
-    if (duplicate) {
-      AppToast.show(context, widget.duplicateError, type: ToastType.info);
-      return false;
-    }
+    return duplicate ? widget.duplicateError : null;
+  }
+
+  bool _saveEdit(String val) {
+    if (_editingIndex == null) return false;
     widget.onEdit(_editingIndex!, val);
     setState(() => _editingIndex = null);
     FocusScope.of(context).unfocus();
@@ -105,11 +105,6 @@ class _EditableNameListState extends State<EditableNameList> {
 
   /// Adds [val]; the field stays open for the next name.
   bool _commitAdd(String val) {
-    final lower = val.toLowerCase();
-    if (widget.items.any((e) => e.toLowerCase() == lower)) {
-      AppToast.show(context, widget.duplicateError, type: ToastType.info);
-      return false;
-    }
     widget.onAdd(val);
     return true;
   }
@@ -164,6 +159,7 @@ class _EditableNameListState extends State<EditableNameList> {
       hintText: widget.hintLabel,
       commitTooltip: widget.saveTooltip,
       cancelTooltip: widget.cancelTooltip,
+      validator: _duplicate,
       onCommit: _saveEdit,
       onCancel: _cancelEdit,
     ),
@@ -177,6 +173,7 @@ class _EditableNameListState extends State<EditableNameList> {
       commitTooltip: widget.addTooltip,
       cancelTooltip: widget.cancelTooltip,
       keepOpen: true,
+      validator: _duplicate,
       onCommit: _commitAdd,
       onCancel: _cancelAdd,
     ),

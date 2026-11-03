@@ -44,11 +44,8 @@ class ExpenseGroupGeneralPage extends StatelessWidget {
           ExpenseGroupNotifier,
           GroupFormController
         >(
-          update: (context, state, notifier, previous) => GroupFormController(
-            state,
-            mode,
-            notifier,
-          ),
+          update: (context, state, notifier, previous) =>
+              GroupFormController(state, mode, notifier),
         ),
       ],
       child: _GeneralPageScaffold(
@@ -82,6 +79,10 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
   String? _dateError;
   final _formKey = GlobalKey<FormState>();
   final _titleFocus = FocusNode();
+
+  /// Set once going back was refused for an empty name: the field then says
+  /// why under it.
+  bool _nameRequired = false;
 
   GroupFormState get _state => context.read<GroupFormState>();
   GroupFormController get _controller => context.read<GroupFormController>();
@@ -182,9 +183,13 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                       errorColor: theme.colorScheme.error,
                       hintText: gloc.enter_title,
                     ).copyWith(
-                      // Red border only: the hint inside already says
-                      // what's missing.
-                      error: state.title.trim().isEmpty
+                      // Red border only while editing: the hint inside
+                      // already says what's missing. After trying to leave,
+                      // the reason too.
+                      errorText: _nameRequired && state.title.trim().isEmpty
+                          ? gloc.group_name_required
+                          : null,
+                      error: !_nameRequired && state.title.trim().isEmpty
                           ? const SizedBox.shrink()
                           : null,
                     ),
@@ -303,12 +308,8 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
               // A group can't be left without a name: stay here, point at
               // the field (already red) and say why.
               if (_state.title.trim().isEmpty) {
+                setState(() => _nameRequired = true);
                 _titleFocus.requestFocus();
-                AppToast.show(
-                  context,
-                  gen.AppLocalizations.of(context).group_name_required,
-                  type: ToastType.error,
-                );
                 return;
               }
               if (controller.hasChanges) {

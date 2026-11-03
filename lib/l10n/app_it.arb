@@ -247,8 +247,6 @@
   ,"@spent_today": {"description": "Etichetta mostrata prima dell'importo speso oggi"}
   ,"error_saving_group": "Errore durante il salvataggio: {error}"
   ,"@error_saving_group": {"placeholders": {"error": {}}}
-  ,"already_exists": "esiste già"
-  ,"@already_exists": {"description": "Mostrato dopo il nome di un'entità quando si tenta di inserire un duplicato"}
   ,"cannot_delete_assigned_participant": "Impossibile eliminare il partecipante: è assegnato a una o più spese"
   ,"@cannot_delete_assigned_participant": {"description": "Errore mostrato quando si prova a eliminare un partecipante che ha spese assegnate"}
   ,"cannot_delete_assigned_category": "Impossibile eliminare la categoria: è assegnata a una o più spese"
@@ -769,7 +767,6 @@
   ,"settings_group_templates_name_hint": "Es. Settimana bianca"
   ,"settings_group_templates_icon_label": "Icona"
   ,"settings_group_templates_categories_label": "Categorie predefinite"
-  ,"settings_group_templates_validation_error": "Nome e almeno una categoria sono obbligatori"
   ,"settings_group_templates_delete_title": "Elimina modello"
   ,"settings_group_templates_delete_message": "Il modello «{templateName}» verrà eliminato."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
@@ -918,4 +915,6 @@
   ,"settings_whats_new_desc": "Cosa è cambiato in questa versione"
   ,"settings_footer_version": "Caravella {version}"
   ,"settings_made_by": "Fatta da {name}"
+  ,"duplicate_participant_name": "C’è già una persona con questo nome"
+  ,"duplicate_category_name": "C’è già una categoria con questo nome"
 }

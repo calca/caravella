@@ -80,6 +80,53 @@ void main() {
       },
     );
 
+    testWidgets('a name already in the list is refused under the field', (
+      tester,
+    ) async {
+      final added = <String>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: appLocalizationsDelegates,
+          supportedLocales: gen.AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: ElevatedButton(
+                onPressed: () => showSelectionBottomSheet<String>(
+                  context: context,
+                  items: const ['Alice', 'Bob'],
+                  selected: null,
+                  itemLabel: (p) => p,
+                  sheetTitle: 'Select Participant',
+                  onAddItemInline: (name) async => added.add(name),
+                  addItemHint: 'Participant name',
+                  addLabel: 'Add',
+                  addCategoryLabel: 'Add participant',
+                  alreadyExistsMessage:
+                      'There’s already someone with this name',
+                ),
+                child: const Text('Open Bottom Sheet'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Open Bottom Sheet'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Add participant'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'alice');
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.check_rounded));
+      await tester.pumpAndSettle();
+
+      expect(added, isEmpty);
+      expect(
+        find.text('There’s already someone with this name'),
+        findsOneWidget,
+      );
+      expect(find.text('Select Participant'), findsOneWidget);
+    });
+
     testWidgets('Modal sheet builds correctly with items', (tester) async {
       final testItems = ['Category 1', 'Category 2', 'Category 3'];
 
@@ -166,52 +213,54 @@ void main() {
       expect(find.byIcon(Icons.close_rounded), findsOneWidget);
     });
 
-    testWidgets('Add button is inside the scrollable list, not fixed at bottom',
-        (tester) async {
-      final testItems = ['Item 1', 'Item 2', 'Item 3'];
+    testWidgets(
+      'Add button is inside the scrollable list, not fixed at bottom',
+      (tester) async {
+        final testItems = ['Item 1', 'Item 2', 'Item 3'];
 
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: appLocalizationsDelegates,
-          supportedLocales: gen.AppLocalizations.supportedLocales,
-          home: Builder(
-            builder: (context) => Scaffold(
-              body: ElevatedButton(
-                onPressed: () async {
-                  await showSelectionBottomSheet<String>(
-                    context: context,
-                    items: testItems,
-                    selected: null,
-                    itemLabel: (item) => item,
-                    onAddItemInline: (name) async {},
-                    addItemHint: 'Add new item',
-                    addCategoryLabel: 'Add item',
-                  );
-                },
-                child: const Text('Open Modal'),
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: appLocalizationsDelegates,
+            supportedLocales: gen.AppLocalizations.supportedLocales,
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: ElevatedButton(
+                  onPressed: () async {
+                    await showSelectionBottomSheet<String>(
+                      context: context,
+                      items: testItems,
+                      selected: null,
+                      itemLabel: (item) => item,
+                      onAddItemInline: (name) async {},
+                      addItemHint: 'Add new item',
+                      addCategoryLabel: 'Add item',
+                    );
+                  },
+                  child: const Text('Open Modal'),
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      // Open the bottom sheet
-      await tester.tap(find.text('Open Modal'));
-      await tester.pumpAndSettle();
+        // Open the bottom sheet
+        await tester.tap(find.text('Open Modal'));
+        await tester.pumpAndSettle();
 
-      // Verify the add button is present
-      expect(find.text('Add item'), findsOneWidget);
+        // Verify the add button is present
+        expect(find.text('Add item'), findsOneWidget);
 
-      // Verify the add button is inside the ListView (scrollable list),
-      // not a separate widget below the list
-      final addButton = find.text('Add item');
-      final listView = find.byType(ListView);
-      expect(listView, findsOneWidget);
-      expect(
-        find.descendant(of: listView, matching: addButton),
-        findsOneWidget,
-      );
-    });
+        // Verify the add button is inside the ListView (scrollable list),
+        // not a separate widget below the list
+        final addButton = find.text('Add item');
+        final listView = find.byType(ListView);
+        expect(listView, findsOneWidget);
+        expect(
+          find.descendant(of: listView, matching: addButton),
+          findsOneWidget,
+        );
+      },
+    );
 
     testWidgets('Modal sheet handles empty items list', (tester) async {
       final testItems = <String>[];

@@ -276,8 +276,6 @@
   ,"discard": "Discard"
   ,"error_saving_group": "Error saving: {error}"
   ,"@error_saving_group": {"placeholders": {"error": {}}}
-  ,"already_exists": "already exists"
-  ,"@already_exists": {"description": "Shown after an entity name when a duplicate entry is attempted"}
   ,"status_active": "Active"
   ,"@status_active": {"description": "Filter label: active groups"}
   ,"status_archived": "Archived"
@@ -800,7 +798,6 @@
   ,"settings_group_templates_name_hint": "E.g. Ski week"
   ,"settings_group_templates_icon_label": "Icon"
   ,"settings_group_templates_categories_label": "Default categories"
-  ,"settings_group_templates_validation_error": "Name and at least one category are required"
   ,"settings_group_templates_delete_title": "Delete template"
   ,"settings_group_templates_delete_message": "The template “{templateName}” will be deleted."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
@@ -1060,4 +1057,6 @@
   ,"@settings_footer_version": {"placeholders": {"version": {"type": "String"}}}
   ,"@settings_made_by": {"placeholders": {"name": {"type": "String"}}}
   ,"@invite_friends_message": {"description": "Shared invite text; {link} is the store page of this build (Google Play or F-Droid)", "placeholders": {"link": {"type": "String"}}}
+  ,"duplicate_participant_name": "There’s already someone with this name"
+  ,"duplicate_category_name": "There’s already a category with this name"
 }

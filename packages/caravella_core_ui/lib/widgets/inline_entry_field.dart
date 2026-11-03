@@ -12,15 +12,18 @@ import 'field_action_button.dart';
 /// description, then × (cancel) and a filled ✓ (greyed out while empty).
 /// Enter confirms too.
 ///
-/// [onCommit] gets the trimmed text and returns whether it was taken: false
-/// keeps the text (e.g. a duplicate the caller has just reported). With
-/// [keepOpen], a taken entry empties the field and keeps it focused for
-/// the next one; otherwise closing is up to the caller.
+/// [validator] runs first on the trimmed text: a message turns the border
+/// red and shows under the field (e.g. a name already taken), until the
+/// text changes. [onCommit] then gets the text and returns whether it was
+/// taken: false keeps the text. With [keepOpen], a taken entry empties the
+/// field and keeps it focused for the next one; otherwise closing is up to
+/// the caller.
 class InlineEntryField extends StatefulWidget {
   final String hintText;
   final String commitTooltip;
   final String cancelTooltip;
   final FutureOr<bool> Function(String value) onCommit;
+  final String? Function(String value)? validator;
   final VoidCallback onCancel;
   final bool keepOpen;
 
@@ -37,6 +40,7 @@ class InlineEntryField extends StatefulWidget {
     required this.cancelTooltip,
     required this.onCommit,
     required this.onCancel,
+    this.validator,
     this.keepOpen = false,
     this.initialText,
     this.textCapitalization = TextCapitalization.sentences,
@@ -57,16 +61,28 @@ class _InlineEntryFieldState extends State<InlineEntryField> {
       (_ownController ??= TextEditingController(text: widget.initialText));
   FocusNode get _focus => widget.focusNode ?? (_ownFocus ??= FocusNode());
 
+  /// The [InlineEntryField.validator]'s message, shown until the text changes.
+  String? _error;
+  String _errorFor = '';
+
   @override
   void initState() {
     super.initState();
     if (widget.controller != null && widget.initialText != null) {
       widget.controller!.text = widget.initialText!;
     }
+    _controller.addListener(_clearError);
+  }
+
+  void _clearError() {
+    if (_error != null && _controller.text != _errorFor) {
+      setState(() => _error = null);
+    }
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_clearError);
     _ownController?.dispose();
     _ownFocus?.dispose();
     super.dispose();
@@ -75,6 +91,15 @@ class _InlineEntryFieldState extends State<InlineEntryField> {
   Future<void> _commit() async {
     final value = _controller.text.trim();
     if (value.isEmpty) return;
+    final error = widget.validator?.call(value);
+    if (error != null) {
+      setState(() {
+        _error = error;
+        _errorFor = _controller.text;
+      });
+      _focus.requestFocus();
+      return;
+    }
     final taken = await widget.onCommit(value);
     if (!mounted || !taken || !widget.keepOpen) return;
     _controller.clear();
@@ -103,6 +128,8 @@ class _InlineEntryFieldState extends State<InlineEntryField> {
             errorColor: s.error,
             hintText: widget.hintText,
           ).copyWith(
+            errorText: _error,
+            errorMaxLines: 2,
             suffixIcon: Padding(
               padding: const EdgeInsets.only(right: 6),
               child: Row(

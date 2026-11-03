@@ -37,7 +37,7 @@ class CategoriesSection extends StatelessWidget {
       saveTooltip: loc.save,
       cancelTooltip: loc.cancel,
       addTooltip: loc.add,
-      duplicateError: '${loc.category_name} ${loc.already_exists}',
+      duplicateError: loc.duplicate_category_name,
       onAdd: onAddCategory,
       onEdit: onEditCategory,
       onDelete: onRemoveCategory,

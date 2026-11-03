@@ -260,8 +260,6 @@
   "discard": "Descartar",
   "error_saving_group": "Error guardando: {error}",
   "@error_saving_group": {"placeholders": {"error": {}}},
-  "already_exists": "ya existe",
-  "@already_exists": {"description": "Mostrado después del nombre de una entidad cuando se intenta una entrada duplicada"},
   "status_active": "Activos",
   "@status_active": {"description": "Etiqueta de filtro: grupos activos"},
   "status_archived": "Archivados",
@@ -792,7 +790,6 @@
   ,"settings_group_templates_name_hint": "Ej. Semana de esquí"
   ,"settings_group_templates_icon_label": "Icono"
   ,"settings_group_templates_categories_label": "Categorías predeterminadas"
-  ,"settings_group_templates_validation_error": "Se requiere nombre y al menos una categoría"
   ,"settings_group_templates_delete_title": "Eliminar plantilla"
   ,"settings_group_templates_delete_message": "La plantilla «{templateName}» se eliminará."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
@@ -943,4 +940,6 @@
   ,"settings_whats_new_desc": "Qué ha cambiado en esta versión"
   ,"settings_footer_version": "Caravella {version}"
   ,"settings_made_by": "Hecha por {name}"
+  ,"duplicate_participant_name": "Ya hay alguien con este nombre"
+  ,"duplicate_category_name": "Ya hay una categoría con este nombre"
 }

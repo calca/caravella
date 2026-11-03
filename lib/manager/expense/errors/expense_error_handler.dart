@@ -13,17 +13,6 @@ class ExpenseErrorHandler {
 
   // Attachment errors
 
-  static void showAttachmentLimitError(
-    BuildContext context, {
-    required int maxCount,
-  }) {
-    AppToast.show(
-      context,
-      gen.AppLocalizations.of(context).attachment_limit(maxCount),
-      type: ToastType.error,
-    );
-  }
-
   static void showAttachmentAddError(BuildContext context, Object error) {
     LoggerService.warning('Adding an attachment failed: $error', name: 'ui');
     AppToast.show(

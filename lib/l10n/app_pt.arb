@@ -139,7 +139,6 @@
   "discard_changes_message": "As alterações que você não salvou serão perdidas.",
   "discard": "Descartar",
   "error_saving_group": "Erro ao salvar: {error}",
-  "already_exists": "já existe",
   "other_settings_desc": "Notificação, localização",
   "segment_general": "Geral",
   "segment_other": "Outro",
@@ -762,7 +761,6 @@
   ,"settings_group_templates_name_hint": "Ex. Semana de esqui"
   ,"settings_group_templates_icon_label": "Ícone"
   ,"settings_group_templates_categories_label": "Categorias padrão"
-  ,"settings_group_templates_validation_error": "Nome e pelo menos uma categoria são obrigatórios"
   ,"settings_group_templates_delete_title": "Excluir modelo"
   ,"settings_group_templates_delete_message": "O modelo “{templateName}” será excluído."
   ,"@settings_group_templates_delete_message": {"placeholders": {"templateName": {"type": "String"}}}
@@ -917,4 +915,6 @@
   ,"settings_whats_new_desc": "O que mudou nesta versão"
   ,"settings_footer_version": "Caravella {version}"
   ,"settings_made_by": "Feito por {name}"
+  ,"duplicate_participant_name": "Já existe alguém com este nome"
+  ,"duplicate_category_name": "Já existe uma categoria com este nome"
 }

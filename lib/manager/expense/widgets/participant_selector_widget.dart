@@ -48,8 +48,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
           addLabel: gloc.add,
           cancelLabel: gloc.cancel,
           addCategoryLabel: gloc.add_participant,
-          alreadyExistsMessage:
-              '${gloc.participant_name} ${gloc.already_exists}',
+          alreadyExistsMessage: gloc.duplicate_participant_name,
           sheetTitle: gloc.participants_label,
           singleLine: singleLine,
         ),

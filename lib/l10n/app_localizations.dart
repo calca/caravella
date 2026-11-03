@@ -1550,12 +1550,6 @@ abstract class AppLocalizations {
   /// **'Error saving: {error}'**
   String error_saving_group(Object error);
 
-  /// Shown after an entity name when a duplicate entry is attempted
-  ///
-  /// In en, this message translates to:
-  /// **'already exists'**
-  String get already_exists;
-
   /// Filter label: active groups
   ///
   /// In en, this message translates to:
@@ -3632,12 +3626,6 @@ abstract class AppLocalizations {
   /// **'Default categories'**
   String get settings_group_templates_categories_label;
 
-  /// No description provided for @settings_group_templates_validation_error.
-  ///
-  /// In en, this message translates to:
-  /// **'Name and at least one category are required'**
-  String get settings_group_templates_validation_error;
-
   /// No description provided for @settings_group_templates_delete_title.
   ///
   /// In en, this message translates to:
@@ -4511,6 +4499,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Made by {name}'**
   String settings_made_by(String name);
+
+  /// No description provided for @duplicate_participant_name.
+  ///
+  /// In en, this message translates to:
+  /// **'There’s already someone with this name'**
+  String get duplicate_participant_name;
+
+  /// No description provided for @duplicate_category_name.
+  ///
+  /// In en, this message translates to:
+  /// **'There’s already a category with this name'**
+  String get duplicate_category_name;
 }
 
 class _AppLocalizationsDelegate

@@ -753,9 +753,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get already_exists => '已存在';
-
-  @override
   String get status_active => '活跃';
 
   @override
@@ -1826,9 +1823,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_group_templates_categories_label => '默认分类';
 
   @override
-  String get settings_group_templates_validation_error => '必须填写名称且至少添加一个分类';
-
-  @override
   String get settings_group_templates_delete_title => '删除模板';
 
   @override
@@ -2366,4 +2360,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String settings_made_by(String name) {
     return '由 $name 开发';
   }
+
+  @override
+  String get duplicate_participant_name => '已有同名的人';
+
+  @override
+  String get duplicate_category_name => '已有同名的类别';
 }

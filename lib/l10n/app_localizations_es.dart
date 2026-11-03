@@ -768,9 +768,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get already_exists => 'ya existe';
-
-  @override
   String get status_active => 'Activos';
 
   @override
@@ -1871,10 +1868,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Categorías predeterminadas';
 
   @override
-  String get settings_group_templates_validation_error =>
-      'Se requiere nombre y al menos una categoría';
-
-  @override
   String get settings_group_templates_delete_title => 'Eliminar plantilla';
 
   @override
@@ -2428,4 +2421,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String settings_made_by(String name) {
     return 'Hecha por $name';
   }
+
+  @override
+  String get duplicate_participant_name => 'Ya hay alguien con este nombre';
+
+  @override
+  String get duplicate_category_name => 'Ya hay una categoría con este nombre';
 }

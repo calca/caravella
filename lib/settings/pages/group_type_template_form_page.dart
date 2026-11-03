@@ -49,17 +49,14 @@ class _GroupTypeTemplateFormPageState extends State<GroupTypeTemplateFormPage> {
     super.dispose();
   }
 
+  /// A name and at least one category: until then Save is greyed out.
+  bool get _complete =>
+      _nameController.text.trim().isNotEmpty && _categories.isNotEmpty;
+
   Future<void> _save() async {
     final loc = gen.AppLocalizations.of(context);
     final name = _nameController.text.trim();
-    if (name.isEmpty || _categories.isEmpty) {
-      AppToast.show(
-        context,
-        loc.settings_group_templates_validation_error,
-        type: ToastType.info,
-      );
-      return;
-    }
+    if (!_complete) return;
 
     setState(() => _saving = true);
     final nextTemplate = GroupTypeTemplate(
@@ -127,10 +124,13 @@ class _GroupTypeTemplateFormPageState extends State<GroupTypeTemplateFormPage> {
         title: isEdit
             ? loc.settings_group_templates_edit_title
             : loc.settings_group_templates_add_title,
-        bottomBar: BottomActionBar(
-          onPressed: _save,
-          label: loc.save,
-          enabled: !_saving,
+        bottomBar: ListenableBuilder(
+          listenable: _nameController,
+          builder: (context, _) => BottomActionBar(
+            onPressed: _save,
+            label: loc.save,
+            enabled: !_saving && _complete,
+          ),
         ),
         children: [
           // Name: a big field in its own card, like the group's settings.
@@ -209,7 +209,7 @@ class _GroupTypeTemplateFormPageState extends State<GroupTypeTemplateFormPage> {
             saveTooltip: loc.save,
             cancelTooltip: loc.cancel,
             addTooltip: loc.add,
-            duplicateError: '${loc.category_name} ${loc.already_exists}',
+            duplicateError: loc.duplicate_category_name,
             onAdd: _addCategory,
             onEdit: _editCategory,
             onDelete: _removeCategory,

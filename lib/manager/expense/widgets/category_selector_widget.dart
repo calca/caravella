@@ -48,7 +48,7 @@ class CategorySelectorWidget extends StatelessWidget {
           addLabel: gloc.add,
           cancelLabel: gloc.cancel,
           addCategoryLabel: gloc.add_category,
-          alreadyExistsMessage: '${gloc.category_name} ${gloc.already_exists}',
+          alreadyExistsMessage: gloc.duplicate_category_name,
           sheetTitle: gloc.category,
           singleLine: singleLine,
         ),

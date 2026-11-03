@@ -31,11 +31,8 @@ class ExpenseGroupParticipantsPage extends StatelessWidget {
           ExpenseGroupNotifier,
           GroupFormController
         >(
-          update: (context, state, notifier, previous) => GroupFormController(
-            state,
-            mode,
-            notifier,
-          ),
+          update: (context, state, notifier, previous) =>
+              GroupFormController(state, mode, notifier),
         ),
       ],
       child: _ParticipantsPageScaffold(

@@ -20,16 +20,20 @@ class _WizardPeopleStepState extends State<WizardPeopleStep> {
   /// Whether the name field is open (after "Add participant").
   bool _adding = false;
 
-  /// Adds [name] unless someone already has it; the field stays open for
-  /// the next one.
-  bool _add(GroupFormState state, String name, String duplicateMessage) {
+  /// [duplicateMessage] when someone already has [name].
+  String? _duplicate(
+    GroupFormState state,
+    String name,
+    String duplicateMessage,
+  ) {
     final exists = state.participants.any(
       (p) => p.name.trim().toLowerCase() == name.toLowerCase(),
     );
-    if (exists) {
-      AppToast.show(context, duplicateMessage, type: ToastType.info);
-      return false;
-    }
+    return exists ? duplicateMessage : null;
+  }
+
+  /// Adds [name]; the field stays open for the next one.
+  bool _add(GroupFormState state, String name) {
     state.addParticipant(ExpenseParticipant(name: name));
     return true;
   }
@@ -95,11 +99,9 @@ class _WizardPeopleStepState extends State<WizardPeopleStep> {
             cancelTooltip: gloc.cancel,
             textCapitalization: TextCapitalization.words,
             keepOpen: true,
-            onCommit: (name) => _add(
-              state,
-              name,
-              '${gloc.participant_name} ${gloc.already_exists}',
-            ),
+            validator: (name) =>
+                _duplicate(state, name, gloc.duplicate_participant_name),
+            onCommit: (name) => _add(state, name),
             onCancel: () => setState(() => _adding = false),
           )
         else

@@ -221,23 +221,6 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   Future<bool> _commitInlineAdd(String val) async {
     if (widget.onAddItemInline == null) return false;
 
-    // Check for duplicates (case-insensitive)
-    final lower = val.toLowerCase();
-    final isDuplicate = _currentItems.any(
-      (item) => widget.itemLabel(item).toLowerCase() == lower,
-    );
-
-    if (isDuplicate) {
-      if (widget.alreadyExistsMessage != null) {
-        AppToast.show(
-          context,
-          widget.alreadyExistsMessage!,
-          type: ToastType.info,
-        );
-      }
-      return false;
-    }
-
     try {
       await widget.onAddItemInline!(val);
 
@@ -280,6 +263,18 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   /// From this many items a search field shows above the list.
   static const int searchFrom = 9;
 
+  /// [InlineEntryField.validator]: the "already exists" message when an item
+  /// has [val] (case-insensitive).
+  String? _duplicate(String val) {
+    final lower = val.toLowerCase();
+    final isDuplicate = _currentItems.any(
+      (item) => widget.itemLabel(item).toLowerCase() == lower,
+    );
+    if (!isDuplicate) return null;
+    // Without a message, still refused: red border only.
+    return widget.alreadyExistsMessage ?? '';
+  }
+
   Widget _buildInlineAddRow() {
     return Padding(
       padding: const EdgeInsets.only(top: 12),
@@ -291,6 +286,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         cancelTooltip:
             widget.cancelLabel ??
             MaterialLocalizations.of(context).cancelButtonLabel,
+        validator: _duplicate,
         onCommit: _commitInlineAdd,
         onCancel: _cancelInlineAdd,
       ),

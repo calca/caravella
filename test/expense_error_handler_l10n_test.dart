@@ -42,14 +42,6 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
   }
 
-  testWidgets('attachment limit in Italian', (tester) async {
-    await show(
-      tester,
-      (c) => ExpenseErrorHandler.showAttachmentLimitError(c, maxCount: 5),
-    );
-    expect(find.text('Puoi aggiungere al massimo 5 allegati'), findsOneWidget);
-  });
-
   testWidgets('a failed attachment hides the exception', (tester) async {
     await show(
       tester,
