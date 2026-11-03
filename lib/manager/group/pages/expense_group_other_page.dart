@@ -35,22 +35,6 @@ class ExpenseGroupOtherPage extends StatelessWidget {
             state,
             mode,
             notifier,
-            () {
-              final gloc = gen.AppLocalizations.of(context);
-              AppToast.show(
-                context,
-                gloc.group_added_success,
-                type: ToastType.success,
-              );
-            },
-            (error) {
-              final gloc = gen.AppLocalizations.of(context);
-              AppToast.show(
-                context,
-                gloc.error_saving_group(error.toString()),
-                type: ToastType.error,
-              );
-            },
           ),
         ),
       ],
@@ -132,25 +116,9 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
           savedGroup,
           gloc,
         );
-
-        if (context.mounted) {
-          AppToast.show(
-            context,
-            gloc.notification_enabled,
-            type: ToastType.success,
-          );
-        }
       } else {
         // Cancel notification for this group
         await NotificationManager().cancelNotificationForGroup(savedGroup.id);
-
-        if (context.mounted) {
-          AppToast.show(
-            context,
-            '${gloc.notification_enabled} ${gloc.accessibility_currently_disabled.toLowerCase()}',
-            type: ToastType.info,
-          );
-        }
       }
     } catch (e, st) {
       // Revert state on error

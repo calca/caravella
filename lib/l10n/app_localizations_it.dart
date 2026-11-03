@@ -119,9 +119,6 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get markdown_save_cancelled => 'Esportazione Markdown annullata';
-
-  @override
   String get markdown_save_error => 'Impossibile salvare il file Markdown';
 
   @override
@@ -473,12 +470,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unarchived_with_undo => 'Tolto dall’archivio';
 
   @override
-  String get pinned_with_undo => 'Segnato come preferito';
-
-  @override
-  String get unpinned_with_undo => 'Preferito rimosso';
-
-  @override
   String get deleted_with_undo => 'Eliminato';
 
   @override
@@ -559,13 +550,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get expense_added_success => 'Spesa aggiunta';
 
   @override
-  String get expense_updated_success => 'Spesa aggiornata';
-
-  @override
   String get refresh => 'Aggiorna';
-
-  @override
-  String get group_added_success => 'Gruppo aggiunto';
 
   @override
   String get group_deleted_success => 'Gruppo eliminato';
@@ -579,9 +564,6 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get csv_save_cancelled => 'Esportazione annullata';
-
-  @override
   String get csv_save_error => 'Impossibile salvare il file CSV';
 
   @override
@@ -591,9 +573,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String ofx_saved_in(Object path) {
     return 'OFX salvato in: $path';
   }
-
-  @override
-  String get ofx_save_cancelled => 'Esportazione OFX annullata';
 
   @override
   String get ofx_save_error => 'Impossibile salvare il file OFX';
@@ -826,9 +805,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get accessibility_add_expense => 'Aggiungi spesa';
-
-  @override
-  String get accessibility_currently_disabled => 'Attualmente inattivo';
 
   @override
   String get accessibility_previous_month => 'Mese precedente';
@@ -1858,9 +1834,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get no_text_found => 'Nessun testo trovato nell’immagine';
-
-  @override
-  String get receipt_scanned => 'Scontrino scansionato';
 
   @override
   String get settings_group_templates_manage_title => 'Modelli di gruppo';

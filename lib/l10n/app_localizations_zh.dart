@@ -118,9 +118,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get markdown_save_cancelled => 'Markdown 导出已取消';
-
-  @override
   String get markdown_save_error => '保存 Markdown 文件时出错';
 
   @override
@@ -466,12 +463,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchived_with_undo => '已移出归档';
 
   @override
-  String get pinned_with_undo => '已标记为收藏';
-
-  @override
-  String get unpinned_with_undo => '已移除收藏';
-
-  @override
   String get deleted_with_undo => '已删除';
 
   @override
@@ -550,13 +541,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get expense_added_success => '已添加支出';
 
   @override
-  String get expense_updated_success => '支出已更新';
-
-  @override
   String get refresh => '刷新';
-
-  @override
-  String get group_added_success => '群组已添加';
 
   @override
   String get group_deleted_success => '群组已删除';
@@ -570,9 +555,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get csv_save_cancelled => '导出已取消';
-
-  @override
   String get csv_save_error => '保存 CSV 文件时出错';
 
   @override
@@ -582,9 +564,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String ofx_saved_in(Object path) {
     return 'OFX 已保存在：$path';
   }
-
-  @override
-  String get ofx_save_cancelled => 'OFX 导出已取消';
 
   @override
   String get ofx_save_error => '保存 OFX 文件时出错';
@@ -813,9 +792,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get accessibility_add_expense => '添加支出';
-
-  @override
-  String get accessibility_currently_disabled => '当前已禁用';
 
   @override
   String get accessibility_previous_month => '上个月';
@@ -1818,9 +1794,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get no_text_found => '图像中未找到文本';
-
-  @override
-  String get receipt_scanned => '收据已扫描';
 
   @override
   String get settings_group_templates_manage_title => '群组模板';

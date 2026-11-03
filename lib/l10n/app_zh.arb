@@ -58,7 +58,6 @@
   "@view_all_groups": {"description": "从空状态查看所有已归档群组的 CTA 标签"},
   "markdown_select_directory_title": "选择保存 Markdown 的文件夹",
   "markdown_saved_in": "Markdown 已保存至：{path}",
-  "markdown_save_cancelled": "Markdown 导出已取消",
   "markdown_save_error": "保存 Markdown 文件时出错",
   "share_label": "分享",
   "export_share": "分享和导出",
@@ -137,8 +136,6 @@
   "delete": "删除",
   "archived_with_undo": "已归档",
   "unarchived_with_undo": "已移出归档",
-  "pinned_with_undo": "已标记为收藏",
-  "unpinned_with_undo": "已移除收藏",
   "deleted_with_undo": "已删除",
   "statistics": "统计",
   "period": "期间",
@@ -160,20 +157,16 @@
   "added_by": "添加者",
   "edited_by": "编辑者",
   "expense_added_success": "已添加支出",
-  "expense_updated_success": "支出已更新",
   "refresh": "刷新",
-  "group_added_success": "群组已添加",
   "group_deleted_success": "群组已删除",
   "@group_deleted_success": {
     "description": "删除费用群组后的提示信息"
   },
   "csv_select_directory_title": "选择保存 CSV 的文件夹",
   "csv_saved_in": "CSV 已保存在：{path}",
-  "csv_save_cancelled": "导出已取消",
   "csv_save_error": "保存 CSV 文件时出错",
   "ofx_select_directory_title": "选择保存 OFX 的文件夹",
   "ofx_saved_in": "OFX 已保存在：{path}",
-  "ofx_save_cancelled": "OFX 导出已取消",
   "ofx_save_error": "保存 OFX 文件时出错",
   "csv_expense_name": "描述",
   "csv_amount": "金额",
@@ -240,7 +233,6 @@
       "amount": {}
     }
   },
-  "accessibility_currently_disabled": "当前已禁用",
   "accessibility_previous_month": "上个月",
   "accessibility_next_month": "下个月",
   "color_suggested_title": "建议的颜色",
@@ -1089,8 +1081,6 @@
   ,"@receipt_scan_permission_denied": {"description": "相机或相册权限被拒绝时的错误消息"}
   ,"no_text_found": "图像中未找到文本"
   ,"@no_text_found": {"description": "OCR在图像中未找到文本时的消息"}
-  ,"receipt_scanned": "收据已扫描"
-  ,"@receipt_scanned": {"description": "OCR扫描后的成功消息"}
   ,"settings_group_templates_manage_title": "群组模板"
   ,"settings_group_templates_manage_desc": "创建和编辑你的模板"
   ,"settings_group_templates_page_title": "群组模板"

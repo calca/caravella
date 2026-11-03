@@ -36,7 +36,6 @@
   "group_total": "Totale",
   "markdown_select_directory_title": "Seleziona cartella per salvare Markdown",
   "markdown_saved_in": "Markdown salvato in: {path}",
-  "markdown_save_cancelled": "Esportazione Markdown annullata",
   "markdown_save_error": "Impossibile salvare il file Markdown",
   "share_label": "Condividi",
   "export_share": "Condividi ed esporta",
@@ -160,8 +159,6 @@
   "delete": "Elimina",
   "archived_with_undo": "Archiviato",
   "unarchived_with_undo": "Tolto dall’archivio",
-  "pinned_with_undo": "Segnato come preferito",
-  "unpinned_with_undo": "Preferito rimosso",
   "deleted_with_undo": "Eliminato",
   "statistics": "Statistiche",
   "period": "Periodo",
@@ -184,18 +181,14 @@
   "added_by": "Aggiunto da",
   "edited_by": "Modificato da",
   "expense_added_success": "Spesa aggiunta",
-  "expense_updated_success": "Spesa aggiornata",
   "refresh": "Aggiorna",
-  "group_added_success": "Gruppo aggiunto",
   "group_deleted_success": "Gruppo eliminato",
   "@group_deleted_success": {"description": "Messaggio di conferma dopo l'eliminazione di un gruppo di spese"},
   "csv_select_directory_title": "Seleziona cartella per salvare CSV",
   "csv_saved_in": "CSV salvato in: {path}",
-  "csv_save_cancelled": "Esportazione annullata",
   "csv_save_error": "Impossibile salvare il file CSV",
   "ofx_select_directory_title": "Seleziona cartella per salvare OFX",
   "ofx_saved_in": "OFX salvato in: {path}",
-  "ofx_save_cancelled": "Esportazione OFX annullata",
   "ofx_save_error": "Impossibile salvare il file OFX",
   "csv_expense_name": "Descrizione",
   "csv_amount": "Importo",
@@ -283,8 +276,6 @@
   ,"@accessibility_total_expenses": {"description": "Total expenses accessibility label", "placeholders": {"amount": {}}}
   ,"accessibility_add_expense": "Aggiungi spesa"
   ,"@accessibility_add_expense": {"description": "Add expense button accessibility label"}
-  ,"accessibility_currently_disabled": "Attualmente inattivo"
-  ,"@accessibility_currently_disabled": {"description": "Currently disabled state label"}
   ,"accessibility_previous_month": "Mese precedente"
   ,"@accessibility_previous_month": {"description": "Previous month button accessibility label"}
   ,"accessibility_next_month": "Mese successivo"
@@ -768,8 +759,6 @@
   ,"@receipt_scan_permission_denied": {"description": "Messaggio di errore quando il permesso di fotocamera o galleria viene negato"}
   ,"no_text_found": "Nessun testo trovato nell’immagine"
   ,"@no_text_found": {"description": "Messaggio quando l'OCR non trova testo nell'immagine"}
-  ,"receipt_scanned": "Scontrino scansionato"
-  ,"@receipt_scanned": {"description": "Messaggio di successo dopo la scansione OCR"}
   ,"settings_group_templates_manage_title": "Modelli di gruppo"
   ,"settings_group_templates_manage_desc": "Crea e modifica i tuoi modelli"
   ,"settings_group_templates_page_title": "Modelli di gruppo"

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Settings: the last part is now two short groups instead of a row opening a separate Information page — **Caravella** (rate it on Google Play, or its F-Droid page in the F-Droid build; invite your friends; what's new in this version) and **Open source project** (buy me a coffee, source code, report a problem), with the version, the developer's site and the license in a line at the bottom. The invite message links to the store the app came from (Google Play or F-Droid)
+- Fewer messages at the bottom of the screen: no more toasts for what the screen already shows — a group added, an expense updated, an address found, a receipt read into the form, the persistent notification switched on or off, a group pinned or unpinned, or an export you cancelled yourself
 
 ### Fixed
 - Group settings → General: going back with the name left empty no longer saves a group without a name — you stay on the page, the name field is focused and a message says the group needs a name

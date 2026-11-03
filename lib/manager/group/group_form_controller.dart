@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 // ...existing code...
@@ -12,16 +11,8 @@ class GroupFormController {
   final GroupFormState state;
   final GroupEditMode mode;
   final ExpenseGroupNotifier? _notifier;
-  final VoidCallback? onSaveSuccess;
-  final Function(String)? onSaveError;
 
-  GroupFormController(
-    this.state,
-    this.mode, [
-    this._notifier,
-    this.onSaveSuccess,
-    this.onSaveError,
-  ]) {
+  GroupFormController(this.state, this.mode, [this._notifier]) {
     // No automatic auto-save: saving is performed explicitly (e.g. on back)
   }
 

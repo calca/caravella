@@ -314,12 +314,6 @@ abstract class AppLocalizations {
   /// **'Markdown saved in: {path}'**
   String markdown_saved_in(String path);
 
-  /// No description provided for @markdown_save_cancelled.
-  ///
-  /// In en, this message translates to:
-  /// **'Markdown export cancelled'**
-  String get markdown_save_cancelled;
-
   /// No description provided for @markdown_save_error.
   ///
   /// In en, this message translates to:
@@ -992,18 +986,6 @@ abstract class AppLocalizations {
   /// **'Removed from archive'**
   String get unarchived_with_undo;
 
-  /// Snackbar message when group is marked as favorite
-  ///
-  /// In en, this message translates to:
-  /// **'Marked as favorite'**
-  String get pinned_with_undo;
-
-  /// Snackbar message when favorite mark is removed from group
-  ///
-  /// In en, this message translates to:
-  /// **'Favorite removed'**
-  String get unpinned_with_undo;
-
   /// Snackbar message when group is deleted
   ///
   /// In en, this message translates to:
@@ -1160,23 +1142,11 @@ abstract class AppLocalizations {
   /// **'Expense added'**
   String get expense_added_success;
 
-  /// No description provided for @expense_updated_success.
-  ///
-  /// In en, this message translates to:
-  /// **'Expense updated'**
-  String get expense_updated_success;
-
   /// No description provided for @refresh.
   ///
   /// In en, this message translates to:
   /// **'Refresh'**
   String get refresh;
-
-  /// No description provided for @group_added_success.
-  ///
-  /// In en, this message translates to:
-  /// **'Group added'**
-  String get group_added_success;
 
   /// Toast shown after deleting an expense group
   ///
@@ -1196,12 +1166,6 @@ abstract class AppLocalizations {
   /// **'CSV saved in: {path}'**
   String csv_saved_in(Object path);
 
-  /// No description provided for @csv_save_cancelled.
-  ///
-  /// In en, this message translates to:
-  /// **'Export cancelled'**
-  String get csv_save_cancelled;
-
   /// No description provided for @csv_save_error.
   ///
   /// In en, this message translates to:
@@ -1219,12 +1183,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OFX saved in: {path}'**
   String ofx_saved_in(Object path);
-
-  /// No description provided for @ofx_save_cancelled.
-  ///
-  /// In en, this message translates to:
-  /// **'OFX export cancelled'**
-  String get ofx_save_cancelled;
 
   /// No description provided for @ofx_save_error.
   ///
@@ -1669,12 +1627,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add expense'**
   String get accessibility_add_expense;
-
-  /// Currently disabled state label
-  ///
-  /// In en, this message translates to:
-  /// **'Currently disabled'**
-  String get accessibility_currently_disabled;
 
   /// Previous month button accessibility label
   ///
@@ -3619,12 +3571,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No text found in image'**
   String get no_text_found;
-
-  /// Success message after OCR scanning
-  ///
-  /// In en, this message translates to:
-  /// **'Receipt scanned'**
-  String get receipt_scanned;
 
   /// No description provided for @settings_group_templates_manage_title.
   ///

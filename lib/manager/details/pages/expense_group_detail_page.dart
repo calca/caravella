@@ -395,12 +395,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                   gloc,
                 );
 
-                if (!sheetCtx.mounted) return;
-                AppToast.show(
-                  sheetCtx,
-                  gloc.expense_updated_success,
-                  type: ToastType.success,
-                );
                 // Note: nav.pop() removed - ExpenseFormComponent handles navigation
                 // when shouldAutoClose is true to avoid double pop back to home
               },

@@ -55,7 +55,6 @@
   "group_total": "Total",
   "markdown_select_directory_title": "Seleccionar carpeta para guardar Markdown",
   "markdown_saved_in": "Markdown guardado en: {path}",
-  "markdown_save_cancelled": "Exportación Markdown cancelada",
   "markdown_save_error": "No se pudo guardar el archivo Markdown",
   "share_label": "Compartir",
   "export_share": "Compartir y exportar",
@@ -168,8 +167,6 @@
   "unpin": "Quitar favorito",
   "archived_with_undo": "Archivado",
   "unarchived_with_undo": "Sacado del archivo",
-  "pinned_with_undo": "Marcado como favorito",
-  "unpinned_with_undo": "Favorito quitado",
   "deleted_with_undo": "Eliminado",
   "statistics": "Estadísticas",
   "period": "Período",
@@ -196,18 +193,14 @@
   "added_by": "Añadido por",
   "edited_by": "Editado por",
   "expense_added_success": "Gasto añadido",
-  "expense_updated_success": "Gasto actualizado",
   "refresh": "Actualizar",
-  "group_added_success": "Grupo añadido",
   "group_deleted_success": "Grupo eliminado",
   "@group_deleted_success": {"description": "Mensaje mostrado después de eliminar un grupo de gastos"},
   "csv_select_directory_title": "Seleccionar carpeta para guardar CSV",
   "csv_saved_in": "CSV guardado en: {path}",
-  "csv_save_cancelled": "Exportación cancelada",
   "csv_save_error": "No se pudo guardar el archivo CSV",
   "ofx_select_directory_title": "Seleccionar carpeta para guardar OFX",
   "ofx_saved_in": "OFX guardado en: {path}",
-  "ofx_save_cancelled": "Exportación OFX cancelada",
   "ofx_save_error": "No se pudo guardar el archivo OFX",
   "csv_expense_name": "Descripción",
   "csv_amount": "Cantidad",
@@ -293,8 +286,6 @@
   "@accessibility_total_expenses": {"description": "Etiqueta de accesibilidad de gastos totales", "placeholders": {"amount": {}}},
   "accessibility_add_expense": "Añadir gasto",
   "@accessibility_add_expense": {"description": "Etiqueta de accesibilidad del botón agregar gasto"},
-  "accessibility_currently_disabled": "Actualmente deshabilitado",
-  "@accessibility_currently_disabled": {"description": "Etiqueta de estado actualmente deshabilitado"},
   "accessibility_previous_month": "Mes anterior",
   "@accessibility_previous_month": {"description": "Previous month button accessibility label"},
   "accessibility_next_month": "Mes siguiente",
@@ -791,8 +782,6 @@
   ,"@receipt_scan_permission_denied": {"description": "Mensaje de error cuando se deniega el permiso de cámara o galería"}
   ,"no_text_found": "No se encontró texto en la imagen"
   ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
-  ,"receipt_scanned": "Recibo escaneado"
-  ,"@receipt_scanned": {"description": "Mensaje de éxito después del escaneo OCR"}
   ,"settings_group_templates_manage_title": "Plantillas de grupo"
   ,"settings_group_templates_manage_desc": "Crea y edita tus plantillas"
   ,"settings_group_templates_page_title": "Plantillas de grupo"
