@@ -114,11 +114,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Seleccionar carpeta para guardar Markdown';
 
   @override
-  String markdown_saved_in(String path) {
-    return 'Markdown guardado en: $path';
-  }
-
-  @override
   String get markdown_save_error => 'No se pudo guardar el archivo Markdown';
 
   @override
@@ -456,15 +451,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unpin => 'Quitar favorito';
 
   @override
-  String get archived_with_undo => 'Archivado';
-
-  @override
-  String get unarchived_with_undo => 'Sacado del archivo';
-
-  @override
-  String get deleted_with_undo => 'Eliminado';
-
-  @override
   String get statistics => 'Estadísticas';
 
   @override
@@ -552,21 +538,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'Seleccionar carpeta para guardar CSV';
 
   @override
-  String csv_saved_in(Object path) {
-    return 'CSV guardado en: $path';
-  }
-
-  @override
   String get csv_save_error => 'No se pudo guardar el archivo CSV';
 
   @override
   String get ofx_select_directory_title =>
       'Seleccionar carpeta para guardar OFX';
-
-  @override
-  String ofx_saved_in(Object path) {
-    return 'OFX guardado en: $path';
-  }
 
   @override
   String get ofx_save_error => 'No se pudo guardar el archivo OFX';
@@ -753,11 +729,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get discard => 'Descartar';
-
-  @override
-  String error_saving_group(Object error) {
-    return 'Error guardando: $error';
-  }
 
   @override
   String get status_active => 'Activos';
@@ -2476,4 +2447,45 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get permission_not_now => 'Ahora no';
+
+  @override
+  String get undo => 'Deshacer';
+
+  @override
+  String group_archived_toast(String title) {
+    return '«$title» archivado';
+  }
+
+  @override
+  String group_unarchived_toast(String title) {
+    return '«$title» sacado del archivo';
+  }
+
+  @override
+  String group_deleted_toast(String title) {
+    return '«$title» eliminado';
+  }
+
+  @override
+  String get group_save_error => 'No se pudo guardar el grupo';
+
+  @override
+  String get template_save_error => 'No se pudo guardar la plantilla';
+
+  @override
+  String get template_delete_error => 'No se pudo eliminar la plantilla';
+
+  @override
+  String get groups_load_error => 'No se pudieron cargar los grupos';
+
+  @override
+  String get group_not_found_toast => 'Este grupo ya no está';
+
+  @override
+  String get add_name_error => 'No se pudo añadir, inténtalo de nuevo';
+
+  @override
+  String file_saved_in(String file, String folder) {
+    return '«$file» guardado en $folder';
+  }
 }

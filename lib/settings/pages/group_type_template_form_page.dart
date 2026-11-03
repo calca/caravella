@@ -79,11 +79,7 @@ class _GroupTypeTemplateFormPageState extends State<GroupTypeTemplateFormPage> {
       );
       if (mounted) {
         setState(() => _saving = false);
-        AppToast.show(
-          context,
-          loc.error_saving_group(e),
-          type: ToastType.error,
-        );
+        AppToast.show(context, loc.template_save_error, type: ToastType.error);
       }
     }
   }

@@ -138,7 +138,7 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
                 if (context.mounted) {
                   AppToast.show(
                     context,
-                    gloc.error_saving_group(e.toString()),
+                    gloc.group_save_error,
                     type: ToastType.error,
                   );
                 }

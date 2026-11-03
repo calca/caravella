@@ -25,6 +25,7 @@ Future<T?> showSelectionBottomSheet<T>({
   String? cancelLabel,
   String? addCategoryLabel,
   String? alreadyExistsMessage,
+  String? addErrorMessage,
   bool autoStartAdd = false,
 }) async {
   return showModalBottomSheet<T>(
@@ -42,6 +43,7 @@ Future<T?> showSelectionBottomSheet<T>({
       cancelLabel: cancelLabel,
       addCategoryLabel: addCategoryLabel,
       alreadyExistsMessage: alreadyExistsMessage,
+      addErrorMessage: addErrorMessage,
       autoStartAdd: autoStartAdd,
     ),
   );
@@ -59,6 +61,9 @@ class _SelectionSheet<T> extends StatefulWidget {
   final String? cancelLabel;
   final String? addCategoryLabel;
   final String? alreadyExistsMessage;
+
+  /// Toast when [onAddItemInline] throws (the details go to the log).
+  final String? addErrorMessage;
   final bool autoStartAdd;
   const _SelectionSheet({
     required this.items,
@@ -72,6 +77,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     this.cancelLabel,
     this.addCategoryLabel,
     this.alreadyExistsMessage,
+    this.addErrorMessage,
     this.autoStartAdd = false,
   });
 
@@ -243,8 +249,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       }
       return true;
     } catch (e) {
-      if (mounted) {
-        AppToast.show(context, 'Error adding item: $e', type: ToastType.error);
+      LoggerService.warning('Adding "$val" failed: $e', name: 'ui.sheet');
+      if (mounted && widget.addErrorMessage != null) {
+        AppToast.show(context, widget.addErrorMessage!, type: ToastType.error);
       }
       return false;
     }

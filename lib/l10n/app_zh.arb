@@ -57,7 +57,6 @@
   "view_all_groups": "查看所有群组",
   "@view_all_groups": {"description": "从空状态查看所有已归档群组的 CTA 标签"},
   "markdown_select_directory_title": "选择保存 Markdown 的文件夹",
-  "markdown_saved_in": "Markdown 已保存至：{path}",
   "markdown_save_error": "保存 Markdown 文件时出错",
   "share_label": "分享",
   "export_share": "分享和导出",
@@ -132,9 +131,6 @@
   "unarchive": "移出归档",
   "unpin": "取消收藏",
   "delete": "删除",
-  "archived_with_undo": "已归档",
-  "unarchived_with_undo": "已移出归档",
-  "deleted_with_undo": "已删除",
   "statistics": "统计",
   "period": "期间",
   "total_expenses": "总支出",
@@ -161,10 +157,8 @@
     "description": "删除费用群组后的提示信息"
   },
   "csv_select_directory_title": "选择保存 CSV 的文件夹",
-  "csv_saved_in": "CSV 已保存在：{path}",
   "csv_save_error": "保存 CSV 文件时出错",
   "ofx_select_directory_title": "选择保存 OFX 的文件夹",
-  "ofx_saved_in": "OFX 已保存在：{path}",
   "ofx_save_error": "保存 OFX 文件时出错",
   "csv_expense_name": "描述",
   "csv_amount": "金额",
@@ -218,12 +212,6 @@
   "select_category": "类别",
   "delete_expense": "删除支出",
   "delete_expense_confirm": "该支出将被删除，且无法撤销。",
-  "error_saving_group": "保存错误：{error}",
-  "@error_saving_group": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "accessibility_total_expenses": "总支出：{amount}",
   "@accessibility_total_expenses": {
     "description": "总支出无障碍标签",
@@ -1252,4 +1240,15 @@
   ,"permission_location_message": "Caravella 使用位置记录支出发生的地点。访问已关闭：你可以在手机设置中开启。"
   ,"permission_open_settings": "打开设置"
   ,"permission_not_now": "暂不"
+  ,"undo": "撤销"
+  ,"group_archived_toast": "“{title}”已归档"
+  ,"group_unarchived_toast": "“{title}”已移出归档"
+  ,"group_deleted_toast": "“{title}”已删除"
+  ,"group_save_error": "无法保存群组"
+  ,"template_save_error": "无法保存模板"
+  ,"template_delete_error": "无法删除模板"
+  ,"groups_load_error": "无法加载群组"
+  ,"group_not_found_toast": "此群组已不存在"
+  ,"add_name_error": "无法添加，请重试"
+  ,"file_saved_in": "“{file}”已保存到 {folder}"
 }

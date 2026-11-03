@@ -114,11 +114,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Seleziona cartella per salvare Markdown';
 
   @override
-  String markdown_saved_in(String path) {
-    return 'Markdown salvato in: $path';
-  }
-
-  @override
   String get markdown_save_error => 'Impossibile salvare il file Markdown';
 
   @override
@@ -456,15 +451,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unpin => 'Rimuovi preferito';
 
   @override
-  String get archived_with_undo => 'Archiviato';
-
-  @override
-  String get unarchived_with_undo => 'Tolto dall’archivio';
-
-  @override
-  String get deleted_with_undo => 'Eliminato';
-
-  @override
   String get statistics => 'Statistiche';
 
   @override
@@ -551,20 +537,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get csv_select_directory_title => 'Seleziona cartella per salvare CSV';
 
   @override
-  String csv_saved_in(Object path) {
-    return 'CSV salvato in: $path';
-  }
-
-  @override
   String get csv_save_error => 'Impossibile salvare il file CSV';
 
   @override
   String get ofx_select_directory_title => 'Seleziona cartella per salvare OFX';
-
-  @override
-  String ofx_saved_in(Object path) {
-    return 'OFX salvato in: $path';
-  }
 
   @override
   String get ofx_save_error => 'Impossibile salvare il file OFX';
@@ -749,11 +725,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get discard => 'Scarta';
-
-  @override
-  String error_saving_group(Object error) {
-    return 'Errore durante il salvataggio: $error';
-  }
 
   @override
   String get status_active => 'Attivi';
@@ -2473,4 +2444,45 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get permission_not_now => 'Non ora';
+
+  @override
+  String get undo => 'Annulla';
+
+  @override
+  String group_archived_toast(String title) {
+    return '«$title» archiviato';
+  }
+
+  @override
+  String group_unarchived_toast(String title) {
+    return '«$title» tolto dall’archivio';
+  }
+
+  @override
+  String group_deleted_toast(String title) {
+    return '«$title» eliminato';
+  }
+
+  @override
+  String get group_save_error => 'Impossibile salvare il gruppo';
+
+  @override
+  String get template_save_error => 'Impossibile salvare il modello';
+
+  @override
+  String get template_delete_error => 'Impossibile eliminare il modello';
+
+  @override
+  String get groups_load_error => 'Impossibile caricare i gruppi';
+
+  @override
+  String get group_not_found_toast => 'Questo gruppo non c’è più';
+
+  @override
+  String get add_name_error => 'Impossibile aggiungerlo, riprova';
+
+  @override
+  String file_saved_in(String file, String folder) {
+    return '«$file» salvato in $folder';
+  }
 }

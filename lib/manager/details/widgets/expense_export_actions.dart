@@ -41,7 +41,10 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
           final file = File('$dirPath/$filename');
           await file.writeAsString(csv);
           if (!rootContext.mounted) return;
-          final msg = gloc.csv_saved_in(file.path);
+          final msg = gloc.file_saved_in(
+            filename,
+            dirPath.split(Platform.pathSeparator).last,
+          );
           AppToast.show(rootContext, msg, type: ToastType.success);
           nav.pop();
         } catch (e) {
@@ -91,7 +94,10 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
           final file = File('$dirPath/$filename');
           await file.writeAsString(ofx);
           if (!rootContext.mounted) return;
-          final msg = gloc.ofx_saved_in(file.path);
+          final msg = gloc.file_saved_in(
+            filename,
+            dirPath.split(Platform.pathSeparator).last,
+          );
           AppToast.show(rootContext, msg, type: ToastType.success);
           nav.pop();
         } catch (e) {
@@ -140,7 +146,10 @@ void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
           final file = File('$dirPath/$filename');
           await file.writeAsString(markdown);
           if (!rootContext.mounted) return;
-          final msg = gloc.markdown_saved_in(file.path);
+          final msg = gloc.file_saved_in(
+            filename,
+            dirPath.split(Platform.pathSeparator).last,
+          );
           AppToast.show(rootContext, msg, type: ToastType.success);
           nav.pop();
         } catch (e) {

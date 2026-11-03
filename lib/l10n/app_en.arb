@@ -53,8 +53,6 @@
   "in_group_prefix": "in",
   "group_total": "Total",
   "markdown_select_directory_title": "Select folder to save Markdown",
-  "markdown_saved_in": "Markdown saved in: {path}",
-  "@markdown_saved_in": {"description": "Toast message when Markdown export is saved", "placeholders": {"path": {"type": "String"}}},
   "markdown_save_error": "Couldn’t save the Markdown file",
   "share_label": "Share",
   "export_share": "Share and export",
@@ -170,12 +168,6 @@
   "unpin": "Remove favorite",
   "@unpin": {"description": "Action to remove favorite mark from a group"},
   "@delete": {"description": "Action to delete a group"},
-  "archived_with_undo": "Archived",
-  "@archived_with_undo": {"description": "Snackbar message when group is archived"},
-  "unarchived_with_undo": "Removed from archive",
-  "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
-  "deleted_with_undo": "Deleted",
-  "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "statistics": "Statistics",
   "period": "Period",
   "total_expenses": "Total expenses",
@@ -205,10 +197,8 @@
   "group_deleted_success": "Group deleted",
   "@group_deleted_success": {"description": "Toast shown after deleting an expense group"},
   "csv_select_directory_title": "Select folder to save CSV",
-  "csv_saved_in": "CSV saved in: {path}",
   "csv_save_error": "Couldn’t save the CSV file",
   "ofx_select_directory_title": "Select folder to save OFX",
-  "ofx_saved_in": "OFX saved in: {path}",
   "ofx_save_error": "Couldn’t save the OFX file",
   "csv_expense_name": "Description",
   "csv_amount": "Amount",
@@ -270,8 +260,6 @@
   ,"discard_changes_title": "Leave without saving?"
   ,"discard_changes_message": "Changes you haven’t saved will be lost."
   ,"discard": "Discard"
-  ,"error_saving_group": "Error saving: {error}"
-  ,"@error_saving_group": {"placeholders": {"error": {}}}
   ,"status_active": "Active"
   ,"@status_active": {"description": "Filter label: active groups"}
   ,"status_archived": "Archived"
@@ -768,7 +756,7 @@
   ,"@unsplash_no_results": {"description": "Message when Unsplash search returns no results"}
   ,"unsplash_downloading": "Downloading photo…"
   ,"@unsplash_downloading": {"description": "Loading label while downloading an Unsplash photo"}
-  ,"unsplash_error": "Failed to load images"
+  ,"unsplash_error": "Couldn’t load the images"
   ,"@unsplash_error": {"description": "Error message when Unsplash search or download fails"}
   ,"unsplash_photos_by": "Photos by"
   ,"@unsplash_photos_by": {"description": "Attribution prefix before the Unsplash brand link at the bottom of the search page"}
@@ -1070,4 +1058,19 @@
   ,"permission_location_message": "Caravella uses your location to add where an expense happened. Access is turned off: you can turn it on in your phone’s settings."
   ,"permission_open_settings": "Open settings"
   ,"permission_not_now": "Not now"
+  ,"undo": "Undo"
+  ,"group_archived_toast": "“{title}” archived"
+  ,"group_unarchived_toast": "“{title}” is back from the archive"
+  ,"group_deleted_toast": "“{title}” deleted"
+  ,"group_save_error": "Couldn’t save the group"
+  ,"template_save_error": "Couldn’t save the template"
+  ,"template_delete_error": "Couldn’t delete the template"
+  ,"groups_load_error": "Couldn’t load the groups"
+  ,"group_not_found_toast": "This group isn’t here any more"
+  ,"add_name_error": "Couldn’t add it, try again"
+  ,"file_saved_in": "“{file}” saved in {folder}"
+  ,"@group_archived_toast": {"placeholders": {"title": {"type": "String"}}}
+  ,"@group_unarchived_toast": {"placeholders": {"title": {"type": "String"}}}
+  ,"@group_deleted_toast": {"placeholders": {"title": {"type": "String"}}}
+  ,"@file_saved_in": {"description": "Toast after an export is saved: the file's name and the folder's name (not the full path)", "placeholders": {"file": {"type": "String"}, "folder": {"type": "String"}}}
 }

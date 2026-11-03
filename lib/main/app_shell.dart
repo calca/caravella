@@ -69,7 +69,6 @@ class _AppShellState extends State<AppShell> {
             : gloc.sync_group_received(from, group.title),
         type: ToastType.success,
         icon: Icons.group_add_outlined,
-        duration: const Duration(seconds: 4),
         actionLabel: gloc.toast_open,
         onAction: () => Navigator.of(context).push(
           MaterialPageRoute(

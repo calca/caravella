@@ -101,7 +101,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
         setState(() => _loading = false);
         AppToast.show(
           context,
-          'Errore nel caricamento dei gruppi',
+          gen.AppLocalizations.of(context).groups_load_error,
           type: ToastType.error,
         );
       }

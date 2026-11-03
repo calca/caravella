@@ -223,7 +223,7 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
       if (mounted) {
         setState(() => _isDownloading = false);
         final loc = gen.AppLocalizations.of(context);
-        AppToast.show(context, loc.unsplash_error);
+        AppToast.show(context, loc.unsplash_error, type: ToastType.error);
       }
     }
   }

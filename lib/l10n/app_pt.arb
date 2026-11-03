@@ -54,7 +54,6 @@
   "in_group_prefix": "em",
   "group_total": "Total",
   "markdown_select_directory_title": "Selecionar pasta para salvar Markdown",
-  "markdown_saved_in": "Markdown salvo em: {path}",
   "markdown_save_error": "Não foi possível salvar o arquivo Markdown",
   "share_label": "Compartilhar",
   "export_share": "Compartilhar e exportar",
@@ -122,9 +121,6 @@
   "archive": "Arquivar",
   "pin": "Favorito",
   "unpin": "Remover favorito",
-  "archived_with_undo": "Arquivado",
-  "unarchived_with_undo": "Retirado do arquivo",
-  "deleted_with_undo": "Excluído",
   "select_category": "Categoria",
   "delete_expense": "Excluir despesa",
   "delete_expense_confirm": "A despesa será excluída. Não será possível desfazer.",
@@ -134,7 +130,6 @@
   "discard_changes_title": "Sair sem salvar?",
   "discard_changes_message": "As alterações que você não salvou serão perdidas.",
   "discard": "Descartar",
-  "error_saving_group": "Erro ao salvar: {error}",
   "other_settings_desc": "Notificação, localização",
   "segment_general": "Geral",
   "segment_other": "Outro",
@@ -431,7 +426,6 @@
   ,"csv_amount": "Valor"
   ,"csv_category": "Categoria"
   ,"csv_save_error": "Não foi possível salvar o arquivo CSV"
-  ,"csv_saved_in": "CSV salvo em: {path}"
   ,"currency": "Moeda"
   ,"date": "Data"
   ,"delete_group": "Excluir grupo"
@@ -456,7 +450,6 @@
   ,"no_expenses_to_export": "Nenhuma despesa para exportar"
   ,"note_hint": "Nota"
   ,"ofx_save_error": "Não foi possível salvar o arquivo OFX"
-  ,"ofx_saved_in": "OFX salvo em: {path}"
   ,"paid_by": "Pago por"
   ,"added_by": "Adicionado por"
   ,"edited_by": "Editado por"
@@ -925,4 +918,15 @@
   ,"permission_location_message": "O Caravella usa a localização para adicionar onde você fez uma despesa. O acesso está desativado: você pode ativá-lo nas configurações do celular."
   ,"permission_open_settings": "Abrir configurações"
   ,"permission_not_now": "Agora não"
+  ,"undo": "Desfazer"
+  ,"group_archived_toast": "“{title}” arquivado"
+  ,"group_unarchived_toast": "“{title}” saiu do arquivo"
+  ,"group_deleted_toast": "“{title}” excluído"
+  ,"group_save_error": "Não foi possível salvar o grupo"
+  ,"template_save_error": "Não foi possível salvar o modelo"
+  ,"template_delete_error": "Não foi possível excluir o modelo"
+  ,"groups_load_error": "Não foi possível carregar os grupos"
+  ,"group_not_found_toast": "Este grupo não existe mais"
+  ,"add_name_error": "Não foi possível adicionar, tente de novo"
+  ,"file_saved_in": "“{file}” salvo em {folder}"
 }

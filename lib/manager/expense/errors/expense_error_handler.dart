@@ -63,11 +63,6 @@ class ExpenseErrorHandler {
   }
 
   static void _showLocationError(BuildContext context, String message) {
-    AppToast.show(
-      context,
-      message,
-      type: ToastType.error,
-      duration: const Duration(seconds: 5),
-    );
+    AppToast.show(context, message, type: ToastType.error);
   }
 }

@@ -126,11 +126,7 @@ class AddExpenseController {
       double? amount;
       String? description;
       if (readReceipt) {
-        AppToast.show(
-          context,
-          gloc.scanning_receipt,
-          duration: const Duration(seconds: 2),
-        );
+        AppToast.show(context, gloc.scanning_receipt);
         final result = await ReceiptScannerService().scanReceipt(
           File(picked.path),
         );

@@ -64,23 +64,24 @@ Future<void> _executeArchiveAction(
 ) async {
   final isArchived = trip.archived;
   final gloc = gen.AppLocalizations.of(context);
-  final actionText = isArchived
-      ? gloc.unarchived_with_undo
-      : gloc.archived_with_undo;
+  // The card moves to the other tab and its context goes: the toast hangs
+  // off the navigator's, which stays.
+  final toastContext = Navigator.of(context).context;
 
-  // Execute action
   await onArchiveToggle(trip.id, !isArchived);
 
   // Small delay to ensure UI has updated
   await Future.delayed(const Duration(milliseconds: 100));
 
-  // Show AppToast with undo
-  if (context.mounted) {
+  // Undo puts it back where it was.
+  if (toastContext.mounted) {
     AppToast.show(
-      context,
-      '$actionText • ${trip.title}',
-      type: ToastType.info,
-      duration: const Duration(seconds: 4),
+      toastContext,
+      isArchived
+          ? gloc.group_unarchived_toast(trip.title)
+          : gloc.group_archived_toast(trip.title),
+      actionLabel: gloc.undo,
+      onAction: () => onArchiveToggle(trip.id, isArchived),
     );
   }
 }
@@ -110,6 +111,8 @@ Future<void> _executeDeleteAction(
   );
 
   if (confirmed != true || !context.mounted) return;
+  // As for archiving: the card's context goes with the card.
+  final toastContext = Navigator.of(context).context;
 
   // Execute deletion
   await ExpenseGroupStorageV2.deleteGroup(trip.id);
@@ -123,11 +126,10 @@ Future<void> _executeDeleteAction(
   // Trigger reload callback if provided
   onDelete?.call();
 
-  if (!context.mounted) return;
+  if (!toastContext.mounted) return;
   AppToast.show(
-    context,
-    '${gloc.deleted_with_undo} • ${trip.title}',
+    toastContext,
+    gloc.group_deleted_toast(trip.title),
     type: ToastType.success,
-    duration: const Duration(seconds: 3),
   );
 }

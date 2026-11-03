@@ -308,12 +308,6 @@ abstract class AppLocalizations {
   /// **'Select folder to save Markdown'**
   String get markdown_select_directory_title;
 
-  /// Toast message when Markdown export is saved
-  ///
-  /// In en, this message translates to:
-  /// **'Markdown saved in: {path}'**
-  String markdown_saved_in(String path);
-
   /// No description provided for @markdown_save_error.
   ///
   /// In en, this message translates to:
@@ -962,24 +956,6 @@ abstract class AppLocalizations {
   /// **'Remove favorite'**
   String get unpin;
 
-  /// Snackbar message when group is archived
-  ///
-  /// In en, this message translates to:
-  /// **'Archived'**
-  String get archived_with_undo;
-
-  /// Snackbar message when group is unarchived
-  ///
-  /// In en, this message translates to:
-  /// **'Removed from archive'**
-  String get unarchived_with_undo;
-
-  /// Snackbar message when group is deleted
-  ///
-  /// In en, this message translates to:
-  /// **'Deleted'**
-  String get deleted_with_undo;
-
   /// No description provided for @statistics.
   ///
   /// In en, this message translates to:
@@ -1148,12 +1124,6 @@ abstract class AppLocalizations {
   /// **'Select folder to save CSV'**
   String get csv_select_directory_title;
 
-  /// No description provided for @csv_saved_in.
-  ///
-  /// In en, this message translates to:
-  /// **'CSV saved in: {path}'**
-  String csv_saved_in(Object path);
-
   /// No description provided for @csv_save_error.
   ///
   /// In en, this message translates to:
@@ -1165,12 +1135,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select folder to save OFX'**
   String get ofx_select_directory_title;
-
-  /// No description provided for @ofx_saved_in.
-  ///
-  /// In en, this message translates to:
-  /// **'OFX saved in: {path}'**
-  String ofx_saved_in(Object path);
 
   /// No description provided for @ofx_save_error.
   ///
@@ -1531,12 +1495,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discard'**
   String get discard;
-
-  /// No description provided for @error_saving_group.
-  ///
-  /// In en, this message translates to:
-  /// **'Error saving: {error}'**
-  String error_saving_group(Object error);
 
   /// Filter label: active groups
   ///
@@ -3509,7 +3467,7 @@ abstract class AppLocalizations {
   /// Error message when Unsplash search or download fails
   ///
   /// In en, this message translates to:
-  /// **'Failed to load images'**
+  /// **'Couldn’t load the images'**
   String get unsplash_error;
 
   /// Attribution prefix before the Unsplash brand link at the bottom of the search page
@@ -4577,6 +4535,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not now'**
   String get permission_not_now;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @group_archived_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” archived'**
+  String group_archived_toast(String title);
+
+  /// No description provided for @group_unarchived_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” is back from the archive'**
+  String group_unarchived_toast(String title);
+
+  /// No description provided for @group_deleted_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” deleted'**
+  String group_deleted_toast(String title);
+
+  /// No description provided for @group_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t save the group'**
+  String get group_save_error;
+
+  /// No description provided for @template_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t save the template'**
+  String get template_save_error;
+
+  /// No description provided for @template_delete_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t delete the template'**
+  String get template_delete_error;
+
+  /// No description provided for @groups_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t load the groups'**
+  String get groups_load_error;
+
+  /// No description provided for @group_not_found_toast.
+  ///
+  /// In en, this message translates to:
+  /// **'This group isn’t here any more'**
+  String get group_not_found_toast;
+
+  /// No description provided for @add_name_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t add it, try again'**
+  String get add_name_error;
+
+  /// Toast after an export is saved: the file's name and the folder's name (not the full path)
+  ///
+  /// In en, this message translates to:
+  /// **'“{file}” saved in {folder}'**
+  String file_saved_in(String file, String folder);
 }
 
 class _AppLocalizationsDelegate

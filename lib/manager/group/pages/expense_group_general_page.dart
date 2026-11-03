@@ -358,7 +358,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                   if (context.mounted) {
                     AppToast.show(
                       context,
-                      gloc.error_saving_group(e.toString()),
+                      gloc.group_save_error,
                       type: ToastType.error,
                     );
                   }

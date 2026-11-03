@@ -54,7 +54,6 @@
   "in_group_prefix": "en",
   "group_total": "Total",
   "markdown_select_directory_title": "Seleccionar carpeta para guardar Markdown",
-  "markdown_saved_in": "Markdown guardado en: {path}",
   "markdown_save_error": "No se pudo guardar el archivo Markdown",
   "share_label": "Compartir",
   "export_share": "Compartir y exportar",
@@ -161,9 +160,6 @@
   "unarchive": "Sacar del archivo",
   "pin": "Favorito",
   "unpin": "Quitar favorito",
-  "archived_with_undo": "Archivado",
-  "unarchived_with_undo": "Sacado del archivo",
-  "deleted_with_undo": "Eliminado",
   "statistics": "Estadísticas",
   "period": "Período",
   "total_expenses": "Total de gastos",
@@ -193,10 +189,8 @@
   "group_deleted_success": "Grupo eliminado",
   "@group_deleted_success": {"description": "Mensaje mostrado después de eliminar un grupo de gastos"},
   "csv_select_directory_title": "Seleccionar carpeta para guardar CSV",
-  "csv_saved_in": "CSV guardado en: {path}",
   "csv_save_error": "No se pudo guardar el archivo CSV",
   "ofx_select_directory_title": "Seleccionar carpeta para guardar OFX",
-  "ofx_saved_in": "OFX guardado en: {path}",
   "ofx_save_error": "No se pudo guardar el archivo OFX",
   "csv_expense_name": "Descripción",
   "csv_amount": "Cantidad",
@@ -254,8 +248,6 @@
   "discard_changes_title": "¿Salir sin guardar?",
   "discard_changes_message": "Los cambios que no has guardado se perderán.",
   "discard": "Descartar",
-  "error_saving_group": "Error guardando: {error}",
-  "@error_saving_group": {"placeholders": {"error": {}}},
   "status_active": "Activos",
   "@status_active": {"description": "Etiqueta de filtro: grupos activos"},
   "status_archived": "Archivados",
@@ -950,4 +942,15 @@
   ,"permission_location_message": "Caravella usa la ubicación para añadir dónde hiciste un gasto. El acceso está desactivado: puedes activarlo en los ajustes del teléfono."
   ,"permission_open_settings": "Abrir ajustes"
   ,"permission_not_now": "Ahora no"
+  ,"undo": "Deshacer"
+  ,"group_archived_toast": "«{title}» archivado"
+  ,"group_unarchived_toast": "«{title}» sacado del archivo"
+  ,"group_deleted_toast": "«{title}» eliminado"
+  ,"group_save_error": "No se pudo guardar el grupo"
+  ,"template_save_error": "No se pudo guardar la plantilla"
+  ,"template_delete_error": "No se pudo eliminar la plantilla"
+  ,"groups_load_error": "No se pudieron cargar los grupos"
+  ,"group_not_found_toast": "Este grupo ya no está"
+  ,"add_name_error": "No se pudo añadir, inténtalo de nuevo"
+  ,"file_saved_in": "«{file}» guardado en {folder}"
 }

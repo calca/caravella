@@ -277,7 +277,12 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     }
   }
 
-  Future<void> _handleArchiveToggle(BuildContext context) async {
+  /// Archives or unarchives the group, then says so with Undo (which
+  /// switches it back, without a second toast).
+  Future<void> _handleArchiveToggle(
+    BuildContext context, {
+    bool announce = true,
+  }) async {
     final gloc = gen.AppLocalizations.of(context);
     final groupNotifier = Provider.of<ExpenseGroupNotifier>(
       context,
@@ -300,10 +305,19 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
 
     if (!context.mounted) return;
 
-    AppToast.show(
-      context,
-      newArchivedState ? gloc.archived_with_undo : gloc.unarchived_with_undo,
-    );
+    if (announce) {
+      final title = _currentTrip.title;
+      AppToast.show(
+        context,
+        newArchivedState
+            ? gloc.group_archived_toast(title)
+            : gloc.group_unarchived_toast(title),
+        actionLabel: gloc.undo,
+        onAction: () {
+          if (mounted) _handleArchiveToggle(this.context, announce: false);
+        },
+      );
+    }
 
     widget.onGroupUpdated?.call();
   }

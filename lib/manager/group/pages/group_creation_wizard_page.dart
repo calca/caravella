@@ -205,11 +205,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
       );
       if (mounted) {
         setState(() => _saving = false);
-        AppToast.show(
-          context,
-          gloc.error_saving_group(e.toString()),
-          type: ToastType.error,
-        );
+        AppToast.show(context, gloc.group_save_error, type: ToastType.error);
       }
     }
   }

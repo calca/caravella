@@ -115,11 +115,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Select folder to save Markdown';
 
   @override
-  String markdown_saved_in(String path) {
-    return 'Markdown saved in: $path';
-  }
-
-  @override
   String get markdown_save_error => 'Couldn’t save the Markdown file';
 
   @override
@@ -455,15 +450,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unpin => 'Remove favorite';
 
   @override
-  String get archived_with_undo => 'Archived';
-
-  @override
-  String get unarchived_with_undo => 'Removed from archive';
-
-  @override
-  String get deleted_with_undo => 'Deleted';
-
-  @override
   String get statistics => 'Statistics';
 
   @override
@@ -550,20 +536,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get csv_select_directory_title => 'Select folder to save CSV';
 
   @override
-  String csv_saved_in(Object path) {
-    return 'CSV saved in: $path';
-  }
-
-  @override
   String get csv_save_error => 'Couldn’t save the CSV file';
 
   @override
   String get ofx_select_directory_title => 'Select folder to save OFX';
-
-  @override
-  String ofx_saved_in(Object path) {
-    return 'OFX saved in: $path';
-  }
 
   @override
   String get ofx_save_error => 'Couldn’t save the OFX file';
@@ -748,11 +724,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discard => 'Discard';
-
-  @override
-  String error_saving_group(Object error) {
-    return 'Error saving: $error';
-  }
 
   @override
   String get status_active => 'Active';
@@ -1794,7 +1765,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unsplash_downloading => 'Downloading photo…';
 
   @override
-  String get unsplash_error => 'Failed to load images';
+  String get unsplash_error => 'Couldn’t load the images';
 
   @override
   String get unsplash_photos_by => 'Photos by';
@@ -2465,4 +2436,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permission_not_now => 'Not now';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String group_archived_toast(String title) {
+    return '“$title” archived';
+  }
+
+  @override
+  String group_unarchived_toast(String title) {
+    return '“$title” is back from the archive';
+  }
+
+  @override
+  String group_deleted_toast(String title) {
+    return '“$title” deleted';
+  }
+
+  @override
+  String get group_save_error => 'Couldn’t save the group';
+
+  @override
+  String get template_save_error => 'Couldn’t save the template';
+
+  @override
+  String get template_delete_error => 'Couldn’t delete the template';
+
+  @override
+  String get groups_load_error => 'Couldn’t load the groups';
+
+  @override
+  String get group_not_found_toast => 'This group isn’t here any more';
+
+  @override
+  String get add_name_error => 'Couldn’t add it, try again';
+
+  @override
+  String file_saved_in(String file, String folder) {
+    return '“$file” saved in $folder';
+  }
 }

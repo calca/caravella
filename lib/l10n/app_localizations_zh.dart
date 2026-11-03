@@ -113,11 +113,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get markdown_select_directory_title => '选择保存 Markdown 的文件夹';
 
   @override
-  String markdown_saved_in(String path) {
-    return 'Markdown 已保存至：$path';
-  }
-
-  @override
   String get markdown_save_error => '保存 Markdown 文件时出错';
 
   @override
@@ -451,15 +446,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unpin => '取消收藏';
 
   @override
-  String get archived_with_undo => '已归档';
-
-  @override
-  String get unarchived_with_undo => '已移出归档';
-
-  @override
-  String get deleted_with_undo => '已删除';
-
-  @override
   String get statistics => '统计';
 
   @override
@@ -544,20 +530,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get csv_select_directory_title => '选择保存 CSV 的文件夹';
 
   @override
-  String csv_saved_in(Object path) {
-    return 'CSV 已保存在：$path';
-  }
-
-  @override
   String get csv_save_error => '保存 CSV 文件时出错';
 
   @override
   String get ofx_select_directory_title => '选择保存 OFX 的文件夹';
-
-  @override
-  String ofx_saved_in(Object path) {
-    return 'OFX 已保存在：$path';
-  }
 
   @override
   String get ofx_save_error => '保存 OFX 文件时出错';
@@ -740,11 +716,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get discard => '舍弃';
-
-  @override
-  String error_saving_group(Object error) {
-    return '保存错误：$error';
-  }
 
   @override
   String get status_active => '活跃';
@@ -2416,4 +2387,45 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get permission_not_now => '暂不';
+
+  @override
+  String get undo => '撤销';
+
+  @override
+  String group_archived_toast(String title) {
+    return '“$title”已归档';
+  }
+
+  @override
+  String group_unarchived_toast(String title) {
+    return '“$title”已移出归档';
+  }
+
+  @override
+  String group_deleted_toast(String title) {
+    return '“$title”已删除';
+  }
+
+  @override
+  String get group_save_error => '无法保存群组';
+
+  @override
+  String get template_save_error => '无法保存模板';
+
+  @override
+  String get template_delete_error => '无法删除模板';
+
+  @override
+  String get groups_load_error => '无法加载群组';
+
+  @override
+  String get group_not_found_toast => '此群组已不存在';
+
+  @override
+  String get add_name_error => '无法添加，请重试';
+
+  @override
+  String file_saved_in(String file, String folder) {
+    return '“$file”已保存到 $folder';
+  }
 }

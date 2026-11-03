@@ -101,7 +101,6 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
             context,
             _errorMessage(gloc, error),
             type: ToastType.error,
-            duration: const Duration(seconds: 3),
           );
         }
       },

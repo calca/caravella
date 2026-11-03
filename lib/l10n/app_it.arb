@@ -35,7 +35,6 @@
   "in_group_prefix": "in",
   "group_total": "Totale",
   "markdown_select_directory_title": "Seleziona cartella per salvare Markdown",
-  "markdown_saved_in": "Markdown salvato in: {path}",
   "markdown_save_error": "Impossibile salvare il file Markdown",
   "share_label": "Condividi",
   "export_share": "Condividi ed esporta",
@@ -157,9 +156,6 @@
   "pin": "Preferito",
   "unpin": "Rimuovi preferito",
   "delete": "Elimina",
-  "archived_with_undo": "Archiviato",
-  "unarchived_with_undo": "Tolto dall’archivio",
-  "deleted_with_undo": "Eliminato",
   "statistics": "Statistiche",
   "period": "Periodo",
   "total_expenses": "Totale spese",
@@ -185,10 +181,8 @@
   "group_deleted_success": "Gruppo eliminato",
   "@group_deleted_success": {"description": "Messaggio di conferma dopo l'eliminazione di un gruppo di spese"},
   "csv_select_directory_title": "Seleziona cartella per salvare CSV",
-  "csv_saved_in": "CSV salvato in: {path}",
   "csv_save_error": "Impossibile salvare il file CSV",
   "ofx_select_directory_title": "Seleziona cartella per salvare OFX",
-  "ofx_saved_in": "OFX salvato in: {path}",
   "ofx_save_error": "Impossibile salvare il file OFX",
   "csv_expense_name": "Descrizione",
   "csv_amount": "Importo",
@@ -245,8 +239,6 @@
   ,"discard": "Scarta"
   ,"spent_today": "Oggi"
   ,"@spent_today": {"description": "Etichetta mostrata prima dell'importo speso oggi"}
-  ,"error_saving_group": "Errore durante il salvataggio: {error}"
-  ,"@error_saving_group": {"placeholders": {"error": {}}}
   ,"status_active": "Attivi"
   ,"@status_active": {"description": "Etichetta filtro: gruppi attivi"}
   ,"status_archived": "Archiviati"
@@ -925,4 +917,15 @@
   ,"permission_location_message": "Caravella usa la posizione per aggiungere dove hai fatto una spesa. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono."
   ,"permission_open_settings": "Apri impostazioni"
   ,"permission_not_now": "Non ora"
+  ,"undo": "Annulla"
+  ,"group_archived_toast": "«{title}» archiviato"
+  ,"group_unarchived_toast": "«{title}» tolto dall’archivio"
+  ,"group_deleted_toast": "«{title}» eliminato"
+  ,"group_save_error": "Impossibile salvare il gruppo"
+  ,"template_save_error": "Impossibile salvare il modello"
+  ,"template_delete_error": "Impossibile eliminare il modello"
+  ,"groups_load_error": "Impossibile caricare i gruppi"
+  ,"group_not_found_toast": "Questo gruppo non c’è più"
+  ,"add_name_error": "Impossibile aggiungerlo, riprova"
+  ,"file_saved_in": "«{file}» salvato in {folder}"
 }
