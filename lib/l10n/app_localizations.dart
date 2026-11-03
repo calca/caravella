@@ -104,24 +104,6 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
-  /// Section title for developer and support links in DeveloperPage
-  ///
-  /// In en, this message translates to:
-  /// **'Developer and support'**
-  String get developer_section_title;
-
-  /// Section title for repository and issues links in DeveloperPage
-  ///
-  /// In en, this message translates to:
-  /// **'Code and issues'**
-  String get repo_section_title;
-
-  /// Section title for license link in DeveloperPage
-  ///
-  /// In en, this message translates to:
-  /// **'License'**
-  String get license_section_title;
-
   /// Letter indicator for weekly chart badge
   ///
   /// In en, this message translates to:
@@ -617,7 +599,7 @@ abstract class AppLocalizations {
   /// No description provided for @license_link.
   ///
   /// In en, this message translates to:
-  /// **'View the MIT License on GitHub'**
+  /// **'License'**
   String get license_link;
 
   /// No description provided for @add_trip.
@@ -1436,30 +1418,6 @@ abstract class AppLocalizations {
   /// **'Data management'**
   String get settings_data_manage;
 
-  /// No description provided for @settings_info.
-  ///
-  /// In en, this message translates to:
-  /// **'Information'**
-  String get settings_info;
-
-  /// No description provided for @settings_app_version.
-  ///
-  /// In en, this message translates to:
-  /// **'App version'**
-  String get settings_app_version;
-
-  /// No description provided for @settings_info_card.
-  ///
-  /// In en, this message translates to:
-  /// **'Information'**
-  String get settings_info_card;
-
-  /// No description provided for @settings_info_card_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Developer, source code and license'**
-  String get settings_info_card_desc;
-
   /// No description provided for @settings_invite_friends.
   ///
   /// In en, this message translates to:
@@ -1472,34 +1430,22 @@ abstract class AppLocalizations {
   /// **'Share Caravella with anyone'**
   String get settings_invite_friends_desc;
 
-  /// No description provided for @invite_friends_message.
+  /// Shared invite text; {link} is the store page of this build (Google Play or F-Droid)
   ///
   /// In en, this message translates to:
-  /// **'Hey! I use Caravella to split group expenses with friends, it’s super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm'**
-  String get invite_friends_message;
-
-  /// No description provided for @terms_github_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Website: calca'**
-  String get terms_github_title;
-
-  /// No description provided for @terms_github_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Developer’s website'**
-  String get terms_github_desc;
+  /// **'Hey! I use Caravella to split group expenses with friends, it’s super handy 🎒💸 Give it a try: {link}'**
+  String invite_friends_message(String link);
 
   /// No description provided for @terms_repo_title.
   ///
   /// In en, this message translates to:
-  /// **'GitHub repository'**
+  /// **'Source code'**
   String get terms_repo_title;
 
   /// No description provided for @terms_repo_desc.
   ///
   /// In en, this message translates to:
-  /// **'The app’s source code'**
+  /// **'On GitHub, MIT license'**
   String get terms_repo_desc;
 
   /// No description provided for @terms_issue_title.
@@ -1511,14 +1457,8 @@ abstract class AppLocalizations {
   /// No description provided for @terms_issue_desc.
   ///
   /// In en, this message translates to:
-  /// **'Report a problem on GitHub'**
+  /// **'Open a report on GitHub'**
   String get terms_issue_desc;
-
-  /// No description provided for @terms_license_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'MIT open source license'**
-  String get terms_license_desc;
 
   /// No description provided for @support_developer_title.
   ///
@@ -4565,6 +4505,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get unsplash_retry;
+
+  /// No description provided for @settings_app_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella'**
+  String get settings_app_section;
+
+  /// No description provided for @settings_project_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Open source project'**
+  String get settings_project_section;
+
+  /// No description provided for @settings_rate_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Caravella'**
+  String get settings_rate_title;
+
+  /// No description provided for @settings_rate_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave a review on Google Play'**
+  String get settings_rate_desc;
+
+  /// No description provided for @settings_fdroid_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella on F-Droid'**
+  String get settings_fdroid_title;
+
+  /// No description provided for @settings_fdroid_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'The app’s page in the F-Droid catalog'**
+  String get settings_fdroid_desc;
+
+  /// No description provided for @settings_whats_new_version.
+  ///
+  /// In en, this message translates to:
+  /// **'What’s new in version {version}'**
+  String settings_whats_new_version(String version);
+
+  /// No description provided for @settings_whats_new_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'What changed in this version'**
+  String get settings_whats_new_desc;
+
+  /// No description provided for @settings_footer_version.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella {version}'**
+  String settings_footer_version(String version);
+
+  /// No description provided for @settings_made_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Made by {name}'**
+  String settings_made_by(String name);
 }
 
 class _AppLocalizationsDelegate

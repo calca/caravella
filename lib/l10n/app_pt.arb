@@ -1,11 +1,5 @@
 {
   "@@locale": "pt",
-  "developer_section_title": "Desenvolvedor e suporte",
-  "@developer_section_title": {"description": "Section title for developer and support links in DeveloperPage"},
-  "repo_section_title": "Código e problemas",
-  "@repo_section_title": {"description": "Section title for repository and issues links in DeveloperPage"},
-  "license_section_title": "Licença",
-  "@license_section_title": {"description": "Section title for license link in DeveloperPage"},
   "weeklyChartBadge": "W",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"
@@ -214,20 +208,13 @@
   "settings_privacy": "Privacidade",
   "settings_data": "Dados",
   "settings_data_manage": "Gerenciamento de dados",
-  "settings_info": "Informações",
-  "settings_app_version": "Versão do app",
-  "settings_info_card": "Informações",
-  "settings_info_card_desc": "Desenvolvedor, código-fonte e licença",
   "settings_invite_friends": "Convide seus amigos",
   "settings_invite_friends_desc": "Compartilhe o Caravella com quem quiser",
-  "invite_friends_message": "Oi! Uso o Caravella para dividir as despesas em grupo com amigos, é super prático 🎒💸 Experimente também: https://play.google.com/store/apps/details?id=io.caravella.egm",
-  "terms_github_title": "Site: calca",
-  "terms_github_desc": "Site do programador",
-  "terms_repo_title": "Repositório GitHub",
-  "terms_repo_desc": "Código-fonte do app",
+  "invite_friends_message": "Oi! Uso o Caravella para dividir as despesas em grupo com amigos, é super prático 🎒💸 Experimente também: {link}",
+  "terms_repo_title": "Código-fonte",
+  "terms_repo_desc": "No GitHub, licença MIT",
   "terms_issue_title": "Reportar um problema",
-  "terms_issue_desc": "Reporta um problema no GitHub",
-  "terms_license_desc": "Licença open source MIT",
+  "terms_issue_desc": "Abra um relato no GitHub",
   "support_developer_title": "Pague um café",
   "support_developer_desc": "Apoie o desenvolvimento do app",
   "data_title": "Backup e restauração",
@@ -478,7 +465,7 @@
   ,"last_7_days": "Últimos 7 dias"
   ,"today": "Hoje"
   ,"this_month": "Este mês"
-  ,"license_link": "Ver a licença MIT no GitHub"
+  ,"license_link": "Licença"
   ,"no_expenses_to_export": "Nenhuma despesa para exportar"
   ,"note_hint": "Nota"
   ,"ofx_save_error": "Não foi possível salvar o arquivo OFX"
@@ -930,4 +917,14 @@
   ,"location_service_disabled": "A localização está desativada: ative-a para adicionar o lugar"
   ,"unsplash_load_more_error": "Não foi possível carregar mais fotos"
   ,"unsplash_retry": "Tentar novamente"
+  ,"settings_app_section": "Caravella"
+  ,"settings_project_section": "Projeto de código aberto"
+  ,"settings_rate_title": "Avalie o Caravella"
+  ,"settings_rate_desc": "Deixe uma avaliação no Google Play"
+  ,"settings_fdroid_title": "Caravella no F-Droid"
+  ,"settings_fdroid_desc": "A página do app no catálogo do F-Droid"
+  ,"settings_whats_new_version": "Novidades da versão {version}"
+  ,"settings_whats_new_desc": "O que mudou nesta versão"
+  ,"settings_footer_version": "Caravella {version}"
+  ,"settings_made_by": "Feito por {name}"
 }
