@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Settings: the last part is now two short groups instead of a row opening a separate Information page — **Caravella** (rate it on Google Play, or its F-Droid page in the F-Droid build; invite your friends; what's new in this version) and **Open source project** (buy me a coffee, source code, report a problem), with the version, the developer's site and the license in a line at the bottom. The invite message links to the store the app came from (Google Play or F-Droid)
+
 ### Fixed
 - Group settings → General: going back with the name left empty no longer saves a group without a name — you stay on the page, the name field is focused and a message says the group needs a name
 

@@ -9,15 +9,6 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get developer_section_title => 'Desarrollador y soporte';
-
-  @override
-  String get repo_section_title => 'Código e incidencias';
-
-  @override
-  String get license_section_title => 'Licencia';
-
-  @override
   String get weeklyChartBadge => 'S';
 
   @override
@@ -279,7 +270,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get recent_expenses => 'Gastos recientes';
 
   @override
-  String get license_link => 'Ver licencia MIT en GitHub';
+  String get license_link => 'Licencia';
 
   @override
   String get add_trip => 'Añadir grupo';
@@ -704,19 +695,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_data_manage => 'Gestión de datos';
 
   @override
-  String get settings_info => 'Información';
-
-  @override
-  String get settings_app_version => 'Versión de la aplicación';
-
-  @override
-  String get settings_info_card => 'Información';
-
-  @override
-  String get settings_info_card_desc =>
-      'Desarrollador, código fuente y licencia';
-
-  @override
   String get settings_invite_friends => 'Invita a tus amigos';
 
   @override
@@ -724,29 +702,21 @@ class AppLocalizationsEs extends AppLocalizations {
       'Comparte Caravella con quien quieras';
 
   @override
-  String get invite_friends_message =>
-      '¡Hola! Uso Caravella para dividir los gastos en grupo con amigos, es súper cómoda 🎒💸 Pruébala tú también: https://play.google.com/store/apps/details?id=io.caravella.egm';
+  String invite_friends_message(String link) {
+    return '¡Hola! Uso Caravella para dividir los gastos en grupo con amigos, es súper cómoda 🎒💸 Pruébala tú también: $link';
+  }
 
   @override
-  String get terms_github_title => 'Sitio web: calca';
+  String get terms_repo_title => 'Código fuente';
 
   @override
-  String get terms_github_desc => 'Web del desarrollador';
-
-  @override
-  String get terms_repo_title => 'Repositorio GitHub';
-
-  @override
-  String get terms_repo_desc => 'Código fuente de la app';
+  String get terms_repo_desc => 'En GitHub, licencia MIT';
 
   @override
   String get terms_issue_title => 'Reportar un problema';
 
   @override
-  String get terms_issue_desc => 'Informa de un problema en GitHub';
-
-  @override
-  String get terms_license_desc => 'Licencia de código abierto MIT';
+  String get terms_issue_desc => 'Abre un informe en GitHub';
 
   @override
   String get support_developer_title => 'Cómprame un café';
@@ -2448,4 +2418,41 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get unsplash_retry => 'Reintentar';
+
+  @override
+  String get settings_app_section => 'Caravella';
+
+  @override
+  String get settings_project_section => 'Proyecto de código abierto';
+
+  @override
+  String get settings_rate_title => 'Valora Caravella';
+
+  @override
+  String get settings_rate_desc => 'Deja una reseña en Google Play';
+
+  @override
+  String get settings_fdroid_title => 'Caravella en F-Droid';
+
+  @override
+  String get settings_fdroid_desc =>
+      'La página de la app en el catálogo de F-Droid';
+
+  @override
+  String settings_whats_new_version(String version) {
+    return 'Novedades de la versión $version';
+  }
+
+  @override
+  String get settings_whats_new_desc => 'Qué ha cambiado en esta versión';
+
+  @override
+  String settings_footer_version(String version) {
+    return 'Caravella $version';
+  }
+
+  @override
+  String settings_made_by(String name) {
+    return 'Hecha por $name';
+  }
 }

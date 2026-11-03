@@ -9,15 +9,6 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get developer_section_title => '开发者和支持';
-
-  @override
-  String get repo_section_title => '代码和问题反馈';
-
-  @override
-  String get license_section_title => '许可证';
-
-  @override
   String get weeklyChartBadge => '周';
 
   @override
@@ -275,7 +266,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get recent_expenses => '最近支出';
 
   @override
-  String get license_link => '在GitHub上查看MIT许可证';
+  String get license_link => '许可证';
 
   @override
   String get add_trip => '添加群组';
@@ -692,47 +683,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_data_manage => '管理数据';
 
   @override
-  String get settings_info => '信息';
-
-  @override
-  String get settings_app_version => '应用版本';
-
-  @override
-  String get settings_info_card => '应用信息';
-
-  @override
-  String get settings_info_card_desc => '开发者、源代码和许可证';
-
-  @override
   String get settings_invite_friends => '邀请好友';
 
   @override
   String get settings_invite_friends_desc => '把 Caravella 分享给你的朋友';
 
   @override
-  String get invite_friends_message =>
-      '嗨！我在用 Caravella 和朋友们一起记账分摊费用，非常方便 🎒💸 你也来试试吧：https://play.google.com/store/apps/details?id=io.caravella.egm';
+  String invite_friends_message(String link) {
+    return '嗨！我在用 Caravella 和朋友们一起记账分摊费用，非常方便 🎒💸 你也来试试吧：$link';
+  }
 
   @override
-  String get terms_github_title => '网站：calca';
+  String get terms_repo_title => '源代码';
 
   @override
-  String get terms_github_desc => '开发者网站';
-
-  @override
-  String get terms_repo_title => 'GitHub仓库';
-
-  @override
-  String get terms_repo_desc => '应用源代码';
+  String get terms_repo_desc => '在 GitHub 上，MIT 许可证';
 
   @override
   String get terms_issue_title => '报告问题';
 
   @override
-  String get terms_issue_desc => '在 GitHub 上报告问题';
-
-  @override
-  String get terms_license_desc => 'MIT 开源许可证';
+  String get terms_issue_desc => '在 GitHub 上提交问题报告';
 
   @override
   String get support_developer_title => '请我喝杯咖啡';
@@ -2386,4 +2357,40 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get unsplash_retry => '重试';
+
+  @override
+  String get settings_app_section => 'Caravella';
+
+  @override
+  String get settings_project_section => '开源项目';
+
+  @override
+  String get settings_rate_title => '为 Caravella 评分';
+
+  @override
+  String get settings_rate_desc => '在 Google Play 上留下评价';
+
+  @override
+  String get settings_fdroid_title => 'F-Droid 上的 Caravella';
+
+  @override
+  String get settings_fdroid_desc => '应用在 F-Droid 目录中的页面';
+
+  @override
+  String settings_whats_new_version(String version) {
+    return '$version 版本新功能';
+  }
+
+  @override
+  String get settings_whats_new_desc => '此版本的更新内容';
+
+  @override
+  String settings_footer_version(String version) {
+    return 'Caravella $version';
+  }
+
+  @override
+  String settings_made_by(String name) {
+    return '由 $name 开发';
+  }
 }

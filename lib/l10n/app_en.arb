@@ -1,11 +1,5 @@
 {
   "@@locale": "en",
-  "developer_section_title": "Developer and support",
-  "@developer_section_title": {"description": "Section title for developer and support links in DeveloperPage"},
-  "repo_section_title": "Code and issues",
-  "@repo_section_title": {"description": "Section title for repository and issues links in DeveloperPage"},
-  "license_section_title": "License",
-  "@license_section_title": {"description": "Section title for license link in DeveloperPage"},
   "weeklyChartBadge": "W",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"
@@ -114,7 +108,7 @@
   "this_month": "This month",
   "recent_expenses": "Recent expenses",
   "@recent_expenses": {"description": "Label for recent expenses section"},
-  "license_link": "View the MIT License on GitHub",
+  "license_link": "License",
   "add_trip": "Add a group",
   "group": "Group",
   "create": "Create",
@@ -260,20 +254,13 @@
   "settings_privacy": "Privacy",
   "settings_data": "Data",
   "settings_data_manage": "Data management",
-  "settings_info": "Information",
-  "settings_app_version": "App version",
-  "settings_info_card": "Information",
-  "settings_info_card_desc": "Developer, source code and license",
   "settings_invite_friends": "Invite your friends",
   "settings_invite_friends_desc": "Share Caravella with anyone",
-  "invite_friends_message": "Hey! I use Caravella to split group expenses with friends, it’s super handy 🎒💸 Give it a try: https://play.google.com/store/apps/details?id=io.caravella.egm",
-  "terms_github_title": "Website: calca",
-  "terms_github_desc": "Developer’s website",
-  "terms_repo_title": "GitHub repository",
-  "terms_repo_desc": "The app’s source code",
+  "invite_friends_message": "Hey! I use Caravella to split group expenses with friends, it’s super handy 🎒💸 Give it a try: {link}",
+  "terms_repo_title": "Source code",
+  "terms_repo_desc": "On GitHub, MIT license",
   "terms_issue_title": "Report a problem",
-  "terms_issue_desc": "Report a problem on GitHub",
-  "terms_license_desc": "MIT open source license",
+  "terms_issue_desc": "Open a report on GitHub",
   "support_developer_title": "Buy me a coffee",
   "support_developer_desc": "Support the app’s development",
   "data_title": "Backup and restore",
@@ -1072,4 +1059,18 @@
   ,"unsplash_retry": "Retry"
   ,"@unsplash_load_more_error": {"description": "Shown at the end of the Unsplash results when loading the next page fails"}
   ,"@unsplash_retry": {"description": "Button to retry loading the next page of Unsplash results"}
+  ,"settings_app_section": "Caravella"
+  ,"settings_project_section": "Open source project"
+  ,"settings_rate_title": "Rate Caravella"
+  ,"settings_rate_desc": "Leave a review on Google Play"
+  ,"settings_fdroid_title": "Caravella on F-Droid"
+  ,"settings_fdroid_desc": "The app’s page in the F-Droid catalog"
+  ,"settings_whats_new_version": "What’s new in version {version}"
+  ,"settings_whats_new_desc": "What changed in this version"
+  ,"settings_footer_version": "Caravella {version}"
+  ,"settings_made_by": "Made by {name}"
+  ,"@settings_whats_new_version": {"placeholders": {"version": {"type": "String"}}}
+  ,"@settings_footer_version": {"placeholders": {"version": {"type": "String"}}}
+  ,"@settings_made_by": {"placeholders": {"name": {"type": "String"}}}
+  ,"@invite_friends_message": {"description": "Shared invite text; {link} is the store page of this build (Google Play or F-Droid)", "placeholders": {"link": {"type": "String"}}}
 }

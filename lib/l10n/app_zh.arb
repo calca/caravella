@@ -1,17 +1,5 @@
 {
   "@@locale": "zh",
-  "developer_section_title": "开发者和支持",
-  "@developer_section_title": {
-    "description": "Section title for developer and support links in DeveloperPage"
-  },
-  "repo_section_title": "代码和问题反馈",
-  "@repo_section_title": {
-    "description": "Section title for repository and issues links in DeveloperPage"
-  },
-  "license_section_title": "许可证",
-  "@license_section_title": {
-    "description": "Section title for license link in DeveloperPage"
-  },
   "weeklyChartBadge": "周",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"
@@ -92,7 +80,7 @@
   "participants": "参与者",
   "recent_expenses": "最近支出",
   "@recent_expenses": {"description": "最近支出部分的标签"},
-  "license_link": "在GitHub上查看MIT许可证",
+  "license_link": "许可证",
   "add_trip": "添加群组",
   "create": "创建",
   "group_name": "群组名称",
@@ -217,20 +205,13 @@
   "settings_dynamic_color_desc": "使用壁纸颜色",
   "settings_data": "数据",
   "settings_data_manage": "管理数据",
-  "settings_info": "信息",
-  "settings_app_version": "应用版本",
-  "settings_info_card": "应用信息",
-  "settings_info_card_desc": "开发者、源代码和许可证",
   "settings_invite_friends": "邀请好友",
   "settings_invite_friends_desc": "把 Caravella 分享给你的朋友",
-  "invite_friends_message": "嗨！我在用 Caravella 和朋友们一起记账分摊费用，非常方便 🎒💸 你也来试试吧：https://play.google.com/store/apps/details?id=io.caravella.egm",
-  "terms_github_title": "网站：calca",
-  "terms_github_desc": "开发者网站",
-  "terms_repo_title": "GitHub仓库",
-  "terms_repo_desc": "应用源代码",
+  "invite_friends_message": "嗨！我在用 Caravella 和朋友们一起记账分摊费用，非常方便 🎒💸 你也来试试吧：{link}",
+  "terms_repo_title": "源代码",
+  "terms_repo_desc": "在 GitHub 上，MIT 许可证",
   "terms_issue_title": "报告问题",
-  "terms_issue_desc": "在 GitHub 上报告问题",
-  "terms_license_desc": "MIT 开源许可证",
+  "terms_issue_desc": "在 GitHub 上提交问题报告",
   "support_developer_title": "请我喝杯咖啡",
   "support_developer_desc": "支持应用的开发",
   "data_title": "备份与恢复",
@@ -1261,4 +1242,14 @@
   ,"location_service_disabled": "定位服务已关闭：请开启以添加地点"
   ,"unsplash_load_more_error": "无法加载更多照片"
   ,"unsplash_retry": "重试"
+  ,"settings_app_section": "Caravella"
+  ,"settings_project_section": "开源项目"
+  ,"settings_rate_title": "为 Caravella 评分"
+  ,"settings_rate_desc": "在 Google Play 上留下评价"
+  ,"settings_fdroid_title": "F-Droid 上的 Caravella"
+  ,"settings_fdroid_desc": "应用在 F-Droid 目录中的页面"
+  ,"settings_whats_new_version": "{version} 版本新功能"
+  ,"settings_whats_new_desc": "此版本的更新内容"
+  ,"settings_footer_version": "Caravella {version}"
+  ,"settings_made_by": "由 {name} 开发"
 }
