@@ -6,7 +6,9 @@ import 'package:caravella_core/sync/channels/lan_sync_channel.dart';
 import 'package:caravella_core/sync/device_identity.dart';
 import 'package:caravella_core/sync/models/group_sync_status.dart';
 import 'package:caravella_core/sync/models/paired_device.dart';
+import 'package:caravella_core/sync/models/sync_problem.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
+import 'package:caravella_core/sync/sync_problem_log.dart';
 import 'package:caravella_core/sync/models/sync_status.dart';
 import 'package:caravella_core/sync/pairing_payload.dart';
 import 'package:caravella_core/sync/sync_manager.dart';
@@ -30,6 +32,9 @@ class SyncOrchestrator {
 
   /// Sync history entries (most recent first).
   final List<Map<String, dynamic>> _history = [];
+
+  /// What's still wrong: see [problems].
+  final SyncProblemLog _problems = SyncProblemLog();
 
   StreamSubscription<SyncEvent>? _lanEventSub;
   StreamSubscription<SyncEvent>? _managerEventSub;
@@ -62,6 +67,11 @@ class SyncOrchestrator {
 
   /// Unified stream of sync events from ALL channels.
   Stream<SyncEvent> get events => _eventController.stream;
+
+  /// Sync problems not solved yet, newest first, for Settings → Sync's "To
+  /// fix" list and the ochre dot (see [SyncProblemLog]). Read it again on
+  /// each [events].
+  List<SyncProblem> get problems => _problems.problems;
 
   /// Initialize: start LAN automatically, cloud if opt-in.
   ///
@@ -218,7 +228,37 @@ class SyncOrchestrator {
             ),
           );
         }
-        return _cloudChannel.syncNow();
+        try {
+          final result = await _cloudChannel.syncNow();
+          _problems.clearReason(SyncProblemReason.cloudUnreachable);
+          return result;
+        } catch (e, st) {
+          LoggerService.error(
+            'Cloud sync failed',
+            name: _tag,
+            error: e,
+            stackTrace: st,
+          );
+          _forwardEvent(
+            SyncFailed(
+              e.toString(),
+              reason: SyncProblemReason.cloudUnreachable,
+              peerId: _cloudChannel.channelName,
+              channel: _cloudChannel.channelName,
+            ),
+          );
+          return SyncResult(
+            applied: 0,
+            skipped: 0,
+            errors: 1,
+            channel: _cloudChannel.channelName,
+            peerId: '',
+            syncedAt: DateTime.fromMillisecondsSinceEpoch(
+              SyncClock.nowMs(),
+              isUtc: true,
+            ),
+          );
+        }
 
       default:
         LoggerService.warning(
@@ -470,18 +510,48 @@ class SyncOrchestrator {
   }
 
   void _forwardEvent(SyncEvent event) {
-    if (!_eventController.isClosed) {
-      _eventController.add(event);
-    }
-
-    // Record completed syncs in history
+    // Record first, so listeners reading history or [problems] on the
+    // event see it.
     if (event is SyncCompleted) {
       _recordHistory(event.result);
     }
+    // A failed exchange goes in the history too, with its reason.
+    if (event is SyncFailed && !event.unreachable) {
+      final at = DateTime.fromMillisecondsSinceEpoch(
+        SyncClock.nowMs(),
+        isUtc: true,
+      );
+      final channel = event.channel ?? '';
+      final peerId = event.peerId ?? '';
+      _recordHistory(
+        SyncResult(
+          applied: 0,
+          skipped: 0,
+          errors: 1,
+          channel: channel,
+          peerId: peerId,
+          syncedAt: at,
+          problems: [
+            SyncProblem(
+              reason: event.reason,
+              channel: channel,
+              peerId: peerId,
+              at: at,
+            ),
+          ],
+        ),
+        failed: true,
+      );
+    }
+
+    if (!_eventController.isClosed) {
+      _eventController.add(event);
+    }
   }
 
-  void _recordHistory(SyncResult result) {
+  void _recordHistory(SyncResult result, {bool failed = false}) {
     _history.insert(0, {
+      'failed': failed,
       'channel': result.channel,
       'peerId': result.peerId,
       'applied': result.applied,
@@ -489,7 +559,10 @@ class SyncOrchestrator {
       'errors': result.errors,
       'timestamp': result.syncedAt.toIso8601String(),
       'groupIds': result.groupIds.toList(),
+      'peerName': result.peerName,
+      'problems': result.problems,
     });
+    _problems.noteResult(result);
 
     // Cap history at 100 entries
     const maxHistory = 100;

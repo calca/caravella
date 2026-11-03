@@ -1073,4 +1073,14 @@
   ,"@group_unarchived_toast": {"placeholders": {"title": {"type": "String"}}}
   ,"@group_deleted_toast": {"placeholders": {"title": {"type": "String"}}}
   ,"@file_saved_in": {"description": "Toast after an export is saved: the file's name and the folder's name (not the full path)", "placeholders": {"file": {"type": "String"}, "folder": {"type": "String"}}}
+  ,"sync_to_fix_title": "To fix"
+  ,"sync_unknown_device": "Unknown device"
+  ,"sync_problem_not_shared": "{device} sent this group, but it isn’t shared with that device here: share it again"
+  ,"sync_problem_unreadable": "Couldn’t be read: update Caravella on both devices"
+  ,"sync_problem_not_paired": "Not paired any more: pair it again from “Sync with others”"
+  ,"sync_problem_peer_error": "The other device answered with an error: try again later"
+  ,"sync_problem_cloud": "Couldn’t reach Google Drive: check the connection"
+  ,"sync_problem_failed": "Sync didn’t go through"
+  ,"sync_history_failed": "didn’t go through"
+  ,"@sync_problem_not_shared": {"description": "Settings → Sync, To fix: a device sent a group this device doesn't share with it", "placeholders": {"device": {"type": "String"}}}
 }

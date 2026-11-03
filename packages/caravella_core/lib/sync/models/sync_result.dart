@@ -1,3 +1,4 @@
+import 'package:caravella_core/sync/models/sync_problem.dart';
 import 'package:caravella_core/sync/utils/sync_clock.dart';
 
 /// Outcome of a single sync exchange with a peer.
@@ -32,6 +33,10 @@ class SyncResult {
   /// The peer's device name, when the exchange knows it.
   final String? peerName;
 
+  /// What went wrong, one per [errors] the exchange can explain (a group
+  /// not shared with the peer, one that couldn't be read, …).
+  final List<SyncProblem> problems;
+
   const SyncResult({
     required this.applied,
     required this.skipped,
@@ -42,6 +47,7 @@ class SyncResult {
     this.groupIds = const {},
     this.newGroupIds = const {},
     this.peerName,
+    this.problems = const [],
   });
 
   /// An empty result with zeroed counters and placeholder metadata.
@@ -67,6 +73,7 @@ class SyncResult {
     groupIds: {...a.groupIds, ...b.groupIds},
     newGroupIds: {...a.newGroupIds, ...b.newGroupIds},
     peerName: a.peerName ?? b.peerName,
+    problems: [...a.problems, ...b.problems],
   );
 
   @override

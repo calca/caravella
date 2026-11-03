@@ -2428,4 +2428,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String file_saved_in(String file, String folder) {
     return '“$file”已保存到 $folder';
   }
+
+  @override
+  String get sync_to_fix_title => '待处理';
+
+  @override
+  String get sync_unknown_device => '未知设备';
+
+  @override
+  String sync_problem_not_shared(String device) {
+    return '$device 发送了此群组，但这里未与该设备共享：请重新共享';
+  }
+
+  @override
+  String get sync_problem_unreadable => '无法读取：请在两台设备上更新 Caravella';
+
+  @override
+  String get sync_problem_not_paired => '已不再配对：请在“与他人同步”中重新配对';
+
+  @override
+  String get sync_problem_peer_error => '另一台设备返回了错误：请稍后再试';
+
+  @override
+  String get sync_problem_cloud => '无法连接 Google Drive：请检查网络';
+
+  @override
+  String get sync_problem_failed => '同步未完成';
+
+  @override
+  String get sync_history_failed => '未完成';
 }

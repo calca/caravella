@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
@@ -6,6 +8,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'multi_device_sync_page.dart';
 import 'multi_user_sync_page.dart';
 import 'sync_history_page.dart';
+import 'sync_problem_tile.dart';
 
 /// Entry point for Settings → Sync.
 ///
@@ -13,10 +16,51 @@ import 'sync_history_page.dart';
 /// pairing with other people's devices) and [MultiDeviceSyncPage] (cloud
 /// sync across a single user's own devices) — plus the shared sync history,
 /// which spans all channels.
-class SyncSettingsScreen extends StatelessWidget {
+///
+/// Also where Home's sync button leads: when something is still wrong
+/// ([SyncOrchestrator.problems], the ochre dot), a "To fix" group on top
+/// says which group and device, why, and what to do; tapping a row opens
+/// the page to fix it on.
+class SyncSettingsScreen extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
   const SyncSettingsScreen({super.key, required this.orchestrator});
+
+  @override
+  State<SyncSettingsScreen> createState() => _SyncSettingsScreenState();
+}
+
+class _SyncSettingsScreenState extends State<SyncSettingsScreen> {
+  SyncOrchestrator get orchestrator => widget.orchestrator;
+  StreamSubscription<SyncEvent>? _events;
+  List<SyncProblem> _problems = const [];
+  SyncNames _names = const SyncNames();
+
+  @override
+  void initState() {
+    super.initState();
+    _refresh();
+    _events = orchestrator.events.listen((_) => _refresh());
+  }
+
+  @override
+  void dispose() {
+    _events?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refresh() async {
+    final problems = orchestrator.problems;
+    final names = await SyncNames.load(
+      orchestrator,
+      problems.map((p) => p.groupId).whereType<String>(),
+    );
+    if (!mounted) return;
+    setState(() {
+      _problems = problems;
+      _names = names;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +73,30 @@ class SyncSettingsScreen extends StatelessWidget {
         eyebrow: loc.settings,
         title: loc.sync_title,
         children: [
+          if (_problems.isNotEmpty)
+            SettingsGroup(
+              label: loc.sync_to_fix_title,
+              children: [
+                for (final p in _problems)
+                  SyncProblemTile(
+                    problem: p,
+                    names: _names,
+                    // Where it gets fixed: Drive's page for the cloud,
+                    // the pairing page for everything with a device.
+                    onTap: p.reason == SyncProblemReason.cloudUnreachable
+                        ? (orchestrator.isCloudEnabled
+                              ? () => push(
+                                  MultiDeviceSyncPage(
+                                    orchestrator: orchestrator,
+                                  ),
+                                )
+                              : null)
+                        : () => push(
+                            MultiUserSyncPage(orchestrator: orchestrator),
+                          ),
+                  ),
+              ],
+            ),
           SettingsGroup(
             children: [
               SettingsTile(

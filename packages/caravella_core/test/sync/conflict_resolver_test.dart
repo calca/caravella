@@ -184,6 +184,11 @@ void main() {
         final result = await resolver.applyDelta(db, delta, 'lan');
         expect(result.applied, equals(0));
         expect(result.errors, equals(1));
+        // Which group, which device, why (#606).
+        final problem = result.problems.single;
+        expect(problem.reason, SyncProblemReason.notShared);
+        expect(problem.groupId, 'ungranted-group');
+        expect(problem.peerId, 'remote-1');
 
         final stored = await repository.getGroupById('ungranted-group');
         expect(stored.unwrap(), isNull);
@@ -211,6 +216,8 @@ void main() {
         final result = await resolver.applyDelta(db, delta, 'lan');
         expect(result.applied, equals(0));
         expect(result.errors, equals(1));
+        expect(result.problems.single.reason, SyncProblemReason.notShared);
+        expect(result.problems.single.groupId, 'ungranted-delete');
 
         final stored = await repository.getGroupById('ungranted-delete');
         expect(

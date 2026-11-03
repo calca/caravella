@@ -928,4 +928,13 @@
   ,"group_not_found_toast": "Questo gruppo non c’è più"
   ,"add_name_error": "Impossibile aggiungerlo, riprova"
   ,"file_saved_in": "«{file}» salvato in {folder}"
+  ,"sync_to_fix_title": "Da sistemare"
+  ,"sync_unknown_device": "Dispositivo sconosciuto"
+  ,"sync_problem_not_shared": "{device} ha mandato il gruppo, ma qui non è condiviso con quel dispositivo: condividilo di nuovo"
+  ,"sync_problem_unreadable": "Non leggibile: aggiorna Caravella su entrambi i dispositivi"
+  ,"sync_problem_not_paired": "Non è più abbinato: abbinalo di nuovo da «Sincronizza con altri»"
+  ,"sync_problem_peer_error": "L’altro dispositivo ha risposto con un errore: riprova più tardi"
+  ,"sync_problem_cloud": "Impossibile raggiungere Google Drive: controlla la connessione"
+  ,"sync_problem_failed": "Sincronizzazione non riuscita"
+  ,"sync_history_failed": "non riuscita"
 }

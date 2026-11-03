@@ -5,6 +5,7 @@ import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/conflict_resolver.dart';
 import 'package:caravella_core/sync/delta_builder.dart';
 import 'package:caravella_core/sync/models/paired_device.dart';
+import 'package:caravella_core/sync/models/sync_problem.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/models/sync_status.dart';
 import 'package:caravella_core/sync/sync_dao.dart';
@@ -111,7 +112,14 @@ class SyncManager {
         error: e,
         stackTrace: st,
       );
-      _eventController.add(SyncFailed(e.toString()));
+      _eventController.add(
+        SyncFailed(
+          e.toString(),
+          reason: SyncProblemReason.unreadable,
+          peerId: peerId,
+          channel: channel,
+        ),
+      );
       rethrow;
     }
   }

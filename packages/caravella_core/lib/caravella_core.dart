@@ -64,6 +64,8 @@ export 'sync/utils/sync_clock.dart';
 export 'sync/utils/local_network_info.dart';
 export 'sync/models/sync_result.dart';
 export 'sync/models/sync_status.dart';
+export 'sync/models/sync_problem.dart';
+export 'sync/sync_problem_log.dart';
 export 'sync/models/group_sync_status.dart';
 export 'sync/models/paired_device.dart';
 export 'sync/pairing_payload.dart';
