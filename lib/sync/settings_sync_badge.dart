@@ -13,11 +13,13 @@ import 'sync_settings_screen.dart';
 /// [SyncStatusIcon]:
 /// - [anyChannelEnabled]: at least one sync channel (LAN, Bluetooth, cloud)
 ///   is turned on
-/// - [hasError]: the last sync attempt failed
+/// - [hasError]: something in sync is still to fix
+///   ([SyncOrchestrator.problems]: a group a device sent that isn't shared
+///   with it, a device no longer paired, …)
 ///
-/// Seeds from [SyncOrchestrator.getHistory] on load (so a failure from
-/// before this widget mounted, e.g. app restart, still surfaces) and then
-/// stays live via [SyncOrchestrator.events].
+/// Read on load and again on each [SyncOrchestrator.events]: the problems
+/// list is what Settings → Sync shows under "To fix", so the dot and the
+/// list always agree.
 mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
   SyncOrchestrator get orchestrator;
 
@@ -48,14 +50,10 @@ mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
     final cloudChannel = orchestrator.cloudChannel;
     final cloud = cloudChannel != null && await cloudChannel.isEnabled();
 
-    final history = await orchestrator.getHistory(limit: 1);
-    final lastHadError =
-        history.isNotEmpty && ((history.first['errors'] as int?) ?? 0) > 0;
-
     if (mounted) {
       setState(() {
         anyChannelEnabled = lan || bt || cloud;
-        hasError = lastHadError;
+        hasError = orchestrator.problems.isNotEmpty;
         loaded = true;
       });
     }
@@ -65,15 +63,9 @@ mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
     if (!mounted) return;
     setState(() {
       if (event is SyncStarted) syncing = true;
-      if (event is SyncFailed) {
-        syncing = false;
-        // A peer out of reach is normal for device-to-device sync.
-        if (!event.unreachable) hasError = true;
-      }
-      if (event is SyncCompleted) {
-        syncing = false;
-        hasError = event.result.errors > 0;
-      }
+      if (event is SyncFailed || event is SyncCompleted) syncing = false;
+      // A peer out of reach is normal for device-to-device sync: never one.
+      hasError = orchestrator.problems.isNotEmpty;
     });
   }
 }

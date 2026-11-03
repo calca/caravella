@@ -4601,6 +4601,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'“{file}” saved in {folder}'**
   String file_saved_in(String file, String folder);
+
+  /// No description provided for @sync_to_fix_title.
+  ///
+  /// In en, this message translates to:
+  /// **'To fix'**
+  String get sync_to_fix_title;
+
+  /// No description provided for @sync_unknown_device.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown device'**
+  String get sync_unknown_device;
+
+  /// Settings → Sync, To fix: a device sent a group this device doesn't share with it
+  ///
+  /// In en, this message translates to:
+  /// **'{device} sent this group, but it isn’t shared with that device here: share it again'**
+  String sync_problem_not_shared(String device);
+
+  /// No description provided for @sync_problem_unreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t be read: update Caravella on both devices'**
+  String get sync_problem_unreadable;
+
+  /// No description provided for @sync_problem_not_paired.
+  ///
+  /// In en, this message translates to:
+  /// **'Not paired any more: pair it again from “Sync with others”'**
+  String get sync_problem_not_paired;
+
+  /// No description provided for @sync_problem_peer_error.
+  ///
+  /// In en, this message translates to:
+  /// **'The other device answered with an error: try again later'**
+  String get sync_problem_peer_error;
+
+  /// No description provided for @sync_problem_cloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t reach Google Drive: check the connection'**
+  String get sync_problem_cloud;
+
+  /// No description provided for @sync_problem_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync didn’t go through'**
+  String get sync_problem_failed;
+
+  /// No description provided for @sync_history_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'didn’t go through'**
+  String get sync_history_failed;
 }
 
 class _AppLocalizationsDelegate

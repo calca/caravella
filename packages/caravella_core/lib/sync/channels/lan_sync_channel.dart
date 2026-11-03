@@ -13,6 +13,7 @@ import 'package:caravella_core/sync/crypto/device_key_manager.dart';
 import 'package:caravella_core/sync/crypto/peer_key_store.dart';
 import 'package:caravella_core/sync/crypto/sync_envelope.dart';
 import 'package:caravella_core/sync/device_identity.dart';
+import 'package:caravella_core/sync/models/sync_problem.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/models/sync_status.dart';
 import 'package:caravella_core/sync/utils/sync_clock.dart';
@@ -597,7 +598,14 @@ class LanSyncChannel {
           'required, skipping sync',
           name: _tag,
         );
-        _eventController.add(const SyncFailed('Peer not paired (no key)'));
+        _eventController.add(
+          SyncFailed(
+            'Peer not paired (no key)',
+            reason: SyncProblemReason.notPaired,
+            peerId: peerId,
+            channel: _channel,
+          ),
+        );
         return;
       }
 
@@ -659,7 +667,12 @@ class LanSyncChannel {
             name: _tag,
           );
           _eventController.add(
-            SyncFailed('HTTP ${httpResponse.statusCode}: $responseBody'),
+            SyncFailed(
+              'HTTP ${httpResponse.statusCode}: $responseBody',
+              reason: SyncProblemReason.peerError,
+              peerId: peerId,
+              channel: _channel,
+            ),
           );
         }
       } finally {
@@ -672,7 +685,9 @@ class LanSyncChannel {
         error: e,
         stackTrace: st,
       );
-      _eventController.add(SyncFailed(e.toString()));
+      _eventController.add(
+        SyncFailed(e.toString(), peerId: peerId, channel: _channel),
+      );
     }
   }
 

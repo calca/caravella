@@ -2488,4 +2488,37 @@ class AppLocalizationsEs extends AppLocalizations {
   String file_saved_in(String file, String folder) {
     return '«$file» guardado en $folder';
   }
+
+  @override
+  String get sync_to_fix_title => 'Por resolver';
+
+  @override
+  String get sync_unknown_device => 'Dispositivo desconocido';
+
+  @override
+  String sync_problem_not_shared(String device) {
+    return '$device envió este grupo, pero aquí no está compartido con ese dispositivo: compártelo de nuevo';
+  }
+
+  @override
+  String get sync_problem_unreadable =>
+      'No se pudo leer: actualiza Caravella en ambos dispositivos';
+
+  @override
+  String get sync_problem_not_paired =>
+      'Ya no está emparejado: vuelve a emparejarlo desde «Sincroniza con otros»';
+
+  @override
+  String get sync_problem_peer_error =>
+      'El otro dispositivo respondió con un error: inténtalo más tarde';
+
+  @override
+  String get sync_problem_cloud =>
+      'No se pudo acceder a Google Drive: revisa la conexión';
+
+  @override
+  String get sync_problem_failed => 'La sincronización no se completó';
+
+  @override
+  String get sync_history_failed => 'no se completó';
 }

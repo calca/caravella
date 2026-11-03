@@ -5,6 +5,7 @@ import 'package:caravella_core/data/sqlite_group_mapper.dart';
 import 'package:caravella_core/model/expense_group.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/delta_builder.dart';
+import 'package:caravella_core/sync/models/sync_problem.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 import 'package:caravella_core/sync/sync_dao.dart';
 import 'package:caravella_core/sync/utils/sync_clock.dart';
@@ -50,6 +51,24 @@ class ConflictResolver {
     int errors = 0;
     final touchedGroupIds = <String>{};
     final newGroupIds = <String>{};
+    final problems = <SyncProblem>[];
+    // One per error: what went wrong and with which group, for the user.
+    void problem(SyncProblemReason reason, [String? groupId]) {
+      errors++;
+      problems.add(
+        SyncProblem(
+          reason: reason,
+          channel: channel,
+          peerId: peerId,
+          peerName: parsed['device_name'] as String?,
+          groupId: groupId,
+          at: DateTime.fromMillisecondsSinceEpoch(
+            SyncClock.nowMs(),
+            isUtc: true,
+          ),
+        ),
+      );
+    }
 
     LoggerService.info(
       'Applying delta from peer=$peerId ($peerName): '
@@ -62,19 +81,20 @@ class ConflictResolver {
       // 1. Upsert / merge groups
       // ------------------------------------------------------------------
       for (final remoteJson in remoteGroups) {
+        String? groupId;
         try {
           final syncMeta =
               remoteJson['_sync'] as Map<String, dynamic>? ?? const {};
           final remoteUpdatedAt = syncMeta['updated_at'] as int? ?? 0;
           final remoteSyncVersion = syncMeta['sync_version'] as int? ?? 0;
 
-          final groupId = remoteJson['id'] as String?;
+          groupId = remoteJson['id'] as String?;
           if (groupId == null) {
             LoggerService.warning(
               'Skipping group with null ID',
               name: _tag,
             );
-            errors++;
+            problem(SyncProblemReason.unreadable);
             continue;
           }
 
@@ -87,7 +107,7 @@ class ConflictResolver {
               'Rejecting group $groupId from peer=$peerId — not granted',
               name: _tag,
             );
-            errors++;
+            problem(SyncProblemReason.notShared, groupId);
             continue;
           }
 
@@ -137,7 +157,7 @@ class ConflictResolver {
             error: e,
             stackTrace: st,
           );
-          errors++;
+          problem(SyncProblemReason.unreadable, groupId);
         }
       }
 
@@ -145,12 +165,13 @@ class ConflictResolver {
       // 2. Handle deleted groups
       // ------------------------------------------------------------------
       for (final entry in deletedGroups) {
+        String? groupId;
         try {
-          final groupId = entry['id'] as String?;
+          groupId = entry['id'] as String?;
           final remoteUpdatedAt = entry['updated_at'] as int? ?? 0;
 
           if (groupId == null) {
-            errors++;
+            problem(SyncProblemReason.unreadable);
             continue;
           }
 
@@ -159,7 +180,7 @@ class ConflictResolver {
               'Rejecting deletion of $groupId from peer=$peerId — not granted',
               name: _tag,
             );
-            errors++;
+            problem(SyncProblemReason.notShared, groupId);
             continue;
           }
 
@@ -202,7 +223,7 @@ class ConflictResolver {
             error: e,
             stackTrace: st,
           );
-          errors++;
+          problem(SyncProblemReason.unreadable, groupId);
         }
       }
     });
@@ -236,6 +257,7 @@ class ConflictResolver {
       groupIds: touchedGroupIds,
       newGroupIds: newGroupIds,
       peerName: parsed['device_name'] as String?,
+      problems: problems,
     );
 
     LoggerService.info('Delta applied: $result', name: _tag);

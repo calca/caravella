@@ -1,3 +1,4 @@
+import 'package:caravella_core/sync/models/sync_problem.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 
 /// High-level state of the sync engine.
@@ -39,7 +40,22 @@ class SyncFailed extends SyncEvent {
   /// state of device-to-device sync, not something to warn about.
   final bool unreachable;
 
-  const SyncFailed(this.error, {this.unreachable = false});
+  /// Why, for the user ([error] is the technical detail, for the log).
+  final SyncProblemReason reason;
+
+  /// The peer the exchange was with, when known.
+  final String? peerId;
+
+  /// The channel it was on (e.g. "lan"), when known.
+  final String? channel;
+
+  const SyncFailed(
+    this.error, {
+    this.unreachable = false,
+    this.reason = SyncProblemReason.failed,
+    this.peerId,
+    this.channel,
+  });
 
   @override
   String toString() =>
