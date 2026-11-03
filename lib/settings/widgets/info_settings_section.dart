@@ -145,10 +145,13 @@ class _InfoSettingsSectionState extends State<InfoSettingsSection> {
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  Text(
-                    loc.settings_footer_version(version),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                  Padding(
+                    padding: const EdgeInsets.only(right: AppSpacing.xs),
+                    child: Text(
+                      loc.settings_footer_version(version),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                   _footerLink(
