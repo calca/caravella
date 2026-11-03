@@ -16,7 +16,27 @@ enum LocationProblem {
 /// Service class to handle location retrieval and geocoding
 /// Now uses LocationRepository for better testability and separation of concerns
 class LocationService {
-  static final LocationRepository _repository = LocationRepositoryImpl();
+  static LocationRepository _repository = LocationRepositoryImpl();
+
+  /// Test hook: use [repository] instead of the platform one.
+  static void debugSetRepository(LocationRepository repository) =>
+      _repository = repository;
+
+  /// A name for a place saved as bare coordinates
+  /// ([ExpenseLocation.isBareCoordinates]): the same place with what the
+  /// platform geocoder knows about it, or null (offline, no geocoder,
+  /// nothing found). Never throws.
+  static Future<ExpenseLocation?> name(ExpenseLocation bare) async {
+    if (!bare.hasLocation) return null;
+    try {
+      final named = await _repository.describe(bare.latitude!, bare.longitude!);
+      if (named == null || named.isBareCoordinates) return null;
+      return named;
+    } catch (e) {
+      LoggerService.warning('Naming a place failed: $e', name: 'ui');
+      return null;
+    }
+  }
 
   /// Retrieves the current location with optional reverse geocoding.
   ///

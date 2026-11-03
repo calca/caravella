@@ -1,6 +1,7 @@
 library;
 
 import 'package:io_caravella_egm/services/permission_dialog.dart';
+import '../location/location_service.dart';
 import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show PlatformException;
@@ -164,6 +165,28 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
     // Initialize synchronously - no loader needed!
     _lifecycleManager.initializeSync(context);
+    _nameBarePlace();
+  }
+
+  /// An expense saved before places kept their details (2.3.0) has only
+  /// coordinates: look up their name in the background, show it, and keep
+  /// it for next time — not as an edit (no "discard changes?", no "modified
+  /// by", nothing to sync), see [ExpenseGroupStorageV2.fillExpenseLocation].
+  Future<void> _nameBarePlace() async {
+    final expense = widget.config.initialExpense;
+    final bare = expense?.location;
+    if (expense == null || expense.id.isEmpty || bare == null) return;
+    if (!bare.isBareCoordinates) return;
+    final named = await LocationService.name(bare);
+    if (named == null || !mounted) return;
+    // The user may have changed or removed the place meanwhile.
+    if (_controller.state.location != bare) return;
+    _controller.updateLocation(named, byUser: false);
+    await ExpenseGroupStorageV2.fillExpenseLocation(
+      widget.config.groupId,
+      expense.id,
+      named,
+    );
   }
 
   void _setupFocusListeners() {

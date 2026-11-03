@@ -6,6 +6,7 @@ import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
 import '../model/expense_author.dart';
+import '../model/expense_location.dart';
 import '../sync/device_identity.dart';
 import 'expense_group_repository.dart';
 import 'expense_group_repository_factory.dart';
@@ -32,9 +33,7 @@ class ExpenseGroupStorageV2 {
     final deviceInitialized = DeviceIdentity.isInitialized;
     return ExpenseAuthor(
       deviceId: deviceInitialized ? DeviceIdentity.instance.deviceId : '',
-      deviceName: deviceInitialized
-          ? DeviceIdentity.instance.deviceName
-          : null,
+      deviceName: deviceInitialized ? DeviceIdentity.instance.deviceName : null,
       userName: PreferencesService.isInitialized
           ? PreferencesService.instance.user.getName()
           : null,
@@ -104,6 +103,26 @@ class ExpenseGroupStorageV2 {
           name: 'storage',
         );
       }
+    }
+  }
+
+  /// Names a place saved as bare coordinates: see
+  /// [IExpenseGroupRepository.fillExpenseLocation] (not an edit, not synced).
+  static Future<void> fillExpenseLocation(
+    String groupId,
+    String expenseId,
+    ExpenseLocation location,
+  ) async {
+    final result = await _repository.fillExpenseLocation(
+      groupId,
+      expenseId,
+      location,
+    );
+    if (result.isFailure) {
+      LoggerService.warning(
+        'Failed to fill in the place of expense $expenseId: ${result.error}',
+        name: 'storage',
+      );
     }
   }
 

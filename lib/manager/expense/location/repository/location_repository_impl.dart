@@ -100,6 +100,33 @@ class LocationRepositoryImpl implements LocationRepository {
   }
 
   @override
+  Future<ExpenseLocation?> describe(double latitude, double longitude) async {
+    try {
+      final placemark = await _locationService.reverseGeocode(
+        latitude: latitude,
+        longitude: longitude,
+      );
+      if (placemark == null) return null;
+      return ExpenseLocation(
+        latitude: latitude,
+        longitude: longitude,
+        address: placemark.formattedAddress,
+        street: placemark.street,
+        streetNumber: placemark.streetNumber,
+        locality: placemark.locality,
+        subLocality: placemark.subLocality,
+        administrativeArea: placemark.administrativeArea,
+        subAdministrativeArea: placemark.subAdministrativeArea,
+        postalCode: placemark.postalCode,
+        country: placemark.country,
+        isoCountryCode: placemark.isoCountryCode,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
   Future<String?> reverseGeocode(double latitude, double longitude) async {
     try {
       final placemark = await _locationService.reverseGeocode(

@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../model/expense_group.dart';
 import '../model/expense_details.dart';
+import '../model/expense_location.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
 import '../services/logging/logger_service.dart';
@@ -302,17 +304,13 @@ class SqliteExpenseGroupRepository
 
   @override
   Future<StorageResult<List<ExpenseGroup>>> getActiveGroups() {
-    return _guarded(
-      'getActiveGroups',
-      'Failed to get active groups',
-      () async {
-        final db = await database;
-        final groups = await _mapper.loadAllGroups(db);
-        final activeGroups = groups.where((g) => !g.archived).toList();
-        activeGroups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-        return activeGroups;
-      },
-    );
+    return _guarded('getActiveGroups', 'Failed to get active groups', () async {
+      final db = await database;
+      final groups = await _mapper.loadAllGroups(db);
+      final activeGroups = groups.where((g) => !g.archived).toList();
+      activeGroups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      return activeGroups;
+    });
   }
 
   @override
@@ -470,9 +468,7 @@ class SqliteExpenseGroupRepository
               .toSet();
 
           // Get new participant IDs
-          final newParticipantIds = group.participants
-              .map((p) => p.id)
-              .toSet();
+          final newParticipantIds = group.participants.map((p) => p.id).toSet();
 
           // Delete participants that are no longer in the group
           final participantsToDelete = existingParticipantIds.difference(
@@ -488,15 +484,11 @@ class SqliteExpenseGroupRepository
 
           // Insert or update participants (using REPLACE for simplicity)
           for (final participant in group.participants) {
-            await txn.insert(
-              kTableParticipants,
-              {
-                'id': participant.id,
-                'group_id': group.id,
-                'name': participant.name,
-              },
-              conflictAlgorithm: ConflictAlgorithm.replace,
-            );
+            await txn.insert(kTableParticipants, {
+              'id': participant.id,
+              'group_id': group.id,
+              'name': participant.name,
+            }, conflictAlgorithm: ConflictAlgorithm.replace);
           }
 
           // Get existing category IDs to determine which to delete
@@ -527,15 +519,11 @@ class SqliteExpenseGroupRepository
 
           // Insert or update categories (using REPLACE for simplicity)
           for (final category in group.categories) {
-            await txn.insert(
-              kTableCategories,
-              {
-                'id': category.id,
-                'group_id': group.id,
-                'name': category.name,
-              },
-              conflictAlgorithm: ConflictAlgorithm.replace,
-            );
+            await txn.insert(kTableCategories, {
+              'id': category.id,
+              'group_id': group.id,
+              'name': category.name,
+            }, conflictAlgorithm: ConflictAlgorithm.replace);
           }
         });
       },
@@ -614,6 +602,33 @@ class SqliteExpenseGroupRepository
   }
 
   @override
+  Future<StorageResult<void>> fillExpenseLocation(
+    String groupId,
+    String expenseId,
+    ExpenseLocation location,
+  ) {
+    return _guarded(
+      'fillExpenseLocation',
+      'Failed to fill in the expense place',
+      () async {
+        final db = await database;
+        // The expense row only: groups.updated_at is left as it is.
+        await db.update(
+          kTableExpenses,
+          {
+            'location_latitude': location.latitude,
+            'location_longitude': location.longitude,
+            'location_name': location.name,
+            'location_details': jsonEncode(location.toJson()),
+          },
+          where: 'id = ? AND group_id = ?',
+          whereArgs: [expenseId, groupId],
+        );
+      },
+    );
+  }
+
+  @override
   StorageResult<void> validateGroup(ExpenseGroup group) {
     return ExpenseGroupValidator.validate(group);
   }
@@ -663,9 +678,11 @@ class SqliteExpenseGroupRepository
           now.month,
           now.day,
         ).millisecondsSinceEpoch;
-        final startOfNextDay = DateTime(now.year, now.month, now.day)
-            .add(const Duration(days: 1))
-            .millisecondsSinceEpoch;
+        final startOfNextDay = DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).add(const Duration(days: 1)).millisecondsSinceEpoch;
         final rows = await db.rawQuery(
           'SELECT COALESCE(SUM(amount), 0.0) AS today_total '
           'FROM $kTableExpenses '

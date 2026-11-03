@@ -13,6 +13,11 @@ abstract class LocationRepository {
   /// Performs reverse geocoding to get address from coordinates
   Future<String?> reverseGeocode(double latitude, double longitude);
 
+  /// The place at these coordinates with its address details (locality,
+  /// street, …) from the platform geocoder; null when it finds nothing
+  /// (offline, no geocoder).
+  Future<ExpenseLocation?> describe(double latitude, double longitude);
+
   /// Searches for places matching the query using Nominatim
   Future<List<NominatimPlace>> searchPlaces(String query);
 
