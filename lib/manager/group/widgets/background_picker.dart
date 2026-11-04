@@ -7,6 +7,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../services/unsplash/unsplash_service.dart';
 import '../data/group_form_state.dart';
+import '../group_edit_mode.dart';
 import '../group_form_controller.dart';
 import '../pages/unsplash_search_page.dart';
 import 'background_color_sheet.dart';
@@ -179,6 +180,21 @@ class _BackgroundSheet extends StatelessWidget {
     required this.parentContext,
   });
 
+  /// In group creation, with nothing chosen: the color the group will get.
+  String? _defaultColorNote(gen.AppLocalizations loc) {
+    if (controller.mode != GroupEditMode.create ||
+        state.imagePath != null ||
+        state.color != null) {
+      return null;
+    }
+    return switch (state.groupType) {
+      ExpenseGroupType.travel => loc.background_default_travel,
+      ExpenseGroupType.family => loc.background_default_family,
+      ExpenseGroupType.personal => loc.background_default_personal,
+      ExpenseGroupType.other || null => loc.background_default_other,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
@@ -258,6 +274,9 @@ class _BackgroundSheet extends StatelessWidget {
         SettingsTile(
           icon: Icons.image_search_outlined,
           title: loc.from_unsplash,
+          subtitle: state.title.trim().isNotEmpty
+              ? loc.background_unsplash_search(state.title.trim())
+              : null,
           chevron: false,
           onTap: () async {
             final sheetNav = Navigator.of(context);
@@ -291,6 +310,7 @@ class _BackgroundSheet extends StatelessWidget {
       SettingsTile(
         icon: Icons.color_lens_outlined,
         title: loc.color,
+        subtitle: _defaultColorNote(loc),
         chevron: false,
         onTap: () {
           final sheetNav = Navigator.of(context);

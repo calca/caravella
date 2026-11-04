@@ -1091,7 +1091,6 @@
   ,"get_started_create_group": "创建群组"
   ,"get_started_first_expense": "添加第一笔支出"
   ,"get_started_participants": "添加参与者"
-  ,"get_started_look": "选择照片或颜色"
   ,"get_started_step_done": "{step}，已完成"
   ,"balances": "余额"
   ,"settle_up": "结清方式"
@@ -1260,4 +1259,9 @@
   ,"sync_problem_cloud": "无法连接 Google Drive：请检查网络"
   ,"sync_problem_failed": "同步未完成"
   ,"sync_history_failed": "未完成"
+  ,"background_unsplash_search": "搜索“{name}”"
+  ,"background_default_travel": "当前：天蓝色，旅行默认"
+  ,"background_default_family": "当前：鼠尾草绿，家庭默认"
+  ,"background_default_personal": "当前：薰衣草紫，个人群组默认"
+  ,"background_default_other": "当前：杏色，此类群组默认"
 }

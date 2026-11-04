@@ -1850,9 +1850,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get get_started_participants => '添加参与者';
 
   @override
-  String get get_started_look => '选择照片或颜色';
-
-  @override
   String get_started_step_done(String step) {
     return '$step，已完成';
   }
@@ -2457,4 +2454,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_history_failed => '未完成';
+
+  @override
+  String background_unsplash_search(String name) {
+    return '搜索“$name”';
+  }
+
+  @override
+  String get background_default_travel => '当前：天蓝色，旅行默认';
+
+  @override
+  String get background_default_family => '当前：鼠尾草绿，家庭默认';
+
+  @override
+  String get background_default_personal => '当前：薰衣草紫，个人群组默认';
+
+  @override
+  String get background_default_other => '当前：杏色，此类群组默认';
 }

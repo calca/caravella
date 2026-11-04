@@ -770,7 +770,6 @@
   ,"get_started_create_group": "Crea il gruppo"
   ,"get_started_first_expense": "Aggiungi la prima spesa"
   ,"get_started_participants": "Aggiungi i partecipanti"
-  ,"get_started_look": "Scegli una foto o un colore"
   ,"get_started_step_done": "{step}, fatto"
   ,"balances": "Saldi"
   ,"settle_up": "Per pareggiare"
@@ -937,4 +936,9 @@
   ,"sync_problem_cloud": "Impossibile raggiungere Google Drive: controlla la connessione"
   ,"sync_problem_failed": "Sincronizzazione non riuscita"
   ,"sync_history_failed": "non riuscita"
+  ,"background_unsplash_search": "Cerca «{name}»"
+  ,"background_default_travel": "Ora: azzurro, scelto per i viaggi"
+  ,"background_default_family": "Ora: verde salvia, scelto per le famiglie"
+  ,"background_default_personal": "Ora: lavanda, scelto per i gruppi personali"
+  ,"background_default_other": "Ora: albicocca, scelto per questo tipo di gruppo"
 }

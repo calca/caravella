@@ -3,13 +3,12 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
 import '../../../manager/group/group_edit_mode.dart';
-import '../../../manager/group/pages/expense_group_general_page.dart';
 import '../../../manager/group/pages/expense_group_participants_page.dart';
 
 /// Getting-started checklist shown on the Home card while the group has no
 /// expenses: create the group (done), add the first expense, add the
-/// participants, choose a photo or a color. Steps tick themselves as the
-/// group changes; the first expense replaces the checklist with the amounts.
+/// participants. Steps tick themselves as the group changes; the first
+/// expense replaces the checklist with the amounts.
 class GroupCardGetStarted extends StatelessWidget {
   final ExpenseGroup group;
   final ThemeData theme;
@@ -33,7 +32,6 @@ class GroupCardGetStarted extends StatelessWidget {
     final t = theme.textTheme;
     final loc = localizations;
 
-    final hasLook = (group.file?.isNotEmpty ?? false) || group.color != null;
     final steps = [
       (Icons.group_add_outlined, loc.get_started_create_group, true, null),
       (Icons.add, loc.get_started_first_expense, false, onAddExpense),
@@ -44,19 +42,6 @@ class GroupCardGetStarted extends StatelessWidget {
         () => _open(
           context,
           ExpenseGroupParticipantsPage(trip: group, mode: GroupEditMode.edit),
-        ),
-      ),
-      (
-        Icons.image_outlined,
-        loc.get_started_look,
-        hasLook,
-        () => _open(
-          context,
-          ExpenseGroupGeneralPage(
-            trip: group,
-            mode: GroupEditMode.edit,
-            openBackground: true,
-          ),
         ),
       ),
     ];

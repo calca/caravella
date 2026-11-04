@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
@@ -7,11 +10,13 @@ import '../../../details/pages/tabs/usecase/date_range_formatter.dart';
 import '../../data/group_form_state.dart';
 import '../../group_type/group_type_localization.dart';
 import '../../pages/group_creation_wizard_page.dart';
+import '../../widgets/background_picker.dart';
 import '../../widgets/currency_selector_sheet.dart';
 import '../../widgets/period_selection_bottom_sheet.dart';
+import '../wizard_group_preview.dart';
 
-/// The group's name (the only required field), then its dates and currency
-/// as pills, like the expense form's details.
+/// A preview of the group, its name (the only required field), then its
+/// dates, currency and background as pills, like the expense form's details.
 class WizardDetailsStep extends StatefulWidget {
   final VoidCallback onSubmitted;
 
@@ -61,6 +66,49 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
     if (selected != null) state.setCurrency(selected);
   }
 
+  /// "Background" until one is chosen, then the photo or the color.
+  Widget _backgroundPill(
+    BuildContext context,
+    GroupFormState state,
+    gen.AppLocalizations gloc,
+  ) {
+    void pick() => showBackgroundPickerSheet(context);
+    final image = state.imagePath;
+    final color = ExpenseGroupColorPalette.resolveColor(
+      state.color,
+      Theme.of(context).colorScheme,
+    );
+    if (image == null && color == null) {
+      return FormPill(
+        icon: Icons.image_outlined,
+        label: gloc.background,
+        style: FormPillStyle.add,
+        onTap: pick,
+      );
+    }
+    final label = image != null ? gloc.image : gloc.color;
+    return FormPill(
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: SizedBox.square(
+          dimension: 22,
+          child: image != null
+              ? Image.file(
+                  File(image),
+                  fit: BoxFit.cover,
+                  cacheWidth: 66,
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                )
+              : ColoredBox(color: color!),
+        ),
+      ),
+      label: label,
+      semanticsLabel: '${gloc.background}: $label',
+      style: FormPillStyle.selected,
+      onTap: pick,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
@@ -77,6 +125,8 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
       eyebrow: eyebrow,
       title: gloc.wizard_details_title,
       children: [
+        WizardGroupPreview(fallbackTitle: eyebrow),
+        const SizedBox(height: 16),
         // Same outlined field as the group's General settings and an
         // expense's description.
         TextField(
@@ -135,6 +185,7 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
                   '${gloc.currency}: ${currency['name'] ?? currency['code']}',
               onTap: () => _pickCurrency(state),
             ),
+            _backgroundPill(context, state, gloc),
           ],
         ),
         const SizedBox(height: 16),

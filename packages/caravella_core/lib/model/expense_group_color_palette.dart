@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'expense_group_type.dart';
 import 'expense_group.dart';
 
 /// The colors a group can have: 12 fixed, soft tints chosen for groups
@@ -33,6 +34,16 @@ class ExpenseGroupColorPalette {
 
     return resolveColor(group.color, colorScheme) ?? effectiveFallback;
   }
+
+  /// The palette index a new group gets when nobody picks a background:
+  /// sky for trips, sage for families, lavender for personal groups, apricot
+  /// for anything else (other, custom templates).
+  static int defaultIndexFor(ExpenseGroupType? type) => switch (type) {
+    ExpenseGroupType.travel => 5,
+    ExpenseGroupType.family => 4,
+    ExpenseGroupType.personal => 6,
+    ExpenseGroupType.other || null => 3,
+  };
 
   /// Whether dark text reads better than white on [color]: true when black
   /// gives the higher contrast ratio (luminance above ~0.18).

@@ -218,7 +218,11 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
       wizard.previousStep();
       return;
     }
-    if (await _confirmDiscard() && mounted) Navigator.of(context).pop();
+    if (!await _confirmDiscard() || !mounted) return;
+    final nav = Navigator.of(context);
+    // A photo already picked belongs to no group: don't leave it on disk.
+    await context.read<GroupFormController>().removeImage();
+    nav.pop();
   }
 
   Future<bool> _confirmDiscard() async {

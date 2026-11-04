@@ -1890,9 +1890,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get get_started_participants => 'Adicione os participantes';
 
   @override
-  String get get_started_look => 'Escolha uma foto ou uma cor';
-
-  @override
   String get_started_step_done(String step) {
     return '$step, concluído';
   }
@@ -2514,4 +2511,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sync_history_failed => 'não concluída';
+
+  @override
+  String background_unsplash_search(String name) {
+    return 'Pesquisar \"$name\"';
+  }
+
+  @override
+  String get background_default_travel =>
+      'Agora: azul-céu, escolhido para viagens';
+
+  @override
+  String get background_default_family =>
+      'Agora: verde-sálvia, escolhido para famílias';
+
+  @override
+  String get background_default_personal =>
+      'Agora: lavanda, escolhido para grupos pessoais';
+
+  @override
+  String get background_default_other =>
+      'Agora: damasco, escolhido para este tipo de grupo';
 }

@@ -7,11 +7,12 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/group_type/group_type_localization.dart';
 import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
+import 'package:io_caravella_egm/manager/group/wizard/wizard_group_preview.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// The group creation wizard: your name (first start only) → what kind of
-/// group → its name, dates and currency → who shares the expenses.
+/// group → its name, dates, currency and background → who shares the expenses.
 void main() {
   Future<gen.AppLocalizations> open(
     WidgetTester tester, {
@@ -149,6 +150,38 @@ void main() {
     await tester.pump();
     expect(mainButton(tester).onPressed, isNotNull);
     expect(form(tester).title, 'Lisbon');
+  });
+
+  testWidgets('the preview follows the name, the pill opens the sheet', (
+    tester,
+  ) async {
+    final l10n = await open(tester);
+    await next(tester, l10n);
+
+    final preview = find.byType(WizardGroupPreview);
+    expect(
+      find.descendant(of: preview, matching: find.text('Personal')),
+      findsOneWidget,
+    );
+    await tester.enterText(find.byType(TextField), 'Lisbon');
+    await tester.pump();
+    expect(
+      find.descendant(of: preview, matching: find.text('Lisbon')),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text(l10n.background));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.from_gallery), findsOneWidget);
+    // Nothing chosen yet: the sheet says what the group will get.
+    expect(find.text(l10n.background_default_personal), findsOneWidget);
+
+    await tester.tapAt(const Offset(200, 50)); // outside the sheet
+    await tester.pumpAndSettle();
+    form(tester).setColor(1);
+    await tester.pump();
+    expect(find.text(l10n.background), findsNothing);
+    expect(find.text(l10n.color), findsOneWidget);
   });
 
   testWidgets('people: you first, then friends added by name', (tester) async {
