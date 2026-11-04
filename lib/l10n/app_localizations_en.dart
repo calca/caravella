@@ -1884,9 +1884,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_started_participants => 'Add the participants';
 
   @override
-  String get get_started_look => 'Choose a photo or a color';
-
-  @override
   String get_started_step_done(String step) {
     return '$step, done';
   }
@@ -2510,4 +2507,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_history_failed => 'didn’t go through';
+
+  @override
+  String background_unsplash_search(String name) {
+    return 'Search \"$name\"';
+  }
+
+  @override
+  String get background_default_travel => 'Now: sky blue, chosen for trips';
+
+  @override
+  String get background_default_family =>
+      'Now: sage green, chosen for families';
+
+  @override
+  String get background_default_personal =>
+      'Now: lavender, chosen for personal groups';
+
+  @override
+  String get background_default_other =>
+      'Now: apricot, chosen for this kind of group';
 }

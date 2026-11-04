@@ -3662,12 +3662,6 @@ abstract class AppLocalizations {
   /// **'Add the participants'**
   String get get_started_participants;
 
-  /// Getting-started step: opens the group background (photo or color) settings
-  ///
-  /// In en, this message translates to:
-  /// **'Choose a photo or a color'**
-  String get get_started_look;
-
   /// Screen reader label of a completed getting-started step
   ///
   /// In en, this message translates to:
@@ -4655,6 +4649,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'didn’t go through'**
   String get sync_history_failed;
+
+  /// Subtitle of the Unsplash row in the background sheet: the search will start from the group name
+  ///
+  /// In en, this message translates to:
+  /// **'Search \"{name}\"'**
+  String background_unsplash_search(String name);
+
+  /// Subtitle of the Color row in group creation: the color a trip gets if nothing is chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Now: sky blue, chosen for trips'**
+  String get background_default_travel;
+
+  /// Subtitle of the Color row in group creation: the color a family group gets if nothing is chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Now: sage green, chosen for families'**
+  String get background_default_family;
+
+  /// Subtitle of the Color row in group creation: the color a personal group gets if nothing is chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Now: lavender, chosen for personal groups'**
+  String get background_default_personal;
+
+  /// Subtitle of the Color row in group creation: the color any other group gets if nothing is chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Now: apricot, chosen for this kind of group'**
+  String get background_default_other;
 }
 
 class _AppLocalizationsDelegate

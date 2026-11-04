@@ -162,7 +162,12 @@ class GroupFormController {
         endDate: state.endDate,
         currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
         file: state.imagePath,
-        color: state.color,
+        // A new group with no background chosen gets its type's color.
+        color:
+            state.color ??
+            (mode == GroupEditMode.create && state.imagePath == null
+                ? ExpenseGroupColorPalette.defaultIndexFor(state.groupType)
+                : null),
         notificationEnabled: state.notificationEnabled,
         groupType: state.groupType,
         autoLocationEnabled: state.autoLocationEnabled,

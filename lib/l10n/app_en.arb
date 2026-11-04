@@ -811,8 +811,6 @@
   ,"@get_started_first_expense": {"description": "Getting-started step: opens the new expense sheet"}
   ,"get_started_participants": "Add the participants"
   ,"@get_started_participants": {"description": "Getting-started step: opens the group participants; done with two or more"}
-  ,"get_started_look": "Choose a photo or a color"
-  ,"@get_started_look": {"description": "Getting-started step: opens the group background (photo or color) settings"}
   ,"get_started_step_done": "{step}, done"
   ,"@get_started_step_done": {"description": "Screen reader label of a completed getting-started step", "placeholders": {"step": {"type": "String"}}}
   ,"balances": "Balances"
@@ -1083,4 +1081,14 @@
   ,"sync_problem_failed": "Sync didn’t go through"
   ,"sync_history_failed": "didn’t go through"
   ,"@sync_problem_not_shared": {"description": "Settings → Sync, To fix: a device sent a group this device doesn't share with it", "placeholders": {"device": {"type": "String"}}}
+  ,"background_unsplash_search": "Search \"{name}\""
+  ,"@background_unsplash_search": {"description": "Subtitle of the Unsplash row in the background sheet: the search will start from the group name", "placeholders": {"name": {"type": "String"}}}
+  ,"background_default_travel": "Now: sky blue, chosen for trips"
+  ,"@background_default_travel": {"description": "Subtitle of the Color row in group creation: the color a trip gets if nothing is chosen"}
+  ,"background_default_family": "Now: sage green, chosen for families"
+  ,"@background_default_family": {"description": "Subtitle of the Color row in group creation: the color a family group gets if nothing is chosen"}
+  ,"background_default_personal": "Now: lavender, chosen for personal groups"
+  ,"@background_default_personal": {"description": "Subtitle of the Color row in group creation: the color a personal group gets if nothing is chosen"}
+  ,"background_default_other": "Now: apricot, chosen for this kind of group"
+  ,"@background_default_other": {"description": "Subtitle of the Color row in group creation: the color any other group gets if nothing is chosen"}
 }

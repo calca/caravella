@@ -1891,9 +1891,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get get_started_participants => 'Aggiungi i partecipanti';
 
   @override
-  String get get_started_look => 'Scegli una foto o un colore';
-
-  @override
   String get_started_step_done(String step) {
     return '$step, fatto';
   }
@@ -2518,4 +2515,24 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_history_failed => 'non riuscita';
+
+  @override
+  String background_unsplash_search(String name) {
+    return 'Cerca «$name»';
+  }
+
+  @override
+  String get background_default_travel => 'Ora: azzurro, scelto per i viaggi';
+
+  @override
+  String get background_default_family =>
+      'Ora: verde salvia, scelto per le famiglie';
+
+  @override
+  String get background_default_personal =>
+      'Ora: lavanda, scelto per i gruppi personali';
+
+  @override
+  String get background_default_other =>
+      'Ora: albicocca, scelto per questo tipo di gruppo';
 }
