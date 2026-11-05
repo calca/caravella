@@ -428,18 +428,22 @@ class WizardStepLayout extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
+  /// Space under the content, inside the part that scrolls.
+  final double bottomPadding;
+
   const WizardStepLayout({
     super.key,
     required this.eyebrow,
     required this.title,
     required this.children,
+    this.bottomPadding = 20,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 28, 20, 20),
+      padding: EdgeInsets.fromLTRB(20, 28, 20, bottomPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

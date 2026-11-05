@@ -63,6 +63,8 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
     return WizardStepLayout(
       eyebrow: eyebrow,
       title: gloc.wizard_details_title,
+      // With the keyboard up every pixel goes to the card and the field.
+      bottomPadding: widget.keyboardOpen ? 0 : 20,
       children: [
         WizardGroupPreview(
           fallbackTitle: eyebrow,

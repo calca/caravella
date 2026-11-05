@@ -169,6 +169,22 @@ void main() {
       find.descendant(of: preview, matching: find.text('Lisbon')),
       findsOneWidget,
     );
+    // The type moves to the line below the name, until there are dates.
+    expect(
+      find.descendant(of: preview, matching: find.text('Personal')),
+      findsOneWidget,
+    );
+    form(tester).setStartDate(DateTime(2030, 5, 12));
+    form(tester).setEndDate(DateTime(2030, 5, 18));
+    await tester.pump();
+    expect(
+      find.descendant(of: preview, matching: find.text('Personal')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: preview, matching: find.byType(CurrencyDisplay)),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text(l10n.background));
     await tester.pumpAndSettle();
@@ -209,7 +225,17 @@ void main() {
     expect(find.text(l10n.wizard_details_note), findsNothing);
     expect(
       tester.getSize(find.byType(WizardGroupPreview)).height,
-      WizardGroupPreview.compactHeight,
+      GroupCardFace.compactHeight,
+    );
+    // The whole card shows between the back button and the field.
+    final card = tester.getRect(find.byType(WizardGroupPreview));
+    expect(
+      card.top,
+      greaterThanOrEqualTo(tester.getRect(find.byType(RoundBackButton)).bottom),
+    );
+    expect(
+      tester.getRect(find.byType(TextField)).bottom,
+      lessThan(tester.getRect(find.text(l10n.background)).top),
     );
   });
 
