@@ -184,6 +184,35 @@ void main() {
     expect(find.text(l10n.color), findsOneWidget);
   });
 
+  testWidgets('the keyboard never hides the dates, currency and background', (
+    tester,
+  ) async {
+    final l10n = await open(tester);
+    await next(tester, l10n);
+    expect(find.text(l10n.wizard_details_note), findsOneWidget);
+
+    // A 360x740 phone with the keyboard up.
+    await tester.binding.setSurfaceSize(const Size(360, 740));
+    tester.view.viewInsets = FakeViewPadding(
+      bottom: 300 * tester.view.devicePixelRatio,
+    );
+    addTearDown(tester.view.resetViewInsets);
+    await tester.pumpAndSettle();
+
+    const keyboardTop = 440;
+    for (final label in [l10n.wizard_dates_add, l10n.background]) {
+      final pill = tester.getRect(find.text(label));
+      expect(pill.bottom, lessThan(keyboardTop));
+      final button = tester.getRect(find.text(l10n.wizard_continue));
+      expect(pill.bottom, lessThan(button.top));
+    }
+    expect(find.text(l10n.wizard_details_note), findsNothing);
+    expect(
+      tester.getSize(find.byType(WizardGroupPreview)).height,
+      WizardGroupPreview.compactHeight,
+    );
+  });
+
   testWidgets('people: you first, then friends added by name', (tester) async {
     final l10n = await open(tester);
     await next(tester, l10n);

@@ -15,12 +15,19 @@ import '../../widgets/currency_selector_sheet.dart';
 import '../../widgets/period_selection_bottom_sheet.dart';
 import '../wizard_group_preview.dart';
 
-/// A preview of the group, its name (the only required field), then its
-/// dates, currency and background as pills, like the expense form's details.
+/// A preview of the group and its name (the only required field). Its dates,
+/// currency and background are [WizardDetailsPills], outside this step.
 class WizardDetailsStep extends StatefulWidget {
   final VoidCallback onSubmitted;
 
-  const WizardDetailsStep({super.key, required this.onSubmitted});
+  /// With the keyboard up there's room for the preview and the name only.
+  final bool keyboardOpen;
+
+  const WizardDetailsStep({
+    super.key,
+    required this.onSubmitted,
+    this.keyboardOpen = false,
+  });
 
   @override
   State<WizardDetailsStep> createState() => _WizardDetailsStepState();
@@ -44,8 +51,62 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
     super.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final type = context.select((GroupFormState s) => s.groupType);
+    final eyebrow = type != null
+        ? GroupTypeLocalization.typeName(gloc, type)
+        : gloc.wizard_group_creation_title;
+
+    return WizardStepLayout(
+      eyebrow: eyebrow,
+      title: gloc.wizard_details_title,
+      children: [
+        WizardGroupPreview(
+          fallbackTitle: eyebrow,
+          compact: widget.keyboardOpen,
+        ),
+        const SizedBox(height: 16),
+        // Same outlined field as the group's General settings and an
+        // expense's description.
+        TextField(
+          controller: _title,
+          autofocus: true,
+          textCapitalization: TextCapitalization.sentences,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) {
+            if (_title.text.trim().isNotEmpty) widget.onSubmitted();
+          },
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+          decoration: FormTheme.getCardDecoration(
+            fillColor: theme.colorScheme.raisedSurface,
+            borderColor: CardOutline.colorFor(theme.brightness),
+            focusColor: theme.colorScheme.primary,
+            errorColor: theme.colorScheme.error,
+            hintText: gloc.enter_title,
+          ),
+        ),
+        if (!widget.keyboardOpen) ...[
+          const SizedBox(height: 16),
+          WizardNote(gloc.wizard_details_note),
+        ],
+      ],
+    );
+  }
+}
+
+/// The group's dates, currency and background as pills, like the expense
+/// form's details. Kept above the wizard's button, outside the part that
+/// scrolls, so the keyboard never hides them.
+class WizardDetailsPills extends StatelessWidget {
+  const WizardDetailsPills({super.key});
+
   /// The same calendar sheet as the group's settings.
-  Future<void> _pickDates(GroupFormState state) =>
+  Future<void> _pickDates(BuildContext context, GroupFormState state) =>
       showPeriodSelectionBottomSheet(
         context: context,
         initialStartDate: state.startDate,
@@ -54,7 +115,7 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
             state.setDates(start: start, end: end),
       );
 
-  Future<void> _pickCurrency(GroupFormState state) async {
+  Future<void> _pickCurrency(BuildContext context, GroupFormState state) async {
     final selected = await showModalBottomSheet<Map<String, String>>(
       context: context,
       isScrollControlled: true,
@@ -114,82 +175,45 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final state = context.watch<GroupFormState>();
-    final type = state.groupType;
-    final eyebrow = type != null
-        ? GroupTypeLocalization.typeName(gloc, type)
-        : gloc.wizard_group_creation_title;
     final hasDates = state.startDate != null || state.endDate != null;
     final currency = state.currency;
 
-    return WizardStepLayout(
-      eyebrow: eyebrow,
-      title: gloc.wizard_details_title,
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        WizardGroupPreview(fallbackTitle: eyebrow),
-        const SizedBox(height: 16),
-        // Same outlined field as the group's General settings and an
-        // expense's description.
-        TextField(
-          controller: _title,
-          autofocus: true,
-          textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) {
-            if (_title.text.trim().isNotEmpty) widget.onSubmitted();
-          },
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-          decoration: FormTheme.getCardDecoration(
-            fillColor: theme.colorScheme.raisedSurface,
-            borderColor: CardOutline.colorFor(theme.brightness),
-            focusColor: theme.colorScheme.primary,
-            errorColor: theme.colorScheme.error,
-            hintText: gloc.enter_title,
-          ),
+        FormPill(
+          icon: Icons.event_outlined,
+          label: hasDates
+              ? formatDateRange(
+                  start: state.startDate,
+                  end: state.endDate,
+                  locale: Localizations.localeOf(context),
+                )
+              : gloc.wizard_dates_add,
+          style: hasDates ? FormPillStyle.selected : FormPillStyle.add,
+          onTap: () => _pickDates(context, state),
         ),
-        const SizedBox(height: 20),
-        FormSectionLabel(gloc.expense_details_section),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            FormPill(
-              icon: Icons.event_outlined,
-              label: hasDates
-                  ? formatDateRange(
-                      start: state.startDate,
-                      end: state.endDate,
-                      locale: Localizations.localeOf(context),
-                    )
-                  : gloc.wizard_dates_add,
-              style: hasDates ? FormPillStyle.selected : FormPillStyle.add,
-              onTap: () => _pickDates(state),
+        if (hasDates)
+          IconButton(
+            icon: const Icon(Icons.close_rounded, size: 20),
+            tooltip: gloc.clear_dates,
+            onPressed: state.clearDates,
+          ),
+        FormPill(
+          leading: Text(
+            currency['symbol'] ?? '',
+            style: theme.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w800,
             ),
-            if (hasDates)
-              IconButton(
-                icon: const Icon(Icons.close_rounded, size: 20),
-                tooltip: gloc.clear_dates,
-                onPressed: state.clearDates,
-              ),
-            FormPill(
-              leading: Text(
-                currency['symbol'] ?? '',
-                style: theme.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              label: currency['name'] ?? currency['code'] ?? '',
-              semanticsLabel:
-                  '${gloc.currency}: ${currency['name'] ?? currency['code']}',
-              onTap: () => _pickCurrency(state),
-            ),
-            _backgroundPill(context, state, gloc),
-          ],
+          ),
+          label: currency['name'] ?? currency['code'] ?? '',
+          semanticsLabel:
+              '${gloc.currency}: ${currency['name'] ?? currency['code']}',
+          onTap: () => _pickCurrency(context, state),
         ),
-        const SizedBox(height: 16),
-        WizardNote(gloc.wizard_details_note),
+        _backgroundPill(context, state, gloc),
       ],
     );
   }
