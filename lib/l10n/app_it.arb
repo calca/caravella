@@ -2,7 +2,6 @@
   "@@locale": "it",
   "weeklyChartBadge": "S",
   "monthlyChartBadge": "M",
-  "dateRangeChartBadge": "G",
   "weeklyExpensesChart": "Spese settimanali",
   "monthlyExpensesChart": "Spese mensili",
   "dateRangeExpensesChart": "Spese per periodo",

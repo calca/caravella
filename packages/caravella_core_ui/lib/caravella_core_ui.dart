@@ -45,7 +45,7 @@ export 'widgets/selection_bottom_sheet.dart';
 // Chart widgets
 export 'widgets/charts/chart_badge.dart';
 export 'widgets/charts/chart_type.dart';
-export 'widgets/charts/date_range_expense_chart.dart';
+export 'widgets/charts/spending_bars.dart';
 export 'widgets/charts/last_15_days_bar_chart.dart';
 export 'widgets/charts/monthly_expense_chart.dart';
 export 'widgets/charts/spending_wave.dart';

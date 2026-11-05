@@ -335,6 +335,49 @@ void main() {
     expect(find.text('3 of 7 months with expenses'), findsOneWidget);
   });
 
+  group('statistics chart', () {
+    Future<void> pump(WidgetTester tester, ExpenseGroup group) async {
+      tester.view.physicalSize = const Size(400, 3000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(_wrap(GroupStatisticsView(group: group)));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('three expenses on the same day show one bar', (tester) async {
+      final today = DateTime.now();
+      await pump(
+        tester,
+        _group([
+          _expense('Lunch', 20, today, _anna),
+          _expense('Dinner', 35.5, today, _anna),
+          _expense('Taxi', 12, today, _luca),
+        ]),
+      );
+
+      expect(find.text('Day by day'), findsOneWidget);
+      expect(find.byKey(SpendingBars.barKey(0)), findsOneWidget);
+      expect(find.byKey(SpendingBars.barKey(1)), findsNothing);
+      expect(find.text('67.50 €'), findsOneWidget);
+    });
+
+    testWidgets('whole amounts above the bars have no decimals', (
+      tester,
+    ) async {
+      final today = DateTime.now();
+      await pump(
+        tester,
+        _group([
+          _expense('Lunch', 30, today.subtract(const Duration(days: 1)), _anna),
+          _expense('Dinner', 40, today, _anna),
+        ]),
+      );
+
+      expect(find.text('30 €'), findsOneWidget);
+      expect(find.text('40 €'), findsOneWidget);
+    });
+  });
+
   group('one spending chart, step by length', () {
     final now = DateTime(2026, 10, 19);
     ExpenseGroup span(DateTime from, DateTime to) => _group([

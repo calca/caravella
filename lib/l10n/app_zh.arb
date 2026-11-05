@@ -5,10 +5,6 @@
     "description": "Letter indicator for weekly chart badge"
   },
   "monthlyChartBadge": "月",
-  "dateRangeChartBadge": "日",
-  "@dateRangeChartBadge": {
-    "description": "Letter indicator for date range chart badge"
-  },
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
