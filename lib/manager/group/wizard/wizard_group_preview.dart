@@ -1,17 +1,19 @@
-import 'dart:io';
-
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
+import '../../details/pages/tabs/usecase/date_range_formatter.dart';
 import '../data/group_form_state.dart';
 import '../group_type/group_type_localization.dart';
 
-/// The group as it's being created: its background (the photo, the color
-/// chosen, or its type's color), icon and name, updated while typing.
+/// The group as it's being created, on the card it will have on the Groups
+/// page ([GroupCardFace]), updated while typing: name, dates (or the type
+/// until there are any), currency and background.
 /// Decorative for screen readers: the field and the pills say the same.
 class WizardGroupPreview extends StatelessWidget {
-  /// Shown until the group has a name.
+  /// Shown until the group has a name, then as the line below it until it
+  /// has dates.
   final String fallbackTitle;
 
   /// Shorter while the keyboard is up, so the name field stays in view.
@@ -23,83 +25,67 @@ class WizardGroupPreview extends StatelessWidget {
     this.compact = false,
   });
 
-  static const double height = 132;
-  static const double compactHeight = 104;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final state = context.watch<GroupFormState>();
-    final image = state.imagePath;
-    final color =
-        ExpenseGroupColorPalette.resolveColor(
-          state.color ??
-              ExpenseGroupColorPalette.defaultIndexFor(state.groupType),
-          theme.colorScheme,
-        ) ??
-        theme.colorScheme.primary;
-    final onBackground = image != null
-        ? Colors.white
-        : ExpenseGroupColorPalette.getContrastingTextColor(color);
     final title = state.title.trim();
-    final icon = state.customTemplateIconCodePoint != null
-        ? GroupTypeLocalization.iconFromCodePoint(
-            state.customTemplateIconCodePoint!,
-          )
-        : (state.groupType ?? ExpenseGroupType.other).icon;
+    final hasDates = state.startDate != null || state.endDate != null;
+    final radius = GroupCardFace.borderRadiusFor(wide: true);
 
     return ExcludeSemantics(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          height: compact ? compactHeight : height,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              ColoredBox(color: color),
-              if (image != null) ...[
-                Image.file(
-                  File(image),
-                  key: ValueKey(image),
-                  fit: BoxFit.cover,
-                  cacheWidth: 900,
-                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
-                ),
-                // Keeps the white name readable on any photo.
-                const ColoredBox(color: Color(0x66000000)),
-              ],
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: onBackground.withValues(alpha: 0.16),
-                      ),
-                      child: Icon(icon, size: 20, color: onBackground),
+      child: CardOutline(
+        borderRadius: radius,
+        child: ClipRRect(
+          borderRadius: radius,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            height: compact
+                ? GroupCardFace.compactHeight
+                : GroupCardFace.wideHeight,
+            // The compact card has room for the text up to this size; the
+            // name field below it follows the system's size.
+            child: MediaQuery.withClampedTextScaling(
+              maxScaleFactor: 1.3,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  GroupCardFace(
+                    title: title.isEmpty ? fallbackTitle : title,
+                    subtitle: hasDates
+                        ? formatDateRange(
+                            start: state.startDate,
+                            end: state.endDate,
+                            locale: Localizations.localeOf(context),
+                          )
+                        : (title.isEmpty ? null : fallbackTitle),
+                    total: 0,
+                    currency:
+                        state.currency['symbol'] ??
+                        state.currency['code'] ??
+                        'EUR',
+                    photoPath: state.imagePath,
+                    color: ExpenseGroupColorPalette.resolveColor(
+                      state.color ??
+                          ExpenseGroupColorPalette.defaultIndexFor(
+                            state.groupType,
+                          ),
+                      theme.colorScheme,
                     ),
-                    Text(
-                      title.isEmpty ? fallbackTitle : title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: onBackground,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ],
-                ),
+                    icon: state.customTemplateIconCodePoint != null
+                        ? GroupTypeLocalization.iconFromCodePoint(
+                            state.customTemplateIconCodePoint!,
+                          )
+                        : (state.groupType ?? ExpenseGroupType.other).icon,
+                    wide: true,
+                    compact: compact,
+                  ),
+                  if (state.loadingImage)
+                    const Center(child: CircularProgressIndicator()),
+                ],
               ),
-              if (state.loadingImage)
-                const Center(child: CircularProgressIndicator()),
-            ],
+            ),
           ),
         ),
       ),

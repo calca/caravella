@@ -150,4 +150,12 @@ class PhotoVeilSpot {
     solidExtent: 72,
     fadeExtent: 100,
   );
+
+  /// The wide card in the creation wizard while the keyboard is up.
+  static const groupsWideCardCompact = PhotoVeilSpot(
+    width: 372,
+    height: 120,
+    solidExtent: 60,
+    fadeExtent: 60,
+  );
 }
