@@ -186,6 +186,8 @@ void main() {
       findsOneWidget,
     );
 
+    await tester.ensureVisible(find.text(l10n.background));
+    await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.background));
     await tester.pumpAndSettle();
     expect(find.text(l10n.from_gallery), findsOneWidget);
@@ -237,6 +239,32 @@ void main() {
       tester.getRect(find.byType(TextField)).bottom,
       lessThan(tester.getRect(find.text(l10n.background)).top),
     );
+  });
+
+  testWidgets('with dates the pills stay on one row, the x clears them', (
+    tester,
+  ) async {
+    final l10n = await open(tester);
+    await next(tester, l10n);
+    await tester.binding.setSurfaceSize(const Size(360, 740));
+    await tester.pumpAndSettle();
+    final top = tester.getRect(find.text(l10n.background)).top;
+
+    form(
+      tester,
+    ).setDates(start: DateTime(2030, 11, 12), end: DateTime(2030, 11, 26));
+    form(tester).setColor(1);
+    await tester.pumpAndSettle();
+    expect(tester.getRect(find.text(l10n.color)).top, top);
+
+    await tester.ensureVisible(find.byIcon(Icons.close_rounded));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.close_rounded));
+    await tester.pumpAndSettle();
+    expect(form(tester).startDate, isNull);
+    expect(form(tester).endDate, isNull);
+    // The sheet didn't open.
+    expect(find.text(l10n.wizard_dates_add), findsOneWidget);
   });
 
   testWidgets('people: you first, then friends added by name', (tester) async {

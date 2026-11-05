@@ -103,7 +103,8 @@ class _WizardDetailsStepState extends State<WizardDetailsStep> {
 
 /// The group's dates, currency and background as pills, like the expense
 /// form's details. Kept above the wizard's button, outside the part that
-/// scrolls, so the keyboard never hides them.
+/// scrolls vertically, so the keyboard never hides them; running to the
+/// screen's edges, so the caller gives them no side margins.
 class WizardDetailsPills extends StatelessWidget {
   const WizardDetailsPills({super.key});
 
@@ -180,43 +181,44 @@ class WizardDetailsPills extends StatelessWidget {
     final hasDates = state.startDate != null || state.endDate != null;
     final currency = state.currency;
 
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        FormPill(
-          icon: Icons.event_outlined,
-          label: hasDates
-              ? formatDateRange(
-                  start: state.startDate,
-                  end: state.endDate,
-                  locale: Localizations.localeOf(context),
-                )
-              : gloc.wizard_dates_add,
-          style: hasDates ? FormPillStyle.selected : FormPillStyle.add,
-          onTap: () => _pickDates(context, state),
-        ),
-        if (hasDates)
-          IconButton(
-            icon: const Icon(Icons.close_rounded, size: 20),
-            tooltip: gloc.clear_dates,
-            onPressed: state.clearDates,
+    // One row that scrolls: on two lines they'd push the card and the name
+    // field off the screen while the keyboard is up.
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        spacing: 8,
+        children: [
+          FormPill(
+            icon: Icons.event_outlined,
+            label: hasDates
+                ? formatDateRange(
+                    start: state.startDate,
+                    end: state.endDate,
+                    locale: Localizations.localeOf(context),
+                  )
+                : gloc.wizard_dates_add,
+            style: hasDates ? FormPillStyle.selected : FormPillStyle.add,
+            onTap: () => _pickDates(context, state),
+            trailingIcon: hasDates ? Icons.close_rounded : null,
+            onTrailingTap: hasDates ? state.clearDates : null,
+            trailingLabel: gloc.clear_dates,
           ),
-        FormPill(
-          leading: Text(
-            currency['symbol'] ?? '',
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w800,
+          FormPill(
+            leading: Text(
+              currency['symbol'] ?? '',
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
             ),
+            label: currency['name'] ?? currency['code'] ?? '',
+            semanticsLabel:
+                '${gloc.currency}: ${currency['name'] ?? currency['code']}',
+            onTap: () => _pickCurrency(context, state),
           ),
-          label: currency['name'] ?? currency['code'] ?? '',
-          semanticsLabel:
-              '${gloc.currency}: ${currency['name'] ?? currency['code']}',
-          onTap: () => _pickCurrency(context, state),
-        ),
-        _backgroundPill(context, state, gloc),
-      ],
+          _backgroundPill(context, state, gloc),
+        ],
+      ),
     );
   }
 }

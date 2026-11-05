@@ -119,4 +119,30 @@ void main() {
     );
     handle.dispose();
   });
+
+  testWidgets('the trailing button and the pill tap apart', (tester) async {
+    final handle = tester.ensureSemantics();
+    var pill = 0;
+    var trailing = 0;
+    await tester.pumpWidget(
+      wrap(
+        FormPill(
+          label: '12/11 - 26/11',
+          onTap: () => pill++,
+          trailingIcon: Icons.close_rounded,
+          onTrailingTap: () => trailing++,
+          trailingLabel: 'Clear',
+        ),
+      ),
+    );
+
+    await tester.tap(find.byIcon(Icons.close_rounded), warnIfMissed: false);
+    expect((pill, trailing), (0, 1));
+
+    await tester.tap(find.text('12/11 - 26/11'));
+    expect((pill, trailing), (1, 1));
+
+    expect(find.bySemanticsLabel('Clear'), findsOneWidget);
+    handle.dispose();
+  });
 }

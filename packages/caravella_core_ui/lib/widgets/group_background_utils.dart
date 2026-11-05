@@ -103,12 +103,17 @@ class GroupBackgroundUtils {
             ExpenseGroupColorPalette.resolveColor(group.color, colorScheme) ??
             colorScheme.primary;
       }
-      // Color only: opaque color top → transparent color bottom
+      // Color only: opaque color top → transparent color bottom. In the dark
+      // theme a card with its own surface fades into that, not into the page
+      // behind it, which is darker than the other cards.
+      final fade = groupColor.withValues(alpha: 0.1);
       return GroupBackground(
         color: groupColor,
         gradient: buildGradient(
           groupColor.withValues(alpha: 0.95),
-          groupColor.withValues(alpha: 0.1),
+          baseColor != null && colorScheme.brightness == Brightness.dark
+              ? Color.alphaBlend(fade, baseColor)
+              : fade,
         ),
       );
     }

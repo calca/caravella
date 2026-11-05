@@ -114,6 +114,29 @@ void main() {
       expect(result.hasImage, isFalse);
     });
 
+    test('dark theme: a color fades into the baseColor, opaque', () {
+      final group = ExpenseGroup(
+        title: 'Trip',
+        expenses: const [],
+        participants: const [],
+        categories: const [],
+        currency: 'EUR',
+        color: 5,
+      );
+      final dark = GroupBackgroundUtils.resolve(
+        group,
+        const ColorScheme.dark(),
+        baseColor: const Color(0xFF313334),
+      );
+      expect(dark.gradient!.colors.last.a, 1);
+      final light = GroupBackgroundUtils.resolve(
+        group,
+        const ColorScheme.light(),
+        baseColor: Colors.white,
+      );
+      expect(light.gradient!.colors.last.a, closeTo(0.1, 0.01));
+    });
+
     test('honors a custom baseColor override for the image gradient', () {
       final tempFile = File(
         '${Directory.systemTemp.path}/caravella_test_bg_base_${DateTime.now().millisecondsSinceEpoch}.png',
