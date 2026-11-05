@@ -60,7 +60,7 @@ All in `export/`, static classes with `generate(...)`/`buildFilename(...)`:
 | Exporter | Format | Filename pattern |
 |---|---|---|
 | `CsvExporter` | One row per expense (name, amount, paidBy, category, ISO date, note, location text) | `YYYYMMDD_<slug-title>_export.csv` |
-| `MarkdownExporter` | Full report: metadata, per-participant/per-category totals, settlements section, expense table | `YYYYMMDD_<slug-title>_export.md` |
+| `MarkdownExporter` | Full report: metadata, per-participant/per-category totals, settlements section, expense table; amounts use the decimal separator of the language | `YYYYMMDD_<slug-title>_export.md` |
 | `OfxExporter` | Pseudo-OFX 2.0 XML (`<STMTTRN>` per expense, all typed `DEBIT`) for import into personal-finance apps | `YYYY-MM-DD_<slug-title>_export.ofx` |
 
 ## See also

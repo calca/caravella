@@ -47,7 +47,11 @@ class ExpenseDayRow extends StatelessWidget {
         title,
         subtitle,
         DateFormat.MMMMEEEEd(locale).format(date),
-        '${(expense.amount ?? 0).toStringAsFixed(2)} $currency',
+        CurrencyDisplay.formatLocalizedText(
+          expense.amount ?? 0,
+          currency,
+          Localizations.maybeLocaleOf(context),
+        ),
       ].join(', '),
       onTap: onTap,
       excludeSemantics: true,

@@ -182,7 +182,11 @@ class GroupCardTotalAmount extends StatelessWidget {
       children: [
         Semantics(
           label: localizations.accessibility_total_expenses(
-            CurrencyDisplay.formatCurrencyText(totalExpenses, '€'),
+            CurrencyDisplay.formatLocalizedText(
+              totalExpenses,
+              '€',
+              Localizations.maybeLocaleOf(context),
+            ),
           ),
           child: CurrencyDisplay(
             value: totalExpenses,

@@ -201,7 +201,11 @@ class GroupPhotoCard extends StatelessWidget {
           if (group.pinned) gloc.pin,
           ?dates,
           people,
-          '${total.toStringAsFixed(2)} ${group.currency}',
+          CurrencyDisplay.formatLocalizedText(
+            total,
+            group.currency,
+            Localizations.maybeLocaleOf(context),
+          ),
         ].join(', '),
         onTap: open,
         onLongPress: options,

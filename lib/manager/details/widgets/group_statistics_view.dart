@@ -473,8 +473,7 @@ class GroupPayersBubbles extends StatelessWidget {
                 Semantics(
                   label:
                       '${p.name}, '
-                      '${(totals[p.id] ?? 0).toStringAsFixed(2)} '
-                      '${group.currency}',
+                      '${CurrencyDisplay.formatLocalizedText(totals[p.id] ?? 0, group.currency, Localizations.maybeLocaleOf(context))}',
                   excludeSemantics: true,
                   child: SizedBox(
                     width: 74,

@@ -37,10 +37,10 @@ class StatCard extends StatelessWidget {
     final surface = theme.colorScheme.raisedSurface;
 
     // Use CurrencyDisplay for consistent formatting in semantic labels
-    final formattedValue = CurrencyDisplay.formatCurrencyText(
+    final formattedValue = CurrencyDisplay.formatLocalizedText(
       value,
       currency,
-      showDecimals: true,
+      Localizations.maybeLocaleOf(context),
     );
 
     final semanticLabel =

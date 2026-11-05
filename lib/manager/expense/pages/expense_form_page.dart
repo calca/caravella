@@ -113,7 +113,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     buffer.writeln('');
     buffer.writeln('${gloc.expense_name}: ${expense.name ?? ""}');
     buffer.writeln(
-      '${gloc.amount}: ${CurrencyDisplay.formatCurrencyText(expense.amount ?? 0, widget.group.currency)}',
+      '${gloc.amount}: ${CurrencyDisplay.formatLocalizedText(expense.amount ?? 0, widget.group.currency, Localizations.maybeLocaleOf(context))}',
     );
     buffer.writeln('${gloc.paid_by}: ${expense.paidBy.name}');
     buffer.writeln('${gloc.category}: ${expense.category.name}');
