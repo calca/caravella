@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - New groups: with dates, currency and background set, the pills no longer wrap onto a second line and push the group's card off the screen: they stay on one row you can swipe, and the × that clears the dates is inside the pill
 - Dark theme: the Home cards were darker than the page, unlike the cards everywhere else; they now use the same raised color as the Groups page
+- Dark theme: icons that follow the theme were black on dark surfaces, such as the magnifying glass and the × in Unsplash and place search, or the × that clears the dates in the group creation wizard. They are light again
 - Statistics → spending pace: a single day or month reads correctly (“1 giorno su 1”, “1 of 1 day”)
 - Amounts written in text use the decimal separator of your language (22,33 € in Italian) in the spending pace, the group’s welcome card, the persistent notification, the Markdown export and what TalkBack reads; CSV and OFX exports keep their fixed format
 - Statistics → the spending chart is now made of bars starting from zero, with the amounts above them when there are few: a group whose expenses are all on one day no longer shows an empty card, equal amounts no longer look like no spending, close amounts no longer look like a big jump, and days without expenses are a short mark instead of a curve dipping below zero
