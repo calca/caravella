@@ -27,9 +27,10 @@ class GroupWelcomeCard extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final people = gloc.participant_count(group.participants.length);
     final expenses = gloc.expense_count(group.expenses.length);
-    final total = CurrencyDisplay.formatCurrencyText(
+    final total = CurrencyDisplay.formatLocalizedText(
       group.getTotalExpenses(),
       group.currency,
+      Localizations.localeOf(context),
     );
     final radius = BorderRadius.circular(20);
     final initials = from.trim().isEmpty

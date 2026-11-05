@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- Statistics → spending pace: a single day or month reads correctly (“1 giorno su 1”, “1 of 1 day”)
+- Amounts written in text use the decimal separator of your language (22,33 € in Italian) in the spending pace, the group’s welcome card, the persistent notification, the Markdown export and what TalkBack reads; CSV and OFX exports keep their fixed format
 - Statistics → the spending chart is now made of bars starting from zero, with the amounts above them when there are few: a group whose expenses are all on one day no longer shows an empty card, equal amounts no longer look like no spending, close amounts no longer look like a big jump, and days without expenses are a short mark instead of a curve dipping below zero
 - Places of expenses saved before 2.3.0 that showed as coordinates get their name back when you open the expense (with a connection), and keep it
 - Statistics → spending pace: a group without an end date that hasn't had an expense for more than two weeks is averaged up to its last expense instead of today, so a weekend from months ago shows its spending per day over those days, not per month over the months since

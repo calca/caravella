@@ -440,7 +440,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
       button: true,
       label:
           '$name, $where, '
-          '${CurrencyDisplay.formatCurrencyText(e.amount ?? 0, g.currency)}',
+          '${CurrencyDisplay.formatLocalizedText(e.amount ?? 0, g.currency, Localizations.maybeLocaleOf(context))}',
       onTap: () => _open(g),
       excludeSemantics: true,
       child: InkWell(

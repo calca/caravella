@@ -947,9 +947,9 @@
   ,"@stats_pace_months": {"description": "Statistics pace card: what the monthly average is computed over; range is the formatted period", "placeholders": {"count": {"type": "int"}, "range": {"type": "String"}}}
   ,"stats_per_expense": "{amount} per expense"
   ,"@stats_per_expense": {"description": "Statistics pace card: average amount of one expense, already formatted with currency", "placeholders": {"amount": {"type": "String"}}}
-  ,"stats_active_days": "{active} of {total} days with expenses"
+  ,"stats_active_days": "{total, plural, =1{{active} of 1 day} other{{active} of {total} days}} with expenses"
   ,"@stats_active_days": {"description": "Statistics pace card: how many days of the period have at least one expense", "placeholders": {"active": {"type": "int"}, "total": {"type": "int"}}}
-  ,"stats_active_months": "{active} of {total} months with expenses"
+  ,"stats_active_months": "{total, plural, =1{{active} of 1 month} other{{active} of {total} months}} with expenses"
   ,"@stats_active_months": {"description": "Statistics pace card: how many months of the period have at least one expense", "placeholders": {"active": {"type": "int"}, "total": {"type": "int"}}}
   ,"most_expensive_month": "Most expensive month"
   ,"@most_expensive_month": {"description": "Statistics card for long groups: the month with the highest total spending"}

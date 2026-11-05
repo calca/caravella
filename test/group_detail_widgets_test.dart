@@ -335,6 +335,58 @@ void main() {
     expect(find.text('3 of 7 months with expenses'), findsOneWidget);
   });
 
+  test('days and months with expenses agree with the number', () {
+    final en = lookupAppLocalizations(const Locale('en'));
+    expect(en.stats_active_days(1, 1), '1 of 1 day with expenses');
+    expect(en.stats_active_days(1, 3), '1 of 3 days with expenses');
+    expect(en.stats_active_months(1, 1), '1 of 1 month with expenses');
+
+    final it = lookupAppLocalizations(const Locale('it'));
+    expect(it.stats_active_days(1, 1), '1 giorno su 1 con spese');
+    expect(it.stats_active_days(1, 3), '1 giorno su 3 con spese');
+    expect(it.stats_active_days(2, 3), '2 giorni su 3 con spese');
+    expect(it.stats_active_months(1, 2), '1 mese su 2 con spese');
+
+    final es = lookupAppLocalizations(const Locale('es'));
+    expect(es.stats_active_days(1, 1), '1 de 1 día con gastos');
+    expect(es.stats_active_months(2, 3), '2 de 3 meses con gastos');
+
+    final pt = lookupAppLocalizations(const Locale('pt'));
+    expect(pt.stats_active_days(1, 1), '1 de 1 dia com despesas');
+    expect(pt.stats_active_months(1, 1), '1 de 1 mês com despesas');
+  });
+
+  testWidgets('spending pace amounts use the language decimal separator', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: appLocalizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
+        home: Scaffold(
+          body: SpendingPaceCard(
+            pace: SpendingPace(
+              unit: SpendingPaceUnit.day,
+              start: DateTime(2026, 11, 5),
+              end: DateTime(2026, 11, 5),
+              periods: 1,
+              activePeriods: 1,
+              total: 67,
+              expenseCount: 3,
+            ),
+            currency: '€',
+            participants: 2,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('22,33 € a spesa'), findsOneWidget);
+    expect(find.text('33,50 € a testa'), findsOneWidget);
+    expect(find.text('1 giorno su 1 con spese'), findsOneWidget);
+  });
+
   group('statistics chart', () {
     Future<void> pump(WidgetTester tester, ExpenseGroup group) async {
       tester.view.physicalSize = const Size(400, 3000);

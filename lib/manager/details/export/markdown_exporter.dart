@@ -1,3 +1,5 @@
+import 'dart:ui' show Locale;
+
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -10,6 +12,11 @@ class MarkdownExporter {
   static String generate(ExpenseGroup? group, gen.AppLocalizations loc) {
     if (group == null || group.expenses.isEmpty) return '';
     final buffer = StringBuffer();
+    String money(double value) => CurrencyDisplay.formatLocalizedText(
+      value,
+      group.currency,
+      Locale(loc.localeName),
+    );
 
     // Header with group info
     buffer.writeln('# ${_escape(group.title)}');
@@ -42,9 +49,7 @@ class MarkdownExporter {
 
     // Total expenses
     final totalAmount = group.getTotalExpenses();
-    buffer.writeln(
-      '**${loc.total_expenses}**: ${CurrencyDisplay.formatCurrencyText(totalAmount, group.currency)}',
-    );
+    buffer.writeln('**${loc.total_expenses}**: ${money(totalAmount)}');
     buffer.writeln();
 
     // Number of expenses
@@ -57,7 +62,7 @@ class MarkdownExporter {
           ? loc.stats_per_month
           : loc.stats_per_day;
       buffer.writeln(
-        '**${loc.stats_pace_title}**: ${CurrencyDisplay.formatCurrencyText(pace.average, group.currency)} $unit',
+        '**${loc.stats_pace_title}**: ${money(pace.average)} $unit',
       );
       buffer.writeln();
     }
@@ -71,9 +76,7 @@ class MarkdownExporter {
 
     for (final p in group.participants) {
       final total = participantTotals[p.id] ?? 0.0;
-      buffer.writeln(
-        '- **${_escape(p.name)}**: ${CurrencyDisplay.formatCurrencyText(total, group.currency)}',
-      );
+      buffer.writeln('- **${_escape(p.name)}**: ${money(total)}');
     }
     buffer.writeln();
 
@@ -86,9 +89,7 @@ class MarkdownExporter {
       ..sort((a, b) => b.value.compareTo(a.value));
 
     for (final entry in sortedCategories) {
-      buffer.writeln(
-        '- **${_escape(entry.key.name)}**: ${CurrencyDisplay.formatCurrencyText(entry.value, group.currency)}',
-      );
+      buffer.writeln('- **${_escape(entry.key.name)}**: ${money(entry.value)}');
     }
     buffer.writeln();
 
@@ -106,7 +107,7 @@ class MarkdownExporter {
         final fromName = idToName[s.fromId] ?? s.fromId;
         final toName = idToName[s.toId] ?? s.toId;
         buffer.writeln(
-          '- **${_escape(fromName)}** → **${_escape(toName)}**: ${CurrencyDisplay.formatCurrencyText(s.amount, group.currency)}',
+          '- **${_escape(fromName)}** → **${_escape(toName)}**: ${money(s.amount)}',
         );
       }
       buffer.writeln();
@@ -125,7 +126,7 @@ class MarkdownExporter {
     // Expense rows
     for (final e in group.expenses) {
       buffer.writeln(
-        '| ${_escape(e.name ?? '')} | ${CurrencyDisplay.formatCurrencyText(e.amount ?? 0, group.currency)} | ${_escape(e.paidBy.name)} | ${_escape(e.category.name)} | ${_formatDate(e.date)} | ${_escape(e.note ?? '')} | ${_escape(e.location?.displayText ?? '')} |',
+        '| ${_escape(e.name ?? '')} | ${money(e.amount ?? 0)} | ${_escape(e.paidBy.name)} | ${_escape(e.category.name)} | ${_formatDate(e.date)} | ${_escape(e.note ?? '')} | ${_escape(e.location?.displayText ?? '')} |',
       );
     }
 

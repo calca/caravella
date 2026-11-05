@@ -251,7 +251,7 @@ class _FairShareCard extends StatelessWidget {
       container: true,
       label:
           '${gloc.balances_share_per_person}: '
-          '${CurrencyDisplay.formatCurrencyText(share, currency)}, $basis',
+          '${CurrencyDisplay.formatLocalizedText(share, currency, Localizations.maybeLocaleOf(context))}, $basis',
       excludeSemantics: true,
       child: CardOutline(
         borderRadius: radius,

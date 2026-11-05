@@ -1,5 +1,8 @@
+import 'dart:ui' show Locale;
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'notification_manager.dart';
 
@@ -119,7 +122,11 @@ class NotificationService {
     // Build notification content
     final title = group.title.isEmpty ? loc.new_expense_group : group.title;
     final content = loc.notification_daily_spent(
-      todaySpent.toStringAsFixed(2),
+      CurrencyDisplay.formatLocalizedText(
+        todaySpent,
+        '',
+        Locale(loc.localeName),
+      ).trim(),
       group.currency,
     );
 

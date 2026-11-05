@@ -40,5 +40,31 @@ void main() {
         expect(result, equals(''));
       },
     );
+
+    test('Amounts use the decimal separator of the language', () {
+      final anna = ExpenseParticipant(id: 'a', name: 'Anna');
+      final food = ExpenseCategory(id: 'f', name: 'Food');
+      final group = ExpenseGroup(
+        title: 'Rome',
+        expenses: [
+          ExpenseDetails(
+            name: 'Lunch',
+            amount: 22.5,
+            date: DateTime(2026, 11, 5),
+            paidBy: anna,
+            category: food,
+          ),
+        ],
+        participants: [anna],
+        categories: [food],
+        currency: '€',
+      );
+
+      final it = lookupAppLocalizations(const Locale('it'));
+      final en = lookupAppLocalizations(const Locale('en'));
+      expect(MarkdownExporter.generate(group, it), contains('22,50 €'));
+      expect(MarkdownExporter.generate(group, it), isNot(contains('22.50 €')));
+      expect(MarkdownExporter.generate(group, en), contains('22.50 €'));
+    });
   });
 }

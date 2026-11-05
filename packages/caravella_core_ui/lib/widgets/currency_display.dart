@@ -38,20 +38,35 @@ class CurrencyDisplay extends StatelessWidget {
     return '$formattedValue $currency';
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Get the locale and decimal separator
-    final locale = Localizations.maybeLocaleOf(context);
-    String decimalSeparator = '.';
+  /// Like [formatCurrencyText], with the decimal separator of [locale]: for
+  /// amounts written in text on screen ("22,33 €" in Italian). Exports keep
+  /// [formatCurrencyText], whose format doesn't depend on the language.
+  static String formatLocalizedText(
+    double value,
+    String currency,
+    Locale? locale,
+  ) {
+    final amount = value
+        .toStringAsFixed(2)
+        .replaceAll('.', _decimalSeparator(locale));
+    return '$amount $currency';
+  }
+
+  static String _decimalSeparator(Locale? locale) {
+    if (locale == null) return '.';
     try {
-      if (locale != null) {
-        final numberFormat = NumberFormat.decimalPattern(locale.toString());
-        decimalSeparator = numberFormat.symbols.DECIMAL_SEP;
-      }
+      return NumberFormat.decimalPattern(locale.toString()).symbols.DECIMAL_SEP;
     } catch (_) {
       // Fallback to dot if locale detection fails
-      decimalSeparator = '.';
+      return '.';
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final decimalSeparator = _decimalSeparator(
+      Localizations.maybeLocaleOf(context),
+    );
 
     final String formattedValue = showDecimals
         ? value.toStringAsFixed(2).replaceAll('.', decimalSeparator)

@@ -4150,13 +4150,13 @@ abstract class AppLocalizations {
   /// Statistics pace card: how many days of the period have at least one expense
   ///
   /// In en, this message translates to:
-  /// **'{active} of {total} days with expenses'**
+  /// **'{total, plural, =1{{active} of 1 day} other{{active} of {total} days}} with expenses'**
   String stats_active_days(int active, int total);
 
   /// Statistics pace card: how many months of the period have at least one expense
   ///
   /// In en, this message translates to:
-  /// **'{active} of {total} months with expenses'**
+  /// **'{total, plural, =1{{active} of 1 month} other{{active} of {total} months}} with expenses'**
   String stats_active_months(int active, int total);
 
   /// Statistics card for long groups: the month with the highest total spending

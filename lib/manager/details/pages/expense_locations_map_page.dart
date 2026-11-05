@@ -161,9 +161,10 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
           ? gloc.accessibility_map_marker_group(count, place)
           : gloc.accessibility_map_marker_expense(
               firstExpense.name ?? '',
-              CurrencyDisplay.formatCurrencyText(
+              CurrencyDisplay.formatLocalizedText(
                 firstExpense.amount ?? 0,
                 widget.group.currency,
+                Localizations.maybeLocaleOf(context),
               ),
             );
 
