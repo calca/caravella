@@ -32,6 +32,11 @@ class FormPill extends StatelessWidget {
   /// Icon after the label (e.g. a small × on a removable pill).
   final IconData? trailingIcon;
 
+  /// Makes [trailingIcon] a button of its own, separate from [onTap]:
+  /// 48dp, inside the pill, read as [trailingLabel] by screen readers.
+  final VoidCallback? onTrailingTap;
+  final String? trailingLabel;
+
   /// A value shown as it is, with no action (e.g. "Anna (you)" among the
   /// people): full strength instead of greyed out like a choice that can't
   /// be picked right now.
@@ -48,6 +53,8 @@ class FormPill extends StatelessWidget {
     this.semanticsLabel,
     this.tooltip,
     this.trailingIcon,
+    this.onTrailingTap,
+    this.trailingLabel,
     this.inert = false,
   });
 
@@ -55,6 +62,7 @@ class FormPill extends StatelessWidget {
   /// (48dp in all), so laid out with no run spacing the pills sit 8dp apart.
   static const double height = 40;
   static const double touchMargin = 4;
+  static const double touchTarget = height + touchMargin * 2;
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +93,11 @@ class FormPill extends StatelessWidget {
     };
 
     final hasLeading = leading != null || icon != null;
+    final trailingButton = trailingIcon != null && onTrailingTap != null;
     final content = Padding(
       padding: EdgeInsets.only(
         left: hasLeading ? 6 : 14,
-        right: trailingIcon != null ? 10 : 14,
+        right: trailingButton ? 0 : (trailingIcon != null ? 10 : 14),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -114,7 +123,12 @@ class FormPill extends StatelessWidget {
               ),
             ),
           ),
-          if (trailingIcon != null) ...[
+          if (trailingButton)
+            SizedBox(
+              width: touchTarget,
+              child: Icon(trailingIcon, size: 18, color: foreground),
+            )
+          else if (trailingIcon != null) ...[
             const SizedBox(width: 4),
             Icon(trailingIcon, size: 18, color: foreground),
           ],
@@ -146,7 +160,7 @@ class FormPill extends StatelessWidget {
     }
     if (tooltip != null) pill = Tooltip(message: tooltip!, child: pill);
 
-    return Semantics(
+    final tappable = Semantics(
       button: enabled,
       selected: selected,
       // An inert pill is plain text to TalkBack, not a disabled button.
@@ -164,6 +178,31 @@ class FormPill extends StatelessWidget {
           child: pill,
         ),
       ),
+    );
+    if (!trailingButton) return tappable;
+
+    // Over the pill rather than in it, so it takes the whole 48dp and the
+    // pill's own tap stops where it starts.
+    return Stack(
+      children: [
+        tappable,
+        Positioned(
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: touchTarget,
+          child: Semantics(
+            button: true,
+            label: trailingLabel,
+            onTap: onTrailingTap,
+            excludeSemantics: true,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: onTrailingTap,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

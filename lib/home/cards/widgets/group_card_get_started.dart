@@ -117,7 +117,7 @@ class _Step extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: done ? s.primary : s.surfaceContainerHighest,
+                  color: done ? s.primary : s.onSurface.withValues(alpha: 0.08),
                 ),
                 child: Icon(
                   done ? Icons.check_rounded : icon,

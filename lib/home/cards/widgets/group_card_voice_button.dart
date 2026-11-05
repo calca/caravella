@@ -394,7 +394,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
             style: IconButton.styleFrom(
               backgroundColor: _isListening
                   ? colorScheme.primaryContainer
-                  : colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                  : colorScheme.onSurface.withValues(alpha: 0.08),
               foregroundColor: _isListening
                   ? colorScheme.onPrimaryContainer
                   : colorScheme.onSurfaceVariant,

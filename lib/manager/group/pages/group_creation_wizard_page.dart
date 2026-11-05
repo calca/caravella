@@ -320,7 +320,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                  padding: const EdgeInsets.only(top: 8, bottom: 16),
                   child: Consumer<GroupFormState>(
                     builder: (context, state, _) {
                       final enabled = !_saving && _canContinue(wizard, state);
@@ -332,32 +332,36 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                             const WizardDetailsPills(),
                             const SizedBox(height: 12),
                           ],
-                          FilledButton(
-                            onPressed: enabled ? () => _next(wizard) : null,
-                            style: FilledButton.styleFrom(
-                              minimumSize: const Size.fromHeight(52),
-                              shape: const StadiumBorder(),
-                              elevation: 0,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: FilledButton(
+                              onPressed: enabled ? () => _next(wizard) : null,
+                              style: FilledButton.styleFrom(
+                                minimumSize: const Size.fromHeight(52),
+                                shape: const StadiumBorder(),
+                                elevation: 0,
+                              ),
+                              child: _saving
+                                  ? SizedBox.square(
+                                      dimension: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: s.onPrimary,
+                                      ),
+                                    )
+                                  : Text(
+                                      wizard.isLastStep
+                                          ? gloc.wizard_create
+                                          : gloc.wizard_continue,
+                                      style: theme.textTheme.titleSmall
+                                          ?.copyWith(
+                                            color: enabled
+                                                ? s.onPrimary
+                                                : s.onSurfaceVariant,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                    ),
                             ),
-                            child: _saving
-                                ? SizedBox.square(
-                                    dimension: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: s.onPrimary,
-                                    ),
-                                  )
-                                : Text(
-                                    wizard.isLastStep
-                                        ? gloc.wizard_create
-                                        : gloc.wizard_continue,
-                                    style: theme.textTheme.titleSmall?.copyWith(
-                                      color: enabled
-                                          ? s.onPrimary
-                                          : s.onSurfaceVariant,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
                           ),
                           if (wizard.step == WizardStep.userName)
                             TextButton(

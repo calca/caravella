@@ -120,7 +120,7 @@ class GroupCardContent extends StatelessWidget {
           children: [
             PhotoVeil(
               path: photo,
-              color: theme.colorScheme.surface,
+              color: theme.colorScheme.raisedSurface,
               // Title and dates sit on the plain surface below.
               solidExtent: PhotoVeilSpot.home.solidExtent,
               fadeExtent: PhotoVeilSpot.home.fadeExtent,
@@ -152,7 +152,7 @@ class GroupCardContent extends StatelessWidget {
                   Positioned.fill(
                     child: PhotoVeil(
                       path: photo,
-                      color: theme.colorScheme.surface,
+                      color: theme.colorScheme.raisedSurface,
                       solidExtent: PhotoVeilSpot.home.solidExtent,
                       fadeExtent: PhotoVeilSpot.home.fadeExtent,
                     ),
