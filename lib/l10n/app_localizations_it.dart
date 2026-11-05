@@ -2198,12 +2198,24 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String stats_active_days(int active, int total) {
-    return '$active giorni su $total con spese';
+    String _temp0 = intl.Intl.pluralLogic(
+      active,
+      locale: localeName,
+      other: '$active giorni',
+      one: '1 giorno',
+    );
+    return '$_temp0 su $total con spese';
   }
 
   @override
   String stats_active_months(int active, int total) {
-    return '$active mesi su $total con spese';
+    String _temp0 = intl.Intl.pluralLogic(
+      active,
+      locale: localeName,
+      other: '$active mesi',
+      one: '1 mese',
+    );
+    return '$_temp0 su $total con spese';
   }
 
   @override

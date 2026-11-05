@@ -2201,12 +2201,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String stats_active_days(int active, int total) {
-    return '$active de $total días con gastos';
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$active de $total días',
+      one: '$active de 1 día',
+    );
+    return '$_temp0 con gastos';
   }
 
   @override
   String stats_active_months(int active, int total) {
-    return '$active de $total meses con gastos';
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$active de $total meses',
+      one: '$active de 1 mes',
+    );
+    return '$_temp0 con gastos';
   }
 
   @override

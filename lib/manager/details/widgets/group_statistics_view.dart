@@ -322,10 +322,8 @@ class SpendingPaceCard extends StatelessWidget {
     final over = monthly
         ? gloc.stats_pace_months(pace.periods, range)
         : gloc.stats_pace_days(pace.periods, range);
-    final perExpense = CurrencyDisplay.formatCurrencyText(
-      pace.perExpense,
-      currency,
-    );
+    String amount(double value) =>
+        CurrencyDisplay.formatLocalizedText(value, currency, locale);
     final radius = BorderRadius.circular(20);
 
     Widget pill(String text) => Container(
@@ -341,7 +339,7 @@ class SpendingPaceCard extends StatelessWidget {
       container: true,
       label:
           '${gloc.stats_pace_title}: '
-          '${CurrencyDisplay.formatCurrencyText(pace.average, currency)} '
+          '${amount(pace.average)} '
           '$unit. $over',
       child: CardOutline(
         borderRadius: radius,
@@ -397,14 +395,11 @@ class SpendingPaceCard extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     pill(gloc.expense_count(pace.expenseCount)),
-                    pill(gloc.stats_per_expense(perExpense)),
+                    pill(gloc.stats_per_expense(amount(pace.perExpense))),
                     if (participants > 1)
                       pill(
                         gloc.stats_per_person(
-                          CurrencyDisplay.formatCurrencyText(
-                            pace.total / participants,
-                            currency,
-                          ),
+                          amount(pace.total / participants),
                         ),
                       ),
                     pill(
