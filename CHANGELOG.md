@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- Statistics → the spending chart is now made of bars starting from zero, with the amounts above them when there are few: a group whose expenses are all on one day no longer shows an empty card, equal amounts no longer look like no spending, close amounts no longer look like a big jump, and days without expenses are a short mark instead of a curve dipping below zero
 - Places of expenses saved before 2.3.0 that showed as coordinates get their name back when you open the expense (with a connection), and keep it
 - Statistics → spending pace: a group without an end date that hasn't had an expense for more than two weeks is averaged up to its last expense instead of today, so a weekend from months ago shows its spending per day over those days, not per month over the months since
 - Group settings → General: going back with the name left empty no longer saves a group without a name — you stay on the page, the name field is focused and a message says the group needs a name

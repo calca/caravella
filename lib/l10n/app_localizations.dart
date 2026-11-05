@@ -116,12 +116,6 @@ abstract class AppLocalizations {
   /// **'M'**
   String get monthlyChartBadge;
 
-  /// Letter indicator for date range chart badge
-  ///
-  /// In en, this message translates to:
-  /// **'D'**
-  String get dateRangeChartBadge;
-
   /// Label for weekly expenses chart
   ///
   /// In en, this message translates to:

@@ -15,9 +15,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get monthlyChartBadge => 'M';
 
   @override
-  String get dateRangeChartBadge => 'G';
-
-  @override
   String get weeklyExpensesChart => 'Spese settimanali';
 
   @override

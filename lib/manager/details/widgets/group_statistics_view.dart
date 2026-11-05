@@ -79,14 +79,15 @@ class GroupStatisticsView extends StatelessWidget {
                 end: series.end,
                 locale: Localizations.localeOf(context),
               ),
-              chart: DateRangeExpenseChart(
-                dailyTotals: series.values,
-                theme: theme,
-                badgeText: gloc.dateRangeChartBadge,
+              chart: SpendingBars(
+                values: series.values,
                 semanticLabel: gloc.dateRangeExpensesChart,
                 height: _ChartCard.chartHeight,
-                showBadge: false,
-                color: theme.colorScheme.primary,
+                amountLabel: (value) => _barAmount(
+                  value,
+                  group.currency,
+                  Localizations.localeOf(context),
+                ),
               ),
             ),
           if (pace != null) ...[
@@ -244,6 +245,15 @@ class _ChartCard extends StatelessWidget {
 /// Whether a chart series has anything to draw (charts render nothing for
 /// an all-zero series, which would leave an empty card).
 bool _hasSpending(List<double> series) => series.any((v) => v > 0);
+
+/// Amount above a bar: decimals only when it has any, there's little room.
+String _barAmount(double value, String currency, Locale locale) {
+  final format = NumberFormat.decimalPatternDigits(
+    locale: locale.toString(),
+    decimalDigits: value == value.roundToDouble() ? 0 : 2,
+  );
+  return '${format.format(value)} $currency';
+}
 
 /// The group's largest expense, or null when it has none.
 ExpenseDetails? highestExpense(ExpenseGroup group) => group.expenses.isEmpty

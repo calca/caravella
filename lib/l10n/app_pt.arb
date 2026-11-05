@@ -8,10 +8,6 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
-  "dateRangeChartBadge": "D",
-  "@dateRangeChartBadge": {
-    "description": "Letter indicator for date range chart badge"
-  },
   "weeklyExpensesChart": "Despesas semanais",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"

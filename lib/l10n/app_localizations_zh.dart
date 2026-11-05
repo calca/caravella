@@ -15,9 +15,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get monthlyChartBadge => '月';
 
   @override
-  String get dateRangeChartBadge => '日';
-
-  @override
   String get weeklyExpensesChart => '每周支出';
 
   @override
