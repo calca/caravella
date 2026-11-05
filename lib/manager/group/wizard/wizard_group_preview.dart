@@ -14,9 +14,17 @@ class WizardGroupPreview extends StatelessWidget {
   /// Shown until the group has a name.
   final String fallbackTitle;
 
-  const WizardGroupPreview({super.key, required this.fallbackTitle});
+  /// Shorter while the keyboard is up, so the name field stays in view.
+  final bool compact;
+
+  const WizardGroupPreview({
+    super.key,
+    required this.fallbackTitle,
+    this.compact = false,
+  });
 
   static const double height = 132;
+  static const double compactHeight = 104;
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +51,10 @@ class WizardGroupPreview extends StatelessWidget {
     return ExcludeSemantics(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: SizedBox(
-          height: height,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          height: compact ? compactHeight : height,
           child: Stack(
             fit: StackFit.expand,
             children: [

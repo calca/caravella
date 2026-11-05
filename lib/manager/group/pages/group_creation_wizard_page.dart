@@ -260,6 +260,9 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
     final s = theme.colorScheme;
     final wizard = context.watch<WizardState>();
 
+    // Read here: the Scaffold hides the keyboard's inset from its body.
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+
     return AppSystemUI.surfaceContainer(
       context: context,
       // Back is always handled here: the step or the discard question.
@@ -307,6 +310,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                               WizardStep.type => const WizardTypeStep(),
                               WizardStep.details => WizardDetailsStep(
                                 onSubmitted: () => _next(wizard),
+                                keyboardOpen: keyboardOpen,
                               ),
                               WizardStep.people => const WizardPeopleStep(),
                             },
@@ -324,6 +328,10 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          if (wizard.step == WizardStep.details) ...[
+                            const WizardDetailsPills(),
+                            const SizedBox(height: 12),
+                          ],
                           FilledButton(
                             onPressed: enabled ? () => _next(wizard) : null,
                             style: FilledButton.styleFrom(
