@@ -131,7 +131,7 @@ if (permission == LocationPermission.denied) {
 - Yes (users can delete all data through app settings, or delete individual records)
 
 ### Privacy Policy Compliance
-- Complete privacy policy available at https://calca.github.io/caravella/privacy-policy.html
+- Complete privacy policy available at https://duea.page/privacy/
 - Covers all data collection and usage
 - Explains user rights and controls
 - GDPR and CCPA compliant

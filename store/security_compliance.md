@@ -265,7 +265,7 @@ Implement crash reporting that doesn't violate privacy:
 ## Compliance Documentation
 
 ### For Play Console
-- Privacy policy link: https://calca.github.io/caravella/privacy-policy.html
+- Privacy policy link: https://duea.page/privacy/
 - Data safety information documented
 - Permission justifications prepared
 - Content rating completed

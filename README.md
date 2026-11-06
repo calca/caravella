@@ -134,7 +134,7 @@ For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Per
 ### iOS
 - **App Store**: Coming soon
 
-Visit our [website](https://calca.github.io/caravella) for more information.
+Visit our [website](https://duea.page) for more information.
 
 ## 🤝 Contributing
 
@@ -144,7 +144,7 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 - **Project Repository**: https://github.com/calca/caravella
 - **Issues**: https://github.com/calca/caravella/issues
-- **Website**: https://calca.github.io/caravella
+- **Website**: https://duea.page
 - **Privacy Inquiries**: privacy@caravella.app
 
 ## 📄 License

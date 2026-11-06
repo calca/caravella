@@ -29,7 +29,7 @@ class InfoSettingsSection extends StatefulWidget {
   static const issuesUrl = 'https://github.com/calca/caravella/issues';
   static const licenseUrl =
       'https://github.com/calca/caravella/blob/main/LICENSE';
-  static const developerUrl = 'https://calca.github.io/';
+  static const developerUrl = 'https://duea.page';
 
   @override
   State<InfoSettingsSection> createState() => _InfoSettingsSectionState();
