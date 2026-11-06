@@ -19,9 +19,6 @@
         <!-- GitHub for potential updates or documentation links -->
         <domain includeSubdomains="true">github.com</domain>
         <domain includeSubdomains="true">api.github.com</domain>
-        
-        <!-- App website -->
-        <domain includeSubdomains="true">calca.github.io</domain>
     </domain-config>
     
     <!-- Debug overrides for development builds only -->
