@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/manager/group/pages/unsplash_search_page.dart';
+import 'package:io_caravella_egm/manager/group/widgets/unsplash_photo_widgets.dart';
 import 'package:io_caravella_egm/services/unsplash/unsplash_photo.dart';
 import 'package:io_caravella_egm/services/unsplash/unsplash_service.dart';
 import 'package:material_ui/material_ui.dart';
@@ -91,5 +92,32 @@ void main() {
     await tester.pump();
     expect(calls, [1, 2, 2]);
     expect(find.text('Couldn’t load more photos'), findsNothing);
+  });
+
+  testWidgets('a failed search offers Retry, which searches again', (
+    tester,
+  ) async {
+    failNext = true;
+    await pumpPage(tester);
+    expect(calls, [1]);
+
+    await tester.tap(find.text('Retry'));
+    await tester.pump();
+    await tester.pump();
+    expect(calls, [1, 1]);
+    expect(find.text('Retry'), findsNothing);
+    expect(find.byType(PhotoTile), findsWidgets);
+  });
+
+  testWidgets('submitting while typing searches once', (tester) async {
+    await pumpPage(tester);
+    calls.clear();
+
+    await tester.enterText(find.byType(EditableText), 'lisbon');
+    await tester.testTextInput.receiveAction(TextInputAction.search);
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump();
+
+    expect(calls, [1]);
   });
 }
