@@ -17,6 +17,10 @@ class PlaceSearchController extends ChangeNotifier {
     duration: const Duration(milliseconds: 300),
   );
 
+  /// Values of [PlaceSearchState.errorMessage]; the page shows them translated.
+  static const searchFailed = 'search_failed';
+  static const locationFailed = 'location_failed';
+
   PlaceSearchController({PlaceSearchState? initialState})
     : _state = initialState ?? PlaceSearchState.initial();
 
@@ -78,7 +82,7 @@ class PlaceSearchController extends ChangeNotifier {
     } catch (e) {
       _updateState(
         _state.copyWith(
-          errorMessage: 'Unable to get current location',
+          errorMessage: locationFailed,
           isCenteringOnLocation: false,
         ),
       );
@@ -125,7 +129,7 @@ class PlaceSearchController extends ChangeNotifier {
       );
     } catch (e) {
       _updateState(
-        _state.copyWith(errorMessage: 'Search failed', isSearching: false),
+        _state.copyWith(errorMessage: searchFailed, isSearching: false),
       );
     }
   }

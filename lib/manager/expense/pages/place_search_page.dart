@@ -38,6 +38,7 @@ class PlaceSearchPage extends StatefulWidget {
 
 class _PlaceSearchPageState extends State<PlaceSearchPage> {
   late final PlaceSearchController _controller;
+  final MapTileStatus _tileStatus = MapTileStatus();
 
   @override
   void initState() {
@@ -72,6 +73,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
 
   @override
   void dispose() {
+    _tileStatus.dispose();
     _controller.removeListener(_onStateChanged);
     _controller.dispose();
     super.dispose();
@@ -91,6 +93,12 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
         body: Stack(
           children: [
             Positioned.fill(child: _buildFullScreenMap(colorScheme)),
+            Positioned.fill(
+              child: MapLoadingOverlay(
+                status: _tileStatus,
+                message: gloc.map_loading,
+              ),
+            ),
             Positioned(
               top: topInset + 8,
               left: 16,
@@ -111,11 +119,21 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                   if (_controller.state.hasSearchResults &&
                       _controller.searchController.text.isNotEmpty)
                     _buildAutocompleteResults(theme, colorScheme),
+                  MapUnavailableCard(
+                    status: _tileStatus,
+                    title: gloc.map_unavailable_title,
+                    message: gloc.map_unavailable_place_message,
+                    retryLabel: gloc.map_retry,
+                  ),
                   if (_controller.state.hasError)
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: MapErrorOverlay(
-                        message: _controller.state.errorMessage,
+                        message:
+                            _controller.state.errorMessage ==
+                                PlaceSearchController.locationFailed
+                            ? gloc.location_error
+                            : gloc.place_search_failed,
                       ),
                     ),
                 ],
@@ -232,6 +250,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
   Widget _buildFullScreenMap(ColorScheme colorScheme) {
     return StandardMap(
       semanticLabel: gen.AppLocalizations.of(context).location,
+      tileStatus: _tileStatus,
       mapController: _controller.mapController,
       initialCenter: _controller.state.mapCenter,
       initialZoom: _controller.state.mapZoom,

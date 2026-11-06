@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'map_tile_layer.dart';
+import 'map_tile_status.dart';
 
 /// A thin convenience wrapper around [FlutterMap] applying common defaults
 /// and always including the shared [MapTileLayerWidget].
@@ -19,6 +20,9 @@ class StandardMap extends StatelessWidget {
   /// their own semantics nodes inside it.
   final String? semanticLabel;
 
+  /// Follows the tiles, for [MapLoadingOverlay] and [MapUnavailableCard].
+  final MapTileStatus? tileStatus;
+
   const StandardMap({
     super.key,
     this.mapController,
@@ -29,6 +33,7 @@ class StandardMap extends StatelessWidget {
     this.onTap,
     this.layers = const [],
     this.semanticLabel,
+    this.tileStatus,
   });
 
   @override
@@ -45,7 +50,10 @@ class StandardMap extends StatelessWidget {
         // flutter_map's default is a light grey, also in dark.
         backgroundColor: Theme.of(context).colorScheme.surface,
       ),
-      children: [const MapTileLayerWidget(), ...layers],
+      children: [
+        MapTileLayerWidget(status: tileStatus),
+        ...layers,
+      ],
     );
     if (semanticLabel == null) return map;
     // container without explicitChildNodes: flutter_map's own tap/long-press

@@ -20,10 +20,17 @@ class ExpenseLocationsMapPage extends StatefulWidget {
 
 class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
   final MapController _mapController = MapController();
+  final MapTileStatus _tileStatus = MapTileStatus();
   bool _isLoading = true;
   String? _errorMessage;
   List<ExpenseDetails> _expensesWithLocation = [];
   LatLngBounds? _bounds;
+
+  @override
+  void dispose() {
+    _tileStatus.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -300,6 +307,7 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
               child: ErrorBoundary(
                 child: StandardMap(
                   semanticLabel: gloc.expenses_map,
+                  tileStatus: _tileStatus,
                   mapController: _mapController,
                   initialCenter: center,
                   initialZoom: hasBounds ? 12 : 14,
@@ -317,6 +325,12 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
                 ),
               ),
             ),
+            Positioned.fill(
+              child: MapLoadingOverlay(
+                status: _tileStatus,
+                message: gloc.map_loading,
+              ),
+            ),
             Positioned(
               top: 0,
               left: 0,
@@ -324,43 +338,56 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const RoundBackButton(),
-                      const SizedBox(width: 10),
-                      Flexible(
-                        child: Material(
-                          color: colorScheme.raisedSurface,
-                          shape: const StadiumBorder(),
-                          elevation: 2,
-                          shadowColor: Colors.black26,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 8,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.group.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                      Row(
+                        children: [
+                          const RoundBackButton(),
+                          const SizedBox(width: 10),
+                          Flexible(
+                            child: Material(
+                              color: colorScheme.raisedSurface,
+                              shape: const StadiumBorder(),
+                              elevation: 2,
+                              shadowColor: Colors.black26,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                  vertical: 8,
                                 ),
-                                Text(
-                                  gloc.expenses_map,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.onSurfaceVariant,
-                                  ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.group.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: theme.textTheme.titleSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                    Text(
+                                      gloc.expenses_map,
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: colorScheme.onSurfaceVariant,
+                                          ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                      MapUnavailableCard(
+                        status: _tileStatus,
+                        title: gloc.map_unavailable_title,
+                        message: gloc.map_unavailable_message,
+                        retryLabel: gloc.map_retry,
                       ),
                     ],
                   ),

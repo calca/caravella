@@ -585,6 +585,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get finding_address => 'Cerco l’indirizzo…';
 
   @override
+  String get map_loading => 'Carico la mappa…';
+
+  @override
+  String get map_unavailable_title => 'Mappa non disponibile';
+
+  @override
+  String get map_unavailable_place_message =>
+      'Controlla la connessione. La posizione attuale funziona comunque.';
+
+  @override
+  String get map_unavailable_message => 'Controlla la connessione.';
+
+  @override
+  String get map_retry => 'Riprova';
+
+  @override
+  String get place_search_failed =>
+      'Ricerca non riuscita. Controlla la connessione.';
+
+  @override
   String get settings_general => 'Generali';
 
   @override

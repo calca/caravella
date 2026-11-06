@@ -1220,6 +1220,42 @@ abstract class AppLocalizations {
   /// **'Finding address…'**
   String get finding_address;
 
+  /// No description provided for @map_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the map…'**
+  String get map_loading;
+
+  /// No description provided for @map_unavailable_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Map not available'**
+  String get map_unavailable_title;
+
+  /// No description provided for @map_unavailable_place_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your connection. Your current location still works.'**
+  String get map_unavailable_place_message;
+
+  /// No description provided for @map_unavailable_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your connection.'**
+  String get map_unavailable_message;
+
+  /// No description provided for @map_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get map_retry;
+
+  /// No description provided for @place_search_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Search failed. Check your connection.'**
+  String get place_search_failed;
+
   /// No description provided for @settings_general.
   ///
   /// In en, this message translates to:
