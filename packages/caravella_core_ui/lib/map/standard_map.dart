@@ -41,6 +41,9 @@ class StandardMap extends StatelessWidget {
         minZoom: minZoom,
         maxZoom: maxZoom,
         onTap: onTap,
+        // Shows until the tiles arrive, or instead of them when offline:
+        // flutter_map's default is a light grey, also in dark.
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       children: [const MapTileLayerWidget(), ...layers],
     );

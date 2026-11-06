@@ -10,7 +10,14 @@ import '../../pages/group_creation_wizard_page.dart';
 class WizardUserNameStep extends StatefulWidget {
   final VoidCallback onSubmitted;
 
-  const WizardUserNameStep({super.key, required this.onSubmitted});
+  /// Whether the note under the field fits; see the wizard page.
+  final bool showNote;
+
+  const WizardUserNameStep({
+    super.key,
+    required this.onSubmitted,
+    this.showNote = true,
+  });
 
   @override
   State<WizardUserNameStep> createState() => _WizardUserNameStepState();
@@ -91,8 +98,10 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        WizardNote(gloc.wizard_name_note, icon: Icons.lock_outline_rounded),
+        if (widget.showNote) ...[
+          const SizedBox(height: 16),
+          WizardNote(gloc.wizard_name_note, icon: Icons.lock_outline_rounded),
+        ],
       ],
     );
   }

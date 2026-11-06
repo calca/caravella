@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- Amounts you type use the decimal separator of your language (12,34 in Italian), in the field’s placeholder too, and so do the percentages in Statistics → Categories
+- Place on the map: “Finding address” is translated. In the dark theme the map is dark while its tiles load or when you’re offline
+- Home with every group archived: “See all groups” opens the archived ones, and it’s no longer a red button in the dark theme
+- Small screens: the notes in group creation no longer show as a cut-off line above the keyboard, “Use this photo” stays centered on two lines, and the last line of Settings no longer starts with a stray dot
 - New groups: with dates, currency and background set, the pills no longer wrap onto a second line and push the group's card off the screen: they stay on one row you can swipe, and the × that clears the dates is inside the pill
 - Dark theme: the Home cards were darker than the page, unlike the cards everywhere else; they now use the same raised color as the Groups page
 - Dark theme: icons that follow the theme were black on dark surfaces, such as the magnifying glass and the × in Unsplash and place search, or the × that clears the dates in the group creation wizard. They are light again

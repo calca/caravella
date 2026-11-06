@@ -209,6 +209,7 @@
   "getting_location": "Finding location…",
   "location_error": "Couldn’t find your location",
   "address_resolved": "Address resolved",
+  "finding_address": "Finding address…",
   "settings_general": "General",
   "settings_auto_location_title": "Automatic location",
   "settings_auto_location_desc": "Saves where new expenses are made",

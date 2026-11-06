@@ -71,10 +71,12 @@ class ExpenseFormController extends ChangeNotifier {
 
   /// [amount] as the amount field shows it: no decimals for whole
   /// amounts, otherwise always two ("54.50", not "54.5").
-  static String formatAmountForInput(double amount) =>
-      amount == amount.roundToDouble()
+  static String formatAmountForInput(
+    double amount, {
+    String decimalSeparator = '.',
+  }) => amount == amount.roundToDouble()
       ? amount.toStringAsFixed(0)
-      : amount.toStringAsFixed(2);
+      : amount.toStringAsFixed(2).replaceAll('.', decimalSeparator);
 
   // Initialize controllers from state
   void _initializeFromState() {

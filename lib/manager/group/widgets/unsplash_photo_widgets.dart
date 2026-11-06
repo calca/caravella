@@ -186,7 +186,10 @@ class PhotoPreviewSheet extends StatelessWidget {
               Expanded(
                 child: FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(loc.unsplash_use_photo),
+                  child: Text(
+                    loc.unsplash_use_photo,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ],

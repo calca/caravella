@@ -1214,6 +1214,12 @@ abstract class AppLocalizations {
   /// **'Address resolved'**
   String get address_resolved;
 
+  /// No description provided for @finding_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding address…'**
+  String get finding_address;
+
   /// No description provided for @settings_general.
   ///
   /// In en, this message translates to:

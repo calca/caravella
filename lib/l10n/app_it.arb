@@ -196,6 +196,7 @@
   "getting_location": "Rilevamento posizione…",
   "location_error": "Impossibile rilevare la posizione",
   "address_resolved": "Indirizzo trovato",
+  "finding_address": "Cerco l’indirizzo…",
   "settings_general": "Generali",
   "settings_auto_location_title": "Posizione automatica",
   "settings_auto_location_desc": "Salva il luogo delle nuove spese",

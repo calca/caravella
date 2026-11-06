@@ -13,7 +13,10 @@ import '../../main/app_shell.dart';
 import '../details/pages/section_swipe.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
-  const ExpesensHistoryPage({super.key});
+  /// Open on the archived groups instead of the active ones.
+  final bool showArchived;
+
+  const ExpesensHistoryPage({super.key, this.showArchived = false});
 
   @override
   State<ExpesensHistoryPage> createState() => _ExpesensHistoryPageState();
@@ -29,7 +32,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
   late final ScrollController _scrollController;
   bool _fabVisible = true;
   Timer? _fabIdleTimer;
-  bool _showArchived = false;
+  late bool _showArchived = widget.showArchived;
   // Horizontal travel of the current drag, for swiping Active <-> Archived.
   double _swipeDistance = 0;
 

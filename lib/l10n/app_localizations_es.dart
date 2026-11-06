@@ -584,6 +584,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get address_resolved => 'Dirección resuelta';
 
   @override
+  String get finding_address => 'Buscando la dirección…';
+
+  @override
   String get settings_general => 'General';
 
   @override

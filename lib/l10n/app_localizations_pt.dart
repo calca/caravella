@@ -583,6 +583,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get address_resolved => 'Endereço resolvido';
 
   @override
+  String get finding_address => 'Procurando o endereço…';
+
+  @override
   String get settings_general => 'Geral';
 
   @override

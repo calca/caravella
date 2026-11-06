@@ -7,13 +7,13 @@ import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 
-Widget _app() => MaterialApp(
+Widget _app({bool showArchived = false}) => MaterialApp(
   localizationsDelegates: appLocalizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   locale: const Locale('en'),
   home: MultiProvider(
     providers: [ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier())],
-    child: const ExpesensHistoryPage(),
+    child: ExpesensHistoryPage(showArchived: showArchived),
   ),
 );
 
@@ -49,6 +49,13 @@ void main() {
     await tester.tap(find.textContaining('Active ·'));
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('No archived groups'), findsNothing);
+  });
+
+  testWidgets('it can open on the archived groups', (tester) async {
+    await tester.pumpWidget(_app(showArchived: true));
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('No archived groups'), findsOneWidget);
   });
 
   testWidgets('swiping moves between Active and Archived', (tester) async {

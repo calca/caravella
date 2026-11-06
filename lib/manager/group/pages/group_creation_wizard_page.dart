@@ -34,6 +34,9 @@ class GroupCreationWizardPage extends StatefulWidget {
       _GroupCreationWizardPageState();
 }
 
+/// Height left above the keyboard under which a step's note is hidden.
+const double _minHeightForNotes = 520;
+
 class _GroupCreationWizardPageState extends State<GroupCreationWizardPage> {
   late final bool _includeUserNameStep;
 
@@ -261,7 +264,13 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
     final wizard = context.watch<WizardState>();
 
     // Read here: the Scaffold hides the keyboard's inset from its body.
-    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+    final keyboardOpen = keyboardInset > 0;
+    // On a short screen the keyboard leaves no room for a step's note, which
+    // would show as a sliver under the fold.
+    final showNotes =
+        !keyboardOpen ||
+        MediaQuery.sizeOf(context).height - keyboardInset >= _minHeightForNotes;
 
     return AppSystemUI.surfaceContainer(
       context: context,
@@ -306,13 +315,16 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                             child: switch (step) {
                               WizardStep.userName => WizardUserNameStep(
                                 onSubmitted: () => _next(wizard),
+                                showNote: showNotes,
                               ),
                               WizardStep.type => const WizardTypeStep(),
                               WizardStep.details => WizardDetailsStep(
                                 onSubmitted: () => _next(wizard),
                                 keyboardOpen: keyboardOpen,
                               ),
-                              WizardStep.people => const WizardPeopleStep(),
+                              WizardStep.people => WizardPeopleStep(
+                                showNote: showNotes,
+                              ),
                             },
                           ),
                         ),
