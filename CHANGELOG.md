@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- A group with no expenses: Balances and Statistics are greyed out until the first expense, instead of making the empty card flicker when tapped
 - Unsplash: searches now include photos of any shape, not only square ones, so a search finds more of them
 - Unsplash: photos already seen don’t load again when you scroll back, a photo that fails to load tries again (then with a tap), and a failed search offers **Retry**
 - Place on the map: the address appears as soon as it’s found, instead of the sheet staying on “Finding address” or on the coordinates

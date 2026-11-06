@@ -9,12 +9,13 @@ import 'floating_nav_bar.dart';
 /// With [expand] the segments share the available width equally; otherwise
 /// the control sizes to its labels. Changing [selectedIndex] slides the
 /// selected fill over to the new segment (instant when the system disables
-/// animations).
+/// animations). Segments in [disabled] are greyed out and can't be chosen.
 class PillSegmentedControl extends StatelessWidget {
   final List<String> labels;
   final int selectedIndex;
   final ValueChanged<int> onChanged;
   final bool expand;
+  final Set<int> disabled;
 
   const PillSegmentedControl({
     super.key,
@@ -22,6 +23,7 @@ class PillSegmentedControl extends StatelessWidget {
     required this.selectedIndex,
     required this.onChanged,
     this.expand = false,
+    this.disabled = const {},
   });
 
   // 48 dp: Material's minimum touch target.
@@ -127,10 +129,12 @@ class PillSegmentedControl extends StatelessWidget {
   ) {
     final s = Theme.of(context).colorScheme;
     final selected = i == selectedIndex;
-    void onTap() => onChanged(i);
+    final enabled = !disabled.contains(i);
+    final VoidCallback? onTap = enabled ? () => onChanged(i) : null;
     return Semantics(
       selected: selected,
       button: true,
+      enabled: enabled,
       label: labels[i],
       onTap: onTap,
       excludeSemantics: true,
@@ -145,7 +149,11 @@ class PillSegmentedControl extends StatelessWidget {
               curve: _curve,
               style: (style ?? const TextStyle()).copyWith(
                 fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                color: selected ? s.onSurface : s.onSurfaceVariant,
+                color: !enabled
+                    ? s.onSurface.withValues(alpha: 0.38)
+                    : selected
+                    ? s.onSurface
+                    : s.onSurfaceVariant,
               ),
               // With large text the label shrinks to fit rather than being
               // cut ("Expen…").
