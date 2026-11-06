@@ -318,9 +318,6 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
   void _showLocationConfirmationBottomSheet() {
     final selected = _controller.state.selectedMapLocation!;
     final gloc = gen.AppLocalizations.of(context);
-    final displayText =
-        _controller.state.selectedLocationAddress ??
-        '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
 
     showModalBottomSheet(
       context: context,
@@ -342,90 +339,102 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
           }
         });
 
-        return CaravellaBottomSheetScaffold(
-          title: gloc.location,
-          scrollable: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Address container
-              if (_controller.state.isGeocodingLocation)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: colorScheme.primary,
-                        ),
+        // The address arrives while the sheet is open.
+        return ListenableBuilder(
+          listenable: _controller,
+          builder: (context, _) {
+            final displayText =
+                _controller.state.selectedLocationAddress ??
+                '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
+            return CaravellaBottomSheetScaffold(
+              title: gloc.location,
+              scrollable: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Address container
+                  if (_controller.state.isGeocodingLocation)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          gen.AppLocalizations.of(context).finding_address,
-                          style: theme.textTheme.bodyLarge,
-                        ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              gen.AppLocalizations.of(context).finding_address,
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              else
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(displayText, style: theme.textTheme.bodyLarge),
-                ),
+                    )
+                  else
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        displayText,
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                    ),
 
-              // Coordinates if available
-              if (_controller.state.selectedLocationAddress != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
+                  // Coordinates if available
+                  if (_controller.state.selectedLocationAddress != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+
+                  const SizedBox(height: 24),
+
+                  // Confirm button
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () {
+                        final displayName =
+                            _controller.state.selectedLocationAddress ??
+                            '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
+
+                        Navigator.of(sheetContext).pop();
+                        Navigator.of(context).pop(
+                          NominatimPlace(
+                            latitude: selected.latitude,
+                            longitude: selected.longitude,
+                            displayName: displayName,
+                          ),
+                        );
+                      },
+                      child: Text(gloc.crop_confirm),
                     ),
                   ),
-                ),
-
-              const SizedBox(height: 24),
-
-              // Confirm button
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    final displayName =
-                        _controller.state.selectedLocationAddress ??
-                        '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
-
-                    Navigator.of(sheetContext).pop();
-                    Navigator.of(context).pop(
-                      NominatimPlace(
-                        latitude: selected.latitude,
-                        longitude: selected.longitude,
-                        displayName: displayName,
-                      ),
-                    );
-                  },
-                  child: Text(gloc.crop_confirm),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
