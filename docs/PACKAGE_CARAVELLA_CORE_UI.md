@@ -53,10 +53,11 @@ Shared design-system package: reusable widgets, themes, map building blocks. Dep
 
 Built on **`flutter_map`** (OpenStreetMap tiles) + **`latlong2`**:
 
-- `MapTileLayerWidget` — centralizes the OSM tile layer config (`tile.openstreetmap.org`, `userAgentPackageName`, swallows tile-load errors).
-- `StandardMap` — the entry point for any new map screen: always includes the tile layer, pass markers/polylines via `layers`.
+- `MapTileLayerWidget` — centralizes the OSM tile layer config (`tile.openstreetmap.org`, `userAgentPackageName`; tile-load errors only reach an optional `MapTileStatus`).
+- `StandardMap` — the entry point for any new map screen: always includes the tile layer, pass markers/polylines via `layers`, and a `MapTileStatus` as `tileStatus` to follow the tiles.
 - `computeBounds(points, {minSpanDegrees})` — bounding box for a set of points, expanding near-degenerate spans so camera fit doesn't over-zoom.
-- `MapLoadingOverlay`, `MapErrorOverlay`, `MapErrorState`, `MapEmptyState`, `MapNoResultsMessage` — presentational overlays for common map states.
+- `MapLoadingOverlay`, `MapUnavailableCard` — the pill while tiles are slow and the card with Try again when they fail, both driven by a `MapTileStatus`.
+- `MapErrorOverlay`, `MapErrorState`, `MapEmptyState`, `MapNoResultsMessage` — presentational overlays for common map states.
 
 See [Location & Maps](LOCATION_AND_MAPS.md) for how these compose with the geocoding/search pipeline.
 

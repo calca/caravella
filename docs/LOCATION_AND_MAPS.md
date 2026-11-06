@@ -36,7 +36,7 @@ The result flows back into `ExpenseFormController.updateLocation`. UI: `pages/pl
 
 ## Map rendering
 
-Both the place-search screen and [Group Details & Stats § Locations map](APP_GROUP_DETAILS_STATS.md#locations-map) render on `flutter_map` (OSM tiles) via the shared building blocks in `caravella_core_ui/lib/map/`: `StandardMap` (base map + tile layer), `computeBounds` (fit-camera bounding box with degenerate-span handling), and the `MapLoadingOverlay`/`MapErrorOverlay`/`MapEmptyState`/`MapNoResultsMessage` presentational overlays. See [caravella_core_ui reference § Map widgets](PACKAGE_CARAVELLA_CORE_UI.md#map-widgets) for the full catalog.
+Both the place-search screen and [Group Details & Stats § Locations map](APP_GROUP_DETAILS_STATS.md#locations-map) render on `flutter_map` (OSM tiles) via the shared building blocks in `caravella_core_ui/lib/map/`: `StandardMap` (base map + tile layer; give it a `MapTileStatus` to follow the tiles, for `MapLoadingOverlay` while they are slow and `MapUnavailableCard` with Try again when they fail and none shows), `computeBounds` (fit-camera bounding box with degenerate-span handling), and the `MapErrorOverlay`/`MapEmptyState`/`MapNoResultsMessage` presentational overlays. See [caravella_core_ui reference § Map widgets](PACKAGE_CARAVELLA_CORE_UI.md#map-widgets) for the full catalog.
 
 ## See also
 

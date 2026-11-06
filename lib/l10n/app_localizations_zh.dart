@@ -578,6 +578,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get finding_address => '正在查找地址…';
 
   @override
+  String get map_loading => '正在加载地图…';
+
+  @override
+  String get map_unavailable_title => '地图不可用';
+
+  @override
+  String get map_unavailable_place_message => '请检查网络连接。当前位置仍可使用。';
+
+  @override
+  String get map_unavailable_message => '请检查网络连接。';
+
+  @override
+  String get map_retry => '重试';
+
+  @override
+  String get place_search_failed => '搜索失败。请检查网络连接。';
+
+  @override
   String get settings_general => '常规';
 
   @override

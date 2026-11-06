@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- Maps say what’s going on: “Loading the map…” when tiles take a while, and a card with **Try again** when they can’t be loaded, in Place and in the group’s map. A failed place search is translated too
 - Amounts you type use the decimal separator of your language (12,34 in Italian), in the field’s placeholder too, and so do the percentages in Statistics → Categories
 - Place on the map: “Finding address” is translated. In the dark theme the map is dark while its tiles load or when you’re offline
 - Home with every group archived: “See all groups” opens the archived ones, and it’s no longer a red button in the dark theme

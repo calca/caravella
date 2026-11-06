@@ -1,46 +1,169 @@
 import 'package:material_ui/material_ui.dart';
 
-/// Loading indicator overlay for map operations
+import '../themes/caravella_themes.dart';
+import '../widgets/card_outline.dart';
+import 'map_tile_status.dart';
+
+/// "Loading" pill in the middle of a map, while [status] says it's slow.
 ///
-/// Shows a semi-transparent card with a circular progress indicator
-/// and a status message, typically shown while fetching location data
-/// or performing searches.
+/// Touches go through to the map.
 class MapLoadingOverlay extends StatelessWidget {
+  final MapTileStatus status;
   final String message;
 
-  const MapLoadingOverlay({super.key, required this.message});
+  const MapLoadingOverlay({
+    super.key,
+    required this.status,
+    required this.message,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.85),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2.5,
-              color: colorScheme.onPrimaryContainer,
+    return ListenableBuilder(
+      listenable: status,
+      builder: (context, _) {
+        if (status.state != MapTileState.slow) return const SizedBox.shrink();
+        return IgnorePointer(
+          child: Center(
+            child: Semantics(
+              liveRegion: true,
+              child: Material(
+                color: s.raisedSurface,
+                shape: const StadiumBorder(),
+                elevation: 2,
+                shadowColor: Colors.black26,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: s.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          message,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
-          const SizedBox(width: 12),
-          Text(
-            message,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+        );
+      },
+    );
+  }
+}
+
+/// Card saying the map can't be shown, with a way to try again.
+///
+/// Takes no space unless [status] says the tiles failed.
+class MapUnavailableCard extends StatelessWidget {
+  final MapTileStatus status;
+  final String title;
+  final String message;
+  final String retryLabel;
+
+  const MapUnavailableCard({
+    super.key,
+    required this.status,
+    required this.title,
+    required this.message,
+    required this.retryLabel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final radius = BorderRadius.circular(24);
+
+    return ListenableBuilder(
+      listenable: status,
+      builder: (context, _) {
+        if (status.state != MapTileState.unavailable) {
+          return const SizedBox.shrink();
+        }
+        return Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: Semantics(
+            liveRegion: true,
+            container: true,
+            child: CardOutline(
+              borderRadius: radius,
+              child: Material(
+                color: s.raisedSurface,
+                borderRadius: radius,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: s.onSurface.withValues(alpha: 0.08),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.wifi_off_rounded,
+                          size: 19,
+                          color: s.onSurface,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              message,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: s.onSurfaceVariant,
+                              ),
+                            ),
+                            Transform.translate(
+                              offset: const Offset(-12, 0),
+                              child: TextButton(
+                                onPressed: status.retry,
+                                child: Text(retryLabel),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
