@@ -51,8 +51,7 @@ class UnsplashService {
       '$_baseUrl/search/photos'
       '?query=${Uri.encodeComponent(query)}'
       '&page=$page'
-      '&per_page=$perPage'
-      '&orientation=squarish',
+      '&per_page=$perPage',
     );
 
     try {
