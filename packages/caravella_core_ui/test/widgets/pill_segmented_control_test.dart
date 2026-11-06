@@ -31,6 +31,29 @@ void main() {
     );
   });
 
+  testWidgets('a disabled segment can\'t be chosen', (tester) async {
+    int? tapped;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: PillSegmentedControl(
+            labels: const ['Expenses', 'Balances', 'Statistics'],
+            selectedIndex: 0,
+            onChanged: (i) => tapped = i,
+            expand: true,
+            disabled: const {1, 2},
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Balances'));
+    expect(tapped, isNull);
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Balances')),
+      isSemantics(isButton: true, hasEnabledState: true, isEnabled: false),
+    );
+  });
+
   testWidgets('the selected fill slides to the new segment', (tester) async {
     Widget control(int selected) => MaterialApp(
       home: Scaffold(

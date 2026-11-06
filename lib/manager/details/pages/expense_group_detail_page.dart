@@ -515,6 +515,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
         : null;
 
     final sections = [gloc.expenses, gloc.balances, gloc.statistics];
+    // A group with no expenses has nothing but its empty state to show.
+    if (trip.expenses.isEmpty) _section = 0;
 
     final Widget content = switch (_section) {
       _ when trip.expenses.isEmpty => SliverToBoxAdapter(
@@ -631,6 +633,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                         selectedIndex: _section,
                         onChanged: _selectSection,
                         expand: true,
+                        disabled: trip.expenses.isEmpty
+                            ? const {1, 2}
+                            : const {},
                       ),
                     ),
                   ),

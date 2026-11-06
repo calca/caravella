@@ -69,6 +69,15 @@ final _group = ExpenseGroup(
   ],
 );
 
+final _emptyGroup = ExpenseGroup(
+  id: 'empty',
+  title: 'Weekend',
+  participants: [_anna],
+  categories: [_food],
+  currency: '€',
+  expenses: const [],
+);
+
 Widget _app(Widget home, {required bool dark, required double textScale}) =>
     MultiProvider(
       providers: [
@@ -107,6 +116,10 @@ final _screens =
       'group page · statistics': (
         () => ExpenseGroupDetailPage(trip: _group),
         (t) => t.tap(find.text('Statistics')),
+      ),
+      'group page · no expenses': (
+        () => ExpenseGroupDetailPage(trip: _emptyGroup),
+        (t) => t.tap(find.text('Balances'), warnIfMissed: false),
       ),
       'groups page': (() => const ExpesensHistoryPage(), null),
       'group search': (() => const GroupSearchPage(), null),
@@ -162,6 +175,7 @@ void main() {
     ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
     ExpenseGroupStorageV2.clearCache();
     await ExpenseGroupStorageV2.addExpenseGroup(_group);
+    await ExpenseGroupStorageV2.addExpenseGroup(_emptyGroup);
   });
 
   for (final (variant, dark, scale) in [
