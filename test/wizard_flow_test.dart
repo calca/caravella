@@ -267,6 +267,26 @@ void main() {
     expect(find.text(l10n.wizard_dates_add), findsOneWidget);
   });
 
+  testWidgets('with no room above the keyboard the note goes away', (
+    tester,
+  ) async {
+    final l10n = await open(tester);
+    await next(tester, l10n);
+    await tester.enterText(find.byType(TextField), 'Lisbon');
+    await tester.pumpAndSettle();
+    await next(tester, l10n);
+    expect(find.text(l10n.wizard_participants_section_hint), findsOneWidget);
+
+    await tester.binding.setSurfaceSize(const Size(360, 740));
+    tester.view.viewInsets = FakeViewPadding(
+      bottom: 300 * tester.view.devicePixelRatio,
+    );
+    addTearDown(tester.view.resetViewInsets);
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.wizard_participants_section_hint), findsNothing);
+  });
+
   testWidgets('people: you first, then friends added by name', (tester) async {
     final l10n = await open(tester);
     await next(tester, l10n);

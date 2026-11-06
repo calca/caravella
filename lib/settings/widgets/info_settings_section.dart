@@ -141,28 +141,35 @@ class _InfoSettingsSectionState extends State<InfoSettingsSection> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: AppSpacing.sm),
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
+              child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: AppSpacing.xs),
-                    child: Text(
-                      loc.settings_footer_version(version),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                  Text(
+                    loc.settings_footer_version(version),
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  _footerLink(
-                    context,
-                    loc.settings_made_by('calca'),
-                    InfoSettingsSection.developerUrl,
-                  ),
-                  _footerLink(
-                    context,
-                    loc.license_link,
-                    InfoSettingsSection.licenseUrl,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _footerLink(
+                        context,
+                        loc.settings_made_by('calca'),
+                        InfoSettingsSection.developerUrl,
+                      ),
+                      Text(
+                        '·',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      _footerLink(
+                        context,
+                        loc.license_link,
+                        InfoSettingsSection.licenseUrl,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -196,27 +203,15 @@ class _InfoSettingsSectionState extends State<InfoSettingsSection> {
 
   /// "· label", the label a link.
   Widget _footerLink(BuildContext context, String label, String url) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          '·',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        TextButton(
-          onPressed: () => _launchUrl(context, url),
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-            textStyle: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          child: Text(label),
-        ),
-      ],
+    return TextButton(
+      onPressed: () => _launchUrl(context, url),
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+        textStyle: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+      ),
+      child: Text(label),
     );
   }
 

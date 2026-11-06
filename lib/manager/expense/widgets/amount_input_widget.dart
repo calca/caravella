@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -114,6 +115,10 @@ class AmountInputWidget extends StatelessWidget {
       letterSpacing: 0,
     );
 
+    final decimalSeparator = decimalSeparatorFor(
+      Localizations.localeOf(context),
+    );
+
     final amountField = TextFormField(
       controller: controller,
       focusNode: focusNode,
@@ -122,7 +127,7 @@ class AmountInputWidget extends StatelessWidget {
       textAlign: TextAlign.left,
       maxLines: 1,
       decoration: FormTheme.getBorderlessAmountDecoration(
-        hintText: '0.00',
+        hintText: '0${decimalSeparator}00',
         hintStyle: amountStyle?.copyWith(color: color.withValues(alpha: 0.35)),
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -132,7 +137,7 @@ class AmountInputWidget extends StatelessWidget {
       onFieldSubmitted: (_) => onSubmitted?.call(),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-        _SimpleDecimalFormatter(),
+        _SimpleDecimalFormatter(decimalSeparator),
       ],
     );
 
@@ -163,9 +168,19 @@ class AmountInputWidget extends StatelessWidget {
   }
 }
 
+/// The decimal separator of [locale], as the amount field shows it.
+String decimalSeparatorFor(Locale locale) =>
+    NumberFormat.decimalPattern(locale.toString()).symbols.DECIMAL_SEP;
+
 /// Simple formatter for decimal input that handles basic decimal formatting
 /// without complex locale-specific thousands separators
 class _SimpleDecimalFormatter extends TextInputFormatter {
+  /// What the field shows between units and decimals. The text is parsed by
+  /// [ExpenseValidationService.parseAmount], which accepts both.
+  final String decimalSeparator;
+
+  const _SimpleDecimalFormatter(this.decimalSeparator);
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -219,7 +234,7 @@ class _SimpleDecimalFormatter extends TextInputFormatter {
     }
 
     return TextEditingValue(
-      text: sanitized,
+      text: sanitized.replaceAll('.', decimalSeparator),
       selection: TextSelection.collapsed(offset: cursorPosition),
     );
   }

@@ -22,6 +22,7 @@ import 'expense_form_fields.dart';
 import 'expense_form_extended_fields.dart';
 import 'expense_form_compact_header.dart';
 import '../../../services/receipt_scanner_service.dart';
+import '../widgets/amount_input_widget.dart';
 
 /// Main expense form component - refactored to use config object pattern
 ///
@@ -96,6 +97,7 @@ class ExpenseFormComponent extends StatefulWidget {
 }
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
+  bool _amountLocalized = false;
   final _formKey = GlobalKey<FormState>();
   late ExpenseFormLifecycleManager _lifecycleManager;
   late ExpenseFormOrchestrator _orchestrator;
@@ -115,6 +117,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       !widget.config.isEditMode &&
       !_controller.isExpanded &&
       widget.config.onExpand != null;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_amountLocalized) return;
+    _amountLocalized = true;
+    // The controller fills the field before the locale can be read. Same
+    // value for it, so opening an expense doesn't mark the form as changed.
+    final amount = _controller.amountController;
+    final separator = decimalSeparatorFor(Localizations.localeOf(context));
+    if (amount.text.contains('.') && separator != '.') {
+      amount.text = amount.text.replaceAll('.', separator);
+    }
+  }
 
   @override
   void initState() {
@@ -485,7 +501,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
       if (amount != null) {
         _controller.amountController.text =
-            ExpenseFormController.formatAmountForInput(amount);
+            ExpenseFormController.formatAmountForInput(
+              amount,
+              decimalSeparator: decimalSeparatorFor(
+                Localizations.localeOf(context),
+              ),
+            );
       }
       if (description != null && description.isNotEmpty) {
         _controller.nameController.text = description;
@@ -557,8 +578,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   void _applyVoiceResult(Map<String, dynamic> parsed) {
     final amount = parsed['amount'] as double?;
     if (amount != null && amount > 0) {
-      _controller.amountController.text =
-          ExpenseFormController.formatAmountForInput(amount);
+      _controller
+          .amountController
+          .text = ExpenseFormController.formatAmountForInput(
+        amount,
+        decimalSeparator: decimalSeparatorFor(Localizations.localeOf(context)),
+      );
     }
     final name = parsed['name'] as String?;
     if (name != null && name.isNotEmpty) {

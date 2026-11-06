@@ -575,6 +575,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get address_resolved => '地址已解析';
 
   @override
+  String get finding_address => '正在查找地址…';
+
+  @override
   String get settings_general => '常规';
 
   @override

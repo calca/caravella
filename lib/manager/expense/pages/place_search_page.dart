@@ -352,7 +352,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Finding address...',
+                          gen.AppLocalizations.of(context).finding_address,
                           style: theme.textTheme.bodyLarge,
                         ),
                       ),

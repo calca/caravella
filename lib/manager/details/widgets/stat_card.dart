@@ -1,4 +1,5 @@
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Small KPI card consistent with app dark surfaces.
@@ -129,7 +130,7 @@ class StatCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 12),
                             Text(
-                              '${percent!.toStringAsFixed(1)}%',
+                              '${NumberFormat.decimalPatternDigits(locale: Localizations.localeOf(context).toString(), decimalDigits: 1).format(percent)}%',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),

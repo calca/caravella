@@ -581,6 +581,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get address_resolved => 'Address resolved';
 
   @override
+  String get finding_address => 'Finding address…';
+
+  @override
   String get settings_general => 'General';
 
   @override

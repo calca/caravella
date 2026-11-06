@@ -92,15 +92,19 @@ class EmptyGroupsState extends StatelessWidget {
                   ),
                   if (allArchived) ...[
                     const SizedBox(height: 8),
-                    FilledButton.tonalIcon(
+                    OutlinedButton.icon(
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const ExpesensHistoryPage(),
+                          builder: (context) =>
+                              const ExpesensHistoryPage(showArchived: true),
                         ),
                       ),
                       icon: const Icon(Icons.folder_copy_outlined),
                       label: Text(localizations.view_all_groups),
-                      style: buttonStyle,
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(52),
+                        shape: const StadiumBorder(),
+                      ),
                     ),
                   ],
                 ],

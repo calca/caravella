@@ -201,6 +201,7 @@
   "getting_location": "Obteniendo ubicación…",
   "location_error": "No se pudo obtener la ubicación",
   "address_resolved": "Dirección resuelta",
+  "finding_address": "Buscando la dirección…",
   "settings_general": "General",
   "settings_auto_location_title": "Ubicación automática",
   "settings_auto_location_desc": "Guarda dónde haces cada gasto",

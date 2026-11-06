@@ -10,7 +10,10 @@ import '../../pages/group_creation_wizard_page.dart';
 /// Who shares the expenses: the user first ("Gigi (you)"), then the people
 /// added by name, each a pill with their initials; tap one to remove it.
 class WizardPeopleStep extends StatefulWidget {
-  const WizardPeopleStep({super.key});
+  /// Whether the note under the people fits; see the wizard page.
+  final bool showNote;
+
+  const WizardPeopleStep({super.key, this.showNote = true});
 
   @override
   State<WizardPeopleStep> createState() => _WizardPeopleStepState();
@@ -114,8 +117,10 @@ class _WizardPeopleStepState extends State<WizardPeopleStep> {
               onTap: () => setState(() => _adding = true),
             ),
           ),
-        const SizedBox(height: 16),
-        WizardNote(gloc.wizard_participants_section_hint),
+        if (widget.showNote) ...[
+          const SizedBox(height: 16),
+          WizardNote(gloc.wizard_participants_section_hint),
+        ],
       ],
     );
   }
