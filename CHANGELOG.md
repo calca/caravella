@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Unsplash: searches now include photos of any shape, not only square ones, so a search finds more of them
+- Unsplash: photos already seen don’t load again when you scroll back, a photo that fails to load tries again (then with a tap), and a failed search offers **Retry**
 - Place on the map: the address appears as soon as it’s found, instead of the sheet staying on “Finding address” or on the coordinates
 - Maps say what’s going on: “Loading the map…” when tiles take a while, and a card with **Try again** when they can’t be loaded, in Place and in the group’s map. A failed place search is translated too
 - Amounts you type use the decimal separator of your language (12,34 in Italian), in the field’s placeholder too, and so do the percentages in Statistics → Categories

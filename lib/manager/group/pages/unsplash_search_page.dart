@@ -111,6 +111,7 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
   }
 
   Future<void> _search(String query) async {
+    _debounce?.cancel();
     if (query.trim().isEmpty) return;
     final generation = ++_generation;
     setState(() {
@@ -362,6 +363,11 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
                 loc.unsplash_error,
                 style: theme.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 4),
+              TextButton(
+                onPressed: () => _search(_searchController.text),
+                child: Text(loc.unsplash_retry),
               ),
             ],
           ),
