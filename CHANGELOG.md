@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- Sharing a group by QR code: the group now reaches the phone that scanned it right away, instead of only after restarting the app. The phone showing the code closes it by itself ("Paired with …") and lists the new device under the group's sync settings
 - A group with no expenses: Balances and Statistics are greyed out until the first expense, instead of making the empty card flicker when tapped
 - Unsplash: searches now include photos of any shape, not only square ones, so a search finds more of them
 - Unsplash: photos already seen don’t load again when you scroll back, a photo that fails to load tries again (then with a tap), and a failed search offers **Retry**

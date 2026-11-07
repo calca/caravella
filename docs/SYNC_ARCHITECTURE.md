@@ -156,7 +156,10 @@ sequenceDiagram
     A-->>B: 200 {device_id, device_name, platform, public_key}
     B->>B: derive the same shared key independently<br/>PeerKeyStore.save(A, sharedKey)<br/>handlePairingCompleted → same registration
     Note over A,B: Both devices now trust each other<br/>for exactly this one group
+    B->>A: first delta exchange right away (_syncWithPeer):<br/>A's answer carries the shared group to B
 ```
+
+`handlePairingCompleted` emits a `PeerPaired` event (`deviceId`, `deviceName`, `groupId`) on `SyncOrchestrator.events`, on both sides and for Bluetooth too. On A, `QrPairShowSheet` closes itself with a "Paired with …" toast and `PairedDevicesList` reloads, so the new device appears without reopening the page. B starts the first exchange itself at the end of `pairWithHost` (in the background, so the scan page closes at once): A had most likely already been discovered over mDNS before the pairing and skipped as unpaired, and mDNS doesn't announce it again, so without this the group only arrived after an app restart.
 
 Bluetooth pairing is the same idea with a different transport: an unencrypted `hello`/`hello_ack` handshake over Nearby Connections (`NearbyBluetoothSyncChannel.syncWithPeer` on the connecting side, `_handleHello` on the advertising side — `packages/caravella_gms/lib/src/nearby_bluetooth_sync_channel.dart`) instead of QR + HTTP — the key exchange and grant-writing steps afterward are identical.
 

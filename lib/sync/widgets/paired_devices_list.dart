@@ -1,12 +1,13 @@
+import 'dart:async';
+
 import 'package:caravella_core/caravella_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 /// Displays the devices granted access to a specific group's sync.
 ///
-/// Self-loads via [orchestrator] on mount. Pass a new [key] (e.g. an
-/// incrementing counter) to force a reload after a pairing completes
-/// elsewhere (the QR scan / Bluetooth flow).
+/// Self-loads via [orchestrator] on mount, and again when a device pairs
+/// for [groupId] ([PeerPaired], from the QR or Bluetooth flow).
 class PairedDevicesList extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
@@ -31,11 +32,27 @@ class PairedDevicesList extends StatefulWidget {
 
 class _PairedDevicesListState extends State<PairedDevicesList> {
   late Future<List<PairedDevice>> _future;
+  StreamSubscription<SyncEvent>? _events;
 
   @override
   void initState() {
     super.initState();
     _future = widget.orchestrator.getPairedDevicesForGroup(widget.groupId);
+    _events = widget.orchestrator.events.listen((event) {
+      if (event is PeerPaired && event.groupId == widget.groupId && mounted) {
+        setState(() {
+          _future = widget.orchestrator.getPairedDevicesForGroup(
+            widget.groupId,
+          );
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _events?.cancel();
+    super.dispose();
   }
 
   IconData _iconFor(String platform) {
