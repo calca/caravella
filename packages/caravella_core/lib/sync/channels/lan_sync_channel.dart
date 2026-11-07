@@ -373,8 +373,8 @@ class LanSyncChannel {
   /// Sends a pairing request to [host]:[port] — typically parsed from a
   /// scanned QR code, for [groupId] — registering this device as paired on
   /// both ends in a single round trip and deriving the shared encryption
-  /// key from the exchanged public keys. Returns `true` if the handshake
-  /// succeeded.
+  /// key from the exchanged public keys, then starts a first exchange with
+  /// it in the background. Returns `true` if the handshake succeeded.
   Future<bool> pairWithHost(String host, int port, {required String groupId}) async {
     final identity = DeviceIdentity.instance;
     final myPublicKey = await DeviceKeyManager.publicKeyBase64();
@@ -426,6 +426,11 @@ class LanSyncChannel {
         'for group=$groupId',
         name: _tag,
       );
+      // The peer was most likely already discovered over mDNS before the
+      // pairing, and skipped as unpaired; mDNS won't announce it again, so
+      // exchange now: that's what brings the shared group to this device.
+      _peers[remoteDeviceId] = (host, port);
+      unawaited(_syncWithPeer(remoteDeviceId, host, port));
       return true;
     } catch (e, st) {
       LoggerService.error(

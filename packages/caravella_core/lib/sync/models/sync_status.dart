@@ -61,3 +61,21 @@ class SyncFailed extends SyncEvent {
   String toString() =>
       'SyncFailed(error: $error${unreachable ? ', unreachable' : ''})';
 }
+
+/// A pairing handshake finished, on either side and any transport: this
+/// device now trusts [deviceId] for [groupId]. Lets the QR sheet close and
+/// the group's device list reload as soon as the other phone has scanned.
+class PeerPaired extends SyncEvent {
+  final String deviceId;
+  final String deviceName;
+  final String groupId;
+
+  const PeerPaired({
+    required this.deviceId,
+    required this.deviceName,
+    required this.groupId,
+  });
+
+  @override
+  String toString() => 'PeerPaired(device: $deviceId, group: $groupId)';
+}

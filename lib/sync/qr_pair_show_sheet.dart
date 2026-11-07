@@ -12,6 +12,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 /// The code is only valid for [PairingPayload.validityMs] — a countdown is
 /// shown next to it, and once it expires the QR is replaced with a prompt
 /// to generate a new one instead of staying scannable indefinitely.
+///
+/// Closes by itself, with a toast, when the other device pairs for this
+/// group ([PeerPaired]).
 class QrPairShowSheet extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
@@ -34,18 +37,33 @@ class QrPairShowSheet extends StatefulWidget {
 class _QrPairShowSheetState extends State<QrPairShowSheet> {
   Future<PairingPayload?>? _future;
   Timer? _ticker;
+  StreamSubscription<SyncEvent>? _events;
   Duration _remaining = Duration.zero;
 
   @override
   void initState() {
     super.initState();
     _generate();
+    _events = widget.orchestrator.events.listen(_onEvent);
   }
 
   @override
   void dispose() {
     _ticker?.cancel();
+    _events?.cancel();
     super.dispose();
+  }
+
+  /// The other phone scanned the code: nothing left to show here.
+  void _onEvent(SyncEvent event) {
+    if (event is! PeerPaired || event.groupId != widget.groupId) return;
+    if (!mounted) return;
+    AppToast.show(
+      context,
+      gen.AppLocalizations.of(context).sync_qr_pair_success(event.deviceName),
+      type: ToastType.success,
+    );
+    Navigator.of(context).pop();
   }
 
   void _generate() {

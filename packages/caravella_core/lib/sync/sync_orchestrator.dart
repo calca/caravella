@@ -455,6 +455,9 @@ class SyncOrchestrator {
   ) async {
     await _syncManager.registerPairedDevice(deviceId, deviceName, platform);
     await _syncManager.grantGroupAccess(deviceId, groupId);
+    _forwardEvent(
+      PeerPaired(deviceId: deviceId, deviceName: deviceName, groupId: groupId),
+    );
   }
 
   /// Handle an incoming delta from any transport (LAN, Bluetooth, ...),
