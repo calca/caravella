@@ -4,19 +4,18 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 
-import '../../../sync/bluetooth_advertise_sheet.dart';
 import '../../../sync/bluetooth_sync_factory.dart';
-import '../../../sync/qr_pair_show_sheet.dart';
+import '../../../sync/invite_sheet.dart';
 import '../../../sync/sync_history_page.dart';
 import '../../../sync/widgets/paired_devices_list.dart';
 
 /// Per-group sync settings sub-page, reached from [GroupSettingsPage].
 ///
-/// Sharing this group only takes effect once Wi-Fi or Bluetooth sync is
-/// turned on app-wide (Settings → Sync) — this page shows why the "Share
-/// this group" toggle is disabled otherwise, and once it's on, hosts the
-/// actual QR code / Bluetooth advertising for whichever channel is
-/// available, scoped to this group specifically.
+/// Sharing this group needs a way to reach the other phone: Wi-Fi sync on
+/// (Settings › Sync › Sync with others) or Bluetooth in this build. This
+/// page says so when neither is there, and once sharing is on, has a single
+/// "Invite a device" button opening [InviteSheet] (QR code and Bluetooth at
+/// once), scoped to this group, above the devices it's shared with.
 class ExpenseGroupSyncPage extends StatefulWidget {
   final ExpenseGroup trip;
 
@@ -56,9 +55,8 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     _lastCheckedOrchestrator = orchestrator;
 
     final lan = await orchestrator.isLanSyncEnabled();
-    final bt =
-        BluetoothSyncFactory.isEnabled &&
-        await BluetoothSyncFactory.isUserEnabled();
+    // No switch for Bluetooth: it runs while the invite sheet is open.
+    final bt = BluetoothSyncFactory.isEnabled;
 
     if (mounted) {
       setState(() {
@@ -93,16 +91,18 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     });
   }
 
-  void _showQr(BuildContext context, SyncOrchestrator orchestrator) {
+  void _invite(BuildContext context, SyncOrchestrator orchestrator) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (_) => QrPairShowSheet(
+      builder: (_) => InviteSheet(
         orchestrator: orchestrator,
         groupId: _currentTrip.id,
         groupTitle: _currentTrip.title,
+        wifiEnabled: _lanAvailable,
+        bluetooth: BluetoothSyncFactory.createChannel(orchestrator),
       ),
-    ).whenComplete(() => setState(() {}));
+    );
   }
 
   void _openHistory(BuildContext context, SyncOrchestrator orchestrator) {
@@ -115,20 +115,6 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
         ),
       ),
     );
-  }
-
-  void _shareViaBluetooth(BuildContext context, SyncOrchestrator orchestrator) {
-    final channel = BluetoothSyncFactory.createChannel(orchestrator);
-    if (channel == null) return;
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => BluetoothAdvertiseSheet(
-        channel: channel,
-        groupId: _currentTrip.id,
-        groupTitle: _currentTrip.title,
-      ),
-    ).whenComplete(() => setState(() {}));
   }
 
   @override
@@ -173,18 +159,37 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
               SettingsGroup(
                 label: gloc.sync_paired_devices_title,
                 children: [
-                  if (_lanAvailable)
-                    SettingsTile(
-                      icon: Icons.qr_code,
-                      title: gloc.sync_qr_show_button,
-                      onTap: () => _showQr(context, orchestrator),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.md,
+                      AppSpacing.md,
+                      AppSpacing.md,
+                      0,
                     ),
-                  if (_btAvailable)
-                    SettingsTile(
-                      icon: Icons.bluetooth,
-                      title: gloc.sync_bt_title,
-                      onTap: () => _shareViaBluetooth(context, orchestrator),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        FilledButton.icon(
+                          onPressed: () => _invite(context, orchestrator),
+                          icon: const Icon(Icons.person_add_alt_1_outlined),
+                          label: Text(gloc.sync_invite_button),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          _btAvailable
+                              ? gloc.sync_invite_button_desc
+                              : gloc.sync_invite_button_desc_wifi,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ],
                     ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: PairedDevicesList(

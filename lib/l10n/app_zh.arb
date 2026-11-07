@@ -858,11 +858,11 @@
   "@sync_group_enable": {
     "description": "在群组上启用同步的标签"
   },
-  "sync_group_enable_desc": "与已配对设备同步",
+  "sync_group_enable_desc": "与你邀请的设备同步",
   "@sync_group_enable_desc": {
     "description": "群组同步开关的说明"
   },
-  "sync_group_needs_channel": "请在“同步”中开启 Wi-Fi 或蓝牙以共享群组",
+  "sync_group_needs_channel": "请在“与他人同步”中开启“在同一 Wi-Fi 下自动同步”以共享群组",
   "@sync_group_needs_channel": {
     "description": "当应用范围内Wi-Fi和蓝牙同步都未开启时，显示此文本代替sync_group_enable_desc"
   },
@@ -1267,4 +1267,29 @@
   ,"background_default_family": "当前：鼠尾草绿，家庭默认"
   ,"background_default_personal": "当前：薰衣草紫，个人群组默认"
   ,"background_default_other": "当前：杏色，此类群组默认"
+  ,"sync_invite_button": "邀请设备"
+  ,"sync_invite_button_desc": "使用二维码，或在附近时通过蓝牙"
+  ,"sync_invite_button_desc_wifi": "使用二维码，需连接同一 Wi-Fi"
+  ,"sync_invite_title": "邀请加入“{title}”"
+  ,"sync_invite_other_phone": "在另一部手机上：设置 › 同步 › 与他人同步 › 加入群组"
+  ,"sync_invite_nearby_title": "附近的手机可以看到你"
+  ,"sync_invite_nearby_desc": "没有同一 Wi-Fi 时，可通过蓝牙找到你"
+  ,"sync_invite_nearby_syncing": "正在与 {device} 同步…"
+  ,"sync_invite_closes": "另一部手机加入后会自动关闭"
+  ,"sync_invite_qr_off": "二维码需要在“与他人同步”中开启“在同一 Wi-Fi 下自动同步”"
+  ,"sync_join_button": "加入群组"
+  ,"sync_join_button_desc": "扫描二维码或选择附近的手机"
+  ,"sync_join_scan_hint": "扫描另一部手机上显示的二维码"
+  ,"sync_join_nearby_title": "或附近的手机"
+  ,"sync_join_searching": "正在搜索…"
+  ,"sync_join_nearby_hint": "打开“邀请”的手机会显示在这里"
+  ,"sync_join_peer_paired": "已配对 · 更新群组"
+  ,"sync_join_action": "加入"
+  ,"sync_join_update": "更新"
+  ,"sync_join_done": "已与 {device} 同步"
+  ,"sync_join_qr_off": "要用二维码加入，请开启同一 Wi-Fi 下的自动同步"
+  ,"sync_join_turn_on": "开启"
+  ,"sync_wifi_auto_title": "在同一 Wi-Fi 下自动同步"
+  ,"sync_wifi_auto_desc": "共享的群组会自动更新"
+  ,"sync_bt_update_hint": "没有共同的 Wi-Fi 时，在另一部手机旁打开“加入群组”，即可通过蓝牙更新。"
 }

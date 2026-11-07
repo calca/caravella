@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Sharing a group with someone is one flow, whatever the connection: **Invite a device** in the group's sync settings shows the QR code and, at the same time, makes the phone visible to nearby phones over Bluetooth; on the other phone, **Join a group** (Settings › Synchronization › Sync with others) reads the QR code or lists the nearby phones with the group they invite to. No more separate Wi-Fi and Bluetooth switches and screens: one switch is left, to update automatically on the same Wi-Fi, and Bluetooth only works while Invite or Join is open. An already paired phone without the same Wi-Fi updates with **Update** in Join. Both close by themselves once done. Play builds; the F-Droid build has the QR code to show only
 - Settings: the developer's link at the bottom opens the new site, duea.page
 - New groups: "What shall we call it?" now shows the group's card as it will look on the Groups page, updated as you type or pick its dates, currency and background, and a **Background** pill next to Dates and Currency, all kept above Continue so the keyboard never hides them, with the usual photo, camera, Unsplash (Play builds; it searches the group's name when you tap it) and color choices. A group with no background chosen gets a soft color for its type instead of the plain surface, so the Home getting-started checklist no longer has a "Choose a photo or a color" step
 - Balances: settling up suggests as few payments as possible — people whose balances cancel out among themselves now settle with each other (e.g. balances +4, +3, +3, −6, −4 take 3 payments instead of 4), the same in Balances, the reminder message and the Markdown export. Amounts are worked out in whole cents, so a share that doesn't divide evenly no longer adds a 0.01 payment
@@ -20,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
-- Sharing a group by QR code: the group now reaches the phone that scanned it right away, instead of only after restarting the app. The phone showing the code closes it by itself ("Paired with …") and lists the new device under the group's sync settings
+- Sharing a group by QR code: the group now reaches the phone that scanned it right away, instead of only after restarting the app. The phone showing the code closes it by itself and lists the new device under the group's sync settings
 - A group with no expenses: Balances and Statistics are greyed out until the first expense, instead of making the empty card flicker when tapped
 - Unsplash: searches now include photos of any shape, not only square ones, so a search finds more of them
 - Unsplash: photos already seen don’t load again when you scroll back, a photo that fails to load tries again (then with a tap), and a failed search offers **Retry**

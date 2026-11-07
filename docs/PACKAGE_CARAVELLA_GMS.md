@@ -22,8 +22,8 @@ The root `pubspec.yaml` depends on `caravella_gms` (path `packages/caravella_gms
 | In-app updates | `PlayStoreAppUpdates` wrapping [play_store_updates](PACKAGE_PLAY_STORE_UPDATES.md) (still gated on `ENABLE_PLAY_UPDATES`) | Unavailable — no auto-check, no "Check for updates" card | `HomePage._performUpdateCheckIfNeeded`, `WhatsNewPage` |
 | Google Drive backup | `GoogleDriveSyncFactory.createBackupStore()` → `GoogleDriveBackupStore` (same flag and sign-in as the cloud relay) | Unavailable — only the file export / import | `DriveBackupSection`, `DriveBackupService` (`createCloudBackupStore`, default `null` in `GmsIntegrations`) |
 | Google Drive cloud relay | `GoogleDriveSyncFactory.createCloudChannel()` from [google_drive_sync](PACKAGE_GOOGLE_DRIVE_SYNC.md) (still gated on `ENABLE_GOOGLE_DRIVE_SYNC`) | Unavailable — Cloud Sync hidden | `SyncBootstrap`; the Drive account UI uses `CloudAccountChannel` |
-| Bluetooth sync | `NearbyBluetoothSyncChannel` (`nearby_connections`) | Unavailable — Bluetooth section hidden | `BluetoothSyncFactory.isEnabled` / `createChannel` (also honours `ENABLE_BLUETOOTH_SYNC`) — see [Sync Architecture](SYNC_ARCHITECTURE.md) |
-| QR scanning (pairing) | `MobileScannerQrView` (`mobile_scanner` → ML Kit barcode) | Unavailable — "Scan a code" hidden; the device can still be paired by **showing** its own QR (`qr_flutter`, free) for a Play device to scan | `QrPairScanPage`, `MultiUserSyncPage` |
+| Bluetooth sync | `NearbyBluetoothSyncChannel` (`nearby_connections`) | Unavailable — Invite shows only the QR code, Join is hidden | `BluetoothSyncFactory.isEnabled` / `createChannel` (also honours `ENABLE_BLUETOOTH_SYNC`) — see [Sync Architecture](SYNC_ARCHITECTURE.md) |
+| QR scanning (pairing) | `MobileScannerQrView` (`mobile_scanner` → ML Kit barcode) | Unavailable — "Join a group" hidden (no camera scanner and no Bluetooth); the device can still be paired by **showing** its own QR from "Invite a device" (`qr_flutter`, free) for a Play device to scan | `QrPairScanPage`, `MultiUserSyncPage` |
 
 ## Switching variant
 

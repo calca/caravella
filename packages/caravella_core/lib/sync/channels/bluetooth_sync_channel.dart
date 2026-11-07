@@ -36,16 +36,54 @@ sealed class BluetoothPeerEvent {
 
 /// A nearby peer was found.
 class PeerFound extends BluetoothPeerEvent {
-  /// Advertised name of the peer.
+  /// Advertised name of the peer (its device name).
   final String name;
 
   /// Nearby Connections endpoint ID.
   final String endpointId;
 
-  const PeerFound({required this.name, required this.endpointId});
+  /// Title of the group the peer is inviting to, when it said (see
+  /// [BluetoothEndpointName]); `null` for older versions.
+  final String? groupTitle;
+
+  const PeerFound({
+    required this.name,
+    required this.endpointId,
+    this.groupTitle,
+  });
 
   @override
   String toString() => 'PeerFound(name: $name, endpointId: $endpointId)';
+}
+
+/// The name a device advertises over Bluetooth: its device name and, after
+/// a newline, the title of the group it invites to, so the joining phone
+/// can show "Pixel 9 · Invite to «Lisbon»" before connecting. Older
+/// versions advertise the device name alone, which decodes the same way.
+abstract final class BluetoothEndpointName {
+  /// Group titles are cut to this many characters: the endpoint name must
+  /// stay short.
+  static const int maxGroupTitleLength = 40;
+
+  static String encode(String deviceName, String groupTitle) {
+    final name = deviceName.replaceAll('\n', ' ');
+    final title = groupTitle.replaceAll('\n', ' ').trim();
+    if (title.isEmpty) return name;
+    final cut = title.length > maxGroupTitleLength
+        ? '${title.substring(0, maxGroupTitleLength - 1)}…'
+        : title;
+    return '$name\n$cut';
+  }
+
+  static ({String deviceName, String? groupTitle}) decode(String raw) {
+    final i = raw.indexOf('\n');
+    if (i < 0) return (deviceName: raw, groupTitle: null);
+    final title = raw.substring(i + 1).trim();
+    return (
+      deviceName: raw.substring(0, i),
+      groupTitle: title.isEmpty ? null : title,
+    );
+  }
 }
 
 /// A previously found peer is no longer available.
