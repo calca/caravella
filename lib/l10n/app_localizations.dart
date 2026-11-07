@@ -3239,13 +3239,13 @@ abstract class AppLocalizations {
   /// Description for the group sync toggle
   ///
   /// In en, this message translates to:
-  /// **'With your paired devices'**
+  /// **'With the devices you invite'**
   String get sync_group_enable_desc;
 
   /// Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide
   ///
   /// In en, this message translates to:
-  /// **'Turn on Wi-Fi or Bluetooth in Synchronization to share the group'**
+  /// **'Turn on “Automatically on the same Wi-Fi” in Sync with others to share the group'**
   String get sync_group_needs_channel;
 
   /// Button to show this device's pairing QR code
@@ -4715,6 +4715,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Now: apricot, chosen for this kind of group'**
   String get background_default_other;
+
+  /// Invite/Join sync flow: sync invite button
+  ///
+  /// In en, this message translates to:
+  /// **'Invite a device'**
+  String get sync_invite_button;
+
+  /// Invite/Join sync flow: sync invite button desc
+  ///
+  /// In en, this message translates to:
+  /// **'With the QR code, or over Bluetooth if you’re close'**
+  String get sync_invite_button_desc;
+
+  /// Invite/Join sync flow: sync invite button desc wifi
+  ///
+  /// In en, this message translates to:
+  /// **'With the QR code, on the same Wi-Fi'**
+  String get sync_invite_button_desc_wifi;
+
+  /// Invite/Join sync flow: sync invite title
+  ///
+  /// In en, this message translates to:
+  /// **'Invite to «{title}»'**
+  String sync_invite_title(String title);
+
+  /// Invite/Join sync flow: sync invite other phone
+  ///
+  /// In en, this message translates to:
+  /// **'On the other phone: Settings › Synchronization › Sync with others › Join a group'**
+  String get sync_invite_other_phone;
+
+  /// Invite/Join sync flow: sync invite nearby title
+  ///
+  /// In en, this message translates to:
+  /// **'Visible to nearby phones'**
+  String get sync_invite_nearby_title;
+
+  /// Invite/Join sync flow: sync invite nearby desc
+  ///
+  /// In en, this message translates to:
+  /// **'Without the same Wi-Fi, they find you over Bluetooth'**
+  String get sync_invite_nearby_desc;
+
+  /// Invite/Join sync flow: sync invite nearby syncing
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing with {device}…'**
+  String sync_invite_nearby_syncing(String device);
+
+  /// Invite/Join sync flow: sync invite closes
+  ///
+  /// In en, this message translates to:
+  /// **'Closes by itself when the other phone joins'**
+  String get sync_invite_closes;
+
+  /// Invite/Join sync flow: sync invite qr off
+  ///
+  /// In en, this message translates to:
+  /// **'The QR code needs “Automatically on the same Wi-Fi”, in Sync with others'**
+  String get sync_invite_qr_off;
+
+  /// Invite/Join sync flow: sync join button
+  ///
+  /// In en, this message translates to:
+  /// **'Join a group'**
+  String get sync_join_button;
+
+  /// Invite/Join sync flow: sync join button desc
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the QR code or pick a nearby phone'**
+  String get sync_join_button_desc;
+
+  /// Invite/Join sync flow: sync join scan hint
+  ///
+  /// In en, this message translates to:
+  /// **'Point at the QR code on the other phone'**
+  String get sync_join_scan_hint;
+
+  /// Invite/Join sync flow: sync join nearby title
+  ///
+  /// In en, this message translates to:
+  /// **'Or a nearby phone'**
+  String get sync_join_nearby_title;
+
+  /// Invite/Join sync flow: sync join searching
+  ///
+  /// In en, this message translates to:
+  /// **'Searching…'**
+  String get sync_join_searching;
+
+  /// Invite/Join sync flow: sync join nearby hint
+  ///
+  /// In en, this message translates to:
+  /// **'Phones with “Invite” open show up here'**
+  String get sync_join_nearby_hint;
+
+  /// Invite/Join sync flow: sync join peer paired
+  ///
+  /// In en, this message translates to:
+  /// **'Already paired · updates the groups'**
+  String get sync_join_peer_paired;
+
+  /// Invite/Join sync flow: sync join action
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get sync_join_action;
+
+  /// Invite/Join sync flow: sync join update
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get sync_join_update;
+
+  /// Invite/Join sync flow: sync join done
+  ///
+  /// In en, this message translates to:
+  /// **'Synced with {device}'**
+  String sync_join_done(String device);
+
+  /// Invite/Join sync flow: sync join qr off
+  ///
+  /// In en, this message translates to:
+  /// **'To join with the QR code, turn on automatic sync on the same Wi-Fi'**
+  String get sync_join_qr_off;
+
+  /// Invite/Join sync flow: sync join turn on
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get sync_join_turn_on;
+
+  /// Invite/Join sync flow: sync wifi auto title
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically on the same Wi-Fi'**
+  String get sync_wifi_auto_title;
+
+  /// Invite/Join sync flow: sync wifi auto desc
+  ///
+  /// In en, this message translates to:
+  /// **'Shared groups update by themselves'**
+  String get sync_wifi_auto_desc;
+
+  /// Invite/Join sync flow: sync bt update hint
+  ///
+  /// In en, this message translates to:
+  /// **'Without a Wi-Fi in common, open “Join a group” next to the other phone to update over Bluetooth.'**
+  String get sync_bt_update_hint;
 }
 
 class _AppLocalizationsDelegate

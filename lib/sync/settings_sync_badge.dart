@@ -6,7 +6,6 @@ import 'package:material_ui/material_ui.dart';
 
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-import 'bluetooth_sync_factory.dart';
 import 'sync_settings_screen.dart';
 
 /// Shared "overall sync health" polling behind both [SettingsSyncBadge] and
@@ -44,15 +43,14 @@ mixin _SyncStatusMixin<T extends StatefulWidget> on State<T> {
 
   Future<void> _load() async {
     final lan = await orchestrator.isLanSyncEnabled();
-    final bt =
-        BluetoothSyncFactory.isEnabled &&
-        await BluetoothSyncFactory.isUserEnabled();
     final cloudChannel = orchestrator.cloudChannel;
     final cloud = cloudChannel != null && await cloudChannel.isEnabled();
 
     if (mounted) {
       setState(() {
-        anyChannelEnabled = lan || bt || cloud;
+        // Bluetooth is manual (only while an invite or join is open): nothing
+        // runs on its own to report.
+        anyChannelEnabled = lan || cloud;
         hasError = orchestrator.problems.isNotEmpty;
         loaded = true;
       });

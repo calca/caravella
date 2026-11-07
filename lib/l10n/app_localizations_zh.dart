@@ -1610,10 +1610,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_group_enable => '共享此群组';
 
   @override
-  String get sync_group_enable_desc => '与已配对设备同步';
+  String get sync_group_enable_desc => '与你邀请的设备同步';
 
   @override
-  String get sync_group_needs_channel => '请在“同步”中开启 Wi-Fi 或蓝牙以共享群组';
+  String get sync_group_needs_channel => '请在“与他人同步”中开启“在同一 Wi-Fi 下自动同步”以共享群组';
 
   @override
   String get sync_qr_show_button => '显示二维码';
@@ -2489,4 +2489,85 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get background_default_other => '当前：杏色，此类群组默认';
+
+  @override
+  String get sync_invite_button => '邀请设备';
+
+  @override
+  String get sync_invite_button_desc => '使用二维码，或在附近时通过蓝牙';
+
+  @override
+  String get sync_invite_button_desc_wifi => '使用二维码，需连接同一 Wi-Fi';
+
+  @override
+  String sync_invite_title(String title) {
+    return '邀请加入“$title”';
+  }
+
+  @override
+  String get sync_invite_other_phone => '在另一部手机上：设置 › 同步 › 与他人同步 › 加入群组';
+
+  @override
+  String get sync_invite_nearby_title => '附近的手机可以看到你';
+
+  @override
+  String get sync_invite_nearby_desc => '没有同一 Wi-Fi 时，可通过蓝牙找到你';
+
+  @override
+  String sync_invite_nearby_syncing(String device) {
+    return '正在与 $device 同步…';
+  }
+
+  @override
+  String get sync_invite_closes => '另一部手机加入后会自动关闭';
+
+  @override
+  String get sync_invite_qr_off => '二维码需要在“与他人同步”中开启“在同一 Wi-Fi 下自动同步”';
+
+  @override
+  String get sync_join_button => '加入群组';
+
+  @override
+  String get sync_join_button_desc => '扫描二维码或选择附近的手机';
+
+  @override
+  String get sync_join_scan_hint => '扫描另一部手机上显示的二维码';
+
+  @override
+  String get sync_join_nearby_title => '或附近的手机';
+
+  @override
+  String get sync_join_searching => '正在搜索…';
+
+  @override
+  String get sync_join_nearby_hint => '打开“邀请”的手机会显示在这里';
+
+  @override
+  String get sync_join_peer_paired => '已配对 · 更新群组';
+
+  @override
+  String get sync_join_action => '加入';
+
+  @override
+  String get sync_join_update => '更新';
+
+  @override
+  String sync_join_done(String device) {
+    return '已与 $device 同步';
+  }
+
+  @override
+  String get sync_join_qr_off => '要用二维码加入，请开启同一 Wi-Fi 下的自动同步';
+
+  @override
+  String get sync_join_turn_on => '开启';
+
+  @override
+  String get sync_wifi_auto_title => '在同一 Wi-Fi 下自动同步';
+
+  @override
+  String get sync_wifi_auto_desc => '共享的群组会自动更新';
+
+  @override
+  String get sync_bt_update_hint => '没有共同的 Wi-Fi 时，在另一部手机旁打开“加入群组”，即可通过蓝牙更新。';
 }

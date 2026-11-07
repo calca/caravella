@@ -639,9 +639,9 @@
   ,"@sync_group_shared": {"description": "Tooltip para ícone de grupo compartilhado"}
   ,"sync_group_enable": "Compartilhar este grupo"
   ,"@sync_group_enable": {"description": "Etiqueta para ativar a sincronização em um grupo"}
-  ,"sync_group_enable_desc": "Com os dispositivos emparelhados"
+  ,"sync_group_enable_desc": "Com os dispositivos que você convidar"
   ,"@sync_group_enable_desc": {"description": "Descrição para o alternador de sincronização do grupo"}
-  ,"sync_group_needs_channel": "Ative Wi-Fi ou Bluetooth em Sincronização para compartilhar o grupo"
+  ,"sync_group_needs_channel": "Ative «Automático na mesma Wi-Fi» em Sincronizar com outros para compartilhar o grupo"
   ,"@sync_group_needs_channel": {"description": "Mostrado no lugar de sync_group_enable_desc quando nem Wi-Fi nem Bluetooth sync estão ativos no app"}
   ,"sync_qr_show_button": "Mostrar código QR"
   ,"@sync_qr_show_button": {"description": "Botão para mostrar o código QR de pareamento deste dispositivo"}
@@ -945,4 +945,29 @@
   ,"background_default_family": "Agora: verde-sálvia, escolhido para famílias"
   ,"background_default_personal": "Agora: lavanda, escolhido para grupos pessoais"
   ,"background_default_other": "Agora: damasco, escolhido para este tipo de grupo"
+  ,"sync_invite_button": "Convidar um dispositivo"
+  ,"sync_invite_button_desc": "Com o QR ou por Bluetooth, se estiverem perto"
+  ,"sync_invite_button_desc_wifi": "Com o QR, na mesma Wi-Fi"
+  ,"sync_invite_title": "Convidar para «{title}»"
+  ,"sync_invite_other_phone": "No outro telefone: Configurações › Sincronização › Sincronizar com outros › Entrar num grupo"
+  ,"sync_invite_nearby_title": "Visível para telefones próximos"
+  ,"sync_invite_nearby_desc": "Sem a mesma Wi-Fi, encontram você por Bluetooth"
+  ,"sync_invite_nearby_syncing": "Sincronizando com {device}…"
+  ,"sync_invite_closes": "Fecha sozinho quando o outro telefone entrar"
+  ,"sync_invite_qr_off": "O QR precisa de «Automático na mesma Wi-Fi», em Sincronizar com outros"
+  ,"sync_join_button": "Entrar num grupo"
+  ,"sync_join_button_desc": "Escaneie o QR ou escolha um telefone próximo"
+  ,"sync_join_scan_hint": "Aponte para o QR exibido no outro telefone"
+  ,"sync_join_nearby_title": "Ou um telefone próximo"
+  ,"sync_join_searching": "Procurando…"
+  ,"sync_join_nearby_hint": "Aqui aparecem os telefones com «Convidar» aberto"
+  ,"sync_join_peer_paired": "Já emparelhado · atualiza os grupos"
+  ,"sync_join_action": "Entrar"
+  ,"sync_join_update": "Atualizar"
+  ,"sync_join_done": "Sincronizado com {device}"
+  ,"sync_join_qr_off": "Para entrar com o QR, ative a sincronização automática na mesma Wi-Fi"
+  ,"sync_join_turn_on": "Ativar"
+  ,"sync_wifi_auto_title": "Automático na mesma Wi-Fi"
+  ,"sync_wifi_auto_desc": "Os grupos compartilhados se atualizam sozinhos"
+  ,"sync_bt_update_hint": "Sem uma Wi-Fi em comum, abra «Entrar num grupo» perto do outro telefone para atualizar por Bluetooth."
 }

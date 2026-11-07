@@ -9,7 +9,7 @@ Read this after [caravella_core reference](PACKAGE_CARAVELLA_CORE.md) and, if yo
 ```mermaid
 flowchart TB
     subgraph app["lib/ (app layer)"]
-        UI["Sync UI: sync_settings_screen.dart,\nmulti_user_sync_page.dart,\nqr_pair_scan_page.dart / qr_pair_show_sheet.dart, ..."]
+        UI["Sync UI: sync_settings_screen.dart,\nmulti_user_sync_page.dart,\njoin_group_page.dart / invite_sheet.dart, ..."]
         BT["NearbyBluetoothSyncChannel\n(packages/caravella_gms)"]
         Bootstrap["SyncBootstrap.initialize()\n(lib/sync/sync_bootstrap.dart)"]
     end
@@ -45,7 +45,7 @@ flowchart TB
     UI --> Orch
 ```
 
-`BluetoothSyncChannel` is deliberately **not** owned by `SyncOrchestrator` the way `LanSyncChannel`/`CloudRelayChannel` are — it's constructed fresh per pairing/sync session by UI code (`lib/sync/multi_user_sync_page.dart:206-208`, `lib/manager/details/pages/expense_group_sync_page.dart:104-106`) and pointed at the same orchestrator instance via two public methods that exist specifically for this: `SyncOrchestrator.handleIncomingDelta` and `.handlePairingCompleted` (`packages/caravella_core/lib/sync/sync_orchestrator.dart:359-388`). This is why those two methods are public despite everything else being routed through private helpers.
+`BluetoothSyncChannel` is deliberately **not** owned by `SyncOrchestrator` the way `LanSyncChannel`/`CloudRelayChannel` are — it's constructed fresh per invite or join session by UI code (`BluetoothSyncFactory.createChannel`, called by `MultiUserSyncPage._join` for `JoinGroupPage` and `ExpenseGroupSyncPage._invite` for `InviteSheet`; the page or sheet stops it when closed) and pointed at the same orchestrator instance via two public methods that exist specifically for this: `SyncOrchestrator.handleIncomingDelta` and `.handlePairingCompleted` (`packages/caravella_core/lib/sync/sync_orchestrator.dart:359-388`). This is why those two methods are public despite everything else being routed through private helpers.
 
 ## Components
 
@@ -147,7 +147,7 @@ sequenceDiagram
     participant A as Device A (shows QR)
     participant B as Device B (scans QR)
 
-    Note over A: User enables sync for a group,<br/>taps "Show QR"
+    Note over A: User enables sync for a group,<br/>taps "Invite a device"
     A->>A: SyncOrchestrator.buildOwnPairingPayload(groupId, groupTitle)<br/>resolves local IPv4, embeds host:port + pubkey
     A-->>B: QR code (PairingPayload, valid 5 min)
     B->>B: PairingPayload.tryParse, check isExpired /<br/>isLikelyUnreachableEmulatorHost
@@ -159,7 +159,15 @@ sequenceDiagram
     B->>A: first delta exchange right away (_syncWithPeer):<br/>A's answer carries the shared group to B
 ```
 
-`handlePairingCompleted` emits a `PeerPaired` event (`deviceId`, `deviceName`, `groupId`) on `SyncOrchestrator.events`, on both sides and for Bluetooth too. On A, `QrPairShowSheet` closes itself with a "Paired with …" toast and `PairedDevicesList` reloads, so the new device appears without reopening the page. B starts the first exchange itself at the end of `pairWithHost` (in the background, so the scan page closes at once): A had most likely already been discovered over mDNS before the pairing and skipped as unpaired, and mDNS doesn't announce it again, so without this the group only arrived after an app restart.
+`handlePairingCompleted` emits a `PeerPaired` event (`deviceId`, `deviceName`, `groupId`, `channel`: `"lan"` or `"bluetooth"`) on `SyncOrchestrator.events`, on both sides; `BluetoothSyncFactory.createChannel` wires the Bluetooth channel's pairing callback with `channel: 'bluetooth'`. `PairedDevicesList` reloads on it, so the new device appears without reopening the page. B starts the first exchange itself at the end of `pairWithHost` (in the background, so the scan page closes at once): A had most likely already been discovered over mDNS before the pairing and skipped as unpaired, and mDNS doesn't announce it again, so without this the group only arrived after an app restart.
+
+## Invite and Join (the UI)
+
+One flow for both transports, so the user never picks one:
+
+- **Invite** — the group's sync page (`ExpenseGroupSyncPage`) has a single "Invite a device" button opening `InviteSheet` (`lib/sync/invite_sheet.dart`): the QR code (when Wi-Fi sync is on, with its 5-minute countdown) and, in builds with Bluetooth, advertising for as long as the sheet is open ("Visible to nearby phones"). The advertised Nearby endpoint name is `BluetoothEndpointName.encode(deviceName, groupTitle)` (device name, newline, group title cut to 40 characters; older versions advertise the name alone and decode the same way). The sheet closes itself with a "Synced with …" toast on a `PeerPaired` for its group on `"lan"`; on `"bluetooth"` it shows "Syncing with …" and closes one second after the channel's `BtSyncCompleted`, so the answer leaves the phone before advertising stops.
+- **Join** — Settings › Synchronization › Sync with others (`MultiUserSyncPage`) starts with "Join a group", opening `JoinGroupPage` (`lib/sync/join_group_page.dart`): the camera for the QR code (when Wi-Fi sync is on; otherwise a "Turn on" button that switches it on) and, below, the nearby phones found over Bluetooth with the group they invite to — "Join", or "Update" when a paired device has that name. Either way it pops with a "Synced with …" toast. Hidden where neither the camera scanner nor Bluetooth exists (F-Droid).
+- The only switch left is "Automatically on the same Wi-Fi" (`setLanSyncEnabled`). Bluetooth has none: it runs only while Invite or Join is open, and the old `sync_bluetooth_enabled` preference is no longer read. A group can be shared when Wi-Fi sync is on or the build has Bluetooth.
 
 Bluetooth pairing is the same idea with a different transport: an unencrypted `hello`/`hello_ack` handshake over Nearby Connections (`NearbyBluetoothSyncChannel.syncWithPeer` on the connecting side, `_handleHello` on the advertising side — `packages/caravella_gms/lib/src/nearby_bluetooth_sync_channel.dart`) instead of QR + HTTP — the key exchange and grant-writing steps afterward are identical.
 

@@ -671,9 +671,9 @@
   ,"@sync_group_shared": {"description": "Tooltip for shared group icon"}
   ,"sync_group_enable": "Share this group"
   ,"@sync_group_enable": {"description": "Label for enabling sync on a group"}
-  ,"sync_group_enable_desc": "With your paired devices"
+  ,"sync_group_enable_desc": "With the devices you invite"
   ,"@sync_group_enable_desc": {"description": "Description for the group sync toggle"}
-  ,"sync_group_needs_channel": "Turn on Wi-Fi or Bluetooth in Synchronization to share the group"
+  ,"sync_group_needs_channel": "Turn on “Automatically on the same Wi-Fi” in Sync with others to share the group"
   ,"@sync_group_needs_channel": {"description": "Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide"}
   ,"sync_qr_show_button": "Show QR code"
   ,"@sync_qr_show_button": {"description": "Button to show this device's pairing QR code"}
@@ -1094,4 +1094,54 @@
   ,"@background_default_personal": {"description": "Subtitle of the Color row in group creation: the color a personal group gets if nothing is chosen"}
   ,"background_default_other": "Now: apricot, chosen for this kind of group"
   ,"@background_default_other": {"description": "Subtitle of the Color row in group creation: the color any other group gets if nothing is chosen"}
+  ,"sync_invite_button": "Invite a device"
+  ,"@sync_invite_button": {"description": "Invite/Join sync flow: sync invite button"}
+  ,"sync_invite_button_desc": "With the QR code, or over Bluetooth if you’re close"
+  ,"@sync_invite_button_desc": {"description": "Invite/Join sync flow: sync invite button desc"}
+  ,"sync_invite_button_desc_wifi": "With the QR code, on the same Wi-Fi"
+  ,"@sync_invite_button_desc_wifi": {"description": "Invite/Join sync flow: sync invite button desc wifi"}
+  ,"sync_invite_title": "Invite to «{title}»"
+  ,"@sync_invite_title": {"description": "Invite/Join sync flow: sync invite title", "placeholders": {"title": {"type": "String"}}}
+  ,"sync_invite_other_phone": "On the other phone: Settings › Synchronization › Sync with others › Join a group"
+  ,"@sync_invite_other_phone": {"description": "Invite/Join sync flow: sync invite other phone"}
+  ,"sync_invite_nearby_title": "Visible to nearby phones"
+  ,"@sync_invite_nearby_title": {"description": "Invite/Join sync flow: sync invite nearby title"}
+  ,"sync_invite_nearby_desc": "Without the same Wi-Fi, they find you over Bluetooth"
+  ,"@sync_invite_nearby_desc": {"description": "Invite/Join sync flow: sync invite nearby desc"}
+  ,"sync_invite_nearby_syncing": "Syncing with {device}…"
+  ,"@sync_invite_nearby_syncing": {"description": "Invite/Join sync flow: sync invite nearby syncing", "placeholders": {"device": {"type": "String"}}}
+  ,"sync_invite_closes": "Closes by itself when the other phone joins"
+  ,"@sync_invite_closes": {"description": "Invite/Join sync flow: sync invite closes"}
+  ,"sync_invite_qr_off": "The QR code needs “Automatically on the same Wi-Fi”, in Sync with others"
+  ,"@sync_invite_qr_off": {"description": "Invite/Join sync flow: sync invite qr off"}
+  ,"sync_join_button": "Join a group"
+  ,"@sync_join_button": {"description": "Invite/Join sync flow: sync join button"}
+  ,"sync_join_button_desc": "Scan the QR code or pick a nearby phone"
+  ,"@sync_join_button_desc": {"description": "Invite/Join sync flow: sync join button desc"}
+  ,"sync_join_scan_hint": "Point at the QR code on the other phone"
+  ,"@sync_join_scan_hint": {"description": "Invite/Join sync flow: sync join scan hint"}
+  ,"sync_join_nearby_title": "Or a nearby phone"
+  ,"@sync_join_nearby_title": {"description": "Invite/Join sync flow: sync join nearby title"}
+  ,"sync_join_searching": "Searching…"
+  ,"@sync_join_searching": {"description": "Invite/Join sync flow: sync join searching"}
+  ,"sync_join_nearby_hint": "Phones with “Invite” open show up here"
+  ,"@sync_join_nearby_hint": {"description": "Invite/Join sync flow: sync join nearby hint"}
+  ,"sync_join_peer_paired": "Already paired · updates the groups"
+  ,"@sync_join_peer_paired": {"description": "Invite/Join sync flow: sync join peer paired"}
+  ,"sync_join_action": "Join"
+  ,"@sync_join_action": {"description": "Invite/Join sync flow: sync join action"}
+  ,"sync_join_update": "Update"
+  ,"@sync_join_update": {"description": "Invite/Join sync flow: sync join update"}
+  ,"sync_join_done": "Synced with {device}"
+  ,"@sync_join_done": {"description": "Invite/Join sync flow: sync join done", "placeholders": {"device": {"type": "String"}}}
+  ,"sync_join_qr_off": "To join with the QR code, turn on automatic sync on the same Wi-Fi"
+  ,"@sync_join_qr_off": {"description": "Invite/Join sync flow: sync join qr off"}
+  ,"sync_join_turn_on": "Turn on"
+  ,"@sync_join_turn_on": {"description": "Invite/Join sync flow: sync join turn on"}
+  ,"sync_wifi_auto_title": "Automatically on the same Wi-Fi"
+  ,"@sync_wifi_auto_title": {"description": "Invite/Join sync flow: sync wifi auto title"}
+  ,"sync_wifi_auto_desc": "Shared groups update by themselves"
+  ,"@sync_wifi_auto_desc": {"description": "Invite/Join sync flow: sync wifi auto desc"}
+  ,"sync_bt_update_hint": "Without a Wi-Fi in common, open “Join a group” next to the other phone to update over Bluetooth."
+  ,"@sync_bt_update_hint": {"description": "Invite/Join sync flow: sync bt update hint"}
 }

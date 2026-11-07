@@ -203,7 +203,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     try {
       final identity = DeviceIdentity.instance;
       final started = await _nearby.startAdvertising(
-        identity.deviceName,
+        BluetoothEndpointName.encode(identity.deviceName, groupTitle),
         Strategy.P2P_CLUSTER,
         onConnectionInitiated: _onConnectionInitiated,
         onConnectionResult: _onConnectionResult,
@@ -549,7 +549,14 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
       'Found peer: $name ($endpointId)',
       name: _tag,
     );
-    _eventController.add(PeerFound(name: name, endpointId: endpointId));
+    final decoded = BluetoothEndpointName.decode(name);
+    _eventController.add(
+      PeerFound(
+        name: decoded.deviceName,
+        endpointId: endpointId,
+        groupTitle: decoded.groupTitle,
+      ),
+    );
   }
 
   void _onEndpointLost(String? endpointId) {
