@@ -447,16 +447,25 @@ class SyncOrchestrator {
   /// Public so a [BluetoothSyncChannel] — constructed per pairing session
   /// by the UI, outside this class — can wire its own handshake completion
   /// into the same pipeline LAN pairing uses internally.
+  ///
+  /// [channel] (`"lan"` or `"bluetooth"`) is passed on in the [PeerPaired]
+  /// event this emits.
   Future<void> handlePairingCompleted(
     String deviceId,
     String deviceName,
     String platform,
-    String groupId,
-  ) async {
+    String groupId, {
+    String channel = 'lan',
+  }) async {
     await _syncManager.registerPairedDevice(deviceId, deviceName, platform);
     await _syncManager.grantGroupAccess(deviceId, groupId);
     _forwardEvent(
-      PeerPaired(deviceId: deviceId, deviceName: deviceName, groupId: groupId),
+      PeerPaired(
+        deviceId: deviceId,
+        deviceName: deviceName,
+        groupId: groupId,
+        channel: channel,
+      ),
     );
   }
 

@@ -1641,11 +1641,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sync_group_enable => 'Compartir este grupo';
 
   @override
-  String get sync_group_enable_desc => 'Con los dispositivos vinculados';
+  String get sync_group_enable_desc => 'Con los dispositivos que invites';
 
   @override
   String get sync_group_needs_channel =>
-      'Activa Wi-Fi o Bluetooth en Sincronización para compartir el grupo';
+      'Activa «Automático en la misma Wi-Fi» en Sincroniza con otros para compartir el grupo';
 
   @override
   String get sync_qr_show_button => 'Mostrar código QR';
@@ -2571,4 +2571,95 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get background_default_other =>
       'Ahora: albaricoque, elegido para este tipo de grupo';
+
+  @override
+  String get sync_invite_button => 'Invitar un dispositivo';
+
+  @override
+  String get sync_invite_button_desc =>
+      'Con el QR o por Bluetooth, si estáis cerca';
+
+  @override
+  String get sync_invite_button_desc_wifi => 'Con el QR, en la misma Wi-Fi';
+
+  @override
+  String sync_invite_title(String title) {
+    return 'Invitar a «$title»';
+  }
+
+  @override
+  String get sync_invite_other_phone =>
+      'En el otro teléfono: Configuración › Sincronización › Sincroniza con otros › Unirse a un grupo';
+
+  @override
+  String get sync_invite_nearby_title => 'Visible para teléfonos cercanos';
+
+  @override
+  String get sync_invite_nearby_desc =>
+      'Sin la misma Wi-Fi, te encuentran por Bluetooth';
+
+  @override
+  String sync_invite_nearby_syncing(String device) {
+    return 'Sincronizando con $device…';
+  }
+
+  @override
+  String get sync_invite_closes =>
+      'Se cierra solo cuando el otro teléfono se une';
+
+  @override
+  String get sync_invite_qr_off =>
+      'El QR necesita «Automático en la misma Wi-Fi», en Sincroniza con otros';
+
+  @override
+  String get sync_join_button => 'Unirse a un grupo';
+
+  @override
+  String get sync_join_button_desc =>
+      'Escanea el QR o elige un teléfono cercano';
+
+  @override
+  String get sync_join_scan_hint => 'Apunta al QR que muestra el otro teléfono';
+
+  @override
+  String get sync_join_nearby_title => 'O un teléfono cercano';
+
+  @override
+  String get sync_join_searching => 'Buscando…';
+
+  @override
+  String get sync_join_nearby_hint =>
+      'Aquí aparecen los teléfonos con «Invitar» abierto';
+
+  @override
+  String get sync_join_peer_paired => 'Ya vinculado · actualiza los grupos';
+
+  @override
+  String get sync_join_action => 'Unirse';
+
+  @override
+  String get sync_join_update => 'Actualizar';
+
+  @override
+  String sync_join_done(String device) {
+    return 'Sincronizado con $device';
+  }
+
+  @override
+  String get sync_join_qr_off =>
+      'Para unirte con el QR, activa la sincronización automática en la misma Wi-Fi';
+
+  @override
+  String get sync_join_turn_on => 'Activar';
+
+  @override
+  String get sync_wifi_auto_title => 'Automático en la misma Wi-Fi';
+
+  @override
+  String get sync_wifi_auto_desc =>
+      'Los grupos compartidos se actualizan solos';
+
+  @override
+  String get sync_bt_update_hint =>
+      'Sin una Wi-Fi en común, abre «Unirse a un grupo» junto al otro teléfono para actualizar por Bluetooth.';
 }

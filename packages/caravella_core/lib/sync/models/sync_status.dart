@@ -63,19 +63,26 @@ class SyncFailed extends SyncEvent {
 }
 
 /// A pairing handshake finished, on either side and any transport: this
-/// device now trusts [deviceId] for [groupId]. Lets the QR sheet close and
-/// the group's device list reload as soon as the other phone has scanned.
+/// device now trusts [deviceId] for [groupId]. Lets the invite sheet close
+/// and the group's device list reload as soon as the other phone has joined.
 class PeerPaired extends SyncEvent {
   final String deviceId;
   final String deviceName;
   final String groupId;
 
+  /// The transport the handshake ran on: `"lan"` (QR code) or
+  /// `"bluetooth"`. Over Bluetooth the data exchange follows on the same
+  /// connection, so a UI must wait for it before closing.
+  final String channel;
+
   const PeerPaired({
     required this.deviceId,
     required this.deviceName,
     required this.groupId,
+    this.channel = 'lan',
   });
 
   @override
-  String toString() => 'PeerPaired(device: $deviceId, group: $groupId)';
+  String toString() =>
+      'PeerPaired(device: $deviceId, group: $groupId, channel: $channel)';
 }
