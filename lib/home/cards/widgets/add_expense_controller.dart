@@ -24,10 +24,16 @@ class AddExpenseController {
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
 
+  /// Called right after the quick-add sheet persisted a new expense (before
+  /// the group is refreshed), with the stored expense and its generated id.
+  /// The group page uses it to highlight the new row.
+  final void Function(ExpenseDetails expense)? onExpensePersisted;
+
   const AddExpenseController({
     required this.group,
     required this.onExpenseAdded,
     this.onCategoryAdded,
+    this.onExpensePersisted,
   });
 
   /// Shows the quick add expense bottom sheet, optionally pre-filled with
@@ -70,6 +76,7 @@ class AddExpenseController {
                 currentGroup.id,
                 expenseWithId,
               );
+              onExpensePersisted?.call(expenseWithId);
 
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
