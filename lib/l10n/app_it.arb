@@ -1003,7 +1003,7 @@
   ,"sync_device_removed": "{device} tolto dal gruppo"
   ,"sync_device_forgotten": "{device} dimenticato"
   ,"sync_device_forget_hint": "Tocca un dispositivo per aggiornarlo o dimenticarlo: lo togli da tutti i gruppi."
-  ,"sync_device_update_hint_bt": "Sullo stesso Wi-Fi, oppure vicini via Bluetooth."
+  ,"sync_device_update_hint_bt": "Sulla stessa Wi-Fi, oppure vicini via Bluetooth."
   ,"sync_update_bt_hint": "«Sincronizza via Wi-Fi» è disattivato: l’aggiornamento avviene via Bluetooth, con i telefoni vicini."
   ,"sync_update_step_wifi": "Wi-Fi"
   ,"sync_update_wifi_skipped_off": "Saltato · «Sincronizza via Wi-Fi» è disattivato"

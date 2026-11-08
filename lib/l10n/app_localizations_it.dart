@@ -2779,7 +2779,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_device_update_hint_bt =>
-      'Sullo stesso Wi-Fi, oppure vicini via Bluetooth.';
+      'Sulla stessa Wi-Fi, oppure vicini via Bluetooth.';
 
   @override
   String get sync_update_bt_hint =>
