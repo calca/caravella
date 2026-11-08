@@ -180,4 +180,32 @@ void main() {
     expect(find.text('Pixel 9'), findsNothing);
     await tester.pump(const Duration(seconds: 10));
   });
+
+  testWidgets('empty: the empty builder; with devices: the trailing row', (
+    tester,
+  ) async {
+    var count = -1;
+    Widget list() => app(
+      Scaffold(
+        body: PairedDevicesList(
+          orchestrator: orchestrator,
+          groupId: 'g1',
+          onLoaded: (n) => count = n,
+          emptyBuilder: (_) => const Text('nobody yet'),
+          trailing: const Text('invite another'),
+        ),
+      ),
+    );
+    await tester.pumpWidget(list());
+    await settle(tester);
+    expect(find.text('nobody yet'), findsOneWidget);
+    expect(find.text('invite another'), findsNothing);
+    expect(count, 0);
+
+    await tester.runAsync(() => pair('phone-2', 'Pixel 9', 'g1'));
+    await settleUntil(tester, () => count == 1);
+    expect(find.text('Pixel 9'), findsOneWidget);
+    expect(find.text('invite another'), findsOneWidget);
+    expect(find.text('nobody yet'), findsNothing);
+  });
 }

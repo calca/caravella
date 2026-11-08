@@ -1228,4 +1228,10 @@
   ,"@sync_update_bt_instruction_group": {"description": "Update now over Bluetooth: what to do on the other phone, when opened from a group. Arrows separate menu levels", "placeholders": {"device": {"type": "String"}, "group": {"type": "String"}}}
   ,"sync_update_bt_instruction_settings": "On {device} open Caravella › Settings › Synchronization › Sync with others, tap your phone, then Update now"
   ,"@sync_update_bt_instruction_settings": {"description": "Update now over Bluetooth: what to do on the other phone, when opened from Settings. Arrows separate menu levels", "placeholders": {"device": {"type": "String"}}}
+  ,"sync_shared_empty_title": "Shared with no one yet"
+  ,"@sync_shared_empty_title": {"description": "Group sync page, Shared with: sync shared empty title"}
+  ,"sync_shared_empty_body": "Invite the people you split expenses with: you’ll all see the same expenses, each on your own phone."
+  ,"@sync_shared_empty_body": {"description": "Group sync page, Shared with: sync shared empty body"}
+  ,"sync_invite_another": "Invite another device"
+  ,"@sync_invite_another": {"description": "Group sync page, Shared with: sync invite another"}
 }
