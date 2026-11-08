@@ -32,12 +32,25 @@ class PairedDevicesList extends StatefulWidget {
   /// Shown when there are no devices; nothing at all when null.
   final String? emptyText;
 
+  /// Built instead of [emptyText] when there are no devices.
+  final WidgetBuilder? emptyBuilder;
+
+  /// A last row after the devices (e.g. "Invite another device"), only
+  /// when there is at least one.
+  final Widget? trailing;
+
+  /// Called with the number of devices each time the list loads.
+  final ValueChanged<int>? onLoaded;
+
   const PairedDevicesList({
     super.key,
     required this.orchestrator,
     this.groupId,
     this.groupTitle,
     this.emptyText,
+    this.emptyBuilder,
+    this.trailing,
+    this.onLoaded,
   });
 
   @override
@@ -92,6 +105,7 @@ class _PairedDevicesListState extends State<PairedDevicesList> {
       _entries = entries;
       _names = names;
     });
+    widget.onLoaded?.call(entries.length);
   }
 
   Future<void> _open(_Entry entry) async {
@@ -115,6 +129,8 @@ class _PairedDevicesListState extends State<PairedDevicesList> {
     if (entries == null) return const SizedBox.shrink();
 
     if (entries.isEmpty) {
+      final builder = widget.emptyBuilder;
+      if (builder != null) return builder(context);
       final empty = widget.emptyText;
       if (empty == null) return const SizedBox.shrink();
       return Padding(
@@ -141,6 +157,10 @@ class _PairedDevicesListState extends State<PairedDevicesList> {
             onTap: () => _open(e),
             loc: loc,
           ),
+        ],
+        if (widget.trailing case final trailing?) ...[
+          const Divider(height: 1),
+          trailing,
         ],
       ],
     );

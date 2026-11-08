@@ -2821,4 +2821,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String sync_update_bt_instruction_settings(String device) {
     return 'En $device abre Caravella › Configuración › Sincronización › Sincroniza con otros, toca tu teléfono y luego Actualizar ahora';
   }
+
+  @override
+  String get sync_shared_empty_title => 'Todavía con nadie';
+
+  @override
+  String get sync_shared_empty_body =>
+      'Invita a quienes comparten gastos contigo: veréis los mismos gastos, cada uno en su teléfono.';
+
+  @override
+  String get sync_invite_another => 'Invitar otro dispositivo';
 }

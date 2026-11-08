@@ -2721,4 +2721,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String sync_update_bt_instruction_settings(String device) {
     return '在 $device 上打开 Caravella › 设置 › 同步 › 与他人同步，点按你的手机，然后点“立即更新”';
   }
+
+  @override
+  String get sync_shared_empty_title => '还没有与任何人共享';
+
+  @override
+  String get sync_shared_empty_body => '邀请和你一起分摊费用的人：你们会在各自的手机上看到相同的支出。';
+
+  @override
+  String get sync_invite_another => '邀请另一台设备';
 }
