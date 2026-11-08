@@ -1199,7 +1199,7 @@
   ,"toast_open": "打开"
   ,"stats_per_person": "人均 {amount}"
   ,"balances_share_per_person": "人均分摊"
-  ,"balances_share_basis": "{people}平均分摊"
+  ,"balances_share_basis": "总额除以 {count}"
   ,"attachment_remove": "移除 {name}"
   ,"keep_editing": "继续编辑"
   ,"delete_expense_confirm_title": "删除这笔支出？"

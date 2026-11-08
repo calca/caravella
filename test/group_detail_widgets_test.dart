@@ -153,7 +153,7 @@ void main() {
       ),
     );
     expect(find.text('Share per person'), findsOneWidget);
-    expect(find.text('Split equally among 2 participants'), findsOneWidget);
+    expect(find.text('The total divided by 2'), findsOneWidget);
     expect(
       find.bySemanticsLabel(RegExp(r'^Share per person: 50')),
       findsOneWidget,

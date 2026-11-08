@@ -1,4 +1,7 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'package:material_ui/material_ui.dart';
+import 'app_toast.dart';
+import 'inline_entry_field.dart';
 import 'selection_bottom_sheet.dart';
 import '../themes/app_spacing.dart';
 import '../themes/caravella_themes.dart';
@@ -18,12 +21,21 @@ import 'form_pill.dart';
 /// when [onAddItemInline] is provided. [itemLeading] puts a widget (e.g.
 /// an avatar) before each label.
 ///
-/// With [singleLine] (the quick-add sheet) it never wraps: it shows the
-/// items that fit on one line and, at its end on the same line, a "+N" pill
-/// opening the full list (with add); the selection always stays visible.
-class ChipSelectorRow<T> extends StatelessWidget {
+/// With [singleLine] (the quick-add sheet) it shows the items that fit on
+/// one line and, at its end, a "+N" pill; the selection always stays
+/// visible. The "+N" pill (and the dashed add pill) expand the row IN PLACE
+/// instead of opening [showSelectionBottomSheet]: every item wraps (the
+/// area scrolls past [expandedMaxHeight]), followed by a dashed add pill
+/// that turns into an [InlineEntryField]. Nothing here unfocuses or
+/// refocuses the form's fields, so an open keyboard stays open (a second
+/// sheet closed and reopened it). Picking an item or adding one collapses
+/// the row again.
+class ChipSelectorRow<T> extends StatefulWidget {
   static const int maxVisibleItems = 4;
   static const String _moreLabel = '...';
+
+  /// Tallest the expanded [singleLine] list grows before it scrolls.
+  static const double expandedMaxHeight = FormPill.touchTarget * 4;
 
   final List<T> items;
   final T? selected;
@@ -65,10 +77,179 @@ class ChipSelectorRow<T> extends StatelessWidget {
     this.singleLine = false,
   });
 
-  bool get _hasOverflow => items.length > maxVisibleItems + 1;
+  @override
+  State<ChipSelectorRow<T>> createState() => _ChipSelectorRowState<T>();
+}
+
+class _ChipSelectorRowState<T> extends State<ChipSelectorRow<T>> {
+  final _inlineController = TextEditingController();
+  final _inlineFocus = FocusNode();
+  bool _expanded = false;
+  bool _adding = false;
+
+  /// The field that had focus before the name field took it (the amount or
+  /// description), to give it back so the keyboard never closes.
+  FocusNode? _returnFocus;
+
+  List<T> get items => widget.items;
+  T? get selected => widget.selected;
+  bool get singleLine => widget.singleLine;
+  bool get enabled => widget.enabled;
+  String Function(T) get itemLabel => widget.itemLabel;
+  Widget Function(T)? get itemLeading => widget.itemLeading;
+  Future<void> Function(String)? get onAddItemInline => widget.onAddItemInline;
+
+  bool get _hasOverflow => items.length > ChipSelectorRow.maxVisibleItems + 1;
+
+  @override
+  void dispose() {
+    _inlineController.dispose();
+    _inlineFocus.dispose();
+    super.dispose();
+  }
+
+  void _expand() => setState(() => _expanded = true);
+
+  /// Shows the name field and moves focus to it: [InlineEntryField]'s
+  /// autofocus does nothing while another field (the amount) has focus.
+  void _startAdd() {
+    final current = FocusManager.instance.primaryFocus;
+    if (current != _inlineFocus) _returnFocus = current;
+    setState(() {
+      _expanded = true;
+      _adding = true;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _inlineFocus.requestFocus();
+    });
+  }
+
+  void _collapse() {
+    _inlineController.clear();
+    _restoreFocus();
+    setState(() {
+      _expanded = false;
+      _adding = false;
+    });
+  }
+
+  /// Gives focus back to the field the name field took it from.
+  void _restoreFocus() {
+    final target = _returnFocus;
+    _returnFocus = null;
+    if (target == null) return;
+    // Submitting with the keyboard's "done" already dropped the name
+    // field's focus (to the scope); don't steal it from another field.
+    final current = FocusManager.instance.primaryFocus;
+    if (current == null ||
+        current == _inlineFocus ||
+        current is FocusScopeNode) {
+      target.requestFocus();
+    }
+  }
+
+  /// Back from the field to the open list.
+  void _cancelAdd() {
+    _inlineController.clear();
+    _restoreFocus();
+    setState(() => _adding = false);
+  }
+
+  void _pick(T item) {
+    widget.onSelected(item);
+    if (_expanded) _collapse();
+  }
+
+  String? _duplicate(String val) {
+    final lower = val.toLowerCase();
+    if (!items.any((i) => itemLabel(i).toLowerCase() == lower)) return null;
+    // Without a message, still refused: red border only.
+    return widget.alreadyExistsMessage ?? '';
+  }
+
+  /// The caller's callback adds (and selects) the item; the row collapses.
+  Future<bool> _commitInlineAdd(String val) async {
+    try {
+      await onAddItemInline!(val);
+    } catch (e) {
+      LoggerService.warning('Adding "$val" failed: $e', name: 'ui.sheet');
+      if (mounted && widget.addErrorMessage != null) {
+        AppToast.show(context, widget.addErrorMessage!, type: ToastType.error);
+      }
+      return false;
+    }
+    if (mounted) _collapse();
+    return true;
+  }
+
+  Widget _expandedList(BuildContext context) {
+    final addLabel = widget.addCategoryLabel ?? widget.addLabel ?? '';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxHeight: ChipSelectorRow.expandedMaxHeight,
+          ),
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                spacing: AppSpacing.xs,
+                // FormPill's own touch margin already spaces the rows.
+                runSpacing: 0,
+                children: [
+                  for (final item in items)
+                    FormPill(
+                      label: itemLabel(item),
+                      leading: itemLeading?.call(item),
+                      style: selected == item
+                          ? FormPillStyle.selected
+                          : FormPillStyle.normal,
+                      onTap: enabled ? () => _pick(item) : null,
+                    ),
+                  if (onAddItemInline != null && !_adding)
+                    FormPill(
+                      label: addLabel,
+                      icon: Icons.add_rounded,
+                      style: FormPillStyle.add,
+                      onTap: enabled ? () => _startAdd() : null,
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (onAddItemInline != null && _adding)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.xs),
+            child: InlineEntryField(
+              controller: _inlineController,
+              focusNode: _inlineFocus,
+              // "done" must not drop focus (and the keyboard) before the
+              // row collapses and hands focus back.
+              keepOpen: true,
+              hintText: widget.addItemHint ?? '',
+              commitTooltip: widget.addLabel ?? '',
+              cancelTooltip:
+                  widget.cancelLabel ??
+                  MaterialLocalizations.of(context).cancelButtonLabel,
+              validator: _duplicate,
+              onCommit: _commitInlineAdd,
+              onCancel: _cancelAdd,
+            ),
+          ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    const maxVisibleItems = ChipSelectorRow.maxVisibleItems;
+    const moreLabel = ChipSelectorRow._moreLabel;
+    final sheetTitle = widget.sheetTitle;
+    final addCategoryLabel = widget.addCategoryLabel;
     final visible = _hasOverflow ? items.take(maxVisibleItems).toList() : items;
     final selectedIsHidden =
         _hasOverflow && selected != null && !visible.contains(selected);
@@ -82,21 +263,22 @@ class ChipSelectorRow<T> extends StatelessWidget {
         itemLabel: itemLabel,
         itemLeading: itemLeading,
         onAddItemInline: onAddItemInline,
-        addItemHint: addItemHint,
-        addLabel: addLabel,
-        cancelLabel: cancelLabel,
+        addItemHint: widget.addItemHint,
+        addLabel: widget.addLabel,
+        cancelLabel: widget.cancelLabel,
         addCategoryLabel: addCategoryLabel,
-        alreadyExistsMessage: alreadyExistsMessage,
-        addErrorMessage: addErrorMessage,
+        alreadyExistsMessage: widget.alreadyExistsMessage,
+        addErrorMessage: widget.addErrorMessage,
         autoStartAdd: autoStartAdd,
       );
-      if (picked != null) onSelected(picked);
+      if (picked != null) widget.onSelected(picked);
     }
 
     if (singleLine) {
+      if (_expanded) return _expandedList(context);
       return LayoutBuilder(
         builder: (context, constraints) =>
-            _singleLine(context, constraints.maxWidth, openPicker),
+            _singleLine(context, constraints.maxWidth),
       );
     }
 
@@ -108,7 +290,7 @@ class ChipSelectorRow<T> extends StatelessWidget {
           style: selected == item
               ? FormPillStyle.selected
               : FormPillStyle.normal,
-          onTap: enabled ? () => onSelected(item) : null,
+          onTap: enabled ? () => _pick(item) : null,
         ),
       // A choice from the full list shows as its own pill, and "..." stays
       // after it: it used to take the choice's label, so the way back to
@@ -118,11 +300,11 @@ class ChipSelectorRow<T> extends StatelessWidget {
           label: itemLabel(selected as T),
           leading: itemLeading?.call(selected as T),
           style: FormPillStyle.selected,
-          onTap: enabled ? () => onSelected(selected as T) : null,
+          onTap: enabled ? () => _pick(selected as T) : null,
         ),
       if (_hasOverflow)
         FormPill(
-          label: _moreLabel,
+          label: moreLabel,
           semanticsLabel: sheetTitle,
           tooltip: sheetTitle,
           onTap: enabled ? openPicker : null,
@@ -145,7 +327,7 @@ class ChipSelectorRow<T> extends StatelessWidget {
   }
 }
 
-extension<T> on ChipSelectorRow<T> {
+extension<T> on _ChipSelectorRowState<T> {
   /// Width of a pill with [label] (and a leading widget or not).
   double _pillWidth(BuildContext context, String label, bool hasLeading) {
     final theme = Theme.of(context);
@@ -164,11 +346,7 @@ extension<T> on ChipSelectorRow<T> {
     return painter.width + (hasLeading ? 6 + 28 + 6 : 14) + 14 + 2;
   }
 
-  Widget _singleLine(
-    BuildContext context,
-    double maxWidth,
-    Future<void> Function({bool autoStartAdd}) openPicker,
-  ) {
+  Widget _singleLine(BuildContext context, double maxWidth) {
     const gap = AppSpacing.xs;
     final widths = [
       for (final item in items)
@@ -215,7 +393,7 @@ extension<T> on ChipSelectorRow<T> {
               style: selected == item
                   ? FormPillStyle.selected
                   : FormPillStyle.normal,
-              onTap: enabled ? () => onSelected(item) : null,
+              onTap: enabled ? () => _pick(item) : null,
             ),
           ),
         ],
@@ -224,15 +402,15 @@ extension<T> on ChipSelectorRow<T> {
           FormPill(
             label: '+$hidden',
             style: FormPillStyle.add,
-            semanticsLabel: sheetTitle,
-            tooltip: sheetTitle,
-            onTap: enabled ? openPicker : null,
+            semanticsLabel: widget.sheetTitle,
+            tooltip: widget.sheetTitle,
+            onTap: enabled ? _expand : null,
           ),
         ] else if (onAddItemInline != null) ...[
           const SizedBox(width: gap),
           _AddPill(
-            tooltip: addCategoryLabel,
-            onTap: enabled ? () => openPicker(autoStartAdd: true) : null,
+            tooltip: widget.addCategoryLabel,
+            onTap: enabled ? () => _startAdd() : null,
           ),
         ],
       ],

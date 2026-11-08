@@ -2310,8 +2310,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get balances_share_per_person => 'Quota a testa';
 
   @override
-  String balances_share_basis(String people) {
-    return 'Divisa in parti uguali tra $people';
+  String balances_share_basis(int count) {
+    return 'Il totale diviso per $count';
   }
 
   @override

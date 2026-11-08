@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Paired devices: each one says how it's doing — updated how long ago, never updated, or the last exchange didn't go through — with a dot like the groups' “Shared” pill. Tap one for its details: when it last updated, when it was paired and which groups it shares, **Update now** on the same Wi-Fi, and **Take off** the group (with a confirmation; before, the × removed it at once). Settings › Synchronization › Sync with others lists every paired device too, where one can be forgotten
+- Balances: under “Share per person” the line now reads “The total divided by 4” instead of “Split equally among 4 participants”
 - A group with a color now looks like one with a photo: the color fills the top and fades into the card, so name, dates and figures read the same everywhere — on the Groups page (the type icon stays where it was), in the new group's preview, on the Home card (with the type icon top-left) and at the top of the group's page
 - Sharing a group with someone is one flow, whatever the connection: **Invite a device** in the group's sync settings shows the QR code and, at the same time, makes the phone visible to nearby phones over Bluetooth; on the other phone, **Join a group** (Settings › Synchronization › Sync with others) reads the QR code or lists the nearby phones with the group they invite to. No more separate Wi-Fi and Bluetooth screens: Sync with others has two privacy switches, **Sync over Wi-Fi** (updates automatically on the same network) and **Sync over Bluetooth** (off at first, and only working while Invite or Join is open; both offer **Turn on** while it's off). With both off the phone isn't visible to anyone and receives nothing, and groups can't be shared until one is on. An already paired phone without the same Wi-Fi updates with **Update** in Join. Both close by themselves once done. Play builds; the F-Droid build has the QR code to show only
 - Settings: the developer's link at the bottom opens the new site, duea.page
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- Adding an expense from Home: tapping “+N” on the people or categories line now opens the full list inside the sheet, and adding a new person or category happens right in that line, so the keyboard no longer closes and reopens and the sheet no longer jumps up and down
 - Join a group: the camera now fills the screen behind the nearby phones panel, instead of stopping above it
 - Sync history: the row is greyed out, saying “No synchronizations”, until there's something to show — in Settings › Synchronization and in a group's sync settings
 - Sharing a group by QR code: the group now reaches the phone that scanned it right away, instead of only after restarting the app. The phone showing the code closes it by itself and lists the new device under the group's sync settings
