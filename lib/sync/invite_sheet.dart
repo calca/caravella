@@ -9,7 +9,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 /// Modal bottom sheet inviting another phone into one group, over every
 /// transport at once: a QR code for the same Wi-Fi (when Wi-Fi sync is on)
 /// and, when [bluetooth] is given, visible to nearby phones over Bluetooth
-/// for as long as it's open. The other phone joins from Settings ›
+/// for as long as it's open — once the user allows Bluetooth
+/// ([bluetoothEnabled]; otherwise a "Turn on" button, [onTurnOnBluetooth]). The other phone joins from Settings ›
 /// Synchronization › Sync with others › Join a group ([JoinGroupPage]).
 ///
 /// The QR code is only valid for [PairingPayload.validityMs]: a countdown
@@ -33,6 +34,13 @@ class InviteSheet extends StatefulWidget {
   /// where Bluetooth isn't available (F-Droid build).
   final BluetoothSyncChannel? bluetooth;
 
+  /// Whether the user allows Bluetooth sync (the privacy switch). While
+  /// false, [bluetooth] stays off and the sheet offers to turn it on.
+  final bool bluetoothEnabled;
+
+  /// Turns the Bluetooth privacy switch on, from the "Turn on" button.
+  final Future<void> Function()? onTurnOnBluetooth;
+
   const InviteSheet({
     super.key,
     required this.orchestrator,
@@ -40,13 +48,15 @@ class InviteSheet extends StatefulWidget {
     required this.groupTitle,
     required this.wifiEnabled,
     this.bluetooth,
+    required this.bluetoothEnabled,
+    this.onTurnOnBluetooth,
   });
 
   @override
   State<InviteSheet> createState() => _InviteSheetState();
 }
 
-enum _NearbyState { visible, syncing, denied, failed }
+enum _NearbyState { off, visible, syncing, denied, failed }
 
 class _InviteSheetState extends State<InviteSheet> {
   Future<PairingPayload?>? _qr;
@@ -55,7 +65,10 @@ class _InviteSheetState extends State<InviteSheet> {
 
   StreamSubscription<SyncEvent>? _syncEvents;
   StreamSubscription<BluetoothPeerEvent>? _btEvents;
-  _NearbyState _nearby = _NearbyState.visible;
+  late _NearbyState _nearby = widget.bluetoothEnabled
+      ? _NearbyState.visible
+      : _NearbyState.off;
+  bool _turningOnBluetooth = false;
 
   /// The phone that paired over Bluetooth, while its exchange runs.
   String? _btPeerName;
@@ -66,9 +79,13 @@ class _InviteSheetState extends State<InviteSheet> {
     super.initState();
     if (widget.wifiEnabled) _generate();
     _syncEvents = widget.orchestrator.events.listen(_onSyncEvent);
+    if (widget.bluetoothEnabled) _startBluetooth();
+  }
+
+  void _startBluetooth() {
     final bt = widget.bluetooth;
     if (bt != null) {
-      _btEvents = bt.events.listen(_onBluetoothEvent);
+      _btEvents ??= bt.events.listen(_onBluetoothEvent);
       bt
           .startAdvertising(
             groupId: widget.groupId,
@@ -93,6 +110,19 @@ class _InviteSheetState extends State<InviteSheet> {
     final bt = widget.bluetooth;
     if (bt != null) unawaited(bt.stopAll().then((_) => bt.dispose()));
     super.dispose();
+  }
+
+  Future<void> _turnOnBluetooth() async {
+    final turnOn = widget.onTurnOnBluetooth;
+    if (turnOn == null) return;
+    setState(() => _turningOnBluetooth = true);
+    await turnOn();
+    if (!mounted) return;
+    setState(() {
+      _turningOnBluetooth = false;
+      _nearby = _NearbyState.visible;
+    });
+    _startBluetooth();
   }
 
   void _generate() {
@@ -313,6 +343,7 @@ class _InviteSheetState extends State<InviteSheet> {
   Widget _buildNearby(BuildContext context, gen.AppLocalizations loc) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    if (_nearby == _NearbyState.off) return _buildBluetoothOff(context, loc);
     final problem =
         _nearby == _NearbyState.denied || _nearby == _NearbyState.failed;
 
@@ -325,6 +356,7 @@ class _InviteSheetState extends State<InviteSheet> {
         loc.sync_invite_nearby_syncing(_btPeerName ?? ''),
         null,
       ),
+      _NearbyState.off => (loc.sync_bt_off_title, null),
       _NearbyState.denied => (loc.sync_bt_permission_denied, null),
       _NearbyState.failed => (loc.sync_bt_error_detail, null),
     };
@@ -383,6 +415,56 @@ class _InviteSheetState extends State<InviteSheet> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildBluetoothOff(BuildContext context, gen.AppLocalizations loc) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.sm,
+        AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.bluetooth_disabled, color: colorScheme.onSurfaceVariant),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  loc.sync_bt_off_title,
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  loc.sync_bt_off_desc,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (widget.onTurnOnBluetooth != null) ...[
+            const SizedBox(width: AppSpacing.xs),
+            OutlinedButton(
+              onPressed: _turningOnBluetooth ? null : _turnOnBluetooth,
+              child: Text(loc.sync_join_turn_on),
+            ),
+          ],
+        ],
       ),
     );
   }

@@ -1613,7 +1613,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_group_enable_desc => '与你邀请的设备同步';
 
   @override
-  String get sync_group_needs_channel => '请在“与他人同步”中开启“在同一 Wi-Fi 下自动同步”以共享群组';
+  String get sync_group_needs_channel => '“与他人同步”中的 Wi-Fi 和蓝牙均已关闭';
 
   @override
   String get sync_qr_show_button => '显示二维码';
@@ -2522,7 +2522,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_invite_closes => '另一部手机加入后会自动关闭';
 
   @override
-  String get sync_invite_qr_off => '二维码需要在“与他人同步”中开启“在同一 Wi-Fi 下自动同步”';
+  String get sync_invite_qr_off => '二维码需要在“与他人同步”中开启 Wi-Fi';
 
   @override
   String get sync_join_button => '加入群组';
@@ -2557,17 +2557,29 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get sync_join_qr_off => '要用二维码加入，请开启同一 Wi-Fi 下的自动同步';
+  String get sync_join_qr_off => '要用二维码加入，请开启 Wi-Fi';
 
   @override
   String get sync_join_turn_on => '开启';
 
   @override
-  String get sync_wifi_auto_title => '在同一 Wi-Fi 下自动同步';
+  String get sync_privacy_section => 'Caravella 可以使用';
 
   @override
-  String get sync_wifi_auto_desc => '共享的群组会自动更新';
+  String get sync_wifi_switch_desc => '在同一网络下，共享的群组会自动更新';
 
   @override
-  String get sync_bt_update_hint => '没有共同的 Wi-Fi 时，在另一部手机旁打开“加入群组”，即可通过蓝牙更新。';
+  String get sync_bt_switch_desc => '仅在“邀请设备”或“加入群组”打开时';
+
+  @override
+  String get sync_privacy_footer => '全部关闭时，此手机对他人不可见，也不会接收任何内容。群组仍保存在手机上。';
+
+  @override
+  String get sync_group_open_settings => '在设置中开启';
+
+  @override
+  String get sync_bt_off_title => '蓝牙已关闭';
+
+  @override
+  String get sync_bt_off_desc => '不在同一 Wi-Fi 时需要';
 }

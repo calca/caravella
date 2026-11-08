@@ -6,14 +6,16 @@ import 'package:provider/provider.dart';
 
 import '../../../sync/bluetooth_sync_factory.dart';
 import '../../../sync/invite_sheet.dart';
+import '../../../sync/multi_user_sync_page.dart';
 import '../../../sync/sync_history_page.dart';
 import '../../../sync/widgets/paired_devices_list.dart';
 
 /// Per-group sync settings sub-page, reached from [GroupSettingsPage].
 ///
-/// Sharing this group needs a way to reach the other phone: Wi-Fi sync on
-/// (Settings › Sync › Sync with others) or Bluetooth in this build. This
-/// page says so when neither is there, and once sharing is on, has a single
+/// Sharing this group needs a way to reach the other phone: Wi-Fi or
+/// Bluetooth allowed in Settings › Sync › Sync with others (the privacy
+/// switches). With both off the switch is locked off, with a button to
+/// those settings; once sharing is on, the page has a single
 /// "Invite a device" button opening [InviteSheet] (QR code and Bluetooth at
 /// once), scoped to this group, above the devices it's shared with.
 class ExpenseGroupSyncPage extends StatefulWidget {
@@ -55,8 +57,9 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     _lastCheckedOrchestrator = orchestrator;
 
     final lan = await orchestrator.isLanSyncEnabled();
-    // No switch for Bluetooth: it runs while the invite sheet is open.
-    final bt = BluetoothSyncFactory.isEnabled;
+    final bt =
+        BluetoothSyncFactory.isEnabled &&
+        await BluetoothSyncFactory.isUserEnabled();
 
     if (mounted) {
       setState(() {
@@ -67,8 +70,8 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     }
   }
 
-  // Sharing can only ever be truly active while a channel (Wi-Fi or
-  // Bluetooth sync) is turned on app-wide — without one, a group's stored
+  // Sharing can only ever be truly active while Wi-Fi or Bluetooth is
+  // allowed in the privacy switches — without one, a group's stored
   // `syncEnabled` flag is just a dormant preference, so the switch must
   // neither display nor be toggleable as if it were live.
   bool _canToggleSync(SyncOrchestrator? orchestrator, bool canToggleOn) =>
@@ -91,6 +94,17 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     });
   }
 
+  Future<void> _openChannelSettings(SyncOrchestrator orchestrator) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MultiUserSyncPage(orchestrator: orchestrator),
+      ),
+    );
+    // Back from the switches: read them again.
+    _lastCheckedOrchestrator = null;
+    await _ensureChannelsChecked(orchestrator);
+  }
+
   void _invite(BuildContext context, SyncOrchestrator orchestrator) {
     showModalBottomSheet(
       context: context,
@@ -101,6 +115,11 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
         groupTitle: _currentTrip.title,
         wifiEnabled: _lanAvailable,
         bluetooth: BluetoothSyncFactory.createChannel(orchestrator),
+        bluetoothEnabled: _btAvailable,
+        onTurnOnBluetooth: () async {
+          await BluetoothSyncFactory.setUserEnabled(true);
+          if (mounted) setState(() => _btAvailable = true);
+        },
       ),
     );
   }
@@ -151,6 +170,21 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                       ? null
                       : (value) => _handleSyncToggle(value),
                 ),
+                if (orchestrator != null &&
+                    !_checkingChannels &&
+                    !channelsAvailable)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.md,
+                      0,
+                      AppSpacing.md,
+                      AppSpacing.md,
+                    ),
+                    child: OutlinedButton(
+                      onPressed: () => _openChannelSettings(orchestrator),
+                      child: Text(gloc.sync_group_open_settings),
+                    ),
+                  ),
               ],
             ),
             if (orchestrator != null &&
