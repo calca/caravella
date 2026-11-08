@@ -34,7 +34,7 @@ class SyncManager {
 
   /// Creates a [SyncManager] backed by the given [repository].
   SyncManager({required SqliteExpenseGroupRepository repository})
-      : _repository = repository;
+    : _repository = repository;
 
   /// Stream of [SyncEvent]s for UI or other listeners.
   Stream<SyncEvent> get events => _eventController.stream;
@@ -52,13 +52,8 @@ class SyncManager {
     final db = await _repository.database;
 
     _syncDao = SyncDao(db);
-    _deltaBuilder = DeltaBuilder(
-      syncDao: _syncDao,
-      repository: _repository,
-    );
-    _conflictResolver = ConflictResolver(
-      syncDao: _syncDao,
-    );
+    _deltaBuilder = DeltaBuilder(syncDao: _syncDao, repository: _repository);
+    _conflictResolver = ConflictResolver(syncDao: _syncDao);
 
     _started = true;
     LoggerService.info('SyncManager started', name: _tag);
@@ -195,6 +190,12 @@ class SyncManager {
   }
 
   /// Whether [deviceId] has been granted access to [groupId].
+  /// Every group [deviceId] is granted.
+  Future<List<String>> getGrantedGroupIds(String deviceId) {
+    _ensureStarted();
+    return _syncDao.getGrantedGroupIds(deviceId);
+  }
+
   Future<bool> isGroupGranted(String deviceId, String groupId) {
     _ensureStarted();
     return _syncDao.isGroupGranted(deviceId, groupId);
@@ -227,9 +228,7 @@ class SyncManager {
 
   void _ensureStarted() {
     if (!_started) {
-      throw StateError(
-        'SyncManager has not been started. Call start() first.',
-      );
+      throw StateError('SyncManager has not been started. Call start() first.');
     }
   }
 }

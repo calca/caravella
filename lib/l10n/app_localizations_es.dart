@@ -2682,4 +2682,101 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sync_join_turn_on_wifi => 'Activar sincronización Wi-Fi';
+
+  @override
+  String get sync_shared_with => 'Compartido con';
+
+  @override
+  String get sync_device_synced_now => 'Actualizado ahora';
+
+  @override
+  String sync_device_synced_ago(String ago) {
+    return 'Actualizado hace $ago';
+  }
+
+  @override
+  String sync_device_never(String date) {
+    return 'Nunca actualizado · vinculado $date';
+  }
+
+  @override
+  String get sync_device_failed => 'El último intercambio no se completó';
+
+  @override
+  String get sync_device_tap_hint =>
+      'Toca un dispositivo para actualizarlo o quitarlo del grupo.';
+
+  @override
+  String get sync_device_last_update => 'Última actualización';
+
+  @override
+  String get sync_device_paired_on => 'Vinculado';
+
+  @override
+  String get sync_device_groups => 'Grupos compartidos';
+
+  @override
+  String get sync_device_never_short => 'Nunca';
+
+  @override
+  String get sync_device_update_now => 'Actualizar ahora';
+
+  @override
+  String get sync_device_update_hint =>
+      'En la misma Wi-Fi. Si no, abre «Unirse a un grupo» junto al otro teléfono.';
+
+  @override
+  String get sync_device_update_wifi_off =>
+      'Activa «Sincronizar por Wi-Fi» para actualizar desde aquí, o abre «Unirse a un grupo» junto al otro teléfono.';
+
+  @override
+  String sync_device_unreachable(String device) {
+    return '$device no está ahora en tu red Wi-Fi';
+  }
+
+  @override
+  String sync_device_remove_from(String group) {
+    return 'Quitar de «$group»';
+  }
+
+  @override
+  String sync_device_remove_title(String device, String group) {
+    return '¿Quitar $device de «$group»?';
+  }
+
+  @override
+  String get sync_device_remove_body =>
+      'Ya no recibirá los cambios de este grupo y tú no recibirás los suyos. Los gastos que ya tiene se quedan en su teléfono.';
+
+  @override
+  String get sync_device_remove_confirm => 'Quitar';
+
+  @override
+  String get sync_device_forget => 'Olvidar el dispositivo';
+
+  @override
+  String sync_device_forget_title(String device) {
+    return '¿Olvidar $device?';
+  }
+
+  @override
+  String get sync_device_forget_body =>
+      'Se quita de todos los grupos compartidos. Para volver a sincronizar tendrás que invitarlo.';
+
+  @override
+  String get sync_device_forget_confirm => 'Olvidar';
+
+  @override
+  String sync_device_removed(String device) {
+    return '$device quitado del grupo';
+  }
+
+  @override
+  String sync_device_forgotten(String device) {
+    return '$device olvidado';
+  }
+
+  @override
+  String get sync_device_forget_hint =>
+      'Toca un dispositivo para actualizarlo u olvidarlo: se quita de todos los grupos.';
 }

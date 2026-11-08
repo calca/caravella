@@ -197,7 +197,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                 _currentTrip.syncEnabled &&
                 canToggleOn) ...[
               SettingsGroup(
-                label: gloc.sync_paired_devices_title,
+                label: gloc.sync_shared_with,
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
@@ -231,11 +231,17 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.md,
+                      AppSpacing.sm,
+                      AppSpacing.md,
+                      AppSpacing.md,
+                    ),
                     child: PairedDevicesList(
                       orchestrator: orchestrator,
                       groupId: _currentTrip.id,
-                      showRemoveAction: true,
+                      groupTitle: _currentTrip.title,
+                      emptyText: gloc.sync_paired_devices_empty,
                     ),
                   ),
                 ],

@@ -4,6 +4,7 @@ import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/channels/cloud_relay_channel.dart';
 import 'package:caravella_core/sync/channels/lan_sync_channel.dart';
 import 'package:caravella_core/sync/device_identity.dart';
+import 'package:caravella_core/sync/models/device_sync_info.dart';
 import 'package:caravella_core/sync/models/group_sync_status.dart';
 import 'package:caravella_core/sync/models/paired_device.dart';
 import 'package:caravella_core/sync/models/sync_problem.dart';
@@ -49,9 +50,9 @@ class SyncOrchestrator {
     required LanSyncChannel lanChannel,
     required SyncManager syncManager,
     CloudRelayChannel? cloudChannel,
-  })  : _lanChannel = lanChannel,
-        _syncManager = syncManager,
-        _cloudChannel = cloudChannel;
+  }) : _lanChannel = lanChannel,
+       _syncManager = syncManager,
+       _cloudChannel = cloudChannel;
 
   /// Whether the LAN channel is currently active.
   bool get isLanActive => _lanChannel.isActive;
@@ -327,11 +328,12 @@ class SyncOrchestrator {
     final source = groupId == null
         ? _history
         : _history
-            .where(
-              (e) => (e['groupIds'] as List<String>? ?? const [])
-                  .contains(groupId),
-            )
-            .toList();
+              .where(
+                (e) => (e['groupIds'] as List<String>? ?? const []).contains(
+                  groupId,
+                ),
+              )
+              .toList();
 
     if (source.length <= limit) return List.unmodifiable(source);
     return List.unmodifiable(source.take(limit));
@@ -382,10 +384,7 @@ class SyncOrchestrator {
   /// not still be usable to pair.
   Future<bool> pairWithScannedPayload(PairingPayload payload) {
     if (payload.isExpired) {
-      LoggerService.warning(
-        'Rejected pairing — QR code expired',
-        name: _tag,
-      );
+      LoggerService.warning('Rejected pairing — QR code expired', name: _tag);
       return Future.value(false);
     }
     return _lanChannel.pairWithHost(
@@ -426,6 +425,28 @@ class SyncOrchestrator {
       lastSyncAt: at,
       lastHadErrors: hadErrors,
       now: now ?? DateTime.now(),
+    );
+  }
+
+  /// How sync with [deviceId] is doing: its last exchange (from this
+  /// session's history, else the sync log) and the groups it's granted.
+  Future<DeviceSyncInfo> getDeviceSyncInfo(String deviceId) async {
+    final recent = _history.where((e) => e['peerId'] == deviceId).firstOrNull;
+    final DateTime? at;
+    final bool failed;
+    if (recent != null) {
+      at = DateTime.parse(recent['timestamp'] as String);
+      failed =
+          (recent['failed'] as bool? ?? false) ||
+          ((recent['errors'] as int?) ?? 0) > 0;
+    } else {
+      at = await _syncManager.lastSyncTime(deviceId);
+      failed = false;
+    }
+    return DeviceSyncInfo(
+      lastSyncAt: at,
+      lastFailed: failed,
+      groupIds: await _syncManager.getGrantedGroupIds(deviceId),
     );
   }
 
@@ -479,8 +500,7 @@ class SyncOrchestrator {
   Future<Map<String, dynamic>> handleIncomingDelta(
     Map<String, dynamic> remoteDelta,
     String peerId,
-  ) =>
-      _handleDelta(remoteDelta, peerId);
+  ) => _handleDelta(remoteDelta, peerId);
 
   // ---------------------------------------------------------------------------
   // Internal
@@ -493,8 +513,11 @@ class SyncOrchestrator {
   ) async {
     if (remoteDelta.isNotEmpty) {
       try {
-        final result =
-            await _syncManager.syncWithPeer(peerId, remoteDelta, 'lan');
+        final result = await _syncManager.syncWithPeer(
+          peerId,
+          remoteDelta,
+          'lan',
+        );
 
         _recordHistory(result);
       } catch (e, st) {

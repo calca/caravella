@@ -5,6 +5,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import 'bluetooth_sync_factory.dart';
 import 'join_group_page.dart';
+import 'widgets/paired_devices_list.dart';
 
 /// Settings sub-page for syncing with **other people's** devices: "Join a
 /// group" ([JoinGroupPage]: a QR code on the same Wi-Fi, or a nearby phone
@@ -37,6 +38,7 @@ class _MultiUserSyncPageState extends State<MultiUserSyncPage> {
   bool _loading = true;
   bool _busy = false;
   bool _btOn = false;
+  bool _hasDevices = false;
 
   bool get _bluetooth => BluetoothSyncFactory.isEnabled;
 
@@ -53,8 +55,10 @@ class _MultiUserSyncPageState extends State<MultiUserSyncPage> {
   Future<void> _load() async {
     final wifi = await widget.orchestrator.isLanSyncEnabled();
     final bt = await BluetoothSyncFactory.isUserEnabled();
+    final devices = await widget.orchestrator.getPairedDevices();
     if (mounted) {
       setState(() {
+        _hasDevices = devices.isNotEmpty;
         _wifi = wifi;
         _btOn = bt;
         _loading = false;
@@ -135,6 +139,29 @@ class _MultiUserSyncPageState extends State<MultiUserSyncPage> {
                 ),
               ],
             ),
+          if (_hasDevices) ...[
+            SettingsGroup(
+              label: loc.sync_paired_devices_title,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  child: PairedDevicesList(orchestrator: widget.orchestrator),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              child: Text(
+                loc.sync_device_forget_hint,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
           SettingsGroup(
             label: loc.sync_privacy_section,
             children: [
