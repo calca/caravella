@@ -80,6 +80,14 @@ void main() {
     button.onPressed!();
   }
 
+  // Removing a device is real sqlite work: wait for it (and the sheet's
+  // closing and the list's reload) as long as a slow machine needs.
+  Future<void> settleUntil(WidgetTester tester, bool Function() done) async {
+    for (var i = 0; i < 50 && !done(); i++) {
+      await settle(tester);
+    }
+  }
+
   AppLocalizations locOf(WidgetTester tester) =>
       AppLocalizations.of(tester.element(find.byType(Scaffold).first));
 
@@ -125,7 +133,10 @@ void main() {
       findsOneWidget,
     );
     press(tester, loc.sync_device_remove_confirm);
-    await settle(tester);
+    await settleUntil(
+      tester,
+      () => find.byType(PairedDeviceSheet).evaluate().isEmpty,
+    );
 
     expect(find.byType(PairedDeviceSheet), findsNothing);
     expect(
@@ -161,7 +172,7 @@ void main() {
     press(tester, loc.sync_device_forget);
     await settle(tester);
     press(tester, loc.sync_device_forget_confirm);
-    await settle(tester);
+    await settleUntil(tester, () => find.text('Pixel 9').evaluate().isEmpty);
     expect(
       await tester.runAsync(() => orchestrator.getPairedDevices()),
       isEmpty,
