@@ -111,6 +111,10 @@ class _GroupCardState extends State<GroupCard> {
       baseColor: theme.colorScheme.raisedSurface,
     );
     final photo = bg.hasImage ? bg.imagePath : null;
+    // A color is drawn by the card content as its cover, like a photo.
+    final Color? coverColor = photo != null || _group.color == null
+        ? null
+        : ExpenseGroupColorPalette.resolveGroupColor(_group, theme.colorScheme);
     final radius = BorderRadius.circular(32);
 
     final groupCard = CardOutline(
@@ -121,10 +125,7 @@ class _GroupCardState extends State<GroupCard> {
         margin: EdgeInsets.zero,
         padding: EdgeInsets.zero,
         borderRadius: radius,
-        backgroundColor: photo != null
-            ? theme.colorScheme.raisedSurface
-            : bg.color,
-        backgroundGradient: photo != null ? null : bg.gradient,
+        backgroundColor: theme.colorScheme.raisedSurface,
         onTap: _openGroup,
         // The header carries the "open group" action for screen readers.
         mergeSemantics: false,
@@ -140,6 +141,7 @@ class _GroupCardState extends State<GroupCard> {
             onCategoryAdded: widget.onCategoryAdded,
             isSynced: widget.isSynced,
             photoPath: photo,
+            coverColor: coverColor,
           ),
         ),
       ),
