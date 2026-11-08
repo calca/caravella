@@ -3047,7 +3047,7 @@ abstract class AppLocalizations {
   /// Title for local LAN sync section
   ///
   /// In en, this message translates to:
-  /// **'Wi-Fi'**
+  /// **'Sync over Wi-Fi'**
   String get sync_local_title;
 
   /// Description for LAN sync
@@ -3179,7 +3179,7 @@ abstract class AppLocalizations {
   /// Generic explanation shown under sync_bt_error for connection/timeout/decryption failures — deliberately does not surface raw exception text to the user
   ///
   /// In en, this message translates to:
-  /// **'Something went wrong during the connection. Please try again.'**
+  /// **'Couldn’t connect. Check that the phone’s Bluetooth is on and try again.'**
   String get sync_bt_error_detail;
 
   /// Button to retry BT sync
@@ -3191,7 +3191,7 @@ abstract class AppLocalizations {
   /// Error shown when Bluetooth/nearby-device permissions are denied
   ///
   /// In en, this message translates to:
-  /// **'Bluetooth not allowed: turn it on in your phone settings'**
+  /// **'Caravella doesn’t have the “Nearby devices” permission: allow it in your phone settings'**
   String get sync_bt_permission_denied;
 
   /// Empty state for sync history
@@ -3245,7 +3245,7 @@ abstract class AppLocalizations {
   /// Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide
   ///
   /// In en, this message translates to:
-  /// **'Wi-Fi and Bluetooth are off in Sync with others'**
+  /// **'Sync over Wi-Fi and over Bluetooth are both off in Sync with others'**
   String get sync_group_needs_channel;
 
   /// Button to show this device's pairing QR code
@@ -3305,7 +3305,7 @@ abstract class AppLocalizations {
   /// Shown when no local network address is available for pairing
   ///
   /// In en, this message translates to:
-  /// **'Connect to Wi-Fi to generate the pairing code'**
+  /// **'Connect the phone to a Wi-Fi network to create the QR code'**
   String get sync_qr_no_network;
 
   /// Title for the QR pairing scan page
@@ -4773,7 +4773,7 @@ abstract class AppLocalizations {
   /// Invite/Join sync flow: sync invite qr off
   ///
   /// In en, this message translates to:
-  /// **'The QR code needs Wi-Fi turned on, in Sync with others'**
+  /// **'For the QR code, turn on “Sync over Wi-Fi” in Sync with others'**
   String get sync_invite_qr_off;
 
   /// Invite/Join sync flow: sync join button
@@ -4839,7 +4839,7 @@ abstract class AppLocalizations {
   /// Invite/Join sync flow: sync join qr off
   ///
   /// In en, this message translates to:
-  /// **'To join with the QR code, turn on Wi-Fi'**
+  /// **'To join with the QR code, turn on “Sync over Wi-Fi”'**
   String get sync_join_qr_off;
 
   /// Invite/Join sync flow: sync join turn on
@@ -4851,7 +4851,7 @@ abstract class AppLocalizations {
   /// Sync privacy switches: sync privacy section
   ///
   /// In en, this message translates to:
-  /// **'What Caravella can use'**
+  /// **'How Caravella can sync'**
   String get sync_privacy_section;
 
   /// Sync privacy switches: sync wifi switch desc
@@ -4869,7 +4869,7 @@ abstract class AppLocalizations {
   /// Sync privacy switches: sync privacy footer
   ///
   /// In en, this message translates to:
-  /// **'With everything off, this phone isn’t visible to others and receives nothing. Your groups stay on this phone.'**
+  /// **'With both off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi and Bluetooth don’t change.'**
   String get sync_privacy_footer;
 
   /// Sync privacy switches: sync group open settings
@@ -4881,14 +4881,26 @@ abstract class AppLocalizations {
   /// Sync privacy switches: sync bt off title
   ///
   /// In en, this message translates to:
-  /// **'Bluetooth off'**
+  /// **'Bluetooth sync is off'**
   String get sync_bt_off_title;
 
   /// Sync privacy switches: sync bt off desc
   ///
   /// In en, this message translates to:
-  /// **'Needed if you’re not on the same Wi-Fi'**
+  /// **'Needed when the phones aren’t on the same Wi-Fi network'**
   String get sync_bt_off_desc;
+
+  /// Sync privacy switches: sync bt switch title
+  ///
+  /// In en, this message translates to:
+  /// **'Sync over Bluetooth'**
+  String get sync_bt_switch_title;
+
+  /// Sync privacy switches: sync join turn on wifi
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Wi-Fi sync'**
+  String get sync_join_turn_on_wifi;
 }
 
 class _AppLocalizationsDelegate

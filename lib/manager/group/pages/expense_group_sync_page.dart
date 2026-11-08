@@ -34,6 +34,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
   bool _lanAvailable = false;
   bool _btAvailable = false;
   bool _checkingChannels = true;
+  bool? _hasHistory;
   SyncOrchestrator? _lastCheckedOrchestrator;
 
   @override
@@ -57,6 +58,10 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
     _lastCheckedOrchestrator = orchestrator;
 
     final lan = await orchestrator.isLanSyncEnabled();
+    final history = await orchestrator.getHistory(
+      limit: 1,
+      groupId: _currentTrip.id,
+    );
     final bt =
         BluetoothSyncFactory.isEnabled &&
         await BluetoothSyncFactory.isUserEnabled();
@@ -66,6 +71,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
         _lanAvailable = lan;
         _btAvailable = bt;
         _checkingChannels = false;
+        _hasHistory = history.isNotEmpty;
       });
     }
   }
@@ -241,6 +247,10 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
                   SettingsTile(
                     icon: Icons.history,
                     title: gloc.sync_history_title,
+                    subtitle: _hasHistory == false
+                        ? gloc.sync_history_empty
+                        : null,
+                    enabled: _hasHistory ?? false,
                     onTap: () => _openHistory(context, orchestrator),
                   ),
                 ],

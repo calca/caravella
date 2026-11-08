@@ -154,7 +154,7 @@ class _MultiUserSyncPageState extends State<MultiUserSyncPage> {
               if (_bluetooth)
                 SettingsTile(
                   icon: _btOn ? Icons.bluetooth : Icons.bluetooth_disabled,
-                  title: loc.sync_channel_bluetooth,
+                  title: loc.sync_bt_switch_title,
                   subtitle: loc.sync_bt_switch_desc,
                   switchValue: _btOn,
                   onSwitch: _loading ? null : _setBluetooth,

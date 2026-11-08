@@ -389,7 +389,7 @@ void main() {
       );
       expect(find.text(loc.sync_join_qr_off), findsOneWidget);
 
-      await tester.tap(find.text(loc.sync_join_turn_on));
+      await tester.tap(find.text(loc.sync_join_turn_on_wifi));
       await tester.pump();
       expect(turnedOn, isTrue);
       expect(find.text(loc.sync_join_qr_off), findsNothing);

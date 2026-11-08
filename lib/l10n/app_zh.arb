@@ -699,7 +699,7 @@
   "@sync_multidevice_description": {
     "description": "多设备同步入口描述"
   },
-  "sync_local_title": "Wi-Fi",
+  "sync_local_title": "通过 Wi-Fi 同步",
   "@sync_local_title": {
     "description": "本地局域网同步部分标题"
   },
@@ -810,7 +810,7 @@
   "@sync_bt_error": {
     "description": "蓝牙同步失败状态"
   },
-  "sync_bt_error_detail": "连接过程中出现问题，请重试。",
+  "sync_bt_error_detail": "无法连接。请确认手机的蓝牙已开启，然后重试。",
   "@sync_bt_error_detail": {
     "description": "在 sync_bt_error 下显示的通用说明，用于连接/超时/解密失败——刻意不向用户显示原始异常文本"
   },
@@ -818,7 +818,7 @@
   "@sync_bt_retry": {
     "description": "重试蓝牙同步按钮"
   },
-  "sync_bt_permission_denied": "未允许蓝牙：请在手机设置中开启",
+  "sync_bt_permission_denied": "Caravella 没有“附近的设备”权限：请在手机设置中允许",
   "@sync_bt_permission_denied": {
     "description": "蓝牙/附近设备权限被拒绝时显示的错误"
   },
@@ -862,7 +862,7 @@
   "@sync_group_enable_desc": {
     "description": "群组同步开关的说明"
   },
-  "sync_group_needs_channel": "“与他人同步”中的 Wi-Fi 和蓝牙均已关闭",
+  "sync_group_needs_channel": "“与他人同步”中的 Wi-Fi 同步和蓝牙同步均已关闭",
   "@sync_group_needs_channel": {
     "description": "当应用范围内Wi-Fi和蓝牙同步都未开启时，显示此文本代替sync_group_enable_desc"
   },
@@ -912,7 +912,7 @@
   "@sync_qr_regenerate_button": {
     "description": "上一个配对二维码过期后，用于生成新二维码的按钮"
   },
-  "sync_qr_no_network": "请连接 Wi-Fi 以生成配对码",
+  "sync_qr_no_network": "请将手机连接到 Wi-Fi 网络以创建二维码",
   "@sync_qr_no_network": {
     "description": "没有可用本地网络地址时显示"
   },
@@ -1276,7 +1276,7 @@
   ,"sync_invite_nearby_desc": "没有同一 Wi-Fi 时，可通过蓝牙找到你"
   ,"sync_invite_nearby_syncing": "正在与 {device} 同步…"
   ,"sync_invite_closes": "另一部手机加入后会自动关闭"
-  ,"sync_invite_qr_off": "二维码需要在“与他人同步”中开启 Wi-Fi"
+  ,"sync_invite_qr_off": "要使用二维码，请在“与他人同步”中开启“通过 Wi-Fi 同步”"
   ,"sync_join_button": "加入群组"
   ,"sync_join_button_desc": "扫描二维码或选择附近的手机"
   ,"sync_join_scan_hint": "扫描另一部手机上显示的二维码"
@@ -1287,13 +1287,15 @@
   ,"sync_join_action": "加入"
   ,"sync_join_update": "更新"
   ,"sync_join_done": "已与 {device} 同步"
-  ,"sync_join_qr_off": "要用二维码加入，请开启 Wi-Fi"
+  ,"sync_join_qr_off": "要用二维码加入，请开启“通过 Wi-Fi 同步”"
   ,"sync_join_turn_on": "开启"
-  ,"sync_privacy_section": "Caravella 可以使用"
+  ,"sync_privacy_section": "Caravella 的同步方式"
   ,"sync_wifi_switch_desc": "在同一网络下，共享的群组会自动更新"
   ,"sync_bt_switch_desc": "仅在“邀请设备”或“加入群组”打开时"
-  ,"sync_privacy_footer": "全部关闭时，此手机对他人不可见，也不会接收任何内容。群组仍保存在手机上。"
+  ,"sync_privacy_footer": "两项都关闭时，Caravella 对其他手机不可见，也不会接收任何内容。手机本身的 Wi-Fi 和蓝牙不受影响。"
   ,"sync_group_open_settings": "在设置中开启"
-  ,"sync_bt_off_title": "蓝牙已关闭"
-  ,"sync_bt_off_desc": "不在同一 Wi-Fi 时需要"
+  ,"sync_bt_off_title": "蓝牙同步已关闭"
+  ,"sync_bt_off_desc": "手机不在同一 Wi-Fi 网络时需要"
+  ,"sync_bt_switch_title": "通过蓝牙同步"
+  ,"sync_join_turn_on_wifi": "开启 Wi-Fi 同步"
 }

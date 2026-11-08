@@ -234,46 +234,50 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
       forceStatusBarLight: true,
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Column(
+        // The camera fills the screen, behind the nearby panel too (its
+        // rounded top shows the camera); status and top bar sit above it.
+        body: Stack(
+          fit: StackFit.expand,
           children: [
-            Expanded(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (_canScan)
-                    GmsIntegrations.instance.buildQrScanner(
-                          onDetect: _onDetect,
-                          paused:
-                              _handling ||
-                              _qrProblem != null ||
-                              _joining != null,
-                        ) ??
-                        const SizedBox.shrink(),
-                  if (_handling)
-                    const ColoredBox(
-                      color: Colors.black54,
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.xl),
-                      child: _buildQrStatus(context, loc),
-                    ),
+            if (_canScan)
+              GmsIntegrations.instance.buildQrScanner(
+                    onDetect: _onDetect,
+                    paused: _handling || _qrProblem != null || _joining != null,
+                  ) ??
+                  const SizedBox.shrink(),
+            Column(
+              children: [
+                Expanded(
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      if (_handling)
+                        const ColoredBox(
+                          color: Colors.black54,
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppSpacing.xl),
+                          child: _buildQrStatus(context, loc),
+                        ),
+                      ),
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: MediaTopBar(
+                          title: loc.sync_join_button,
+                          backTooltip: loc.accessibility_back_button,
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: MediaTopBar(
-                      title: loc.sync_join_button,
-                      backTooltip: loc.accessibility_back_button,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                if (widget.bluetooth != null) _buildNearby(context, loc),
+              ],
             ),
-            if (widget.bluetooth != null) _buildNearby(context, loc),
           ],
         ),
       ),
@@ -293,7 +297,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
             const SizedBox(height: AppSpacing.md),
             FilledButton(
               onPressed: _turningOnWifi ? null : _turnOnWifi,
-              child: Text(loc.sync_join_turn_on),
+              child: Text(loc.sync_join_turn_on_wifi),
             ),
           ],
         ],
