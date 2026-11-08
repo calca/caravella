@@ -2589,4 +2589,97 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_join_turn_on_wifi => '开启 Wi-Fi 同步';
+
+  @override
+  String get sync_shared_with => '共享对象';
+
+  @override
+  String get sync_device_synced_now => '刚刚更新';
+
+  @override
+  String sync_device_synced_ago(String ago) {
+    return '$ago前更新';
+  }
+
+  @override
+  String sync_device_never(String date) {
+    return '从未更新 · $date 配对';
+  }
+
+  @override
+  String get sync_device_failed => '上次交换未完成';
+
+  @override
+  String get sync_device_tap_hint => '点按设备即可更新，或将其移出群组。';
+
+  @override
+  String get sync_device_last_update => '上次更新';
+
+  @override
+  String get sync_device_paired_on => '配对时间';
+
+  @override
+  String get sync_device_groups => '共享的群组';
+
+  @override
+  String get sync_device_never_short => '从未';
+
+  @override
+  String get sync_device_update_now => '立即更新';
+
+  @override
+  String get sync_device_update_hint => '需在同一 Wi-Fi 下。否则请在另一部手机旁打开“加入群组”。';
+
+  @override
+  String get sync_device_update_wifi_off =>
+      '开启“通过 Wi-Fi 同步”即可在此更新，或在另一部手机旁打开“加入群组”。';
+
+  @override
+  String sync_device_unreachable(String device) {
+    return '$device 现在不在你的 Wi-Fi 网络中';
+  }
+
+  @override
+  String sync_device_remove_from(String group) {
+    return '移出“$group”';
+  }
+
+  @override
+  String sync_device_remove_title(String device, String group) {
+    return '将 $device 移出“$group”？';
+  }
+
+  @override
+  String get sync_device_remove_body =>
+      '它将不再收到此群组的更改，你也不会收到它的更改。它已有的支出仍保留在它的手机上。';
+
+  @override
+  String get sync_device_remove_confirm => '移出';
+
+  @override
+  String get sync_device_forget => '忘记此设备';
+
+  @override
+  String sync_device_forget_title(String device) {
+    return '忘记 $device？';
+  }
+
+  @override
+  String get sync_device_forget_body => '它将被移出所有共享群组。要再次同步，需要重新邀请。';
+
+  @override
+  String get sync_device_forget_confirm => '忘记';
+
+  @override
+  String sync_device_removed(String device) {
+    return '已将 $device 移出群组';
+  }
+
+  @override
+  String sync_device_forgotten(String device) {
+    return '已忘记 $device';
+  }
+
+  @override
+  String get sync_device_forget_hint => '点按设备即可更新或忘记它：忘记后会移出所有群组。';
 }

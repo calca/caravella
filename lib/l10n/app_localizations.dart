@@ -4901,6 +4901,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Turn on Wi-Fi sync'**
   String get sync_join_turn_on_wifi;
+
+  /// Paired devices: sync shared with
+  ///
+  /// In en, this message translates to:
+  /// **'Shared with'**
+  String get sync_shared_with;
+
+  /// Paired devices: sync device synced now
+  ///
+  /// In en, this message translates to:
+  /// **'Updated just now'**
+  String get sync_device_synced_now;
+
+  /// Paired devices: sync device synced ago
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {ago} ago'**
+  String sync_device_synced_ago(String ago);
+
+  /// Paired devices: sync device never
+  ///
+  /// In en, this message translates to:
+  /// **'Never updated · paired {date}'**
+  String sync_device_never(String date);
+
+  /// Paired devices: sync device failed
+  ///
+  /// In en, this message translates to:
+  /// **'Last exchange didn’t go through'**
+  String get sync_device_failed;
+
+  /// Paired devices: sync device tap hint
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a device to update it or take it off the group.'**
+  String get sync_device_tap_hint;
+
+  /// Paired devices: sync device last update
+  ///
+  /// In en, this message translates to:
+  /// **'Last update'**
+  String get sync_device_last_update;
+
+  /// Paired devices: sync device paired on
+  ///
+  /// In en, this message translates to:
+  /// **'Paired'**
+  String get sync_device_paired_on;
+
+  /// Paired devices: sync device groups
+  ///
+  /// In en, this message translates to:
+  /// **'Shared groups'**
+  String get sync_device_groups;
+
+  /// Paired devices: sync device never short
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get sync_device_never_short;
+
+  /// Paired devices: sync device update now
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get sync_device_update_now;
+
+  /// Paired devices: sync device update hint
+  ///
+  /// In en, this message translates to:
+  /// **'On the same Wi-Fi. Otherwise open “Join a group” next to the other phone.'**
+  String get sync_device_update_hint;
+
+  /// Paired devices: sync device update wifi off
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on “Sync over Wi-Fi” to update from here, or open “Join a group” next to the other phone.'**
+  String get sync_device_update_wifi_off;
+
+  /// Paired devices: sync device unreachable
+  ///
+  /// In en, this message translates to:
+  /// **'{device} isn’t on your Wi-Fi network right now'**
+  String sync_device_unreachable(String device);
+
+  /// Paired devices: sync device remove from
+  ///
+  /// In en, this message translates to:
+  /// **'Take off «{group}»'**
+  String sync_device_remove_from(String group);
+
+  /// Paired devices: sync device remove title
+  ///
+  /// In en, this message translates to:
+  /// **'Take {device} off «{group}»?'**
+  String sync_device_remove_title(String device, String group);
+
+  /// Paired devices: sync device remove body
+  ///
+  /// In en, this message translates to:
+  /// **'It won’t receive this group’s changes any more, and you won’t receive its. The expenses it already has stay on its phone.'**
+  String get sync_device_remove_body;
+
+  /// Paired devices: sync device remove confirm
+  ///
+  /// In en, this message translates to:
+  /// **'Take off'**
+  String get sync_device_remove_confirm;
+
+  /// Paired devices: sync device forget
+  ///
+  /// In en, this message translates to:
+  /// **'Forget this device'**
+  String get sync_device_forget;
+
+  /// Paired devices: sync device forget title
+  ///
+  /// In en, this message translates to:
+  /// **'Forget {device}?'**
+  String sync_device_forget_title(String device);
+
+  /// Paired devices: sync device forget body
+  ///
+  /// In en, this message translates to:
+  /// **'It’s taken off every shared group. To sync again you’ll have to invite it.'**
+  String get sync_device_forget_body;
+
+  /// Paired devices: sync device forget confirm
+  ///
+  /// In en, this message translates to:
+  /// **'Forget'**
+  String get sync_device_forget_confirm;
+
+  /// Paired devices: sync device removed
+  ///
+  /// In en, this message translates to:
+  /// **'{device} taken off the group'**
+  String sync_device_removed(String device);
+
+  /// Paired devices: sync device forgotten
+  ///
+  /// In en, this message translates to:
+  /// **'{device} forgotten'**
+  String sync_device_forgotten(String device);
+
+  /// Paired devices: sync device forget hint
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a device to update it, or to forget it: that takes it off every group.'**
+  String get sync_device_forget_hint;
 }
 
 class _AppLocalizationsDelegate

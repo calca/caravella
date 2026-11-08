@@ -68,6 +68,7 @@ export 'sync/models/sync_problem.dart';
 export 'sync/sync_problem_log.dart';
 export 'sync/models/group_sync_status.dart';
 export 'sync/models/paired_device.dart';
+export 'sync/models/device_sync_info.dart';
 export 'sync/pairing_payload.dart';
 export 'sync/sync_dao.dart';
 export 'sync/delta_builder.dart';
