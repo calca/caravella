@@ -43,17 +43,23 @@ class PhotoVeil extends StatelessWidget {
 
   /// The gradient a [PhotoVeil] lays over its photo, also used by
   /// [ColorVeil] over a group's color.
+  ///
+  /// [hold] (0–1) keeps the first part of the fade clear and fades over the
+  /// rest, ending at the same point: [ColorVeil] uses it so a pale color
+  /// shows as far down as a photo does.
   static LinearGradient fadeGradient({
     required Color color,
     required double height,
     double solidExtent = 0,
     double fadeExtent = 120,
     bool topShade = false,
+    double hold = 0,
   }) {
     final h = height <= 0 ? 1.0 : height;
     final clear = color.withValues(alpha: 0);
     final solidTop = h - solidExtent;
-    final fadeTop = solidTop - fadeExtent;
+    final heldFade = fadeExtent * (1 - hold.clamp(0.0, 1.0));
+    final fadeTop = solidTop - heldFade;
 
     final colors = <Color>[];
     final stops = <double>[];
@@ -76,7 +82,7 @@ class PhotoVeil extends StatelessWidget {
     for (var i = 0; i <= steps; i++) {
       final t = i / steps;
       final eased = t * t * (3 - 2 * t);
-      add(color.withValues(alpha: eased), fadeTop + fadeExtent * t);
+      add(color.withValues(alpha: eased), fadeTop + heldFade * t);
     }
     add(color, h);
     return LinearGradient(
@@ -115,9 +121,15 @@ class PhotoVeil extends StatelessWidget {
 }
 
 /// A group's color in place of its photo: in full at the top, melting into
-/// [surface] towards the bottom exactly like a [PhotoVeil], so the text
-/// sits on the same plain surface whether the group has a photo or a color.
+/// [surface] towards the bottom like a [PhotoVeil] and ending at the same
+/// point, so the text sits on the same plain surface whether the group has
+/// a photo or a color. A pale color fading over the whole extent looks gone
+/// long before a photo does, so it stays full for the first [hold] of the
+/// fade and melts over the rest.
 class ColorVeil extends StatelessWidget {
+  /// The part of the fade the color stays full for.
+  static const double hold = 0.45;
+
   /// The group's color.
   final Color color;
 
@@ -146,6 +158,7 @@ class ColorVeil extends StatelessWidget {
             height: constraints.maxHeight,
             solidExtent: solidExtent,
             fadeExtent: fadeExtent,
+            hold: hold,
           ),
         ),
         child: const SizedBox.expand(),
