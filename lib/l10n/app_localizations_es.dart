@@ -2779,4 +2779,46 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get sync_device_forget_hint =>
       'Toca un dispositivo para actualizarlo u olvidarlo: se quita de todos los grupos.';
+
+  @override
+  String get sync_device_update_hint_bt =>
+      'En la misma red Wi-Fi, o juntos por Bluetooth.';
+
+  @override
+  String get sync_update_bt_hint =>
+      '«Sincronizar por Wi-Fi» está desactivado: se actualizará por Bluetooth, con los teléfonos juntos.';
+
+  @override
+  String get sync_update_step_wifi => 'Wi-Fi';
+
+  @override
+  String get sync_update_wifi_skipped_off =>
+      'Omitido · «Sincronizar por Wi-Fi» está desactivado';
+
+  @override
+  String get sync_update_wifi_skipped_away => 'Omitido · no está en tu red';
+
+  @override
+  String get sync_update_step_bluetooth => 'Bluetooth';
+
+  @override
+  String get sync_update_bt_close => 'Mantén los teléfonos cerca';
+
+  @override
+  String get sync_update_bt_found => 'Encontrado · intercambiando gastos';
+
+  @override
+  String sync_update_bt_done(int received, int sent) {
+    return 'Recibidos $received, enviados $sent';
+  }
+
+  @override
+  String sync_update_bt_instruction_group(String device, String group) {
+    return 'En $device abre Caravella › $group › Sincronización, toca tu teléfono y luego Actualizar ahora';
+  }
+
+  @override
+  String sync_update_bt_instruction_settings(String device) {
+    return 'En $device abre Caravella › Configuración › Sincronización › Sincroniza con otros, toca tu teléfono y luego Actualizar ahora';
+  }
 }

@@ -6,6 +6,10 @@ class SyncResult {
   /// Number of operations successfully applied.
   final int applied;
 
+  /// Number of changes this device sent to the peer, when the channel
+  /// counts them (Bluetooth updates); 0 otherwise.
+  final int sent;
+
   /// Number of operations skipped (e.g. already up-to-date).
   final int skipped;
 
@@ -44,6 +48,7 @@ class SyncResult {
     required this.channel,
     required this.peerId,
     required this.syncedAt,
+    this.sent = 0,
     this.groupIds = const {},
     this.newGroupIds = const {},
     this.peerName,
@@ -57,7 +62,10 @@ class SyncResult {
     errors: 0,
     channel: '',
     peerId: '',
-    syncedAt: DateTime.fromMillisecondsSinceEpoch(SyncClock.nowMs(), isUtc: true),
+    syncedAt: DateTime.fromMillisecondsSinceEpoch(
+      SyncClock.nowMs(),
+      isUtc: true,
+    ),
   );
 
   /// Merges two results by summing their counters.
@@ -70,6 +78,7 @@ class SyncResult {
     channel: a.channel,
     peerId: a.peerId,
     syncedAt: a.syncedAt.isAfter(b.syncedAt) ? a.syncedAt : b.syncedAt,
+    sent: a.sent + b.sent,
     groupIds: {...a.groupIds, ...b.groupIds},
     newGroupIds: {...a.newGroupIds, ...b.newGroupIds},
     peerName: a.peerName ?? b.peerName,

@@ -1206,4 +1206,26 @@
   ,"@sync_device_forgotten": {"description": "Paired devices: sync device forgotten", "placeholders": {"device": {"type": "String"}}}
   ,"sync_device_forget_hint": "Tap a device to update it, or to forget it: that takes it off every group."
   ,"@sync_device_forget_hint": {"description": "Paired devices: sync device forget hint"}
+  ,"sync_device_update_hint_bt": "On the same Wi-Fi, or side by side over Bluetooth."
+  ,"@sync_device_update_hint_bt": {"description": "Paired device sheet: hint under Update now when Bluetooth is available as a fallback"}
+  ,"sync_update_bt_hint": "Sync over Wi-Fi is off: this updates over Bluetooth, with the phones side by side."
+  ,"@sync_update_bt_hint": {"description": "Paired device sheet: hint under Update now when Sync over Wi-Fi is off and the update will use Bluetooth"}
+  ,"sync_update_step_wifi": "Wi-Fi"
+  ,"@sync_update_step_wifi": {"description": "Update now progress: name of the Wi-Fi step"}
+  ,"sync_update_wifi_skipped_off": "Skipped · Sync over Wi-Fi is off"
+  ,"@sync_update_wifi_skipped_off": {"description": "Update now progress: the Wi-Fi step was skipped because Sync over Wi-Fi is off"}
+  ,"sync_update_wifi_skipped_away": "Skipped · not on your network"
+  ,"@sync_update_wifi_skipped_away": {"description": "Update now progress: the Wi-Fi step was skipped because the other phone did not answer on this network"}
+  ,"sync_update_step_bluetooth": "Bluetooth"
+  ,"@sync_update_step_bluetooth": {"description": "Update now progress: name of the Bluetooth step"}
+  ,"sync_update_bt_close": "Keep the phones close"
+  ,"@sync_update_bt_close": {"description": "Update now progress: asks the user to keep the two phones close while searching over Bluetooth"}
+  ,"sync_update_bt_found": "Found · exchanging expenses"
+  ,"@sync_update_bt_found": {"description": "Update now progress: the other phone was found over Bluetooth and data is being exchanged"}
+  ,"sync_update_bt_done": "Received {received}, sent {sent}"
+  ,"@sync_update_bt_done": {"description": "Update now progress: result of the Bluetooth exchange", "placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
+  ,"sync_update_bt_instruction_group": "On {device} open Caravella › {group} › Sync, tap your phone, then Update now"
+  ,"@sync_update_bt_instruction_group": {"description": "Update now over Bluetooth: what to do on the other phone, when opened from a group. Arrows separate menu levels", "placeholders": {"device": {"type": "String"}, "group": {"type": "String"}}}
+  ,"sync_update_bt_instruction_settings": "On {device} open Caravella › Settings › Synchronization › Sync with others, tap your phone, then Update now"
+  ,"@sync_update_bt_instruction_settings": {"description": "Update now over Bluetooth: what to do on the other phone, when opened from Settings. Arrows separate menu levels", "placeholders": {"device": {"type": "String"}}}
 }

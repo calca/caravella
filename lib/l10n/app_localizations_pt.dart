@@ -2772,4 +2772,46 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get sync_device_forget_hint =>
       'Toque em um dispositivo para atualizá-lo ou esquecê-lo: ele sai de todos os grupos.';
+
+  @override
+  String get sync_device_update_hint_bt =>
+      'Na mesma rede Wi-Fi, ou lado a lado por Bluetooth.';
+
+  @override
+  String get sync_update_bt_hint =>
+      '«Sincronizar por Wi-Fi» está desativado: a atualização será por Bluetooth, com os telemóveis lado a lado.';
+
+  @override
+  String get sync_update_step_wifi => 'Wi-Fi';
+
+  @override
+  String get sync_update_wifi_skipped_off =>
+      'Ignorado · «Sincronizar por Wi-Fi» está desativado';
+
+  @override
+  String get sync_update_wifi_skipped_away => 'Ignorado · não está na sua rede';
+
+  @override
+  String get sync_update_step_bluetooth => 'Bluetooth';
+
+  @override
+  String get sync_update_bt_close => 'Mantenha os telemóveis perto';
+
+  @override
+  String get sync_update_bt_found => 'Encontrado · a trocar despesas';
+
+  @override
+  String sync_update_bt_done(int received, int sent) {
+    return 'Recebidos $received, enviados $sent';
+  }
+
+  @override
+  String sync_update_bt_instruction_group(String device, String group) {
+    return 'Em $device abra Caravella › $group › Sincronização, toque no seu telemóvel e depois em Atualizar agora';
+  }
+
+  @override
+  String sync_update_bt_instruction_settings(String device) {
+    return 'Em $device abra Caravella › Configurações › Sincronização › Sincronizar com outros, toque no seu telemóvel e depois em Atualizar agora';
+  }
 }
