@@ -72,25 +72,6 @@ class GroupCardHeader extends StatelessWidget {
     return title;
   }
 
-  Widget _buildPill(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: _fg.withValues(alpha: foreground == null ? 0.05 : 0.18),
-        borderRadius: BorderRadius.circular(
-          HomeLayoutConstants.buttonBorderRadius,
-        ),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: _fg,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-
   Widget _buildDateRange(BuildContext context) {
     // Show pin/shared badges even if there are no dates
     if (group.startDate == null &&
@@ -100,8 +81,9 @@ class GroupCardHeader extends StatelessWidget {
       return const SizedBox(height: HomeLayoutConstants.smallSpacing);
     }
 
+    // The favorite is a heart before the dates, as on the group page.
+    final heart = group.pinned && showPinnedBadge;
     final badges = [
-      if (group.pinned && showPinnedBadge) _buildPill(localizations.pin),
       if (group.syncEnabled)
         GroupSyncBadge(
           group: group,
@@ -131,13 +113,24 @@ class GroupCardHeader extends StatelessWidget {
           spacing: 8,
           runSpacing: 6,
           children: [
-            if (hasDates)
+            if (hasDates || heart)
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.event_outlined, size: 14, color: _fg),
-                  const SizedBox(width: 4),
-                  Flexible(child: dates),
+                  if (heart) ...[
+                    Icon(
+                      Icons.favorite_rounded,
+                      size: 16,
+                      color: _fg,
+                      semanticLabel: localizations.pin,
+                    ),
+                    const SizedBox(width: 6),
+                  ],
+                  if (hasDates) ...[
+                    Icon(Icons.event_outlined, size: 14, color: _fg),
+                    const SizedBox(width: 4),
+                    Flexible(child: dates),
+                  ],
                 ],
               ),
             if (badges.isNotEmpty)
