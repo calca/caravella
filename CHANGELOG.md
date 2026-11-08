@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- Adding an expense from Home: tapping “+N” on the people or categories line now opens the full list inside the sheet, and adding a new person or category happens right in that line, so the keyboard no longer closes and reopens and the sheet no longer jumps up and down
 - Join a group: the camera now fills the screen behind the nearby phones panel, instead of stopping above it
 - Sync history: the row is greyed out, saying “No synchronizations”, until there's something to show — in Settings › Synchronization and in a group's sync settings
 - Sharing a group by QR code: the group now reaches the phone that scanned it right away, instead of only after restarting the app. The phone showing the code closes it by itself and lists the new device under the group's sync settings
