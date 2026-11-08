@@ -75,6 +75,10 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - name: Install dependencies
         run: flutter pub get
+      # The sqlite3 build hook downloads SQLite from GitHub releases and
+      # fails on a bad download; fetch it with retries and a hash check first.
+      - name: Prefetch SQLite binaries
+        run: .github/scripts/prefetch_sqlite3.sh
       - name: Analyze
         run: flutter analyze
       - name: Package boundary guard
