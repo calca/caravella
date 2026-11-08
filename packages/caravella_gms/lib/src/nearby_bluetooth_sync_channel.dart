@@ -40,7 +40,6 @@ const Duration _handshakeTimeout = Duration(seconds: 15);
 /// response before giving up.
 const Duration _syncResponseTimeout = Duration(seconds: 30);
 
-
 // ---------------------------------------------------------------------------
 // Chunk envelope
 // ---------------------------------------------------------------------------
@@ -58,16 +57,16 @@ class _ChunkHeader {
   });
 
   Map<String, dynamic> toJson() => {
-        'index': index,
-        'total': total,
-        'data': data,
-      };
+    'index': index,
+    'total': total,
+    'data': data,
+  };
 
   factory _ChunkHeader.fromJson(Map<String, dynamic> json) => _ChunkHeader(
-        index: json['index'] as int,
-        total: json['total'] as int,
-        data: json['data'] as String,
-      );
+    index: json['index'] as int,
+    total: json['total'] as int,
+    data: json['data'] as String,
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -125,12 +124,17 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   String? _advertisingGroupId;
   String _advertisingGroupTitle = '';
 
+  /// Set by [startUpdate]: the only device this channel talks to, and only
+  /// over the key already on file for it (no pairing, no group grants).
+  String? _updateTargetId;
+
   /// Callback for processing received deltas. Set before initiating sync.
   @override
   Future<Map<String, dynamic>> Function(
     Map<String, dynamic> remoteDelta,
     String peerId,
-  )? onDelta;
+  )?
+  onDelta;
 
   /// Callback invoked when a pairing handshake completes. Should persist
   /// the peer and grant it access to the group involved.
@@ -200,10 +204,21 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     _advertisingGroupId = groupId;
     _advertisingGroupTitle = groupTitle;
 
+    await _advertise(
+      BluetoothEndpointName.encode(
+        DeviceIdentity.instance.deviceName,
+        groupTitle,
+      ),
+      'group=$groupId',
+    );
+  }
+
+  /// Starts Nearby advertising under [endpointName] and records the result
+  /// in [_advertising]; failures are logged, not thrown.
+  Future<void> _advertise(String endpointName, String what) async {
     try {
-      final identity = DeviceIdentity.instance;
       final started = await _nearby.startAdvertising(
-        BluetoothEndpointName.encode(identity.deviceName, groupTitle),
+        endpointName,
         Strategy.P2P_CLUSTER,
         onConnectionInitiated: _onConnectionInitiated,
         onConnectionResult: _onConnectionResult,
@@ -213,10 +228,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
 
       if (started) {
         _advertising = true;
-        LoggerService.info(
-          'Started advertising as "${identity.deviceName}" for group=$groupId',
-          name: _tag,
-        );
+        LoggerService.info('Started advertising for $what', name: _tag);
       } else {
         LoggerService.warning('Advertising failed to start', name: _tag);
       }
@@ -227,6 +239,38 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
         error: e,
         stackTrace: st,
       );
+    }
+  }
+
+  /// Advertises and discovers at once for an update with the paired device
+  /// [targetDeviceId]; see [BluetoothSyncChannel.startUpdate].
+  ///
+  /// The advertisement carries our device ID ([BluetoothEndpointName
+  /// .encodeUpdate]) so the other phone can tell whose it is. Throws a
+  /// [StateError] when neither could start.
+  @override
+  Future<void> startUpdate({required String targetDeviceId}) async {
+    if (!await requestPermissions()) {
+      throw const BluetoothPermissionDeniedException();
+    }
+
+    _updateTargetId = targetDeviceId;
+    final identity = DeviceIdentity.instance;
+    LoggerService.info('Starting update with $targetDeviceId', name: _tag);
+
+    if (!_advertising) {
+      await _advertise(
+        BluetoothEndpointName.encodeUpdate(
+          identity.deviceName,
+          identity.deviceId,
+        ),
+        'update with $targetDeviceId',
+      );
+    }
+    if (!_discovering) await _discover();
+    if (!_advertising && !_discovering) {
+      _updateTargetId = null;
+      throw StateError('Neither advertising nor discovery could start');
     }
   }
 
@@ -245,6 +289,12 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
       throw const BluetoothPermissionDeniedException();
     }
 
+    await _discover();
+  }
+
+  /// Starts Nearby discovery and records the result in [_discovering];
+  /// failures are logged, not thrown.
+  Future<void> _discover() async {
     try {
       final started = await _nearby.startDiscovery(
         DeviceIdentity.instance.deviceName,
@@ -273,6 +323,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   /// Stop all advertising and discovery.
   @override
   Future<void> stopAll() async {
+    _updateTargetId = null;
     try {
       if (_advertising) {
         await _nearby.stopAdvertising();
@@ -320,6 +371,8 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   @override
   Future<SyncResult> syncWithPeer(String endpointId) async {
     _eventController.add(const BtSyncStarted());
+    // In an update only the already-paired target is served, with its key.
+    final updateTarget = _updateTargetId;
 
     try {
       final identity = DeviceIdentity.instance;
@@ -346,6 +399,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
           'device_name': identity.deviceName,
           'platform': identity.platform.name,
           'public_key': myPublicKey,
+          if (updateTarget != null) 'mode': 'update',
         }),
       );
 
@@ -370,26 +424,31 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
 
       if (remoteDeviceId == null ||
           remotePublicKey == null ||
-          groupId == null) {
+          (updateTarget == null && groupId == null)) {
         throw StateError('Bluetooth pairing handshake failed or timed out');
       }
+      if (updateTarget != null &&
+          !await _isPairedUpdatePeer(remoteDeviceId, remotePublicKey)) {
+        throw StateError('Update handshake answered by an unexpected device');
+      }
 
-      final sharedKey = await DeviceKeyManager.deriveSharedKey(
-        remotePublicKey,
-      );
-      await PeerKeyStore.save(remoteDeviceId, sharedKey);
-      await onPairingRequest?.call(
-        remoteDeviceId,
-        remoteDeviceName,
-        remotePlatform,
-        groupId,
-      );
+      final sharedKey = await DeviceKeyManager.deriveSharedKey(remotePublicKey);
+      if (updateTarget == null) {
+        await PeerKeyStore.save(remoteDeviceId, sharedKey);
+        await onPairingRequest?.call(
+          remoteDeviceId,
+          remoteDeviceName,
+          remotePlatform,
+          groupId!,
+        );
+      }
 
       // 2. Build our outgoing delta via the callback, then encrypt it.
       final localDelta = onDelta != null
           ? await onDelta!(<String, dynamic>{}, remoteDeviceId)
           : <String, dynamic>{};
       final envelope = await SyncEnvelope.encrypt(sharedKey, localDelta);
+      final sentCount = BluetoothUpdate.countChanges(localDelta);
 
       // Register the completer before sending so a fast peer response can
       // never race ahead of us — otherwise it would be misread as a new
@@ -432,7 +491,10 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
       await _nearby.disconnectFromEndpoint(endpointId);
 
       final result = SyncResult(
-        applied: remoteDelta.length,
+        applied: updateTarget != null
+            ? BluetoothUpdate.countChanges(remoteDelta)
+            : remoteDelta.length,
+        sent: updateTarget != null ? sentCount : 0,
         skipped: 0,
         errors: 0,
         channel: _channel,
@@ -497,8 +559,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     // _handleHello/_handleIncomingSync).
     _nearby.acceptConnection(
       endpointId,
-      onPayLoadRecieved: (endId, payload) =>
-          _onPayloadReceived(endId, payload),
+      onPayLoadRecieved: (endId, payload) => _onPayloadReceived(endId, payload),
       onPayloadTransferUpdate: (endId, update) =>
           _onPayloadTransferUpdate(endId, update),
     );
@@ -545,16 +606,14 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   }
 
   void _onEndpointFound(String endpointId, String name, String serviceId) {
-    LoggerService.info(
-      'Found peer: $name ($endpointId)',
-      name: _tag,
-    );
+    LoggerService.info('Found peer: $name ($endpointId)', name: _tag);
     final decoded = BluetoothEndpointName.decode(name);
     _eventController.add(
       PeerFound(
         name: decoded.deviceName,
         endpointId: endpointId,
         groupTitle: decoded.groupTitle,
+        updateDeviceId: decoded.updateDeviceId,
       ),
     );
   }
@@ -664,10 +723,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     }
   }
 
-  void _handleCompletePayload(
-    String endpointId,
-    Map<String, dynamic> json,
-  ) {
+  void _handleCompletePayload(String endpointId, Map<String, dynamic> json) {
     final type = json['type'] as String?;
 
     if (type == 'hello') {
@@ -707,6 +763,11 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     final peerDeviceName = json['device_name'] as String? ?? 'Unknown device';
     final peerPlatform = json['platform'] as String? ?? 'unknown';
     final peerPublicKey = json['public_key'] as String?;
+
+    if (_updateTargetId != null) {
+      await _handleUpdateHello(endpointId, peerDeviceId, peerPublicKey);
+      return;
+    }
     final groupId = _advertisingGroupId;
 
     if (peerDeviceId == null || peerPublicKey == null || groupId == null) {
@@ -748,6 +809,63 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     );
   }
 
+  /// Whether [deviceId] is the update target and [publicKeyBase64] derives
+  /// exactly the key already on file for it. Keys are derived from fixed
+  /// per-device key pairs, so a genuine paired device always matches; an
+  /// unknown device, or one claiming the target's ID with another key, never
+  /// does.
+  Future<bool> _isPairedUpdatePeer(
+    String deviceId,
+    String publicKeyBase64,
+  ) async {
+    if (deviceId != _updateTargetId) return false;
+    final stored = await PeerKeyStore.get(deviceId);
+    if (stored == null) return false;
+    final derived = await DeviceKeyManager.deriveSharedKey(publicKeyBase64);
+    final storedBytes = await stored.extractBytes();
+    final derivedBytes = await derived.extractBytes();
+    if (storedBytes.length != derivedBytes.length) return false;
+    var diff = 0;
+    for (var i = 0; i < storedBytes.length; i++) {
+      diff |= storedBytes[i] ^ derivedBytes[i];
+    }
+    return diff == 0;
+  }
+
+  /// Handles a `hello` while updating: answers only the paired target, with
+  /// no group and without touching the stored key or any grant. Anyone else
+  /// gets no answer (their handshake times out).
+  Future<void> _handleUpdateHello(
+    String endpointId,
+    String? peerDeviceId,
+    String? peerPublicKey,
+  ) async {
+    if (peerDeviceId == null ||
+        peerPublicKey == null ||
+        !await _isPairedUpdatePeer(peerDeviceId, peerPublicKey)) {
+      LoggerService.warning(
+        'Ignoring Bluetooth hello from $endpointId during an update — '
+        'not the paired device being updated',
+        name: _tag,
+      );
+      return;
+    }
+
+    final identity = DeviceIdentity.instance;
+    final myPublicKey = await DeviceKeyManager.publicKeyBase64();
+    await _sendPayload(
+      endpointId,
+      jsonEncode({
+        'type': 'hello_ack',
+        'device_id': identity.deviceId,
+        'device_name': identity.deviceName,
+        'platform': identity.platform.name,
+        'public_key': myPublicKey,
+        'mode': 'update',
+      }),
+    );
+  }
+
   Future<void> _handleIncomingSync(
     String endpointId,
     Map<String, dynamic> json,
@@ -755,6 +873,16 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     try {
       final peerId = json['device_id'] as String? ?? endpointId;
       final envelope = json['envelope'] as String?;
+
+      final updateTarget = _updateTargetId;
+      if (updateTarget != null && peerId != updateTarget) {
+        LoggerService.warning(
+          'Ignoring Bluetooth sync from $peerId during an update — not the '
+          'paired device being updated',
+          name: _tag,
+        );
+        return;
+      }
 
       final peerKey = await PeerKeyStore.get(peerId);
       if (peerKey == null || envelope == null) {
@@ -798,7 +926,12 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
       _eventController.add(
         BtSyncCompleted(
           result: SyncResult(
-            applied: remoteDelta.length,
+            applied: updateTarget != null
+                ? BluetoothUpdate.countChanges(remoteDelta)
+                : remoteDelta.length,
+            sent: updateTarget != null
+                ? BluetoothUpdate.countChanges(localDelta)
+                : 0,
             skipped: 0,
             errors: 0,
             channel: _channel,
@@ -829,10 +962,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
 
     if (bytes.length <= _maxChunkSize) {
       // Send as single payload
-      await _nearby.sendBytesPayload(
-        endpointId,
-        Uint8List.fromList(bytes),
-      );
+      await _nearby.sendBytesPayload(endpointId, Uint8List.fromList(bytes));
       LoggerService.debug(
         'Sent ${bytes.length} bytes to $endpointId',
         name: _tag,

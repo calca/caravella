@@ -2682,4 +2682,43 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_device_forget_hint => '点按设备即可更新或忘记它：忘记后会移出所有群组。';
+
+  @override
+  String get sync_device_update_hint_bt => '在同一 Wi-Fi 下，或通过蓝牙靠近更新。';
+
+  @override
+  String get sync_update_bt_hint => '“通过 Wi-Fi 同步”已关闭：将通过蓝牙更新，请让两部手机靠近。';
+
+  @override
+  String get sync_update_step_wifi => 'Wi-Fi';
+
+  @override
+  String get sync_update_wifi_skipped_off => '已跳过 · “通过 Wi-Fi 同步”已关闭';
+
+  @override
+  String get sync_update_wifi_skipped_away => '已跳过 · 不在你的网络中';
+
+  @override
+  String get sync_update_step_bluetooth => '蓝牙';
+
+  @override
+  String get sync_update_bt_close => '请让两部手机靠近';
+
+  @override
+  String get sync_update_bt_found => '已找到 · 正在交换支出';
+
+  @override
+  String sync_update_bt_done(int received, int sent) {
+    return '已接收 $received，已发送 $sent';
+  }
+
+  @override
+  String sync_update_bt_instruction_group(String device, String group) {
+    return '在 $device 上打开 Caravella › $group › 同步，点按你的手机，然后点“立即更新”';
+  }
+
+  @override
+  String sync_update_bt_instruction_settings(String device) {
+    return '在 $device 上打开 Caravella › 设置 › 同步 › 与他人同步，点按你的手机，然后点“立即更新”';
+  }
 }

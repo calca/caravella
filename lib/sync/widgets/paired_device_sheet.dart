@@ -6,11 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
+import '../bluetooth_sync_factory.dart';
 import 'paired_devices_list.dart';
 
 /// One paired device: how its sync is doing, the groups it shares,
-/// "Update now" over Wi-Fi, and taking it off — off [groupId] when opened
-/// from a group, forgetting it everywhere when opened from Settings.
+/// "Update now" (Wi-Fi first, then Bluetooth) and taking it off — off
+/// [groupId] when opened from a group, forgetting it everywhere when opened
+/// from Settings.
 Future<void> showPairedDeviceSheet(
   BuildContext context, {
   required SyncOrchestrator orchestrator,
@@ -29,6 +31,11 @@ Future<void> showPairedDeviceSheet(
     groupTitles: groupTitles,
     groupId: groupId,
     groupTitle: groupTitle,
+    createBluetooth: BluetoothSyncFactory.isEnabled
+        ? () => BluetoothSyncFactory.createChannel(orchestrator)
+        : null,
+    isBluetoothEnabled: BluetoothSyncFactory.isUserEnabled,
+    onTurnOnBluetooth: () => BluetoothSyncFactory.setUserEnabled(true),
   ),
 );
 
@@ -43,8 +50,31 @@ class PairedDeviceSheet extends StatefulWidget {
   final String? groupId;
   final String? groupTitle;
 
+  /// A new channel for one Bluetooth update (the sheet stops and disposes
+  /// it), or null where Bluetooth isn't available (F-Droid build).
+  final BluetoothSyncChannel? Function()? createBluetooth;
+
+  /// Whether the user allows Bluetooth sync (the privacy switch); while
+  /// false the sheet offers "Turn on" via [onTurnOnBluetooth]. Null: allowed.
+  final Future<bool> Function()? isBluetoothEnabled;
+  final Future<void> Function()? onTurnOnBluetooth;
+
+  /// This phone's device ID, for deciding which phone requests the
+  /// Bluetooth connection. Null: [DeviceIdentity].
+  final String? ownDeviceId;
+
   /// How long "Update now" waits for the device to answer over Wi-Fi.
   static const Duration updateTimeout = Duration(seconds: 15);
+
+  /// How long the initiating phone waits, after a failed Bluetooth request,
+  /// for the other direction to succeed before trying again.
+  static const Duration collisionGrace = Duration(seconds: 3);
+
+  /// Times the initiating phone requests the Bluetooth connection.
+  static const int maxBluetoothAttempts = 2;
+
+  /// How long "Received N, sent M" stays before the sheet closes.
+  static const Duration doneDelay = Duration(milliseconds: 1500);
 
   const PairedDeviceSheet({
     super.key,
@@ -54,18 +84,44 @@ class PairedDeviceSheet extends StatefulWidget {
     required this.groupTitles,
     this.groupId,
     this.groupTitle,
+    this.createBluetooth,
+    this.isBluetoothEnabled,
+    this.onTurnOnBluetooth,
+    this.ownDeviceId,
   });
 
   @override
   State<PairedDeviceSheet> createState() => _PairedDeviceSheetState();
 }
 
+/// Where "Update now" is: trying Wi-Fi, asking to turn Bluetooth on, or in
+/// the Bluetooth step (looking, exchanging, done, failed).
+enum _Phase { idle, wifi, needsBluetooth, searching, exchanging, done, failed }
+
 class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
+  static const _tag = 'ui.sync';
+
+  _Phase _phase = _Phase.idle;
   bool? _wifi;
-  bool _updating = false;
+  bool _wifiWasOff = false;
   String? _problem;
+  bool _turningOnBluetooth = false;
+
+  // Wi-Fi attempt
   StreamSubscription<SyncEvent>? _events;
   Timer? _timeout;
+  Completer<String?>? _wifiAttempt;
+
+  // Bluetooth step
+  BluetoothSyncChannel? _bt;
+  StreamSubscription<BluetoothPeerEvent>? _btEvents;
+  String? _btProblem;
+  String? _peerEndpoint;
+  bool _requested = false;
+  int _attempts = 0;
+  SyncResult? _btResult;
+  Timer? _graceTimer;
+  Timer? _closeTimer;
 
   @override
   void initState() {
@@ -79,46 +135,67 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
   void dispose() {
     _events?.cancel();
     _timeout?.cancel();
+    _graceTimer?.cancel();
+    _closeTimer?.cancel();
+    final attempt = _wifiAttempt;
+    if (attempt != null && !attempt.isCompleted) attempt.complete(null);
+    _stopBluetooth();
     super.dispose();
   }
 
   String get _name => widget.device.deviceName;
+  bool get _bluetoothAvailable => widget.createBluetooth != null;
+  bool get _inBluetoothStep =>
+      _phase == _Phase.searching ||
+      _phase == _Phase.exchanging ||
+      _phase == _Phase.done ||
+      _phase == _Phase.failed;
+
+  // ---------------------------------------------------------------------------
+  // Update now: Wi-Fi first, then Bluetooth
+  // ---------------------------------------------------------------------------
 
   Future<void> _update() async {
     final loc = gen.AppLocalizations.of(context);
-    setState(() {
-      _updating = true;
-      _problem = null;
-    });
-    void finish({String? problem}) {
-      _events?.cancel();
-      _timeout?.cancel();
+    _wifiWasOff = _wifi != true;
+    if (_wifi == true) {
+      setState(() {
+        _phase = _Phase.wifi;
+        _problem = null;
+      });
+      final problem = await _tryWifi(loc);
       if (!mounted) return;
-      if (problem == null) {
-        AppToast.show(
-          context,
-          loc.sync_join_done(_name),
-          type: ToastType.success,
-        );
-        Navigator.of(context).pop();
+      if (problem == null) return _finish();
+      if (!_bluetoothAvailable) {
+        setState(() {
+          _phase = _Phase.idle;
+          _problem = problem;
+        });
         return;
       }
-      setState(() {
-        _updating = false;
-        _problem = problem;
-      });
+    }
+    await _startBluetooth();
+  }
+
+  /// Triggers a Wi-Fi sync and waits up to [PairedDeviceSheet.updateTimeout]
+  /// for this device to answer. Null when it did, else what went wrong.
+  Future<String?> _tryWifi(gen.AppLocalizations loc) {
+    final attempt = Completer<String?>();
+    _wifiAttempt = attempt;
+    void finish(String? problem) {
+      _events?.cancel();
+      _timeout?.cancel();
+      if (!attempt.isCompleted) attempt.complete(problem);
     }
 
     _events = widget.orchestrator.events.listen((event) {
       if (event is SyncCompleted &&
           event.result.peerId == widget.device.deviceId) {
-        finish(
-          problem: event.result.errors > 0 ? loc.sync_device_failed : null,
-        );
+        finish(event.result.errors > 0 ? loc.sync_device_failed : null);
       } else if (event is SyncFailed &&
           event.peerId == widget.device.deviceId) {
         finish(
-          problem: event.unreachable
+          event.unreachable
               ? loc.sync_device_unreachable(_name)
               : loc.sync_device_failed,
         );
@@ -126,20 +203,226 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     });
     _timeout = Timer(
       PairedDeviceSheet.updateTimeout,
-      () => finish(problem: loc.sync_device_unreachable(_name)),
+      () => finish(loc.sync_device_unreachable(_name)),
     );
-    try {
-      await widget.orchestrator.triggerManualSync('lan');
-    } catch (e, st) {
+    widget.orchestrator.triggerManualSync('lan').then<void>((_) {}).catchError((
+      Object e,
+      StackTrace st,
+    ) {
       LoggerService.error(
         'Manual update of $_name failed',
-        name: 'ui.sync',
+        name: _tag,
         error: e,
         stackTrace: st,
       );
-      finish(problem: loc.sync_device_failed);
+      finish(loc.sync_device_failed);
+    });
+    return attempt.future;
+  }
+
+  void _finish() {
+    if (!mounted) return;
+    AppToast.show(
+      context,
+      gen.AppLocalizations.of(context).sync_join_done(_name),
+      type: ToastType.success,
+    );
+    Navigator.of(context).pop();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Bluetooth step: both phones advertise and discover; the one with the
+  // smaller device ID requests the connection, the other waits for it.
+  // ---------------------------------------------------------------------------
+
+  Future<void> _startBluetooth() async {
+    final enabled = await widget.isBluetoothEnabled?.call() ?? true;
+    if (!mounted) return;
+    if (!enabled) {
+      setState(() => _phase = _Phase.needsBluetooth);
+      return;
+    }
+    await _beginBluetooth();
+  }
+
+  Future<void> _turnOnBluetooth() async {
+    final turnOn = widget.onTurnOnBluetooth;
+    if (turnOn == null) return;
+    setState(() => _turningOnBluetooth = true);
+    await turnOn();
+    if (!mounted) return;
+    setState(() => _turningOnBluetooth = false);
+    await _beginBluetooth();
+  }
+
+  Future<void> _beginBluetooth() async {
+    final bt = widget.createBluetooth?.call();
+    if (bt == null) {
+      setState(() {
+        _phase = _Phase.idle;
+        _problem = gen.AppLocalizations.of(context).sync_bt_error_detail;
+      });
+      return;
+    }
+    _stopBluetooth();
+    _graceTimer?.cancel();
+    _bt = bt;
+    _btEvents = bt.events.listen(_onBluetoothEvent);
+    setState(() {
+      _phase = _Phase.searching;
+      _problem = null;
+      _btProblem = null;
+      _peerEndpoint = null;
+      _requested = false;
+      _attempts = 0;
+      _btResult = null;
+    });
+    try {
+      await bt.startUpdate(targetDeviceId: widget.device.deviceId);
+    } catch (e, st) {
+      LoggerService.error(
+        'Bluetooth update with $_name could not start',
+        name: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      if (!mounted || _bt != bt) return;
+      final loc = gen.AppLocalizations.of(context);
+      setState(() {
+        _phase = _Phase.failed;
+        _btProblem = e is BluetoothPermissionDeniedException
+            ? loc.sync_bt_permission_denied
+            : loc.sync_bt_error_detail;
+      });
     }
   }
+
+  void _onBluetoothEvent(BluetoothPeerEvent event) {
+    if (!mounted || _phase == _Phase.done) return;
+    switch (event) {
+      case PeerFound(:final endpointId, :final updateDeviceId):
+        // Only the paired device being updated counts; invitations and
+        // other phones are ignored.
+        if (updateDeviceId != widget.device.deviceId) {
+          LoggerService.debug(
+            'Ignoring nearby $endpointId during an update',
+            name: _tag,
+          );
+          return;
+        }
+        _peerEndpoint = endpointId;
+        if (_phase == _Phase.searching) {
+          setState(() => _phase = _Phase.exchanging);
+        }
+        _requestExchange();
+      case PeerLost(:final endpointId):
+        if (endpointId == _peerEndpoint &&
+            !_requested &&
+            _phase == _Phase.exchanging) {
+          setState(() {
+            _peerEndpoint = null;
+            _phase = _Phase.searching;
+          });
+        }
+      case BtSyncCompleted(:final result):
+        // Our own request finishing, or the other phone's arriving.
+        if (result.peerId == widget.device.deviceId && result.errors == 0) {
+          _completeBluetooth(result);
+        }
+      default:
+        break;
+    }
+  }
+
+  /// Requests the connection if this phone is the one that does (the
+  /// smaller device ID); the other only waits for it.
+  void _requestExchange() {
+    final bt = _bt;
+    final endpoint = _peerEndpoint;
+    if (bt == null ||
+        endpoint == null ||
+        _requested ||
+        _phase != _Phase.exchanging) {
+      return;
+    }
+    final ownId = widget.ownDeviceId ?? DeviceIdentity.instance.deviceId;
+    if (!BluetoothUpdate.initiates(ownId, widget.device.deviceId)) return;
+
+    _requested = true;
+    _attempts++;
+    bt
+        .syncWithPeer(endpoint)
+        .then<void>((result) {
+          if (!mounted || _bt != bt || _phase == _Phase.done) return;
+          if (result.errors == 0) {
+            _completeBluetooth(result);
+          } else {
+            _requestFailed();
+          }
+        })
+        .catchError((Object e, StackTrace st) {
+          LoggerService.error(
+            'Bluetooth request to $_name failed',
+            name: _tag,
+            error: e,
+            stackTrace: st,
+          );
+          if (mounted && _bt == bt && _phase != _Phase.done) _requestFailed();
+        });
+  }
+
+  /// A failed request may only mean both directions collided and the other
+  /// one went through: wait a moment for that before trying again, then
+  /// give up.
+  void _requestFailed() {
+    _requested = false;
+    _graceTimer?.cancel();
+    _graceTimer = Timer(PairedDeviceSheet.collisionGrace, () {
+      if (!mounted || _phase == _Phase.done) return;
+      if (_attempts < PairedDeviceSheet.maxBluetoothAttempts &&
+          _peerEndpoint != null) {
+        _requestExchange();
+        return;
+      }
+      setState(() {
+        _phase = _Phase.failed;
+        _btProblem = gen.AppLocalizations.of(context).sync_bt_error_detail;
+      });
+    });
+  }
+
+  void _completeBluetooth(SyncResult result) {
+    if (!mounted || _phase == _Phase.done) return;
+    _graceTimer?.cancel();
+    setState(() {
+      _phase = _Phase.done;
+      _btResult = result;
+    });
+    _closeTimer = Timer(PairedDeviceSheet.doneDelay, _finish);
+  }
+
+  void _cancelBluetooth() {
+    _graceTimer?.cancel();
+    _stopBluetooth();
+    setState(() {
+      _phase = _Phase.idle;
+      _peerEndpoint = null;
+      _requested = false;
+    });
+  }
+
+  /// Stops Bluetooth and releases the channel; also when the sheet closes.
+  void _stopBluetooth() {
+    _btEvents?.cancel();
+    _btEvents = null;
+    final bt = _bt;
+    _bt = null;
+    if (bt != null) unawaited(bt.stopAll().then((_) => bt.dispose()));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Taking it off
+  // ---------------------------------------------------------------------------
 
   Future<void> _takeOff() async {
     final loc = gen.AppLocalizations.of(context);
@@ -193,6 +476,10 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     Navigator.of(context).pop();
   }
 
+  // ---------------------------------------------------------------------------
+  // UI
+  // ---------------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
@@ -201,7 +488,6 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     final locale = Localizations.localeOf(context).toString();
     final info = widget.info;
     final last = info.lastSyncAt;
-    final wifi = _wifi;
 
     Widget fact(String label, String value) => Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
@@ -230,6 +516,22 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
       ),
     );
 
+    final header = Row(
+      children: [
+        DeviceAvatar(platform: widget.device.platform, size: 48),
+        const SizedBox(width: AppSpacing.md),
+        DeviceSyncDot(health: deviceSyncHealth(info)),
+        Expanded(
+          child: Text(
+            deviceSyncLine(context, loc, widget.device, info),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: s.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ],
+    );
+
     return CaravellaBottomSheetScaffold(
       title: _name,
       scrollable: true,
@@ -237,98 +539,280 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              DeviceAvatar(platform: widget.device.platform, size: 48),
-              const SizedBox(width: AppSpacing.md),
-              DeviceSyncDot(health: deviceSyncHealth(info)),
-              Expanded(
-                child: Text(
-                  deviceSyncLine(context, loc, widget.device, info),
-                  style: theme.textTheme.bodyMedium?.copyWith(
+          header,
+          const SizedBox(height: AppSpacing.md),
+          if (_inBluetoothStep)
+            ..._bluetoothStep(context, loc)
+          else ...[
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              decoration: BoxDecoration(
+                color: s.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  fact(
+                    loc.sync_device_last_update,
+                    last == null
+                        ? loc.sync_device_never_short
+                        : DateFormat.MMMd(
+                            locale,
+                          ).add_Hm().format(last.toLocal()),
+                  ),
+                  fact(
+                    loc.sync_device_paired_on,
+                    DateFormat.yMMMd(
+                      locale,
+                    ).format(widget.device.pairedAt.toLocal()),
+                  ),
+                  if (widget.groupTitles.isNotEmpty)
+                    fact(loc.sync_device_groups, widget.groupTitles.join(', ')),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            ..._actions(context, loc),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// "Update now", its hint, the "turn on Bluetooth" panel and "Take off".
+  List<Widget> _actions(BuildContext context, gen.AppLocalizations loc) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final wifi = _wifi;
+    final trying = _phase == _Phase.wifi;
+    final canUpdate = wifi != null && (wifi || _bluetoothAvailable) && !trying;
+
+    final hint =
+        _problem ??
+        (wifi == false
+            ? (_bluetoothAvailable
+                  ? loc.sync_update_bt_hint
+                  : loc.sync_device_update_wifi_off)
+            : (_bluetoothAvailable
+                  ? loc.sync_device_update_hint_bt
+                  : loc.sync_device_update_hint));
+
+    return [
+      FilledButton.icon(
+        onPressed: canUpdate ? _update : null,
+        icon: trying
+            ? SizedBox.square(
+                dimension: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: s.onSurface.withValues(alpha: 0.38),
+                ),
+              )
+            : const Icon(Icons.sync),
+        label: Text(loc.sync_device_update_now),
+      ),
+      const SizedBox(height: AppSpacing.xs),
+      Semantics(
+        liveRegion: true,
+        child: Text(
+          hint,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: _problem != null ? s.error : s.onSurfaceVariant,
+          ),
+        ),
+      ),
+      if (_phase == _Phase.needsBluetooth) ...[
+        const SizedBox(height: AppSpacing.md),
+        _bluetoothOffPanel(context, loc),
+      ],
+      const SizedBox(height: AppSpacing.lg),
+      OutlinedButton.icon(
+        onPressed: trying ? null : _takeOff,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: s.error,
+          side: BorderSide(color: s.error),
+        ),
+        icon: Icon(
+          widget.groupId != null
+              ? Icons.person_remove_outlined
+              : Icons.delete_outline,
+        ),
+        label: Text(
+          widget.groupId != null
+              ? loc.sync_device_remove_from(widget.groupTitle ?? '')
+              : loc.sync_device_forget,
+        ),
+      ),
+    ];
+  }
+
+  Widget _bluetoothOffPanel(BuildContext context, gen.AppLocalizations loc) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.sm,
+        AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: s.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.bluetooth_disabled, color: s.onSurfaceVariant),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  loc.sync_bt_off_title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  loc.sync_bt_off_desc,
+                  style: theme.textTheme.bodySmall?.copyWith(
                     color: s.onSurfaceVariant,
                   ),
+                ),
+              ],
+            ),
+          ),
+          if (widget.onTurnOnBluetooth != null) ...[
+            const SizedBox(width: AppSpacing.xs),
+            OutlinedButton(
+              onPressed: _turningOnBluetooth ? null : _turnOnBluetooth,
+              child: Text(loc.sync_join_turn_on),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// The two steps (Wi-Fi skipped, Bluetooth in progress), what to do on the
+  /// other phone, and Cancel / Retry.
+  List<Widget> _bluetoothStep(BuildContext context, gen.AppLocalizations loc) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final failed = _phase == _Phase.failed;
+    final done = _phase == _Phase.done;
+    final result = _btResult;
+
+    final btDetail = switch (_phase) {
+      _Phase.exchanging => loc.sync_update_bt_found,
+      _Phase.done =>
+        result == null
+            ? loc.sync_bt_completed
+            : loc.sync_update_bt_done(result.applied, result.sent),
+      _Phase.failed => _btProblem ?? loc.sync_bt_error_detail,
+      _ => loc.sync_update_bt_close,
+    };
+
+    Widget step(Widget leading, String title, String detail, {Color? color}) =>
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox.square(dimension: 24, child: Center(child: leading)),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      detail,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: color ?? s.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
-            ),
-            decoration: BoxDecoration(
-              color: s.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              children: [
-                fact(
-                  loc.sync_device_last_update,
-                  last == null
-                      ? loc.sync_device_never_short
-                      : DateFormat.MMMd(locale).add_Hm().format(last.toLocal()),
-                ),
-                fact(
-                  loc.sync_device_paired_on,
-                  DateFormat.yMMMd(
-                    locale,
-                  ).format(widget.device.pairedAt.toLocal()),
-                ),
-                if (widget.groupTitles.isNotEmpty)
-                  fact(loc.sync_device_groups, widget.groupTitles.join(', ')),
-              ],
-            ),
+        );
+
+    final instruction = widget.groupTitle == null
+        ? loc.sync_update_bt_instruction_settings(_name)
+        : loc.sync_update_bt_instruction_group(_name, widget.groupTitle!);
+
+    return [
+      Semantics(
+        liveRegion: true,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
           ),
-          const SizedBox(height: AppSpacing.lg),
-          FilledButton.icon(
-            onPressed: wifi == true && !_updating ? _update : null,
-            icon: _updating
-                ? SizedBox.square(
-                    dimension: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: s.onSurface.withValues(alpha: 0.38),
-                    ),
-                  )
-                : const Icon(Icons.sync),
-            label: Text(loc.sync_device_update_now),
+          decoration: BoxDecoration(
+            color: s.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              step(
+                Icon(Icons.wifi_off, size: 20, color: s.onSurfaceVariant),
+                loc.sync_update_step_wifi,
+                _wifiWasOff
+                    ? loc.sync_update_wifi_skipped_off
+                    : loc.sync_update_wifi_skipped_away,
+              ),
+              step(
+                done
+                    ? Icon(Icons.check_circle, size: 22, color: s.primary)
+                    : failed
+                    ? Icon(Icons.error_outline, size: 22, color: s.error)
+                    : const SizedBox.square(
+                        dimension: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2.5),
+                      ),
+                loc.sync_update_step_bluetooth,
+                btDetail,
+                color: failed ? s.error : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+      if (!done && !failed) ...[
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          instruction,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: s.onSurfaceVariant,
+          ),
+        ),
+      ],
+      if (!done) ...[
+        const SizedBox(height: AppSpacing.lg),
+        if (failed) ...[
+          FilledButton.tonalIcon(
+            onPressed: _beginBluetooth,
+            icon: const Icon(Icons.refresh),
+            label: Text(loc.sync_bt_retry),
           ),
           const SizedBox(height: AppSpacing.xs),
-          Semantics(
-            liveRegion: true,
-            child: Text(
-              _problem ??
-                  (wifi == false
-                      ? loc.sync_device_update_wifi_off
-                      : loc.sync_device_update_hint),
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: _problem != null ? s.error : s.onSurfaceVariant,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          OutlinedButton.icon(
-            onPressed: _updating ? null : _takeOff,
-            style: OutlinedButton.styleFrom(
-              foregroundColor: s.error,
-              side: BorderSide(color: s.error),
-            ),
-            icon: Icon(
-              widget.groupId != null
-                  ? Icons.person_remove_outlined
-                  : Icons.delete_outline,
-            ),
-            label: Text(
-              widget.groupId != null
-                  ? loc.sync_device_remove_from(widget.groupTitle ?? '')
-                  : loc.sync_device_forget,
-            ),
-          ),
         ],
-      ),
-    );
+        OutlinedButton(onPressed: _cancelBluetooth, child: Text(loc.cancel)),
+      ],
+    ];
   }
 }

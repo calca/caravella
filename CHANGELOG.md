@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Paired devices: **Update now** is one button on both phones, Wi-Fi first — if Sync over Wi-Fi is off or the other phone doesn’t answer on your network, it carries on over Bluetooth by itself: open the same device on the other phone, keep the phones close, and both show “Received N, sent M” and close (Play builds; Bluetooth must be on in Sync with others)
 - Adding an expense from a group’s page now opens the same quick sheet as Home (with the “More details” option to expand it); editing an expense still opens the full form
 - Paired devices: each one says how it's doing — updated how long ago, never updated, or the last exchange didn't go through — with a dot like the groups' “Shared” pill. Tap one for its details: when it last updated, when it was paired and which groups it shares, **Update now** on the same Wi-Fi, and **Take off** the group (with a confirmation; before, the × removed it at once). Settings › Synchronization › Sync with others lists every paired device too, where one can be forgotten
 - Balances: under “Share per person” the line now reads “The total divided by 4” instead of “Split equally among 4 participants”

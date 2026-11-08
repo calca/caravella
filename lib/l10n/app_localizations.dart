@@ -5051,6 +5051,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap a device to update it, or to forget it: that takes it off every group.'**
   String get sync_device_forget_hint;
+
+  /// Paired device sheet: hint under Update now when Bluetooth is available as a fallback
+  ///
+  /// In en, this message translates to:
+  /// **'On the same Wi-Fi, or side by side over Bluetooth.'**
+  String get sync_device_update_hint_bt;
+
+  /// Paired device sheet: hint under Update now when Sync over Wi-Fi is off and the update will use Bluetooth
+  ///
+  /// In en, this message translates to:
+  /// **'Sync over Wi-Fi is off: this updates over Bluetooth, with the phones side by side.'**
+  String get sync_update_bt_hint;
+
+  /// Update now progress: name of the Wi-Fi step
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi'**
+  String get sync_update_step_wifi;
+
+  /// Update now progress: the Wi-Fi step was skipped because Sync over Wi-Fi is off
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped · Sync over Wi-Fi is off'**
+  String get sync_update_wifi_skipped_off;
+
+  /// Update now progress: the Wi-Fi step was skipped because the other phone did not answer on this network
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped · not on your network'**
+  String get sync_update_wifi_skipped_away;
+
+  /// Update now progress: name of the Bluetooth step
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth'**
+  String get sync_update_step_bluetooth;
+
+  /// Update now progress: asks the user to keep the two phones close while searching over Bluetooth
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the phones close'**
+  String get sync_update_bt_close;
+
+  /// Update now progress: the other phone was found over Bluetooth and data is being exchanged
+  ///
+  /// In en, this message translates to:
+  /// **'Found · exchanging expenses'**
+  String get sync_update_bt_found;
+
+  /// Update now progress: result of the Bluetooth exchange
+  ///
+  /// In en, this message translates to:
+  /// **'Received {received}, sent {sent}'**
+  String sync_update_bt_done(int received, int sent);
+
+  /// Update now over Bluetooth: what to do on the other phone, when opened from a group. Arrows separate menu levels
+  ///
+  /// In en, this message translates to:
+  /// **'On {device} open Caravella › {group} › Sync, tap your phone, then Update now'**
+  String sync_update_bt_instruction_group(String device, String group);
+
+  /// Update now over Bluetooth: what to do on the other phone, when opened from Settings. Arrows separate menu levels
+  ///
+  /// In en, this message translates to:
+  /// **'On {device} open Caravella › Settings › Synchronization › Sync with others, tap your phone, then Update now'**
+  String sync_update_bt_instruction_settings(String device);
 }
 
 class _AppLocalizationsDelegate

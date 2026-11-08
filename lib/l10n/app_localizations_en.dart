@@ -2765,4 +2765,45 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get sync_device_forget_hint =>
       'Tap a device to update it, or to forget it: that takes it off every group.';
+
+  @override
+  String get sync_device_update_hint_bt =>
+      'On the same Wi-Fi, or side by side over Bluetooth.';
+
+  @override
+  String get sync_update_bt_hint =>
+      'Sync over Wi-Fi is off: this updates over Bluetooth, with the phones side by side.';
+
+  @override
+  String get sync_update_step_wifi => 'Wi-Fi';
+
+  @override
+  String get sync_update_wifi_skipped_off => 'Skipped · Sync over Wi-Fi is off';
+
+  @override
+  String get sync_update_wifi_skipped_away => 'Skipped · not on your network';
+
+  @override
+  String get sync_update_step_bluetooth => 'Bluetooth';
+
+  @override
+  String get sync_update_bt_close => 'Keep the phones close';
+
+  @override
+  String get sync_update_bt_found => 'Found · exchanging expenses';
+
+  @override
+  String sync_update_bt_done(int received, int sent) {
+    return 'Received $received, sent $sent';
+  }
+
+  @override
+  String sync_update_bt_instruction_group(String device, String group) {
+    return 'On $device open Caravella › $group › Sync, tap your phone, then Update now';
+  }
+
+  @override
+  String sync_update_bt_instruction_settings(String device) {
+    return 'On $device open Caravella › Settings › Synchronization › Sync with others, tap your phone, then Update now';
+  }
 }

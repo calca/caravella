@@ -179,6 +179,9 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
   void _onBluetoothEvent(BluetoothPeerEvent event) {
     if (!mounted) return;
     switch (event) {
+      case PeerFound(:final updateDeviceId) when updateDeviceId != null:
+        // A paired phone waiting for "Update now": not an invitation.
+        break;
       case PeerFound(:final endpointId, :final name, :final groupTitle):
         setState(() {
           _peers.removeWhere((p) => p.endpointId == endpointId);

@@ -18,12 +18,13 @@ class BluetoothPermissionDeniedException implements Exception {
 /// side): should persist the peer's identity and grant it access to
 /// [groupId] — pairing is scoped to the specific group that was being
 /// advertised, not every synced group.
-typedef BluetoothPairingCallback = Future<void> Function(
-  String deviceId,
-  String deviceName,
-  String platform,
-  String groupId,
-);
+typedef BluetoothPairingCallback =
+    Future<void> Function(
+      String deviceId,
+      String deviceName,
+      String platform,
+      String groupId,
+    );
 
 // ---------------------------------------------------------------------------
 // Bluetooth peer events
@@ -46,24 +47,53 @@ class PeerFound extends BluetoothPeerEvent {
   /// [BluetoothEndpointName]); `null` for older versions.
   final String? groupTitle;
 
+  /// Set when the peer is waiting for an update with an already-paired
+  /// device (see [BluetoothSyncChannel.startUpdate]): its device ID, as it
+  /// advertised it. `null` for an invitation.
+  final String? updateDeviceId;
+
   const PeerFound({
     required this.name,
     required this.endpointId,
     this.groupTitle,
+    this.updateDeviceId,
   });
 
   @override
   String toString() => 'PeerFound(name: $name, endpointId: $endpointId)';
 }
 
-/// The name a device advertises over Bluetooth: its device name and, after
-/// a newline, the title of the group it invites to, so the joining phone
-/// can show "Pixel 9 · Invite to «Lisbon»" before connecting. Older
-/// versions advertise the device name alone, which decodes the same way.
+/// The name a device advertises over Bluetooth.
+///
+/// An invitation is its device name and, after a newline, the title of the
+/// group it invites to, so the joining phone can show "Pixel 9 · Invite to
+/// «Lisbon»" before connecting. Older versions advertise the device name
+/// alone, which decodes the same way.
+///
+/// An update (two paired phones refreshing each other, see
+/// [BluetoothUpdate]) is the name, an empty title line and a third line
+/// `upd:<deviceId>`: no group, and the other phone learns whose
+/// advertisement it is without trusting the (editable) device name.
 abstract final class BluetoothEndpointName {
   /// Group titles are cut to this many characters: the endpoint name must
   /// stay short.
   static const int maxGroupTitleLength = 40;
+
+  /// Device names in an update advertisement are cut to this many
+  /// characters, to leave room for the device ID.
+  static const int maxUpdateNameLength = 30;
+
+  static const String _updatePrefix = 'upd:';
+
+  /// The name advertised while waiting for an update; [deviceId] is this
+  /// phone's.
+  static String encodeUpdate(String deviceName, String deviceId) {
+    final name = deviceName.replaceAll('\n', ' ');
+    final cut = name.length > maxUpdateNameLength
+        ? '${name.substring(0, maxUpdateNameLength - 1)}…'
+        : name;
+    return '$cut\n\n$_updatePrefix${deviceId.replaceAll('\n', '')}';
+  }
 
   static String encode(String deviceName, String groupTitle) {
     final name = deviceName.replaceAll('\n', ' ');
@@ -75,14 +105,40 @@ abstract final class BluetoothEndpointName {
     return '$name\n$cut';
   }
 
-  static ({String deviceName, String? groupTitle}) decode(String raw) {
+  static ({String deviceName, String? groupTitle, String? updateDeviceId})
+  decode(String raw) {
     final i = raw.indexOf('\n');
-    if (i < 0) return (deviceName: raw, groupTitle: null);
+    if (i < 0) return (deviceName: raw, groupTitle: null, updateDeviceId: null);
+    final lines = raw.split('\n');
+    if (lines.length == 3 && lines[2].startsWith(_updatePrefix)) {
+      final id = lines[2].substring(_updatePrefix.length).trim();
+      if (id.isNotEmpty) {
+        return (deviceName: lines[0], groupTitle: null, updateDeviceId: id);
+      }
+    }
     final title = raw.substring(i + 1).trim();
     return (
       deviceName: raw.substring(0, i),
       groupTitle: title.isEmpty ? null : title,
+      updateDeviceId: null,
     );
+  }
+}
+
+/// Rules of a Bluetooth update between two already-paired phones, which
+/// both run the same screen and so both advertise and discover.
+abstract final class BluetoothUpdate {
+  /// Whether the phone with [ownDeviceId] is the one to request the
+  /// connection to [peerDeviceId]: the lexicographically smaller ID. The
+  /// other side only waits, so exactly one connection is requested. Equal
+  /// IDs (never in practice) make nobody initiate.
+  static bool initiates(String ownDeviceId, String peerDeviceId) =>
+      ownDeviceId.compareTo(peerDeviceId) < 0;
+
+  /// How many changes (groups, deletions) an exchange's delta carries.
+  static int countChanges(Map<String, dynamic> delta) {
+    int length(Object? list) => list is List ? list.length : 0;
+    return length(delta['groups']) + length(delta['deleted_groups']);
   }
 }
 
@@ -147,7 +203,8 @@ abstract class BluetoothSyncChannel {
   Future<Map<String, dynamic>> Function(
     Map<String, dynamic> remoteDelta,
     String peerId,
-  )? onDelta;
+  )?
+  onDelta;
 
   /// Callback invoked when a pairing handshake completes. Should persist
   /// the peer and grant it access to the group involved.
@@ -181,6 +238,18 @@ abstract class BluetoothSyncChannel {
   /// Throws [BluetoothPermissionDeniedException] if the required runtime
   /// permissions are not granted.
   Future<void> startDiscovery();
+
+  /// Starts an update with the already-paired device [targetDeviceId]:
+  /// advertises and discovers at the same time (the other phone runs the
+  /// same), and only that device is served — no pairing, no group grants,
+  /// and the exchange must use the key already on file for it. Any other
+  /// device is ignored. See [BluetoothUpdate.initiates] for who requests
+  /// the connection with [syncWithPeer].
+  ///
+  /// Throws [BluetoothPermissionDeniedException] if the required runtime
+  /// permissions are not granted. Ended by [stopAll].
+  Future<void> startUpdate({required String targetDeviceId}) =>
+      throw UnsupportedError('This channel cannot update paired devices');
 
   /// Stop all advertising and discovery.
   Future<void> stopAll();
