@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Home: the favorite group shows a heart before its dates, as on the group page, instead of a “Favorite” pill
 - A group's sync page: with nobody to share with yet, “Shared with” explains what sharing is for, above **Invite a device**; once there are devices they come first, with “+ Invite another device” as the last row
 - Paired devices: **Update now** is one button on both phones, Wi-Fi first — if Sync over Wi-Fi is off or the other phone doesn’t answer on your network, it carries on over Bluetooth by itself: open the same device on the other phone, keep the phones close, and both show “Received N, sent M” and close (Play builds; Bluetooth must be on in Sync with others)
 - Adding an expense from a group’s page now opens the same quick sheet as Home (with the “More details” option to expand it); editing an expense still opens the full form
