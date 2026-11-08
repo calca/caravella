@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:provider/provider.dart';
 
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../home/cards/widgets/add_expense_controller.dart';
 import '../widgets/delete_expense_dialog.dart';
 import '../../expense/pages/expense_form_page.dart';
 import '../widgets/expense_export_actions.dart';
@@ -292,77 +293,25 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     );
   }
 
+  /// Same quick-add sheet as Home; the controller persists the expense,
+  /// refreshes the notifier, updates the notification and prompts for rating.
+  /// The page only adds the highlight animation and its own refresh.
   void _showAddExpenseSheet() {
-    if (_trip != null) {
-      _groupNotifier?.setCurrentGroup(_trip!);
-    }
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (context) => ExpenseFormPage(
-              group: _trip!,
-              onExpenseSaved: (newExpense) async {
-                final sheetCtx = context; // expense form page context
-                final gloc = gen.AppLocalizations.of(sheetCtx);
-                final newExpenseId = DateTime.now().millisecondsSinceEpoch
-                    .toString();
-                final expenseWithId = newExpense.copyWith(id: newExpenseId);
-
-                // Persist using the new storage API
-                await ExpenseGroupStorageV2.addExpenseToGroup(
-                  widget.trip.id,
-                  expenseWithId,
-                );
-
-                // Set the newly added expense ID for animation
-                if (mounted) {
-                  setState(() {
-                    _newlyAddedExpenseId = newExpenseId;
-                  });
-                }
-
-                // Refresh local state and notifier
-                await _refreshGroup();
-                _groupNotifier?.notifyGroupUpdated(widget.trip.id);
-
-                // Update notification if enabled
-                await NotificationManager().updateNotificationForGroupById(
-                  widget.trip.id,
-                  gloc,
-                );
-
-                // Check if we should prompt for rating
-                // This is done after successful expense save
-                RatingService.checkAndPromptForRating();
-
-                // Clear the animation ID after a short delay to allow re-animation
-                // for subsequent additions
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  if (mounted) {
-                    setState(() {
-                      _newlyAddedExpenseId = null;
-                    });
-                  }
-                });
-                // Note: nav.pop() removed - ExpenseFormComponent handles navigation
-                // when shouldAutoClose is true to avoid double pop back to home
-              },
-              onCategoryAdded: (categoryName) async {
-                await _groupNotifier?.addCategory(categoryName);
-                await _refreshGroup();
-              },
-              onParticipantAdded: (participantName) async {
-                await _groupNotifier?.addParticipant(participantName);
-                await _refreshGroup();
-              },
-            ),
-          ),
-        )
-        .whenComplete(() {
-          if (mounted) {
-            _groupNotifier?.clearCurrentGroup();
-          }
+    final trip = _trip;
+    if (trip == null) return;
+    AddExpenseController(
+      group: trip,
+      onExpensePersisted: (expense) {
+        if (mounted) setState(() => _newlyAddedExpenseId = expense.id);
+      },
+      onExpenseAdded: () async {
+        await _refreshGroup();
+        // Clear the id after a short delay so later additions animate again.
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) setState(() => _newlyAddedExpenseId = null);
         });
+      },
+    ).showAddExpenseSheet(context, trip);
   }
 
   Future<void> _openEditExpense(ExpenseDetails expense) async {
