@@ -30,6 +30,7 @@ Self-enforces Nominatim's 1-request/second usage policy via a static `_lastReque
 `PlaceSearchController` (`location/state/place_search_controller.dart`, `ChangeNotifier` over immutable `PlaceSearchState`) is the map-search screen's brain:
 - Debounces `searchPlaces(query)` (minimum 3 characters) via a shared `Debouncer` (see [caravella_core_ui reference](PACKAGE_CARAVELLA_CORE_UI.md)).
 - On map tap, `selectMapLocation` → `_geocodeLocation` → `NominatimSearchService.reverseGeocode` (3s timeout) resolves a display address for an arbitrary tapped point.
+- `PlaceSearchPage` shows the selected point (a tapped point, a search result, or the expense's place when it already has one) in a card at the bottom of the map, with the address, coordinates and Confirm. It is not a modal sheet, so the search above and the map stay usable to pick another place, and the card steps aside while the search field has focus.
 - `PlaceSearchState` tracks `mapCenter`/`mapZoom` (default: Rome, `41.9028,12.4964`) and `isCenteringOnLocation`/`isGeocodingLocation` UI flags.
 
 The result flows back into `ExpenseFormController.updateLocation`. UI: `pages/place_search_page.dart` (full map+search screen), `widgets/location_input_widget.dart`, `widgets/compact_location_indicator.dart`.
