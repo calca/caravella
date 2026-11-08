@@ -3245,7 +3245,7 @@ abstract class AppLocalizations {
   /// Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide
   ///
   /// In en, this message translates to:
-  /// **'Turn on “Automatically on the same Wi-Fi” in Sync with others to share the group'**
+  /// **'Wi-Fi and Bluetooth are off in Sync with others'**
   String get sync_group_needs_channel;
 
   /// Button to show this device's pairing QR code
@@ -4773,7 +4773,7 @@ abstract class AppLocalizations {
   /// Invite/Join sync flow: sync invite qr off
   ///
   /// In en, this message translates to:
-  /// **'The QR code needs “Automatically on the same Wi-Fi”, in Sync with others'**
+  /// **'The QR code needs Wi-Fi turned on, in Sync with others'**
   String get sync_invite_qr_off;
 
   /// Invite/Join sync flow: sync join button
@@ -4839,7 +4839,7 @@ abstract class AppLocalizations {
   /// Invite/Join sync flow: sync join qr off
   ///
   /// In en, this message translates to:
-  /// **'To join with the QR code, turn on automatic sync on the same Wi-Fi'**
+  /// **'To join with the QR code, turn on Wi-Fi'**
   String get sync_join_qr_off;
 
   /// Invite/Join sync flow: sync join turn on
@@ -4848,23 +4848,47 @@ abstract class AppLocalizations {
   /// **'Turn on'**
   String get sync_join_turn_on;
 
-  /// Invite/Join sync flow: sync wifi auto title
+  /// Sync privacy switches: sync privacy section
   ///
   /// In en, this message translates to:
-  /// **'Automatically on the same Wi-Fi'**
-  String get sync_wifi_auto_title;
+  /// **'What Caravella can use'**
+  String get sync_privacy_section;
 
-  /// Invite/Join sync flow: sync wifi auto desc
+  /// Sync privacy switches: sync wifi switch desc
   ///
   /// In en, this message translates to:
-  /// **'Shared groups update by themselves'**
-  String get sync_wifi_auto_desc;
+  /// **'On the same network, shared groups update by themselves'**
+  String get sync_wifi_switch_desc;
 
-  /// Invite/Join sync flow: sync bt update hint
+  /// Sync privacy switches: sync bt switch desc
   ///
   /// In en, this message translates to:
-  /// **'Without a Wi-Fi in common, open “Join a group” next to the other phone to update over Bluetooth.'**
-  String get sync_bt_update_hint;
+  /// **'Only while “Invite a device” or “Join a group” is open'**
+  String get sync_bt_switch_desc;
+
+  /// Sync privacy switches: sync privacy footer
+  ///
+  /// In en, this message translates to:
+  /// **'With everything off, this phone isn’t visible to others and receives nothing. Your groups stay on this phone.'**
+  String get sync_privacy_footer;
+
+  /// Sync privacy switches: sync group open settings
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on in Settings'**
+  String get sync_group_open_settings;
+
+  /// Sync privacy switches: sync bt off title
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth off'**
+  String get sync_bt_off_title;
+
+  /// Sync privacy switches: sync bt off desc
+  ///
+  /// In en, this message translates to:
+  /// **'Needed if you’re not on the same Wi-Fi'**
+  String get sync_bt_off_desc;
 }
 
 class _AppLocalizationsDelegate

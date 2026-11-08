@@ -1641,7 +1641,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_group_needs_channel =>
-      'Attiva «In automatico sulla stessa Wi-Fi» in Sincronizza con altri per condividere il gruppo';
+      'Wi-Fi e Bluetooth sono spenti in Sincronizza con altri';
 
   @override
   String get sync_qr_show_button => 'Mostra codice QR';
@@ -2605,7 +2605,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_invite_qr_off =>
-      'Per il QR serve «In automatico sulla stessa Wi-Fi», in Sincronizza con altri';
+      'Per il QR serve la Wi-Fi attiva, in Sincronizza con altri';
 
   @override
   String get sync_join_button => 'Unisciti a un gruppo';
@@ -2643,19 +2643,32 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get sync_join_qr_off =>
-      'Per unirti con il QR, attiva l’aggiornamento automatico sulla stessa Wi-Fi';
+  String get sync_join_qr_off => 'Per unirti con il QR, attiva la Wi-Fi';
 
   @override
   String get sync_join_turn_on => 'Attiva';
 
   @override
-  String get sync_wifi_auto_title => 'In automatico sulla stessa Wi-Fi';
+  String get sync_privacy_section => 'Cosa può usare Caravella';
 
   @override
-  String get sync_wifi_auto_desc => 'I gruppi condivisi si aggiornano da soli';
+  String get sync_wifi_switch_desc =>
+      'Sulla stessa rete, i gruppi condivisi si aggiornano da soli';
 
   @override
-  String get sync_bt_update_hint =>
-      'Senza Wi-Fi in comune, riapri «Unisciti a un gruppo» vicino all’altro telefono per aggiornare via Bluetooth.';
+  String get sync_bt_switch_desc =>
+      'Solo mentre «Invita un dispositivo» o «Unisciti a un gruppo» sono aperti';
+
+  @override
+  String get sync_privacy_footer =>
+      'Con tutto spento il telefono non si fa vedere e non riceve niente. I gruppi restano sul telefono.';
+
+  @override
+  String get sync_group_open_settings => 'Attiva in Impostazioni';
+
+  @override
+  String get sync_bt_off_title => 'Bluetooth spento';
+
+  @override
+  String get sync_bt_off_desc => 'Serve se non avete la stessa Wi-Fi';
 }

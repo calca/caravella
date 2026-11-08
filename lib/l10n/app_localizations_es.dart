@@ -1645,7 +1645,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sync_group_needs_channel =>
-      'Activa «Automático en la misma Wi-Fi» en Sincroniza con otros para compartir el grupo';
+      'Wi-Fi y Bluetooth están apagados en Sincroniza con otros';
 
   @override
   String get sync_qr_show_button => 'Mostrar código QR';
@@ -2609,7 +2609,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sync_invite_qr_off =>
-      'El QR necesita «Automático en la misma Wi-Fi», en Sincroniza con otros';
+      'El QR necesita la Wi-Fi activada, en Sincroniza con otros';
 
   @override
   String get sync_join_button => 'Unirse a un grupo';
@@ -2646,20 +2646,32 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get sync_join_qr_off =>
-      'Para unirte con el QR, activa la sincronización automática en la misma Wi-Fi';
+  String get sync_join_qr_off => 'Para unirte con el QR, activa la Wi-Fi';
 
   @override
   String get sync_join_turn_on => 'Activar';
 
   @override
-  String get sync_wifi_auto_title => 'Automático en la misma Wi-Fi';
+  String get sync_privacy_section => 'Qué puede usar Caravella';
 
   @override
-  String get sync_wifi_auto_desc =>
-      'Los grupos compartidos se actualizan solos';
+  String get sync_wifi_switch_desc =>
+      'En la misma red, los grupos compartidos se actualizan solos';
 
   @override
-  String get sync_bt_update_hint =>
-      'Sin una Wi-Fi en común, abre «Unirse a un grupo» junto al otro teléfono para actualizar por Bluetooth.';
+  String get sync_bt_switch_desc =>
+      'Solo mientras «Invitar un dispositivo» o «Unirse a un grupo» están abiertos';
+
+  @override
+  String get sync_privacy_footer =>
+      'Con todo apagado, el teléfono no es visible y no recibe nada. Tus grupos se quedan en el teléfono.';
+
+  @override
+  String get sync_group_open_settings => 'Activar en Configuración';
+
+  @override
+  String get sync_bt_off_title => 'Bluetooth apagado';
+
+  @override
+  String get sync_bt_off_desc => 'Hace falta si no estáis en la misma Wi-Fi';
 }
