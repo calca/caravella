@@ -4308,11 +4308,11 @@ abstract class AppLocalizations {
   /// **'Share per person'**
   String get balances_share_per_person;
 
-  /// Balances: under 'Share per person', how it's computed; people is already pluralized ('4 participants')
+  /// Balances: under 'Share per person', how it's computed: the group total divided by the number of people
   ///
   /// In en, this message translates to:
-  /// **'Split equally among {people}'**
-  String balances_share_basis(String people);
+  /// **'The total divided by {count}'**
+  String balances_share_basis(int count);
 
   /// Accessibility label of the button removing an attachment from an expense
   ///
