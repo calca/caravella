@@ -1637,7 +1637,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_group_needs_channel =>
-      'Turn on “Automatically on the same Wi-Fi” in Sync with others to share the group';
+      'Wi-Fi and Bluetooth are off in Sync with others';
 
   @override
   String get sync_qr_show_button => 'Show QR code';
@@ -2597,7 +2597,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_invite_qr_off =>
-      'The QR code needs “Automatically on the same Wi-Fi”, in Sync with others';
+      'The QR code needs Wi-Fi turned on, in Sync with others';
 
   @override
   String get sync_join_button => 'Join a group';
@@ -2632,19 +2632,32 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get sync_join_qr_off =>
-      'To join with the QR code, turn on automatic sync on the same Wi-Fi';
+  String get sync_join_qr_off => 'To join with the QR code, turn on Wi-Fi';
 
   @override
   String get sync_join_turn_on => 'Turn on';
 
   @override
-  String get sync_wifi_auto_title => 'Automatically on the same Wi-Fi';
+  String get sync_privacy_section => 'What Caravella can use';
 
   @override
-  String get sync_wifi_auto_desc => 'Shared groups update by themselves';
+  String get sync_wifi_switch_desc =>
+      'On the same network, shared groups update by themselves';
 
   @override
-  String get sync_bt_update_hint =>
-      'Without a Wi-Fi in common, open “Join a group” next to the other phone to update over Bluetooth.';
+  String get sync_bt_switch_desc =>
+      'Only while “Invite a device” or “Join a group” is open';
+
+  @override
+  String get sync_privacy_footer =>
+      'With everything off, this phone isn’t visible to others and receives nothing. Your groups stay on this phone.';
+
+  @override
+  String get sync_group_open_settings => 'Turn on in Settings';
+
+  @override
+  String get sync_bt_off_title => 'Bluetooth off';
+
+  @override
+  String get sync_bt_off_desc => 'Needed if you’re not on the same Wi-Fi';
 }

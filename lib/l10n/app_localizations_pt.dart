@@ -1641,7 +1641,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sync_group_needs_channel =>
-      'Ative «Automático na mesma Wi-Fi» em Sincronizar com outros para compartilhar o grupo';
+      'Wi-Fi e Bluetooth estão desligados em Sincronizar com outros';
 
   @override
   String get sync_qr_show_button => 'Mostrar código QR';
@@ -2601,7 +2601,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sync_invite_qr_off =>
-      'O QR precisa de «Automático na mesma Wi-Fi», em Sincronizar com outros';
+      'O QR precisa da Wi-Fi ativada, em Sincronizar com outros';
 
   @override
   String get sync_join_button => 'Entrar num grupo';
@@ -2639,20 +2639,32 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get sync_join_qr_off =>
-      'Para entrar com o QR, ative a sincronização automática na mesma Wi-Fi';
+  String get sync_join_qr_off => 'Para entrar com o QR, ative a Wi-Fi';
 
   @override
   String get sync_join_turn_on => 'Ativar';
 
   @override
-  String get sync_wifi_auto_title => 'Automático na mesma Wi-Fi';
+  String get sync_privacy_section => 'O que o Caravella pode usar';
 
   @override
-  String get sync_wifi_auto_desc =>
-      'Os grupos compartilhados se atualizam sozinhos';
+  String get sync_wifi_switch_desc =>
+      'Na mesma rede, os grupos compartilhados se atualizam sozinhos';
 
   @override
-  String get sync_bt_update_hint =>
-      'Sem uma Wi-Fi em comum, abra «Entrar num grupo» perto do outro telefone para atualizar por Bluetooth.';
+  String get sync_bt_switch_desc =>
+      'Só enquanto «Convidar um dispositivo» ou «Entrar num grupo» estão abertos';
+
+  @override
+  String get sync_privacy_footer =>
+      'Com tudo desligado, o telefone não fica visível e não recebe nada. Seus grupos ficam no telefone.';
+
+  @override
+  String get sync_group_open_settings => 'Ativar em Configurações';
+
+  @override
+  String get sync_bt_off_title => 'Bluetooth desligado';
+
+  @override
+  String get sync_bt_off_desc => 'Necessário se vocês não estão na mesma Wi-Fi';
 }

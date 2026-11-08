@@ -21,6 +21,7 @@ class _FakeBluetooth extends BluetoothSyncChannel {
   Completer<SyncResult>? exchange;
   final List<String> synced = [];
   String? advertisedGroup;
+  bool discovering = false;
   bool stopped = false;
 
   @override
@@ -43,6 +44,7 @@ class _FakeBluetooth extends BluetoothSyncChannel {
   @override
   Future<void> startDiscovery() async {
     if (discoveryError != null) throw discoveryError!;
+    discovering = true;
   }
 
   @override
@@ -161,7 +163,12 @@ void main() {
   });
 
   group('InviteSheet', () {
-    Future<void> open(WidgetTester tester, {_FakeBluetooth? bluetooth}) async {
+    Future<void> open(
+      WidgetTester tester, {
+      _FakeBluetooth? bluetooth,
+      bool bluetoothOn = true,
+      Future<void> Function()? onTurnOnBluetooth,
+    }) async {
       await tester.pumpWidget(
         app(
           Builder(
@@ -177,6 +184,8 @@ void main() {
                     // Off: no real network lookup for the QR code.
                     wifiEnabled: false,
                     bluetooth: bluetooth,
+                    bluetoothEnabled: bluetoothOn,
+                    onTurnOnBluetooth: onTurnOnBluetooth,
                   ),
                 ),
                 child: const Text('share'),
@@ -246,6 +255,29 @@ void main() {
       expect(find.text(loc.sync_bt_permission_denied), findsOneWidget);
       expect(find.text(loc.sync_invite_qr_off), findsOneWidget);
     });
+
+    testWidgets('with the Bluetooth switch off, stays invisible until '
+        'turned on', (tester) async {
+      var turnedOn = false;
+      final bt = _FakeBluetooth();
+      await open(
+        tester,
+        bluetooth: bt,
+        bluetoothOn: false,
+        onTurnOnBluetooth: () async => turnedOn = true,
+      );
+      final loc = AppLocalizations.of(tester.element(find.byType(InviteSheet)));
+      expect(bt.advertisedGroup, isNull);
+      expect(find.text(loc.sync_bt_off_title), findsOneWidget);
+      expect(find.text(loc.sync_invite_nearby_title), findsNothing);
+
+      await tester.tap(find.text(loc.sync_join_turn_on));
+      await tester.pump();
+      await tester.pump();
+      expect(turnedOn, isTrue);
+      expect(bt.advertisedGroup, 'g1');
+      expect(find.text(loc.sync_invite_nearby_title), findsOneWidget);
+    });
   });
 
   group('JoinGroupPage', () {
@@ -254,6 +286,8 @@ void main() {
       _FakeBluetooth bt, {
       bool wifi = true,
       Future<void> Function()? onTurnOnWifi,
+      bool bluetoothOn = true,
+      Future<void> Function()? onTurnOnBluetooth,
     }) async {
       await tester.pumpWidget(
         app(
@@ -267,6 +301,8 @@ void main() {
                       wifiEnabled: wifi,
                       onTurnOnWifi: onTurnOnWifi,
                       bluetooth: bt,
+                      bluetoothEnabled: bluetoothOn,
+                      onTurnOnBluetooth: onTurnOnBluetooth,
                     ),
                   ),
                 ),
@@ -358,6 +394,32 @@ void main() {
       expect(turnedOn, isTrue);
       expect(find.text(loc.sync_join_qr_off), findsNothing);
       expect(find.text(loc.sync_join_scan_hint), findsOneWidget);
+    });
+
+    testWidgets('with the Bluetooth switch off, does not search until '
+        'turned on', (tester) async {
+      var turnedOn = false;
+      final bt = _FakeBluetooth();
+      await open(
+        tester,
+        bt,
+        bluetoothOn: false,
+        onTurnOnBluetooth: () async => turnedOn = true,
+      );
+      final loc = AppLocalizations.of(
+        tester.element(find.byType(JoinGroupPage)),
+      );
+      expect(bt.discovering, isFalse);
+      expect(find.text(loc.sync_bt_off_title), findsOneWidget);
+      expect(find.text(loc.sync_join_searching), findsNothing);
+
+      await tester.tap(find.text(loc.sync_join_turn_on));
+      await tester.pump();
+      await tester.pump();
+      expect(turnedOn, isTrue);
+      expect(bt.discovering, isTrue);
+      expect(find.text(loc.sync_bt_off_title), findsNothing);
+      expect(find.text(loc.sync_join_searching), findsOneWidget);
     });
   });
 }

@@ -9,7 +9,8 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 /// transport at once. The camera reads the QR code another phone shows
 /// (same Wi-Fi), and, when [bluetooth] is given, the panel at the bottom
 /// lists the nearby phones with "Invite" open, to join (or, when already
-/// paired, update) over Bluetooth.
+/// paired, update) over Bluetooth — once the user allows Bluetooth
+/// ([bluetoothEnabled]; otherwise a "Turn on" button, [onTurnOnBluetooth]).
 ///
 /// Pops with `true` once joined. A QR code that can't be used (expired,
 /// from an emulator, pairing failed) is explained in the panel with "Scan
@@ -27,12 +28,21 @@ class JoinGroupPage extends StatefulWidget {
   /// Bluetooth isn't available (F-Droid build).
   final BluetoothSyncChannel? bluetooth;
 
+  /// Whether the user allows Bluetooth sync (the privacy switch). While
+  /// false, [bluetooth] stays off and the panel offers to turn it on.
+  final bool bluetoothEnabled;
+
+  /// Turns the Bluetooth privacy switch on, from the "Turn on" button.
+  final Future<void> Function()? onTurnOnBluetooth;
+
   const JoinGroupPage({
     super.key,
     required this.orchestrator,
     required this.wifiEnabled,
     this.onTurnOnWifi,
     this.bluetooth,
+    required this.bluetoothEnabled,
+    this.onTurnOnBluetooth,
   });
 
   @override
@@ -56,6 +66,8 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
   String? _qrProblem;
 
   // Bluetooth
+  late bool _btOn = widget.bluetoothEnabled;
+  bool _turningOnBluetooth = false;
   StreamSubscription<BluetoothPeerEvent>? _btEvents;
   final List<_NearbyPeer> _peers = [];
   Set<String> _pairedNames = const {};
@@ -67,9 +79,13 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
   @override
   void initState() {
     super.initState();
+    if (_btOn) _startBluetooth();
+  }
+
+  void _startBluetooth() {
     final bt = widget.bluetooth;
     if (bt != null) {
-      _btEvents = bt.events.listen(_onBluetoothEvent);
+      _btEvents ??= bt.events.listen(_onBluetoothEvent);
       _startDiscovery();
       widget.orchestrator.getPairedDevices().then((devices) {
         if (mounted) {
@@ -134,6 +150,19 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
   // ---------------------------------------------------------------------------
   // Bluetooth
   // ---------------------------------------------------------------------------
+
+  Future<void> _turnOnBluetooth() async {
+    final turnOn = widget.onTurnOnBluetooth;
+    if (turnOn == null) return;
+    setState(() => _turningOnBluetooth = true);
+    await turnOn();
+    if (!mounted) return;
+    setState(() {
+      _turningOnBluetooth = false;
+      _btOn = true;
+    });
+    _startBluetooth();
+  }
 
   void _startDiscovery() {
     widget.bluetooth!.startDiscovery().catchError((Object e) {
@@ -333,7 +362,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                       ),
                     ),
                   ),
-                  if (_btProblem == null)
+                  if (_btOn && _btProblem == null)
                     Text(
                       loc.sync_join_searching,
                       style: textTheme.bodySmall?.copyWith(
@@ -343,39 +372,78 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
                 ],
               ),
               const SizedBox(height: AppSpacing.sm),
-              for (final peer in _peers) ...[
-                _buildPeer(context, loc, peer),
-                const SizedBox(height: AppSpacing.xs),
-              ],
-              if (_btProblem != null)
-                Semantics(
-                  liveRegion: true,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.xs,
+              if (!_btOn)
+                _buildBluetoothOff(context, loc)
+              else ...[
+                for (final peer in _peers) ...[
+                  _buildPeer(context, loc, peer),
+                  const SizedBox(height: AppSpacing.xs),
+                ],
+                if (_btProblem != null)
+                  Semantics(
+                    liveRegion: true,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.xs,
+                      ),
+                      child: Text(
+                        _btProblem!,
+                        textAlign: TextAlign.center,
+                        style: textTheme.bodySmall?.copyWith(color: s.error),
+                      ),
                     ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.xxs),
                     child: Text(
-                      _btProblem!,
+                      loc.sync_join_nearby_hint,
                       textAlign: TextAlign.center,
-                      style: textTheme.bodySmall?.copyWith(color: s.error),
+                      style: textTheme.bodySmall?.copyWith(
+                        color: s.onSurfaceVariant,
+                      ),
                     ),
                   ),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.xxs),
-                  child: Text(
-                    loc.sync_join_nearby_hint,
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: s.onSurfaceVariant,
-                    ),
-                  ),
-                ),
+              ],
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildBluetoothOff(BuildContext context, gen.AppLocalizations loc) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                loc.sync_bt_off_title,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                loc.sync_bt_off_desc,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: s.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (widget.onTurnOnBluetooth != null) ...[
+          const SizedBox(width: AppSpacing.xs),
+          OutlinedButton(
+            onPressed: _turningOnBluetooth ? null : _turnOnBluetooth,
+            child: Text(loc.sync_join_turn_on),
+          ),
+        ],
+      ],
     );
   }
 

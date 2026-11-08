@@ -649,7 +649,7 @@
   ,"@sync_group_enable": {"description": "Etichetta per abilitare la sincronizzazione su un gruppo"}
   ,"sync_group_enable_desc": "Con i dispositivi che inviti"
   ,"@sync_group_enable_desc": {"description": "Descrizione per il toggle di sincronizzazione del gruppo"}
-  ,"sync_group_needs_channel": "Attiva «In automatico sulla stessa Wi-Fi» in Sincronizza con altri per condividere il gruppo"
+  ,"sync_group_needs_channel": "Wi-Fi e Bluetooth sono spenti in Sincronizza con altri"
   ,"@sync_group_needs_channel": {"description": "Mostrato al posto di sync_group_enable_desc quando né Wi-Fi né Bluetooth sync sono attivi a livello di app"}
   ,"sync_qr_show_button": "Mostra codice QR"
   ,"@sync_qr_show_button": {"description": "Pulsante per mostrare il codice QR di pairing di questo dispositivo"}
@@ -956,7 +956,7 @@
   ,"sync_invite_nearby_desc": "Se non avete la stessa Wi-Fi, ti trovano via Bluetooth"
   ,"sync_invite_nearby_syncing": "Sincronizzazione con {device}…"
   ,"sync_invite_closes": "Si chiude da solo quando l’altro telefono si unisce"
-  ,"sync_invite_qr_off": "Per il QR serve «In automatico sulla stessa Wi-Fi», in Sincronizza con altri"
+  ,"sync_invite_qr_off": "Per il QR serve la Wi-Fi attiva, in Sincronizza con altri"
   ,"sync_join_button": "Unisciti a un gruppo"
   ,"sync_join_button_desc": "Inquadra il QR o scegli un telefono vicino"
   ,"sync_join_scan_hint": "Inquadra il QR che mostra l’altro telefono"
@@ -967,9 +967,13 @@
   ,"sync_join_action": "Unisciti"
   ,"sync_join_update": "Aggiorna"
   ,"sync_join_done": "Sincronizzato con {device}"
-  ,"sync_join_qr_off": "Per unirti con il QR, attiva l’aggiornamento automatico sulla stessa Wi-Fi"
+  ,"sync_join_qr_off": "Per unirti con il QR, attiva la Wi-Fi"
   ,"sync_join_turn_on": "Attiva"
-  ,"sync_wifi_auto_title": "In automatico sulla stessa Wi-Fi"
-  ,"sync_wifi_auto_desc": "I gruppi condivisi si aggiornano da soli"
-  ,"sync_bt_update_hint": "Senza Wi-Fi in comune, riapri «Unisciti a un gruppo» vicino all’altro telefono per aggiornare via Bluetooth."
+  ,"sync_privacy_section": "Cosa può usare Caravella"
+  ,"sync_wifi_switch_desc": "Sulla stessa rete, i gruppi condivisi si aggiornano da soli"
+  ,"sync_bt_switch_desc": "Solo mentre «Invita un dispositivo» o «Unisciti a un gruppo» sono aperti"
+  ,"sync_privacy_footer": "Con tutto spento il telefono non si fa vedere e non riceve niente. I gruppi restano sul telefono."
+  ,"sync_group_open_settings": "Attiva in Impostazioni"
+  ,"sync_bt_off_title": "Bluetooth spento"
+  ,"sync_bt_off_desc": "Serve se non avete la stessa Wi-Fi"
 }
