@@ -83,9 +83,7 @@ class GroupBalancesView extends StatelessWidget {
               share: group.getTotalExpenses() / group.participants.length,
               currency: group.currency,
               // The total is already in the header above.
-              basis: gloc.balances_share_basis(
-                gloc.participant_count(group.participants.length),
-              ),
+              basis: gloc.balances_share_basis(group.participants.length),
             ),
             const SizedBox(height: 12),
           ],
