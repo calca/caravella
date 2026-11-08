@@ -11,7 +11,8 @@ import '../pages/tabs/usecase/date_range_formatter.dart';
 /// The group's photo or color behind the top of its page, melting into
 /// [pageColor] at the bottom. A photo (as on the Home and Groups cards) is in
 /// full color at the top and melts into the page color, where dates, title
-/// and figure cards keep the theme's colors.
+/// and figure cards keep the theme's colors; a color does the same
+/// ([ColorVeil]).
 class GroupHeaderBand extends StatelessWidget {
   final ExpenseGroup group;
   final Color pageColor;
@@ -37,10 +38,11 @@ class GroupHeaderBand extends StatelessWidget {
         : null;
   }
 
-  /// Extra room above the title with a photo, so the photo shows.
+  /// Extra room above the title with a photo or a color, so it shows.
   static const double photoExtraTop = 96;
 
-  /// Text color for the band's upper part (title, top bar).
+  /// Text color for the top bar over the band (the title sits on the page
+  /// color, in the theme's text color).
   static Color foregroundOf(ExpenseGroup group, ColorScheme s) {
     final color = colorOf(group, s);
     return color == null
@@ -66,25 +68,11 @@ class GroupHeaderBand extends StatelessWidget {
         fadeExtent: PhotoVeilSpot.groupPage.fadeExtent,
       );
     }
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        ColoredBox(color: color!),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                pageColor.withValues(alpha: 0),
-                pageColor.withValues(alpha: 0),
-                pageColor,
-              ],
-              stops: const [0, 0.5, 1],
-            ),
-          ),
-        ),
-      ],
+    return ColorVeil(
+      color: color!,
+      surface: pageColor,
+      solidExtent: PhotoVeilSpot.groupPage.solidExtent,
+      fadeExtent: PhotoVeilSpot.groupPage.fadeExtent,
     );
   }
 }

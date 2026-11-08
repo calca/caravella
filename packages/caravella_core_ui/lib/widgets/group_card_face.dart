@@ -15,7 +15,8 @@ import 'photo_veil.dart';
 /// Every card has one background treatment:
 /// - **photo**: full color on top, melting into the surface the text sits on
 ///   ([PhotoVeil], like the Home card and the group page);
-/// - **color**: the palette color, with contrasting text;
+/// - **color**: the palette color in place of the photo, melting into the
+///   same surface ([ColorVeil]), so the text looks the same as on a photo;
 /// - **neither**: the raised surface of the Home card.
 ///
 /// Cards without a photo show the [icon] top-left, so they don't look empty.
@@ -70,10 +71,12 @@ class GroupCardFace extends StatelessWidget {
     final path = photoPath;
     final hasPhoto = path != null && path.isNotEmpty && File(path).existsSync();
     final background = hasPhoto ? null : color;
-    final Color fg = background != null
+    // Text always sits on the raised surface; the icon on the color.
+    final Color fg = s.onSurface;
+    final Color fgSecondary = fg.withValues(alpha: 0.8);
+    final Color iconFg = background != null
         ? ExpenseGroupColorPalette.getContrastingTextColor(background)
         : s.onSurface;
-    final Color fgSecondary = fg.withValues(alpha: 0.8);
     final spot = compact
         ? PhotoVeilSpot.groupsWideCardCompact
         : wide
@@ -189,8 +192,15 @@ class GroupCardFace extends StatelessWidget {
             solidExtent: spot.solidExtent,
             fadeExtent: spot.fadeExtent,
           )
+        else if (background != null)
+          ColorVeil(
+            color: background,
+            surface: s.raisedSurface,
+            solidExtent: spot.solidExtent,
+            fadeExtent: spot.fadeExtent,
+          )
         else
-          ColoredBox(color: background ?? s.raisedSurface),
+          ColoredBox(color: s.raisedSurface),
         if (!hasPhoto)
           Padding(
             padding: padding,
@@ -201,9 +211,9 @@ class GroupCardFace extends StatelessWidget {
                 height: iconBox,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: fg.withValues(alpha: 0.12),
+                  color: iconFg.withValues(alpha: 0.12),
                 ),
-                child: Icon(icon, size: iconSize, color: fg),
+                child: Icon(icon, size: iconSize, color: iconFg),
               ),
             ),
           ),

@@ -13,7 +13,8 @@ import 'add_expense_controller.dart';
 ///
 /// With a photo, the photo fills the top of the card in full color and melts
 /// into the card color, where title, dates and figures keep the theme's
-/// colors. The recent expenses
+/// colors. A group color takes the photo's place the same way
+/// ([ColorVeil]), with the type icon top-left so it doesn't look empty. The recent expenses
 /// are in the second card ([GroupCardActivity]).
 class GroupCardContent extends StatelessWidget {
   final ExpenseGroup group;
@@ -35,6 +36,9 @@ class GroupCardContent extends StatelessWidget {
   /// The group photo, drawn as the card's cover.
   final String? photoPath;
 
+  /// The group's color, drawn as the cover when there's no [photoPath].
+  final Color? coverColor;
+
   const GroupCardContent({
     super.key,
     required this.group,
@@ -46,6 +50,7 @@ class GroupCardContent extends StatelessWidget {
     this.isSynced,
     this.showAddButton = true,
     this.photoPath,
+    this.coverColor,
   });
 
   /// Card height from which the spending wave fits under the figures.
@@ -63,6 +68,7 @@ class GroupCardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final photo = photoPath;
+    final tint = photo == null ? coverColor : null;
     final header = MergeSemantics(
       child: Semantics(
         button: onOpen != null,
@@ -104,7 +110,7 @@ class GroupCardContent extends StatelessWidget {
         // Unbounded (large text): stacked at their own height, no spacers.
         final bounded = constraints.hasBoundedHeight;
         final gap = bounded ? const Spacer() : const SizedBox(height: _padding);
-        if (photo == null) {
+        if (photo == null && tint == null) {
           return Padding(
             padding: const EdgeInsets.all(_padding),
             child: Column(
@@ -115,16 +121,37 @@ class GroupCardContent extends StatelessWidget {
           );
         }
 
+        // Title and dates sit on the plain surface below the cover.
+        Widget cover() => photo != null
+            ? PhotoVeil(
+                path: photo,
+                color: theme.colorScheme.raisedSurface,
+                solidExtent: PhotoVeilSpot.home.solidExtent,
+                fadeExtent: PhotoVeilSpot.home.fadeExtent,
+              )
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  ColorVeil(
+                    color: tint!,
+                    surface: theme.colorScheme.raisedSurface,
+                    solidExtent: PhotoVeilSpot.home.solidExtent,
+                    fadeExtent: PhotoVeilSpot.home.fadeExtent,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(_padding),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: _TypeIcon(group: group, color: tint),
+                    ),
+                  ),
+                ],
+              );
+
         final photoArea = Stack(
           fit: StackFit.expand,
           children: [
-            PhotoVeil(
-              path: photo,
-              color: theme.colorScheme.raisedSurface,
-              // Title and dates sit on the plain surface below.
-              solidExtent: PhotoVeilSpot.home.solidExtent,
-              fadeExtent: PhotoVeilSpot.home.fadeExtent,
-            ),
+            cover(),
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 _padding,
@@ -149,14 +176,7 @@ class GroupCardContent extends StatelessWidget {
             else
               Stack(
                 children: [
-                  Positioned.fill(
-                    child: PhotoVeil(
-                      path: photo,
-                      color: theme.colorScheme.raisedSurface,
-                      solidExtent: PhotoVeilSpot.home.solidExtent,
-                      fadeExtent: PhotoVeilSpot.home.fadeExtent,
-                    ),
-                  ),
+                  Positioned.fill(child: cover()),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
                       _padding,
@@ -179,7 +199,7 @@ class GroupCardContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   amounts,
-                  // The photo needs room to show: the wave only on cards
+                  // The cover needs room to show: the wave only on cards
                   // tall enough for both.
                   if (wave != null &&
                       constraints.maxHeight >= photoWaveMinHeight) ...[
@@ -211,6 +231,35 @@ class GroupCardContent extends StatelessWidget {
       values: series.values,
       startLabel: format.format(series.start),
       endLabel: endsToday ? localizations.today : format.format(series.end),
+    );
+  }
+}
+
+/// The group type's icon in a circle, on the color cover (as on the Groups
+/// cards).
+class _TypeIcon extends StatelessWidget {
+  final ExpenseGroup group;
+  final Color color;
+
+  const _TypeIcon({required this.group, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = ExpenseGroupColorPalette.getContrastingTextColor(color);
+    return ExcludeSemantics(
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: fg.withValues(alpha: 0.12),
+        ),
+        child: Icon(
+          (group.groupType ?? ExpenseGroupType.other).icon,
+          size: 24,
+          color: fg,
+        ),
+      ),
     );
   }
 }

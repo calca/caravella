@@ -1,3 +1,4 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -92,5 +93,37 @@ void main() {
       height: GroupCardFace.compactHeight,
     );
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a color melts into the surface like a photo: theme text, '
+      'icon on the color', (tester) async {
+    const tint = Color(0xFFAED6EE);
+    await pump(
+      tester,
+      const GroupCardFace(
+        title: 'Lisbon',
+        total: 0,
+        currency: '€',
+        icon: icon,
+        color: tint,
+      ),
+      width: 179,
+      height: 218,
+    );
+    final veil = tester.widget<ColorVeil>(find.byType(ColorVeil));
+    expect(veil.color, tint);
+    expect(veil.solidExtent, PhotoVeilSpot.groupsCard.solidExtent);
+    expect(veil.fadeExtent, PhotoVeilSpot.groupsCard.fadeExtent);
+
+    final scheme = Theme.of(tester.element(find.text('Lisbon'))).colorScheme;
+    expect(veil.surface, scheme.raisedSurface);
+    expect(
+      tester.widget<Text>(find.text('Lisbon')).style?.color,
+      scheme.onSurface,
+    );
+    expect(
+      tester.widget<Icon>(find.byIcon(icon)).color,
+      ExpenseGroupColorPalette.getContrastingTextColor(tint),
+    );
   });
 }

@@ -33,7 +33,23 @@ class PhotoVeil extends StatelessWidget {
   });
 
   /// The fade gradient for a veil [height] px tall.
-  LinearGradient gradientFor(double height) {
+  LinearGradient gradientFor(double height) => fadeGradient(
+    color: color,
+    height: height,
+    solidExtent: solidExtent,
+    fadeExtent: fadeExtent,
+    topShade: topShade,
+  );
+
+  /// The gradient a [PhotoVeil] lays over its photo, also used by
+  /// [ColorVeil] over a group's color.
+  static LinearGradient fadeGradient({
+    required Color color,
+    required double height,
+    double solidExtent = 0,
+    double fadeExtent = 120,
+    bool topShade = false,
+  }) {
     final h = height <= 0 ? 1.0 : height;
     final clear = color.withValues(alpha: 0);
     final solidTop = h - solidExtent;
@@ -94,6 +110,46 @@ class PhotoVeil extends StatelessWidget {
           ),
         ),
       ],
+    ),
+  );
+}
+
+/// A group's color in place of its photo: in full at the top, melting into
+/// [surface] towards the bottom exactly like a [PhotoVeil], so the text
+/// sits on the same plain surface whether the group has a photo or a color.
+class ColorVeil extends StatelessWidget {
+  /// The group's color.
+  final Color color;
+
+  /// The surface it melts into.
+  final Color surface;
+
+  final double solidExtent;
+  final double fadeExtent;
+
+  const ColorVeil({
+    super.key,
+    required this.color,
+    required this.surface,
+    this.solidExtent = 0,
+    this.fadeExtent = 120,
+  });
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => DecoratedBox(
+      decoration: BoxDecoration(color: color),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: PhotoVeil.fadeGradient(
+            color: surface,
+            height: constraints.maxHeight,
+            solidExtent: solidExtent,
+            fadeExtent: fadeExtent,
+          ),
+        ),
+        child: const SizedBox.expand(),
+      ),
     ),
   );
 }

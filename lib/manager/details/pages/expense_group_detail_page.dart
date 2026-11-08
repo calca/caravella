@@ -597,13 +597,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                             topInset +
                                 _topBarHeight +
                                 4 +
-                                (hasPhoto ? GroupHeaderBand.photoExtraTop : 0),
+                                (hasPhoto || bandColor != null
+                                    ? GroupHeaderBand.photoExtraTop
+                                    : 0),
                             20,
                             20,
                           ),
                           child: GroupDetailHeader(
                             group: trip,
-                            foreground: bandForeground,
+                            foreground: s.onSurface,
                             onOpenSync: _showSyncPage,
                           ),
                         ),
