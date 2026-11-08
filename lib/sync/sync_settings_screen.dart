@@ -36,6 +36,10 @@ class _SyncSettingsScreenState extends State<SyncSettingsScreen> {
   List<SyncProblem> _problems = const [];
   SyncNames _names = const SyncNames();
 
+  /// Whether there's anything in the history yet: until then its row is
+  /// greyed out, saying so.
+  bool? _hasHistory;
+
   @override
   void initState() {
     super.initState();
@@ -55,10 +59,12 @@ class _SyncSettingsScreenState extends State<SyncSettingsScreen> {
       orchestrator,
       problems.map((p) => p.groupId).whereType<String>(),
     );
+    final history = await orchestrator.getHistory(limit: 1);
     if (!mounted) return;
     setState(() {
       _problems = problems;
       _names = names;
+      _hasHistory = history.isNotEmpty;
     });
   }
 
@@ -124,6 +130,8 @@ class _SyncSettingsScreenState extends State<SyncSettingsScreen> {
               SettingsTile(
                 icon: Icons.history,
                 title: loc.sync_history_title,
+                subtitle: _hasHistory == false ? loc.sync_history_empty : null,
+                enabled: _hasHistory ?? false,
                 onTap: () => _openHistory(context),
               ),
             ],

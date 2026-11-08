@@ -1522,7 +1522,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Keep your devices in step via Drive';
 
   @override
-  String get sync_local_title => 'Wi-Fi';
+  String get sync_local_title => 'Sync over Wi-Fi';
 
   @override
   String get sync_local_description => 'Automatic on the same Wi-Fi';
@@ -1600,14 +1600,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_bt_error_detail =>
-      'Something went wrong during the connection. Please try again.';
+      'Couldn’t connect. Check that the phone’s Bluetooth is on and try again.';
 
   @override
   String get sync_bt_retry => 'Retry';
 
   @override
   String get sync_bt_permission_denied =>
-      'Bluetooth not allowed: turn it on in your phone settings';
+      'Caravella doesn’t have the “Nearby devices” permission: allow it in your phone settings';
 
   @override
   String get sync_history_empty => 'No synchronizations';
@@ -1637,7 +1637,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_group_needs_channel =>
-      'Wi-Fi and Bluetooth are off in Sync with others';
+      'Sync over Wi-Fi and over Bluetooth are both off in Sync with others';
 
   @override
   String get sync_qr_show_button => 'Show QR code';
@@ -1673,7 +1673,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_qr_no_network =>
-      'Connect to Wi-Fi to generate the pairing code';
+      'Connect the phone to a Wi-Fi network to create the QR code';
 
   @override
   String get sync_qr_scan_title => 'Scan the pairing code';
@@ -2597,7 +2597,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_invite_qr_off =>
-      'The QR code needs Wi-Fi turned on, in Sync with others';
+      'For the QR code, turn on “Sync over Wi-Fi” in Sync with others';
 
   @override
   String get sync_join_button => 'Join a group';
@@ -2632,13 +2632,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get sync_join_qr_off => 'To join with the QR code, turn on Wi-Fi';
+  String get sync_join_qr_off =>
+      'To join with the QR code, turn on “Sync over Wi-Fi”';
 
   @override
   String get sync_join_turn_on => 'Turn on';
 
   @override
-  String get sync_privacy_section => 'What Caravella can use';
+  String get sync_privacy_section => 'How Caravella can sync';
 
   @override
   String get sync_wifi_switch_desc =>
@@ -2650,14 +2651,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_privacy_footer =>
-      'With everything off, this phone isn’t visible to others and receives nothing. Your groups stay on this phone.';
+      'With both off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi and Bluetooth don’t change.';
 
   @override
   String get sync_group_open_settings => 'Turn on in Settings';
 
   @override
-  String get sync_bt_off_title => 'Bluetooth off';
+  String get sync_bt_off_title => 'Bluetooth sync is off';
 
   @override
-  String get sync_bt_off_desc => 'Needed if you’re not on the same Wi-Fi';
+  String get sync_bt_off_desc =>
+      'Needed when the phones aren’t on the same Wi-Fi network';
+
+  @override
+  String get sync_bt_switch_title => 'Sync over Bluetooth';
+
+  @override
+  String get sync_join_turn_on_wifi => 'Turn on Wi-Fi sync';
 }

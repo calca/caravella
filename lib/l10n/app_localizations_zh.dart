@@ -1504,7 +1504,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_multidevice_description => '通过云端硬盘同步你的设备';
 
   @override
-  String get sync_local_title => 'Wi-Fi';
+  String get sync_local_title => '通过 Wi-Fi 同步';
 
   @override
   String get sync_local_description => '同一 Wi-Fi 下自动同步';
@@ -1578,13 +1578,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_bt_error => '同步失败';
 
   @override
-  String get sync_bt_error_detail => '连接过程中出现问题，请重试。';
+  String get sync_bt_error_detail => '无法连接。请确认手机的蓝牙已开启，然后重试。';
 
   @override
   String get sync_bt_retry => '重试';
 
   @override
-  String get sync_bt_permission_denied => '未允许蓝牙：请在手机设置中开启';
+  String get sync_bt_permission_denied => 'Caravella 没有“附近的设备”权限：请在手机设置中允许';
 
   @override
   String get sync_history_empty => '暂无同步记录';
@@ -1613,7 +1613,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_group_enable_desc => '与你邀请的设备同步';
 
   @override
-  String get sync_group_needs_channel => '“与他人同步”中的 Wi-Fi 和蓝牙均已关闭';
+  String get sync_group_needs_channel => '“与他人同步”中的 Wi-Fi 同步和蓝牙同步均已关闭';
 
   @override
   String get sync_qr_show_button => '显示二维码';
@@ -1647,7 +1647,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_qr_regenerate_button => '生成新二维码';
 
   @override
-  String get sync_qr_no_network => '请连接 Wi-Fi 以生成配对码';
+  String get sync_qr_no_network => '请将手机连接到 Wi-Fi 网络以创建二维码';
 
   @override
   String get sync_qr_scan_title => '扫描配对码';
@@ -2522,7 +2522,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_invite_closes => '另一部手机加入后会自动关闭';
 
   @override
-  String get sync_invite_qr_off => '二维码需要在“与他人同步”中开启 Wi-Fi';
+  String get sync_invite_qr_off => '要使用二维码，请在“与他人同步”中开启“通过 Wi-Fi 同步”';
 
   @override
   String get sync_join_button => '加入群组';
@@ -2557,13 +2557,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get sync_join_qr_off => '要用二维码加入，请开启 Wi-Fi';
+  String get sync_join_qr_off => '要用二维码加入，请开启“通过 Wi-Fi 同步”';
 
   @override
   String get sync_join_turn_on => '开启';
 
   @override
-  String get sync_privacy_section => 'Caravella 可以使用';
+  String get sync_privacy_section => 'Caravella 的同步方式';
 
   @override
   String get sync_wifi_switch_desc => '在同一网络下，共享的群组会自动更新';
@@ -2572,14 +2572,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_bt_switch_desc => '仅在“邀请设备”或“加入群组”打开时';
 
   @override
-  String get sync_privacy_footer => '全部关闭时，此手机对他人不可见，也不会接收任何内容。群组仍保存在手机上。';
+  String get sync_privacy_footer =>
+      '两项都关闭时，Caravella 对其他手机不可见，也不会接收任何内容。手机本身的 Wi-Fi 和蓝牙不受影响。';
 
   @override
   String get sync_group_open_settings => '在设置中开启';
 
   @override
-  String get sync_bt_off_title => '蓝牙已关闭';
+  String get sync_bt_off_title => '蓝牙同步已关闭';
 
   @override
-  String get sync_bt_off_desc => '不在同一 Wi-Fi 时需要';
+  String get sync_bt_off_desc => '手机不在同一 Wi-Fi 网络时需要';
+
+  @override
+  String get sync_bt_switch_title => '通过蓝牙同步';
+
+  @override
+  String get sync_join_turn_on_wifi => '开启 Wi-Fi 同步';
 }

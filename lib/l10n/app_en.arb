@@ -607,7 +607,7 @@
   ,"@sync_multidevice_title": {"description": "Title for the cloud (own devices) sync sub-page entry"}
   ,"sync_multidevice_description": "Keep your devices in step via Drive"
   ,"@sync_multidevice_description": {"description": "Description for the multi-device sync entry"}
-  ,"sync_local_title": "Wi-Fi"
+  ,"sync_local_title": "Sync over Wi-Fi"
   ,"@sync_local_title": {"description": "Title for local LAN sync section"}
   ,"sync_local_description": "Automatic on the same Wi-Fi"
   ,"@sync_local_description": {"description": "Description for LAN sync"}
@@ -651,11 +651,11 @@
   ,"@sync_bt_received_sent": {"description": "Summary after sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
   ,"sync_bt_error": "Sync failed"
   ,"@sync_bt_error": {"description": "Status when BT sync fails"}
-  ,"sync_bt_error_detail": "Something went wrong during the connection. Please try again."
+  ,"sync_bt_error_detail": "Couldn’t connect. Check that the phone’s Bluetooth is on and try again."
   ,"@sync_bt_error_detail": {"description": "Generic explanation shown under sync_bt_error for connection/timeout/decryption failures — deliberately does not surface raw exception text to the user"}
   ,"sync_bt_retry": "Retry"
   ,"@sync_bt_retry": {"description": "Button to retry BT sync"}
-  ,"sync_bt_permission_denied": "Bluetooth not allowed: turn it on in your phone settings"
+  ,"sync_bt_permission_denied": "Caravella doesn’t have the “Nearby devices” permission: allow it in your phone settings"
   ,"@sync_bt_permission_denied": {"description": "Error shown when Bluetooth/nearby-device permissions are denied"}
   ,"sync_history_empty": "No synchronizations"
   ,"@sync_history_empty": {"description": "Empty state for sync history"}
@@ -673,7 +673,7 @@
   ,"@sync_group_enable": {"description": "Label for enabling sync on a group"}
   ,"sync_group_enable_desc": "With the devices you invite"
   ,"@sync_group_enable_desc": {"description": "Description for the group sync toggle"}
-  ,"sync_group_needs_channel": "Wi-Fi and Bluetooth are off in Sync with others"
+  ,"sync_group_needs_channel": "Sync over Wi-Fi and over Bluetooth are both off in Sync with others"
   ,"@sync_group_needs_channel": {"description": "Shown instead of sync_group_enable_desc when neither Wi-Fi nor Bluetooth sync is turned on app-wide"}
   ,"sync_qr_show_button": "Show QR code"
   ,"@sync_qr_show_button": {"description": "Button to show this device's pairing QR code"}
@@ -693,7 +693,7 @@
   ,"@sync_qr_expired_desc": {"description": "Description shown when the pairing QR code has expired"}
   ,"sync_qr_regenerate_button": "Generate new code"
   ,"@sync_qr_regenerate_button": {"description": "Button to generate a fresh pairing QR code after the previous one expired"}
-  ,"sync_qr_no_network": "Connect to Wi-Fi to generate the pairing code"
+  ,"sync_qr_no_network": "Connect the phone to a Wi-Fi network to create the QR code"
   ,"@sync_qr_no_network": {"description": "Shown when no local network address is available for pairing"}
   ,"sync_qr_scan_title": "Scan the pairing code"
   ,"@sync_qr_scan_title": {"description": "Title for the QR pairing scan page"}
@@ -1112,7 +1112,7 @@
   ,"@sync_invite_nearby_syncing": {"description": "Invite/Join sync flow: sync invite nearby syncing", "placeholders": {"device": {"type": "String"}}}
   ,"sync_invite_closes": "Closes by itself when the other phone joins"
   ,"@sync_invite_closes": {"description": "Invite/Join sync flow: sync invite closes"}
-  ,"sync_invite_qr_off": "The QR code needs Wi-Fi turned on, in Sync with others"
+  ,"sync_invite_qr_off": "For the QR code, turn on “Sync over Wi-Fi” in Sync with others"
   ,"@sync_invite_qr_off": {"description": "Invite/Join sync flow: sync invite qr off"}
   ,"sync_join_button": "Join a group"
   ,"@sync_join_button": {"description": "Invite/Join sync flow: sync join button"}
@@ -1134,22 +1134,26 @@
   ,"@sync_join_update": {"description": "Invite/Join sync flow: sync join update"}
   ,"sync_join_done": "Synced with {device}"
   ,"@sync_join_done": {"description": "Invite/Join sync flow: sync join done", "placeholders": {"device": {"type": "String"}}}
-  ,"sync_join_qr_off": "To join with the QR code, turn on Wi-Fi"
+  ,"sync_join_qr_off": "To join with the QR code, turn on “Sync over Wi-Fi”"
   ,"@sync_join_qr_off": {"description": "Invite/Join sync flow: sync join qr off"}
   ,"sync_join_turn_on": "Turn on"
   ,"@sync_join_turn_on": {"description": "Invite/Join sync flow: sync join turn on"}
-  ,"sync_privacy_section": "What Caravella can use"
+  ,"sync_privacy_section": "How Caravella can sync"
   ,"@sync_privacy_section": {"description": "Sync privacy switches: sync privacy section"}
   ,"sync_wifi_switch_desc": "On the same network, shared groups update by themselves"
   ,"@sync_wifi_switch_desc": {"description": "Sync privacy switches: sync wifi switch desc"}
   ,"sync_bt_switch_desc": "Only while “Invite a device” or “Join a group” is open"
   ,"@sync_bt_switch_desc": {"description": "Sync privacy switches: sync bt switch desc"}
-  ,"sync_privacy_footer": "With everything off, this phone isn’t visible to others and receives nothing. Your groups stay on this phone."
+  ,"sync_privacy_footer": "With both off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi and Bluetooth don’t change."
   ,"@sync_privacy_footer": {"description": "Sync privacy switches: sync privacy footer"}
   ,"sync_group_open_settings": "Turn on in Settings"
   ,"@sync_group_open_settings": {"description": "Sync privacy switches: sync group open settings"}
-  ,"sync_bt_off_title": "Bluetooth off"
+  ,"sync_bt_off_title": "Bluetooth sync is off"
   ,"@sync_bt_off_title": {"description": "Sync privacy switches: sync bt off title"}
-  ,"sync_bt_off_desc": "Needed if you’re not on the same Wi-Fi"
+  ,"sync_bt_off_desc": "Needed when the phones aren’t on the same Wi-Fi network"
   ,"@sync_bt_off_desc": {"description": "Sync privacy switches: sync bt off desc"}
+  ,"sync_bt_switch_title": "Sync over Bluetooth"
+  ,"@sync_bt_switch_title": {"description": "Sync privacy switches: sync bt switch title"}
+  ,"sync_join_turn_on_wifi": "Turn on Wi-Fi sync"
+  ,"@sync_join_turn_on_wifi": {"description": "Sync privacy switches: sync join turn on wifi"}
 }

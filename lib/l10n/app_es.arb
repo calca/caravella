@@ -595,7 +595,7 @@
   ,"@sync_title": {"description": "Título para la página de ajustes de sync"}
   ,"sync_settings_desc": "Wi-Fi, Bluetooth o Google Drive"
   ,"@sync_settings_desc": {"description": "Subtítulo para la entrada de sync en ajustes de Datos"}
-  ,"sync_local_title": "Wi-Fi"
+  ,"sync_local_title": "Sincronizar por Wi-Fi"
   ,"@sync_local_title": {"description": "Título para la sección de sync LAN local"}
   ,"sync_multiuser_title": "Sincroniza con otros"
   ,"@sync_multiuser_title": {"description": "Título para la entrada a la subpágina de sync Wi-Fi/Bluetooth (dispositivos de otras personas)"}
@@ -647,11 +647,11 @@
   ,"@sync_bt_received_sent": {"description": "Resumen después de sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
   ,"sync_bt_error": "No se pudo sincronizar"
   ,"@sync_bt_error": {"description": "Estado cuando sync BT falla"}
-  ,"sync_bt_error_detail": "Algo salió mal durante la conexión. Inténtalo de nuevo."
+  ,"sync_bt_error_detail": "No se pudo conectar. Comprueba que el Bluetooth del teléfono esté activado e inténtalo de nuevo."
   ,"@sync_bt_error_detail": {"description": "Explicación genérica mostrada bajo sync_bt_error para errores de conexión/tiempo de espera/descifrado — deliberadamente no muestra el texto sin procesar de la excepción"}
   ,"sync_bt_retry": "Reintentar"
   ,"@sync_bt_retry": {"description": "Botón para reintentar sync BT"}
-  ,"sync_bt_permission_denied": "Bluetooth no permitido: actívalo en los ajustes del teléfono"
+  ,"sync_bt_permission_denied": "Caravella no tiene el permiso «Dispositivos cercanos»: concédelo en los ajustes del teléfono"
   ,"@sync_bt_permission_denied": {"description": "Error mostrado cuando se deniegan los permisos de Bluetooth/dispositivos cercanos"}
   ,"sync_history_empty": "Sin sincronizaciones"
   ,"@sync_history_empty": {"description": "Estado vacío para historial de sync"}
@@ -669,7 +669,7 @@
   ,"@sync_group_enable": {"description": "Etiqueta para habilitar la sincronización en un grupo"}
   ,"sync_group_enable_desc": "Con los dispositivos que invites"
   ,"@sync_group_enable_desc": {"description": "Descripción para el interruptor de sincronización del grupo"}
-  ,"sync_group_needs_channel": "Wi-Fi y Bluetooth están apagados en Sincroniza con otros"
+  ,"sync_group_needs_channel": "En Sincroniza con otros la sincronización por Wi-Fi y por Bluetooth está apagada"
   ,"@sync_group_needs_channel": {"description": "Se muestra en lugar de sync_group_enable_desc cuando ni Wi-Fi ni Bluetooth sync están activos a nivel de app"}
   ,"sync_qr_show_button": "Mostrar código QR"
   ,"@sync_qr_show_button": {"description": "Botón para mostrar el código QR de emparejamiento de este dispositivo"}
@@ -689,7 +689,7 @@
   ,"@sync_qr_expired_desc": {"description": "Descripción mostrada cuando el código QR de emparejamiento ha caducado"}
   ,"sync_qr_regenerate_button": "Generar código nuevo"
   ,"@sync_qr_regenerate_button": {"description": "Botón para generar un nuevo código QR de emparejamiento tras la caducidad del anterior"}
-  ,"sync_qr_no_network": "Conéctate al Wi-Fi para generar el código de emparejamiento"
+  ,"sync_qr_no_network": "Conecta el teléfono a una red Wi-Fi para crear el QR"
   ,"@sync_qr_no_network": {"description": "Se muestra cuando no hay una dirección de red local disponible para el emparejamiento"}
   ,"sync_qr_scan_title": "Escanea el código de emparejamiento"
   ,"@sync_qr_scan_title": {"description": "Título para la página de escaneo del QR de emparejamiento"}
@@ -978,7 +978,7 @@
   ,"sync_invite_nearby_desc": "Sin la misma Wi-Fi, te encuentran por Bluetooth"
   ,"sync_invite_nearby_syncing": "Sincronizando con {device}…"
   ,"sync_invite_closes": "Se cierra solo cuando el otro teléfono se une"
-  ,"sync_invite_qr_off": "El QR necesita la Wi-Fi activada, en Sincroniza con otros"
+  ,"sync_invite_qr_off": "Para el QR, activa «Sincronizar por Wi-Fi» en Sincroniza con otros"
   ,"sync_join_button": "Unirse a un grupo"
   ,"sync_join_button_desc": "Escanea el QR o elige un teléfono cercano"
   ,"sync_join_scan_hint": "Apunta al QR que muestra el otro teléfono"
@@ -989,13 +989,15 @@
   ,"sync_join_action": "Unirse"
   ,"sync_join_update": "Actualizar"
   ,"sync_join_done": "Sincronizado con {device}"
-  ,"sync_join_qr_off": "Para unirte con el QR, activa la Wi-Fi"
+  ,"sync_join_qr_off": "Para unirte con el QR, activa «Sincronizar por Wi-Fi»"
   ,"sync_join_turn_on": "Activar"
-  ,"sync_privacy_section": "Qué puede usar Caravella"
+  ,"sync_privacy_section": "Cómo puede sincronizar Caravella"
   ,"sync_wifi_switch_desc": "En la misma red, los grupos compartidos se actualizan solos"
   ,"sync_bt_switch_desc": "Solo mientras «Invitar un dispositivo» o «Unirse a un grupo» están abiertos"
-  ,"sync_privacy_footer": "Con todo apagado, el teléfono no es visible y no recibe nada. Tus grupos se quedan en el teléfono."
+  ,"sync_privacy_footer": "Con las dos apagadas, Caravella no es visible para otros teléfonos y no recibe nada. El Wi-Fi y el Bluetooth del teléfono no cambian."
   ,"sync_group_open_settings": "Activar en Configuración"
-  ,"sync_bt_off_title": "Bluetooth apagado"
-  ,"sync_bt_off_desc": "Hace falta si no estáis en la misma Wi-Fi"
+  ,"sync_bt_off_title": "Sincronización Bluetooth apagada"
+  ,"sync_bt_off_desc": "Hace falta si los teléfonos no están en la misma red Wi-Fi"
+  ,"sync_bt_switch_title": "Sincronizar por Bluetooth"
+  ,"sync_join_turn_on_wifi": "Activar sincronización Wi-Fi"
 }

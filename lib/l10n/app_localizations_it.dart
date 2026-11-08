@@ -1526,7 +1526,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Allinea i tuoi dispositivi via Drive';
 
   @override
-  String get sync_local_title => 'Wi-Fi';
+  String get sync_local_title => 'Sincronizza via Wi-Fi';
 
   @override
   String get sync_local_description => 'Automatica sulla stessa rete Wi-Fi';
@@ -1604,14 +1604,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_bt_error_detail =>
-      'Qualcosa è andato storto durante la connessione. Riprova.';
+      'Connessione non riuscita. Controlla che il Bluetooth del telefono sia acceso e riprova.';
 
   @override
   String get sync_bt_retry => 'Riprova';
 
   @override
   String get sync_bt_permission_denied =>
-      'Bluetooth non consentito: attivalo nelle impostazioni del telefono';
+      'Caravella non ha il permesso «Dispositivi nelle vicinanze»: concedilo nelle impostazioni del telefono';
 
   @override
   String get sync_history_empty => 'Nessuna sincronizzazione';
@@ -1641,7 +1641,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_group_needs_channel =>
-      'Wi-Fi e Bluetooth sono spenti in Sincronizza con altri';
+      'In Sincronizza con altri la sincronizzazione via Wi-Fi e via Bluetooth è spenta';
 
   @override
   String get sync_qr_show_button => 'Mostra codice QR';
@@ -1678,7 +1678,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_qr_no_network =>
-      'Connettiti al Wi-Fi per generare il codice di abbinamento';
+      'Collega il telefono a una rete Wi-Fi per creare il QR';
 
   @override
   String get sync_qr_scan_title => 'Scansiona il codice di abbinamento';
@@ -2605,7 +2605,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_invite_qr_off =>
-      'Per il QR serve la Wi-Fi attiva, in Sincronizza con altri';
+      'Per il QR attiva «Sincronizza via Wi-Fi» in Sincronizza con altri';
 
   @override
   String get sync_join_button => 'Unisciti a un gruppo';
@@ -2643,13 +2643,14 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get sync_join_qr_off => 'Per unirti con il QR, attiva la Wi-Fi';
+  String get sync_join_qr_off =>
+      'Per unirti con il QR, attiva «Sincronizza via Wi-Fi»';
 
   @override
   String get sync_join_turn_on => 'Attiva';
 
   @override
-  String get sync_privacy_section => 'Cosa può usare Caravella';
+  String get sync_privacy_section => 'Come può sincronizzare Caravella';
 
   @override
   String get sync_wifi_switch_desc =>
@@ -2661,14 +2662,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_privacy_footer =>
-      'Con tutto spento il telefono non si fa vedere e non riceve niente. I gruppi restano sul telefono.';
+      'Con tutte e due spente, Caravella non si fa vedere dagli altri telefoni e non riceve niente. Wi-Fi e Bluetooth del telefono non cambiano.';
 
   @override
   String get sync_group_open_settings => 'Attiva in Impostazioni';
 
   @override
-  String get sync_bt_off_title => 'Bluetooth spento';
+  String get sync_bt_off_title => 'Sincronizzazione Bluetooth spenta';
 
   @override
-  String get sync_bt_off_desc => 'Serve se non avete la stessa Wi-Fi';
+  String get sync_bt_off_desc =>
+      'Serve se i telefoni non sono sulla stessa rete Wi-Fi';
+
+  @override
+  String get sync_bt_switch_title => 'Sincronizza via Bluetooth';
+
+  @override
+  String get sync_join_turn_on_wifi => 'Attiva sincronizzazione Wi-Fi';
 }
