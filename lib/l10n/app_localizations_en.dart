@@ -2806,4 +2806,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String sync_update_bt_instruction_settings(String device) {
     return 'On $device open Caravella › Settings › Synchronization › Sync with others, tap your phone, then Update now';
   }
+
+  @override
+  String get sync_shared_empty_title => 'Shared with no one yet';
+
+  @override
+  String get sync_shared_empty_body =>
+      'Invite the people you split expenses with: you’ll all see the same expenses, each on your own phone.';
+
+  @override
+  String get sync_invite_another => 'Invite another device';
 }

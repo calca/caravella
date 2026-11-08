@@ -5117,6 +5117,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On {device} open Caravella › Settings › Synchronization › Sync with others, tap your phone, then Update now'**
   String sync_update_bt_instruction_settings(String device);
+
+  /// Group sync page, Shared with: sync shared empty title
+  ///
+  /// In en, this message translates to:
+  /// **'Shared with no one yet'**
+  String get sync_shared_empty_title;
+
+  /// Group sync page, Shared with: sync shared empty body
+  ///
+  /// In en, this message translates to:
+  /// **'Invite the people you split expenses with: you’ll all see the same expenses, each on your own phone.'**
+  String get sync_shared_empty_body;
+
+  /// Group sync page, Shared with: sync invite another
+  ///
+  /// In en, this message translates to:
+  /// **'Invite another device'**
+  String get sync_invite_another;
 }
 
 class _AppLocalizationsDelegate

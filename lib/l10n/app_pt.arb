@@ -1012,4 +1012,7 @@
   ,"sync_update_bt_done": "Recebidos {received}, enviados {sent}"
   ,"sync_update_bt_instruction_group": "Em {device} abra Caravella › {group} › Sincronização, toque no seu telemóvel e depois em Atualizar agora"
   ,"sync_update_bt_instruction_settings": "Em {device} abra Caravella › Configurações › Sincronização › Sincronizar com outros, toque no seu telemóvel e depois em Atualizar agora"
+  ,"sync_shared_empty_title": "Ainda com ninguém"
+  ,"sync_shared_empty_body": "Convide quem divide as despesas com você: vocês verão as mesmas despesas, cada um no seu telefone."
+  ,"sync_invite_another": "Convidar outro dispositivo"
 }
