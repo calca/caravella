@@ -121,6 +121,14 @@ void main() {
     await tester.pump();
   }
 
+  /// Settles until [done], for steps whose real I/O can take longer than one
+  /// [settleDb] on a busy CI runner.
+  Future<void> settleUntil(WidgetTester tester, bool Function() done) async {
+    for (var i = 0; i < 50 && !done(); i++) {
+      await settleDb(tester);
+    }
+  }
+
   Future<void> pair(String device, String name, String group, String via) =>
       orchestrator.handlePairingCompleted(
         device,
@@ -155,8 +163,10 @@ void main() {
       expect(find.text('Pixel 9'), findsNothing);
 
       await tester.runAsync(() => pair('phone-2', 'Pixel 9', 'g1', 'lan'));
-      await settleDb(tester);
-      await settleDb(tester);
+      await settleUntil(
+        tester,
+        () => find.text('Pixel 9').evaluate().isNotEmpty,
+      );
 
       expect(find.text('Pixel 9'), findsOneWidget);
     });
