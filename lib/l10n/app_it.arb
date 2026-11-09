@@ -1020,4 +1020,6 @@
   ,"sync_settings_desc_wifi": "Wi-Fi"
   ,"sync_settings_desc_wifi_bt": "Wi-Fi o Bluetooth"
   ,"sync_settings_desc_wifi_drive": "Wi-Fi o Google Drive"
+  ,"sync_multiuser_description_wifi": "Gruppi via Wi-Fi"
+  ,"sync_privacy_footer_wifi": "Con l’interruttore spento, Caravella non si fa vedere dagli altri telefoni e non riceve niente. Il Wi-Fi del telefono non cambia."
 }

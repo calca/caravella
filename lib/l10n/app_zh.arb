@@ -1340,4 +1340,6 @@
   ,"sync_settings_desc_wifi": "Wi-Fi"
   ,"sync_settings_desc_wifi_bt": "Wi-Fi 或蓝牙"
   ,"sync_settings_desc_wifi_drive": "Wi-Fi 或 Google 云端硬盘"
+  ,"sync_multiuser_description_wifi": "通过 Wi-Fi 共享群组"
+  ,"sync_privacy_footer_wifi": "关闭后，Caravella 对其他手机不可见，也不会接收任何内容。手机本身的 Wi-Fi 不受影响。"
 }

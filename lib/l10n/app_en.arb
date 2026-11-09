@@ -1240,4 +1240,8 @@
   ,"@sync_settings_desc_wifi_bt": {"description": "Subtitle of the sync entry when the build only has these channels"}
   ,"sync_settings_desc_wifi_drive": "Wi-Fi or Google Drive"
   ,"@sync_settings_desc_wifi_drive": {"description": "Subtitle of the sync entry when the build only has these channels"}
+  ,"sync_multiuser_description_wifi": "Groups over Wi-Fi"
+  ,"@sync_multiuser_description_wifi": {"description": "Sync with others subtitle in builds without Bluetooth sync (F-Droid)"}
+  ,"sync_privacy_footer_wifi": "With it off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi doesn’t change."
+  ,"@sync_privacy_footer_wifi": {"description": "Footer under the only (Wi-Fi) privacy switch in builds without Bluetooth sync (F-Droid)"}
 }

@@ -109,7 +109,9 @@ class _MultiUserSyncPageState extends State<MultiUserSyncPage> {
       child: SettingsScaffold(
         eyebrow: loc.sync_title,
         title: loc.sync_multiuser_title,
-        description: loc.sync_multiuser_description,
+        description: _bluetooth
+            ? loc.sync_multiuser_description
+            : loc.sync_multiuser_description_wifi,
         children: [
           if (_canJoin)
             SettingsGroup(
@@ -191,7 +193,9 @@ class _MultiUserSyncPageState extends State<MultiUserSyncPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
             child: Text(
-              loc.sync_privacy_footer,
+              _bluetooth
+                  ? loc.sync_privacy_footer
+                  : loc.sync_privacy_footer_wifi,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

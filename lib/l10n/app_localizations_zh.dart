@@ -2739,4 +2739,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_settings_desc_wifi_drive => 'Wi-Fi 或 Google 云端硬盘';
+
+  @override
+  String get sync_multiuser_description_wifi => '通过 Wi-Fi 共享群组';
+
+  @override
+  String get sync_privacy_footer_wifi =>
+      '关闭后，Caravella 对其他手机不可见，也不会接收任何内容。手机本身的 Wi-Fi 不受影响。';
 }
