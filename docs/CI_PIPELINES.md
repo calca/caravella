@@ -68,6 +68,18 @@ When `track=production`, `promote_release` is on and it isn't a `dry_run`, it th
 
 Typical release: optionally `Pre-release - Android.yml` for testers → prepare the release (version bump, changelogs, store notes) → `Store - Android.yml` with `track=internal`, test → this workflow with `track=production`.
 
+## Hotfix releases (X.Y.Z+1)
+
+`main` is always where the next version is built, so there is no long-lived release branch. A hotfix branch is created only when one is needed, from the release tag:
+
+1. `git switch -c release/2.4.x v2.4.0`, push it, then open the fix as a PR **into `release/2.4.x`**. The development workflow runs on it as usual.
+2. On that branch, bump `pubspec.yaml` to `2.4.1+<next build number>` and add a `[2.4.1]` section to `CHANGELOG.md`, with the matching release notes and fastlane changelogs (`<build>.txt` plus the per-ABI `1/2/4<build>.txt`).
+3. Optionally run Pre-release with `target_branch=release/2.4.x`. Then run Store (`track=internal`) and Store Promote (`track=production`) with `target_branch=release/2.4.x`. Promote tags `v2.4.1` on the commit it built.
+4. Cherry-pick the fix (not the version bump) into `main` with its own PR, and add the `[2.4.1]` CHANGELOG section there too, so the next version's notes start after it.
+5. Point the fdroiddata recipe at the new tag; F-Droid's `UpdateCheckMode: Tags` picks it up anyway once the app is in.
+
+Version codes are assigned when a release is made: the hotfix takes the next free build number, and the next feature release takes the one after it.
+
 ## Things the workflows have in common
 
 - Flutter is pinned to a specific stable version (check the `flutter-version:` key in each workflow file for the current pin — it's bumped periodically and this page won't track it).
