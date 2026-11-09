@@ -1,0 +1,9 @@
+Versión 2.4.0 - Comparte con amigos
+
+• Únete a un grupo leyendo su código QR, ahora también en esta versión
+• Interruptor de privacidad para la sincronización por Wi-Fi, y dispositivos vinculados que se actualizan con un toque
+• Saldar cuentas con menos pagos; grupos con color iguales a los de foto
+• Añadir gastos más fluido, y lugares que se pueden cambiar en el mapa
+• Se abre en el idioma del teléfono
+
+¡Gracias por usar Caravella!

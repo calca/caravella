@@ -1,3 +1,14 @@
+## 2.4.0 (09.11.2026)
+
+- **New**: Sharing a group is one flow: **Invite a device** shows the QR code and makes the phone visible to nearby phones over Bluetooth; on the other phone, **Join a group** reads the code or lists the nearby phones
+- **New**: Two privacy switches in Sync with others, **Sync over Wi-Fi** and **Sync over Bluetooth**: with both off, the phone isn't visible to anyone
+- **New**: Paired devices say how they're doing, and **Update now** updates over Wi-Fi or, if needed, over Bluetooth
+- **New**: Settling up suggests as few payments as possible
+- **Improvements**: A group with a color looks like one with a photo, and a new group shows its card as you create it
+- **Improvements**: When sync has a problem, Settings › Synchronization explains what to fix; fewer messages at the bottom of the screen, and problems shown where they happen
+- **Improvements**: Adding an expense is smoother: the people and categories lists open inside the sheet, and "More details" grows the sheet into the full page; the group page uses the same quick sheet as Home
+- **Fixes**: The place of an expense can be changed on the map; the app starts in your phone's language; voice input no longer asks for the Nearby devices permission; the F-Droid version can scan the QR code to join a group
+
 ## 2.3.0 (30.10.2026)
 
 - **New**: Statistics open with your spending pace — the average per day (per month for long groups), how many expenses and each person's share — then the chart, the records, who paid, the map and the categories

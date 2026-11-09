@@ -48,5 +48,6 @@ PENSATA PER VIAGGI, CASE ED EVENTI
 I TUOI DATI, LE TUE REGOLE
 • Funziona offline, senza account
 • I tuoi dati restano sul tuo dispositivo
+• Mappe e ricerca dei luoghi usano OpenStreetMap (mappe e Nominatim) solo quando le apri
 • Backup, ripristino ed esportazione CSV quando vuoi
 • Open source (licenza MIT)

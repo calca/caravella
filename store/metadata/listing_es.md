@@ -48,5 +48,6 @@ PENSADA PARA VIAJES, CASAS Y EVENTOS
 TUS DATOS, TUS REGLAS
 • Funciona sin conexión y sin cuenta
 • Tus datos se quedan en tu dispositivo
+• Los mapas y la búsqueda de lugares usan OpenStreetMap (mapas y Nominatim) solo cuando los abres
 • Copia de seguridad, restauración y exportación CSV cuando quieras
 • Código abierto (licencia MIT)

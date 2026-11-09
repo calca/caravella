@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-11-09
+
 ### Changed
 - F-Droid build: "Join a group" can now scan the QR code, with a free scanner (CameraX + ZXing), so two F-Droid installs can pair over Wi-Fi
 - First launch follows the device language (English when it isn't one of the app's languages) instead of always starting in Italian
@@ -658,7 +660,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/calca/caravella/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/calca/caravella/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/calca/caravella/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/calca/caravella/compare/v2.0.2...v2.2.0

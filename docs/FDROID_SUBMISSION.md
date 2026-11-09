@@ -33,7 +33,7 @@ F-Droid reads this listing from the source at the commit of the latest build, no
 
 1. Confirm `pubspec.yaml`'s `version:` matches the GitHub release tag.
 2. Update `metadata.yml`'s `CurrentVersion`/`CurrentVersionCode` and add a new `Builds:` entry if the build recipe changed.
-3. Add the matching `fastlane/metadata/android/<locale>/changelogs/<versionCode>.txt` file(s).
+3. Add the matching `fastlane/metadata/android/<locale>/changelogs/<versionCode>.txt` file(s). F-Droid builds one APK per ABI with its own versionCode (1xxx armeabi-v7a, 2xxx arm64-v8a, 4xxx x86_64) and looks up the changelog by that code, so from 2.4.0 each locale has `<build>.txt` plus the three per-ABI copies (`129`, `1129`, `2129`, `4129`).
 
 ## Dependency / anti-feature review points
 

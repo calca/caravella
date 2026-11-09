@@ -48,5 +48,6 @@ FEITO PARA VIAGENS, CASAS E EVENTOS
 SEUS DADOS, SUAS REGRAS
 • Funciona offline, sem conta
 • Seus dados ficam no seu dispositivo
+• Mapas e busca de lugares usam o OpenStreetMap (mapas e Nominatim) só quando você os abre
 • Backup, restauração e exportação CSV quando quiser
 • Código aberto (licença MIT)

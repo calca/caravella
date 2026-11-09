@@ -1,0 +1,9 @@
+Version 2.4.0 - Share with friends
+
+• Join a group by scanning its QR code, now in this version too
+• Privacy switch for Wi-Fi sync, and paired devices you can update in one tap
+• Settle up with fewer payments; colored groups match photo ones
+• Smoother expense entry, and places you can change on the map
+• Starts in your phone's language
+
+Thanks for using Caravella!

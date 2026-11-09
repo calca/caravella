@@ -1,3 +1,14 @@
+## 2.4.0 (09.11.2026)
+
+- **Novedad**: Compartir un grupo es un solo recorrido: **Invitar un dispositivo** muestra el código QR y hace visible el teléfono a los teléfonos cercanos por Bluetooth; en el otro teléfono, **Unirse a un grupo** lee el código o muestra los teléfonos cercanos
+- **Novedad**: Dos interruptores de privacidad en Sincroniza con otros, **Sincronizar por Wi-Fi** y **Sincronizar por Bluetooth**: con los dos apagados, el teléfono no es visible para nadie
+- **Novedad**: Los dispositivos vinculados dicen cómo están, y **Actualizar ahora** actualiza por Wi-Fi o, si hace falta, por Bluetooth
+- **Novedad**: Saldar cuentas propone el menor número de pagos posible
+- **Mejoras**: Un grupo con un color se ve como uno con una foto, y un grupo nuevo muestra su tarjeta mientras lo creas
+- **Mejoras**: Cuando la sincronización tiene un problema, Ajustes › Sincronización explica qué arreglar; menos mensajes en la parte inferior de la pantalla, y los problemas aparecen donde ocurren
+- **Mejoras**: Añadir un gasto es más fluido: las listas de personas y categorías se abren dentro del panel, y «Más detalles» amplía el panel hasta la página completa; la página del grupo usa el mismo panel rápido que el Inicio
+- **Correcciones**: El lugar de un gasto se puede cambiar en el mapa; la app se abre en el idioma del teléfono; el dictado por voz ya no pide el permiso de Dispositivos cercanos; la versión de F-Droid puede leer el código QR para unirse a un grupo
+
 ## 2.3.0 (30.10.2026)
 
 - **Nuevo**: Las Estadísticas empiezan por tu ritmo de gasto – la media por día (por mes en los grupos largos), cuántos gastos y la parte de cada persona – y luego el gráfico, los récords, quién pagó, el mapa y las categorías
