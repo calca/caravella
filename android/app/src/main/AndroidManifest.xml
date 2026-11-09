@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="io.caravella.egm">
 
-    <!-- Internet permission required for loading map tiles from OpenStreetMap -->
+    <!-- Internet: OpenStreetMap map tiles, place search (Nominatim), and the local Wi-Fi sync between the user's own devices -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Camera permission for taking photos of group backgrounds, scanning receipts with OCR, and expense attachments (optional feature) -->
+    <!-- Camera: photos for group backgrounds and expense attachments; receipt scanning in the Play build (optional feature) -->
     <uses-permission android:name="android.permission.CAMERA" />
     
     <!-- Media permissions for selecting existing photos (optional feature) -->
@@ -28,15 +28,11 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
-    <!-- Bluetooth permissions for manual peer-to-peer group sync via Nearby Connections (optional feature) -->
-    <!-- Legacy permissions for API <= 30; requested at runtime via permission_handler on API 31+ -->
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:minSdkVersion="31" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:minSdkVersion="31" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:minSdkVersion="31" />
-    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:minSdkVersion="33"
-        tools:replace="android:minSdkVersion" />
+    <!-- Bluetooth sync (Play build only) uses Nearby Connections: the
+         nearby_connections plugin declares its Bluetooth / NEARBY_WIFI_DEVICES
+         permissions in its own manifest, merged only when caravella_gms is
+         the real package. The F-Droid build (caravella_gms_foss) has no
+         Bluetooth sync, so it asks for none of them. -->
 
     <!-- Declare that these permissions are not required for basic app functionality -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
