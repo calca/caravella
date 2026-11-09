@@ -44,6 +44,7 @@ class ExpenseFormComponent extends StatefulWidget {
     Function(String)? onParticipantAdded,
     VoidCallback? onDelete,
     bool shouldAutoClose = true,
+    bool autofocusAmount = true,
     DateTime? tripStartDate,
     DateTime? tripEndDate,
     String? newlyAddedCategory,
@@ -72,6 +73,7 @@ class ExpenseFormComponent extends StatefulWidget {
          onParticipantAdded: onParticipantAdded,
          onDelete: onDelete,
          shouldAutoClose: shouldAutoClose,
+         autofocusAmount: autofocusAmount,
          tripStartDate: tripStartDate,
          tripEndDate: tripEndDate,
          newlyAddedCategory: newlyAddedCategory,
@@ -171,7 +173,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         // Autofocus the amount when adding, once the sheet (or page) has
         // slid in: the keyboard rising during the slide made it jerky. When
         // editing, show the whole expense instead of the keyboard.
-        if (!widget.config.isEditMode) {
+        if (!widget.config.isEditMode && widget.config.autofocusAmount) {
           routeSettled(context).then((_) {
             if (mounted) _controller.amountFocus.requestFocus();
           });

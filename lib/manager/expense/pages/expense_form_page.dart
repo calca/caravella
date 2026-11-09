@@ -17,6 +17,9 @@ class ExpenseFormPage extends StatefulWidget {
   final void Function(String)? onParticipantAdded;
   final VoidCallback? onDelete;
 
+  /// See [ExpenseFormConfig.autofocusAmount].
+  final bool autofocusAmount;
+
   const ExpenseFormPage({
     super.key,
     required this.group,
@@ -25,6 +28,7 @@ class ExpenseFormPage extends StatefulWidget {
     required this.onCategoryAdded,
     this.onParticipantAdded,
     this.onDelete,
+    this.autofocusAmount = true,
   });
 
   @override
@@ -232,6 +236,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       tripStartDate: widget.group.startDate,
                       tripEndDate: widget.group.endDate,
                       shouldAutoClose: true,
+                      autofocusAmount: widget.autofocusAmount,
                       fullEdit: true,
                       showGroupHeader: false,
                       showActionsRow: false,

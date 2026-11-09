@@ -31,6 +31,11 @@ class ExpenseFormConfig {
   final bool showActionsRow;
   final bool shouldAutoClose;
 
+  /// Whether a new expense starts with the keyboard on the amount. Off when
+  /// the page opens from the quick-add sheet's "More details": the amount is
+  /// already there and the user came for the date, place or note.
+  final bool autofocusAmount;
+
   // Group context
   final String? groupTitle;
   final String? currency;
@@ -69,6 +74,7 @@ class ExpenseFormConfig {
     this.showGroupHeader = true,
     this.showActionsRow = true,
     this.shouldAutoClose = true,
+    this.autofocusAmount = true,
 
     // Group context
     this.groupTitle,

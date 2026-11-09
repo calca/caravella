@@ -47,6 +47,9 @@ class AddExpenseController {
     notifier.setCurrentGroup(currentGroup);
 
     final parentContext = context;
+    // Set once "More details" hands over to the full page, which then owns
+    // the current group: the sheet closing underneath must not clear it.
+    var expanded = false;
 
     showModalBottomSheet(
       context: context,
@@ -103,14 +106,14 @@ class AddExpenseController {
               await notifier.addParticipant(participantName);
             },
             onExpand: (currentState) {
-              Navigator.of(context).pop();
-              _openFullExpenseForm(parentContext, currentGroup, currentState);
+              expanded = true;
+              _expandToFullPage(context, currentGroup, currentState);
             },
           );
         },
       ),
     ).whenComplete(() {
-      notifier.clearCurrentGroup();
+      if (!expanded) notifier.clearCurrentGroup();
     });
   }
 
@@ -202,11 +205,42 @@ class AddExpenseController {
     }
   }
 
-  void _openFullExpenseForm(
+  /// "More details": the full page rises over the sheet like the sheet
+  /// growing to full height, and the sheet is dropped underneath once the
+  /// page covers it — instead of the sheet sliding down, the page zooming in
+  /// and the keyboard closing and reopening all at once. The keyboard goes
+  /// down once; the page doesn't grab the amount again.
+  void _expandToFullPage(
+    BuildContext sheetContext,
+    ExpenseGroup currentGroup,
+    ExpenseFormState partialState,
+  ) {
+    final sheetRoute = ModalRoute.of(sheetContext);
+    final navigator = Navigator.of(sheetContext);
+    FocusManager.instance.primaryFocus?.unfocus();
+    final pageRoute = _openFullExpenseForm(
+      sheetContext,
+      currentGroup,
+      partialState,
+      fromSheet: true,
+    );
+    void dropSheet(AnimationStatus status) {
+      if (status != AnimationStatus.completed) return;
+      pageRoute.animation?.removeStatusListener(dropSheet);
+      if (sheetRoute != null && sheetRoute.isActive) {
+        navigator.removeRoute(sheetRoute);
+      }
+    }
+
+    pageRoute.animation?.addStatusListener(dropSheet);
+  }
+
+  PageRoute<void> _openFullExpenseForm(
     BuildContext context,
     ExpenseGroup currentGroup,
-    ExpenseFormState? partialState,
-  ) {
+    ExpenseFormState? partialState, {
+    bool fromSheet = false,
+  }) {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
 
@@ -229,56 +263,110 @@ class AddExpenseController {
       );
     }
 
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (context) => Consumer<ExpenseGroupNotifier>(
-              builder: (context, groupNotifier, child) {
-                final currentGroup = groupNotifier.currentGroup ?? group;
-                return ExpenseFormPage(
-                  group: currentGroup,
-                  initialExpense: partialExpense,
-                  onExpenseSaved: (expense) async {
-                    final expenseWithId = expense.copyWith(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                    );
+    Widget buildPage(BuildContext context) => Consumer<ExpenseGroupNotifier>(
+      builder: (context, groupNotifier, child) {
+        final currentGroup = groupNotifier.currentGroup ?? group;
+        return ExpenseFormPage(
+          group: currentGroup,
+          initialExpense: partialExpense,
+          autofocusAmount: !fromSheet,
+          onExpenseSaved: (expense) async {
+            final expenseWithId = expense.copyWith(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+            );
 
-                    await ExpenseGroupStorageV2.addExpenseToGroup(
-                      currentGroup.id,
-                      expenseWithId,
-                    );
+            await ExpenseGroupStorageV2.addExpenseToGroup(
+              currentGroup.id,
+              expenseWithId,
+            );
 
-                    await groupNotifier.refreshGroup();
-                    groupNotifier.notifyGroupUpdated(currentGroup.id);
+            await groupNotifier.refreshGroup();
+            groupNotifier.notifyGroupUpdated(currentGroup.id);
 
-                    if (parentContext.mounted) {
-                      final gloc = gen.AppLocalizations.of(parentContext);
-                      await NotificationManager()
-                          .updateNotificationForGroupById(
-                            currentGroup.id,
-                            gloc,
-                          );
-                    }
+            if (parentContext.mounted) {
+              final gloc = gen.AppLocalizations.of(parentContext);
+              await NotificationManager().updateNotificationForGroupById(
+                currentGroup.id,
+                gloc,
+              );
+            }
 
-                    RatingService.checkAndPromptForRating();
+            RatingService.checkAndPromptForRating();
 
-                    // Notify parent that expense was added
-                    onExpenseAdded();
-                  },
-                  onCategoryAdded: (categoryName) async {
-                    await notifier.addCategory(categoryName);
-                  },
-                  onParticipantAdded: (participantName) async {
-                    await notifier.addParticipant(participantName);
-                  },
-                );
-              },
+            // Notify parent that expense was added
+            onExpenseAdded();
+          },
+          onCategoryAdded: (categoryName) async {
+            await notifier.addCategory(categoryName);
+          },
+          onParticipantAdded: (participantName) async {
+            await notifier.addParticipant(participantName);
+          },
+        );
+      },
+    );
+
+    final PageRoute<void> route = fromSheet
+        ? _SheetToPageRoute(builder: buildPage)
+        : MaterialPageRoute<void>(builder: buildPage);
+    Navigator.of(context).push(route).whenComplete(() {
+      notifier.clearCurrentGroup();
+    });
+    return route;
+  }
+}
+
+/// The full expense page opened from the quick-add sheet: it slides up from
+/// the bottom with the sheet's own motion ([AppMotion.sheet]), opaque, so it
+/// reads as the sheet growing to full screen.
+class _SheetToPageRoute extends PageRoute<void> {
+  _SheetToPageRoute({required this.builder});
+
+  final WidgetBuilder builder;
+
+  @override
+  Duration get transitionDuration => AppMotion.sheet.duration!;
+
+  @override
+  Duration get reverseTransitionDuration => AppMotion.sheet.reverseDuration!;
+
+  @override
+  bool get opaque => true;
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  Color? get barrierColor => null;
+
+  @override
+  String? get barrierLabel => null;
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) => builder(context);
+
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return SlideTransition(
+      position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+          .animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: AppMotion.sheet.curve!,
+              reverseCurve: Curves.easeInCubic,
             ),
           ),
-        )
-        .whenComplete(() {
-          notifier.clearCurrentGroup();
-        });
+      child: child,
+    );
   }
 }
 
