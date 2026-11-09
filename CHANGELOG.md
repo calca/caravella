@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- F-Droid build: "Join a group" can now scan the QR code, with a free scanner (CameraX + ZXing), so two F-Droid installs can pair over Wi-Fi
 - First launch follows the device language (English when it isn't one of the app's languages) instead of always starting in Italian
 - Voice input no longer asks for the Nearby devices (Bluetooth) permission along with the microphone
 - The sync entry in settings names only the channels the build has (just "Wi-Fi" in the F-Droid build)

@@ -63,6 +63,14 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - name: Install dependencies
         run: flutter pub get
+      # Each packages/* is analyzed through its own .dart_tool by the root
+      # `flutter analyze` (see Development - Android.yml).
+      - name: Install package dependencies
+        run: |
+          set -e
+          for pkg in packages/*/; do
+            [ -f "${pkg}pubspec.yaml" ] && (cd "$pkg" && flutter pub get)
+          done
       # The sqlite3 build hook downloads SQLite from GitHub releases and
       # fails on a bad download; fetch it with retries and a hash check first.
       - name: Prefetch SQLite binaries
