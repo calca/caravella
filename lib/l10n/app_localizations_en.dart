@@ -2825,4 +2825,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_settings_desc_wifi_drive => 'Wi-Fi or Google Drive';
+
+  @override
+  String get sync_multiuser_description_wifi => 'Groups over Wi-Fi';
+
+  @override
+  String get sync_privacy_footer_wifi =>
+      'With it off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi doesn’t change.';
 }

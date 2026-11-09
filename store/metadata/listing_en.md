@@ -48,5 +48,6 @@ MADE FOR TRIPS, HOMES AND EVENTS
 YOUR DATA, YOUR RULES
 • Works offline, no account required
 • Your data stays on your device
+• Maps and place search use OpenStreetMap (map tiles and Nominatim) only when you open them
 • Backup, restore and CSV export at any time
 • Open source (MIT license)

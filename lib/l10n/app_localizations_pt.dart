@@ -2833,4 +2833,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sync_settings_desc_wifi_drive => 'Wi-Fi ou Google Drive';
+
+  @override
+  String get sync_multiuser_description_wifi => 'Grupos por Wi-Fi';
+
+  @override
+  String get sync_privacy_footer_wifi =>
+      'Com o interruptor desligado, o Caravella não fica visível para outros telefones e não recebe nada. O Wi-Fi do telefone não muda.';
 }

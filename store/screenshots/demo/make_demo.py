@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime, timedelta
 
 random.seed(7)
-NOW = datetime(2026, 10, 15, 13, 0)
+NOW = datetime(2026, 11, 9, 13, 0)
 PHOTO_DIR = "/storage/emulated/0/Android/data/io.caravella.egm/files/demo"
 
 
@@ -101,7 +101,7 @@ bruges = group(
         ("Train from Brussels", "Transport", 51.60, "Anna", 13, 9, None),
         ("Dinner at the Markt", "Food", 96.00, "Giulia", 13, 20, None),
     ],
-    NOW - timedelta(days=13), NOW - timedelta(days=11), photo="bruges.jpg", ts_days=11,
+    NOW - timedelta(days=13), NOW - timedelta(days=11), color=1, ts_days=11,
 )
 
 ski = group(
@@ -110,7 +110,7 @@ ski = group(
         ("Ski pass 6 days", "Ski pass", 1450.00, "Davide", 40, 9, None),
         ("Chalet deposit", "Accommodation", 600.00, "Anna", 45, 12, None),
     ],
-    NOW + timedelta(days=60), NOW + timedelta(days=67), photo="ski.jpg", ts_days=2,
+    NOW + timedelta(days=60), NOW + timedelta(days=67), color=8, ts_days=2,
 )
 
 flat = group(
@@ -132,7 +132,7 @@ chicago = group(
         ("Team dinner", "Meals", 88.00, "Anna", 24, 20, None),
         ("Airport taxi", "Taxi", 46.50, "Anna", 25, 15, None),
     ],
-    NOW - timedelta(days=26), NOW - timedelta(days=23), photo="chicago.jpg", ts_days=20,
+    NOW - timedelta(days=26), NOW - timedelta(days=23), color=6, ts_days=20,
 )
 
 json.dump([norway, bruges, ski, flat, chicago], sys.stdout, ensure_ascii=False, indent=1)

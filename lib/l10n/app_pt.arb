@@ -1018,4 +1018,6 @@
   ,"sync_settings_desc_wifi": "Wi-Fi"
   ,"sync_settings_desc_wifi_bt": "Wi-Fi ou Bluetooth"
   ,"sync_settings_desc_wifi_drive": "Wi-Fi ou Google Drive"
+  ,"sync_multiuser_description_wifi": "Grupos por Wi-Fi"
+  ,"sync_privacy_footer_wifi": "Com o interruptor desligado, o Caravella não fica visível para outros telefones e não recebe nada. O Wi-Fi do telefone não muda."
 }

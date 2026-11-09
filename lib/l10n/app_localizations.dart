@@ -5153,6 +5153,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wi-Fi or Google Drive'**
   String get sync_settings_desc_wifi_drive;
+
+  /// Sync with others subtitle in builds without Bluetooth sync (F-Droid)
+  ///
+  /// In en, this message translates to:
+  /// **'Groups over Wi-Fi'**
+  String get sync_multiuser_description_wifi;
+
+  /// Footer under the only (Wi-Fi) privacy switch in builds without Bluetooth sync (F-Droid)
+  ///
+  /// In en, this message translates to:
+  /// **'With it off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi doesn’t change.'**
+  String get sync_privacy_footer_wifi;
 }
 
 class _AppLocalizationsDelegate

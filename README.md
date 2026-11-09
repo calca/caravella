@@ -74,7 +74,15 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshots/en/08.jpg" alt="Dark theme" width="200"/>
 </p>
 
-## 🎉 What's New in v2.3.0
+## 🎉 What's New in v2.4.0
+
+- **Share With Friends Nearby**: Invite a device shows a QR code and finds nearby phones over Bluetooth; Join a group reads the code or picks a nearby phone
+- **Privacy Switches**: Turn Wi-Fi and Bluetooth sync on or off; with both off, your phone isn't visible to anyone
+- **Paired Devices**: See when each device last updated, and update it in one tap
+- **Fewer Payments**: Settling up suggests as few payments as possible
+- **Smoother Everyday Use**: Colored groups match photo ones, adding an expense is calmer, and places can be changed on the map
+
+### v2.3.0
 
 - **Spending Pace**: Statistics start with your average per day (or per month), how many expenses and each person's share
 - **Search Every Expense**: Search finds expenses across all your groups, by name, note or place

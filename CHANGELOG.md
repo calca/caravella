@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-11-09
+
 ### Changed
 - F-Droid build: "Join a group" can now scan the QR code, with a free scanner (CameraX + ZXing), so two F-Droid installs can pair over Wi-Fi
 - First launch follows the device language (English when it isn't one of the app's languages) instead of always starting in Italian
@@ -35,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When the camera, photos, notifications or location are turned off for Caravella, a dialog explains what they're for, with “Open settings” to turn them on, instead of a message with nothing to tap
 
 ### Fixed
+- F-Droid build: Sync with others no longer mentions Bluetooth ("Groups over Wi-Fi", and the note under its only switch)
 - Place of an expense: when the expense already had one, the map opened with only “Confirm”. The place now shows in a card at the bottom while the search and the map stay usable, to pick another one
 - Adding an expense from Home: tapping “+N” on the people or categories line now opens the full list inside the sheet, and adding a new person or category happens right in that line, so the keyboard no longer closes and reopens and the sheet no longer jumps up and down
 - Join a group: the camera now fills the screen behind the nearby phones panel, instead of stopping above it
@@ -658,7 +661,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/calca/caravella/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/calca/caravella/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/calca/caravella/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/calca/caravella/compare/v2.0.2...v2.2.0

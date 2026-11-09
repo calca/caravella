@@ -2837,4 +2837,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_settings_desc_wifi_drive => 'Wi-Fi o Google Drive';
+
+  @override
+  String get sync_multiuser_description_wifi => 'Gruppi via Wi-Fi';
+
+  @override
+  String get sync_privacy_footer_wifi =>
+      'Con l’interruttore spento, Caravella non si fa vedere dagli altri telefoni e non riceve niente. Il Wi-Fi del telefono non cambia.';
 }
