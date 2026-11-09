@@ -56,6 +56,22 @@ For everything else, verify licenses against `pubspec.yaml`/`pubspec.lock` direc
 
 Camera and location are declared `android:required="false"` in `AndroidManifest.xml` — the app is fully usable with both denied. Storage permission is only needed pre-Android-13 (modern versions use the system Photo Picker, no permission required).
 
+What the F-Droid APK (foss variant) asks for, and why — check with `aapt dump permissions` on a `./build_variant.sh foss` build when dependencies change:
+
+| Permission | Declared by | Used for |
+|---|---|---|
+| `INTERNET` | app manifest | OpenStreetMap tiles, place search / reverse geocoding (Nominatim), the local Wi-Fi sync between the user's devices. Unsplash backgrounds are off: the recipe passes no `UNSPLASH_ACCESS_KEY` |
+| `CAMERA` | app manifest | Photos for a group background or an expense attachment |
+| `READ_EXTERNAL_STORAGE` (≤ 32), `WRITE_EXTERNAL_STORAGE` (≤ 28) | app manifest | Picking photos / exporting on old Android versions |
+| `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION` | app manifest | Optionally tagging an expense with the current place |
+| `POST_NOTIFICATIONS` | app manifest | The optional persistent notification with a group's total |
+| `RECORD_AUDIO` | app manifest | Optional voice input of an expense |
+| `ACCESS_WIFI_STATE`, `CHANGE_WIFI_MULTICAST_STATE` | app manifest | Optional local Wi-Fi sync (mDNS discovery) |
+| `VIBRATE` | `flutter_local_notifications` | Notifications |
+| `ACCESS_NETWORK_STATE`, `WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED`, `FOREGROUND_SERVICE` | AndroidX WorkManager, via `home_widget` (`WAKE_LOCK` also from ExoPlayer via `video_player`) | Refreshing the home-screen widget; playing video attachments |
+
+The Bluetooth sync is Play-only (Nearby Connections, in `caravella_gms`): its `BLUETOOTH*`, `NEARBY_WIFI_DEVICES` and `CHANGE_WIFI_STATE` permissions come from the `nearby_connections` plugin's own manifest, so the F-Droid APK has none of them. Don't declare them again in `android/app/src/main/AndroidManifest.xml`.
+
 ## Reproducible builds
 
 F-Droid signs the APK with its own key; reproducible builds (F-Droid shipping an APK signed by us) are not enabled, and can't be switched on later without breaking updates for existing installs. They couldn't match anyway: the F-Droid APK is the FOSS variant, the Play/GitHub one isn't.
