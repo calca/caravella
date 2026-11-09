@@ -29,18 +29,15 @@ class DeltaBuilder {
   const DeltaBuilder({
     required SyncDao syncDao,
     required SqliteExpenseGroupRepository repository,
-  })  : _syncDao = syncDao,
-        _repository = repository;
+  }) : _syncDao = syncDao,
+       _repository = repository;
 
   /// Builds an outgoing delta for the given [peerId].
   ///
   /// Only groups modified after the last sync with [peerId] are included.
   /// Each group is fully serialized via [ExpenseGroup.toJson()] so the
   /// receiver can reconstruct the complete model.
-  Future<Map<String, dynamic>> buildDelta(
-    Database db,
-    String peerId,
-  ) async {
+  Future<Map<String, dynamic>> buildDelta(Database db, String peerId) async {
     final lastSync = await _syncDao.getLastSyncTime(peerId) ?? 0;
 
     LoggerService.debug(
@@ -52,8 +49,7 @@ class DeltaBuilder {
     // queries are already scoped to groups [peerId] has been granted access
     // to — see SyncDao.grantGroupAccess.
     final changedRows = await _syncDao.getGroupsDeltaSince(lastSync, peerId);
-    final deletedRows =
-        await _syncDao.getDeletedGroupsSince(lastSync, peerId);
+    final deletedRows = await _syncDao.getDeletedGroupsSince(lastSync, peerId);
 
     // Load full group objects for each changed row
     final groups = <Map<String, dynamic>>[];
@@ -112,8 +108,7 @@ class DeltaBuilder {
     if (!raw.containsKey('groups') || raw['groups'] is! List) {
       throw const FormatException('Delta missing required field: groups');
     }
-    if (!raw.containsKey('deleted_groups') ||
-        raw['deleted_groups'] is! List) {
+    if (!raw.containsKey('deleted_groups') || raw['deleted_groups'] is! List) {
       throw const FormatException(
         'Delta missing required field: deleted_groups',
       );

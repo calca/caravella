@@ -29,10 +29,7 @@ class JsonMerger {
     for (final shard in jsonShards) {
       final payload = GroupSerializer.deserializePayload(shard);
       if (payload == null) {
-        LoggerService.warning(
-          'Skipping unparsable shard',
-          name: _tag,
-        );
+        LoggerService.warning('Skipping unparsable shard', name: _tag);
         continue;
       }
 
@@ -90,7 +87,9 @@ class JsonMerger {
     for (final entry in winners.entries) {
       final group = GroupSerializer.fromJson(entry.value.json);
       if (group != null) {
-        merged.add(_SortableGroup(group: group, updatedAt: entry.value.updatedAt));
+        merged.add(
+          _SortableGroup(group: group, updatedAt: entry.value.updatedAt),
+        );
       }
     }
 
@@ -121,9 +120,7 @@ class JsonMerger {
     List<ExpenseGroup> local,
     List<ExpenseGroup> merged,
   ) {
-    final localMap = <String, ExpenseGroup>{
-      for (final g in local) g.id: g,
-    };
+    final localMap = <String, ExpenseGroup>{for (final g in local) g.id: g};
 
     final changes = <ExpenseGroup>[];
     for (final group in merged) {

@@ -6,10 +6,8 @@ import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/models/sync_result.dart';
 
 /// Callback invoked when remote shards are downloaded from cloud storage.
-typedef DeltaJsonCallback = Future<void> Function(
-  List<String> shards,
-  String channel,
-);
+typedef DeltaJsonCallback =
+    Future<void> Function(List<String> shards, String channel);
 
 /// Cloud relay channel for syncing device shards via a cloud provider.
 ///

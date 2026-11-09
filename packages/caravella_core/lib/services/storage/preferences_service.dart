@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui' show PlatformDispatcher;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,7 +44,6 @@ abstract class _PreferenceKeys {
 
 /// Default values for preferences
 abstract class _PreferenceDefaults {
-  static const String locale = 'it';
   static const String themeMode = 'system';
   static const bool flagSecure = true;
   static const bool autoBackupEnabled = false;
@@ -165,8 +165,7 @@ class PreferencesService {
   SearchPreferences get search => SearchPreferences._(_prefs);
 
   /// Groups shared with this device that haven't been opened yet.
-  SharedGroupPreferences get sharedGroups =>
-      SharedGroupPreferences._(_prefs);
+  SharedGroupPreferences get sharedGroups => SharedGroupPreferences._(_prefs);
 
   GroupTypeTemplatesPreferences get groupTypeTemplates =>
       GroupTypeTemplatesPreferences._(_prefs);
@@ -205,10 +204,24 @@ class LocalePreferences {
   LocalePreferences._(this._prefs);
   final SharedPreferences _prefs;
 
-  /// Get the user's selected locale (default: 'it')
+  /// Languages the app is translated into.
+  static const List<String> supported = ['en', 'es', 'it', 'pt', 'zh'];
+
+  /// The device's first preferred language the app supports, English
+  /// otherwise: what the app speaks until the user picks one.
+  static String deviceDefault([List<String>? deviceLanguages]) {
+    final languages =
+        deviceLanguages ??
+        PlatformDispatcher.instance.locales.map((l) => l.languageCode);
+    for (final code in languages) {
+      if (supported.contains(code)) return code;
+    }
+    return 'en';
+  }
+
+  /// Get the user's selected locale (default: [deviceDefault])
   String get() {
-    return _prefs.getString(_PreferenceKeys.locale) ??
-        _PreferenceDefaults.locale;
+    return _prefs.getString(_PreferenceKeys.locale) ?? deviceDefault();
   }
 
   /// Set the user's selected locale

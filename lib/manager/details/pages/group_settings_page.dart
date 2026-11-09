@@ -11,6 +11,7 @@ import '../../group/pages/expense_group_other_page.dart';
 import '../../group/pages/expense_group_sync_page.dart';
 import '../../group/group_edit_mode.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
+import 'package:io_caravella_egm/sync/sync_channels_label.dart';
 
 class GroupSettingsPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -115,7 +116,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
               SettingsTile(
                 icon: Icons.sync_rounded,
                 title: gloc.sync_title,
-                subtitle: gloc.sync_settings_desc,
+                subtitle: syncChannelsLabel(gloc),
                 onTap: () => _openSyncPage(context),
               ),
               SettingsTile(

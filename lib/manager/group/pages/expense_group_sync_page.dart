@@ -9,6 +9,7 @@ import '../../../sync/invite_sheet.dart';
 import '../../../sync/multi_user_sync_page.dart';
 import '../../../sync/sync_history_page.dart';
 import '../../../sync/widgets/paired_devices_list.dart';
+import 'package:io_caravella_egm/sync/sync_channels_label.dart';
 
 /// Per-group sync settings sub-page, reached from [GroupSettingsPage].
 ///
@@ -162,7 +163,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
         child: SettingsScaffold(
           eyebrow: _currentTrip.title,
           title: gloc.sync_title,
-          description: gloc.sync_settings_desc,
+          description: syncChannelsLabel(gloc),
           children: [
             SettingsGroup(
               children: [

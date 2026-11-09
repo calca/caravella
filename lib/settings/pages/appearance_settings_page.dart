@@ -12,7 +12,8 @@ class AppearanceSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final locale =
+        LocaleNotifier.of(context)?.locale ?? LocalePreferences.deviceDefault();
     return AppSystemUI.edgeToEdge(
       child: SettingsScaffold(
         eyebrow: loc.settings,

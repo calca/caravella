@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - F-Droid build: "Join a group" can now scan the QR code, with a free scanner (CameraX + ZXing), so two F-Droid installs can pair over Wi-Fi
+- First launch follows the device language (English when it isn't one of the app's languages) instead of always starting in Italian
+- Voice input no longer asks for the Nearby devices (Bluetooth) permission along with the microphone
+- The sync entry in settings names only the channels the build has (just "Wi-Fi" in the F-Droid build)
+- Store description: says that maps and place search use OpenStreetMap when opened
 - F-Droid build: no longer asks for Bluetooth and nearby-devices permissions, since its builds have no Bluetooth sync (the Play build still gets them from the Nearby Connections plugin)
 - Expense: "More details" from the quick-add sheet now feels like the sheet growing to full screen: the page slides up over it, the keyboard closes once and doesn't reopen on the amount.
 - Home: the favorite group shows a heart before its dates, as on the group page, instead of a “Favorite” pill

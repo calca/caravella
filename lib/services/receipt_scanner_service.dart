@@ -8,7 +8,8 @@ import 'package:caravella_core/caravella_core.dart';
 /// expense form hides the scan buttons. The amount/description parsing here
 /// is plain Dart.
 class ReceiptScannerService {
-  static final ReceiptScannerService _instance = ReceiptScannerService._internal();
+  static final ReceiptScannerService _instance =
+      ReceiptScannerService._internal();
   factory ReceiptScannerService() => _instance;
   ReceiptScannerService._internal();
 
@@ -32,21 +33,35 @@ class ReceiptScannerService {
     try {
       final recognizer = _recognizer;
       if (recognizer == null) {
-        LoggerService.warning('OCR: not available in this build', name: 'receipt_scanner');
+        LoggerService.warning(
+          'OCR: not available in this build',
+          name: 'receipt_scanner',
+        );
         return {'amount': null, 'description': null};
       }
       final text = await recognizer.recognizeText(imageFile.path);
 
       if (text.isEmpty) {
-        LoggerService.info('OCR: no text found in image', name: 'receipt_scanner');
+        LoggerService.info(
+          'OCR: no text found in image',
+          name: 'receipt_scanner',
+        );
         return {'amount': null, 'description': null};
       }
 
-      LoggerService.info('OCR: text recognized (${text.length} chars)', name: 'receipt_scanner');
+      LoggerService.info(
+        'OCR: text recognized (${text.length} chars)',
+        name: 'receipt_scanner',
+      );
       final result = _parseReceiptText(text);
       return result;
     } catch (e, st) {
-      LoggerService.error('OCR: failed to scan receipt', name: 'receipt_scanner', error: e, stackTrace: st);
+      LoggerService.error(
+        'OCR: failed to scan receipt',
+        name: 'receipt_scanner',
+        error: e,
+        stackTrace: st,
+      );
       rethrow;
     }
   }
@@ -57,14 +72,21 @@ class ReceiptScannerService {
     String? description;
 
     // Split text into lines for processing
-    final lines = text.split('\n').map((line) => line.trim()).where((line) => line.isNotEmpty).toList();
+    final lines = text
+        .split('\n')
+        .map((line) => line.trim())
+        .where((line) => line.isNotEmpty)
+        .toList();
 
     // Try to find amount - look for patterns like:
     // - "TOTALE 12.50" or "TOTAL 12,50"
     // - "€ 12.50" or "EUR 12,50"
     // - Numbers with currency symbols or keywords
     final amountPatterns = [
-      RegExp(r'(?:totale|total|subtotal|tot\.?|somma)\s*[:=]?\s*€?\s*([0-9]+[.,][0-9]{2})', caseSensitive: false),
+      RegExp(
+        r'(?:totale|total|subtotal|tot\.?|somma)\s*[:=]?\s*€?\s*([0-9]+[.,][0-9]{2})',
+        caseSensitive: false,
+      ),
       RegExp(r'€\s*([0-9]+[.,][0-9]{2})'),
       RegExp(r'([0-9]+[.,][0-9]{2})\s*€'),
       RegExp(r'([0-9]+[.,][0-9]{2})\s*eur', caseSensitive: false),
@@ -93,7 +115,7 @@ class ReceiptScannerService {
       // Take first non-empty line that doesn't look like a date or address
       for (final line in lines.take(5)) {
         // Skip lines that are mostly numbers or dates
-        if (line.length > 3 && 
+        if (line.length > 3 &&
             !RegExp(r'^\d{1,2}[/-]\d{1,2}[/-]\d{2,4}').hasMatch(line) &&
             !RegExp(r'^\d+$').hasMatch(line)) {
           description = line;
@@ -102,10 +124,7 @@ class ReceiptScannerService {
       }
     }
 
-    return {
-      'amount': amount,
-      'description': description,
-    };
+    return {'amount': amount, 'description': description};
   }
 
   /// Dispose of resources

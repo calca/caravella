@@ -5135,6 +5135,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invite another device'**
   String get sync_invite_another;
+
+  /// Subtitle of the sync entry when the build only has these channels
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi'**
+  String get sync_settings_desc_wifi;
+
+  /// Subtitle of the sync entry when the build only has these channels
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi or Bluetooth'**
+  String get sync_settings_desc_wifi_bt;
+
+  /// Subtitle of the sync entry when the build only has these channels
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi or Google Drive'**
+  String get sync_settings_desc_wifi_drive;
 }
 
 class _AppLocalizationsDelegate

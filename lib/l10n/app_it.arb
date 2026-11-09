@@ -1017,4 +1017,7 @@
   ,"sync_shared_empty_title": "Ancora con nessuno"
   ,"sync_shared_empty_body": "Invita chi divide le spese con te: vedrete le stesse spese, ognuno sul suo telefono."
   ,"sync_invite_another": "Invita un altro dispositivo"
+  ,"sync_settings_desc_wifi": "Wi-Fi"
+  ,"sync_settings_desc_wifi_bt": "Wi-Fi o Bluetooth"
+  ,"sync_settings_desc_wifi_drive": "Wi-Fi o Google Drive"
 }

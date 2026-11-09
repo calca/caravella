@@ -45,6 +45,11 @@ class VoiceInputService {
       _isInitialized = await _speech.initialize(
         onError: _dispatchError,
         onStatus: _dispatchStatus,
+        // Without it, the plugin asks for BLUETOOTH_CONNECT ("Nearby
+        // devices") along with the microphone whenever the manifest declares
+        // it (Play build, for the Bluetooth sync): an unexpected prompt for
+        // dictating an expense. The phone's own microphone is enough.
+        options: [stt.SpeechToText.androidNoBluetooth],
       );
     }
     return _isInitialized;

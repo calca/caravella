@@ -21,13 +21,13 @@ class PairedDevice {
   });
 
   factory PairedDevice.fromRow(Map<String, dynamic> row) => PairedDevice(
-        deviceId: row['device_id'] as String,
-        deviceName: row['device_name'] as String? ?? 'Unknown device',
-        platform: row['platform'] as String? ?? 'unknown',
-        pairedAt: DateTime.fromMillisecondsSinceEpoch(
-          row['paired_at'] as int,
-          isUtc: true,
-        ),
-        publicKey: row['public_key'] as String?,
-      );
+    deviceId: row['device_id'] as String,
+    deviceName: row['device_name'] as String? ?? 'Unknown device',
+    platform: row['platform'] as String? ?? 'unknown',
+    pairedAt: DateTime.fromMillisecondsSinceEpoch(
+      row['paired_at'] as int,
+      isUtc: true,
+    ),
+    publicKey: row['public_key'] as String?,
+  );
 }

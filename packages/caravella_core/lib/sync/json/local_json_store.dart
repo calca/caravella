@@ -88,10 +88,7 @@ class LocalJsonStore {
     final file = File(p.join(dir.path, '$deviceId.json'));
 
     if (!file.existsSync()) {
-      LoggerService.debug(
-        'Shard not found for device=$deviceId',
-        name: _tag,
-      );
+      LoggerService.debug('Shard not found for device=$deviceId', name: _tag);
       return null;
     }
 
@@ -126,13 +123,12 @@ class LocalJsonStore {
       final files = dir
           .listSync()
           .whereType<File>()
-          .where((f) =>
-              f.path.endsWith('.json') && !f.path.endsWith('.json.tmp'))
+          .where(
+            (f) => f.path.endsWith('.json') && !f.path.endsWith('.json.tmp'),
+          )
           .toList();
 
-      final ids = files
-          .map((f) => p.basenameWithoutExtension(f.path))
-          .toList();
+      final ids = files.map((f) => p.basenameWithoutExtension(f.path)).toList();
 
       LoggerService.debug('Found ${ids.length} shard(s)', name: _tag);
       return ids;
@@ -161,8 +157,8 @@ class LocalJsonStore {
 
     try {
       final files = dir.listSync().whereType<File>().where(
-            (f) => f.path.endsWith('.json') || f.path.endsWith('.json.tmp'),
-          );
+        (f) => f.path.endsWith('.json') || f.path.endsWith('.json.tmp'),
+      );
 
       for (final file in files) {
         final stat = await file.stat();
