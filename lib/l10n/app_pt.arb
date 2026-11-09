@@ -1015,4 +1015,7 @@
   ,"sync_shared_empty_title": "Ainda com ninguém"
   ,"sync_shared_empty_body": "Convide quem divide as despesas com você: vocês verão as mesmas despesas, cada um no seu telefone."
   ,"sync_invite_another": "Convidar outro dispositivo"
+  ,"sync_settings_desc_wifi": "Wi-Fi"
+  ,"sync_settings_desc_wifi_bt": "Wi-Fi ou Bluetooth"
+  ,"sync_settings_desc_wifi_drive": "Wi-Fi ou Google Drive"
 }

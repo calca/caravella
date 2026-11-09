@@ -16,7 +16,7 @@ void main() {
     group('locale preferences', () {
       test('should return default locale when none is set', () {
         final locale = prefs.locale.get();
-        expect(locale, 'it');
+        expect(locale, LocalePreferences.deviceDefault());
       });
 
       test('should store and retrieve locale correctly', () async {
@@ -157,7 +157,7 @@ void main() {
         await prefs.remove('selected_locale');
         final locale = prefs.locale.get();
 
-        expect(locale, 'it'); // Should return default
+        expect(locale, LocalePreferences.deviceDefault()); // Should return default
       });
 
       test('should clear all preferences correctly', () async {
@@ -171,7 +171,7 @@ void main() {
         final themeMode = prefs.theme.get();
         final userName = prefs.user.getName();
 
-        expect(locale, 'it');
+        expect(locale, LocalePreferences.deviceDefault());
         expect(themeMode, 'system');
         expect(userName, null);
       });

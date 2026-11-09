@@ -95,12 +95,14 @@ class GroupSerializer {
         // Use caller-supplied sync metadata when available so that
         // timestamps match what the database stores (required for LWW).
         final meta = syncMetadata[g.id];
-        json['_sync'] = meta ?? <String, dynamic>{
-          'device_id': deviceId,
-          'updated_at': SyncClock.nowMs(),
-          'sync_version': 1,
-          'deleted': false,
-        };
+        json['_sync'] =
+            meta ??
+            <String, dynamic>{
+              'device_id': deviceId,
+              'updated_at': SyncClock.nowMs(),
+              'sync_version': 1,
+              'deleted': false,
+            };
         return json;
       }).toList(),
       'deleted_groups': deletedGroups,
@@ -118,10 +120,7 @@ class GroupSerializer {
     try {
       final decoded = jsonDecode(raw);
       if (decoded is! Map<String, dynamic>) {
-        LoggerService.warning(
-          'Payload is not a JSON object',
-          name: _tag,
-        );
+        LoggerService.warning('Payload is not a JSON object', name: _tag);
         return null;
       }
 
@@ -151,10 +150,7 @@ class GroupSerializer {
 
       return decoded;
     } catch (e, st) {
-      LoggerService.warning(
-        'Failed to deserialize sync payload',
-        name: _tag,
-      );
+      LoggerService.warning('Failed to deserialize sync payload', name: _tag);
       LoggerService.debug('$e\n$st', name: _tag);
       return null;
     }

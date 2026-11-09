@@ -130,9 +130,7 @@ Future<void> createSqliteSchema(Database db) async {
   await db.execute(
     'CREATE INDEX idx_groups_updated_at ON $kTableGroups(updated_at)',
   );
-  await db.execute(
-    'CREATE INDEX idx_groups_deleted ON $kTableGroups(deleted)',
-  );
+  await db.execute('CREATE INDEX idx_groups_deleted ON $kTableGroups(deleted)');
 
   // Paired devices (schema v4; public_key added in v5)
   await db.execute('''

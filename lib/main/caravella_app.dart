@@ -22,7 +22,9 @@ class CaravellaApp extends StatefulWidget {
 }
 
 class _CaravellaAppState extends State<CaravellaApp> {
-  String _locale = 'it';
+  // The device language until the saved choice loads (or for good, when
+  // the user never picked one), so the first frame isn't in Italian.
+  String _locale = LocalePreferences.deviceDefault();
   ThemeMode _themeMode = ThemeMode.system;
   bool _dynamicColorEnabled = false;
 
@@ -38,7 +40,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
     final prefs = await SharedPreferences.getInstance();
     final savedLocale = prefs.getString('selected_locale');
     setState(() {
-      _locale = savedLocale ?? 'it';
+      _locale = savedLocale ?? LocalePreferences.deviceDefault();
     });
   }
 

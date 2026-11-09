@@ -24,6 +24,7 @@ Caravella è il modo più semplice per dividere le spese con amici, famiglia e c
 <b>I tuoi dati, le tue regole</b>
 • Funziona offline, senza account
 • I tuoi dati restano sul tuo dispositivo
+• Mappe e ricerca dei luoghi usano OpenStreetMap (mappe e Nominatim) solo quando le apri
 • Backup, ripristino ed esportazione CSV quando vuoi
 • In italiano, inglese, spagnolo, portoghese e cinese
 • Open source (licenza MIT)

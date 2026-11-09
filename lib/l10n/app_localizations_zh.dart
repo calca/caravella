@@ -2730,4 +2730,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_invite_another => '邀请另一台设备';
+
+  @override
+  String get sync_settings_desc_wifi => 'Wi-Fi';
+
+  @override
+  String get sync_settings_desc_wifi_bt => 'Wi-Fi 或蓝牙';
+
+  @override
+  String get sync_settings_desc_wifi_drive => 'Wi-Fi 或 Google 云端硬盘';
 }

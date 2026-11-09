@@ -8,11 +8,7 @@ class ExpenseAuthor {
   final String? deviceName;
   final String? userName;
 
-  const ExpenseAuthor({
-    required this.deviceId,
-    this.deviceName,
-    this.userName,
-  });
+  const ExpenseAuthor({required this.deviceId, this.deviceName, this.userName});
 
   /// The best human-readable label for this author: the personal name if
   /// set, otherwise the device name, otherwise `null` (nothing usable to
@@ -59,5 +55,6 @@ class ExpenseAuthor {
           userName == other.userName;
 
   @override
-  int get hashCode => deviceId.hashCode ^ deviceName.hashCode ^ userName.hashCode;
+  int get hashCode =>
+      deviceId.hashCode ^ deviceName.hashCode ^ userName.hashCode;
 }

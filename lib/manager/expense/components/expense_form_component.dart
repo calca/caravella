@@ -302,7 +302,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final locale =
+        LocaleNotifier.of(context)?.locale ?? LocalePreferences.deviceDefault();
 
     return PopScope(
       canPop: !_controller.state.isDirty,
@@ -563,7 +564,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   }
 
   Future<void> _showVoiceCapture(BuildContext context) async {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final locale =
+        LocaleNotifier.of(context)?.locale ?? LocalePreferences.deviceDefault();
     final localeId = '${locale}_${locale.toUpperCase()}';
     final participantNames = _lifecycleManager.participants
         .map((p) => p.name)
