@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- F-Droid build: "Join a group" can now scan the QR code, with a free scanner (CameraX + ZXing), so two F-Droid installs can pair over Wi-Fi
 - F-Droid build: no longer asks for Bluetooth and nearby-devices permissions, since its builds have no Bluetooth sync (the Play build still gets them from the Nearby Connections plugin)
 - Expense: "More details" from the quick-add sheet now feels like the sheet growing to full screen: the page slides up over it, the keyboard closes once and doesn't reopen on the amount.
 - Home: the favorite group shows a heart before its dates, as on the group page, instead of a “Favorite” pill
