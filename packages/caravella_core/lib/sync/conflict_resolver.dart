@@ -25,9 +25,7 @@ class ConflictResolver {
   final SyncDao _syncDao;
 
   /// Creates a [ConflictResolver] backed by the given [syncDao].
-  const ConflictResolver({
-    required SyncDao syncDao,
-  }) : _syncDao = syncDao;
+  const ConflictResolver({required SyncDao syncDao}) : _syncDao = syncDao;
 
   /// Processes an incoming [delta] received over [channel] and returns a
   /// [SyncResult] with counters of applied / skipped / errored groups.
@@ -42,9 +40,10 @@ class ConflictResolver {
 
     final peerId = parsed['device_id'] as String;
     final peerName = parsed['device_name'] as String? ?? 'Unknown';
-    final remoteGroups = (parsed['groups'] as List).cast<Map<String, dynamic>>();
-    final deletedGroups =
-        (parsed['deleted_groups'] as List).cast<Map<String, dynamic>>();
+    final remoteGroups = (parsed['groups'] as List)
+        .cast<Map<String, dynamic>>();
+    final deletedGroups = (parsed['deleted_groups'] as List)
+        .cast<Map<String, dynamic>>();
 
     int applied = 0;
     int skipped = 0;
@@ -90,10 +89,7 @@ class ConflictResolver {
 
           groupId = remoteJson['id'] as String?;
           if (groupId == null) {
-            LoggerService.warning(
-              'Skipping group with null ID',
-              name: _tag,
-            );
+            LoggerService.warning('Skipping group with null ID', name: _tag);
             problem(SyncProblemReason.unreadable);
             continue;
           }
@@ -208,10 +204,7 @@ class ConflictResolver {
 
           await txn.update(
             SqliteExpenseGroupRepository.tableGroups,
-            {
-              'deleted': 1,
-              'updated_at': remoteUpdatedAt,
-            },
+            {'deleted': 1, 'updated_at': remoteUpdatedAt},
             where: 'id = ?',
             whereArgs: [groupId],
           );
@@ -305,30 +298,26 @@ class ConflictResolver {
     required int syncVersion,
   }) async {
     // Upsert group row with sync columns set atomically.
-    await txn.insert(
-      SqliteExpenseGroupRepository.tableGroups,
-      {
-        'id': group.id,
-        'title': group.title,
-        'currency': group.currency,
-        'start_date': group.startDate?.millisecondsSinceEpoch,
-        'end_date': group.endDate?.millisecondsSinceEpoch,
-        'timestamp': group.timestamp.millisecondsSinceEpoch,
-        'pinned': group.pinned ? 1 : 0,
-        'archived': group.archived ? 1 : 0,
-        'file': group.file,
-        'color': group.color,
-        'notification_enabled': group.notificationEnabled ? 1 : 0,
-        'group_type': group.groupType?.toJson(),
-        'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
-        'sync_enabled': group.syncEnabled ? 1 : 0,
-        'device_id': deviceId,
-        'updated_at': updatedAt,
-        'deleted': 0,
-        'sync_version': syncVersion,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await txn.insert(SqliteExpenseGroupRepository.tableGroups, {
+      'id': group.id,
+      'title': group.title,
+      'currency': group.currency,
+      'start_date': group.startDate?.millisecondsSinceEpoch,
+      'end_date': group.endDate?.millisecondsSinceEpoch,
+      'timestamp': group.timestamp.millisecondsSinceEpoch,
+      'pinned': group.pinned ? 1 : 0,
+      'archived': group.archived ? 1 : 0,
+      'file': group.file,
+      'color': group.color,
+      'notification_enabled': group.notificationEnabled ? 1 : 0,
+      'group_type': group.groupType?.toJson(),
+      'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
+      'sync_enabled': group.syncEnabled ? 1 : 0,
+      'device_id': deviceId,
+      'updated_at': updatedAt,
+      'deleted': 0,
+      'sync_version': syncVersion,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
 
     // Delete existing child rows
     await txn.delete(

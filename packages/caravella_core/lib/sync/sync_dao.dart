@@ -40,7 +40,8 @@ class SyncDao {
   ) async {
     final rows = await db.query(
       SqliteExpenseGroupRepository.tableGroups,
-      where: 'updated_at > ? AND deleted = 0 AND sync_enabled = 1 '
+      where:
+          'updated_at > ? AND deleted = 0 AND sync_enabled = 1 '
           'AND id IN (SELECT group_id FROM '
           '${SqliteExpenseGroupRepository.tablePairedDeviceGroups} '
           'WHERE device_id = ?)',
@@ -65,7 +66,8 @@ class SyncDao {
   ) async {
     final rows = await db.query(
       SqliteExpenseGroupRepository.tableGroups,
-      where: 'updated_at > ? AND deleted = 1 AND sync_enabled = 1 '
+      where:
+          'updated_at > ? AND deleted = 1 AND sync_enabled = 1 '
           'AND id IN (SELECT group_id FROM '
           '${SqliteExpenseGroupRepository.tablePairedDeviceGroups} '
           'WHERE device_id = ?)',
@@ -196,16 +198,12 @@ class SyncDao {
     required int lastSeen,
     String? vectorClock,
   }) async {
-    await db.insert(
-      SqliteExpenseGroupRepository.tableDeviceMeta,
-      {
-        'device_id': deviceId,
-        'device_name': deviceName,
-        'last_seen': lastSeen,
-        'vector_clock': vectorClock,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert(SqliteExpenseGroupRepository.tableDeviceMeta, {
+      'device_id': deviceId,
+      'device_name': deviceName,
+      'last_seen': lastSeen,
+      'vector_clock': vectorClock,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
     LoggerService.debug(
       'upsertDeviceMeta(id=$deviceId, name=$deviceName)',
       name: _tag,
@@ -289,17 +287,13 @@ class SyncDao {
     required String platform,
     String? publicKey,
   }) async {
-    await db.insert(
-      SqliteExpenseGroupRepository.tablePairedDevices,
-      {
-        'device_id': deviceId,
-        'device_name': deviceName,
-        'platform': platform,
-        'paired_at': SyncClock.nowMs(),
-        'public_key': publicKey,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert(SqliteExpenseGroupRepository.tablePairedDevices, {
+      'device_id': deviceId,
+      'device_name': deviceName,
+      'platform': platform,
+      'paired_at': SyncClock.nowMs(),
+      'public_key': publicKey,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
     LoggerService.info(
       'Paired with device $deviceId ($deviceName)',
       name: _tag,
@@ -356,15 +350,11 @@ class SyncDao {
   /// both devices when a pairing handshake (QR or Bluetooth) completes for
   /// that group.
   Future<void> grantGroupAccess(String deviceId, String groupId) async {
-    await db.insert(
-      SqliteExpenseGroupRepository.tablePairedDeviceGroups,
-      {
-        'device_id': deviceId,
-        'group_id': groupId,
-        'granted_at': SyncClock.nowMs(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert(SqliteExpenseGroupRepository.tablePairedDeviceGroups, {
+      'device_id': deviceId,
+      'group_id': groupId,
+      'granted_at': SyncClock.nowMs(),
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
     LoggerService.info(
       'Granted device $deviceId access to group $groupId',
       name: _tag,

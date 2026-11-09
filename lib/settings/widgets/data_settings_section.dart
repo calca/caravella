@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../pages/data_backup_page.dart';
 import '../pages/group_type_templates_page.dart';
 import '../../sync/sync_settings_screen.dart';
+import 'package:io_caravella_egm/sync/sync_channels_label.dart';
 
 /// "Data" settings section: sync, backup/restore and group type templates.
 class DataSettingsSection extends StatelessWidget {
@@ -22,7 +23,7 @@ class DataSettingsSection extends StatelessWidget {
           SettingsTile(
             icon: Icons.sync_rounded,
             title: loc.sync_title,
-            subtitle: loc.sync_settings_desc,
+            subtitle: syncChannelsLabel(loc),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (ctx) =>

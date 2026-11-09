@@ -30,6 +30,7 @@ class AppHomeWidgetService {
   static const String _openGroupPath = '/open_group';
 
   static StreamSubscription<Uri?>? _widgetTapSubscription;
+
   /// Serializes repeated initialize calls to avoid overlapping subscriptions.
   static Future<void> _tapInitializationFuture = Future.value();
 
@@ -49,9 +50,7 @@ class AppHomeWidgetService {
   }
 
   /// Handles home widget tap deep-links and forwards them to [onTap].
-  static Future<void> initializeTapHandling(
-    HomeWidgetTapCallback onTap,
-  ) async {
+  static Future<void> initializeTapHandling(HomeWidgetTapCallback onTap) async {
     final previousInitialization = _tapInitializationFuture;
     final currentInitialization = Completer<void>();
     _tapInitializationFuture = currentInitialization.future;

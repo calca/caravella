@@ -23,7 +23,8 @@ class ExpenseGroup {
   groupType; // Tipologia del gruppo (viaggio, personale, famiglia, altro)
   final bool
   autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
-  final bool syncEnabled; // Whether this group is shared/synced with other devices
+  final bool
+  syncEnabled; // Whether this group is shared/synced with other devices
 
   ExpenseGroup({
     required this.title,

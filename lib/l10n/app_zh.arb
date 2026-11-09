@@ -1337,4 +1337,7 @@
   ,"sync_shared_empty_title": "还没有与任何人共享"
   ,"sync_shared_empty_body": "邀请和你一起分摊费用的人：你们会在各自的手机上看到相同的支出。"
   ,"sync_invite_another": "邀请另一台设备"
+  ,"sync_settings_desc_wifi": "Wi-Fi"
+  ,"sync_settings_desc_wifi_bt": "Wi-Fi 或蓝牙"
+  ,"sync_settings_desc_wifi_drive": "Wi-Fi 或 Google 云端硬盘"
 }

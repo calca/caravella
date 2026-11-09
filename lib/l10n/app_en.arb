@@ -1234,4 +1234,10 @@
   ,"@sync_shared_empty_body": {"description": "Group sync page, Shared with: sync shared empty body"}
   ,"sync_invite_another": "Invite another device"
   ,"@sync_invite_another": {"description": "Group sync page, Shared with: sync invite another"}
+  ,"sync_settings_desc_wifi": "Wi-Fi"
+  ,"@sync_settings_desc_wifi": {"description": "Subtitle of the sync entry when the build only has these channels"}
+  ,"sync_settings_desc_wifi_bt": "Wi-Fi or Bluetooth"
+  ,"@sync_settings_desc_wifi_bt": {"description": "Subtitle of the sync entry when the build only has these channels"}
+  ,"sync_settings_desc_wifi_drive": "Wi-Fi or Google Drive"
+  ,"@sync_settings_desc_wifi_drive": {"description": "Subtitle of the sync entry when the build only has these channels"}
 }

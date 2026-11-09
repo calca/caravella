@@ -34,7 +34,7 @@ Hosts: `ExpenseFormPage` (full page, for editing an expense from the group page 
 
 ## Voice input
 
-`VoiceInputButton`/`VoiceCaptureBottomSheet` (`widgets/`) and the home-card `GroupCardVoiceButton` (`lib/home/cards/widgets/group_card_voice_button.dart`) all wrap `lib/services/voice_input_service.dart`'s `VoiceInputService`, which wraps the `speech_to_text` plugin across the app's 5 supported locales.
+`VoiceInputButton`/`VoiceCaptureBottomSheet` (`widgets/`) and the home-card `GroupCardVoiceButton` (`lib/home/cards/widgets/group_card_voice_button.dart`) all wrap `lib/services/voice_input_service.dart`'s `VoiceInputService`, which wraps the `speech_to_text` plugin across the app's 5 supported locales. It initializes with `SpeechToText.androidNoBluetooth`: otherwise the plugin asks for `BLUETOOTH_CONNECT` ("Nearby devices") together with the microphone whenever the merged manifest declares it, which happens in the Play build because of the Bluetooth sync.
 
 - `startListening({localeId, onResult, onError, onDone})` drives the mic; errors are normalized into `VoiceInputError` (`notAvailable`/`permissionDenied`/`noSpeech`/`recognitionFailed`).
 - `parseExpenseFromText(text, {participantNames})` is a keyword-based NL parser returning `{amount, name, category, paidBy, date}` — regex-extracts amount (multi-currency tokens), relative dates (yesterday, last week/month, weekday names — per-locale), a "paid by" participant name (matched case-insensitively against the group's participants), and an expense category (locale-specific keyword lists → `food/transport/accommodation/entertainment/shopping/health`).

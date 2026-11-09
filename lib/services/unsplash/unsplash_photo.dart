@@ -23,7 +23,7 @@ class UnsplashPhoto {
       user: UnsplashUser.fromJson(json['user'] as Map<String, dynamic>),
       downloadLocationUrl: json['links'] != null
           ? (json['links'] as Map<String, dynamic>)['download_location']
-              as String?
+                as String?
           : null,
     );
   }

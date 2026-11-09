@@ -62,16 +62,16 @@ class PairingPayload {
   bool get isLikelyUnreachableEmulatorHost => host.startsWith('10.0.2.');
 
   String toQrData() => jsonEncode({
-        'v': _schemaVersion,
-        'device_id': deviceId,
-        'device_name': deviceName,
-        'platform': platform,
-        'host': host,
-        'port': port,
-        'created_at_ms': createdAtMs,
-        'group_id': groupId,
-        'group_title': groupTitle,
-      });
+    'v': _schemaVersion,
+    'device_id': deviceId,
+    'device_name': deviceName,
+    'platform': platform,
+    'host': host,
+    'port': port,
+    'created_at_ms': createdAtMs,
+    'group_id': groupId,
+    'group_title': groupTitle,
+  });
 
   /// Parses QR-scanned data. Returns `null` if [data] isn't a valid pairing
   /// payload — e.g. an unrelated QR code was scanned.

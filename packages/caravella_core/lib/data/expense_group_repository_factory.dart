@@ -7,11 +7,11 @@ import '../services/logging/logger_service.dart';
 class ExpenseGroupRepositoryFactory {
   // Singleton instances
   static IExpenseGroupRepository? _instance;
-  
+
   /// Get the configured repository instance
   static IExpenseGroupRepository getRepository({bool useJsonBackend = false}) {
     if (_instance != null) return _instance!;
-    
+
     if (useJsonBackend) {
       LoggerService.info('Using JSON file-based repository', name: 'storage');
       _instance = FileBasedExpenseGroupRepository();
@@ -19,20 +19,20 @@ class ExpenseGroupRepositoryFactory {
       LoggerService.info('Using SQLite database repository', name: 'storage');
       _instance = SqliteExpenseGroupRepository();
     }
-    
+
     return _instance!;
   }
-  
+
   /// Reset the factory (useful for testing)
   static void reset() {
     _instance = null;
   }
-  
+
   /// Check if using JSON backend
   static bool isUsingJsonBackend() {
     return _instance is FileBasedExpenseGroupRepository;
   }
-  
+
   /// Check if using SQLite backend
   static bool isUsingSqliteBackend() {
     return _instance is SqliteExpenseGroupRepository;

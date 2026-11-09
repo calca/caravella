@@ -24,6 +24,7 @@ Caravella is the simple way to split expenses with friends, family and roommates
 <b>Your data, your rules</b>
 • Works offline, no account required
 • Your data stays on your device
+• Maps and place search use OpenStreetMap (map tiles and Nominatim) only when you open them
 • Backup, restore and CSV export at any time
 • Available in English, Italian, Spanish, Portuguese and Chinese
 • Open source (MIT license)

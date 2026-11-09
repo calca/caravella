@@ -20,10 +20,11 @@ import 'package:caravella_core/sync/utils/sync_clock.dart';
 
 /// Callback invoked when a delta is received from a peer.
 /// Should process the delta and return the local delta to send back.
-typedef DeltaCallback = Future<Map<String, dynamic>> Function(
-  Map<String, dynamic> remoteDelta,
-  String peerId,
-);
+typedef DeltaCallback =
+    Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> remoteDelta,
+      String peerId,
+    );
 
 /// Callback used to check whether [peerId] has completed the QR pairing
 /// handshake and is trusted for automatic sync.
@@ -34,12 +35,13 @@ typedef PeerAuthCallback = Future<bool> Function(String peerId);
 /// pairing with a scanned QR code). Should persist the peer's identity and
 /// grant it access to [groupId] — pairing is scoped to the specific group
 /// it was initiated for, not every synced group.
-typedef PairingCallback = Future<void> Function(
-  String deviceId,
-  String deviceName,
-  String platform,
-  String groupId,
-);
+typedef PairingCallback =
+    Future<void> Function(
+      String deviceId,
+      String deviceName,
+      String platform,
+      String groupId,
+    );
 
 /// LAN peer-to-peer sync channel using HTTP + mDNS (Bonsoir).
 ///
@@ -106,7 +108,10 @@ class LanSyncChannel {
     PairingCallback? onPairingRequest,
   }) async {
     if (_active) {
-      LoggerService.debug('LAN channel already active — skipping start', name: _tag);
+      LoggerService.debug(
+        'LAN channel already active — skipping start',
+        name: _tag,
+      );
       return;
     }
 
@@ -187,15 +192,17 @@ class LanSyncChannel {
     router.post('/pair', _handlePairRequest);
 
     final handler = const shelf.Pipeline()
-        .addMiddleware(shelf.logRequests(
-          logger: (msg, isError) {
-            if (isError) {
-              LoggerService.error(msg, name: _tag);
-            } else {
-              LoggerService.debug(msg, name: _tag);
-            }
-          },
-        ))
+        .addMiddleware(
+          shelf.logRequests(
+            logger: (msg, isError) {
+              if (isError) {
+                LoggerService.error(msg, name: _tag);
+              } else {
+                LoggerService.debug(msg, name: _tag);
+              }
+            },
+          ),
+        )
         .addHandler(router.call);
 
     _httpServer = await shelf_io.serve(handler, InternetAddress.anyIPv4, _port);
@@ -375,7 +382,11 @@ class LanSyncChannel {
   /// both ends in a single round trip and deriving the shared encryption
   /// key from the exchanged public keys, then starts a first exchange with
   /// it in the background. Returns `true` if the handshake succeeded.
-  Future<bool> pairWithHost(String host, int port, {required String groupId}) async {
+  Future<bool> pairWithHost(
+    String host,
+    int port, {
+    required String groupId,
+  }) async {
     final identity = DeviceIdentity.instance;
     final myPublicKey = await DeviceKeyManager.publicKeyBase64();
     final client = HttpClient();
@@ -383,13 +394,15 @@ class LanSyncChannel {
       final uri = Uri.parse('http://$host:$port/pair');
       final request = await client.postUrl(uri);
       request.headers.contentType = ContentType.json;
-      request.write(jsonEncode({
-        'device_id': identity.deviceId,
-        'device_name': identity.deviceName,
-        'platform': identity.platform.name,
-        'public_key': myPublicKey,
-        'group_id': groupId,
-      }));
+      request.write(
+        jsonEncode({
+          'device_id': identity.deviceId,
+          'device_name': identity.deviceName,
+          'platform': identity.platform.name,
+          'public_key': myPublicKey,
+          'group_id': groupId,
+        }),
+      );
       final response = await request.close();
       final responseBody = await response.transform(utf8.decoder).join();
 
@@ -410,9 +423,7 @@ class LanSyncChannel {
 
       if (remoteDeviceId == null || remotePublicKey == null) return false;
 
-      final sharedKey = await DeviceKeyManager.deriveSharedKey(
-        remotePublicKey,
-      );
+      final sharedKey = await DeviceKeyManager.deriveSharedKey(remotePublicKey);
       await PeerKeyStore.save(remoteDeviceId, sharedKey);
 
       await _onPairingRequest?.call(
@@ -635,12 +646,10 @@ class LanSyncChannel {
         httpRequest.write(requestBody);
         final httpResponse = await httpRequest.close();
 
-        final responseBody =
-            await httpResponse.transform(utf8.decoder).join();
+        final responseBody = await httpResponse.transform(utf8.decoder).join();
 
         if (httpResponse.statusCode == 200) {
-          final responseJson =
-              jsonDecode(responseBody) as Map<String, dynamic>;
+          final responseJson = jsonDecode(responseBody) as Map<String, dynamic>;
           final responseEnvelope = responseJson['envelope'] as String?;
           final remoteDelta = responseEnvelope == null
               ? <String, dynamic>{}

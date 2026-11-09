@@ -49,10 +49,7 @@ class SqliteGroupMapper {
   }
 
   /// Convert database map to ExpenseGroup
-  Future<ExpenseGroup> mapToGroup(
-    Database db,
-    Map<String, dynamic> map,
-  ) async {
+  Future<ExpenseGroup> mapToGroup(Database db, Map<String, dynamic> map) async {
     final groupId = map['id'] as String;
 
     // Load participants
@@ -236,8 +233,7 @@ class SqliteGroupMapper {
         );
       }
     }
-    if (map['location_latitude'] == null ||
-        map['location_longitude'] == null) {
+    if (map['location_latitude'] == null || map['location_longitude'] == null) {
       return null;
     }
     return ExpenseLocation(

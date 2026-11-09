@@ -10,7 +10,8 @@ class GroupTypeTemplateService {
 
   final PreferencesService? _preferencesService;
 
-  PreferencesService get _prefs => _preferencesService ?? PreferencesService.instance;
+  PreferencesService get _prefs =>
+      _preferencesService ?? PreferencesService.instance;
 
   List<GroupTypeTemplate> getTemplates() {
     final raw = _prefs.groupTypeTemplates.getTemplatesJson();

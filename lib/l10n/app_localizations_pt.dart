@@ -2824,4 +2824,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sync_invite_another => 'Convidar outro dispositivo';
+
+  @override
+  String get sync_settings_desc_wifi => 'Wi-Fi';
+
+  @override
+  String get sync_settings_desc_wifi_bt => 'Wi-Fi ou Bluetooth';
+
+  @override
+  String get sync_settings_desc_wifi_drive => 'Wi-Fi ou Google Drive';
 }

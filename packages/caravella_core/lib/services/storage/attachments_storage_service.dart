@@ -4,9 +4,9 @@ import 'package:path/path.dart' as path;
 import '../logging/logger_service.dart';
 
 /// Service for managing attachment storage locations
-/// 
+///
 /// Attachments are saved to Documents/Caravella/$GroupName for OS backup.
-/// 
+///
 /// **Note on File Visibility:**
 /// - Files are stored in app-private storage (Documents directory)
 /// - They are NOT visible in Android Photos or Files apps by design
@@ -21,17 +21,17 @@ class AttachmentsStorageService {
   static Future<Directory> getCaravellaDirectory() async {
     final documentsDir = await getApplicationDocumentsDirectory();
     final caravellaDir = Directory(path.join(documentsDir.path, 'Caravella'));
-    
+
     if (!await caravellaDir.exists()) {
       await caravellaDir.create(recursive: true);
     }
-    
+
     return caravellaDir;
   }
 
   /// Get the attachments directory for a specific group
   /// Returns: Documents/Caravella/$groupName/ or Documents/Caravella/$groupName_$groupId/
-  /// 
+  ///
   /// The groupName is sanitized to be filesystem-safe.
   /// GroupId is only appended if the directory exists and belongs to another group.
   static Future<Directory> getGroupAttachmentsDirectory(
@@ -40,14 +40,14 @@ class AttachmentsStorageService {
   ) async {
     final caravellaDir = await getCaravellaDirectory();
     final sanitizedName = _sanitizeDirectoryName(groupName);
-    
+
     // First, try using just the sanitized name
     var groupDir = Directory(path.join(caravellaDir.path, sanitizedName));
-    
+
     // Check if directory exists and if it belongs to a different group
     if (await groupDir.exists()) {
       final existingGroupId = await _getGroupIdFromDirectory(groupDir);
-      
+
       // If directory exists but belongs to a different group, or has no metadata, append groupId
       if (existingGroupId != groupId) {
         // Create unique directory name with groupId suffix
@@ -56,15 +56,15 @@ class AttachmentsStorageService {
       }
       // else: existingGroupId == groupId, reuse the directory
     }
-    
+
     // Create directory if it doesn't exist and write/update metadata
     if (!await groupDir.exists()) {
       await groupDir.create(recursive: true);
     }
-    
+
     // Always ensure metadata file exists and is correct
     await _writeGroupIdToDirectory(groupDir, groupId);
-    
+
     return groupDir;
   }
 
@@ -119,17 +119,17 @@ class AttachmentsStorageService {
         .replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')
         .replaceAll(RegExp(r'[\x00-\x1F]'), '_') // Control characters
         .trim();
-    
+
     // Limit length to 100 characters to avoid filesystem limits
     if (sanitized.length > 100) {
       sanitized = sanitized.substring(0, 100);
     }
-    
+
     // Ensure it's not empty
     if (sanitized.isEmpty) {
       sanitized = 'Unnamed';
     }
-    
+
     return sanitized;
   }
 
