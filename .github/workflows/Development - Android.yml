@@ -38,6 +38,16 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - name: Install dependencies
         run: flutter pub get
+      # The root `flutter analyze` also walks packages/*, and resolves each
+      # one through its own .dart_tool: a package with dependencies the root
+      # doesn't have (caravella_gms_foss: camera, zxing2) needs its pub get
+      # first, or it shows up as undefined imports.
+      - name: Install package dependencies
+        run: |
+          set -e
+          for pkg in packages/*/; do
+            [ -f "${pkg}pubspec.yaml" ] && (cd "$pkg" && flutter pub get)
+          done
       # The sqlite3 build hook downloads SQLite from GitHub releases and
       # fails on a bad download; fetch it with retries and a hash check first.
       - name: Prefetch SQLite binaries
