@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:caravella_core/services/logging/logger_service.dart';
+import 'package:caravella_core/data/newer_format_exception.dart';
+import 'package:caravella_core/integrations/gms_integrations.dart';
 import 'package:caravella_core/sync/channels/cloud_relay_channel.dart';
 import 'package:caravella_core/sync/channels/lan_sync_channel.dart';
 import 'package:caravella_core/sync/device_identity.dart';
@@ -41,6 +44,14 @@ class SyncOrchestrator {
   StreamSubscription<SyncEvent>? _managerEventSub;
 
   bool _initialized = false;
+
+  /// The Google Drive cycle in progress: a second request joins it.
+  Future<SyncResult>? _cloudRun;
+
+  /// A Drive cycle asked for by [requestCloudSync], not started yet, and
+  /// when it's due.
+  Timer? _cloudSoon;
+  DateTime? _cloudSoonAt;
 
   /// Creates a [SyncOrchestrator] with all channel instances.
   ///
@@ -118,37 +129,10 @@ class SyncOrchestrator {
       );
     }
 
-    // Start cloud channel if available and enabled
-    if (_cloudChannel != null) {
-      try {
-        final enabled = await _cloudChannel.isEnabled();
-        if (enabled) {
-          await _cloudChannel.start(
-            onShards: (shards, channel) async {
-              LoggerService.info(
-                'Received ${shards.length} shards from cloud',
-                name: _tag,
-              );
-            },
-          );
-          LoggerService.info('Cloud channel started', name: _tag);
-        } else {
-          LoggerService.info(
-            'Cloud channel disabled — not starting',
-            name: _tag,
-          );
-        }
-      } catch (e, st) {
-        LoggerService.error(
-          'Failed to start cloud channel',
-          name: _tag,
-          error: e,
-          stackTrace: st,
-        );
-      }
-    }
-
     _initialized = true;
+
+    // Google Drive, if the user turned it on: a cycle now, then periodic.
+    await _startCloud();
     LoggerService.info('Sync orchestrator initialized', name: _tag);
   }
 
@@ -162,6 +146,7 @@ class SyncOrchestrator {
     await _lanChannel.stop();
     _lanChannel.dispose();
 
+    _cloudSoon?.cancel();
     if (_cloudChannel != null) {
       await _cloudChannel.stop();
     }
@@ -229,37 +214,7 @@ class SyncOrchestrator {
             ),
           );
         }
-        try {
-          final result = await _cloudChannel.syncNow();
-          _problems.clearReason(SyncProblemReason.cloudUnreachable);
-          return result;
-        } catch (e, st) {
-          LoggerService.error(
-            'Cloud sync failed',
-            name: _tag,
-            error: e,
-            stackTrace: st,
-          );
-          _forwardEvent(
-            SyncFailed(
-              e.toString(),
-              reason: SyncProblemReason.cloudUnreachable,
-              peerId: _cloudChannel.channelName,
-              channel: _cloudChannel.channelName,
-            ),
-          );
-          return SyncResult(
-            applied: 0,
-            skipped: 0,
-            errors: 1,
-            channel: _cloudChannel.channelName,
-            peerId: '',
-            syncedAt: DateTime.fromMillisecondsSinceEpoch(
-              SyncClock.nowMs(),
-              isUtc: true,
-            ),
-          );
-        }
+        return syncCloudNow();
 
       default:
         LoggerService.warning(
@@ -277,6 +232,186 @@ class SyncOrchestrator {
             isUtc: true,
           ),
         );
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Google Drive
+  // ---------------------------------------------------------------------------
+
+  /// Whether the user turned Google Drive sync on (false when it isn't built
+  /// into this app).
+  Future<bool> isCloudSyncEnabled() async =>
+      await _cloudChannel?.isEnabled() ?? false;
+
+  /// Turns Google Drive sync on (a cycle at once, then periodic) or off.
+  Future<void> setCloudSyncEnabled(bool enabled) async {
+    final cloud = _cloudChannel;
+    if (cloud == null) return;
+    await cloud.setEnabled(enabled);
+    if (enabled) {
+      await _startCloud();
+    } else {
+      _cloudSoon?.cancel();
+      await cloud.stop();
+      _problems.clearReason(SyncProblemReason.cloudUnreachable);
+    }
+  }
+
+  /// Runs a Google Drive cycle after [delay], e.g. once the user has
+  /// changed something; requests meanwhile share it, a sooner one brings it
+  /// forward. Does nothing while Drive sync is off.
+  void requestCloudSync({Duration delay = const Duration(seconds: 30)}) {
+    if (_cloudChannel == null || !_initialized) return;
+    final due = DateTime.now().add(delay);
+    final pending = _cloudSoonAt;
+    if ((_cloudSoon?.isActive ?? false) &&
+        pending != null &&
+        !due.isBefore(pending)) {
+      return;
+    }
+    _cloudSoon?.cancel();
+    _cloudSoonAt = due;
+    _cloudSoon = Timer(delay, () async {
+      _cloudSoonAt = null;
+      if (await isCloudSyncEnabled()) unawaited(syncCloudNow());
+    });
+  }
+
+  /// One Google Drive cycle: downloads the other devices' snapshots and
+  /// applies them (Last Writer Wins, see [ConflictResolver]), then uploads
+  /// this device's own, so it carries what was just merged. Returns what
+  /// was applied from all of them and how many groups were sent.
+  Future<SyncResult> syncCloudNow() =>
+      _cloudRun ??= _runCloudCycle().whenComplete(() => _cloudRun = null);
+
+  Future<void> _startCloud() async {
+    final cloud = _cloudChannel;
+    if (cloud == null) return;
+    try {
+      if (!await cloud.isEnabled()) {
+        LoggerService.info('Cloud channel disabled — not starting', name: _tag);
+        return;
+      }
+      await cloud.start(cycle: syncCloudNow);
+      unawaited(syncCloudNow());
+      LoggerService.info('Cloud channel started', name: _tag);
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to start cloud channel',
+        name: _tag,
+        error: e,
+        stackTrace: st,
+      );
+    }
+  }
+
+  Future<SyncResult> _runCloudCycle() async {
+    final cloud = _cloudChannel;
+    final channel = cloud?.channelName ?? 'cloud';
+    DateTime now() =>
+        DateTime.fromMillisecondsSinceEpoch(SyncClock.nowMs(), isUtc: true);
+    if (cloud == null) {
+      return SyncResult(
+        applied: 0,
+        skipped: 0,
+        errors: 1,
+        channel: channel,
+        peerId: '',
+        syncedAt: now(),
+      );
+    }
+
+    final ownId = DeviceIdentity.instance.deviceId;
+    var applied = 0, skipped = 0, errors = 0;
+    final groupIds = <String>{};
+    final problems = <SyncProblem>[];
+    try {
+      // A restart forgets the Google session: get it back without UI.
+      if (cloud is CloudAccountChannel) {
+        final account = cloud as CloudAccountChannel;
+        if (account.signedInAccountEmail == null) {
+          await account.restoreSession();
+        }
+      }
+
+      final shards = await cloud.downloadAllShards();
+      for (final raw in shards) {
+        final Map<String, dynamic> delta;
+        try {
+          final decoded = jsonDecode(raw);
+          if (decoded is! Map<String, dynamic>) {
+            throw const FormatException('Shard is not a JSON object');
+          }
+          delta = decoded;
+        } on FormatException catch (e) {
+          LoggerService.warning('Unreadable Drive shard: $e', name: _tag);
+          errors++;
+          continue;
+        }
+        final peerId = delta['device_id'];
+        if (peerId is! String || peerId == ownId) continue;
+        try {
+          final result = await _syncManager.syncWithPeer(
+            peerId,
+            delta,
+            channel,
+            checkGrants: false,
+          );
+          applied += result.applied;
+          skipped += result.skipped;
+          errors += result.errors;
+          groupIds.addAll(result.groupIds);
+          problems.addAll(result.problems);
+        } on NewerFormatException {
+          // Already reported by SyncManager ("update Caravella").
+          errors++;
+        } on FormatException {
+          errors++;
+        }
+      }
+
+      final snapshot = await _syncManager.getCloudSnapshot();
+      await cloud.uploadShard(ownId, jsonEncode(snapshot));
+      _problems.clearReason(SyncProblemReason.cloudUnreachable);
+
+      final result = SyncResult(
+        applied: applied,
+        skipped: skipped,
+        errors: errors,
+        channel: channel,
+        peerId: '',
+        syncedAt: now(),
+        sent: (snapshot['groups'] as List).length,
+        groupIds: groupIds,
+        problems: problems,
+      );
+      LoggerService.info('Cloud cycle done: $result', name: _tag);
+      return result;
+    } catch (e, st) {
+      LoggerService.error(
+        'Cloud sync failed',
+        name: _tag,
+        error: e,
+        stackTrace: st,
+      );
+      _forwardEvent(
+        SyncFailed(
+          e.toString(),
+          reason: SyncProblemReason.cloudUnreachable,
+          peerId: channel,
+          channel: channel,
+        ),
+      );
+      return SyncResult(
+        applied: applied,
+        skipped: skipped,
+        errors: errors + 1,
+        channel: channel,
+        peerId: '',
+        syncedAt: now(),
+        groupIds: groupIds,
+      );
     }
   }
 

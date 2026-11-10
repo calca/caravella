@@ -114,10 +114,10 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
       }
     }
 
-    final cloud = _cloudChannel;
-    if (cloud == null) return;
+    if (_cloudChannel == null) return;
 
-    await cloud.setEnabled(value);
+    // On: a first exchange now, then every 15 minutes and after changes.
+    await widget.orchestrator.setCloudSyncEnabled(value);
     if (!value) {
       await _driveChannel?.signOut();
     }
@@ -145,13 +145,30 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
   }
 
   Future<void> _syncNow() async {
+    if (_busy) return;
     LoggerService.info('Manual cloud sync triggered', name: 'settings');
-    final result = await widget.orchestrator.triggerManualSync('cloud');
-    if (mounted) {
-      setState(() {
-        _lastCloudSync = result.syncedAt;
-      });
-    }
+    setState(() => _busy = true);
+    final result = await widget.orchestrator.syncCloudNow();
+    if (!mounted) return;
+    setState(() {
+      _busy = false;
+      _lastCloudSync = result.syncedAt;
+    });
+    final loc = gen.AppLocalizations.of(context);
+    final unreachable = widget.orchestrator.problems.any(
+      (p) => p.reason == SyncProblemReason.cloudUnreachable,
+    );
+    AppToast.show(
+      context,
+      unreachable
+          ? loc.sync_problem_cloud
+          : result.errors > 0
+          ? loc.sync_device_failed
+          : loc.sync_update_bt_done(result.applied, result.sent),
+      type: unreachable || result.errors > 0
+          ? ToastType.error
+          : ToastType.success,
+    );
   }
 
   @override
@@ -191,7 +208,7 @@ class _CloudSyncCardState extends State<_CloudSyncCard> {
             subtitle: _lastCloudSync != null
                 ? loc.sync_last_sync(_formatTime(_lastCloudSync!))
                 : null,
-            onTap: _syncNow,
+            onTap: _busy ? null : _syncNow,
           ),
       ],
     );

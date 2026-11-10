@@ -81,6 +81,23 @@ class SyncDao {
     return rows;
   }
 
+  /// Every group of this device, for the Google Drive snapshot: there the
+  /// trust comes from the Google account (the user's own devices), so there
+  /// is no per-group share or grant to check.
+  Future<List<Map<String, dynamic>>> getAllGroupRows() => db.query(
+    SqliteExpenseGroupRepository.tableGroups,
+    where: 'deleted = 0',
+    orderBy: 'updated_at ASC',
+  );
+
+  /// Every deleted group (tombstone) of this device, for the Google Drive
+  /// snapshot (see [getAllGroupRows]).
+  Future<List<Map<String, dynamic>>> getAllDeletedGroupRows() => db.query(
+    SqliteExpenseGroupRepository.tableGroups,
+    where: 'deleted = 1',
+    orderBy: 'updated_at ASC',
+  );
+
   // ---------------------------------------------------------------------------
   // Group sync metadata
   // ---------------------------------------------------------------------------

@@ -52,7 +52,7 @@ The P2P sync tests live in `packages/caravella_core/test/sync/` — they test cl
 | `sync_crypto_test.dart` | `SyncEnvelope` encrypt/decrypt round-trip and X25519 ECDH + HKDF key agreement |
 | `sync_dao_test.dart` | Per-group pairing grants (paired devices, `isPaired`, revocation) |
 | `sync_result_test.dart` | SyncResult / SyncStatus domain models |
-| `group_serializer_test.dart` | JSON serialization with `_sync` metadata block |
+| `cloud_sync_test.dart` | Google Drive cycle with a fake `appDataFolder` and two phones: every group taken without a grant, own snapshot uploaded with what was merged, own shard ignored, deletion propagated and not undone by a stale shard, newer-schema shard skipped, signed out → `cloudUnreachable`, on/off, and `deleteGroup`'s tombstone |
 
 The one sync test that stays in the root `test/sync/` is `bluetooth_sync_factory_test.dart` — it tests `lib/sync/bluetooth_sync_factory.dart`, an app-level class, not `caravella_core`.
 

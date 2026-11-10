@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -46,25 +44,6 @@ void main() {
         () => DeltaBuilder.parseDelta(delta(schema: 'two')),
         throwsFormatException,
       );
-    });
-  });
-
-  group('Google Drive relay payload', () {
-    String payload(int schema) => jsonEncode({
-      'schema': schema,
-      'device_id': 'peer',
-      'device_name': 'Pixel 9',
-      'exported_at': 1,
-      'groups': <Map<String, dynamic>>[],
-      'deleted_groups': <Map<String, dynamic>>[],
-    });
-
-    test('a version 1 payload is read', () {
-      expect(GroupSerializer.deserializePayload(payload(1)), isNotNull);
-    });
-
-    test('a payload from a newer app is skipped', () {
-      expect(GroupSerializer.deserializePayload(payload(3)), isNull);
     });
   });
 }

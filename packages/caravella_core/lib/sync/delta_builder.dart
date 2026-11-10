@@ -64,7 +64,39 @@ class DeltaBuilder {
     // to — see SyncDao.grantGroupAccess.
     final changedRows = await _syncDao.getGroupsDeltaSince(lastSync, peerId);
     final deletedRows = await _syncDao.getDeletedGroupsSince(lastSync, peerId);
+    final delta = await _assemble(changedRows, deletedRows);
 
+    LoggerService.info(
+      'Delta built: ${(delta['groups'] as List).length} groups, '
+      '${(delta['deleted_groups'] as List).length} deleted for peer=$peerId',
+      name: _tag,
+    );
+
+    return delta;
+  }
+
+  /// Builds this device's full snapshot for Google Drive: every group and
+  /// every tombstone, in the same format as [buildDelta]. The user's other
+  /// devices merge it with Last Writer Wins, so sending all of it each time
+  /// is safe (unchanged groups are skipped there).
+  Future<Map<String, dynamic>> buildSnapshot() async {
+    final snapshot = await _assemble(
+      await _syncDao.getAllGroupRows(),
+      await _syncDao.getAllDeletedGroupRows(),
+    );
+    LoggerService.info(
+      'Snapshot built: ${(snapshot['groups'] as List).length} groups, '
+      '${(snapshot['deleted_groups'] as List).length} deleted',
+      name: _tag,
+    );
+    return snapshot;
+  }
+
+  /// The delta for these group rows and tombstone rows.
+  Future<Map<String, dynamic>> _assemble(
+    List<Map<String, dynamic>> changedRows,
+    List<Map<String, dynamic>> deletedRows,
+  ) async {
     // Load full group objects for each changed row
     final groups = <Map<String, dynamic>>[];
     for (final row in changedRows) {
@@ -92,7 +124,7 @@ class DeltaBuilder {
 
     final identity = DeviceIdentity.instance;
 
-    final delta = <String, dynamic>{
+    return <String, dynamic>{
       'schema': schemaVersion,
       'device_id': identity.deviceId,
       'device_name': identity.deviceName,
@@ -100,14 +132,6 @@ class DeltaBuilder {
       'groups': groups,
       'deleted_groups': deletedGroups,
     };
-
-    LoggerService.info(
-      'Delta built: ${groups.length} groups, '
-      '${deletedGroups.length} deleted for peer=$peerId',
-      name: _tag,
-    );
-
-    return delta;
   }
 
   /// Validates and returns a parsed delta received from a remote peer.

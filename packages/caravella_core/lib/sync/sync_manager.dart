@@ -75,11 +75,15 @@ class SyncManager {
   ///
   /// Returns a [SyncResult] summarizing applied / skipped / errored groups.
   /// Also broadcasts [SyncEvent]s on the [events] stream.
+  ///
+  /// [checkGrants] false only for Google Drive: see
+  /// [ConflictResolver.applyDelta].
   Future<SyncResult> syncWithPeer(
     String peerId,
     Map<String, dynamic> remoteDelta,
-    String channel,
-  ) async {
+    String channel, {
+    bool checkGrants = true,
+  }) async {
     _ensureStarted();
     _eventController.add(SyncStarted(channel));
 
@@ -90,6 +94,7 @@ class SyncManager {
         db,
         remoteDelta,
         channel,
+        checkGrants: checkGrants,
       );
 
       _eventController.add(SyncCompleted(result));
@@ -127,6 +132,13 @@ class SyncManager {
     _ensureStarted();
     final db = await _repository.database;
     return _deltaBuilder.buildDelta(db, peerId);
+  }
+
+  /// This device's full snapshot for Google Drive: every group and
+  /// tombstone (see [DeltaBuilder.buildSnapshot]).
+  Future<Map<String, dynamic>> getCloudSnapshot() {
+    _ensureStarted();
+    return _deltaBuilder.buildSnapshot();
   }
 
   /// Returns the last sync time with [peerId], or `null` if never synced.
