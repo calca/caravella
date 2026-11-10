@@ -181,6 +181,35 @@ void main() {
     expect(find.text('All settled up'), findsOneWidget);
   });
 
+  testWidgets('only the top 4 payers are shown', (tester) async {
+    final people = [
+      for (var i = 0; i < 6; i++) ExpenseParticipant(id: 'p$i', name: 'P$i'),
+    ];
+    final group = ExpenseGroup(
+      title: 'Big',
+      currency: '€',
+      participants: people,
+      categories: [_food],
+      expenses: [
+        for (var i = 0; i < 6; i++)
+          ExpenseDetails(
+            name: 'E$i',
+            amount: 10.0 * (i + 1),
+            date: day1,
+            paidBy: people[i],
+            category: _food,
+          ),
+      ],
+    );
+    await tester.pumpWidget(_wrap(GroupPayersBubbles(group: group)));
+    // The name, and the avatar's initials.
+    for (final name in ['P5', 'P4', 'P3', 'P2']) {
+      expect(find.text(name), findsWidgets);
+    }
+    expect(find.text('P1'), findsNothing);
+    expect(find.text('P0'), findsNothing);
+  });
+
   testWidgets('tapping the clock ticks a payment as paid, in full', (
     tester,
   ) async {
