@@ -153,7 +153,7 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 - **Project Repository**: https://github.com/calca/caravella
 - **Issues**: https://github.com/calca/caravella/issues
 - **Website**: https://duea.page
-- **Privacy Inquiries**: privacy@caravella.app
+- **Privacy Inquiries**: gianluigi.calcaterra@gmail.com
 
 ## 📄 License
 
