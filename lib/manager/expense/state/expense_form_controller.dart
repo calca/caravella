@@ -231,6 +231,22 @@ class ExpenseFormController extends ChangeNotifier {
     }
   }
 
+  /// Fills the amount (when positive) and the name (when not empty) as if
+  /// typed, e.g. from a scanned receipt or a voice note.
+  void fillAmountAndName({
+    double? amount,
+    String? name,
+    String decimalSeparator = '.',
+  }) {
+    if (amount != null && amount > 0) {
+      amountController.text = formatAmountForInput(
+        amount,
+        decimalSeparator: decimalSeparator,
+      );
+    }
+    if (name != null && name.isNotEmpty) nameController.text = name;
+  }
+
   // Reset form state
   void reset({
     required List<ExpenseParticipant> participants,

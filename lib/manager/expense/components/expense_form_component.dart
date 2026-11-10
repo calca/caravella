@@ -23,6 +23,7 @@ import 'expense_form_extended_fields.dart';
 import 'expense_form_compact_header.dart';
 import '../../../services/receipt_scanner_service.dart';
 import '../widgets/amount_input_widget.dart';
+import '../widgets/receipt_scan_line.dart';
 
 /// Main expense form component - refactored to use config object pattern
 ///
@@ -109,7 +110,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final _receiptScanner = ReceiptScannerService();
 
   /// The receipt scan's line above the fields, while there's one to show.
-  _ScanLine? _scanLine;
+  ReceiptScanStatus? _scanLine;
   final _imagePicker = ImagePicker();
 
   /// The quick-add sheet: no details section, just "More details" opening
@@ -119,6 +120,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       !widget.config.isEditMode &&
       !_controller.isExpanded &&
       widget.config.onExpand != null;
+
+  /// Editing a saved expense (no voice input or receipt scan then).
+  bool get _isEdit => widget.config.initialExpense?.id.isNotEmpty ?? false;
+
+  /// Voice input is offered when adding, not when editing or read-only.
+  bool get _showVoice => !_isEdit && !widget.config.isReadOnly;
+
+  String get _decimalSeparator =>
+      decimalSeparatorFor(Localizations.localeOf(context));
 
   @override
   void didChangeDependencies() {
@@ -211,36 +221,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final scrollCoordinator = _lifecycleManager.scrollCoordinator;
     if (scrollCoordinator == null) return;
 
-    _controller.amountFocus.addListener(() {
-      if (_controller.amountFocus.hasFocus) {
+    // A focused field scrolls into view once the keyboard has started rising.
+    final fields = {
+      _controller.amountFocus: _controller.amountFieldKey,
+      _controller.nameFocus: _controller.nameFieldKey,
+      _controller.locationFocus: _controller.locationFieldKey,
+      _controller.noteFocus: _controller.noteFieldKey,
+    };
+    fields.forEach((focus, key) {
+      focus.addListener(() {
+        if (!focus.hasFocus) return;
         Future.delayed(const Duration(milliseconds: 200), () {
-          scrollCoordinator.scrollToField(_controller.amountFieldKey);
+          scrollCoordinator.scrollToField(key);
         });
-      }
-    });
-
-    _controller.nameFocus.addListener(() {
-      if (_controller.nameFocus.hasFocus) {
-        Future.delayed(const Duration(milliseconds: 200), () {
-          scrollCoordinator.scrollToField(_controller.nameFieldKey);
-        });
-      }
-    });
-
-    _controller.locationFocus.addListener(() {
-      if (_controller.locationFocus.hasFocus) {
-        Future.delayed(const Duration(milliseconds: 200), () {
-          scrollCoordinator.scrollToField(_controller.locationFieldKey);
-        });
-      }
-    });
-
-    _controller.noteFocus.addListener(() {
-      if (_controller.noteFocus.hasFocus) {
-        Future.delayed(const Duration(milliseconds: 200), () {
-          scrollCoordinator.scrollToField(_controller.noteFieldKey);
-        });
-      }
+      });
     });
   }
 
@@ -252,20 +246,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   }
 
   void _notifyVoiceCallback() {
-    final isEdit =
-        widget.config.initialExpense?.id != null &&
-        widget.config.initialExpense!.id.isNotEmpty;
-    final showVoice = !isEdit && !widget.config.isReadOnly;
-    final callback = showVoice ? () => _showVoiceCapture(context) : null;
+    final callback = _showVoice ? () => _showVoiceCapture(context) : null;
     widget.config.onVoiceCallbackChanged?.call(callback);
   }
 
   void _notifyScanReceiptCallback() {
-    final isEdit =
-        widget.config.initialExpense?.id != null &&
-        widget.config.initialExpense!.id.isNotEmpty;
     final canScan =
-        _receiptScanner.isAvailable && !isEdit && !widget.config.isReadOnly;
+        _receiptScanner.isAvailable && !_isEdit && !widget.config.isReadOnly;
     widget.config.onScanReceiptCallbackChanged?.call(
       canScan ? () => _scanReceipt(source: ImageSource.camera) : null,
     );
@@ -317,9 +304,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               groupTitle: widget.config.groupTitle,
               showGroupHeader: widget.config.showGroupHeader,
             ),
-            if (_scanLine != null)
-              _ReceiptScanLine(
-                line: _scanLine!,
+            if (_scanLine case final status?)
+              ReceiptScanLine(
+                status: status,
                 onClose: () => setState(() => _scanLine = null),
               ),
             ExpenseFormFields(
@@ -479,14 +466,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   /// action) picks an existing photo instead. No intermediate chooser sheet.
   ///
   /// Progress and problems show in a line above the fields
-  /// ([_ReceiptScanLine]); a good read just fills the fields. A refused
+  /// ([ReceiptScanLine]); a good read just fills the fields. A refused
   /// camera or photos permission opens [showPermissionDeniedDialog].
   Future<void> _scanReceipt({required ImageSource source}) async {
     try {
       final pickedFile = await _imagePicker.pickImage(source: source);
       if (pickedFile == null || !mounted) return;
 
-      setState(() => _scanLine = _ScanLine.reading);
+      setState(() => _scanLine = ReceiptScanStatus.reading);
 
       final imageFile = File(pickedFile.path);
       final result = await _receiptScanner.scanReceipt(imageFile);
@@ -497,23 +484,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       final description = result['description'] as String?;
 
       if (amount == null && description == null) {
-        setState(() => _scanLine = _ScanLine.noText);
+        setState(() => _scanLine = ReceiptScanStatus.noText);
         return;
       }
       setState(() => _scanLine = null);
 
-      if (amount != null) {
-        _controller.amountController.text =
-            ExpenseFormController.formatAmountForInput(
-              amount,
-              decimalSeparator: decimalSeparatorFor(
-                Localizations.localeOf(context),
-              ),
-            );
-      }
-      if (description != null && description.isNotEmpty) {
-        _controller.nameController.text = description;
-      }
+      _controller.fillAmountAndName(
+        amount: amount,
+        name: description,
+        decimalSeparator: _decimalSeparator,
+      );
       _controller.markDirty();
     } on PlatformException catch (e) {
       if (!mounted) return;
@@ -526,40 +506,35 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         setState(() => _scanLine = null);
         await showPermissionDeniedDialog(context, denied);
       } else {
-        setState(() => _scanLine = _ScanLine.failed);
+        setState(() => _scanLine = ReceiptScanStatus.failed);
       }
     } catch (e) {
-      if (mounted) setState(() => _scanLine = _ScanLine.failed);
+      if (mounted) setState(() => _scanLine = ReceiptScanStatus.failed);
     }
   }
 
   Widget _buildActionsRow() {
-    final isEdit =
-        widget.config.initialExpense?.id != null &&
-        widget.config.initialExpense!.id.isNotEmpty;
-    final showVoice = !isEdit && !widget.config.isReadOnly;
-
+    final canScan =
+        _receiptScanner.isAvailable && widget.config.initialExpense == null;
     return ExpenseFormActionsWidget(
       onSave: _controller.isFormValid
           ? () => _orchestrator.saveExpense(context)
           : null,
       isFormValid: _controller.isFormValid,
-      isEdit: isEdit,
+      isEdit: _isEdit,
       onDelete: widget.config.hasDeleteAction
           ? () => _orchestrator.deleteExpense(context)
           : null,
       showExpandButton: false,
       onExpand: null,
-      onScanReceipt:
-          _receiptScanner.isAvailable && widget.config.initialExpense == null
+      onScanReceipt: canScan
           ? () => _scanReceipt(source: ImageSource.camera)
           : null,
-      onScanReceiptFromGallery:
-          _receiptScanner.isAvailable && widget.config.initialExpense == null
+      onScanReceiptFromGallery: canScan
           ? () => _scanReceipt(source: ImageSource.gallery)
           : null,
-      showVoiceButton: showVoice,
-      onVoiceTap: showVoice ? () => _showVoiceCapture(context) : null,
+      showVoiceButton: _showVoice,
+      onVoiceTap: _showVoice ? () => _showVoiceCapture(context) : null,
     );
   }
 
@@ -580,19 +555,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   }
 
   void _applyVoiceResult(Map<String, dynamic> parsed) {
-    final amount = parsed['amount'] as double?;
-    if (amount != null && amount > 0) {
-      _controller
-          .amountController
-          .text = ExpenseFormController.formatAmountForInput(
-        amount,
-        decimalSeparator: decimalSeparatorFor(Localizations.localeOf(context)),
-      );
-    }
-    final name = parsed['name'] as String?;
-    if (name != null && name.isNotEmpty) {
-      _controller.nameController.text = name;
-    }
+    _controller.fillAmountAndName(
+      amount: parsed['amount'] as double?,
+      name: parsed['name'] as String?,
+      decimalSeparator: _decimalSeparator,
+    );
     final categoryKeyword = parsed['category'] as String?;
     if (categoryKeyword != null && _lifecycleManager.categories.isNotEmpty) {
       final match = _lifecycleManager.categories.firstWhere(
@@ -626,68 +593,5 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();
-  }
-}
-
-/// Where a receipt scan is: reading, nothing found, or failed.
-enum _ScanLine { reading, noText, failed }
-
-/// The receipt scan's line above the form's fields: a spinner while the
-/// photo is read, then what went wrong (with × to close) if nothing could
-/// be filled in. A good read leaves no line: the filled fields say it.
-class _ReceiptScanLine extends StatelessWidget {
-  final _ScanLine line;
-  final VoidCallback onClose;
-
-  const _ReceiptScanLine({required this.line, required this.onClose});
-
-  @override
-  Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    final reading = line == _ScanLine.reading;
-    final text = switch (line) {
-      _ScanLine.reading => gloc.scanning_receipt,
-      _ScanLine.noText => gloc.no_text_found,
-      _ScanLine.failed => gloc.receipt_scan_error,
-    };
-    final color = line == _ScanLine.failed ? s.error : s.onSurfaceVariant;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Semantics(
-        liveRegion: true,
-        child: Row(
-          children: [
-            SizedBox.square(
-              dimension: 20,
-              child: reading
-                  ? CircularProgressIndicator(strokeWidth: 2, color: s.primary)
-                  : Icon(
-                      line == _ScanLine.failed
-                          ? Icons.error_outline_rounded
-                          : Icons.receipt_long_outlined,
-                      size: 20,
-                      color: color,
-                    ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                text,
-                style: theme.textTheme.bodyMedium?.copyWith(color: color),
-              ),
-            ),
-            if (!reading)
-              IconButton(
-                tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-                icon: const Icon(Icons.close_rounded, size: 20),
-                color: s.onSurfaceVariant,
-                onPressed: onClose,
-              ),
-          ],
-        ),
-      ),
-    );
   }
 }

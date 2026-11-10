@@ -16,6 +16,7 @@ import '../widgets/grouped_expense_list.dart';
 import '../widgets/empty_expense_state.dart';
 import '../widgets/group_balances_view.dart';
 import '../widgets/group_detail_header.dart';
+import '../widgets/group_detail_top_bar.dart';
 import '../widgets/group_statistics_view.dart';
 import '../widgets/group_welcome_card.dart';
 import '../../../services/notification_manager.dart';
@@ -51,17 +52,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     _sectionFade.forward(from: 0);
   }
 
-  // Opacità lista spese (default 1.0, manual refresh stato rimosso)
-  // final double _listOpacity = 1.0; // RIMOSSO: non più necessario
-
-  // CSV export moved to CsvExporter
-
-  // OFX export moved to OfxExporter.generate and OfxExporter.buildFilename
-
   ExpenseGroup? _trip;
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
-  // Removed manual refresh state (_reloading, _listOpacity)
   late final ScrollController _scrollController;
   bool _fabVisible = true; // controllo visibilità totale
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
@@ -70,7 +63,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   /// The top bar turns opaque as soon as content scrolls under it.
   bool _barOpaque = false;
   String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
-  static const double _topBarHeight = 64.0;
 
   /// Selected view: 0 expenses, 1 balances, 2 statistics.
   int _section = 0;
@@ -169,7 +161,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     }
   }
 
-  // _refreshTrip removed: state updates occur inline after each mutation.
   Future<void> _reloadFromStorage() async {
     if (_trip == null) return;
     final fresh = await ExpenseGroupStorageV2.getTripById(_trip!.id);
@@ -429,12 +420,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     }
   }
 
-  Widget _buildAnimatedFab(ColorScheme colorScheme) {
-    if (_trip?.archived == true) return const SizedBox.shrink();
-
-    // Hide FAB when there are no expenses (EmptyExpenseState handles the call-to-action)
-    if (_trip?.expenses.isEmpty == true) return const SizedBox.shrink();
-    if (_trip?.archived == true) return const SizedBox.shrink();
+  Widget _buildAnimatedFab() {
+    // Archived groups take no expenses; with none yet, EmptyExpenseState
+    // has the call to action.
+    if (_trip?.archived == true || _trip?.expenses.isEmpty == true) {
+      return const SizedBox.shrink();
+    }
 
     return AnimatedSlide(
       duration: const Duration(milliseconds: 260),
@@ -472,7 +463,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     // once the bar turns opaque (scrolled) it follows the theme again.
     final bandColor = GroupHeaderBand.colorOf(trip, s);
     final bandForeground = GroupHeaderBand.foregroundOf(trip, s);
-    final barForeground = _barOpaque ? s.onSurface : bandForeground;
     final hasPhoto = GroupHeaderBand.photoOf(trip) != null;
     final bool? forceStatusBarLight = _barOpaque || hasPhoto
         ? null
@@ -507,22 +497,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
         ),
       ),
     };
-
-    Widget roundButton({
-      required IconData icon,
-      required String tooltip,
-      required VoidCallback onPressed,
-      Color? color,
-    }) => Material(
-      color: _barOpaque ? Colors.transparent : s.raisedSurface,
-      shape: const CircleBorder(),
-      child: IconButton(
-        icon: Icon(icon),
-        color: color ?? s.onSurface,
-        tooltip: tooltip,
-        onPressed: onPressed,
-      ),
-    );
 
     return AppSystemUI.edgeToEdge(
       forceStatusBarLight: forceStatusBarLight,
@@ -563,7 +537,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                           padding: EdgeInsets.fromLTRB(
                             20,
                             topInset +
-                                _topBarHeight +
+                                GroupDetailTopBar.height +
                                 4 +
                                 (hasPhoto || bandColor != null
                                     ? GroupHeaderBand.photoExtraTop
@@ -624,139 +598,40 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
             ),
             // Top bar over the band: round buttons at rest, an opaque bar
             // with the group name once the title has scrolled away.
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              color: _barOpaque ? pageColor : pageColor.withValues(alpha: 0),
-              padding: EdgeInsets.fromLTRB(12, topInset + 4, 12, 4),
-              child: SizedBox(
-                height: _topBarHeight - 8,
-                child: Row(
-                  children: [
-                    roundButton(
-                      icon: Icons.arrow_back_rounded,
-                      tooltip: gloc.accessibility_back_button,
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: AnimatedOpacity(
-                        opacity: _collapsedTitleVisible ? 1 : 0,
-                        duration: const Duration(milliseconds: 200),
-                        child: Text(
-                          trip.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: barForeground,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ),
-                    if (trip.expenses.isNotEmpty) ...[
-                      roundButton(
-                        icon: Icons.search_rounded,
-                        tooltip: gloc.search_expenses,
-                        onPressed: _openSearchPage,
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                    _GroupMenuButton(
-                      background: _barOpaque
-                          ? Colors.transparent
-                          : s.raisedSurface,
-                      items: [
-                        if (!trip.archived)
-                          _MenuItem(
-                            trip.pinned
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
-                            trip.pinned ? gloc.unpin : gloc.pin,
-                            _handlePinToggle,
-                          ),
-                        // The map opens from its card in Statistics.
-                        _MenuItem(
-                          Icons.sync_rounded,
-                          gloc.sync_title,
-                          _showSyncPage,
-                        ),
-                        // Share & export lives in the group's settings
-                        // (rarely used, kept out of this menu).
-                        _MenuItem(
-                          Icons.settings_outlined,
-                          gloc.settings,
-                          _showSettingsPage,
-                        ),
-                      ],
-                    ),
-                  ],
+            GroupDetailTopBar(
+              title: trip.title,
+              opaque: _barOpaque,
+              titleVisible: _collapsedTitleVisible,
+              bandForeground: bandForeground,
+              pageColor: pageColor,
+              onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
+              menuItems: [
+                if (!trip.archived)
+                  GroupMenuItem(
+                    trip.pinned
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    trip.pinned ? gloc.unpin : gloc.pin,
+                    _handlePinToggle,
+                  ),
+                // The map opens from its card in Statistics.
+                GroupMenuItem(
+                  Icons.sync_rounded,
+                  gloc.sync_title,
+                  _showSyncPage,
                 ),
-              ),
+                // Share & export lives in the group's settings
+                // (rarely used, kept out of this menu).
+                GroupMenuItem(
+                  Icons.settings_outlined,
+                  gloc.settings,
+                  _showSettingsPage,
+                ),
+              ],
             ),
           ],
         ),
-        floatingActionButton: _buildAnimatedFab(s),
-      ),
-    );
-  }
-}
-
-class _MenuItem {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  const _MenuItem(this.icon, this.label, this.onTap);
-}
-
-/// The group page's "more" button: a round ⋯ opening a menu with the less
-/// frequent actions, so the top bar keeps only back and search.
-class _GroupMenuButton extends StatelessWidget {
-  final Color background;
-  final List<_MenuItem> items;
-
-  const _GroupMenuButton({required this.background, required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    final s = Theme.of(context).colorScheme;
-    final gloc = gen.AppLocalizations.of(context);
-    // Items at least [menuWidth] wide give the menu a known width, so its end
-    // lines up with the button's (and the page margin) instead of running to
-    // the screen edge.
-    const menuWidth = 248.0;
-    const buttonSize = 48.0;
-    return MenuAnchor(
-      alignmentOffset: const Offset(buttonSize - menuWidth, 4),
-      style: MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(s.raisedSurface),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        ),
-      ),
-      menuChildren: [
-        for (final item in items)
-          MenuItemButton(
-            style: MenuItemButton.styleFrom(
-              minimumSize: const Size(menuWidth, 48),
-            ),
-            leadingIcon: Icon(item.icon),
-            onPressed: item.onTap,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 24),
-              child: Text(item.label),
-            ),
-          ),
-      ],
-      builder: (context, controller, _) => Material(
-        color: background,
-        shape: const CircleBorder(),
-        child: IconButton(
-          icon: const Icon(Icons.more_horiz_rounded),
-          color: s.onSurface,
-          tooltip: gloc.more_options,
-          onPressed: () =>
-              controller.isOpen ? controller.close() : controller.open(),
-        ),
+        floatingActionButton: _buildAnimatedFab(),
       ),
     );
   }
