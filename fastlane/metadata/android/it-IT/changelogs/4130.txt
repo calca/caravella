@@ -1,0 +1,6 @@
+Versione 2.4.1 - Pronti per le prossime novità
+
+• La sincronizzazione con un telefono che ha un Caravella più recente aspetta che tu aggiorni, invece di perdere quello che la nuova versione ha aggiunto
+• Un backup fatto da un Caravella più recente ti chiede di aggiornare prima di ripristinarlo
+
+Grazie per usare Caravella!

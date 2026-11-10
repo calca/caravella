@@ -115,6 +115,7 @@
   "import_confirm_message": "Ripristinare dal file «{file}»? I gruppi attuali verranno sostituiti e non si potrà annullare.",
   "import_success": "Dati ripristinati",
   "import_error": "Ripristino non riuscito: controlla il file",
+  "import_error_newer": "Questo backup viene da un Caravella più recente: aggiorna l’app per ripristinarlo",
   "settings_flag_secure_error": "Impossibile modificare la protezione schermo",
   "settings_debug_logs_title": "Log di debug",
   "settings_debug_logs_desc": "Log dell’app ed errori",

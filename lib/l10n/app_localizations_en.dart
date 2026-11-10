@@ -357,6 +357,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get import_error => 'Restore failed: check the file';
 
   @override
+  String get import_error_newer =>
+      'This backup comes from a newer Caravella: update the app to restore it';
+
+  @override
   String get settings_flag_secure_error => 'Couldn’t change screen security';
 
   @override

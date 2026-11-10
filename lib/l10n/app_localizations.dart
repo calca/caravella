@@ -770,6 +770,12 @@ abstract class AppLocalizations {
   /// **'Restore failed: check the file'**
   String get import_error;
 
+  /// Restore error: the backup was made by a newer app version
+  ///
+  /// In en, this message translates to:
+  /// **'This backup comes from a newer Caravella: update the app to restore it'**
+  String get import_error_newer;
+
   /// No description provided for @settings_flag_secure_error.
   ///
   /// In en, this message translates to:

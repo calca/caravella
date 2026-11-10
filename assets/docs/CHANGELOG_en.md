@@ -1,3 +1,8 @@
+## 2.4.1 (10.11.2026)
+
+- **Improvements**: Sync with a phone on a newer Caravella waits for you to update, instead of losing what the newer version added
+- **Improvements**: A backup made by a newer Caravella asks you to update before restoring it
+
 ## 2.4.0 (09.11.2026)
 
 - **New**: Sharing a group is one flow: **Invite a device** shows the QR code and makes the phone visible to nearby phones over Bluetooth; on the other phone, **Join a group** reads the code or lists the nearby phones

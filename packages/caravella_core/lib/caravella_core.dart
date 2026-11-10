@@ -34,6 +34,7 @@ export 'services/logging/logger_service.dart';
 
 // Services - Storage
 export 'services/backup/backup_archive.dart';
+export 'data/newer_format_exception.dart';
 export 'services/storage/preferences_service.dart';
 export 'services/storage/group_type_template_service.dart';
 export 'services/storage/attachments_storage_service.dart';

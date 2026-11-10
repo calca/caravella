@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
+import 'package:caravella_core/data/newer_format_exception.dart';
 import 'package:caravella_core/data/sqlite_expense_group_repository.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/device_identity.dart';
@@ -12,6 +13,7 @@ import 'package:caravella_core/sync/utils/sync_clock.dart';
 /// A delta is a JSON-serializable [Map] with the following shape:
 /// ```json
 /// {
+///   "schema": 1,
 ///   "device_id": "uuid",
 ///   "device_name": "Device Name",
 ///   "timestamp": 1234567890,
@@ -21,6 +23,14 @@ import 'package:caravella_core/sync/utils/sync_clock.dart';
 /// ```
 class DeltaBuilder {
   static const _tag = 'sync.delta';
+
+  /// Version of the delta format this app writes and can read.
+  ///
+  /// A newer app may add fields this one doesn't know: storing its groups
+  /// would drop them, and sending them back would erase them on the newer
+  /// device. So [parseDelta] refuses a delta with a higher version. Deltas
+  /// from 2.4.0 have no `schema` field and count as version 1.
+  static const int schemaVersion = 1;
 
   final SyncDao _syncDao;
   final SqliteExpenseGroupRepository _repository;
@@ -79,6 +89,7 @@ class DeltaBuilder {
     final identity = DeviceIdentity.instance;
 
     final delta = <String, dynamic>{
+      'schema': schemaVersion,
       'device_id': identity.deviceId,
       'device_name': identity.deviceName,
       'timestamp': SyncClock.nowMs(),
@@ -97,8 +108,17 @@ class DeltaBuilder {
 
   /// Validates and returns a parsed delta received from a remote peer.
   ///
-  /// Throws [FormatException] if required fields are missing.
+  /// Throws [FormatException] if required fields are missing, and
+  /// [NewerFormatException] if it comes from a newer app (see
+  /// [schemaVersion]).
   static Map<String, dynamic> parseDelta(Map<String, dynamic> raw) {
+    final schema = raw['schema'] ?? 1;
+    if (schema is! int) {
+      throw const FormatException('Delta has an invalid schema field');
+    }
+    if (schema > schemaVersion) {
+      throw NewerFormatException('Sync delta', schema);
+    }
     if (!raw.containsKey('device_id') || raw['device_id'] is! String) {
       throw const FormatException('Delta missing required field: device_id');
     }
