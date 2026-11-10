@@ -52,7 +52,7 @@ jobs:
           echo "Building $TAG (previous: $PREVIOUS)"
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.6'
+          flutter-version: '3.47.9'
           channel: 'stable'
           # Flutter SDK and pub packages from the Actions cache.
           cache: true
