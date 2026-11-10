@@ -431,12 +431,16 @@ class SpendingPaceCard extends StatelessWidget {
   }
 }
 
-/// Who paid how much: one avatar per participant, sized by what they paid
-/// (area proportional to the amount), with name and amount below.
+/// Who paid most: the [maxShown] top payers, one avatar each, sized by what
+/// they paid (area proportional to the amount), with name and amount below.
+/// One row on a phone, however big the group.
 class GroupPayersBubbles extends StatelessWidget {
   final ExpenseGroup group;
 
   const GroupPayersBubbles({super.key, required this.group});
+
+  /// How many payers are shown: as many as fit in one row on a phone.
+  static const int maxShown = 4;
 
   static const double _minSize = 36;
   static const double _maxSize = 72;
@@ -451,8 +455,12 @@ class GroupPayersBubbles extends StatelessWidget {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final totals = group.getParticipantTotals();
-    final payers = group.participants.toList()
-      ..sort((a, b) => (totals[b.id] ?? 0).compareTo(totals[a.id] ?? 0));
+    final payers =
+        (group.participants.toList()..sort(
+              (a, b) => (totals[b.id] ?? 0).compareTo(totals[a.id] ?? 0),
+            ))
+            .take(maxShown)
+            .toList();
     final max = payers.isEmpty ? 0.0 : (totals[payers.first.id] ?? 0);
     final radius = BorderRadius.circular(20);
 

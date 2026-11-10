@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Statistics › Participants shows the top 4 payers, in one row, instead of everyone: a big group wrapped onto many rows where the sizes were hard to compare
 - Upgraded Flutter from 3.47.6 to 3.47.9 (stable patch releases), pinned in all three Android CI workflows
 - Major dependency upgrades: `file_picker` 12→13, `flutter_local_notifications` 22→23, `zentoast` 0.2→1.0; all other dependencies refreshed to their latest compatible versions (root + every `packages/*` lockfile, plus `pubspec.fdroid.lock`). No source changes were needed. `home_widget` stays on 0.9.x: 0.10.0 doesn't compile on Android (its plugin references a `HomeWidgetLaunchIntent` class missing from the published package)
 
