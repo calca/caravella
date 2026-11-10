@@ -82,6 +82,21 @@ Map<String, int> _scaledBalances(ExpenseGroup trip) {
   return scaled;
 }
 
+/// What each participant still gets back (positive) or owes (negative),
+/// keyed by id, in whole cents: the sum of the [computeSettlements] payments
+/// still to make. It matches Settle up to the cent, and is zero for everyone
+/// once those are paid. [computeBalances] is the exact value, which can be
+/// off by a fraction of a cent when the total doesn't split evenly.
+Map<String, double> outstandingBalances(ExpenseGroup group) {
+  final cents = {for (final p in group.participants) p.id: 0};
+  for (final s in computeSettlements(group)) {
+    final c = (s.amount * 100).round();
+    cents[s.fromId] = (cents[s.fromId] ?? 0) - c;
+    cents[s.toId] = (cents[s.toId] ?? 0) + c;
+  }
+  return {for (final e in cents.entries) e.key: e.value / 100};
+}
+
 /// [group] with [settlement] ticked as paid, in full, on [date].
 ExpenseGroup markSettlementPaid(
   ExpenseGroup group,

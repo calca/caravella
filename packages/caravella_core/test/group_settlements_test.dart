@@ -220,4 +220,33 @@ void main() {
       expect(back.payments, g.payments);
     });
   });
+
+  group('outstanding balances', () {
+    // 100 among 3: shares of 33.333…, so exact balances have fractions of a
+    // cent.
+    ExpenseGroup g() => _group([
+      [100],
+      [],
+      [],
+    ]);
+
+    test('match Settle up to the cent', () {
+      final out = outstandingBalances(g());
+      for (final s in computeSettlements(g())) {
+        expect(out[s.fromId], -s.amount);
+      }
+      expect(
+        out['p0'],
+        computeSettlements(g()).fold(0.0, (a, s) => a + s.amount),
+      );
+    });
+
+    test('are all zero once every payment is ticked', () {
+      var paid = g();
+      for (final s in computeSettlements(g())) {
+        paid = markSettlementPaid(paid, s);
+      }
+      expect(outstandingBalances(paid).values.every((v) => v == 0), isTrue);
+    });
+  });
 }

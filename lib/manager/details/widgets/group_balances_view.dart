@@ -36,7 +36,8 @@ class GroupBalancesView extends StatelessWidget {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final gloc = gen.AppLocalizations.of(context);
-    final balances = computeBalances(group);
+    // Whole cents, the same as Settle up: no 0.01 left once all is paid.
+    final balances = outstandingBalances(group);
     final settlements = computeSettlements(group);
     final byId = {for (final p in group.participants) p.id: p};
     final rows = group.participants.toList()

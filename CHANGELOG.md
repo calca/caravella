@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Settle up: tick a payment as paid. At the right of each suggested payment a clock turns into a check with one tap, for the full amount (nothing to type); the balances update and the payment stays in the list, struck through with "Paid · <date>", with no reminder button. Tap the check to tick it back. Payments are not expenses: they never show in the expense list, totals or statistics. They're stored in the group (`ExpenseGroup.payments`, `SettlePayment`; SQLite schema v8 adds `groups.payments`) and synced with it (#604)
+- Settle up: tick a payment as paid. At the right of each suggested payment a clock turns into a check with one tap, for the full amount (nothing to type); the balances update and the payment stays in the list, struck through with "Paid · <date>", with no reminder button. Tap the check to tick it back. The balances above now match Settle up to the cent (they used to show the exact share, so "+3.56 €" next to a 3.55 € payment, and 0.01 € left once everything was paid). Payments are not expenses: they never show in the expense list, totals or statistics. They're stored in the group (`ExpenseGroup.payments`, `SettlePayment`; SQLite schema v8 adds `groups.payments`) and synced with it (#604)
 
 ### Changed
 - Sync format 2: deltas carry `"schema": 2` and groups their `payments`. A 2.4.1 device refuses them ("update Caravella on both devices"). When a group arrives from 2.4.0, which sends no version and no payments, this device keeps its own payments for the people still in the group, so an old phone can't erase them (#676)
