@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.1] - 2026-11-10
+
+### Fixed
+- Sync no longer loses data when the other device runs a newer Caravella. A newer version may add fields that 2.4.0 drops when it stores a group, and the whole group is sent back on the next change, so those fields would be erased on the newer device too. Device-to-device deltas now carry a `schema` version (`DeltaBuilder.schemaVersion`, 1; a delta without one, from 2.4.0, counts as 1) and a delta with a higher one is refused: Settings › Sync shows "Couldn't be read: update Caravella on both devices". The Google Drive relay skips a payload whose `schema` is higher than its own
+- Restoring a backup made by a newer Caravella is refused with "This backup comes from a newer Caravella: update the app to restore it", instead of restoring it without the fields this version doesn't know. The backup may now also be an object `{"format": n, "groups": [...]}`; format 1 is still written as a plain list, so 2.4.0 reads 2.4.1 backups
+
 ## [2.4.0] - 2026-11-09
 
 ### Changed
@@ -661,7 +667,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.4.1...HEAD
+[2.4.1]: https://github.com/calca/caravella/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/calca/caravella/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/calca/caravella/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/calca/caravella/compare/v2.2.0...v2.2.1

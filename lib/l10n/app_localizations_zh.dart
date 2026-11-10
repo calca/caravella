@@ -353,6 +353,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get import_error => '恢复失败：请检查文件';
 
   @override
+  String get import_error_newer => '此备份来自较新版本的 Caravella：请更新应用后再恢复';
+
+  @override
   String get settings_flag_secure_error => '无法更改屏幕保护设置';
 
   @override

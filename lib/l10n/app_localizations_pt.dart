@@ -357,6 +357,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get import_error => 'Não foi possível restaurar: verifique o arquivo';
 
   @override
+  String get import_error_newer =>
+      'Este backup vem de um Caravella mais recente: atualize o app para restaurá-lo';
+
+  @override
   String get settings_flag_secure_error =>
       'Não foi possível alterar a proteção de tela';
 

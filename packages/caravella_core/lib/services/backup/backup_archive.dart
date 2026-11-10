@@ -3,13 +3,21 @@ import 'dart:convert';
 import 'package:archive/archive.dart';
 
 import '../../data/expense_group_storage_v2.dart';
+import '../../data/newer_format_exception.dart';
 import '../../model/expense_group.dart';
 
 /// The backup file: every group as JSON in a zip (one entry named
 /// [ExpenseGroupStorageV2.fileName]). Used by the file export / import in
 /// Settings and by the cloud backup (Google Drive).
+///
+/// The JSON is a list of groups (format 1). A newer app may write an object
+/// `{"format": n, "groups": [...]}` instead; [decode] reads format 1 in
+/// either shape and refuses a higher one, whose fields it would drop.
 class BackupArchive {
   BackupArchive._();
+
+  /// Version of the backup format this app can read.
+  static const int formatVersion = 1;
 
   /// `caravella_backup_20261019_213000.zip`
   static String fileNameFor(DateTime time) {
@@ -43,7 +51,8 @@ class BackupArchive {
   }
 
   /// The groups in a backup: a zip from [encode] or, when [isZip] is false,
-  /// the bare JSON file. Throws [FormatException] if there are none.
+  /// the bare JSON file. Throws [FormatException] if there are none, and
+  /// [NewerFormatException] if a newer app made it.
   static List<ExpenseGroup> decode(List<int> bytes, {bool isZip = true}) {
     late final String json;
     if (isZip) {
@@ -56,7 +65,23 @@ class BackupArchive {
     } else {
       json = utf8.decode(bytes);
     }
-    final groups = (jsonDecode(json) as List<dynamic>)
+    final decoded = jsonDecode(json);
+    final List<dynamic> list;
+    if (decoded is List<dynamic>) {
+      list = decoded;
+    } else if (decoded is Map<String, dynamic>) {
+      final format = decoded['format'];
+      if (format is! int || decoded['groups'] is! List<dynamic>) {
+        throw const FormatException('Unrecognized backup file');
+      }
+      if (format > formatVersion) {
+        throw NewerFormatException('Backup', format);
+      }
+      list = decoded['groups'] as List<dynamic>;
+    } else {
+      throw const FormatException('Unrecognized backup file');
+    }
+    final groups = list
         .map((j) => ExpenseGroup.fromJson(j as Map<String, dynamic>))
         .toList();
     if (groups.isEmpty) {

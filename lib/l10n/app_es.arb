@@ -124,6 +124,7 @@
   "import_confirm_message": "¿Restaurar desde el archivo «{file}»? Los grupos actuales se sustituirán y no se podrá deshacer.",
   "import_success": "Datos restaurados",
   "import_error": "No se pudo restaurar: revisa el archivo",
+  "import_error_newer": "Esta copia viene de un Caravella más reciente: actualiza la app para restaurarla",
   "settings_flag_secure_error": "No se pudo cambiar la protección de pantalla",
   "settings_debug_logs_title": "Registros de depuración",
   "settings_debug_logs_desc": "Registros y errores de la app",

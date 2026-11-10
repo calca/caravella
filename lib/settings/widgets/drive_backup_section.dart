@@ -144,9 +144,19 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
     if (!await confirmRestore(context, loc, name) || !mounted) return;
 
     List<ExpenseGroup>? groups;
+    var newer = false;
     await _run(_DriveRow.restore, () async {
-      groups = BackupArchive.decode(await _store!.download(picked.id));
+      try {
+        groups = BackupArchive.decode(await _store!.download(picked.id));
+      } on NewerFormatException {
+        // Not a Drive failure: this app is too old for the backup.
+        newer = true;
+      }
     });
+    if (newer && mounted) {
+      AppToast.show(context, loc.import_error_newer, type: ToastType.error);
+      return;
+    }
     if (groups != null && mounted) {
       await restoreBackupGroups(context, loc, groups!);
     }
