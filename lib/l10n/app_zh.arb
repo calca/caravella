@@ -97,6 +97,7 @@
   "import_confirm_message": "从文件“{file}”恢复？当前群组将被替换，且无法撤销。",
   "import_success": "数据已恢复",
   "import_error": "恢复失败：请检查文件",
+  "import_error_newer": "此备份来自较新版本的 Caravella：请更新应用后再恢复",
   "settings_flag_secure_error": "无法更改屏幕保护设置",
   "settings_debug_logs_title": "调试日志",
   "settings_debug_logs_desc": "应用日志和错误",

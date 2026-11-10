@@ -357,6 +357,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get import_error => 'Ripristino non riuscito: controlla il file';
 
   @override
+  String get import_error_newer =>
+      'Questo backup viene da un Caravella più recente: aggiorna l’app per ripristinarlo';
+
+  @override
   String get settings_flag_secure_error =>
       'Impossibile modificare la protezione schermo';
 

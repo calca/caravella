@@ -441,6 +441,7 @@
   ,"history": "Histórico"
   ,"import_confirm_message": "Restaurar do arquivo “{file}”? Os grupos atuais serão substituídos e não será possível desfazer."
   ,"import_error": "Não foi possível restaurar: verifique o arquivo"
+  ,"import_error_newer": "Este backup vem de um Caravella mais recente: atualize o app para restaurá-lo"
   ,"settings_flag_secure_error": "Não foi possível alterar a proteção de tela"
   ,"settings_debug_logs_title": "Registros de depuração"
   ,"settings_debug_logs_desc": "Registos e erros da app"

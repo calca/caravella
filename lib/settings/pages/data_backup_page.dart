@@ -155,7 +155,11 @@ class _DataBackupPageState extends State<DataBackupPage> {
         stackTrace: st,
       );
       if (context.mounted) {
-        AppToast.show(context, loc.import_error, type: ToastType.error);
+        AppToast.show(
+          context,
+          e is NewerFormatException ? loc.import_error_newer : loc.import_error,
+          type: ToastType.error,
+        );
       }
       return;
     }

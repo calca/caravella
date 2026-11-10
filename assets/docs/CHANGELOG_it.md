@@ -1,3 +1,8 @@
+## 2.4.1 (10.11.2026)
+
+- **Miglioramenti**: La sincronizzazione con un telefono che ha un Caravella più recente aspetta che tu aggiorni, invece di perdere quello che la nuova versione ha aggiunto
+- **Miglioramenti**: Un backup fatto da un Caravella più recente ti chiede di aggiornare prima di ripristinarlo
+
 ## 2.4.0 (09.11.2026)
 
 - **Novità**: Condividere un gruppo è un solo percorso: **Invita un dispositivo** mostra il QR code e rende il telefono visibile ai telefoni vicini via Bluetooth; sull'altro telefono, **Unisciti a un gruppo** legge il codice o elenca i telefoni vicini
