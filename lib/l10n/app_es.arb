@@ -1045,4 +1045,8 @@
   ,"sync_settings_desc_wifi_drive": "Wi-Fi o Google Drive"
   ,"sync_multiuser_description_wifi": "Grupos por Wi-Fi"
   ,"sync_privacy_footer_wifi": "Con el interruptor apagado, Caravella no es visible para otros teléfonos y no recibe nada. El Wi-Fi del teléfono no cambia."
+  ,"settle_mark_paid": "Marcar como pagado"
+  ,"settle_mark_unpaid": "Marcar como pendiente"
+  ,"settle_paid_on": "Pagado · {date}"
+  ,"settlement_paid": "{from} pagó {amount} a {to}"
 }

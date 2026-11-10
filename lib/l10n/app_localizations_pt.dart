@@ -2844,4 +2844,20 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get sync_privacy_footer_wifi =>
       'Com o interruptor desligado, o Caravella não fica visível para outros telefones e não recebe nada. O Wi-Fi do telefone não muda.';
+
+  @override
+  String get settle_mark_paid => 'Marcar como pago';
+
+  @override
+  String get settle_mark_unpaid => 'Marcar como pendente';
+
+  @override
+  String settle_paid_on(String date) {
+    return 'Pago · $date';
+  }
+
+  @override
+  String settlement_paid(String from, String to, String amount) {
+    return '$from pagou $amount a $to';
+  }
 }

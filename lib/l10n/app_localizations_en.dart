@@ -2836,4 +2836,20 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get sync_privacy_footer_wifi =>
       'With it off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi doesn’t change.';
+
+  @override
+  String get settle_mark_paid => 'Mark as paid';
+
+  @override
+  String get settle_mark_unpaid => 'Mark as not paid';
+
+  @override
+  String settle_paid_on(String date) {
+    return 'Paid · $date';
+  }
+
+  @override
+  String settlement_paid(String from, String to, String amount) {
+    return '$from paid $to $amount';
+  }
 }

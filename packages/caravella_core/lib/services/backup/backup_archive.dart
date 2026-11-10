@@ -10,14 +10,16 @@ import '../../model/expense_group.dart';
 /// [ExpenseGroupStorageV2.fileName]). Used by the file export / import in
 /// Settings and by the cloud backup (Google Drive).
 ///
-/// The JSON is a list of groups (format 1). A newer app may write an object
-/// `{"format": n, "groups": [...]}` instead; [decode] reads format 1 in
-/// either shape and refuses a higher one, whose fields it would drop.
+/// The JSON is `{"format": 2, "groups": [...]}`. Format 1 (up to 2.4.1) is
+/// a bare list of groups, or the same object with `"format": 1`; [decode]
+/// reads both and refuses a higher format, whose fields it would drop.
+/// Format 2 added the groups' `payments`; 2.4.1 refuses it rather than
+/// restoring the groups without them.
 class BackupArchive {
   BackupArchive._();
 
-  /// Version of the backup format this app can read.
-  static const int formatVersion = 1;
+  /// Version of the backup format this app writes and can read.
+  static const int formatVersion = 2;
 
   /// `caravella_backup_20261019_213000.zip`
   static String fileNameFor(DateTime time) {
@@ -30,7 +32,10 @@ class BackupArchive {
   /// The zip bytes for [groups].
   static List<int> encode(List<ExpenseGroup> groups) {
     final jsonBytes = utf8.encode(
-      jsonEncode(groups.map((g) => g.toJson()).toList()),
+      jsonEncode({
+        'format': formatVersion,
+        'groups': groups.map((g) => g.toJson()).toList(),
+      }),
     );
     final archive = Archive()
       ..addFile(

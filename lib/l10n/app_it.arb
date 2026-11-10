@@ -1023,4 +1023,8 @@
   ,"sync_settings_desc_wifi_drive": "Wi-Fi o Google Drive"
   ,"sync_multiuser_description_wifi": "Gruppi via Wi-Fi"
   ,"sync_privacy_footer_wifi": "Con l’interruttore spento, Caravella non si fa vedere dagli altri telefoni e non riceve niente. Il Wi-Fi del telefono non cambia."
+  ,"settle_mark_paid": "Segna come pagato"
+  ,"settle_mark_unpaid": "Segna come da pagare"
+  ,"settle_paid_on": "Pagato · {date}"
+  ,"settlement_paid": "{from} ha pagato {amount} a {to}"
 }

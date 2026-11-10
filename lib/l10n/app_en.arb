@@ -1246,4 +1246,12 @@
   ,"@sync_multiuser_description_wifi": {"description": "Sync with others subtitle in builds without Bluetooth sync (F-Droid)"}
   ,"sync_privacy_footer_wifi": "With it off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi doesn’t change."
   ,"@sync_privacy_footer_wifi": {"description": "Footer under the only (Wi-Fi) privacy switch in builds without Bluetooth sync (F-Droid)"}
+  ,"settle_mark_paid": "Mark as paid"
+  ,"@settle_mark_paid": {"description": "Settle up: button (tooltip) ticking a suggested payment as paid, in full"}
+  ,"settle_mark_unpaid": "Mark as not paid"
+  ,"@settle_mark_unpaid": {"description": "Settle up: button (tooltip) unticking a payment back to not paid"}
+  ,"settle_paid_on": "Paid · {date}"
+  ,"@settle_paid_on": {"description": "Settle up: under a payment ticked as paid", "placeholders": {"date": {"type": "String"}}}
+  ,"settlement_paid": "{from} paid {to} {amount}"
+  ,"@settlement_paid": {"description": "Screen reader label of a payment ticked as paid", "placeholders": {"from": {"type": "String"}, "to": {"type": "String"}, "amount": {"type": "String"}}}
 }

@@ -27,7 +27,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 7;
+  static const int _databaseVersion = 8;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -262,6 +262,17 @@ class SqliteExpenseGroupRepository
       );
       LoggerService.info(
         'Database migration to v7 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 8) {
+      // Payments ticked as paid in Settle up, as a JSON list
+      // (`SettlePayment.toJson`): few per group, always read and written
+      // with it.
+      await db.execute('ALTER TABLE $kTableGroups ADD COLUMN payments TEXT');
+      LoggerService.info(
+        'Database migration to v8 complete',
         name: 'storage.sqlite',
       );
     }

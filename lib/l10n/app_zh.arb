@@ -1343,4 +1343,8 @@
   ,"sync_settings_desc_wifi_drive": "Wi-Fi 或 Google 云端硬盘"
   ,"sync_multiuser_description_wifi": "通过 Wi-Fi 共享群组"
   ,"sync_privacy_footer_wifi": "关闭后，Caravella 对其他手机不可见，也不会接收任何内容。手机本身的 Wi-Fi 不受影响。"
+  ,"settle_mark_paid": "标记为已付"
+  ,"settle_mark_unpaid": "标记为未付"
+  ,"settle_paid_on": "已付 · {date}"
+  ,"settlement_paid": "{from} 已向 {to} 支付 {amount}"
 }

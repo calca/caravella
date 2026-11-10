@@ -1,4 +1,5 @@
 import 'expense_group.dart';
+import 'settle_payment.dart';
 
 /// Strongly-typed settlement item using participant IDs (robust to name changes).
 class Settlement {
@@ -66,8 +67,46 @@ Map<String, int> _scaledBalances(ExpenseGroup trip) {
     total += cents;
     paid[e.paidBy.id] = (paid[e.paidBy.id] ?? 0) + cents;
   }
-  return {for (final e in paid.entries) e.key: e.value * n - total};
+  final scaled = {for (final e in paid.entries) e.key: e.value * n - total};
+  // A payment ticked in Settle up: the payer's debt shrinks by it, the
+  // receiver's credit too. It isn't spending, so the total stays. One
+  // naming someone no longer in the group is left out.
+  for (final p in trip.payments) {
+    if (!scaled.containsKey(p.fromId) || !scaled.containsKey(p.toId)) {
+      continue;
+    }
+    final cents = (p.amount * 100).round() * n;
+    scaled[p.fromId] = scaled[p.fromId]! + cents;
+    scaled[p.toId] = scaled[p.toId]! - cents;
+  }
+  return scaled;
 }
+
+/// [group] with [settlement] ticked as paid, in full, on [date].
+ExpenseGroup markSettlementPaid(
+  ExpenseGroup group,
+  Settlement settlement, {
+  DateTime? date,
+}) => group.copyWith(
+  payments: [
+    ...group.payments,
+    SettlePayment(
+      fromId: settlement.fromId,
+      toId: settlement.toId,
+      amount: settlement.amount,
+      date: date ?? DateTime.now(),
+    ),
+  ],
+);
+
+/// [group] without the payment [paymentId]: ticked back to not paid.
+ExpenseGroup unmarkPayment(ExpenseGroup group, String paymentId) =>
+    group.copyWith(
+      payments: [
+        for (final p in group.payments)
+          if (p.id != paymentId) p,
+      ],
+    );
 
 /// Above this many people with a balance, [computeSettlements] stops
 /// searching for the minimum (2^n subsets) and settles greedily.

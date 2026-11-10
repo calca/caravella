@@ -174,6 +174,63 @@ void main() {
     expect(find.text('All settled up'), findsOneWidget);
   });
 
+  testWidgets('tapping the clock ticks a payment as paid, in full', (
+    tester,
+  ) async {
+    List<SettlePayment>? saved;
+    await tester.pumpWidget(
+      _wrap(
+        GroupBalancesView(
+          group: _group([_expense('Hotel', 100, day1, _anna)]),
+          onPaymentsChanged: (p) async => saved = p,
+        ),
+      ),
+    );
+    expect(find.byTooltip('Send reminder: Luca'), findsOneWidget);
+    await tester.tap(find.byTooltip('Mark as paid'));
+    expect(saved, hasLength(1));
+    expect(saved!.single.fromId, _luca.id);
+    expect(saved!.single.toId, _anna.id);
+    expect(saved!.single.amount, 50);
+  });
+
+  testWidgets('a paid payment stays, checked, and can be unticked', (
+    tester,
+  ) async {
+    final group = _group([_expense('Hotel', 100, day1, _anna)]);
+    final paidGroup = markSettlementPaid(
+      group,
+      computeSettlements(group).single,
+      date: DateTime(2026, 11, 10),
+    );
+    List<SettlePayment>? saved;
+    await tester.pumpWidget(
+      _wrap(
+        GroupBalancesView(
+          group: paidGroup,
+          onPaymentsChanged: (p) async => saved = p,
+        ),
+      ),
+    );
+    expect(find.text('All settled up'), findsOneWidget);
+    expect(find.text('Paid · Nov 10'), findsOneWidget);
+    expect(find.bySemanticsLabel('Luca paid Anna 50.00 €'), findsOneWidget);
+    expect(find.bySemanticsLabel('Luca owes 50.00 €'), findsNothing);
+    // No reminder for a payment already made.
+    expect(find.byTooltip('Send reminder: Luca'), findsNothing);
+    await tester.tap(find.byTooltip('Mark as not paid'));
+    expect(saved, isEmpty);
+  });
+
+  testWidgets('without a callback Settle up is read-only', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        GroupBalancesView(group: _group([_expense('Hotel', 100, day1, _anna)])),
+      ),
+    );
+    expect(find.byTooltip('Mark as paid'), findsNothing);
+  });
+
   test('payer avatars grow with what they paid', () {
     expect(
       GroupPayersBubbles.sizeFor(100, 100),
