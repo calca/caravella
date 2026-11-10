@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/manager/expense/components/expense_form_component.dart';
+import 'package:io_caravella_egm/manager/expense/components/expense_form_config.dart';
 import 'package:io_caravella_egm/manager/expense/state/expense_form_controller.dart';
 import 'package:io_caravella_egm/manager/expense/widgets/note_input_widget.dart';
 
@@ -24,15 +25,17 @@ void main() {
         locale: const Locale('en'),
         home: Scaffold(
           body: SingleChildScrollView(
-            child: ExpenseFormComponent.legacy(
-              initialExpense: initialExpense,
-              participants: [ExpenseParticipant(id: 'p1', name: 'Anna')],
-              categories: [ExpenseCategory(id: 'c1', name: 'Food')],
-              onExpenseAdded: (_) {},
-              onCategoryAdded: (_) {},
-              groupId: 'g1',
-              autoLocationEnabled: false,
-              fullEdit: false,
+            child: ExpenseFormComponent(
+              config: ExpenseFormConfig(
+                initialExpense: initialExpense,
+                participants: [ExpenseParticipant(id: 'p1', name: 'Anna')],
+                categories: [ExpenseCategory(id: 'c1', name: 'Food')],
+                onExpenseAdded: (_) {},
+                onCategoryAdded: (_) {},
+                groupId: 'g1',
+                autoLocationEnabled: false,
+                fullEdit: false,
+              ),
             ),
           ),
         ),

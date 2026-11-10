@@ -1,16 +1,13 @@
 import 'package:uuid/uuid.dart';
 
 class ExpenseCategory {
-  final String id; // UDID per la categoria
+  final String id;
   final String name;
   final DateTime createdAt;
 
-  ExpenseCategory({
-    required this.name,
-    String? id, // opzionale, generato se mancante
-    DateTime? createdAt, // opzionale, default a now
-  }) : id = id ?? const Uuid().v4(),
-       createdAt = createdAt ?? DateTime.now();
+  ExpenseCategory({required this.name, String? id, DateTime? createdAt})
+    : id = id ?? const Uuid().v4(),
+      createdAt = createdAt ?? DateTime.now();
 
   factory ExpenseCategory.fromJson(Map<String, dynamic> json) {
     return ExpenseCategory(

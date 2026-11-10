@@ -57,12 +57,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   ExpenseGroupNotifier? _groupNotifier;
   late final ScrollController _scrollController;
   bool _fabVisible = true; // controllo visibilità totale
-  Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
-  bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
+  Timer? _fabIdleTimer; // shows the FAB again after a pause
+  bool _collapsedTitleVisible = false; // group name in the top bar
 
   /// The top bar turns opaque as soon as content scrolls under it.
   bool _barOpaque = false;
-  String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
+  String? _newlyAddedExpenseId; // just added, to highlight
 
   /// Selected view: 0 expenses, 1 balances, 2 statistics.
   int _section = 0;
@@ -86,10 +86,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // Rimuovi il listener precedente se esiste
     _groupNotifier?.removeListener(_onGroupChanged);
 
-    // Ottieni il nuovo notifier e aggiungi il listener
     _groupNotifier = context.read<ExpenseGroupNotifier>();
     _seenRevision = _groupNotifier?.revision ?? 0;
     _groupNotifier?.addListener(_onGroupChanged);
@@ -97,7 +95,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
 
   @override
   void dispose() {
-    // Rimuovi il listener in modo sicuro
     _groupNotifier?.removeListener(_onGroupChanged);
     _groupNotifier = null;
     _scrollController.removeListener(_onScroll);
@@ -134,7 +131,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     }
     final currentGroup = _groupNotifier?.currentGroup;
 
-    // Se il gruppo corrente nel notifier è lo stesso che stiamo visualizzando, aggiorna.
+    // The notifier's current group is this one, changed: show it.
     // Opening the expense form sets this very group as current: nothing
     // changed, and rebuilding the page under the incoming one made it stutter.
     if (currentGroup != null &&
@@ -157,7 +154,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
       _deleted = trip == null;
     });
     if (_deleted && mounted) {
-      Navigator.of(context).pop(true); // Torna in home e aggiorna
+      Navigator.of(context).pop(true); // back to Home, which refreshes
     }
   }
 
@@ -280,12 +277,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
             }
           }
 
-          // Rimuovi la spesa
           setState(() {
             _trip!.expenses.removeWhere((e) => e.id == expense.id);
           });
 
-          // Salva le modifiche tramite storage helper
           await ExpenseGroupStorageV2.removeExpenseFromGroup(
             _trip!.id,
             expense.id,
@@ -383,7 +378,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     final direction = _scrollController.position.userScrollDirection;
     if (direction == ScrollDirection.reverse) {
       if (_fabVisible && mounted) setState(() => _fabVisible = false);
-      // Avvia timer per ri-mostrare dopo inattività
+      // Show it again after a pause
       _fabIdleTimer?.cancel();
       _fabIdleTimer = Timer(const Duration(milliseconds: 1200), () {
         if (mounted && !_fabVisible) {
@@ -392,11 +387,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
       });
     } else if (direction == ScrollDirection.forward) {
       if (!_fabVisible && mounted) setState(() => _fabVisible = true);
-      // reset timer perché già visibile
       _fabIdleTimer?.cancel();
     }
 
-    // Mostra titolo nella appbar quando la flexible space è quasi collassata
+    // The group name shows in the top bar once the title has scrolled away
     final shouldShow =
         _scrollController.offset > _collapsedTitleThreshold(context);
     final opaque = _scrollController.offset > 2;

@@ -2,11 +2,11 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
-/// Utility per generare CSV per un gruppo di spese.
+/// Builds the CSV export of a group's expenses.
 class CsvExporter {
   const CsvExporter._();
 
-  /// Genera il contenuto CSV. Ritorna stringa vuota se gruppo nullo o senza spese.
+  /// The CSV content; empty when there's no group or no expense.
   static String generate(ExpenseGroup? group, gen.AppLocalizations loc) {
     if (group == null || group.expenses.isEmpty) return '';
     final buffer = StringBuffer();
@@ -40,7 +40,7 @@ class CsvExporter {
     return buffer.toString();
   }
 
-  /// Costruisce il nome file CSV nel formato: YYYY-MM-DD_[titolo]_export.csv
+  /// The file name: YYYY-MM-DD_[title]_export.csv
   static String buildFilename(ExpenseGroup? group, {DateTime? now}) {
     now ??= DateTime.now();
     final date =

@@ -5,7 +5,7 @@ import 'expense_location.dart';
 import 'expense_author.dart';
 
 class ExpenseDetails {
-  final String id; // UDID per la spesa
+  final String id;
   final ExpenseCategory category;
   final double? amount;
   final ExpenseParticipant paidBy;
@@ -13,7 +13,8 @@ class ExpenseDetails {
   final String? note;
   final String? name;
   final ExpenseLocation? location;
-  final List<String> attachments; // Percorsi relativi ai file allegati (max 5)
+  final List<String>
+  attachments; // Relative paths of the attached files (at most 5)
   final ExpenseAuthor? createdBy;
   final ExpenseAuthor? updatedBy;
 
@@ -26,7 +27,7 @@ class ExpenseDetails {
     this.name,
     this.location,
     List<String>? attachments,
-    String? id, // opzionale, generato se mancante
+    String? id,
     this.createdBy,
     this.updatedBy,
   }) : id = id ?? const Uuid().v4(),

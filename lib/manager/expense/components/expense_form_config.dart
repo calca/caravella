@@ -2,10 +2,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../state/expense_form_state.dart';
 
-/// Configuration object for ExpenseFormComponent
-///
-/// Consolidates the 43 constructor parameters into a structured configuration
-/// object for better maintainability and readability.
+/// Everything [ExpenseFormComponent] needs: the expense and group, the
+/// callbacks and how the form shows.
 class ExpenseFormConfig {
   // Core data
   final ExpenseDetails? initialExpense;

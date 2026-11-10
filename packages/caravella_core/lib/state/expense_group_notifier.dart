@@ -30,15 +30,15 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   /// the app shell) compare it with the value they last saw.
   int get revision => _revision;
 
-  // Lista degli ID dei gruppi che sono stati aggiornati
+  // IDs of the groups updated since the UI last cleared them
   List<String> get updatedGroupIds => List.unmodifiable(_updatedGroupIds);
 
-  // Ultima categoria aggiunta
+  // Last category added
   String? get lastAddedCategory => _lastAddedCategory;
-  // Ultimo partecipante aggiunto
+  // Last participant added
   String? get lastAddedParticipant => _lastAddedParticipant;
   String? get lastEvent => _lastEvent;
-  // Lista degli ID dei gruppi che sono stati cancellati
+  // IDs of the groups deleted since the UI last cleared them
   List<String> get deletedGroupIds => List.unmodifiable(_deletedGroupIds);
 
   String? consumeLastEvent() {
@@ -54,19 +54,18 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
   void clearCurrentGroup() {
     _currentGroup = null;
-    _lastAddedCategory = null; // Pulisci anche l'ultima categoria
-    _lastAddedParticipant = null; // Pulisci anche l'ultimo partecipante
+    _lastAddedCategory = null;
+    _lastAddedParticipant = null;
     notifyListeners();
   }
 
-  /// Aggiorna solo i metadati del gruppo preservando le spese esistenti
+  /// Updates only the group's metadata, keeping its expenses.
   Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
-    // Aggiorna lo stato corrente preservando le spese se presente
+    // Keep the current group's expenses
     if (_currentGroup != null && _currentGroup!.id == updatedGroup.id) {
       _currentGroup = updatedGroup.copyWith(expenses: _currentGroup!.expenses);
     }
 
-    // Aggiungi l'ID alla lista dei gruppi aggiornati
     if (!_updatedGroupIds.contains(updatedGroup.id)) {
       _updatedGroupIds.add(updatedGroup.id);
     }
@@ -74,7 +73,6 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
     notifyListeners();
 
-    // Persisti le modifiche preservando le spese
     try {
       await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
       // Update shortcuts when group metadata changes
@@ -91,10 +89,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   Future<void> addCategory(String categoryName) async {
     if (_currentGroup == null) return;
 
-    // Controlla se la categoria esiste già
     if (_currentGroup!.categories.any((c) => c.name == categoryName)) {
-      _lastAddedCategory =
-          null; // La categoria esiste già, non c'è nulla di nuovo da preselezionare
+      _lastAddedCategory = null; // already there: nothing new to preselect
       notifyListeners();
       return;
     }
@@ -102,17 +98,14 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     final updatedCategories = [..._currentGroup!.categories];
     updatedCategories.add(ExpenseCategory(name: categoryName));
 
-    // Aggiorna il gruppo corrente con le nuove categorie
     _currentGroup = _currentGroup!.copyWith(categories: updatedCategories);
 
-    // Memorizza l'ultima categoria aggiunta
     _lastAddedCategory = categoryName;
     _lastEvent = 'category_added';
 
-    // Notifica i listener prima di persistere
+    // Notify before saving, so the form updates at once
     notifyListeners();
 
-    // Persisti le modifiche
     try {
       await ExpenseGroupStorageV2.updateGroupMetadata(_currentGroup!);
     } catch (e) {
@@ -127,10 +120,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   Future<void> addParticipant(String participantName) async {
     if (_currentGroup == null) return;
 
-    // Controlla se il partecipante esiste già
     if (_currentGroup!.participants.any((p) => p.name == participantName)) {
-      _lastAddedParticipant =
-          null; // Il partecipante esiste già, non c'è nulla di nuovo da preselezionare
+      _lastAddedParticipant = null; // already there: nothing new to preselect
       notifyListeners();
       return;
     }
@@ -138,17 +129,14 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     final updatedParticipants = [..._currentGroup!.participants];
     updatedParticipants.add(ExpenseParticipant(name: participantName));
 
-    // Aggiorna il gruppo corrente con i nuovi partecipanti
     _currentGroup = _currentGroup!.copyWith(participants: updatedParticipants);
 
-    // Memorizza l'ultimo partecipante aggiunto
     _lastAddedParticipant = participantName;
     _lastEvent = 'participant_added';
 
-    // Notifica i listener prima di persistere
+    // Notify before saving, so the form updates at once
     notifyListeners();
 
-    // Persisti le modifiche
     try {
       await ExpenseGroupStorageV2.updateGroupMetadata(_currentGroup!);
     } catch (e) {
@@ -160,7 +148,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     }
   }
 
-  // Nuovo metodo per aggiornare l'intero gruppo (per quando viene modificato dall'esterno)
+  /// Reloads the current group from storage, after a change made elsewhere.
   Future<void> refreshGroup() async {
     if (_currentGroup == null) return;
 
@@ -181,17 +169,17 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     }
   }
 
-  // Metodo per pulire la lista degli aggiornamenti (chiamato dopo che la UI è stata aggiornata)
+  /// Clears [updatedGroupIds], once the UI has handled them.
   void clearUpdatedGroups() {
     _updatedGroupIds.clear();
   }
 
-  /// Metodo per pulire la lista dei gruppi cancellati
+  /// Clears the deleted group IDs, once the UI has handled them.
   void clearDeletedGroups() {
     _deletedGroupIds.clear();
   }
 
-  // Metodo per notificare un aggiornamento di gruppo dall'esterno
+  /// Tells listeners that [groupId] changed elsewhere.
   void notifyGroupUpdated(String groupId) {
     if (!_updatedGroupIds.contains(groupId)) {
       _updatedGroupIds.add(groupId);
@@ -200,7 +188,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Metodo per notificare che un gruppo è stato cancellato
+  /// Tells listeners that [groupId] was deleted.
   void notifyGroupDeleted(String groupId) {
     if (!_deletedGroupIds.contains(groupId)) {
       _deletedGroupIds.add(groupId);

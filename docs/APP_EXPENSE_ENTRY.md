@@ -10,7 +10,7 @@ Covers `lib/manager/expense/**` — the expense form, attachments, voice input, 
 
 ## Component composition
 
-`ExpenseFormComponent` (`components/expense_form_component.dart`) is the actual widget used everywhere, via `.create`/`.edit`/`.legacy` factories all funneling into one `ExpenseFormConfig` (a config object whose docstring notes it replaces "43 constructor parameters" — distinguishes `create`/`edit` behavior from whether `initialExpense.id` is set).
+`ExpenseFormComponent` (`components/expense_form_component.dart`) is the actual widget used everywhere, built from one `ExpenseFormConfig` (its constructor, or the `.create`/`.edit` factories; `isEditMode` comes from whether `initialExpense.id` is set).
 
 Its `initState` builds an `ExpenseFormLifecycleManager` (controller construction, optional `FormScrollCoordinator`, auto-location retrieval, "newly added category" auto-select) and then an `ExpenseFormOrchestrator` (owns `saveExpense`/`deleteExpense`/`expand`, wires parent-supplied callbacks like `onSaveCallbackChanged` so an external toolbar can trigger the form's internal save).
 

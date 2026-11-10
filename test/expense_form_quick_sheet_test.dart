@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/manager/expense/components/expense_form_component.dart';
+import 'package:io_caravella_egm/manager/expense/components/expense_form_config.dart';
 import 'package:io_caravella_egm/manager/expense/state/expense_form_state.dart';
 
 /// Quick-add sheet (Home): no details section, a visible "More details"
@@ -24,16 +25,18 @@ void main() {
         locale: const Locale('en'),
         home: Scaffold(
           body: SingleChildScrollView(
-            child: ExpenseFormComponent.legacy(
-              initialExpense: initialExpense,
-              participants: [ExpenseParticipant(id: 'p1', name: 'Mario')],
-              categories: [ExpenseCategory(id: 'c1', name: 'Food')],
-              onExpenseAdded: (_) {},
-              onCategoryAdded: (_) {},
-              groupId: 'g1',
-              autoLocationEnabled: false,
-              fullEdit: false,
-              onExpand: onExpand ?? (_) {},
+            child: ExpenseFormComponent(
+              config: ExpenseFormConfig(
+                initialExpense: initialExpense,
+                participants: [ExpenseParticipant(id: 'p1', name: 'Mario')],
+                categories: [ExpenseCategory(id: 'c1', name: 'Food')],
+                onExpenseAdded: (_) {},
+                onCategoryAdded: (_) {},
+                groupId: 'g1',
+                autoLocationEnabled: false,
+                fullEdit: false,
+                onExpand: onExpand ?? (_) {},
+              ),
             ),
           ),
         ),

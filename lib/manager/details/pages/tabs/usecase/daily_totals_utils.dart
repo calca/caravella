@@ -48,7 +48,7 @@ List<double> buildMonthlySeries(ExpenseGroup group) {
 /// If the group qualifies for a date-range chart (<=30 days inclusive),
 /// returns that series; otherwise an empty list.
 List<double> buildAdaptiveDateRangeSeries(ExpenseGroup group) {
-  // Se non ci sono date impostate, usa il range effettivo delle spese
+  // No dates set: use the span of the expenses themselves.
   if (group.startDate == null || group.endDate == null) {
     return buildExpenseRangeSeries(group);
   }
@@ -63,8 +63,8 @@ List<double> buildAdaptiveDateRangeSeries(ExpenseGroup group) {
   return calculateDailyTotalsOptimized(group, start, duration);
 }
 
-/// Calcola la serie basata sul range effettivo delle spese (dalla prima all'ultima).
-/// Ritorna una lista vuota se non ci sono spese o se il range supera i 30 giorni.
+/// The daily series over the span of the expenses (first to last); empty
+/// when there are none or they span more than 30 days.
 List<double> buildExpenseRangeSeries(ExpenseGroup group) {
   if (group.expenses.isEmpty) return const [];
 
@@ -81,29 +81,21 @@ List<double> buildExpenseRangeSeries(ExpenseGroup group) {
   return calculateDailyTotalsOptimized(group, start, duration);
 }
 
-/// Decide se mostrare il grafico "date range" (giorno per giorno) nella home.
-/// Regola aggiornata: mostra SE:
-///  - Le date NON sono impostate (usa il range effettivo delle spese)
-///  - OPPURE entrambe le date sono presenti E la durata è <= 30 giorni
-/// Esempi con date impostate:
-///  - start = 1, end = 1  => 1 giorno (mostra)
-///  - start = 1, end = 30 => 30 giorni (mostra)
-///  - start = 1, end = 31 => 31 giorni (NON mostra)
-/// Senza date impostate:
-///  - Usa il range effettivo delle spese se <= 30 giorni
+/// Whether Home shows the day-by-day ("date range") chart:
+///  - with both dates set, when they span at most 30 days (1st–1st: 1 day,
+///    shown; 1st–30th: 30 days, shown; 1st–31st: 31 days, not shown);
+///  - without them, when the expenses themselves span at most 30 days.
 bool shouldShowDateRangeChart(ExpenseGroup group) {
   final start = group.startDate;
   final end = group.endDate;
 
-  // Se non ci sono date impostate, mostra il grafico date range
-  // basato sul periodo effettivo delle spese (se valido)
+  // No dates set: the span of the expenses decides.
   if (start == null || end == null) {
     final series = buildExpenseRangeSeries(group);
     return series.isNotEmpty;
   }
 
-  // Se ci sono date impostate, mostra solo se <= 30 giorni
-  if (end.isBefore(start)) return false; // dati incoerenti
+  if (end.isBefore(start)) return false; // inconsistent dates
   final inclusiveDays = calendarDaysBetween(start, end) + 1; // inclusive span
   return inclusiveDays <= 30;
 }

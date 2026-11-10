@@ -110,7 +110,7 @@ class _ColorPaletteRow extends StatelessWidget {
         return InkWell(
           onTap: () {
             state.setColor(colorIndex);
-            Navigator.pop(context); // chiudi subito la sheet dopo selezione
+            Navigator.pop(context); // close the sheet as soon as one is picked
           },
           borderRadius: BorderRadius.circular(28),
           child: AnimatedContainer(

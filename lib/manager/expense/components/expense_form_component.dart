@@ -13,7 +13,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../widgets/expense_form_actions_widget.dart';
 import '../widgets/voice_capture_bottom_sheet.dart';
 import '../state/expense_form_controller.dart';
-import '../state/expense_form_state.dart';
 import '../coordination/route_settled.dart';
 import 'expense_form_config.dart';
 import 'expense_form_lifecycle_manager.dart';
@@ -25,75 +24,12 @@ import '../../../services/receipt_scanner_service.dart';
 import '../widgets/amount_input_widget.dart';
 import '../widgets/receipt_scan_line.dart';
 
-/// Main expense form component - refactored to use config object pattern
-///
-/// This component now accepts a single ExpenseFormConfig parameter instead
-/// of 43 individual parameters, improving maintainability and readability.
+/// The expense form: amount, name, who paid and category, then the details,
+/// as set by [ExpenseFormConfig].
 class ExpenseFormComponent extends StatefulWidget {
   final ExpenseFormConfig config;
 
   const ExpenseFormComponent({super.key, required this.config});
-
-  // Legacy constructor for backward compatibility
-  ExpenseFormComponent.legacy({
-    super.key,
-    ExpenseDetails? initialExpense,
-    required List<ExpenseParticipant> participants,
-    required List<ExpenseCategory> categories,
-    required Function(ExpenseDetails) onExpenseAdded,
-    required Function(String) onCategoryAdded,
-    Function(String)? onParticipantAdded,
-    VoidCallback? onDelete,
-    bool shouldAutoClose = true,
-    bool autofocusAmount = true,
-    DateTime? tripStartDate,
-    DateTime? tripEndDate,
-    String? newlyAddedCategory,
-    String? groupTitle,
-    required String groupId,
-    String? currency,
-    required bool autoLocationEnabled,
-    bool fullEdit = false,
-    bool isReadOnly = false,
-    ScrollController? scrollController,
-    void Function(ExpenseFormState)? onExpand,
-    bool showGroupHeader = true,
-    bool showActionsRow = true,
-    void Function(bool)? onFormValidityChanged,
-    void Function(VoidCallback?)? onSaveCallbackChanged,
-    void Function(VoidCallback?)? onVoiceCallbackChanged,
-    void Function(VoidCallback?)? onScanReceiptCallbackChanged,
-    void Function(VoidCallback?)? onScanReceiptFromGalleryCallbackChanged,
-  }) : config = ExpenseFormConfig(
-         initialExpense: initialExpense,
-         participants: participants,
-         categories: categories,
-         groupId: groupId,
-         onExpenseAdded: onExpenseAdded,
-         onCategoryAdded: onCategoryAdded,
-         onParticipantAdded: onParticipantAdded,
-         onDelete: onDelete,
-         shouldAutoClose: shouldAutoClose,
-         autofocusAmount: autofocusAmount,
-         tripStartDate: tripStartDate,
-         tripEndDate: tripEndDate,
-         newlyAddedCategory: newlyAddedCategory,
-         groupTitle: groupTitle,
-         currency: currency,
-         autoLocationEnabled: autoLocationEnabled,
-         fullEdit: fullEdit,
-         scrollController: scrollController,
-         onExpand: onExpand,
-         showGroupHeader: showGroupHeader,
-         showActionsRow: showActionsRow,
-         onFormValidityChanged: onFormValidityChanged,
-         onSaveCallbackChanged: onSaveCallbackChanged,
-         onVoiceCallbackChanged: onVoiceCallbackChanged,
-         onScanReceiptCallbackChanged: onScanReceiptCallbackChanged,
-         onScanReceiptFromGalleryCallbackChanged:
-             onScanReceiptFromGalleryCallbackChanged,
-         isReadOnly: isReadOnly,
-       );
 
   @override
   State<ExpenseFormComponent> createState() => _ExpenseFormComponentState();

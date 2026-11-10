@@ -173,7 +173,7 @@ void showBackgroundPickerSheet(BuildContext context) {
 class _BackgroundSheet extends StatelessWidget {
   final GroupFormState state;
   final GroupFormController controller;
-  final BuildContext parentContext; // per navigazione dopo chiusura sheet
+  final BuildContext parentContext; // navigates once the sheet is closed
   const _BackgroundSheet({
     required this.state,
     required this.controller,
@@ -205,10 +205,9 @@ class _BackgroundSheet extends StatelessWidget {
         title: loc.from_gallery,
         chevron: false,
         onTap: () async {
-          final sheetNav = Navigator.of(context); // navigator della sheet
-          // Chiudi SUBITO la sheet per migliorare UX
+          final sheetNav = Navigator.of(context);
+          // Close the sheet at once
           if (sheetNav.mounted) sheetNav.pop();
-          // Usa il navigator del parent
           final parentNav = Navigator.of(parentContext);
           final x = await imagePicker.pickImage(
             source: picker.ImageSource.gallery,
@@ -216,9 +215,9 @@ class _BackgroundSheet extends StatelessWidget {
           );
           if (x != null) {
             final original = File(x.path);
-            // Mostra loader mentre si prepara la pagina di crop
+            // Show a loader while the crop page gets ready
             state.setLoading(true);
-            // Attendi un frame (e un piccolo delay) per permettere al loader di apparire prima del push
+            // Wait a frame (and a little more) so the loader shows before the push
             await Future.delayed(const Duration(milliseconds: 120));
             final cropped = await parentNav.push<File?>(
               MaterialPageRoute(
@@ -232,7 +231,7 @@ class _BackgroundSheet extends StatelessWidget {
               await controller.persistPickedImage(cropped);
               return;
             }
-            // Se annullato assicura che il loader sia nascosto
+            // Cancelled: make sure the loader is gone
             state.setLoading(false);
           }
         },

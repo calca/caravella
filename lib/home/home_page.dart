@@ -49,17 +49,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
 
-    // Rimuovi il listener precedente se esiste
     _groupNotifier?.removeListener(_onGroupUpdated);
 
-    // Ottieni il nuovo notifier e aggiungi il listener
     _groupNotifier = context.read<ExpenseGroupNotifier>();
     _groupNotifier?.addListener(_onGroupUpdated);
   }
 
   @override
   void dispose() {
-    // Rimuovi il listener in modo sicuro
     _groupNotifier?.removeListener(_onGroupUpdated);
     routeObserver.unsubscribe(this);
     super.dispose();
@@ -74,16 +71,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final updatedGroupIds = _groupNotifier?.updatedGroupIds ?? [];
 
     if (updatedGroupIds.isNotEmpty && mounted) {
-      // Usa state-based updates invece di ricaricare tutto
-      setState(() {
-        // Trigger rebuild of the UI with updated state
-        // La UI si aggiornerà automaticamente grazie al Consumer pattern
-      });
+      // Rebuild from the notifier's state instead of reloading everything
+      setState(() {});
 
-      // Aggiorna solo il pinned trip se necessario
       _updatePinnedTripIfNeeded(updatedGroupIds);
 
-      // Pulisci la lista degli aggiornamenti
       _groupNotifier?.clearUpdatedGroups();
       // Consume event but don't show toast for expense_added from home page
       _groupNotifier?.consumeLastEvent();
