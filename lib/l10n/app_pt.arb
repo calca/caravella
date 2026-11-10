@@ -1021,4 +1021,9 @@
   ,"sync_settings_desc_wifi_drive": "Wi-Fi ou Google Drive"
   ,"sync_multiuser_description_wifi": "Grupos por Wi-Fi"
   ,"sync_privacy_footer_wifi": "Com o interruptor desligado, o Caravella não fica visível para outros telefones e não recebe nada. O Wi-Fi do telefone não muda."
+  ,"settle_mark_paid": "Marcar como pago"
+  ,"settle_mark_unpaid": "Marcar como pendente"
+  ,"settle_paid_on": "Pago · {date}"
+  ,"settlement_paid": "{from} pagou {amount} a {to}"
+  ,"balance_paid_total": "Pagou {amount} no total"
 }

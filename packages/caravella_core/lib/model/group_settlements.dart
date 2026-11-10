@@ -1,4 +1,5 @@
 import 'expense_group.dart';
+import 'settle_payment.dart';
 
 /// Strongly-typed settlement item using participant IDs (robust to name changes).
 class Settlement {
@@ -66,8 +67,61 @@ Map<String, int> _scaledBalances(ExpenseGroup trip) {
     total += cents;
     paid[e.paidBy.id] = (paid[e.paidBy.id] ?? 0) + cents;
   }
-  return {for (final e in paid.entries) e.key: e.value * n - total};
+  final scaled = {for (final e in paid.entries) e.key: e.value * n - total};
+  // A payment ticked in Settle up: the payer's debt shrinks by it, the
+  // receiver's credit too. It isn't spending, so the total stays. One
+  // naming someone no longer in the group is left out.
+  for (final p in trip.payments) {
+    if (!scaled.containsKey(p.fromId) || !scaled.containsKey(p.toId)) {
+      continue;
+    }
+    final cents = (p.amount * 100).round() * n;
+    scaled[p.fromId] = scaled[p.fromId]! + cents;
+    scaled[p.toId] = scaled[p.toId]! - cents;
+  }
+  return scaled;
 }
+
+/// What each participant still gets back (positive) or owes (negative),
+/// keyed by id, in whole cents: the sum of the [computeSettlements] payments
+/// still to make. It matches Settle up to the cent, and is zero for everyone
+/// once those are paid. [computeBalances] is the exact value, which can be
+/// off by a fraction of a cent when the total doesn't split evenly.
+Map<String, double> outstandingBalances(ExpenseGroup group) {
+  final cents = {for (final p in group.participants) p.id: 0};
+  for (final s in computeSettlements(group)) {
+    final c = (s.amount * 100).round();
+    cents[s.fromId] = (cents[s.fromId] ?? 0) - c;
+    cents[s.toId] = (cents[s.toId] ?? 0) + c;
+  }
+  return {for (final e in cents.entries) e.key: e.value / 100};
+}
+
+/// [group] with [settlement] ticked as paid, in full, on [date].
+ExpenseGroup markSettlementPaid(
+  ExpenseGroup group,
+  Settlement settlement, {
+  DateTime? date,
+}) => group.copyWith(
+  payments: [
+    ...group.payments,
+    SettlePayment(
+      fromId: settlement.fromId,
+      toId: settlement.toId,
+      amount: settlement.amount,
+      date: date ?? DateTime.now(),
+    ),
+  ],
+);
+
+/// [group] without the payment [paymentId]: ticked back to not paid.
+ExpenseGroup unmarkPayment(ExpenseGroup group, String paymentId) =>
+    group.copyWith(
+      payments: [
+        for (final p in group.payments)
+          if (p.id != paymentId) p,
+      ],
+    );
 
 /// Above this many people with a balance, [computeSettlements] stops
 /// searching for the minimum (2^n subsets) and settles greedily.

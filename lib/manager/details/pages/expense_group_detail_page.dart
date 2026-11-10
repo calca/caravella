@@ -176,6 +176,23 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     if (mounted && fresh != null) setState(() => _trip = fresh);
   }
 
+  /// Settle up ticked a payment as paid or back: shown at once, then saved
+  /// (and synced with the group).
+  Future<void> _savePayments(List<SettlePayment> payments) async {
+    final trip = _trip;
+    if (trip == null) return;
+    setState(() => _trip = trip.copyWith(payments: payments));
+    final saved = await ExpenseGroupStorageV2.updateGroupPayments(
+      trip.id,
+      payments,
+    );
+    if (!saved) {
+      LoggerService.warning('Payments not saved', name: 'ui.balances');
+    }
+    await _refreshGroup();
+    _groupNotifier?.notifyGroupUpdated(trip.id);
+  }
+
   Future<void> _refreshGroup() async {
     if (_trip == null) return;
     final refreshed = await ExpenseGroupStorageV2.getTripById(_trip!.id);
@@ -480,7 +497,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
         onExpenseTap: _openEditExpense,
         highlightedExpenseId: _newlyAddedExpenseId,
       ),
-      1 => SliverToBoxAdapter(child: GroupBalancesView(group: trip)),
+      1 => SliverToBoxAdapter(
+        child: GroupBalancesView(group: trip, onPaymentsChanged: _savePayments),
+      ),
       _ => SliverToBoxAdapter(
         child: GroupStatisticsView(
           group: trip,

@@ -161,4 +161,92 @@ void main() {
     expect(s.length, lessThanOrEqualTo(n - 1));
     expect(_after(g, s).values, everyElement(closeTo(0, 1.01)));
   });
+
+  group('payments ticked in Settle up', () {
+    // P0 paid 90, P1 and P2 nothing: each owes P0 30.
+    ExpenseGroup g0() => _group([
+      [90],
+      [],
+      [],
+    ]);
+
+    test('a ticked payment settles it and drops out of Settle up', () {
+      final g = g0();
+      final first = computeSettlements(g).first;
+      final paid = markSettlementPaid(g, first, date: DateTime(2026, 11, 10));
+      expect(paid.payments.single.amount, first.amount);
+      final left = computeSettlements(paid);
+      expect(left.length, 1);
+      expect(left.any((s) => s.fromId == first.fromId), isFalse);
+      expect(computeBalances(paid)[first.fromId], 0);
+    });
+
+    test('all ticked: everyone square, spending unchanged', () {
+      var g = g0();
+      for (final s in computeSettlements(g)) {
+        g = markSettlementPaid(g, s);
+      }
+      expect(computeSettlements(g), isEmpty);
+      expect(computeBalances(g).values.every((v) => v == 0), isTrue);
+      expect(g.getTotalExpenses(), 90);
+    });
+
+    test('unticking brings it back', () {
+      final g = g0();
+      final first = computeSettlements(g).first;
+      final paid = markSettlementPaid(g, first);
+      final back = unmarkPayment(paid, paid.payments.single.id);
+      expect(back.payments, isEmpty);
+      expect(computeSettlements(back).length, 2);
+    });
+
+    test('a payment naming someone not in the group is ignored', () {
+      final g = g0().copyWith(
+        payments: [
+          SettlePayment(
+            fromId: 'gone',
+            toId: 'p0',
+            amount: 30,
+            date: DateTime(2026, 11, 10),
+          ),
+        ],
+      );
+      expect(computeBalances(g), computeBalances(g0()));
+    });
+
+    test('payments survive JSON', () {
+      final g = markSettlementPaid(g0(), computeSettlements(g0()).first);
+      final back = ExpenseGroup.fromJson(g.toJson());
+      expect(back.payments, g.payments);
+    });
+  });
+
+  group('outstanding balances', () {
+    // 100 among 3: shares of 33.333…, so exact balances have fractions of a
+    // cent.
+    ExpenseGroup g() => _group([
+      [100],
+      [],
+      [],
+    ]);
+
+    test('match Settle up to the cent', () {
+      final out = outstandingBalances(g());
+      for (final s in computeSettlements(g())) {
+        expect(out[s.fromId], -s.amount);
+      }
+      expect(
+        out['p0'],
+        computeSettlements(g()).fold(0.0, (a, s) => a + s.amount),
+      );
+    });
+
+    test('are all zero once every payment is ticked', () {
+      var paid = g();
+      for (final s in computeSettlements(g())) {
+        paid = markSettlementPaid(paid, s);
+      }
+      expect(outstandingBalances(paid).values.every((v) => v == 0), isTrue);
+    });
+  });
 }

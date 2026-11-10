@@ -2749,4 +2749,25 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get sync_privacy_footer_wifi =>
       '关闭后，Caravella 对其他手机不可见，也不会接收任何内容。手机本身的 Wi-Fi 不受影响。';
+
+  @override
+  String get settle_mark_paid => '标记为已付';
+
+  @override
+  String get settle_mark_unpaid => '标记为未付';
+
+  @override
+  String settle_paid_on(String date) {
+    return '已付 · $date';
+  }
+
+  @override
+  String settlement_paid(String from, String to, String amount) {
+    return '$from 已向 $to 支付 $amount';
+  }
+
+  @override
+  String balance_paid_total(String amount) {
+    return '共支付 $amount';
+  }
 }

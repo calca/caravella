@@ -5171,6 +5171,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'With it off, Caravella isn’t visible to other phones and receives nothing. Your phone’s Wi-Fi doesn’t change.'**
   String get sync_privacy_footer_wifi;
+
+  /// Settle up: button (tooltip) ticking a suggested payment as paid, in full
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as paid'**
+  String get settle_mark_paid;
+
+  /// Settle up: button (tooltip) unticking a payment back to not paid
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as not paid'**
+  String get settle_mark_unpaid;
+
+  /// Settle up: under a payment ticked as paid
+  ///
+  /// In en, this message translates to:
+  /// **'Paid · {date}'**
+  String settle_paid_on(String date);
+
+  /// Screen reader label of a payment ticked as paid
+  ///
+  /// In en, this message translates to:
+  /// **'{from} paid {to} {amount}'**
+  String settlement_paid(String from, String to, String amount);
+
+  /// Balances: under each participant, the total of the expenses they paid
+  ///
+  /// In en, this message translates to:
+  /// **'Paid {amount} in all'**
+  String balance_paid_total(String amount);
 }
 
 class _AppLocalizationsDelegate

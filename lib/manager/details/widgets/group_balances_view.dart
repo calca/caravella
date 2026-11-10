@@ -7,18 +7,25 @@ import 'package:share_plus/share_plus.dart';
 
 /// Balances of a group: for each participant what they get back (bar to the
 /// right, primary) or owe (bar to the left, lighter primary — no alarming
-/// red), then the payments that settle the group ([computeSettlements]),
-/// each with a reminder to share, and a button sharing the whole summary.
+/// red), then Settle up: the payments still to make ([computeSettlements]),
+/// each with a reminder to share, followed by the ones already ticked as
+/// paid ([ExpenseGroup.payments]), and a button sharing the whole summary.
+///
+/// The control at the right of each payment ticks it as paid, in full
+/// ([markSettlementPaid]), or back to not paid ([unmarkPayment]); the new
+/// payments go to [onPaymentsChanged]. Without it the rows are read-only.
 ///
 /// [share] defaults to the system share sheet (overridable in tests).
 class GroupBalancesView extends StatelessWidget {
   final ExpenseGroup group;
   final Future<void> Function(String text) share;
+  final Future<void> Function(List<SettlePayment> payments)? onPaymentsChanged;
 
   const GroupBalancesView({
     super.key,
     required this.group,
     this.share = _systemShare,
+    this.onPaymentsChanged,
   });
 
   static Future<void> _systemShare(String text) =>
@@ -29,7 +36,9 @@ class GroupBalancesView extends StatelessWidget {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final gloc = gen.AppLocalizations.of(context);
-    final balances = computeBalances(group);
+    // Whole cents, the same as Settle up: no 0.01 left once all is paid.
+    final balances = outstandingBalances(group);
+    final paidTotals = group.getParticipantTotals();
     final settlements = computeSettlements(group);
     final byId = {for (final p in group.participants) p.id: p};
     final rows = group.participants.toList()
@@ -43,6 +52,9 @@ class GroupBalancesView extends StatelessWidget {
       Localizations.localeOf(context).toString(),
     );
     String money(double v) => '${number.format(v.abs())} ${group.currency}';
+    final day = DateFormat.MMMd(Localizations.localeOf(context).toString());
+    final paid = [...group.payments]..sort((a, b) => b.date.compareTo(a.date));
+    final onChanged = onPaymentsChanged;
 
     String summary() => [
       gloc.balances_share_title(group.title),
@@ -94,9 +106,12 @@ class GroupBalancesView extends StatelessWidget {
                 balance: balances[p.id] ?? 0,
                 maxAbs: maxAbs,
                 currency: group.currency,
-                semanticLabel: (balances[p.id] ?? 0) >= 0
-                    ? gloc.balance_gets_back(p.name, money(balances[p.id] ?? 0))
-                    : gloc.balance_owes(p.name, money(balances[p.id] ?? 0)),
+                paidLabel: gloc.balance_paid_total(
+                  money(paidTotals[p.id] ?? 0),
+                ),
+                semanticLabel:
+                    '${(balances[p.id] ?? 0) >= 0 ? gloc.balance_gets_back(p.name, money(balances[p.id] ?? 0)) : gloc.balance_owes(p.name, money(balances[p.id] ?? 0))}, '
+                    '${gloc.balance_paid_total(money(paidTotals[p.id] ?? 0))}',
               ),
           ]),
           Padding(
@@ -111,8 +126,8 @@ class GroupBalancesView extends StatelessWidget {
               ),
             ),
           ),
-          if (settlements.isEmpty)
-            card([
+          card([
+            if (settlements.isEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Row(
@@ -123,82 +138,69 @@ class GroupBalancesView extends StatelessWidget {
                   ],
                 ),
               ),
-            ])
-          else
-            card([
-              for (var i = 0; i < settlements.length; i++) ...[
-                if (i > 0)
-                  Divider(
-                    height: 1,
-                    color: s.outlineVariant.withValues(alpha: 0.5),
-                  ),
-                if (byId[settlements[i].fromId] case final from?)
-                  if (byId[settlements[i].toId] case final to?)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Semantics(
-                              label: gloc.settlement_pays(
-                                from.name,
-                                to.name,
-                                money(settlements[i].amount),
-                              ),
-                              excludeSemantics: true,
-                              child: Row(
-                                children: [
-                                  ParticipantAvatar(
-                                    participant: from,
-                                    size: 36,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          TextSpan(text: from.name),
-                                          const TextSpan(text: '  →  '),
-                                          TextSpan(text: to.name),
-                                        ],
-                                      ),
-                                      style: theme.textTheme.titleSmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                    ),
-                                  ),
-                                  CurrencyDisplay(
-                                    value: settlements[i].amount,
-                                    currency: group.currency,
-                                    valueFontSize: 20,
-                                    currencyFontSize: 13,
-                                    showDecimals: true,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          IconButton(
-                            icon: const Icon(Icons.ios_share_rounded),
-                            iconSize: 20,
-                            color: s.onSurfaceVariant,
-                            tooltip: '${gloc.send_reminder}: ${from.name}',
-                            onPressed: () => share(
-                              gloc.balance_reminder_message(
-                                from.name,
-                                group.title,
-                                money(settlements[i].amount),
-                                to.name,
-                              ),
-                            ),
-                          ),
-                        ],
+            for (var i = 0; i < settlements.length; i++) ...[
+              if (i > 0)
+                Divider(
+                  height: 1,
+                  color: s.outlineVariant.withValues(alpha: 0.5),
+                ),
+              if (byId[settlements[i].fromId] case final from?)
+                if (byId[settlements[i].toId] case final to?)
+                  _SettleRow(
+                    from: from,
+                    to: to,
+                    amount: settlements[i].amount,
+                    currency: group.currency,
+                    semanticLabel: gloc.settlement_pays(
+                      from.name,
+                      to.name,
+                      money(settlements[i].amount),
+                    ),
+                    shareTooltip: '${gloc.send_reminder}: ${from.name}',
+                    onShare: () => share(
+                      gloc.balance_reminder_message(
+                        from.name,
+                        group.title,
+                        money(settlements[i].amount),
+                        to.name,
                       ),
                     ),
-              ],
-            ]),
+                    toggleTooltip: gloc.settle_mark_paid,
+                    onToggle: onChanged == null
+                        ? null
+                        : () => onChanged(
+                            markSettlementPaid(group, settlements[i]).payments,
+                          ),
+                  ),
+            ],
+            for (var i = 0; i < paid.length; i++) ...[
+              if (i > 0 || settlements.isNotEmpty)
+                Divider(
+                  height: 1,
+                  color: s.outlineVariant.withValues(alpha: 0.5),
+                ),
+              if (byId[paid[i].fromId] case final from?)
+                if (byId[paid[i].toId] case final to?)
+                  _SettleRow(
+                    from: from,
+                    to: to,
+                    amount: paid[i].amount,
+                    currency: group.currency,
+                    paidLabel: gloc.settle_paid_on(day.format(paid[i].date)),
+                    semanticLabel: gloc.settlement_paid(
+                      from.name,
+                      to.name,
+                      money(paid[i].amount),
+                    ),
+                    toggleTooltip: gloc.settle_mark_unpaid,
+                    onToggle: onChanged == null
+                        ? null
+                        : () => onChanged(
+                            unmarkPayment(group, paid[i].id).payments,
+                          ),
+                  ),
+            ],
+          ]),
           if (settlements.isNotEmpty) ...[
             const SizedBox(height: 12),
             FilledButton.tonalIcon(
@@ -311,12 +313,16 @@ class _BalanceRow extends StatelessWidget {
   final String currency;
   final String semanticLabel;
 
+  /// What they paid in all ("Paid 390.90 € in all"), under the row.
+  final String paidLabel;
+
   const _BalanceRow({
     required this.participant,
     required this.balance,
     required this.maxAbs,
     required this.currency,
     required this.semanticLabel,
+    required this.paidLabel,
   });
 
   @override
@@ -389,6 +395,16 @@ class _BalanceRow extends StatelessWidget {
       ),
     );
     final avatar = ParticipantAvatar(participant: participant, size: 32);
+    // Under the name, past the avatar.
+    final paid = Padding(
+      padding: const EdgeInsets.only(left: 42, top: 2),
+      child: Text(
+        paidLabel,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.bodySmall?.copyWith(color: s.onSurfaceVariant),
+      ),
+    );
 
     // Large text: name and amount on one line, the bar under them, so
     // neither is cut ("So…", "+217." / "30 €").
@@ -412,27 +428,151 @@ class _BalanceRow extends StatelessWidget {
                       amount,
                     ],
                   ),
+                  paid,
                   const SizedBox(height: 8),
                   bar,
                 ],
               )
-            : Row(
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  avatar,
-                  const SizedBox(width: 10),
-                  SizedBox(width: 64, child: name),
-                  Expanded(child: bar),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: 92,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerRight,
-                      child: amount,
+                  Row(
+                    children: [
+                      avatar,
+                      const SizedBox(width: 10),
+                      SizedBox(width: 64, child: name),
+                      Expanded(child: bar),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        width: 92,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: amount,
+                        ),
+                      ),
+                    ],
+                  ),
+                  paid,
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+/// One payment in Settle up: who pays whom and how much; for one still to
+/// make ([paidLabel] null) a reminder to share; at the right, whether it is
+/// paid — a filled check — or still to pay — a clock — tapping to switch.
+class _SettleRow extends StatelessWidget {
+  final ExpenseParticipant from;
+  final ExpenseParticipant to;
+  final double amount;
+  final String currency;
+  final String semanticLabel;
+  final String? paidLabel;
+  final String? shareTooltip;
+  final VoidCallback? onShare;
+  final String toggleTooltip;
+  final VoidCallback? onToggle;
+
+  const _SettleRow({
+    required this.from,
+    required this.to,
+    required this.amount,
+    required this.currency,
+    required this.semanticLabel,
+    required this.toggleTooltip,
+    this.paidLabel,
+    this.shareTooltip,
+    this.onShare,
+    this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    final isPaid = paidLabel != null;
+    final done = isPaid
+        ? TextStyle(
+            color: s.onSurfaceVariant,
+            decoration: TextDecoration.lineThrough,
+            decorationColor: s.onSurfaceVariant,
+          )
+        : null;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Semantics(
+              label: semanticLabel,
+              excludeSemantics: true,
+              child: Row(
+                children: [
+                  ParticipantAvatar(participant: from, size: 36),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(text: from.name),
+                              const TextSpan(text: '  →  '),
+                              TextSpan(text: to.name),
+                            ],
+                          ),
+                          style: theme.textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w600)
+                              .merge(done),
+                        ),
+                        if (paidLabel case final label?)
+                          Text(
+                            label,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: s.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                      ],
                     ),
+                  ),
+                  CurrencyDisplay(
+                    value: amount,
+                    currency: currency,
+                    valueFontSize: 20,
+                    currencyFontSize: 13,
+                    showDecimals: true,
+                    color: isPaid ? s.onSurfaceVariant : null,
                   ),
                 ],
               ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          if (onShare case final share?)
+            IconButton(
+              icon: const Icon(Icons.ios_share_rounded),
+              iconSize: 20,
+              color: s.onSurfaceVariant,
+              tooltip: shareTooltip,
+              onPressed: share,
+            )
+          else
+            const SizedBox(width: 48),
+          if (onToggle != null)
+            IconButton(
+              tooltip: toggleTooltip,
+              isSelected: isPaid,
+              onPressed: onToggle,
+              icon: Icon(Icons.schedule_rounded, color: s.onSurfaceVariant),
+              selectedIcon: Icon(Icons.check_circle_rounded, color: s.primary),
+              iconSize: 28,
+            ),
+        ],
       ),
     );
   }
