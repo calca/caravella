@@ -5,6 +5,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../components/expense_form_component.dart';
+import '../components/expense_form_config.dart';
 import '../widgets/expense_authorship_info.dart';
 import '../widgets/expense_form_actions_widget.dart';
 
@@ -229,31 +230,33 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                         expense: widget.initialExpense!,
                       ),
                     const SizedBox(height: 16),
-                    ExpenseFormComponent.legacy(
-                      initialExpense: widget.initialExpense,
-                      participants: widget.group.getParticipantsByLastUsed(),
-                      categories: widget.group.getCategoriesByLastUsed(),
-                      tripStartDate: widget.group.startDate,
-                      tripEndDate: widget.group.endDate,
-                      shouldAutoClose: true,
-                      autofocusAmount: widget.autofocusAmount,
-                      fullEdit: true,
-                      showGroupHeader: false,
-                      showActionsRow: false,
-                      currency: widget.group.currency,
-                      autoLocationEnabled: widget.group.autoLocationEnabled,
-                      onExpenseAdded: widget.onExpenseSaved,
-                      onCategoryAdded: widget.onCategoryAdded,
-                      onParticipantAdded: widget.onParticipantAdded,
-                      onDelete: widget.onDelete,
-                      onFormValidityChanged: _updateFormValidity,
-                      onSaveCallbackChanged: _updateSaveCallback,
-                      onVoiceCallbackChanged: _updateVoiceCallback,
-                      onScanReceiptCallbackChanged: _updateScanCallback,
-                      onScanReceiptFromGalleryCallbackChanged:
-                          _updateScanFromGalleryCallback,
-                      groupId: widget.group.id,
-                      isReadOnly: isReadOnly,
+                    ExpenseFormComponent(
+                      config: ExpenseFormConfig(
+                        initialExpense: widget.initialExpense,
+                        participants: widget.group.getParticipantsByLastUsed(),
+                        categories: widget.group.getCategoriesByLastUsed(),
+                        tripStartDate: widget.group.startDate,
+                        tripEndDate: widget.group.endDate,
+                        shouldAutoClose: true,
+                        autofocusAmount: widget.autofocusAmount,
+                        fullEdit: true,
+                        showGroupHeader: false,
+                        showActionsRow: false,
+                        currency: widget.group.currency,
+                        autoLocationEnabled: widget.group.autoLocationEnabled,
+                        onExpenseAdded: widget.onExpenseSaved,
+                        onCategoryAdded: widget.onCategoryAdded,
+                        onParticipantAdded: widget.onParticipantAdded,
+                        onDelete: widget.onDelete,
+                        onFormValidityChanged: _updateFormValidity,
+                        onSaveCallbackChanged: _updateSaveCallback,
+                        onVoiceCallbackChanged: _updateVoiceCallback,
+                        onScanReceiptCallbackChanged: _updateScanCallback,
+                        onScanReceiptFromGalleryCallbackChanged:
+                            _updateScanFromGalleryCallback,
+                        groupId: widget.group.id,
+                        isReadOnly: isReadOnly,
+                      ),
                     ),
                   ],
                 ),

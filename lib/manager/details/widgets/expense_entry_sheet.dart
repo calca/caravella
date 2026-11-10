@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../../expense/components/expense_form_component.dart';
+import '../../expense/components/expense_form_config.dart';
 import '../../expense/state/expense_form_state.dart';
 import '../../expense/widgets/expense_form_actions_widget.dart';
 
@@ -99,46 +100,48 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
               child: SingleChildScrollView(
                 controller: _scrollController,
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                child: ExpenseFormComponent.legacy(
-                  initialExpense: widget.initialExpense,
-                  participants: widget.group.getParticipantsByLastUsed(),
-                  categories: widget.group.getCategoriesByLastUsed(),
-                  tripStartDate: widget.group.startDate,
-                  tripEndDate: widget.group.endDate,
-                  shouldAutoClose: false,
-                  fullEdit: widget.fullEdit,
-                  showGroupHeader: widget.showGroupHeader,
-                  showActionsRow: false,
-                  groupTitle: widget.group.title,
-                  groupId: widget.group.id,
-                  currency: widget.group.currency,
-                  autoLocationEnabled: widget.group.autoLocationEnabled,
-                  onExpenseAdded: widget.onExpenseSaved,
-                  onCategoryAdded: widget.onCategoryAdded,
-                  onParticipantAdded: widget.onParticipantAdded,
-                  onDelete: widget.onDelete,
-                  scrollController: _scrollController,
-                  onExpand: widget.onExpand,
-                  isReadOnly: readOnly,
-                  onFormValidityChanged: (valid) {
-                    widget.onFormValidityChanged?.call(valid);
-                    if (valid != _isFormValid) {
-                      _later(() => _isFormValid = valid);
-                    }
-                  },
-                  onSaveCallbackChanged: (callback) {
-                    widget.onSaveCallbackChanged?.call(callback);
-                    _later(() {
-                      _saveCallback = callback;
-                      _isFormValid = callback != null;
-                    });
-                  },
-                  onVoiceCallbackChanged: (callback) =>
-                      _later(() => _voiceCallback = callback),
-                  onScanReceiptCallbackChanged: (callback) =>
-                      _later(() => _scanCallback = callback),
-                  onScanReceiptFromGalleryCallbackChanged: (callback) =>
-                      _later(() => _scanFromGalleryCallback = callback),
+                child: ExpenseFormComponent(
+                  config: ExpenseFormConfig(
+                    initialExpense: widget.initialExpense,
+                    participants: widget.group.getParticipantsByLastUsed(),
+                    categories: widget.group.getCategoriesByLastUsed(),
+                    tripStartDate: widget.group.startDate,
+                    tripEndDate: widget.group.endDate,
+                    shouldAutoClose: false,
+                    fullEdit: widget.fullEdit,
+                    showGroupHeader: widget.showGroupHeader,
+                    showActionsRow: false,
+                    groupTitle: widget.group.title,
+                    groupId: widget.group.id,
+                    currency: widget.group.currency,
+                    autoLocationEnabled: widget.group.autoLocationEnabled,
+                    onExpenseAdded: widget.onExpenseSaved,
+                    onCategoryAdded: widget.onCategoryAdded,
+                    onParticipantAdded: widget.onParticipantAdded,
+                    onDelete: widget.onDelete,
+                    scrollController: _scrollController,
+                    onExpand: widget.onExpand,
+                    isReadOnly: readOnly,
+                    onFormValidityChanged: (valid) {
+                      widget.onFormValidityChanged?.call(valid);
+                      if (valid != _isFormValid) {
+                        _later(() => _isFormValid = valid);
+                      }
+                    },
+                    onSaveCallbackChanged: (callback) {
+                      widget.onSaveCallbackChanged?.call(callback);
+                      _later(() {
+                        _saveCallback = callback;
+                        _isFormValid = callback != null;
+                      });
+                    },
+                    onVoiceCallbackChanged: (callback) =>
+                        _later(() => _voiceCallback = callback),
+                    onScanReceiptCallbackChanged: (callback) =>
+                        _later(() => _scanCallback = callback),
+                    onScanReceiptFromGalleryCallbackChanged: (callback) =>
+                        _later(() => _scanFromGalleryCallback = callback),
+                  ),
                 ),
               ),
             ),
