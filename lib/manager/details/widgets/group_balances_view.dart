@@ -38,6 +38,7 @@ class GroupBalancesView extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     // Whole cents, the same as Settle up: no 0.01 left once all is paid.
     final balances = outstandingBalances(group);
+    final paidTotals = group.getParticipantTotals();
     final settlements = computeSettlements(group);
     final byId = {for (final p in group.participants) p.id: p};
     final rows = group.participants.toList()
@@ -105,9 +106,12 @@ class GroupBalancesView extends StatelessWidget {
                 balance: balances[p.id] ?? 0,
                 maxAbs: maxAbs,
                 currency: group.currency,
-                semanticLabel: (balances[p.id] ?? 0) >= 0
-                    ? gloc.balance_gets_back(p.name, money(balances[p.id] ?? 0))
-                    : gloc.balance_owes(p.name, money(balances[p.id] ?? 0)),
+                paidLabel: gloc.balance_paid_total(
+                  money(paidTotals[p.id] ?? 0),
+                ),
+                semanticLabel:
+                    '${(balances[p.id] ?? 0) >= 0 ? gloc.balance_gets_back(p.name, money(balances[p.id] ?? 0)) : gloc.balance_owes(p.name, money(balances[p.id] ?? 0))}, '
+                    '${gloc.balance_paid_total(money(paidTotals[p.id] ?? 0))}',
               ),
           ]),
           Padding(
@@ -309,12 +313,16 @@ class _BalanceRow extends StatelessWidget {
   final String currency;
   final String semanticLabel;
 
+  /// What they paid in all ("Paid 390.90 € in all"), under the row.
+  final String paidLabel;
+
   const _BalanceRow({
     required this.participant,
     required this.balance,
     required this.maxAbs,
     required this.currency,
     required this.semanticLabel,
+    required this.paidLabel,
   });
 
   @override
@@ -387,6 +395,16 @@ class _BalanceRow extends StatelessWidget {
       ),
     );
     final avatar = ParticipantAvatar(participant: participant, size: 32);
+    // Under the name, past the avatar.
+    final paid = Padding(
+      padding: const EdgeInsets.only(left: 42, top: 2),
+      child: Text(
+        paidLabel,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.bodySmall?.copyWith(color: s.onSurfaceVariant),
+      ),
+    );
 
     // Large text: name and amount on one line, the bar under them, so
     // neither is cut ("So…", "+217." / "30 €").
@@ -410,25 +428,32 @@ class _BalanceRow extends StatelessWidget {
                       amount,
                     ],
                   ),
+                  paid,
                   const SizedBox(height: 8),
                   bar,
                 ],
               )
-            : Row(
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  avatar,
-                  const SizedBox(width: 10),
-                  SizedBox(width: 64, child: name),
-                  Expanded(child: bar),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: 92,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerRight,
-                      child: amount,
-                    ),
+                  Row(
+                    children: [
+                      avatar,
+                      const SizedBox(width: 10),
+                      SizedBox(width: 64, child: name),
+                      Expanded(child: bar),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        width: 92,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: amount,
+                        ),
+                      ),
+                    ],
                   ),
+                  paid,
                 ],
               ),
       ),

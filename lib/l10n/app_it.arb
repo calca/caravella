@@ -1027,4 +1027,5 @@
   ,"settle_mark_unpaid": "Segna come da pagare"
   ,"settle_paid_on": "Pagato · {date}"
   ,"settlement_paid": "{from} ha pagato {amount} a {to}"
+  ,"balance_paid_total": "Ha messo {amount}"
 }

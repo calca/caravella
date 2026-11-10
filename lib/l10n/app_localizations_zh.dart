@@ -2765,4 +2765,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String settlement_paid(String from, String to, String amount) {
     return '$from 已向 $to 支付 $amount';
   }
+
+  @override
+  String balance_paid_total(String amount) {
+    return '共支付 $amount';
+  }
 }

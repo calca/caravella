@@ -2860,4 +2860,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String settlement_paid(String from, String to, String amount) {
     return '$from pagou $amount a $to';
   }
+
+  @override
+  String balance_paid_total(String amount) {
+    return 'Pagou $amount no total';
+  }
 }

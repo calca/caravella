@@ -141,8 +141,15 @@ void main() {
         GroupBalancesView(group: _group([_expense('Hotel', 100, day1, _anna)])),
       ),
     );
-    expect(find.bySemanticsLabel('Anna gets back 50.00 €'), findsOneWidget);
-    expect(find.bySemanticsLabel('Luca owes 50.00 €'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Anna gets back 50.00 €, Paid 100.00 € in all'),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel('Luca owes 50.00 €, Paid 0.00 € in all'),
+      findsOneWidget,
+    );
+    expect(find.text('Paid 100.00 € in all'), findsOneWidget);
     expect(find.bySemanticsLabel('Luca pays Anna 50.00 €'), findsOneWidget);
   });
 
@@ -215,7 +222,7 @@ void main() {
     expect(find.text('All settled up'), findsOneWidget);
     expect(find.text('Paid · Nov 10'), findsOneWidget);
     expect(find.bySemanticsLabel('Luca paid Anna 50.00 €'), findsOneWidget);
-    expect(find.bySemanticsLabel('Luca owes 50.00 €'), findsNothing);
+    expect(find.bySemanticsLabel(RegExp('^Luca owes 50.00 €')), findsNothing);
     // No reminder for a payment already made.
     expect(find.byTooltip('Send reminder: Luca'), findsNothing);
     await tester.tap(find.byTooltip('Mark as not paid'));

@@ -1049,4 +1049,5 @@
   ,"settle_mark_unpaid": "Marcar como pendiente"
   ,"settle_paid_on": "Pagado · {date}"
   ,"settlement_paid": "{from} pagó {amount} a {to}"
+  ,"balance_paid_total": "Ha puesto {amount}"
 }

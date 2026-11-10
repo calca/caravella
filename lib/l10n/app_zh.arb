@@ -1347,4 +1347,5 @@
   ,"settle_mark_unpaid": "标记为未付"
   ,"settle_paid_on": "已付 · {date}"
   ,"settlement_paid": "{from} 已向 {to} 支付 {amount}"
+  ,"balance_paid_total": "共支付 {amount}"
 }

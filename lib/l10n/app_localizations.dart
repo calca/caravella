@@ -5195,6 +5195,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{from} paid {to} {amount}'**
   String settlement_paid(String from, String to, String amount);
+
+  /// Balances: under each participant, the total of the expenses they paid
+  ///
+  /// In en, this message translates to:
+  /// **'Paid {amount} in all'**
+  String balance_paid_total(String amount);
 }
 
 class _AppLocalizationsDelegate

@@ -1254,4 +1254,6 @@
   ,"@settle_paid_on": {"description": "Settle up: under a payment ticked as paid", "placeholders": {"date": {"type": "String"}}}
   ,"settlement_paid": "{from} paid {to} {amount}"
   ,"@settlement_paid": {"description": "Screen reader label of a payment ticked as paid", "placeholders": {"from": {"type": "String"}, "to": {"type": "String"}, "amount": {"type": "String"}}}
+  ,"balance_paid_total": "Paid {amount} in all"
+  ,"@balance_paid_total": {"description": "Balances: under each participant, the total of the expenses they paid", "placeholders": {"amount": {"type": "String"}}}
 }
