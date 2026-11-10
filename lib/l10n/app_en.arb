@@ -131,6 +131,8 @@
   "import_confirm_message": "Restore from the file “{file}”? Your current groups will be replaced and this can’t be undone.",
   "import_success": "Data restored",
   "import_error": "Restore failed: check the file",
+  "import_error_newer": "This backup comes from a newer Caravella: update the app to restore it",
+  "@import_error_newer": {"description": "Restore error: the backup was made by a newer app version"},
   "settings_flag_secure_error": "Couldn’t change screen security",
   "settings_debug_logs_title": "Debug logs",
   "settings_debug_logs_desc": "App logs and errors",

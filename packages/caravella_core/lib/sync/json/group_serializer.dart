@@ -132,6 +132,15 @@ class GroupSerializer {
         );
         return null;
       }
+      // A newer app may add fields this one would drop (see
+      // DeltaBuilder.schemaVersion): skip its payload instead.
+      if ((decoded['schema'] as int) > _schemaVersion) {
+        LoggerService.warning(
+          'Skipping payload from a newer app (schema ${decoded['schema']})',
+          name: _tag,
+        );
+        return null;
+      }
       if (!decoded.containsKey('device_id') ||
           decoded['device_id'] is! String) {
         LoggerService.warning(
