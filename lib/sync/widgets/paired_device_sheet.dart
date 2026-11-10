@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
 import '../bluetooth_sync_factory.dart';
+import 'paired_device_sheet_parts.dart';
 import 'paired_devices_list.dart';
 
 /// One paired device: how its sync is doing, the groups it shares,
@@ -94,14 +94,10 @@ class PairedDeviceSheet extends StatefulWidget {
   State<PairedDeviceSheet> createState() => _PairedDeviceSheetState();
 }
 
-/// Where "Update now" is: trying Wi-Fi, asking to turn Bluetooth on, or in
-/// the Bluetooth step (looking, exchanging, done, failed).
-enum _Phase { idle, wifi, needsBluetooth, searching, exchanging, done, failed }
-
 class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
   static const _tag = 'ui.sync';
 
-  _Phase _phase = _Phase.idle;
+  DeviceUpdatePhase _phase = DeviceUpdatePhase.idle;
   bool? _wifi;
   bool _wifiWasOff = false;
   String? _problem;
@@ -145,11 +141,6 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
 
   String get _name => widget.device.deviceName;
   bool get _bluetoothAvailable => widget.createBluetooth != null;
-  bool get _inBluetoothStep =>
-      _phase == _Phase.searching ||
-      _phase == _Phase.exchanging ||
-      _phase == _Phase.done ||
-      _phase == _Phase.failed;
 
   // ---------------------------------------------------------------------------
   // Update now: Wi-Fi first, then Bluetooth
@@ -160,7 +151,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     _wifiWasOff = _wifi != true;
     if (_wifi == true) {
       setState(() {
-        _phase = _Phase.wifi;
+        _phase = DeviceUpdatePhase.wifi;
         _problem = null;
       });
       final problem = await _tryWifi(loc);
@@ -168,7 +159,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
       if (problem == null) return _finish();
       if (!_bluetoothAvailable) {
         setState(() {
-          _phase = _Phase.idle;
+          _phase = DeviceUpdatePhase.idle;
           _problem = problem;
         });
         return;
@@ -239,7 +230,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     final enabled = await widget.isBluetoothEnabled?.call() ?? true;
     if (!mounted) return;
     if (!enabled) {
-      setState(() => _phase = _Phase.needsBluetooth);
+      setState(() => _phase = DeviceUpdatePhase.needsBluetooth);
       return;
     }
     await _beginBluetooth();
@@ -259,7 +250,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     final bt = widget.createBluetooth?.call();
     if (bt == null) {
       setState(() {
-        _phase = _Phase.idle;
+        _phase = DeviceUpdatePhase.idle;
         _problem = gen.AppLocalizations.of(context).sync_bt_error_detail;
       });
       return;
@@ -269,7 +260,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     _bt = bt;
     _btEvents = bt.events.listen(_onBluetoothEvent);
     setState(() {
-      _phase = _Phase.searching;
+      _phase = DeviceUpdatePhase.searching;
       _problem = null;
       _btProblem = null;
       _peerEndpoint = null;
@@ -289,7 +280,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
       if (!mounted || _bt != bt) return;
       final loc = gen.AppLocalizations.of(context);
       setState(() {
-        _phase = _Phase.failed;
+        _phase = DeviceUpdatePhase.failed;
         _btProblem = e is BluetoothPermissionDeniedException
             ? loc.sync_bt_permission_denied
             : loc.sync_bt_error_detail;
@@ -298,7 +289,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
   }
 
   void _onBluetoothEvent(BluetoothPeerEvent event) {
-    if (!mounted || _phase == _Phase.done) return;
+    if (!mounted || _phase == DeviceUpdatePhase.done) return;
     switch (event) {
       case PeerFound(:final endpointId, :final updateDeviceId):
         // Only the paired device being updated counts; invitations and
@@ -311,17 +302,17 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
           return;
         }
         _peerEndpoint = endpointId;
-        if (_phase == _Phase.searching) {
-          setState(() => _phase = _Phase.exchanging);
+        if (_phase == DeviceUpdatePhase.searching) {
+          setState(() => _phase = DeviceUpdatePhase.exchanging);
         }
         _requestExchange();
       case PeerLost(:final endpointId):
         if (endpointId == _peerEndpoint &&
             !_requested &&
-            _phase == _Phase.exchanging) {
+            _phase == DeviceUpdatePhase.exchanging) {
           setState(() {
             _peerEndpoint = null;
-            _phase = _Phase.searching;
+            _phase = DeviceUpdatePhase.searching;
           });
         }
       case BtSyncCompleted(:final result):
@@ -342,7 +333,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     if (bt == null ||
         endpoint == null ||
         _requested ||
-        _phase != _Phase.exchanging) {
+        _phase != DeviceUpdatePhase.exchanging) {
       return;
     }
     final ownId = widget.ownDeviceId ?? DeviceIdentity.instance.deviceId;
@@ -353,7 +344,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     bt
         .syncWithPeer(endpoint)
         .then<void>((result) {
-          if (!mounted || _bt != bt || _phase == _Phase.done) return;
+          if (!mounted || _bt != bt || _phase == DeviceUpdatePhase.done) return;
           if (result.errors == 0) {
             _completeBluetooth(result);
           } else {
@@ -367,7 +358,9 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
             error: e,
             stackTrace: st,
           );
-          if (mounted && _bt == bt && _phase != _Phase.done) _requestFailed();
+          if (mounted && _bt == bt && _phase != DeviceUpdatePhase.done) {
+            _requestFailed();
+          }
         });
   }
 
@@ -378,24 +371,24 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     _requested = false;
     _graceTimer?.cancel();
     _graceTimer = Timer(PairedDeviceSheet.collisionGrace, () {
-      if (!mounted || _phase == _Phase.done) return;
+      if (!mounted || _phase == DeviceUpdatePhase.done) return;
       if (_attempts < PairedDeviceSheet.maxBluetoothAttempts &&
           _peerEndpoint != null) {
         _requestExchange();
         return;
       }
       setState(() {
-        _phase = _Phase.failed;
+        _phase = DeviceUpdatePhase.failed;
         _btProblem = gen.AppLocalizations.of(context).sync_bt_error_detail;
       });
     });
   }
 
   void _completeBluetooth(SyncResult result) {
-    if (!mounted || _phase == _Phase.done) return;
+    if (!mounted || _phase == DeviceUpdatePhase.done) return;
     _graceTimer?.cancel();
     setState(() {
-      _phase = _Phase.done;
+      _phase = DeviceUpdatePhase.done;
       _btResult = result;
     });
     _closeTimer = Timer(PairedDeviceSheet.doneDelay, _finish);
@@ -405,7 +398,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     _graceTimer?.cancel();
     _stopBluetooth();
     setState(() {
-      _phase = _Phase.idle;
+      _phase = DeviceUpdatePhase.idle;
       _peerEndpoint = null;
       _requested = false;
     });
@@ -483,38 +476,8 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    final locale = Localizations.localeOf(context).toString();
+    final s = Theme.of(context).colorScheme;
     final info = widget.info;
-    final last = info.lastSyncAt;
-
-    Widget fact(String label, String value) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: s.onSurfaceVariant,
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Flexible(
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
 
     final header = Row(
       children: [
@@ -524,9 +487,9 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
         Expanded(
           child: Text(
             deviceSyncLine(context, loc, widget.device, info),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: s.onSurfaceVariant,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: s.onSurfaceVariant),
           ),
         ),
       ],
@@ -541,38 +504,26 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
         children: [
           header,
           const SizedBox(height: AppSpacing.md),
-          if (_inBluetoothStep)
-            ..._bluetoothStep(context, loc)
+          if (_phase.inBluetoothStep)
+            BluetoothUpdateSteps(
+              phase: _phase,
+              result: _btResult,
+              problem: _btProblem,
+              wifiWasOff: _wifiWasOff,
+              instruction: widget.groupTitle == null
+                  ? loc.sync_update_bt_instruction_settings(_name)
+                  : loc.sync_update_bt_instruction_group(
+                      _name,
+                      widget.groupTitle!,
+                    ),
+              onRetry: _beginBluetooth,
+              onCancel: _cancelBluetooth,
+            )
           else ...[
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.sm,
-              ),
-              decoration: BoxDecoration(
-                color: s.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  fact(
-                    loc.sync_device_last_update,
-                    last == null
-                        ? loc.sync_device_never_short
-                        : DateFormat.MMMd(
-                            locale,
-                          ).add_Hm().format(last.toLocal()),
-                  ),
-                  fact(
-                    loc.sync_device_paired_on,
-                    DateFormat.yMMMd(
-                      locale,
-                    ).format(widget.device.pairedAt.toLocal()),
-                  ),
-                  if (widget.groupTitles.isNotEmpty)
-                    fact(loc.sync_device_groups, widget.groupTitles.join(', ')),
-                ],
-              ),
+            DeviceFactsCard(
+              lastSyncAt: info.lastSyncAt,
+              pairedAt: widget.device.pairedAt,
+              groupTitles: widget.groupTitles,
             ),
             const SizedBox(height: AppSpacing.lg),
             ..._actions(context, loc),
@@ -587,7 +538,7 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final wifi = _wifi;
-    final trying = _phase == _Phase.wifi;
+    final trying = _phase == DeviceUpdatePhase.wifi;
     final canUpdate = wifi != null && (wifi || _bluetoothAvailable) && !trying;
 
     final hint =
@@ -625,9 +576,12 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
           ),
         ),
       ),
-      if (_phase == _Phase.needsBluetooth) ...[
+      if (_phase == DeviceUpdatePhase.needsBluetooth) ...[
         const SizedBox(height: AppSpacing.md),
-        _bluetoothOffPanel(context, loc),
+        BluetoothOffPanel(
+          onTurnOn: widget.onTurnOnBluetooth != null ? _turnOnBluetooth : null,
+          busy: _turningOnBluetooth,
+        ),
       ],
       const SizedBox(height: AppSpacing.lg),
       OutlinedButton.icon(
@@ -647,172 +601,6 @@ class _PairedDeviceSheetState extends State<PairedDeviceSheet> {
               : loc.sync_device_forget,
         ),
       ),
-    ];
-  }
-
-  Widget _bluetoothOffPanel(BuildContext context, gen.AppLocalizations loc) {
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.md,
-        AppSpacing.sm,
-        AppSpacing.sm,
-        AppSpacing.sm,
-      ),
-      decoration: BoxDecoration(
-        color: s.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.bluetooth_disabled, color: s.onSurfaceVariant),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  loc.sync_bt_off_title,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  loc.sync_bt_off_desc,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: s.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (widget.onTurnOnBluetooth != null) ...[
-            const SizedBox(width: AppSpacing.xs),
-            OutlinedButton(
-              onPressed: _turningOnBluetooth ? null : _turnOnBluetooth,
-              child: Text(loc.sync_join_turn_on),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  /// The two steps (Wi-Fi skipped, Bluetooth in progress), what to do on the
-  /// other phone, and Cancel / Retry.
-  List<Widget> _bluetoothStep(BuildContext context, gen.AppLocalizations loc) {
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    final failed = _phase == _Phase.failed;
-    final done = _phase == _Phase.done;
-    final result = _btResult;
-
-    final btDetail = switch (_phase) {
-      _Phase.exchanging => loc.sync_update_bt_found,
-      _Phase.done =>
-        result == null
-            ? loc.sync_bt_completed
-            : loc.sync_update_bt_done(result.applied, result.sent),
-      _Phase.failed => _btProblem ?? loc.sync_bt_error_detail,
-      _ => loc.sync_update_bt_close,
-    };
-
-    Widget step(Widget leading, String title, String detail, {Color? color}) =>
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox.square(dimension: 24, child: Center(child: leading)),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text(
-                      detail,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: color ?? s.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-
-    final instruction = widget.groupTitle == null
-        ? loc.sync_update_bt_instruction_settings(_name)
-        : loc.sync_update_bt_instruction_group(_name, widget.groupTitle!);
-
-    return [
-      Semantics(
-        liveRegion: true,
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
-          ),
-          decoration: BoxDecoration(
-            color: s.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            children: [
-              step(
-                Icon(Icons.wifi_off, size: 20, color: s.onSurfaceVariant),
-                loc.sync_update_step_wifi,
-                _wifiWasOff
-                    ? loc.sync_update_wifi_skipped_off
-                    : loc.sync_update_wifi_skipped_away,
-              ),
-              step(
-                done
-                    ? Icon(Icons.check_circle, size: 22, color: s.primary)
-                    : failed
-                    ? Icon(Icons.error_outline, size: 22, color: s.error)
-                    : const SizedBox.square(
-                        dimension: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2.5),
-                      ),
-                loc.sync_update_step_bluetooth,
-                btDetail,
-                color: failed ? s.error : null,
-              ),
-            ],
-          ),
-        ),
-      ),
-      if (!done && !failed) ...[
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          instruction,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: s.onSurfaceVariant,
-          ),
-        ),
-      ],
-      if (!done) ...[
-        const SizedBox(height: AppSpacing.lg),
-        if (failed) ...[
-          FilledButton.tonalIcon(
-            onPressed: _beginBluetooth,
-            icon: const Icon(Icons.refresh),
-            label: Text(loc.sync_bt_retry),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-        ],
-        OutlinedButton(onPressed: _cancelBluetooth, child: Text(loc.cancel)),
-      ],
     ];
   }
 }

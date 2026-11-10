@@ -15,7 +15,7 @@ Lets users scan a receipt (camera or gallery) to auto-fill an expense's amount a
 
 ## UI integration
 
-The scan action is a document-scanner icon button in `ExpenseFormActionsWidget` (part of [Expense Entry](APP_EXPENSE_ENTRY.md)), shown only in **add mode** (not when editing an existing expense). Tapping it opens a bottom sheet (camera vs. gallery), shows a "Reading receipt…" line with a spinner above the form's fields (`_ReceiptScanLine` in `expense_form_component.dart`) while processing, then:
+The scan action is a document-scanner icon button in `ExpenseFormActionsWidget` (part of [Expense Entry](APP_EXPENSE_ENTRY.md)), shown only in **add mode** (not when editing an existing expense). Tapping it opens a bottom sheet (camera vs. gallery), shows a "Reading receipt…" line with a spinner above the form's fields (`ReceiptScanLine` in `widgets/receipt_scan_line.dart`) while processing, then:
 
 - **Success** — prefills the amount and name/description fields and the line goes (the filled fields are the feedback).
 - **No text found** — the line says so (× closes it), no fields changed.
