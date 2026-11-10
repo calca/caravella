@@ -3,6 +3,7 @@ import 'expense_details.dart';
 import 'expense_participant.dart';
 import 'expense_category.dart';
 import 'expense_group_type.dart';
+import 'settle_payment.dart';
 
 class ExpenseGroup {
   final String id; // UDID per il gruppo di spese
@@ -26,6 +27,10 @@ class ExpenseGroup {
   final bool
   syncEnabled; // Whether this group is shared/synced with other devices
 
+  /// Payments ticked as paid in Settle up. Not expenses: they only move
+  /// balances (see `computeBalances`).
+  final List<SettlePayment> payments;
+
   ExpenseGroup({
     required this.title,
     required this.expenses,
@@ -44,6 +49,7 @@ class ExpenseGroup {
     this.groupType, // Opzionale, tipologia del gruppo
     this.autoLocationEnabled = false, // Default a false
     this.syncEnabled = false, // Default a false
+    this.payments = const [],
   }) : timestamp = timestamp ?? DateTime.now(),
        id = id ?? const Uuid().v4();
 
@@ -89,6 +95,11 @@ class ExpenseGroup {
       autoLocationEnabled:
           json['autoLocationEnabled'] ?? false, // Legge il valore auto-location
       syncEnabled: json['syncEnabled'] ?? false, // Legge il valore sync
+      payments:
+          (json['payments'] as List<dynamic>?)
+              ?.map((p) => SettlePayment.fromJson(p as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
   }
 
@@ -111,6 +122,7 @@ class ExpenseGroup {
     'groupType': groupType?.toJson(), // Salva la tipologia
     'autoLocationEnabled': autoLocationEnabled, // Salva il valore auto-location
     'syncEnabled': syncEnabled, // Salva il valore sync
+    'payments': payments.map((p) => p.toJson()).toList(),
   };
 
   ExpenseGroup copyWith({
@@ -132,6 +144,7 @@ class ExpenseGroup {
     Object? groupType = _notProvided,
     bool? autoLocationEnabled,
     bool? syncEnabled,
+    List<SettlePayment>? payments,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -154,6 +167,7 @@ class ExpenseGroup {
           : groupType as ExpenseGroupType?,
       autoLocationEnabled: autoLocationEnabled ?? this.autoLocationEnabled,
       syncEnabled: syncEnabled ?? this.syncEnabled,
+      payments: payments ?? this.payments,
     );
   }
 

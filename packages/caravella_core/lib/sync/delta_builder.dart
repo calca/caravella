@@ -13,7 +13,7 @@ import 'package:caravella_core/sync/utils/sync_clock.dart';
 /// A delta is a JSON-serializable [Map] with the following shape:
 /// ```json
 /// {
-///   "schema": 1,
+///   "schema": 2,
 ///   "device_id": "uuid",
 ///   "device_name": "Device Name",
 ///   "timestamp": 1234567890,
@@ -30,7 +30,11 @@ class DeltaBuilder {
   /// would drop them, and sending them back would erase them on the newer
   /// device. So [parseDelta] refuses a delta with a higher version. Deltas
   /// from 2.4.0 have no `schema` field and count as version 1.
-  static const int schemaVersion = 1;
+  ///
+  /// 2: groups carry `payments` (Settle up). An older peer drops them, so
+  /// `ConflictResolver` keeps this device's when a version 1 delta replaces
+  /// a group.
+  static const int schemaVersion = 2;
 
   final SyncDao _syncDao;
   final SqliteExpenseGroupRepository _repository;

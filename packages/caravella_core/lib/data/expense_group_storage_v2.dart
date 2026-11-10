@@ -2,6 +2,7 @@
 import '../services/logging/logger_service.dart';
 import '../services/storage/preferences_service.dart';
 import '../model/expense_group.dart';
+import '../model/settle_payment.dart';
 import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
@@ -142,6 +143,27 @@ class ExpenseGroupStorageV2 {
   static Future<List<ExpenseGroup>> getAllGroups() async {
     final result = await _repository.getAllGroups();
     return result.unwrapOr([]);
+  }
+
+  /// Saves [payments] (Settle up) on the stored group [groupId], keeping the
+  /// rest of it as stored. Returns false when it couldn't.
+  static Future<bool> updateGroupPayments(
+    String groupId,
+    List<SettlePayment> payments,
+  ) async {
+    final current = await getTripById(groupId);
+    if (current == null) return false;
+    final result = await _repository.saveGroup(
+      current.copyWith(payments: payments),
+    );
+    if (result.isFailure) {
+      LoggerService.warning(
+        'Failed to save the payments of group $groupId: ${result.error}',
+        name: 'storage',
+      );
+      return false;
+    }
+    return true;
   }
 
   /// Updates only the metadata of a group preserving existing expenses

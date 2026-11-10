@@ -68,7 +68,10 @@ void main() {
       expect(restored!.id, equals(original.id));
       expect(restored.title, equals(original.title));
       expect(restored.currency, equals(original.currency));
-      expect(restored.participants.length, equals(original.participants.length));
+      expect(
+        restored.participants.length,
+        equals(original.participants.length),
+      );
       expect(restored.categories.length, equals(original.categories.length));
       expect(restored.expenses.length, equals(original.expenses.length));
     });
@@ -88,7 +91,7 @@ void main() {
 
       final parsed = GroupSerializer.deserializePayload(payload);
       expect(parsed, isNotNull);
-      expect(parsed!['schema'], equals(1));
+      expect(parsed!['schema'], equals(2));
       expect(parsed['device_id'], equals('dev-1'));
       expect(parsed['device_name'], equals('Test Phone'));
       expect((parsed['groups'] as List).length, equals(1));

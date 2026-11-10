@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Settle up: tick a payment as paid. At the right of each suggested payment a clock turns into a check with one tap, for the full amount (nothing to type); the balances update and the payment stays in the list, struck through with "Paid · <date>", with no reminder button. Tap the check to tick it back. Under each name in Balances, what that person paid in all. The balances above now match Settle up to the cent (they used to show the exact share, so "+3.56 €" next to a 3.55 € payment, and 0.01 € left once everything was paid). Payments are not expenses: they never show in the expense list, totals or statistics. They're stored in the group (`ExpenseGroup.payments`, `SettlePayment`; SQLite schema v8 adds `groups.payments`) and synced with it (#604)
+
 ### Changed
+- Sync format 2: deltas carry `"schema": 2` and groups their `payments`. A 2.4.1 device refuses them ("update Caravella on both devices"). When a group arrives from 2.4.0, which sends no version and no payments, this device keeps its own payments for the people still in the group, so an old phone can't erase them (#676)
+- Backups are written as `{"format": 2, "groups": [...]}` with the payments; 2.4 backups (a bare list) are still restored, and 2.4.1 refuses format 2 with "This backup comes from a newer Caravella"
 - Upgraded Flutter from 3.47.6 to 3.47.9 (stable patch releases), pinned in all three Android CI workflows
 - Major dependency upgrades: `file_picker` 12→13, `flutter_local_notifications` 22→23, `zentoast` 0.2→1.0; all other dependencies refreshed to their latest compatible versions (root + every `packages/*` lockfile, plus `pubspec.fdroid.lock`). No source changes were needed. `home_widget` stays on 0.9.x: 0.10.0 doesn't compile on Android (its plugin references a `HomeWidgetLaunchIntent` class missing from the published package)
 

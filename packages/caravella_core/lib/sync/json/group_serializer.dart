@@ -7,7 +7,7 @@ import 'package:caravella_core/sync/utils/sync_clock.dart';
 /// Schema version for the sync payload format.
 ///
 /// Increment this when the payload structure changes in a breaking way.
-const int _schemaVersion = 1;
+const int _schemaVersion = 2;
 
 /// Serializes and deserializes [ExpenseGroup] objects with sync metadata for
 /// the JSON-based sync channel.

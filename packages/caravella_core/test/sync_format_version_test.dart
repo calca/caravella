@@ -16,8 +16,8 @@ void main() {
   };
 
   group('device-to-device delta', () {
-    test('this app writes version 1', () {
-      expect(DeltaBuilder.schemaVersion, 1);
+    test('this app writes version 2', () {
+      expect(DeltaBuilder.schemaVersion, 2);
     });
 
     test('a delta without a version (2.4.0) is read as version 1', () {
@@ -28,11 +28,15 @@ void main() {
       expect(DeltaBuilder.parseDelta(delta(schema: 1)), isNotNull);
     });
 
+    test('a version 2 delta is read', () {
+      expect(DeltaBuilder.parseDelta(delta(schema: 2)), isNotNull);
+    });
+
     test('a delta from a newer app is refused', () {
       expect(
-        () => DeltaBuilder.parseDelta(delta(schema: 2)),
+        () => DeltaBuilder.parseDelta(delta(schema: 3)),
         throwsA(
-          isA<NewerFormatException>().having((e) => e.version, 'version', 2),
+          isA<NewerFormatException>().having((e) => e.version, 'version', 3),
         ),
       );
     });
@@ -60,7 +64,7 @@ void main() {
     });
 
     test('a payload from a newer app is skipped', () {
-      expect(GroupSerializer.deserializePayload(payload(2)), isNull);
+      expect(GroupSerializer.deserializePayload(payload(3)), isNull);
     });
   });
 }

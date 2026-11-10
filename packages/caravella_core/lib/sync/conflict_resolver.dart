@@ -39,6 +39,8 @@ class ConflictResolver {
     final parsed = DeltaBuilder.parseDelta(delta);
 
     final peerId = parsed['device_id'] as String;
+    // Deltas older than schema 2 don't know `payments`: keep ours.
+    final keepLocalPayments = (parsed['schema'] as int? ?? 1) < 2;
     final peerName = parsed['device_name'] as String? ?? 'Unknown';
     final remoteGroups = (parsed['groups'] as List)
         .cast<Map<String, dynamic>>();
@@ -112,7 +114,7 @@ class ConflictResolver {
           // Check if we already have this group locally
           final localRows = await txn.query(
             SqliteExpenseGroupRepository.tableGroups,
-            columns: ['id', 'updated_at'],
+            columns: ['id', 'updated_at', 'payments'],
             where: 'id = ?',
             whereArgs: [groupId],
           );
@@ -132,7 +134,21 @@ class ConflictResolver {
           }
 
           // Parse the full ExpenseGroup from the remote JSON
-          final group = ExpenseGroup.fromJson(remoteJson);
+          var group = ExpenseGroup.fromJson(remoteJson);
+
+          // A peer on 2.4 doesn't know payments and sends the group without
+          // them: keep the ones this device has, for people still in it.
+          if (keepLocalPayments && localRows.isNotEmpty) {
+            final ids = {for (final p in group.participants) p.id};
+            group = group.copyWith(
+              payments: [
+                for (final p in SqliteGroupMapper.paymentsFromColumn(
+                  localRows.first['payments'],
+                ))
+                  if (ids.contains(p.fromId) && ids.contains(p.toId)) p,
+              ],
+            );
+          }
 
           // Save via the repository's transaction-aware pattern with sync
           // metadata set in the same insert (avoids temporal inconsistency).
@@ -313,6 +329,7 @@ class ConflictResolver {
       'group_type': group.groupType?.toJson(),
       'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
       'sync_enabled': group.syncEnabled ? 1 : 0,
+      'payments': SqliteGroupMapper.paymentsToColumn(group.payments),
       'device_id': deviceId,
       'updated_at': updatedAt,
       'deleted': 0,

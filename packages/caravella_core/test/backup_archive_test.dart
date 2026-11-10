@@ -44,13 +44,13 @@ void main() {
 
     test('a backup from a newer app is refused, not read with losses', () {
       final json = bytesOf({
-        'format': 2,
+        'format': 3,
         'groups': [aGroup('Trip').toJson()],
       });
       expect(
         () => BackupArchive.decode(json, isZip: false),
         throwsA(
-          isA<NewerFormatException>().having((e) => e.version, 'version', 2),
+          isA<NewerFormatException>().having((e) => e.version, 'version', 3),
         ),
       );
     });
@@ -68,13 +68,32 @@ void main() {
       );
     });
 
-    test('this app still writes format 1 as a plain list', () {
-      final bytes = BackupArchive.encode([aGroup('Trip')]);
-      final archive = ZipDecoder().decodeBytes(bytes);
-      final json = jsonDecode(
-        utf8.decode(archive.files.single.content as List<int>),
+    test('this app writes format 2, with the payments', () {
+      final g = aGroup('Trip');
+      final paid = g.copyWith(
+        payments: [
+          SettlePayment(
+            fromId: g.participants.first.id,
+            toId: g.participants.first.id,
+            amount: 10,
+            date: DateTime(2026, 11, 10),
+          ),
+        ],
       );
-      expect(json, isA<List<dynamic>>());
+      final bytes = BackupArchive.encode([paid]);
+      final archive = ZipDecoder().decodeBytes(bytes);
+      final json =
+          jsonDecode(utf8.decode(archive.files.single.content as List<int>))
+              as Map<String, dynamic>;
+      expect(json['format'], 2);
+      expect(BackupArchive.decode(bytes).single.payments.single.amount, 10);
+    });
+
+    test('a format 1 list (2.4) is still read', () {
+      final json = bytesOf([aGroup('Trip').toJson()..remove('payments')]);
+      final g = BackupArchive.decode(json, isZip: false).single;
+      expect(g.title, 'Trip');
+      expect(g.payments, isEmpty);
     });
   });
 

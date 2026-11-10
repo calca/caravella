@@ -105,7 +105,7 @@ Sync is unavailable entirely if the app is running on the legacy JSON storage ba
 
 ```json
 {
-  "schema": 1,
+  "schema": 2,
   "device_id": "...",
   "device_name": "...",
   "timestamp": 1234567890,
@@ -118,7 +118,7 @@ This is a **full-snapshot-per-changed-group** delta, not a field-level diff — 
 
 ### Format version
 
-Because the whole group is replaced, an older app that doesn't know a field drops it when it stores the group, and sends the group back without it on its next change, which erases it on the newer device too. So `schema` (`DeltaBuilder.schemaVersion`, 1 since 2.4.1) is raised whenever the group JSON gains data an older app can't keep, and `DeltaBuilder.parseDelta` throws `NewerFormatException` for a delta with a higher one. `SyncManager` reports it like any unreadable delta (`SyncProblemReason.unreadable`: "Couldn't be read: update Caravella on both devices") and nothing is applied. A delta without `schema` comes from 2.4.0 and counts as 1. The Google Drive relay envelope has its own `schema` (`GroupSerializer`), and `deserializePayload` skips a payload whose version is higher. 2.4.0 itself checks neither, so a newer app still has to keep what a 2.4.0 peer would erase — see #676.
+Because the whole group is replaced, an older app that doesn't know a field drops it when it stores the group, and sends the group back without it on its next change, which erases it on the newer device too. So `schema` (`DeltaBuilder.schemaVersion`: 1 since 2.4.1, 2 since 2.5, when groups gained `payments`) is raised whenever the group JSON gains data an older app can't keep, and `DeltaBuilder.parseDelta` throws `NewerFormatException` for a delta with a higher one. `SyncManager` reports it like any unreadable delta (`SyncProblemReason.unreadable`: "Couldn't be read: update Caravella on both devices") and nothing is applied. A delta without `schema` comes from 2.4.0 and counts as 1. The Google Drive relay envelope has its own `schema` (`GroupSerializer`), and `deserializePayload` skips a payload whose version is higher. 2.4.0 itself checks neither, so a newer app still has to keep what a 2.4.0 peer would erase: when `ConflictResolver.applyDelta` takes a group from a delta below schema 2, it keeps this device's `payments` (the `groups.payments` column), for the people still in the group, instead of the empty list the old peer sent. A schema 2 delta replaces them like the rest of the group, so unticking a payment on one device unticks it everywhere.
 
 Inclusion in a delta requires all three: changed since the last recorded sync *with that specific peer*, `sync_enabled = 1`, and explicitly granted to that peer (`SyncDao.getGroupsDeltaSince`/`getDeletedGroupsSince`, `packages/caravella_core/lib/sync/sync_dao.dart:37-80`).
 

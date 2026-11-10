@@ -2848,4 +2848,25 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get sync_privacy_footer_wifi =>
       'Con l’interruttore spento, Caravella non si fa vedere dagli altri telefoni e non riceve niente. Il Wi-Fi del telefono non cambia.';
+
+  @override
+  String get settle_mark_paid => 'Segna come pagato';
+
+  @override
+  String get settle_mark_unpaid => 'Segna come da pagare';
+
+  @override
+  String settle_paid_on(String date) {
+    return 'Pagato · $date';
+  }
+
+  @override
+  String settlement_paid(String from, String to, String amount) {
+    return '$from ha pagato $amount a $to';
+  }
+
+  @override
+  String balance_paid_total(String amount) {
+    return 'Ha messo $amount';
+  }
 }

@@ -8,6 +8,7 @@ import '../model/expense_category.dart';
 import '../model/expense_location.dart';
 import '../model/expense_author.dart';
 import '../model/expense_group_type.dart';
+import '../model/settle_payment.dart';
 import '../services/logging/logger_service.dart';
 import '../sync/device_identity.dart';
 import '../sync/utils/sync_clock.dart';
@@ -123,7 +124,30 @@ class SqliteGroupMapper {
           : null,
       autoLocationEnabled: (map['auto_location_enabled'] as int) == 1,
       syncEnabled: (map['sync_enabled'] as int?) == 1,
+      payments: paymentsFromColumn(map['payments']),
     );
+  }
+
+  /// The `payments` column: a JSON list, or null when there are none.
+  static String? paymentsToColumn(List<SettlePayment> payments) =>
+      payments.isEmpty
+      ? null
+      : jsonEncode(payments.map((p) => p.toJson()).toList());
+
+  /// Reads the `payments` column back; an unreadable one counts as none.
+  static List<SettlePayment> paymentsFromColumn(Object? value) {
+    if (value is! String || value.isEmpty) return const [];
+    try {
+      return (jsonDecode(value) as List<dynamic>)
+          .map((p) => SettlePayment.fromJson(p as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      LoggerService.warning(
+        'Unreadable payments column, ignored: $e',
+        name: 'storage.sqlite',
+      );
+      return const [];
+    }
   }
 
   /// Convert ExpenseGroup to database map
@@ -154,6 +178,7 @@ class SqliteGroupMapper {
       'group_type': group.groupType?.toJson(),
       'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
       'sync_enabled': group.syncEnabled ? 1 : 0,
+      'payments': paymentsToColumn(group.payments),
       'device_id': deviceId,
       'updated_at': nowMs,
       'deleted': 0,
