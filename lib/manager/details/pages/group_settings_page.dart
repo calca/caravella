@@ -168,7 +168,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     );
 
     if (result == true && context.mounted) {
-      // Ricarica il gruppo aggiornato
       final updatedGroup = await ExpenseGroupStorageV2.getTripById(
         _currentTrip.id,
       );
@@ -192,7 +191,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     );
 
     if (result == true && context.mounted) {
-      // Ricarica il gruppo aggiornato
       final updatedGroup = await ExpenseGroupStorageV2.getTripById(
         _currentTrip.id,
       );
@@ -216,7 +214,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     );
 
     if (result == true && context.mounted) {
-      // Ricarica il gruppo aggiornato
       final updatedGroup = await ExpenseGroupStorageV2.getTripById(
         _currentTrip.id,
       );
@@ -238,7 +235,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     );
 
     if (result == true && context.mounted) {
-      // Ricarica il gruppo aggiornato
       final updatedGroup = await ExpenseGroupStorageV2.getTripById(
         _currentTrip.id,
       );
@@ -259,7 +255,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     );
 
     if (result == true && context.mounted) {
-      // Ricarica il gruppo aggiornato
       final updatedGroup = await ExpenseGroupStorageV2.getTripById(
         _currentTrip.id,
       );
@@ -294,7 +289,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
 
     if (!mounted) return;
 
-    // Ricarica il gruppo aggiornato
     final updatedGroup = await ExpenseGroupStorageV2.getTripById(
       _currentTrip.id,
     );

@@ -41,7 +41,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   @override
   void initState() {
     super.initState();
-    // Usa i gruppi iniziali se forniti, altrimenti carica
+    // Start from the given groups, else load them
     _activeGroups = widget.initialGroups ?? [];
     if (widget.initialGroups == null) {
       _loadActiveGroups();
@@ -67,7 +67,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   @override
   void didUpdateWidget(HomeCardsSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Se il pinnedTrip è cambiato, ricarica i gruppi
+    // The pinned group changed: reload
     if (oldWidget.pinnedTrip?.id != widget.pinnedTrip?.id) {
       _loadActiveGroups();
     }
@@ -179,13 +179,11 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       final groups = await ExpenseGroupStorageV2.getActiveGroups();
       if (mounted) {
         setState(() {
-          // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
+          // The pinned group always comes first
           if (widget.pinnedTrip != null) {
-            // Rimuovi il gruppo pinnato dalla lista se è già presente
             final filteredGroups = groups.where(
               (g) => g.id != widget.pinnedTrip!.id,
             );
-            // Metti il gruppo pinnato come primo elemento
             _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
           } else {
             _activeGroups = groups;
@@ -208,13 +206,11 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       final groups = await ExpenseGroupStorageV2.getActiveGroups();
       if (mounted) {
         setState(() {
-          // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
+          // The pinned group always comes first
           if (widget.pinnedTrip != null) {
-            // Rimuovi il gruppo pinnato dalla lista se è già presente
             final filteredGroups = groups.where(
               (g) => g.id != widget.pinnedTrip!.id,
             );
-            // Metti il gruppo pinnato come primo elemento
             _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
           } else {
             _activeGroups = groups;

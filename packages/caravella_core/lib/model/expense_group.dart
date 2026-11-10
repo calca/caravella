@@ -6,24 +6,22 @@ import 'expense_group_type.dart';
 import 'settle_payment.dart';
 
 class ExpenseGroup {
-  final String id; // UDID per il gruppo di spese
+  final String id;
   final String title;
   final List<ExpenseDetails> expenses;
   final List<ExpenseParticipant> participants;
   final DateTime? startDate;
   final DateTime? endDate;
-  final String currency; // Nuovo campo
+  final String currency;
   final List<ExpenseCategory> categories;
-  final DateTime timestamp; // Nuovo campo timestamp
-  final bool pinned; // Nuovo campo per pinnare il gruppo
-  final bool archived; // Nuovo campo per archiviare il gruppo
-  final String? file; // Nuovo campo opzionale per il path del file
-  final int? color; // Nuovo campo opzionale per il colore (Color.value)
-  final bool notificationEnabled; // Campo per abilitare la notifica persistente
-  final ExpenseGroupType?
-  groupType; // Tipologia del gruppo (viaggio, personale, famiglia, altro)
-  final bool
-  autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
+  final DateTime timestamp;
+  final bool pinned;
+  final bool archived;
+  final String? file;
+  final int? color; // Color.value
+  final bool notificationEnabled; // Shows the persistent notification
+  final ExpenseGroupType? groupType; // Trip, personal, family or other
+  final bool autoLocationEnabled;
   final bool
   syncEnabled; // Whether this group is shared/synced with other devices
 
@@ -37,18 +35,18 @@ class ExpenseGroup {
     required this.participants,
     this.startDate,
     this.endDate,
-    required this.currency, // Nuovo campo obbligatorio
-    this.categories = const [], // Default empty list
-    DateTime? timestamp, // opzionale, default a now
-    String? id, // opzionale, generato se mancante
-    this.pinned = false, // Default a false
-    this.archived = false, // Default a false
-    this.file, // Opzionale, path del file
-    this.color, // Opzionale, colore del gruppo
-    this.notificationEnabled = false, // Default a false
-    this.groupType, // Opzionale, tipologia del gruppo
-    this.autoLocationEnabled = false, // Default a false
-    this.syncEnabled = false, // Default a false
+    required this.currency,
+    this.categories = const [],
+    DateTime? timestamp,
+    String? id,
+    this.pinned = false,
+    this.archived = false,
+    this.file,
+    this.color,
+    this.notificationEnabled = false,
+    this.groupType,
+    this.autoLocationEnabled = false,
+    this.syncEnabled = false,
     this.payments = const [],
   }) : timestamp = timestamp ?? DateTime.now(),
        id = id ?? const Uuid().v4();
@@ -73,7 +71,7 @@ class ExpenseGroup {
           ? DateTime.parse(json['startDate'])
           : null,
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
-      currency: json['currency'] ?? '€', // Default a euro se mancante
+      currency: json['currency'] ?? '€', // Euro when missing
       categories:
           (json['categories'] as List<dynamic>?)
               ?.map((c) => ExpenseCategory.fromJson(c as Map<String, dynamic>))
@@ -82,19 +80,14 @@ class ExpenseGroup {
       timestamp: json['timestamp'] != null
           ? DateTime.parse(json['timestamp'])
           : DateTime.now(),
-      pinned: json['pinned'] ?? false, // Legge il valore pinnato
-      archived: json['archived'] ?? false, // Legge il valore archiviato
-      file: json['file'], // Legge il valore del file
-      color: json['color'], // Legge il valore del colore
-      notificationEnabled:
-          json['notificationEnabled'] ??
-          false, // Legge il valore della notifica
-      groupType: ExpenseGroupType.fromJson(
-        json['groupType'],
-      ), // Legge la tipologia
-      autoLocationEnabled:
-          json['autoLocationEnabled'] ?? false, // Legge il valore auto-location
-      syncEnabled: json['syncEnabled'] ?? false, // Legge il valore sync
+      pinned: json['pinned'] ?? false,
+      archived: json['archived'] ?? false,
+      file: json['file'],
+      color: json['color'],
+      notificationEnabled: json['notificationEnabled'] ?? false,
+      groupType: ExpenseGroupType.fromJson(json['groupType']),
+      autoLocationEnabled: json['autoLocationEnabled'] ?? false,
+      syncEnabled: json['syncEnabled'] ?? false,
       payments:
           (json['payments'] as List<dynamic>?)
               ?.map((p) => SettlePayment.fromJson(p as Map<String, dynamic>))
@@ -113,15 +106,14 @@ class ExpenseGroup {
     'currency': currency,
     'categories': categories.map((c) => c.toJson()).toList(),
     'timestamp': timestamp.toIso8601String(),
-    'pinned': pinned, // Salva il valore pinnato
-    'archived': archived, // Salva il valore archiviato
-    'file': file, // Salva il valore del file
-    'color': color, // Salva il valore del colore
-    'notificationEnabled':
-        notificationEnabled, // Salva il valore della notifica
-    'groupType': groupType?.toJson(), // Salva la tipologia
-    'autoLocationEnabled': autoLocationEnabled, // Salva il valore auto-location
-    'syncEnabled': syncEnabled, // Salva il valore sync
+    'pinned': pinned,
+    'archived': archived,
+    'file': file,
+    'color': color,
+    'notificationEnabled': notificationEnabled,
+    'groupType': groupType?.toJson(),
+    'autoLocationEnabled': autoLocationEnabled,
+    'syncEnabled': syncEnabled,
     'payments': payments.map((p) => p.toJson()).toList(),
   };
 
@@ -174,7 +166,7 @@ class ExpenseGroup {
   // Sentinel value to distinguish between null and not provided
   static const Object _notProvided = Object();
 
-  /// Calcola il totale delle spese del gruppo
+  /// Total of the group's expenses.
   double getTotalExpenses() {
     return expenses.fold<double>(
       0,
@@ -182,8 +174,8 @@ class ExpenseGroup {
     );
   }
 
-  /// Restituisce il totale per ogni categoria del gruppo.
-  /// La mappa ha come chiave la categoria e come valore il totale delle spese.
+  /// Total per category of the group,
+  /// keyed by category.
   Map<ExpenseCategory, double> getCategoryTotals() {
     final totals = <ExpenseCategory, double>{};
     for (final category in categories) {
@@ -194,7 +186,7 @@ class ExpenseGroup {
     return totals;
   }
 
-  /// Restituisce il totale pagato per ogni partecipante (keyed by participant id).
+  /// Total paid by each participant (keyed by participant id).
   Map<String, double> getParticipantTotals() {
     final totals = <String, double>{};
     for (final p in participants) {
@@ -337,12 +329,12 @@ class ExpenseGroup {
       id: const Uuid().v4(),
       pinned: false,
       archived: false,
-      file: null, // Path del file inizialmente vuoto
-      color: null, // Colore inizialmente vuoto
-      notificationEnabled: false, // Notifica inizialmente disabilitata
-      groupType: null, // Tipologia inizialmente vuota
-      autoLocationEnabled: false, // Auto-location disabilitata di default
-      syncEnabled: false, // Sync disabilitato di default
+      file: null,
+      color: null,
+      notificationEnabled: false,
+      groupType: null,
+      autoLocationEnabled: false,
+      syncEnabled: false,
     );
   }
 }

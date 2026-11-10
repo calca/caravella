@@ -1,6 +1,6 @@
 import '../../../l10n/app_localizations.dart';
 
-/// Lista di valute (solo simbolo + codice). I nomi sono localizzati via ARB.
+/// Currencies (symbol and code only); their names are localized in the ARB files.
 final List<Map<String, String>> kCurrencies = [
   {'symbol': 'د.إ', 'code': 'AED'},
   {'symbol': '؋', 'code': 'AFN'},

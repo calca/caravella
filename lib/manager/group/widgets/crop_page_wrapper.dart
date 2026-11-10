@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import '../pages/image_crop_page.dart';
 
-/// Wrapper per mostrare loader finché la pagina di crop non ha renderizzato il primo frame.
+/// Shows a loader until the crop page has drawn its first frame.
 class CropPageWrapper extends StatefulWidget {
   final File image;
   final VoidCallback onFirstFrame;
@@ -22,7 +22,6 @@ class _CropPageWrapperState extends State<CropPageWrapper> {
   @override
   void initState() {
     super.initState();
-    // Programma callback dopo primo frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         widget.onFirstFrame();

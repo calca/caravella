@@ -1,12 +1,12 @@
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
-/// Utility per generare il contenuto OFX di un [ExpenseGroup].
+/// Builds the OFX export of an [ExpenseGroup].
 class OfxExporter {
   const OfxExporter._();
 
-  /// Genera il contenuto OFX delle spese del gruppo.
-  /// Ritorna stringa vuota se il gruppo è nullo o senza spese.
+  /// The OFX content of the group's expenses;
+  /// empty when there's no group or no expense.
   static String generate(ExpenseGroup? group) {
     if (group == null || group.expenses.isEmpty) return '';
 

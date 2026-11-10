@@ -1,16 +1,13 @@
 import 'package:uuid/uuid.dart';
 
 class ExpenseParticipant {
-  final String id; // UDID per il partecipante
+  final String id;
   final String name;
   final DateTime createdAt;
 
-  ExpenseParticipant({
-    required this.name,
-    String? id, // opzionale, generato se mancante
-    DateTime? createdAt, // opzionale, default a now
-  }) : id = id ?? const Uuid().v4(),
-       createdAt = createdAt ?? DateTime.now();
+  ExpenseParticipant({required this.name, String? id, DateTime? createdAt})
+    : id = id ?? const Uuid().v4(),
+      createdAt = createdAt ?? DateTime.now();
 
   factory ExpenseParticipant.fromJson(Map<String, dynamic> json) {
     return ExpenseParticipant(
