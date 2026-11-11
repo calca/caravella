@@ -44,7 +44,8 @@ class ConflictResolver {
     final parsed = DeltaBuilder.parseDelta(delta);
 
     final peerId = parsed['device_id'] as String;
-    // Deltas older than schema 2 don't know `payments`: keep ours.
+    // Deltas older than schema 2 don't know `payments` or `budget`: keep
+    // ours.
     final keepLocalPayments = (parsed['schema'] as int? ?? 1) < 2;
     final peerName = parsed['device_name'] as String? ?? 'Unknown';
     final remoteGroups = (parsed['groups'] as List)
@@ -119,7 +120,13 @@ class ConflictResolver {
           // Check if we already have this group locally
           final localRows = await txn.query(
             SqliteExpenseGroupRepository.tableGroups,
-            columns: ['id', 'updated_at', 'payments'],
+            columns: [
+              'id',
+              'updated_at',
+              'payments',
+              'budget_amount',
+              'budget_period',
+            ],
             where: 'id = ?',
             whereArgs: [groupId],
           );
@@ -141,8 +148,9 @@ class ConflictResolver {
           // Parse the full ExpenseGroup from the remote JSON
           var group = ExpenseGroup.fromJson(remoteJson);
 
-          // A peer on 2.4 doesn't know payments and sends the group without
-          // them: keep the ones this device has, for people still in it.
+          // A peer on 2.4 doesn't know payments or budgets and sends the
+          // group without them: keep the ones this device has (payments for
+          // people still in it).
           if (keepLocalPayments && localRows.isNotEmpty) {
             final ids = {for (final p in group.participants) p.id};
             group = group.copyWith(
@@ -152,6 +160,7 @@ class ConflictResolver {
                 ))
                   if (ids.contains(p.fromId) && ids.contains(p.toId)) p,
               ],
+              budget: SqliteGroupMapper.budgetFromColumns(localRows.first),
             );
           }
 
@@ -335,6 +344,7 @@ class ConflictResolver {
       'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
       'sync_enabled': group.syncEnabled ? 1 : 0,
       'payments': SqliteGroupMapper.paymentsToColumn(group.payments),
+      ...SqliteGroupMapper.budgetToColumns(group.budget),
       'device_id': deviceId,
       'updated_at': updatedAt,
       'deleted': 0,

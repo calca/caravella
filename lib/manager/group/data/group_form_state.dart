@@ -20,6 +20,7 @@ class GroupFormState extends ChangeNotifier {
   int? customTemplateIconCodePoint;
   String? customTemplateId;
   bool autoLocationEnabled = false;
+  GroupBudget? budget;
   bool loadingImage = false;
   bool isSaving = false;
   bool notificationEnabled = false;
@@ -163,6 +164,12 @@ class GroupFormState extends ChangeNotifier {
   /// Store or clear the original group snapshot used for diffing/restore.
   void setOriginalGroup(ExpenseGroup? g) {
     originalGroup = g;
+    notifyListeners();
+  }
+
+  void setBudget(GroupBudget? value) {
+    if (budget == value) return;
+    budget = value;
     notifyListeners();
   }
 

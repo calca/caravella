@@ -31,9 +31,9 @@ class DeltaBuilder {
   /// device. So [parseDelta] refuses a delta with a higher version. Deltas
   /// from 2.4.0 have no `schema` field and count as version 1.
   ///
-  /// 2: groups carry `payments` (Settle up). An older peer drops them, so
-  /// `ConflictResolver` keeps this device's when a version 1 delta replaces
-  /// a group.
+  /// 2: groups carry `payments` (Settle up) and `budget`. An older peer
+  /// drops them, so `ConflictResolver` keeps this device's when a version 1
+  /// delta replaces a group.
   static const int schemaVersion = 2;
 
   final SyncDao _syncDao;

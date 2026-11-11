@@ -59,6 +59,8 @@ paired_device_groups(device_id TEXT NOT NULL, group_id TEXT NOT NULL, granted_at
 
 **Schema v8** adds `groups.payments`: the payments ticked as paid in Settle up (`ExpenseGroup.payments`) as a JSON list of `SettlePayment.toJson`, null when there are none (`SqliteGroupMapper.paymentsToColumn`/`paymentsFromColumn`; an unreadable value reads as none). A group has a handful at most and always loads and saves them with itself, so they don't get a table. `ConflictResolver._saveGroupInTransaction` writes the column too.
 
+**Schema v9** adds `groups.budget_amount` (REAL) and `groups.budget_period` (TEXT: `total`, `monthly`, `weekly`, `daily`), the group budget (`ExpenseGroup.budget`, `GroupBudget`); both null for no budget (`SqliteGroupMapper.budgetToColumns`/`budgetFromColumns`; an unknown period or an amount that isn't positive reads as none). `ConflictResolver._saveGroupInTransaction` writes them too.
+
 Indexes: `idx_groups_timestamp(timestamp DESC)`, `idx_groups_pinned(pinned, archived)`, `idx_participants_group`, `idx_categories_group`, `idx_expenses_group`, `idx_expenses_date(date DESC)`, `idx_groups_updated_at`, `idx_groups_deleted`.
 
 The v2 upgrade previously created three aggregation views (`v_group_totals`, `v_category_totals`, `v_participant_totals`), but no Dart code ever queried them — the stat methods (`getTotalExpenses`, `getTodaySpending`, `getTotalExpenseCount`, `getRecentExpenses`) use raw SQL directly instead. They were removed from `_createDatabase`/`_upgradeDatabase` as dead schema; installs that already ran the v2 migration keep the (harmless, unused) views until they reinstall — `_databaseVersion` was not bumped since removing an unused view isn't a schema change existing installs need to react to.

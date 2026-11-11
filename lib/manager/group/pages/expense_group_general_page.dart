@@ -17,6 +17,7 @@ import '../group_edit_mode.dart';
 import '../group_type/group_type_selector_sheet.dart';
 import '../widgets/background_picker.dart';
 import '../widgets/currency_selector_sheet.dart';
+import '../../budget/budget_settings_sheet.dart';
 
 class ExpenseGroupGeneralPage extends StatelessWidget {
   final ExpenseGroup? trip;
@@ -267,6 +268,31 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
               },
             ),
             SettingsTile(
+              icon: Icons.savings_outlined,
+              title: gloc.budget,
+              subtitle: switch (state.budget) {
+                final b? =>
+                  '${CurrencyDisplay.formatLocalizedText(b.amount, currency['symbol'] ?? currency['code'] ?? '', Localizations.localeOf(context))} · ${budgetPeriodName(gloc, b.period)}',
+                null => gloc.budget_none,
+              },
+              onTap: () async {
+                final result = await showBudgetSettingsSheet(
+                  context,
+                  budget: state.budget,
+                  currency: currency['symbol'] ?? currency['code'] ?? '',
+                  groupType: state.groupType,
+                );
+                if (!context.mounted) return;
+                switch (result) {
+                  case BudgetSaved(:final budget):
+                    state.setBudget(budget);
+                  case BudgetRemoved():
+                    state.setBudget(null);
+                  case null:
+                }
+              },
+            ),
+            SettingsTile(
               icon: Icons.image_outlined,
               title: gloc.background,
               subtitle: background,
@@ -297,6 +323,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
             state.groupType,
             state.imagePath,
             state.color,
+            state.budget,
           );
         },
         builder: (context, _, _) {

@@ -40,6 +40,7 @@ class GroupFormController {
     state.customTemplateIconCodePoint = null;
     state.customTemplateId = null;
     state.autoLocationEnabled = group.autoLocationEnabled;
+    state.budget = group.budget;
     // Keep a snapshot in the state to avoid extra repository fetches
     state.setOriginalGroup(group.copyWith());
     state.refresh();
@@ -115,6 +116,7 @@ class GroupFormController {
     if (g.groupType != state.groupType) return true;
     if (g.autoLocationEnabled != state.autoLocationEnabled) return true;
     if (g.notificationEnabled != state.notificationEnabled) return true;
+    if (g.budget != state.budget) return true;
     return false;
   }
 
@@ -171,6 +173,7 @@ class GroupFormController {
         notificationEnabled: state.notificationEnabled,
         groupType: state.groupType,
         autoLocationEnabled: state.autoLocationEnabled,
+        budget: state.budget,
         timestamp: state.originalGroup?.timestamp ?? now,
       );
 

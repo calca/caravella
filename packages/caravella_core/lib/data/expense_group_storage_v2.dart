@@ -3,6 +3,7 @@ import '../services/logging/logger_service.dart';
 import '../services/storage/preferences_service.dart';
 import '../model/expense_group.dart';
 import '../model/settle_payment.dart';
+import '../model/group_budget.dart';
 import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
@@ -158,6 +159,27 @@ class ExpenseGroupStorageV2 {
     if (result.isFailure) {
       LoggerService.warning(
         'Failed to save the payments of group $groupId: ${result.error}',
+        name: 'storage',
+      );
+      return false;
+    }
+    return true;
+  }
+
+  /// Saves [budget] (null: no budget) on the stored group [groupId],
+  /// keeping the rest of it as stored. Returns false when it couldn't.
+  static Future<bool> updateGroupBudget(
+    String groupId,
+    GroupBudget? budget,
+  ) async {
+    final current = await getTripById(groupId);
+    if (current == null) return false;
+    final result = await _repository.saveGroup(
+      current.copyWith(budget: budget),
+    );
+    if (result.isFailure) {
+      LoggerService.warning(
+        'Failed to save the budget of group $groupId: ${result.error}',
         name: 'storage',
       );
       return false;

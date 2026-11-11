@@ -8,6 +8,7 @@ import '../model/expense_category.dart';
 import '../model/expense_location.dart';
 import '../model/expense_author.dart';
 import '../model/expense_group_type.dart';
+import '../model/group_budget.dart';
 import '../model/settle_payment.dart';
 import '../services/logging/logger_service.dart';
 import '../sync/device_identity.dart';
@@ -125,6 +126,7 @@ class SqliteGroupMapper {
       autoLocationEnabled: (map['auto_location_enabled'] as int) == 1,
       syncEnabled: (map['sync_enabled'] as int?) == 1,
       payments: paymentsFromColumn(map['payments']),
+      budget: budgetFromColumns(map),
     );
   }
 
@@ -149,6 +151,19 @@ class SqliteGroupMapper {
       return const [];
     }
   }
+
+  /// The `budget_amount` and `budget_period` columns of [budget].
+  static Map<String, Object?> budgetToColumns(GroupBudget? budget) => {
+    'budget_amount': budget?.amount,
+    'budget_period': budget?.period.toJson(),
+  };
+
+  /// Reads the budget columns of a group row back; null when unset.
+  static GroupBudget? budgetFromColumns(Map<String, Object?> row) =>
+      GroupBudget.fromJson({
+        'amount': row['budget_amount'],
+        'period': row['budget_period'],
+      });
 
   /// Convert ExpenseGroup to database map
   Map<String, dynamic> groupToMap(ExpenseGroup group) {
@@ -179,6 +194,7 @@ class SqliteGroupMapper {
       'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
       'sync_enabled': group.syncEnabled ? 1 : 0,
       'payments': paymentsToColumn(group.payments),
+      ...budgetToColumns(group.budget),
       'device_id': deviceId,
       'updated_at': nowMs,
       'deleted': 0,

@@ -18,6 +18,7 @@ export 'widgets/avatars.dart';
 export 'widgets/base_card.dart';
 export 'widgets/card_outline.dart';
 export 'widgets/bottom_action_bar.dart';
+export 'widgets/budget_meter.dart';
 export 'widgets/caravella_app_bar.dart';
 export 'widgets/caravella_bottom_sheet_scaffold.dart';
 export 'widgets/caravella_tab_bar.dart';
