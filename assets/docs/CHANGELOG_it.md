@@ -1,3 +1,8 @@
+## 2.4.2 (11.11.2026)
+
+- **Correzioni**: Un gruppo cancellato resta cancellato: non ricompare più dopo la sincronizzazione con un altro telefono
+- **Correzioni**: Le modifiche fatte su un telefono arrivano all'altro, qualunque dei due avvii la sincronizzazione
+
 ## 2.4.1 (10.11.2026)
 
 - **Miglioramenti**: La sincronizzazione con un telefono che ha un Caravella più recente aspetta che tu aggiorni, invece di perdere quello che la nuova versione ha aggiunto

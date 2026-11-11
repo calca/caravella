@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.2] - 2026-11-11
+
 ### Fixed
 - A deleted group no longer comes back after syncing with another device. Deleting a group used to remove it from the database, so nothing told the other devices, and the next Wi-Fi or Bluetooth sync brought it back; it now leaves a tombstone (`deleted = 1`, new `updated_at`) that sync sends in `deleted_groups`
 - Changes made on a device reach the other one even when the other one started the sync. The device answering a Wi-Fi or Bluetooth sync built its reply after applying the incoming changes, which recorded the sync, so its reply left out everything it had changed before; it now builds the reply first
@@ -671,7 +673,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.4.1...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.4.2...HEAD
+[2.4.2]: https://github.com/calca/caravella/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/calca/caravella/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/calca/caravella/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/calca/caravella/compare/v2.2.1...v2.3.0

@@ -1,3 +1,8 @@
+## 2.4.2 (11.11.2026)
+
+- **Correções**: Um grupo excluído continua excluído: não volta mais depois de sincronizar com outro telefone
+- **Correções**: As alterações feitas em um telefone chegam ao outro, não importa qual deles inicie a sincronização
+
 ## 2.4.1 (10.11.2026)
 
 - **Melhorias**: A sincronização com um telefone que tem um Caravella mais recente espera você atualizar, em vez de perder o que a nova versão adicionou
