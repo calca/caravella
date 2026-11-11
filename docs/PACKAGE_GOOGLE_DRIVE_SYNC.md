@@ -4,6 +4,8 @@ Google Drive cloud relay for the sync feature, isolated into its own package so 
 
 Barrel: `google_drive_sync.dart`.
 
+**2.4.x:** the sync channel is switched off in the app (`SyncBootstrap.driveSyncAvailable = false` in `lib/sync/sync_bootstrap.dart`), even with `ENABLE_GOOGLE_DRIVE_SYNC=true`: in 2.4 it never moved any data (#688), so "Sync your devices" is hidden and the sync subtitles don't name Google Drive. Drive backup (`createBackupStore`) still runs. The working sync ships in 2.5.
+
 ## Factory pattern
 
 `src/google_drive_sync_factory.dart` gates everything on:

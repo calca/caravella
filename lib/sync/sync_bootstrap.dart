@@ -10,6 +10,12 @@ import 'package:caravella_core/caravella_core.dart';
 class SyncBootstrap {
   static const _tag = 'sync.bootstrap';
 
+  /// Google Drive sync stays off in 2.4: its channel never moved any data
+  /// (see #688), so the "Sync your devices" entry would promise something
+  /// that doesn't happen. It ships, working, in 2.5. Drive backup is
+  /// separate and stays on.
+  static const driveSyncAvailable = false;
+
   /// Builds and starts the [SyncOrchestrator]. Intended to be called once,
   /// from a [FutureProvider] so app startup isn't blocked on LAN/mDNS setup.
   static Future<SyncOrchestrator?> initialize() async {
@@ -29,7 +35,9 @@ class SyncBootstrap {
     final orchestrator = SyncOrchestrator(
       lanChannel: LanSyncChannel(),
       syncManager: SyncManager(repository: repository),
-      cloudChannel: GmsIntegrations.instance.createCloudChannel(),
+      cloudChannel: driveSyncAvailable
+          ? GmsIntegrations.instance.createCloudChannel()
+          : null,
     );
     await orchestrator.initialize();
     return orchestrator;

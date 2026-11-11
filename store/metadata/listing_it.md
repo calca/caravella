@@ -24,7 +24,6 @@ UN DESIGN CHIARO E CALMO
 SINCRONIZZA CON GLI AMICI
 • Condividi un gruppo con chi viaggia con te via Wi-Fi o Bluetooth
 • Abbina i dispositivi una sola volta con un QR code — tutto è crittografato end-to-end
-• Tieni sincronizzati i tuoi telefoni e tablet tramite il tuo Google Drive
 • La sincronizzazione è facoltativa e non passa mai dai nostri server
 
 AGGIUNGI SPESE IN UN ATTIMO

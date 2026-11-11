@@ -1,3 +1,7 @@
+## 2.4.3 (11.11.2026)
+
+- **Changed**: Sync with your own devices through Google Drive is hidden until it's ready: it arrives in the next version. Backup to Google Drive works as before
+
 ## 2.4.2 (11.11.2026)
 
 - **Fixed**: A deleted group stays deleted: it no longer comes back after syncing with another phone

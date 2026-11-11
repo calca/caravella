@@ -1,3 +1,7 @@
+## 2.4.3 (11.11.2026)
+
+- **Mudanças**: A sincronização dos seus aparelhos pelo Google Drive fica oculta até estar pronta: chega na próxima versão. O backup no Google Drive funciona como antes
+
 ## 2.4.2 (11.11.2026)
 
 - **Correções**: Um grupo excluído continua excluído: não volta mais depois de sincronizar com outro telefone
