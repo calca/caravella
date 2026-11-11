@@ -62,7 +62,7 @@ dependencies:
   path: ^1.9.1
   intl: ^0.20.2
   timeago: ^3.7.1
-  gpt_markdown: ^1.1.6
+  gpt_markdown: ^1.4.1
   image_picker_platform_interface: ^2.11.1
   speech_to_text: ^7.0.0
   flutter_local_notifications: ^23.0.0
