@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Settings › Sync no longer shows "Sync your devices" (Google Drive), and the sync subtitles no longer mention Google Drive: the channel never moved any data in 2.4. It comes back, working, in 2.5 (#688). The Play listing drops the line about it. Google Drive backup is unchanged (`SyncBootstrap.driveSyncAvailable = false`, which leaves the orchestrator without a cloud channel)
+
 ## [2.4.2] - 2026-11-11
 
 ### Fixed
