@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Group page: the add-expense button shows on Expenses only. On Balances it sat over the payments' reminder buttons and on Statistics over the charts; it slides away when you switch section and back on Expenses
 
+### Fixed
+- Expenses added by voice with only an amount ("20 euro") or by an Android assistant (App Functions) are no longer lost. They had no name, which the database refuses, so nothing was saved while the app said it was. Voice now opens the form when the name is missing, as it does for a missing payer or category; an assistant's expense is named after its note, or its category
+
 ## [2.4.3] - 2026-11-11
 
 ### Changed
