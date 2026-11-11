@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group page: the add-expense button shows on Expenses only. On Balances it sat over the payments' reminder buttons and on Statistics over the charts; it slides away when you switch section and back on Expenses
 
 ### Fixed
+- Bluetooth: groups whose data is over 32 KB (many expenses) can be shared again. Big messages are sent in chunks, but each chunk was 32 KB of data plus its header, just over what Nearby Connections sends; chunks now leave room for the header. A sync the other phone never answers now fails instead of reporting "done" with nothing received (#675)
 - Expenses added by voice with only an amount ("20 euro") or by an Android assistant (App Functions) are no longer lost. They had no name, which the database refuses, so nothing was saved while the app said it was. Voice now opens the form when the name is missing, as it does for a missing payer or category; an assistant's expense is named after its note, or its category
 
 ## [2.4.3] - 2026-11-11
