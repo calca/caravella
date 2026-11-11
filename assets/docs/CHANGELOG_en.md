@@ -1,3 +1,8 @@
+## 2.4.2 (11.11.2026)
+
+- **Fixed**: A deleted group stays deleted: it no longer comes back after syncing with another phone
+- **Fixed**: Changes made on a phone reach the other one, whichever phone starts the sync
+
 ## 2.4.1 (10.11.2026)
 
 - **Improvements**: Sync with a phone on a newer Caravella waits for you to update, instead of losing what the newer version added

@@ -1,0 +1,6 @@
+Versione 2.4.2 - Sincronizzazione affidabile
+
+• Un gruppo cancellato resta cancellato: non ricompare più dopo la sincronizzazione con un altro telefono
+• Le modifiche fatte su un telefono arrivano all'altro, qualunque dei due avvii la sincronizzazione
+
+Grazie per usare Caravella!
