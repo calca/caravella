@@ -641,11 +641,18 @@ class SyncOrchestrator {
   // Internal
   // ---------------------------------------------------------------------------
 
-  /// Handle an incoming delta by routing it through [SyncManager].
+  /// Handle an incoming delta by routing it through [SyncManager], and
+  /// return our outgoing delta for [peerId].
+  ///
+  /// The outgoing delta is built first: applying [remoteDelta] records the
+  /// sync with [peerId], and a delta built after it would only hold changes
+  /// made since then, so the ones this device made before the exchange
+  /// (deletions included) would never reach the peer.
   Future<Map<String, dynamic>> _handleDelta(
     Map<String, dynamic> remoteDelta,
     String peerId,
   ) async {
+    final outgoing = await _outgoingDelta(peerId);
     if (remoteDelta.isNotEmpty) {
       try {
         final result = await _syncManager.syncWithPeer(
@@ -664,8 +671,10 @@ class SyncOrchestrator {
         );
       }
     }
+    return outgoing;
+  }
 
-    // Return our outgoing delta for this peer
+  Future<Map<String, dynamic>> _outgoingDelta(String peerId) async {
     try {
       return await _syncManager.getOutgoingDelta(peerId);
     } catch (e, st) {
