@@ -21,7 +21,6 @@ import 'expense_form_fields.dart';
 import 'expense_form_extended_fields.dart';
 import 'expense_form_compact_header.dart';
 import '../../../services/receipt_scanner_service.dart';
-import '../widgets/amount_input_widget.dart';
 import '../widgets/receipt_scan_line.dart';
 
 /// The expense form: amount, name, who paid and category, then the details,

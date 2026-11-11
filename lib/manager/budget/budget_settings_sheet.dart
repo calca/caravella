@@ -3,9 +3,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
-import '../expense/validation/expense_validation_service.dart';
-import '../expense/widgets/amount_input_widget.dart';
-
 /// What [showBudgetSettingsSheet] gives back.
 sealed class BudgetSheetResult {
   const BudgetSheetResult();
@@ -90,7 +87,7 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
   }
 
   double? get _value {
-    final v = ExpenseValidationService.parseAmount(_amount.text);
+    final v = AmountField.parse(_amount.text);
     return v != null && v > 0 ? v : null;
   }
 
@@ -138,7 +135,7 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
               ),
             ),
             const SizedBox(height: 8),
-            AmountInputWidget(
+            AmountField(
               controller: _amount,
               currency: widget.currency,
               label: amountLabel,

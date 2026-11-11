@@ -5,7 +5,9 @@ import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/manager/budget/budget_detail_sheet.dart';
 import 'package:io_caravella_egm/manager/budget/budget_settings_sheet.dart';
+import 'package:io_caravella_egm/manager/details/pages/group_settings_page.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_detail_header.dart';
+import 'helpers/test_database.dart';
 import 'package:material_ui/material_ui.dart';
 
 final _anna = ExpenseParticipant(id: 'a', name: 'Anna');
@@ -38,6 +40,11 @@ ExpenseGroup _home({GroupBudget? budget, Map<DateTime, double>? expenses}) =>
           ),
       ],
     );
+
+/// The amounts are [CurrencyDisplay]s, as everywhere in the app.
+Finder _amount(double value) => find.byWidgetPredicate(
+  (w) => w is CurrencyDisplay && (w.value - value).abs() < 1e-9,
+);
 
 const _monthly = GroupBudget(amount: 600, period: BudgetPeriod.monthly);
 
@@ -124,18 +131,20 @@ void main() {
         ),
       ),
     );
-    expect(find.text('11.31 € left today', findRichText: true), findsOneWidget);
+    expect(_amount(11.305), findsOneWidget);
+    expect(find.text('left today'), findsOneWidget);
     expect(find.text('8.40 € spent of 19.71 € planned'), findsOneWidget);
     expect(find.text('BUDGET · NOVEMBER'), findsOneWidget);
-    expect(find.text('385.70 €  left', findRichText: true), findsOneWidget);
+    expect(_amount(385.7), findsOneWidget);
+    expect(find.text('left'), findsOneWidget);
     expect(find.text('today · day 11 of 30'), findsOneWidget);
     expect(find.text('THE MONTHS BEFORE'), findsOneWidget);
     // October within, September over (August has no expenses: not shown,
     // being before the first one).
     expect(find.text('October'), findsOneWidget);
-    expect(find.text('560.00 €'), findsOneWidget);
+    expect(_amount(560), findsOneWidget);
     expect(find.text('September'), findsOneWidget);
-    expect(find.text('642.00 €'), findsOneWidget);
+    expect(_amount(642), findsOneWidget);
     expect(find.text('42.00 € over'), findsOneWidget);
     expect(find.text('August'), findsNothing);
     expect(find.text('Change budget'), findsOneWidget);
@@ -217,5 +226,45 @@ void main() {
     await tester.tap(find.text('Remove budget'));
     await tester.pumpAndSettle();
     expect(result, isA<BudgetRemoved>());
+  });
+
+  group('group settings › Budget', () {
+    setUp(useTestDatabase);
+
+    testWidgets('sets, shows and removes the budget', (tester) async {
+      final group = _home();
+      await tester.runAsync(() => ExpenseGroupStorageV2.addExpenseGroup(group));
+      var updates = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: appLocalizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: GroupSettingsPage(trip: group, onGroupUpdated: () => updates++),
+        ),
+      );
+      expect(find.text('None'), findsOneWidget);
+
+      await tester.tap(find.text('Budget'));
+      await tester.pumpAndSettle();
+      expect(find.text('Amount per month'), findsWidgets);
+      await tester.enterText(find.byType(TextFormField), '600');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      for (var i = 0; i < 10 && updates == 0; i++) {
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 50)),
+        );
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+
+      expect(find.text('600.00 € · Monthly'), findsOneWidget);
+      expect(updates, 1);
+      final stored = await tester.runAsync(
+        () => ExpenseGroupStorageV2.getTripById(group.id),
+      );
+      expect(stored!.budget, _monthly);
+    });
   });
 }

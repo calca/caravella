@@ -84,7 +84,7 @@ class BudgetDetailSheet extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Today(status: status, money: money),
+          _Today(status: status, currency: group.currency, money: money),
           if (budget.period == BudgetPeriod.total &&
               (group.startDate == null || group.endDate == null)) ...[
             const SizedBox(height: 8),
@@ -112,25 +112,12 @@ class BudgetDetailSheet extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 6),
-            Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: money(overPeriod ? status.overBy : status.remaining),
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: overPeriod ? s.onBudgetOver : null,
-                    ),
-                  ),
-                  TextSpan(
-                    text:
-                        '  ${overPeriod ? gloc.budget_over : gloc.budget_left}',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: overPeriod ? s.onBudgetOver : s.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
+            _Figure(
+              value: overPeriod ? status.overBy : status.remaining,
+              currency: group.currency,
+              size: 26,
+              after: overPeriod ? gloc.budget_over : gloc.budget_left,
+              color: overPeriod ? s.onBudgetOver : null,
             ),
             const SizedBox(height: 10),
             Semantics(
@@ -176,14 +163,16 @@ class BudgetDetailSheet extends StatelessWidget {
                             locale.toString(),
                           ).format(status.end!),
                         ),
-                        value: money(status.todayShare!),
+                        value: status.todayShare!,
+                        currency: group.currency,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: _Box(
                         label: gloc.budget_average_so_far,
-                        value: money(status.averagePerDay!),
+                        value: status.averagePerDay!,
+                        currency: group.currency,
                       ),
                     ),
                   ],
@@ -222,6 +211,7 @@ class BudgetDetailSheet extends StatelessWidget {
                 ),
               },
               amount: budget.amount,
+              currency: group.currency,
               money: money,
             ),
           ],
@@ -244,9 +234,14 @@ class BudgetDetailSheet extends StatelessWidget {
 /// and what was spent of it.
 class _Today extends StatelessWidget {
   final BudgetStatus status;
+  final String currency;
   final String Function(double) money;
 
-  const _Today({required this.status, required this.money});
+  const _Today({
+    required this.status,
+    required this.currency,
+    required this.money,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -279,27 +274,14 @@ class _Today extends StatelessWidget {
                   ),
                 ),
                 if (share != null && left != null) ...[
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: money(left.abs()),
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: status.overToday ? s.onBudgetOver : null,
-                          ),
-                        ),
-                        TextSpan(
-                          text:
-                              ' ${status.overToday ? gloc.budget_over_today : gloc.budget_left_today}',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            color: status.overToday
-                                ? s.onBudgetOver
-                                : s.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
+                  _Figure(
+                    value: left.abs(),
+                    currency: currency,
+                    size: 22,
+                    after: status.overToday
+                        ? gloc.budget_over_today
+                        : gloc.budget_left_today,
+                    color: status.overToday ? s.onBudgetOver : null,
                   ),
                   Text(
                     gloc.budget_spent_of_share(
@@ -311,11 +293,10 @@ class _Today extends StatelessWidget {
                     ),
                   ),
                 ] else
-                  Text(
-                    money(status.spentToday),
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                  _Figure(
+                    value: status.spentToday,
+                    currency: currency,
+                    size: 22,
                   ),
               ],
             ),
@@ -328,9 +309,14 @@ class _Today extends StatelessWidget {
 
 class _Box extends StatelessWidget {
   final String label;
-  final String value;
+  final double value;
+  final String currency;
 
-  const _Box({required this.label, required this.value});
+  const _Box({
+    required this.label,
+    required this.value,
+    required this.currency,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -353,12 +339,7 @@ class _Box extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 2),
-            Text(
-              value,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            _Figure(value: value, currency: currency, size: 18),
           ],
         ),
       ),
@@ -373,12 +354,14 @@ class _PastTable extends StatelessWidget {
   final List<BudgetPastPeriod> periods;
   final String Function(BudgetPastPeriod) labelOf;
   final double amount;
+  final String currency;
   final String Function(double) money;
 
   const _PastTable({
     required this.periods,
     required this.labelOf,
     required this.amount,
+    required this.currency,
     required this.money,
   });
 
@@ -415,11 +398,13 @@ class _PastTable extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  money(p.spent),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: over ? s.onBudgetOver : s.onSurfaceVariant,
-                  ),
+                CurrencyDisplay(
+                  value: p.spent,
+                  currency: currency,
+                  valueFontSize: 15,
+                  currencyFontSize: 11,
+                  showDecimals: true,
+                  color: over ? s.onBudgetOver : null,
                 ),
                 if (over)
                   Text(
@@ -443,6 +428,54 @@ class _PastTable extends StatelessWidget {
       },
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [for (final p in periods) row(p)],
+    );
+  }
+}
+
+/// An amount in the app's style ([CurrencyDisplay]: decimals and currency
+/// smaller), optionally followed by a few words ("left", "over budget").
+class _Figure extends StatelessWidget {
+  final double value;
+  final String currency;
+  final double size;
+  final String? after;
+  final Color? color;
+
+  const _Figure({
+    required this.value,
+    required this.currency,
+    required this.size,
+    this.after,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Wrap(
+      spacing: 8,
+      crossAxisAlignment: WrapCrossAlignment.end,
+      children: [
+        CurrencyDisplay(
+          value: value,
+          currency: currency,
+          valueFontSize: size,
+          currencyFontSize: (size * 0.55).roundToDouble(),
+          showDecimals: true,
+          alignment: MainAxisAlignment.start,
+          color: color,
+        ),
+        if (after case final words?)
+          Padding(
+            padding: EdgeInsets.only(bottom: size * 0.08),
+            child: Text(
+              words,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: color ?? theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

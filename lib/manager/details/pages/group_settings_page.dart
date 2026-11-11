@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import '../../budget/budget_settings_sheet.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -103,6 +104,17 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                 onTap: () => _openCategoriesPage(context),
               ),
               SettingsTile(
+                icon: Icons.savings_outlined,
+                title: gloc.budget,
+                subtitle: switch (trip.budget) {
+                  final b? =>
+                    '${CurrencyDisplay.formatLocalizedText(b.amount, trip.currency, Localizations.localeOf(context))}'
+                        ' · ${budgetPeriodName(gloc, b.period)}',
+                  null => gloc.budget_none,
+                },
+                onTap: () => _openBudgetSheet(context),
+              ),
+              SettingsTile(
                 icon: Icons.tune_outlined,
                 title: gloc.segment_other,
                 subtitle: gloc.other_settings_desc,
@@ -178,6 +190,33 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
       }
       widget.onGroupUpdated?.call();
     }
+  }
+
+  /// The budget sheet; saved at once (and synced with the group).
+  Future<void> _openBudgetSheet(BuildContext context) async {
+    final trip = _currentTrip;
+    final result = await showBudgetSettingsSheet(
+      context,
+      budget: trip.budget,
+      currency: trip.currency,
+      groupType: trip.groupType,
+    );
+    final budget = switch (result) {
+      BudgetSaved(:final budget) => budget,
+      BudgetRemoved() => null,
+      null => trip.budget,
+    };
+    if (result == null || budget == trip.budget) return;
+    final saved = await ExpenseGroupStorageV2.updateGroupBudget(
+      trip.id,
+      budget,
+    );
+    if (!saved) {
+      LoggerService.warning('Budget not saved', name: 'ui.budget');
+      return;
+    }
+    if (mounted) setState(() => _currentTrip = trip.copyWith(budget: budget));
+    widget.onGroupUpdated?.call();
   }
 
   Future<void> _openParticipantsPage(BuildContext context) async {
