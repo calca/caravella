@@ -22,7 +22,7 @@ The three read-only functions are handled **entirely in native Kotlin** (`androi
 Called from `lib/home/services/app_functions_initialization.dart` (`AppFunctionsInitialization.initialize()`), synchronously, during app startup (see [Architecture Overview § startup sequence](ARCHITECTURE.md#app-startup-sequence)). Its `_handleAddExpense` callback:
 
 1. Checks the privacy toggle `PreferencesService.instance.appFunctions.isEnabled()` — if disabled, the request is silently ignored (logged only). This toggle is surfaced in Settings → Privacy (see [App: Settings](APP_SETTINGS.md)).
-2. If `params.amount > 0`, resolves a category (case-insensitive match, falling back to first/"Other"), builds an `ExpenseDetails`, and calls `ExpenseGroupStorageV2.addExpenseToGroup`.
+2. If `params.amount > 0`, resolves a category (case-insensitive match, falling back to first/"Other"), builds the `ExpenseDetails` with `AppFunctionsInitialization.expenseFor` (named after the agent's `note`, or the category without one: an expense needs a name, and before 2.4.4/2.5 the unnamed one was refused by SQLite and never saved), and calls `ExpenseGroupStorageV2.addExpenseToGroup`.
 3. If amount is `0.0` (not provided by the agent), skips creating an expense and only navigates.
 4. Always navigates to `ExpenseGroupDetailPage` via the global `navigatorKey`.
 
