@@ -419,18 +419,28 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     if (_trip?.expenses.isEmpty == true) return const SizedBox.shrink();
     if (_trip?.archived == true) return const SizedBox.shrink();
 
-    return AnimatedSlide(
-      duration: const Duration(milliseconds: 260),
-      curve: Curves.easeOut,
-      offset: _fabVisible ? Offset.zero : const Offset(0.3, 1.2),
-      child: AnimatedOpacity(
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeInOut,
-        opacity: _fabVisible ? 1 : 0,
-        child: AddFab(
-          heroTag: 'add-expense-fab',
-          tooltip: gen.AppLocalizations.of(context).add_expense,
-          onPressed: _showAddExpenseSheet,
+    // Only on Expenses, where the new expense shows up: on Balances it
+    // would sit over the payments' reminder buttons, on Statistics over the
+    // charts.
+    final shown = _fabVisible && _section == 0;
+    return IgnorePointer(
+      ignoring: !shown,
+      child: ExcludeSemantics(
+        excluding: !shown,
+        child: AnimatedSlide(
+          duration: const Duration(milliseconds: 260),
+          curve: Curves.easeOut,
+          offset: shown ? Offset.zero : const Offset(0.3, 1.2),
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeInOut,
+            opacity: shown ? 1 : 0,
+            child: AddFab(
+              heroTag: 'add-expense-fab',
+              tooltip: gen.AppLocalizations.of(context).add_expense,
+              onPressed: _showAddExpenseSheet,
+            ),
+          ),
         ),
       ),
     );
