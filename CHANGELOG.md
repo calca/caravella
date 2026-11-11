@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Group page: the add-expense button shows on Expenses only. On Balances it sat over the payments' reminder buttons and on Statistics over the charts; it slides away when you switch section and back on Expenses
+
 ## [2.4.3] - 2026-11-11
 
 ### Changed
