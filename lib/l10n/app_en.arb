@@ -1256,4 +1256,72 @@
   ,"@settlement_paid": {"description": "Screen reader label of a payment ticked as paid", "placeholders": {"from": {"type": "String"}, "to": {"type": "String"}, "amount": {"type": "String"}}}
   ,"balance_paid_total": "Paid {amount} in all"
   ,"@balance_paid_total": {"description": "Balances: under each participant, the total of the expenses they paid", "placeholders": {"amount": {"type": "String"}}}
+  ,"budget": "Budget"
+  ,"@budget": {"description": "Group settings: the budget row, and the title of its sheet"}
+  ,"budget_none": "None"
+  ,"@budget_none": {"description": "Group settings: under Budget when the group has none"}
+  ,"budget_sheet_description": "How much you plan to spend. Tap Today on the group page to see how it’s going."
+  ,"@budget_sheet_description": {"description": "Budget sheet: what the budget is for"}
+  ,"budget_period_total": "In total"
+  ,"@budget_period_total": {"description": "Budget period: one amount for the whole group"}
+  ,"budget_period_monthly": "Monthly"
+  ,"@budget_period_monthly": {"description": "Budget period: an amount for each calendar month"}
+  ,"budget_period_weekly": "Weekly"
+  ,"@budget_period_weekly": {"description": "Budget period: an amount for each week"}
+  ,"budget_period_daily": "Daily"
+  ,"@budget_period_daily": {"description": "Budget period: an amount for each day"}
+  ,"budget_amount_total": "Amount for the whole group"
+  ,"@budget_amount_total": {"description": "Budget sheet: label of the amount for a total budget"}
+  ,"budget_amount_monthly": "Amount per month"
+  ,"@budget_amount_monthly": {"description": "Budget sheet: label of the amount for a monthly budget"}
+  ,"budget_amount_weekly": "Amount per week"
+  ,"@budget_amount_weekly": {"description": "Budget sheet: label of the amount for a weekly budget"}
+  ,"budget_amount_daily": "Amount per day"
+  ,"@budget_amount_daily": {"description": "Budget sheet: label of the amount for a daily budget"}
+  ,"budget_currency_hint": "In the group’s currency"
+  ,"@budget_currency_hint": {"description": "Budget sheet: under the amount"}
+  ,"budget_remove": "Remove budget"
+  ,"@budget_remove": {"description": "Budget sheet: button removing the group's budget"}
+  ,"budget_change": "Change budget"
+  ,"@budget_change": {"description": "Budget detail sheet: button opening the budget settings"}
+  ,"budget_left_today": "left today"
+  ,"@budget_left_today": {"description": "Budget detail: next to what can still be spent today (the amount is shown before it, larger)"}
+  ,"budget_over_today": "over, today"
+  ,"@budget_over_today": {"description": "Budget detail: next to how much today went over its share (the amount is shown before it, larger)"}
+  ,"budget_spent_of_share": "{spent} spent of {share} planned"
+  ,"@budget_spent_of_share": {"description": "Budget detail: spent today out of today's share", "placeholders": {"spent": {"type": "String"}, "share": {"type": "String"}}}
+  ,"budget_header": "Budget · {period}"
+  ,"@budget_header": {"description": "Budget detail: small caps title of the current period (In total, a month name, a week, a day)", "placeholders": {"period": {"type": "String"}}}
+  ,"budget_left": "left"
+  ,"@budget_left": {"description": "Budget detail: after the amount left in the period"}
+  ,"budget_over": "over budget"
+  ,"@budget_over": {"description": "Budget detail: after the amount spent over the budget of the period"}
+  ,"budget_spent_percent": "{amount} spent · {percent}%"
+  ,"@budget_spent_percent": {"description": "Budget detail: under the bar, spent in the period and its share of the budget", "placeholders": {"amount": {"type": "String"}, "percent": {"type": "int"}}}
+  ,"budget_day_of": "today · day {day} of {count}"
+  ,"@budget_day_of": {"description": "Budget detail: under the bar, today's day in the period", "placeholders": {"day": {"type": "int"}, "count": {"type": "int"}}}
+  ,"budget_bar_semantics": "{spent}% of the budget spent, {elapsed}% of the period gone"
+  ,"@budget_bar_semantics": {"description": "Screen reader label of the budget bar", "placeholders": {"spent": {"type": "int"}, "elapsed": {"type": "int"}}}
+  ,"budget_per_day_until": "Per day, until {date}"
+  ,"@budget_per_day_until": {"description": "Budget detail: box with what can be spent each day until the end of the period", "placeholders": {"date": {"type": "String"}}}
+  ,"budget_average_so_far": "So far per day"
+  ,"@budget_average_so_far": {"description": "Budget detail: box with the average spent per day so far in the period"}
+  ,"budget_set_dates_hint": "Set the group’s dates to see how much you can spend each day."
+  ,"@budget_set_dates_hint": {"description": "Budget detail, total budget on a group without dates"}
+  ,"budget_past_months": "The months before"
+  ,"@budget_past_months": {"description": "Budget detail: small caps title of the comparison with the previous months"}
+  ,"budget_past_weeks": "The weeks before"
+  ,"@budget_past_weeks": {"description": "Budget detail: small caps title of the comparison with the previous weeks"}
+  ,"budget_past_days": "The days before"
+  ,"@budget_past_days": {"description": "Budget detail: small caps title of the comparison with the previous days"}
+  ,"budget_over_by": "{amount} over"
+  ,"@budget_over_by": {"description": "Budget detail: a past period that went over its budget, after what it spent", "placeholders": {"amount": {"type": "String"}}}
+  ,"budget_past_semantics": "{period}: {spent} of {budget}"
+  ,"@budget_past_semantics": {"description": "Screen reader label of a past period in the budget comparison", "placeholders": {"period": {"type": "String"}, "spent": {"type": "String"}, "budget": {"type": "String"}}}
+  ,"budget_today_within": "Today {spent}, within the {share} planned for today. Open the budget"
+  ,"@budget_today_within": {"description": "Screen reader label of the Today box with a budget, within today's share", "placeholders": {"spent": {"type": "String"}, "share": {"type": "String"}}}
+  ,"budget_today_over": "Today {spent}, over the {share} planned for today. Open the budget"
+  ,"@budget_today_over": {"description": "Screen reader label of the Today box with a budget, over today's share", "placeholders": {"spent": {"type": "String"}, "share": {"type": "String"}}}
+  ,"budget_today_open": "Today {spent}. Open the budget"
+  ,"@budget_today_open": {"description": "Screen reader label of the Today box with a budget but no share for today", "placeholders": {"spent": {"type": "String"}}}
 }

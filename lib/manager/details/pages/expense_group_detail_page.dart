@@ -26,6 +26,8 @@ import '../../group/group_edit_mode.dart';
 import '../../group/pages/expense_group_other_page.dart';
 import 'expense_search_page.dart';
 import '../../group/pages/expense_group_sync_page.dart';
+import '../../budget/budget_detail_sheet.dart';
+import '../../budget/budget_settings_sheet.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -177,6 +179,43 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     if (!saved) {
       LoggerService.warning('Payments not saved', name: 'ui.balances');
     }
+    await _refreshGroup();
+    _groupNotifier?.notifyGroupUpdated(trip.id);
+  }
+
+  /// "Today" tapped with a budget: its sheet, and from there the budget's
+  /// settings.
+  Future<void> _showBudget() async {
+    final trip = _trip;
+    if (trip == null) return;
+    await showBudgetDetailSheet(
+      context,
+      group: trip,
+      onChangeBudget: _changeBudget,
+    );
+  }
+
+  Future<void> _changeBudget() async {
+    final trip = _trip;
+    if (trip == null || !mounted) return;
+    final result = await showBudgetSettingsSheet(
+      context,
+      budget: trip.budget,
+      currency: trip.currency,
+      groupType: trip.groupType,
+    );
+    final budget = switch (result) {
+      BudgetSaved(:final budget) => budget,
+      BudgetRemoved() => null,
+      null => trip.budget,
+    };
+    if (result == null || budget == trip.budget) return;
+    setState(() => _trip = trip.copyWith(budget: budget));
+    final saved = await ExpenseGroupStorageV2.updateGroupBudget(
+      trip.id,
+      budget,
+    );
+    if (!saved) LoggerService.warning('Budget not saved', name: 'ui.budget');
     await _refreshGroup();
     _groupNotifier?.notifyGroupUpdated(trip.id);
   }
@@ -553,6 +592,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                             group: trip,
                             foreground: s.onSurface,
                             onOpenSync: _showSyncPage,
+                            onOpenBudget: _showBudget,
                           ),
                         ),
                       ],

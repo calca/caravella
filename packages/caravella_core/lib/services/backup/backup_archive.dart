@@ -13,8 +13,8 @@ import '../../model/expense_group.dart';
 /// The JSON is `{"format": 2, "groups": [...]}`. Format 1 (up to 2.4.1) is
 /// a bare list of groups, or the same object with `"format": 1`; [decode]
 /// reads both and refuses a higher format, whose fields it would drop.
-/// Format 2 added the groups' `payments`; 2.4.1 refuses it rather than
-/// restoring the groups without them.
+/// Format 2 added the groups' `payments` and `budget`; 2.4.1 refuses it
+/// rather than restoring the groups without them.
 class BackupArchive {
   BackupArchive._();
 

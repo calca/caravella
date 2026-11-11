@@ -2857,4 +2857,130 @@ class AppLocalizationsEn extends AppLocalizations {
   String balance_paid_total(String amount) {
     return 'Paid $amount in all';
   }
+
+  @override
+  String get budget => 'Budget';
+
+  @override
+  String get budget_none => 'None';
+
+  @override
+  String get budget_sheet_description =>
+      'How much you plan to spend. Tap Today on the group page to see how it’s going.';
+
+  @override
+  String get budget_period_total => 'In total';
+
+  @override
+  String get budget_period_monthly => 'Monthly';
+
+  @override
+  String get budget_period_weekly => 'Weekly';
+
+  @override
+  String get budget_period_daily => 'Daily';
+
+  @override
+  String get budget_amount_total => 'Amount for the whole group';
+
+  @override
+  String get budget_amount_monthly => 'Amount per month';
+
+  @override
+  String get budget_amount_weekly => 'Amount per week';
+
+  @override
+  String get budget_amount_daily => 'Amount per day';
+
+  @override
+  String get budget_currency_hint => 'In the group’s currency';
+
+  @override
+  String get budget_remove => 'Remove budget';
+
+  @override
+  String get budget_change => 'Change budget';
+
+  @override
+  String get budget_left_today => 'left today';
+
+  @override
+  String get budget_over_today => 'over, today';
+
+  @override
+  String budget_spent_of_share(String spent, String share) {
+    return '$spent spent of $share planned';
+  }
+
+  @override
+  String budget_header(String period) {
+    return 'Budget · $period';
+  }
+
+  @override
+  String get budget_left => 'left';
+
+  @override
+  String get budget_over => 'over budget';
+
+  @override
+  String budget_spent_percent(String amount, int percent) {
+    return '$amount spent · $percent%';
+  }
+
+  @override
+  String budget_day_of(int day, int count) {
+    return 'today · day $day of $count';
+  }
+
+  @override
+  String budget_bar_semantics(int spent, int elapsed) {
+    return '$spent% of the budget spent, $elapsed% of the period gone';
+  }
+
+  @override
+  String budget_per_day_until(String date) {
+    return 'Per day, until $date';
+  }
+
+  @override
+  String get budget_average_so_far => 'So far per day';
+
+  @override
+  String get budget_set_dates_hint =>
+      'Set the group’s dates to see how much you can spend each day.';
+
+  @override
+  String get budget_past_months => 'The months before';
+
+  @override
+  String get budget_past_weeks => 'The weeks before';
+
+  @override
+  String get budget_past_days => 'The days before';
+
+  @override
+  String budget_over_by(String amount) {
+    return '$amount over';
+  }
+
+  @override
+  String budget_past_semantics(String period, String spent, String budget) {
+    return '$period: $spent of $budget';
+  }
+
+  @override
+  String budget_today_within(String spent, String share) {
+    return 'Today $spent, within the $share planned for today. Open the budget';
+  }
+
+  @override
+  String budget_today_over(String spent, String share) {
+    return 'Today $spent, over the $share planned for today. Open the budget';
+  }
+
+  @override
+  String budget_today_open(String spent) {
+    return 'Today $spent. Open the budget';
+  }
 }

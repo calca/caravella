@@ -25,7 +25,9 @@ Future<void> createSqliteSchema(Database db) async {
       deleted INTEGER NOT NULL DEFAULT 0,
       sync_version INTEGER NOT NULL DEFAULT 0,
       sync_enabled INTEGER NOT NULL DEFAULT 0,
-      payments TEXT
+      payments TEXT,
+      budget_amount REAL,
+      budget_period TEXT
     )
   ''');
 

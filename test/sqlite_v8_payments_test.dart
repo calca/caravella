@@ -29,6 +29,8 @@ void main() {
     final db = await databaseFactoryFfi.openDatabase(dbPath);
     await createSqliteSchema(db);
     await db.execute('ALTER TABLE groups DROP COLUMN payments');
+    await db.execute('ALTER TABLE groups DROP COLUMN budget_amount');
+    await db.execute('ALTER TABLE groups DROP COLUMN budget_period');
     await db.insert('groups', {
       'id': 'g',
       'title': 'Norway',

@@ -6,6 +6,7 @@ export 'config/app_config.dart';
 export 'config/app_icons.dart';
 
 // Data Models
+export 'model/budget_status.dart';
 export 'model/expense_author.dart';
 export 'model/expense_category.dart';
 export 'model/expense_details.dart';
@@ -15,6 +16,7 @@ export 'model/expense_group_type.dart';
 export 'model/group_type_template.dart';
 export 'model/expense_location.dart';
 export 'model/expense_participant.dart';
+export 'model/group_budget.dart';
 export 'model/group_settlements.dart';
 export 'model/settle_payment.dart';
 export 'model/spending_pace.dart';

@@ -5201,6 +5201,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Paid {amount} in all'**
   String balance_paid_total(String amount);
+
+  /// Group settings: the budget row, and the title of its sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get budget;
+
+  /// Group settings: under Budget when the group has none
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get budget_none;
+
+  /// Budget sheet: what the budget is for
+  ///
+  /// In en, this message translates to:
+  /// **'How much you plan to spend. Tap Today on the group page to see how it’s going.'**
+  String get budget_sheet_description;
+
+  /// Budget period: one amount for the whole group
+  ///
+  /// In en, this message translates to:
+  /// **'In total'**
+  String get budget_period_total;
+
+  /// Budget period: an amount for each calendar month
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get budget_period_monthly;
+
+  /// Budget period: an amount for each week
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get budget_period_weekly;
+
+  /// Budget period: an amount for each day
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get budget_period_daily;
+
+  /// Budget sheet: label of the amount for a total budget
+  ///
+  /// In en, this message translates to:
+  /// **'Amount for the whole group'**
+  String get budget_amount_total;
+
+  /// Budget sheet: label of the amount for a monthly budget
+  ///
+  /// In en, this message translates to:
+  /// **'Amount per month'**
+  String get budget_amount_monthly;
+
+  /// Budget sheet: label of the amount for a weekly budget
+  ///
+  /// In en, this message translates to:
+  /// **'Amount per week'**
+  String get budget_amount_weekly;
+
+  /// Budget sheet: label of the amount for a daily budget
+  ///
+  /// In en, this message translates to:
+  /// **'Amount per day'**
+  String get budget_amount_daily;
+
+  /// Budget sheet: under the amount
+  ///
+  /// In en, this message translates to:
+  /// **'In the group’s currency'**
+  String get budget_currency_hint;
+
+  /// Budget sheet: button removing the group's budget
+  ///
+  /// In en, this message translates to:
+  /// **'Remove budget'**
+  String get budget_remove;
+
+  /// Budget detail sheet: button opening the budget settings
+  ///
+  /// In en, this message translates to:
+  /// **'Change budget'**
+  String get budget_change;
+
+  /// Budget detail: next to what can still be spent today (the amount is shown before it, larger)
+  ///
+  /// In en, this message translates to:
+  /// **'left today'**
+  String get budget_left_today;
+
+  /// Budget detail: next to how much today went over its share (the amount is shown before it, larger)
+  ///
+  /// In en, this message translates to:
+  /// **'over, today'**
+  String get budget_over_today;
+
+  /// Budget detail: spent today out of today's share
+  ///
+  /// In en, this message translates to:
+  /// **'{spent} spent of {share} planned'**
+  String budget_spent_of_share(String spent, String share);
+
+  /// Budget detail: small caps title of the current period (In total, a month name, a week, a day)
+  ///
+  /// In en, this message translates to:
+  /// **'Budget · {period}'**
+  String budget_header(String period);
+
+  /// Budget detail: after the amount left in the period
+  ///
+  /// In en, this message translates to:
+  /// **'left'**
+  String get budget_left;
+
+  /// Budget detail: after the amount spent over the budget of the period
+  ///
+  /// In en, this message translates to:
+  /// **'over budget'**
+  String get budget_over;
+
+  /// Budget detail: under the bar, spent in the period and its share of the budget
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} spent · {percent}%'**
+  String budget_spent_percent(String amount, int percent);
+
+  /// Budget detail: under the bar, today's day in the period
+  ///
+  /// In en, this message translates to:
+  /// **'today · day {day} of {count}'**
+  String budget_day_of(int day, int count);
+
+  /// Screen reader label of the budget bar
+  ///
+  /// In en, this message translates to:
+  /// **'{spent}% of the budget spent, {elapsed}% of the period gone'**
+  String budget_bar_semantics(int spent, int elapsed);
+
+  /// Budget detail: box with what can be spent each day until the end of the period
+  ///
+  /// In en, this message translates to:
+  /// **'Per day, until {date}'**
+  String budget_per_day_until(String date);
+
+  /// Budget detail: box with the average spent per day so far in the period
+  ///
+  /// In en, this message translates to:
+  /// **'So far per day'**
+  String get budget_average_so_far;
+
+  /// Budget detail, total budget on a group without dates
+  ///
+  /// In en, this message translates to:
+  /// **'Set the group’s dates to see how much you can spend each day.'**
+  String get budget_set_dates_hint;
+
+  /// Budget detail: small caps title of the comparison with the previous months
+  ///
+  /// In en, this message translates to:
+  /// **'The months before'**
+  String get budget_past_months;
+
+  /// Budget detail: small caps title of the comparison with the previous weeks
+  ///
+  /// In en, this message translates to:
+  /// **'The weeks before'**
+  String get budget_past_weeks;
+
+  /// Budget detail: small caps title of the comparison with the previous days
+  ///
+  /// In en, this message translates to:
+  /// **'The days before'**
+  String get budget_past_days;
+
+  /// Budget detail: a past period that went over its budget, after what it spent
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} over'**
+  String budget_over_by(String amount);
+
+  /// Screen reader label of a past period in the budget comparison
+  ///
+  /// In en, this message translates to:
+  /// **'{period}: {spent} of {budget}'**
+  String budget_past_semantics(String period, String spent, String budget);
+
+  /// Screen reader label of the Today box with a budget, within today's share
+  ///
+  /// In en, this message translates to:
+  /// **'Today {spent}, within the {share} planned for today. Open the budget'**
+  String budget_today_within(String spent, String share);
+
+  /// Screen reader label of the Today box with a budget, over today's share
+  ///
+  /// In en, this message translates to:
+  /// **'Today {spent}, over the {share} planned for today. Open the budget'**
+  String budget_today_over(String spent, String share);
+
+  /// Screen reader label of the Today box with a budget but no share for today
+  ///
+  /// In en, this message translates to:
+  /// **'Today {spent}. Open the budget'**
+  String budget_today_open(String spent);
 }
 
 class _AppLocalizationsDelegate

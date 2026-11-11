@@ -146,6 +146,30 @@ extension CaravellaSemanticColors on ColorScheme {
   Color get raisedSurface => brightness == Brightness.dark
       ? surfaceContainerHighest
       : surfaceContainerLowest;
+
+  /// The budget ring and bars while within the budget: a calm grey, so
+  /// colour only shows up when it matters ([budgetOver]). >=3:1 on
+  /// [raisedSurface].
+  Color get budgetFill => brightness == Brightness.dark
+      ? const Color(0xFFA0A0A0)
+      : const Color(0xFF666666);
+
+  /// The empty part of the budget ring and bars.
+  Color get budgetTrack => brightness == Brightness.dark
+      ? const Color(0xFF4A4C4D)
+      : const Color(0xFFE3E3E3);
+
+  /// The budget ring and bars once over the budget: a muted amber, never
+  /// red (going over isn't an error). >=3:1 on [raisedSurface]: the same
+  /// hue, darker in the light theme.
+  Color get budgetOver => brightness == Brightness.dark
+      ? const Color(0xFFC8A06A)
+      : const Color(0xFF9A7642);
+
+  /// Text saying how much went over the budget. >=4.5:1 on [surface].
+  Color get onBudgetOver => brightness == Brightness.dark
+      ? const Color(0xFFC8A06A)
+      : const Color(0xFF5E4A2C);
 }
 
 class CaravellaThemes {

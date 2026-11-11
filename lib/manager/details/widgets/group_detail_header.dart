@@ -6,6 +6,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
 import '../../../sync/group_sync_badge.dart';
+import '../../budget/budget_detail_sheet.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
 
 /// The group's photo or color behind the top of its page, melting into
@@ -86,11 +87,19 @@ class GroupDetailHeader extends StatelessWidget {
   /// Opens the group's sync page from the "Shared" badge.
   final VoidCallback? onOpenSync;
 
+  /// Opens the budget sheet from "Today", when the group has a budget.
+  final VoidCallback? onOpenBudget;
+
+  /// "Today" for the figures; now when null (tests set it).
+  final DateTime? today;
+
   const GroupDetailHeader({
     super.key,
     required this.group,
     required this.foreground,
     this.onOpenSync,
+    this.onOpenBudget,
+    this.today,
   });
 
   @override
@@ -161,10 +170,34 @@ class GroupDetailHeader extends StatelessWidget {
               currency: group.currency,
               big: true,
             );
+            final spentToday = group.getTodaySpendingSync(this.today);
+            // With a budget, a ring of how today is going against what can
+            // be spent today; tapping it opens the budget.
+            final budget = BudgetStatus.of(
+              group,
+              today: this.today,
+              firstDayOfWeek: firstDayOfWeekOf(context),
+            );
+            final locale = Localizations.localeOf(context);
+            String money(double v) =>
+                CurrencyDisplay.formatLocalizedText(v, group.currency, locale);
             final today = _Figure(
               label: gloc.today,
-              value: group.getTodaySpendingSync(),
+              value: spentToday,
               currency: group.currency,
+              ring: switch (budget?.todayFraction) {
+                final f? => BudgetRing(fraction: f, over: budget!.overToday),
+                null => null,
+              },
+              onTap: budget == null ? null : onOpenBudget,
+              semanticLabel: switch (budget) {
+                null => null,
+                BudgetStatus(todayShare: final share?) when budget.overToday =>
+                  gloc.budget_today_over(money(spentToday), money(share)),
+                BudgetStatus(todayShare: final share?) =>
+                  gloc.budget_today_within(money(spentToday), money(share)),
+                _ => gloc.budget_today_open(money(spentToday)),
+              },
             );
             // Side by side when "Today" has room for its amount at full
             // size; one under the other with large text, rather than
@@ -203,11 +236,21 @@ class _Figure extends StatelessWidget {
   final String currency;
   final bool big;
 
+  /// The budget ring at the end of the box ("Today" with a budget).
+  final Widget? ring;
+  final VoidCallback? onTap;
+
+  /// Replaces label and amount for screen readers when tappable.
+  final String? semanticLabel;
+
   const _Figure({
     required this.label,
     required this.value,
     required this.currency,
     this.big = false,
+    this.ring,
+    this.onTap,
+    this.semanticLabel,
   });
 
   @override
@@ -215,45 +258,63 @@ class _Figure extends StatelessWidget {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final radius = BorderRadius.circular(18);
+    final figure = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Shrinks rather than truncates with large text.
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            label,
+            maxLines: 1,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: s.onSurfaceVariant,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: CurrencyDisplay(
+            value: value,
+            currency: currency,
+            valueFontSize: big ? 26 : 20,
+            currencyFontSize: big ? 14 : 12,
+            showDecimals: true,
+            alignment: MainAxisAlignment.start,
+          ),
+        ),
+      ],
+    );
+    final content = Padding(
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+      child: ring == null
+          ? figure
+          : Row(
+              children: [
+                Expanded(child: figure),
+                const SizedBox(width: 8),
+                ring!,
+              ],
+            ),
+    );
     return CardOutline(
       borderRadius: radius,
       child: Material(
         color: s.raisedSurface,
         borderRadius: radius,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Shrinks rather than truncates with large text.
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: s.onSurfaceVariant,
-                  ),
-                ),
+        clipBehavior: Clip.antiAlias,
+        child: onTap == null
+            ? content
+            : Semantics(
+                button: true,
+                label: semanticLabel,
+                excludeSemantics: semanticLabel != null,
+                child: InkWell(onTap: onTap, child: content),
               ),
-              const SizedBox(height: 4),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: CurrencyDisplay(
-                  value: value,
-                  currency: currency,
-                  valueFontSize: big ? 26 : 20,
-                  currencyFontSize: big ? 14 : 12,
-                  showDecimals: true,
-                  alignment: MainAxisAlignment.start,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

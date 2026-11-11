@@ -26,6 +26,7 @@ void main() {
         'outline': s.outline,
         'primary': s.primary,
         'error': s.error,
+        'onBudgetOver': s.onBudgetOver,
       };
       for (final MapEntry(key: fg, value: fgColor) in texts.entries) {
         for (final MapEntry(key: bg, value: bgColor) in backgrounds.entries) {
@@ -48,6 +49,8 @@ void main() {
         for (final bg in backgrounds.values) {
           expect(_ratio(s.success, bg), greaterThanOrEqualTo(3));
           expect(_ratio(s.warning, bg), greaterThanOrEqualTo(3));
+          expect(_ratio(s.budgetFill, bg), greaterThanOrEqualTo(3));
+          expect(_ratio(s.budgetOver, bg), greaterThanOrEqualTo(3));
         }
       });
     });

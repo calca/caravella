@@ -3,6 +3,7 @@ import 'expense_details.dart';
 import 'expense_participant.dart';
 import 'expense_category.dart';
 import 'expense_group_type.dart';
+import 'group_budget.dart';
 import 'settle_payment.dart';
 
 class ExpenseGroup {
@@ -29,6 +30,9 @@ class ExpenseGroup {
   /// balances (see `computeBalances`).
   final List<SettlePayment> payments;
 
+  /// How much the group means to spend, or null for no budget.
+  final GroupBudget? budget;
+
   ExpenseGroup({
     required this.title,
     required this.expenses,
@@ -48,6 +52,7 @@ class ExpenseGroup {
     this.autoLocationEnabled = false,
     this.syncEnabled = false,
     this.payments = const [],
+    this.budget,
   }) : timestamp = timestamp ?? DateTime.now(),
        id = id ?? const Uuid().v4();
 
@@ -93,6 +98,7 @@ class ExpenseGroup {
               ?.map((p) => SettlePayment.fromJson(p as Map<String, dynamic>))
               .toList() ??
           const [],
+      budget: GroupBudget.fromJson(json['budget']),
     );
   }
 
@@ -115,6 +121,7 @@ class ExpenseGroup {
     'autoLocationEnabled': autoLocationEnabled,
     'syncEnabled': syncEnabled,
     'payments': payments.map((p) => p.toJson()).toList(),
+    'budget': budget?.toJson(),
   };
 
   ExpenseGroup copyWith({
@@ -137,6 +144,7 @@ class ExpenseGroup {
     bool? autoLocationEnabled,
     bool? syncEnabled,
     List<SettlePayment>? payments,
+    Object? budget = _notProvided,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -160,6 +168,7 @@ class ExpenseGroup {
       autoLocationEnabled: autoLocationEnabled ?? this.autoLocationEnabled,
       syncEnabled: syncEnabled ?? this.syncEnabled,
       payments: payments ?? this.payments,
+      budget: budget == _notProvided ? this.budget : budget as GroupBudget?,
     );
   }
 
