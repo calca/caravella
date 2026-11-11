@@ -23,10 +23,9 @@ export 'model/spending_pace.dart';
 export 'data/expense_group_repository.dart';
 export 'data/expense_group_repository_factory.dart';
 export 'data/expense_group_storage_v2.dart';
-export 'data/file_based_expense_group_repository.dart';
+export 'data/legacy_json_group_reader.dart';
 export 'data/sqlite_expense_group_repository.dart';
 export 'data/storage_errors.dart';
-export 'data/storage_index.dart';
 export 'data/storage_migration_service.dart';
 export 'data/storage_performance.dart';
 

@@ -10,6 +10,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _dir = Directory.systemTemp
@@ -52,8 +53,7 @@ void main() {
     PreferencesService.reset();
     await PreferencesService.initialize();
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
-    ExpenseGroupStorageV2.clearCache();
+    useTestDatabase();
     await ExpenseGroupStorageV2.addExpenseGroup(_group);
   });
 

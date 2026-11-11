@@ -5,6 +5,7 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'package:io_caravella_egm/main.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -30,7 +31,7 @@ void main() {
     await PreferencesService.initialize();
 
     // Initialize the repository
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+    useTestDatabase();
 
     await tester.pumpWidget(createAppForTest());
 

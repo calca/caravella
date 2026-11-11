@@ -11,7 +11,6 @@ import '../model/expense_location.dart';
 import '../sync/device_identity.dart';
 import 'expense_group_repository.dart';
 import 'expense_group_repository_factory.dart';
-import 'file_based_expense_group_repository.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
@@ -189,22 +188,6 @@ class ExpenseGroupStorageV2 {
   static Future<List<String>> checkDataIntegrity() async {
     final result = await _repository.checkDataIntegrity();
     return result.unwrapOr([]);
-  }
-
-  /// Clears internal cache (useful for testing)
-  static void clearCache() {
-    // Clear cache if the repository supports it
-    if (_repository is FileBasedExpenseGroupRepository) {
-      (_repository as FileBasedExpenseGroupRepository).clearCache();
-    }
-  }
-
-  /// Forces reload from disk on next access
-  static void forceReload() {
-    // Force reload if the repository supports it
-    if (_repository is FileBasedExpenseGroupRepository) {
-      (_repository as FileBasedExpenseGroupRepository).forceReload();
-    }
   }
 
   /// Adds a new expense to an existing expense group

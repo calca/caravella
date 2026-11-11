@@ -75,7 +75,7 @@ SyncOrchestrator(
 )
 ```
 
-Sync is unavailable entirely if the app is running on the legacy JSON storage backend (`--dart-define=USE_JSON_BACKEND=true` — see [Storage Backend](STORAGE_BACKEND.md)): `SyncBootstrap.initialize()` returns `null` in that case (`lib/sync/sync_bootstrap.dart:17-21`), because `SyncDao` depends on SQLite-specific columns/tables that don't exist on the JSON repository.
+`SyncBootstrap.initialize()` returns `null` when the factory's repository isn't `SqliteExpenseGroupRepository` (only a test can set another one), because `SyncDao` reads SQLite's sync columns and tables.
 
 ### Sync → UI: `SyncActivity`
 

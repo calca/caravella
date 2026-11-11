@@ -1,12 +1,12 @@
 # Storage Backend
 
-Caravella supports two interchangeable storage backends behind one interface. **SQLite is the default**; the legacy JSON file backend is kept for the `USE_JSON_BACKEND` escape hatch and as the migration source. This page replaces the old `SQLITE_BACKEND.md`.
+Caravella stores its data in a SQLite database behind one interface. Until 2.4 a JSON file backend (`FileBasedExpenseGroupRepository`, the `USE_JSON_BACKEND` define) was kept as an escape hatch; 2.5 removed it (#678). What remains of it is `LegacyJsonGroupReader`, which reads the old file once for the migration. This page replaces the old `SQLITE_BACKEND.md`.
 
 For where this fits in the wider codebase, see [caravella_core reference § Storage architecture](PACKAGE_CARAVELLA_CORE.md#storage-architecture).
 
 ## The interface
 
-`IExpenseGroupRepository` (`packages/caravella_core/lib/data/expense_group_repository.dart`) — 18 methods, all returning `StorageResult<T>` (`unwrap()`/`unwrapOr(fallback)`/`map()`). **Never depend on a concrete repository directly** — always go through `ExpenseGroupStorageV2` or this interface, so code works under both backends.
+`IExpenseGroupRepository` (`packages/caravella_core/lib/data/expense_group_repository.dart`) — 18 methods, all returning `StorageResult<T>` (`unwrap()`/`unwrapOr(fallback)`/`map()`). **Never depend on a concrete repository directly** — always go through `ExpenseGroupStorageV2` or this interface, so tests can hand the app a database of their own.
 
 `ExpenseGroupValidator` (same file): `validate(group)` (empty title/currency, `startDate ≤ endDate`, duplicate participant/category IDs, non-positive expense amounts, dangling `paidBy`/category references) and `validateDataIntegrity(groups)` (duplicate group IDs, more than one pinned-and-non-archived group).
 
@@ -69,37 +69,9 @@ The v2 upgrade previously created three aggregation views (`v_group_totals`, `v_
 
 `deleteGroup` leaves a **tombstone** instead of removing the row: `deleted = 1`, a new `updated_at` (`SyncClock`), `pinned = 0`, and the group's expenses (with their attachment rows), participants and categories deleted, in one transaction. Every read skips deleted groups (`SqliteGroupMapper`, `WHERE deleted = 0`). The tombstone is what tells the other devices the group is gone: it goes out in `deleted_groups` (Wi-Fi/Bluetooth deltas, Google Drive snapshots) and beats their older copy by Last Writer Wins, which is what stops the group coming back from them. Before 2.4.2 the row was removed, so a deletion never reached the other devices.
 
-## Backend 2: JSON file (legacy) — `FileBasedExpenseGroupRepository`
+## The factory
 
-`packages/caravella_core/lib/data/file_based_expense_group_repository.dart`. Stores all groups as one JSON array in `${ApplicationDocumentsDirectory}/expense_group_storage.json`.
-
-- In-memory cache (`_cachedGroups`, 5-minute validity), invalidated by comparing file mtime.
-- `GroupIndex`/`ExpenseIndex` (`storage_index.dart`) for O(1) lookups, rebuilt on every load/save.
-- Extra query methods not on the shared interface: `getGroupsByParticipant/Category/Currency`, `searchGroupsByTitle`, `getStorageStats`, `validateIndexConsistency`, `saveAllGroups`, `clearCache`, `forceReload`.
-- `addExpenseGroup` force-reloads from disk first (bypassing cache) to avoid overwrite races between concurrent writers.
-- `deleteGroup` also calls `AttachmentsStorageService.deleteGroupAttachments`.
-
-## Selecting a backend: the factory
-
-`ExpenseGroupRepositoryFactory` (`expense_group_repository_factory.dart`) is a **singleton** — `getRepository({useJsonBackend = false})` only honors the parameter on the *first* call; subsequent calls return the cached instance regardless of the argument. `reset()` clears it (test-only).
-
-The app-level trigger is `lib/main/app_initialization.dart`'s `initStorage()`:
-
-```dart
-final shouldUseJson = String.fromEnvironment('USE_JSON_BACKEND', defaultValue: 'false')
-    .toLowerCase() == 'true';
-ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: shouldUseJson);
-```
-
-```bash
-# SQLite (default)
-flutter run --flavor dev --dart-define=FLAVOR=dev
-
-# JSON (legacy)
-flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=USE_JSON_BACKEND=true
-```
-
-**Once migrated to SQLite, switching back to `USE_JSON_BACKEND=true` shows the pre-migration JSON snapshot — the two backends are independent after migration, not kept in sync.**
+`ExpenseGroupRepositoryFactory` (`expense_group_repository_factory.dart`) is a **singleton**: `getRepository()` creates the `SqliteExpenseGroupRepository` on first use and returns it from then on. `lib/main/app_initialization.dart`'s `initStorage()` calls it first, then runs the migration below. Tests point it at a database in a temporary file with `useForTesting(repository)` (`test/helpers/test_database.dart`'s `useTestDatabase()` does this), and `reset()` clears it.
 
 ## `ExpenseGroupStorageV2` — the facade to actually use
 
@@ -108,17 +80,15 @@ flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=USE_JSON_BACKEND
 - `addExpenseToGroup` / `updateExpenseToGroup` / `removeExpenseFromGroup`
 - `isParticipantAssigned` / `isCategoryAssigned` — checks if an id is referenced by any expense
 - `removeParticipantIfUnused` / `removeCategoryIfUnused`
-- `updateParticipantReferencesFromDiff` / `updateCategoryReferencesFromDiff` — propagate a participant/category **rename** into the denormalized copies embedded in historical expenses (`ExpenseDetails.category`/`.paidBy` are full embedded objects, not IDs)
-
-`clearCache()`/`forceReload()` only have an effect for the file-based backend (no-ops on SQLite) — safe to call unconditionally from shared code.
+- `updateParticipantReferencesFromDiff` / `updateCategoryReferencesFromDiff` — rewrite the participant/category copies inside the group's expenses after a **rename**. In SQLite an expense row keeps only `paid_by_id`/`category_id` and is read back with the group's current participant/category, so the rename itself (`updateGroupMetadata`) is what the reader sees; these still keep the in-memory `ExpenseDetails` copies consistent
 
 ## Migration: JSON → SQLite
 
-`StorageMigrationService` (`storage_migration_service.dart`), triggered from `initStorage()` only on the SQLite path:
+`StorageMigrationService` (`storage_migration_service.dart`), triggered from `initStorage()` at every launch until it has run once:
 
 1. Skip if `isMigrationCompleted()` (SharedPreferences key `storage_migration_completed`, version-gated by `storage_migration_version` against `_currentMigrationVersion = 1`).
-2. `hasJsonData()` — checks the JSON file exists and isn't empty/`'[]'`.
-3. Load all groups via `FileBasedExpenseGroupRepository().getAllGroups()`.
+2. Read the old file with `LegacyJsonGroupReader.readGroups()` (`legacy_json_group_reader.dart`: `${ApplicationDocumentsDirectory}/expense_group_storage.json`, a JSON list of `ExpenseGroup.toJson`, checked with `validateDataIntegrity`). No file or no groups: mark the migration complete and stop. `hasJsonData()` still answers whether the file has data.
+3. A read failure returns a `MigrationError` without marking complete, so the next launch tries again.
 4. `sqliteRepository.saveGroup(group)` per group, tracking success/error counts.
 5. If any failures occurred, return a `MigrationError` **without** marking complete.
 6. `_validateMigration()` — reloads from SQLite, compares group counts and ID sets against the originals.
@@ -129,9 +99,8 @@ flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=USE_JSON_BACKEND
 
 ## Supporting infrastructure
 
-- **`storage_index.dart`** — `GroupIndex` (id map + pinned/archived/active sets, participant/category/currency/date-range lookups, title search, `validateConsistency()`) and `ExpenseIndex` (expenseId → `{groupId, expenseIndex}`); used only by the file-based repo.
 - **`storage_transaction.dart`** — removed 2026-07-14. It provided a `StorageTransaction`/`TransactionExecutor`/`executeTransaction` extension for queued, in-memory-validated batch operations, committed via one `saveAllGroups` call for the file backend — but for any other repository (i.e. SQLite) it fell back to a non-atomic per-group `saveGroup` loop with no rollback on partial failure, and that path had zero test coverage and zero production callers. Removed rather than fixed since nothing in `lib/` used it. If batched atomic writes are needed again, implement them against `SqliteExpenseGroupRepository`'s own `db.transaction` (see `saveGroup`/`updateGroupMetadata`) instead of resurrecting the generic extension.
-- **`storage_performance.dart`** — `StoragePerformanceMonitor` (opt-in via `.enable()`, 1000-entry ring buffer) and the `PerformanceMonitoring` mixin (`measureOperation`/`measureSyncOperation`) both repositories use.
+- **`storage_performance.dart`** — `StoragePerformanceMonitor` (opt-in via `.enable()`, 1000-entry ring buffer) and the `PerformanceMonitoring` mixin (`measureOperation`/`measureSyncOperation`) the SQLite repository uses.
 - **`test/storage_benchmark.dart`** — `BenchmarkConfig`/`BenchmarkResult` (p50/p95/p99/stddev) for load-testing repositories; lives under `packages/caravella_core/test/` (not `lib/`) since it's dev/test-only tooling, not part of the package's public API or production build.
 - **`storage_errors.dart`** — the `StorageError` hierarchy: `FileOperationError`, `SerializationError`, `ValidationError` (with a `fieldErrors` map), `EntityNotFoundError`, `DataIntegrityError`, `ConcurrentModificationError`, `MigrationError`, `NotFoundError`.
 
@@ -142,8 +111,9 @@ flutter test test/sqlite_repository_test.dart
 flutter test test/storage_migration_test.dart
 ```
 
+Tests that go through `ExpenseGroupStorageV2` call `useTestDatabase()` (`test/helpers/test_database.dart`): a new SQLite database in a temporary file (`sqflite_common_ffi`). Call it in `setUp` for a clean database per test. Participant, category and expense ids are primary keys across the whole database, so two groups in one test need their own ids, as in the app.
+
 ## See also
 
 - [caravella_core reference](PACKAGE_CARAVELLA_CORE.md)
 - [App: Settings § Backup & restore](APP_SETTINGS.md#backup--restore) — how the JSON export/import in Settings relates to (but is distinct from) this migration
-- [Build Variants & Flavors](BUILD_VARIANTS.md) — the `USE_JSON_BACKEND` dart-define alongside the other flags

@@ -325,7 +325,6 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
                 try {
                   final saved = await controller.save();
 
-                  ExpenseGroupStorageV2.forceReload();
                   try {
                     notifier?.notifyGroupUpdated(saved.id);
                   } catch (e) {

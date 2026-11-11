@@ -231,8 +231,7 @@ class GroupFormController {
         await ExpenseGroupStorageV2.addExpenseGroup(group);
       }
 
-      // Ensure repository reloads fresh data and notify listeners globally
-      ExpenseGroupStorageV2.forceReload();
+      // Notify listeners globally
       _notifier?.notifyGroupUpdated(group.id);
 
       // store snapshot in state (single source of truth for original)
@@ -247,8 +246,7 @@ class GroupFormController {
     if (mode == GroupEditMode.create || state.originalGroup == null) return;
     // Use the repository delete API which handles loading/saving atomically
     await ExpenseGroupStorageV2.deleteGroup(state.originalGroup!.id);
-    // Force reload and notify so UI updates across the app
-    ExpenseGroupStorageV2.forceReload();
+    // Notify so the UI updates across the app
     _notifier?.notifyGroupDeleted(state.originalGroup!.id);
   }
 

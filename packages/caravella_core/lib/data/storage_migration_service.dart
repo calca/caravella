@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/logging/logger_service.dart';
 import '../model/expense_group.dart';
 import 'expense_group_repository.dart';
-import 'file_based_expense_group_repository.dart';
+import 'legacy_json_group_reader.dart';
 import 'sqlite_expense_group_repository.dart';
 import 'storage_errors.dart';
 
@@ -40,7 +40,7 @@ class StorageMigrationService {
         final dir = await getApplicationDocumentsDirectory();
         dirPath = dir.path;
       }
-      final file = File('$dirPath/expense_group_storage.json');
+      final file = File('$dirPath/${LegacyJsonGroupReader.fileName}');
       if (!await file.exists()) return false;
 
       final contents = await file.readAsString();
@@ -56,10 +56,10 @@ class StorageMigrationService {
 
   /// Perform migration from JSON to SQLite
   ///
-  /// Optional [jsonRepo] and [sqliteRepo] parameters allow injecting custom
-  /// repositories for testing purposes.
+  /// Optional [jsonReader] and [sqliteRepo] parameters allow injecting a
+  /// custom file and database for testing purposes.
   static Future<StorageResult<void>> migrateToSqlite({
-    FileBasedExpenseGroupRepository? jsonRepo,
+    LegacyJsonGroupReader? jsonReader,
     SqliteExpenseGroupRepository? sqliteRepo,
   }) async {
     try {
@@ -75,27 +75,8 @@ class StorageMigrationService {
         return const StorageResult.success(null);
       }
 
-      // When custom repositories are provided (for testing), skip the hasJsonData check
-      // and use the repository's getAllGroups to determine if there's data
-      final bool hasData;
-      if (jsonRepo != null) {
-        // For custom repo, check by loading groups directly
-        final loadCheck = await jsonRepo.getAllGroups();
-        hasData = loadCheck.isSuccess && (loadCheck.data?.isNotEmpty ?? false);
-      } else {
-        // For default repo, use the standard file check
-        hasData = await hasJsonData();
-      }
-
-      if (!hasData) {
-        LoggerService.info('No JSON data to migrate', name: 'migration');
-        await _markMigrationCompleted();
-        return const StorageResult.success(null);
-      }
-
-      // Load data from JSON
-      final jsonRepository = jsonRepo ?? FileBasedExpenseGroupRepository();
-      final loadResult = await jsonRepository.getAllGroups();
+      final reader = jsonReader ?? LegacyJsonGroupReader();
+      final loadResult = await reader.readGroups();
 
       if (loadResult.isFailure) {
         LoggerService.warning(
@@ -117,7 +98,7 @@ class StorageMigrationService {
       );
 
       if (groups.isEmpty) {
-        LoggerService.info('No groups to migrate', name: 'migration');
+        LoggerService.info('No JSON data to migrate', name: 'migration');
         await _markMigrationCompleted();
         return const StorageResult.success(null);
       }
@@ -172,7 +153,7 @@ class StorageMigrationService {
       await _markMigrationCompleted();
 
       // Optionally backup JSON file
-      await _backupJsonFile();
+      await _backupJsonFile(await reader.file());
 
       LoggerService.info('Migration successfully completed', name: 'migration');
       return const StorageResult.success(null);
@@ -264,11 +245,8 @@ class StorageMigrationService {
   }
 
   /// Backup JSON file after successful migration
-  static Future<void> _backupJsonFile() async {
+  static Future<void> _backupJsonFile(File sourceFile) async {
     try {
-      final dir = await getApplicationDocumentsDirectory();
-      final sourceFile = File('${dir.path}/expense_group_storage.json');
-
       if (await sourceFile.exists()) {
         // Use ISO 8601 format with hyphens for readability
         final timestamp = DateTime.now()
@@ -276,9 +254,7 @@ class StorageMigrationService {
             .replaceAll(':', '-')
             .split('.')
             .first;
-        final backupFile = File(
-          '${dir.path}/expense_group_storage.json.backup.$timestamp',
-        );
+        final backupFile = File('${sourceFile.path}.backup.$timestamp');
         await sourceFile.copy(backupFile.path);
         LoggerService.info(
           'JSON file backed up to ${backupFile.path}',

@@ -2,11 +2,10 @@ import 'package:caravella_core/caravella_core.dart';
 
 /// Builds the app-wide [SyncOrchestrator].
 ///
-/// Sync is only available on the SQLite backend: [SyncDao] queries
-/// sync-specific columns (`sync_enabled`, `device_id`, `updated_at`, ...)
-/// that don't exist in the legacy JSON repository. On the JSON backend
-/// (`--dart-define=USE_JSON_BACKEND=true`) this returns null and the sync
-/// UI stays hidden.
+/// Sync works on the SQLite repository: [SyncDao] queries its sync columns
+/// (`sync_enabled`, `device_id`, `updated_at`, ...). With any other
+/// repository (only tests set one) this returns null and the sync UI stays
+/// hidden.
 class SyncBootstrap {
   static const _tag = 'sync.bootstrap';
 
@@ -15,7 +14,10 @@ class SyncBootstrap {
   static Future<SyncOrchestrator?> initialize() async {
     final repository = ExpenseGroupRepositoryFactory.getRepository();
     if (repository is! SqliteExpenseGroupRepository) {
-      LoggerService.info('Sync unavailable on JSON backend', name: _tag);
+      LoggerService.info(
+        'Sync unavailable: not the SQLite repository',
+        name: _tag,
+      );
       return null;
     }
 

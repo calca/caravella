@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -21,9 +22,8 @@ void main() {
   PathProviderPlatform.instance = _FakePathProvider();
 
   setUpAll(() {
-    // Force use of JSON backend for all tests
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+    useTestDatabase();
   });
   test('updateParticipantReferencesFromDiff replaces paidBy names', () async {
     // Create a minimal group with one expense referencing a participant
@@ -51,10 +51,12 @@ void main() {
       currency: 'EUR',
     );
 
-    // Add group
+    // Add group, then rename the participant as the group form does:
+    // the group's people first, then the expenses that point at them.
     await ExpenseGroupStorageV2.addExpenseGroup(group);
-
-    // Apply diff update
+    await ExpenseGroupStorageV2.updateGroupMetadata(
+      group.copyWith(participants: [participantUpdated]),
+    );
     await ExpenseGroupStorageV2.updateParticipantReferencesFromDiff(
       group.id,
       [participant],
@@ -91,6 +93,9 @@ void main() {
     );
 
     await ExpenseGroupStorageV2.addExpenseGroup(group);
+    await ExpenseGroupStorageV2.updateGroupMetadata(
+      group.copyWith(categories: [categoryUpdated]),
+    );
 
     await ExpenseGroupStorageV2.updateCategoryReferencesFromDiff(
       group.id,

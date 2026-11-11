@@ -6,6 +6,7 @@ import 'package:io_caravella_egm/manager/group/group_form_controller.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/group_edit_mode.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -23,13 +24,12 @@ void main() {
   setUpAll(() {
     // Force use of JSON backend for all tests
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+    useTestDatabase();
   });
 
   group('UI Color Removal Bug Investigation - FIXED', () {
     setUp(() {
       // Clear any cached data before each test
-      ExpenseGroupStorageV2.clearCache();
     });
 
     test(
@@ -135,7 +135,6 @@ void main() {
         );
 
         // Step 4: Simulate app restart - load group from storage again
-        ExpenseGroupStorageV2.forceReload(); // Force fresh read from storage
         final reloadedGroup = await ExpenseGroupStorageV2.getTripById(
           'bug-test-group',
         );
@@ -234,7 +233,6 @@ void main() {
         await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
 
         // Force reload and verify the update persisted
-        ExpenseGroupStorageV2.forceReload();
         loaded = await ExpenseGroupStorageV2.getTripById('storage-test-group');
 
         expect(

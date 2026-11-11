@@ -10,9 +10,8 @@ The barrel `caravella_core.dart` exports everything under `data/`, `model/`, and
 
 Full details on both backends, the SQLite schema, the factory, `ExpenseGroupStorageV2`, and the migration flow live in **[Storage Backend](STORAGE_BACKEND.md)** — this page only summarizes the pieces that matter for day-to-day feature work:
 
-- Never depend on `SqliteExpenseGroupRepository`/`FileBasedExpenseGroupRepository` directly — always go through `ExpenseGroupStorageV2` (a static facade) or `IExpenseGroupRepository`, so code works under both backends.
+- Never depend on `SqliteExpenseGroupRepository` directly — always go through `ExpenseGroupStorageV2` (a static facade) or `IExpenseGroupRepository`, so tests can swap in their own database (`ExpenseGroupRepositoryFactory.useForTesting`).
 - `ExpenseGroupStorageV2.updateParticipantReferencesFromDiff` / `updateCategoryReferencesFromDiff` propagate a participant/category rename into the denormalized copies embedded in historical expenses — use these instead of hand-rolling the update whenever a group's participants/categories are edited.
-- `forceReload()`/`clearCache()` only matter for the file-based backend (no-ops on SQLite) but are safe to call unconditionally.
 
 ## Domain models (`model/`)
 
@@ -59,7 +58,7 @@ static const bool enableTalkerScreen  = bool.fromEnvironment('ENABLE_TALKER_SCRE
 static const bool enableAndroidWidget = bool.fromEnvironment('ENABLE_ANDROID_WIDGET', defaultValue: _flavor != 'prod');
 ```
 
-`AppConfig` does **not** define `FLAVOR` or `USE_JSON_BACKEND` — those dart-defines are read directly in the app's `lib/main/app_initialization.dart`. `ENABLE_PLAY_UPDATES` lives entirely in the sibling package `play_store_updates`. See [Build Variants & Flavors](BUILD_VARIANTS.md) for the full flag list.
+`AppConfig` does **not** define `FLAVOR` — that dart-define is read directly in the app's `lib/main/app_initialization.dart`. `ENABLE_PLAY_UPDATES` lives entirely in the sibling package `play_store_updates`. See [Build Variants & Flavors](BUILD_VARIANTS.md) for the full flag list.
 
 ## See also
 

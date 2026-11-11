@@ -1,8 +1,32 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+/// The pre-SQLite `expense_group_storage.json`, written as the old app did:
+/// a JSON list of groups.
+class _OldJsonFile {
+  _OldJsonFile(this.path);
+
+  final String path;
+  final _groups = <ExpenseGroup>[];
+
+  late final reader = LegacyJsonGroupReader(path: path);
+
+  Future<void> saveGroup(ExpenseGroup group) async {
+    _groups
+      ..removeWhere((g) => g.id == group.id)
+      ..add(group);
+    await File(
+      path,
+    ).writeAsString(jsonEncode([for (final g in _groups) g.toJson()]));
+  }
+
+  Future<StorageResult<List<ExpenseGroup>>> getAllGroups() =>
+      reader.readGroups();
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +36,7 @@ void main() {
   databaseFactory = databaseFactoryFfi;
 
   group('StorageMigrationService', () {
-    late FileBasedExpenseGroupRepository jsonRepo;
+    late _OldJsonFile jsonRepo;
     late SqliteExpenseGroupRepository sqliteRepo;
     late ExpenseGroup testGroup1;
     late ExpenseGroup testGroup2;
@@ -29,7 +53,7 @@ void main() {
       final dbPath = '${tempDir.path}/expense_groups.db';
       final jsonPath = '${tempDir.path}/expense_group_storage.json';
 
-      jsonRepo = FileBasedExpenseGroupRepository(storagePath: jsonPath);
+      jsonRepo = _OldJsonFile(jsonPath);
       sqliteRepo = SqliteExpenseGroupRepository(databasePath: dbPath);
 
       // Reset migration status
@@ -73,7 +97,6 @@ void main() {
     });
 
     tearDown(() async {
-      jsonRepo.clearCache();
       await sqliteRepo.close();
 
       // Clean up temp directory
@@ -115,7 +138,7 @@ void main() {
 
       // Perform migration with injected repositories
       final result = await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
       expect(result.isSuccess, isTrue);
@@ -140,7 +163,7 @@ void main() {
       await jsonRepo.saveGroup(testGroup1);
 
       await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
 
@@ -152,7 +175,7 @@ void main() {
       // First migration
       await jsonRepo.saveGroup(testGroup1);
       await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
 
@@ -161,7 +184,7 @@ void main() {
 
       // Try to migrate again
       final result = await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
       expect(result.isSuccess, isTrue);
@@ -175,7 +198,7 @@ void main() {
       // No data in JSON - hasJsonData will return false, so migration will be skipped
       // We need to use a custom path check
       final result = await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
       expect(result.isSuccess, isTrue);
@@ -189,7 +212,7 @@ void main() {
       await jsonRepo.saveGroup(testGroup2);
 
       final result = await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
       expect(result.isSuccess, isTrue);
@@ -212,7 +235,7 @@ void main() {
 
       await jsonRepo.saveGroup(pinnedGroup);
       await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
 
@@ -228,7 +251,7 @@ void main() {
     test('should preserve expenses during migration', () async {
       await jsonRepo.saveGroup(testGroup1);
       await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
 
@@ -246,7 +269,7 @@ void main() {
       () async {
         await jsonRepo.saveGroup(testGroup1);
         await StorageMigrationService.migrateToSqlite(
-          jsonRepo: jsonRepo,
+          jsonReader: jsonRepo.reader,
           sqliteRepo: sqliteRepo,
         );
 
@@ -265,7 +288,7 @@ void main() {
     test('should backup JSON file after successful migration', () async {
       await jsonRepo.saveGroup(testGroup1);
       await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
 
@@ -279,7 +302,7 @@ void main() {
     test('should reset migration status correctly', () async {
       await jsonRepo.saveGroup(testGroup1);
       await StorageMigrationService.migrateToSqlite(
-        jsonRepo: jsonRepo,
+        jsonReader: jsonRepo.reader,
         sqliteRepo: sqliteRepo,
       );
 

@@ -122,23 +122,7 @@ class AppInitialization {
 
   /// Initializes storage backend and performs migration if needed.
   static Future<void> initStorage() async {
-    // Check if we should use JSON backend (via dart-define flag)
-    const useJsonBackend = String.fromEnvironment(
-      'USE_JSON_BACKEND',
-      defaultValue: 'false',
-    );
-    final shouldUseJson = useJsonBackend.toLowerCase() == 'true';
-
-    // Initialize the repository factory with the appropriate backend
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: shouldUseJson);
-
-    if (shouldUseJson) {
-      LoggerService.info(
-        'Using JSON backend (migration skipped)',
-        name: 'storage',
-      );
-      return;
-    }
+    ExpenseGroupRepositoryFactory.getRepository();
 
     // Using SQLite backend - check if migration is needed
     LoggerService.info('Initializing SQLite backend', name: 'storage');

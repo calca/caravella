@@ -6,6 +6,7 @@ import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/group_edit_mode.dart';
 import 'package:io_caravella_egm/manager/group/group_form_controller.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -31,9 +32,8 @@ void main() {
 
   setUpAll(() {
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+    useTestDatabase();
   });
-  setUp(ExpenseGroupStorageV2.clearCache);
 
   test('a new group with no background gets its type\'s color', () async {
     for (final type in [...ExpenseGroupType.values, null]) {

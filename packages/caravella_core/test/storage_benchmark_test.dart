@@ -1,44 +1,24 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
-import 'package:caravella_core/data/file_based_expense_group_repository.dart';
+import 'package:caravella_core/data/sqlite_expense_group_repository.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:caravella_core/data/storage_performance.dart';
 import 'storage_benchmark.dart';
 
-/// Fake path provider to avoid platform channel dependency in benchmarks
-class _FakePathProvider extends PathProviderPlatform {
-  late final String _tempDir = Directory.systemTemp
-      .createTempSync('bench_test')
-      .path;
-  @override
-  Future<String?> getApplicationDocumentsPath() async => _tempDir;
-}
-
 void main() {
-  // Ensure bindings for path provider & file IO
   TestWidgetsFlutterBinding.ensureInitialized();
-  PathProviderPlatform.instance = _FakePathProvider();
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   group('StorageBenchmark', () {
-    late FileBasedExpenseGroupRepository repository;
+    late SqliteExpenseGroupRepository repository;
     late StorageBenchmark benchmark;
 
     setUp(() async {
-      repository = FileBasedExpenseGroupRepository();
+      final dir = Directory.systemTemp.createTempSync('bench_test');
+      repository = SqliteExpenseGroupRepository(
+        databasePath: '${dir.path}/bench.db',
+      );
       benchmark = StorageBenchmark(repository);
-
-      // Clean up any existing test data
-      try {
-        final dir = await getApplicationDocumentsDirectory();
-        final file = File('${dir.path}/expense_group_storage.json');
-        if (await file.exists()) {
-          await file.delete();
-        }
-      } catch (e) {
-        // Ignore errors during cleanup
-      }
-
-      repository.clearCache();
       StoragePerformanceMonitor.clear();
     });
 
@@ -96,44 +76,6 @@ void main() {
 
       expect(loadResult.operation, equals('loadAllGroups'));
       expect(loadResult.durations.length, equals(config.iterations));
-    });
-
-    test('should show performance improvement with caching', () async {
-      const configWithoutCache = BenchmarkConfig(
-        groupCount: 5,
-        iterations: 3,
-        enableCaching: false,
-        enablePerformanceMonitoring: false,
-      );
-
-      const configWithCache = BenchmarkConfig(
-        groupCount: 5,
-        iterations: 3,
-        enableCaching: true,
-        enablePerformanceMonitoring: false,
-      );
-
-      // Run without caching
-      final resultsWithoutCache = await benchmark.runBenchmarkSuite(
-        config: configWithoutCache,
-      );
-      final loadWithoutCache = resultsWithoutCache
-          .firstWhere((r) => r.operation == 'loadAllGroups')
-          .averageDuration;
-
-      // Clear and run with caching
-      repository.clearCache();
-      final resultsWithCache = await benchmark.runBenchmarkSuite(
-        config: configWithCache,
-      );
-      final loadWithCache = resultsWithCache
-          .firstWhere((r) => r.operation == 'loadAllGroups')
-          .averageDuration;
-
-      // With caching, subsequent loads should be faster (though first load might be slower)
-      // We just verify both complete successfully
-      expect(loadWithoutCache.inMicroseconds, greaterThan(0));
-      expect(loadWithCache.inMicroseconds, greaterThan(0));
     });
 
     test('should calculate statistics correctly', () async {
@@ -200,7 +142,7 @@ void main() {
 
       // Should have metrics for various operations
       final operations = metrics.map((m) => m.operation).toSet();
-      expect(operations, contains('saveGroups'));
+      expect(operations, contains('saveGroup'));
     });
 
     test('should print results without errors', () async {

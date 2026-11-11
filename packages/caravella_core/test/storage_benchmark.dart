@@ -6,7 +6,6 @@ import 'package:caravella_core/model/expense_category.dart';
 import 'package:caravella_core/model/expense_details.dart';
 import 'package:caravella_core/data/expense_group_repository.dart';
 import 'package:caravella_core/data/storage_performance.dart';
-import 'package:caravella_core/data/file_based_expense_group_repository.dart';
 
 /// Benchmark configuration
 class BenchmarkConfig {
@@ -272,12 +271,6 @@ class StorageBenchmark {
     final durations = <Duration>[];
 
     for (int i = 0; i < config.iterations; i++) {
-      // Clear cache if caching is disabled for this test
-      if (!config.enableCaching &&
-          repository is FileBasedExpenseGroupRepository) {
-        (repository as FileBasedExpenseGroupRepository).clearCache();
-      }
-
       final stopwatch = Stopwatch()..start();
 
       final result = await repository.getAllGroups();

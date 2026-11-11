@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -23,7 +24,7 @@ void main() {
   setUpAll(() {
     // Force use of JSON backend for all tests
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+    useTestDatabase();
   });
 
   setUp(() async {
@@ -35,8 +36,6 @@ void main() {
     } catch (e) {
       // ignore
     }
-    ExpenseGroupStorageV2.clearCache();
-    ExpenseGroupStorageV2.forceReload();
   });
 
   test('deleteGroup: removes an existing group from storage', () async {

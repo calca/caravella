@@ -77,6 +77,7 @@ These cover services like notifications, repositories, widget helpers, and the s
 ## Test Patterns
 
 - **In-memory SQLite:** Tests use `sqflite_common_ffi` with `databaseFactoryFfi` and `inMemoryDatabasePath` for isolated, fast DB tests.
+- **App storage in tests:** anything going through `ExpenseGroupStorageV2` calls `useTestDatabase()` (`test/helpers/test_database.dart`), which points `ExpenseGroupRepositoryFactory` at a new SQLite database in a temporary file. Call it in `setUp` for a clean database per test, and give each group its own participant/category/expense ids (they are primary keys across the database).
 - **Mocks:** Mockito-based mocks for repositories and DAOs.
 - **Golden tests:** Not currently used; widget tests use `pumpWidget` with `MaterialApp` wrappers.
 
