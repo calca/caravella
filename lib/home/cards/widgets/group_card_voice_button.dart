@@ -13,10 +13,27 @@ import '../../home_constants.dart';
 ///
 /// Behaviour:
 /// - Tapping starts voice recognition.
-/// - If the recognised text contains sufficient data (amount + paidBy + category)
-///   the expense is saved **directly** without opening any form.
+/// - If the recognised text contains sufficient data (amount + name, with a
+///   payer and a category the group can supply) the expense is saved
+///   **directly** without opening any form ([voiceExpenseIsComplete]).
 /// - If any required field is missing the expense form is opened pre-filled
 ///   with whatever was parsed.
+/// Whether a spoken expense has what the expense form requires, so it can
+/// be saved without opening the form: an amount above zero, a name, who
+/// paid and a category. "20 euro" alone has no name and opens the form.
+@visibleForTesting
+bool voiceExpenseIsComplete({
+  required double? amount,
+  required String? name,
+  required ExpenseParticipant? paidBy,
+  required ExpenseCategory? category,
+}) =>
+    amount != null &&
+    amount > 0 &&
+    (name?.trim().isNotEmpty ?? false) &&
+    paidBy != null &&
+    category != null;
+
 class GroupCardVoiceButton extends StatefulWidget {
   final ExpenseGroup group;
   final VoidCallback onExpenseAdded;
@@ -235,12 +252,14 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
     }
     category ??= categories.isNotEmpty ? categories.first : null;
 
-    final isSufficient =
-        amount != null && amount > 0 && paidBy != null && category != null;
-
-    if (isSufficient) {
+    if (voiceExpenseIsComplete(
+      amount: amount,
+      name: parsed['name'] as String?,
+      paidBy: paidBy,
+      category: category,
+    )) {
       // ── Save directly ──────────────────────────────────────────────────────
-      await _saveDirectly(parsed, amount, paidBy, category);
+      await _saveDirectly(parsed, amount!, paidBy!, category!);
     } else {
       // ── Open pre-filled form ───────────────────────────────────────────────
       if (mounted) {

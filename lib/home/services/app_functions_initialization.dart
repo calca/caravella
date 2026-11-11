@@ -57,18 +57,7 @@ class AppFunctionsInitialization {
       // When no amount is provided (amount == 0.0), navigate to the group detail
       // page only – the user can create the expense manually with the pre-context.
       if (params.amount > 0) {
-        final category = _resolveCategory(group, params.categoryName);
-        final paidBy = group.participants.isNotEmpty
-            ? group.participants.first
-            : ExpenseParticipant(name: 'Me');
-
-        final expense = ExpenseDetails(
-          category: category,
-          amount: params.amount,
-          paidBy: paidBy,
-          date: DateTime.now(),
-          note: params.note,
-        );
+        final expense = expenseFor(group, params);
 
         await ExpenseGroupStorageV2.addExpenseToGroup(group.id, expense);
         LoggerService.info(
@@ -106,6 +95,28 @@ class AppFunctionsInitialization {
   /// If [categoryName] matches an existing category (case-insensitive) in the
   /// group, that category is returned.  Otherwise the first category is used,
   /// or a default one is created.
+  /// The expense an agent's request adds to [group]. Its name is the
+  /// agent's note, or the category's name without one: an expense needs a
+  /// name (the form requires it, and SQLite's `expenses.name` is NOT NULL,
+  /// so an unnamed one was never saved).
+  @visibleForTesting
+  static ExpenseDetails expenseFor(
+    ExpenseGroup group,
+    AddExpenseFunctionParams params,
+  ) {
+    final category = _resolveCategory(group, params.categoryName);
+    final note = params.note?.trim();
+    return ExpenseDetails(
+      name: note != null && note.isNotEmpty ? note : category.name,
+      category: category,
+      amount: params.amount,
+      paidBy: group.participants.isNotEmpty
+          ? group.participants.first
+          : ExpenseParticipant(name: 'Me'),
+      date: DateTime.now(),
+    );
+  }
+
   static ExpenseCategory _resolveCategory(
     ExpenseGroup group,
     String? categoryName,
