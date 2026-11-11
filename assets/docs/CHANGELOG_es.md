@@ -1,3 +1,7 @@
+## 2.4.3 (11.11.2026)
+
+- **Cambios**: La sincronización de tus dispositivos a través de Google Drive queda oculta hasta que esté lista: llega en la próxima versión. La copia de seguridad en Google Drive funciona como antes
+
 ## 2.4.2 (11.11.2026)
 
 - **Correcciones**: Un grupo eliminado sigue eliminado: ya no vuelve a aparecer después de sincronizar con otro teléfono

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.3] - 2026-11-11
+
 ### Changed
 - Settings › Sync no longer shows "Sync your devices" (Google Drive), and the sync subtitles no longer mention Google Drive: the channel never moved any data in 2.4. It comes back, working, in 2.5 (#688). The Play listing drops the line about it. Google Drive backup is unchanged (`SyncBootstrap.driveSyncAvailable = false`, which leaves the orchestrator without a cloud channel)
 
@@ -676,7 +678,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.4.2...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.4.3...HEAD
+[2.4.3]: https://github.com/calca/caravella/compare/v2.4.2...v2.4.3
 [2.4.2]: https://github.com/calca/caravella/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/calca/caravella/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/calca/caravella/compare/v2.3.0...v2.4.0

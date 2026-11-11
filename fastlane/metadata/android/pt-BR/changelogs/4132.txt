@@ -1,0 +1,5 @@
+Versão 2.4.3 - Atualização de manutenção
+
+• Pequena limpeza nas configurações de sincronização, alinhada com a versão da Play Store
+
+Obrigado por usar o Caravella!
