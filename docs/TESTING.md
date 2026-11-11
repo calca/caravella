@@ -53,7 +53,10 @@ The P2P sync tests live in `packages/caravella_core/test/sync/` — they test cl
 | `sync_crypto_test.dart` | `SyncEnvelope` encrypt/decrypt round-trip and X25519 ECDH + HKDF key agreement |
 | `sync_dao_test.dart` | Per-group pairing grants (paired devices, `isPaired`, revocation) |
 | `sync_result_test.dart` | SyncResult / SyncStatus domain models |
+| `lan_two_peer_test.dart` | Wi-Fi end to end: phone A is the real `LanSyncChannel` (`mdns: false`, port 0) behind `SyncOrchestrator` and SQLite, phone B speaks the HTTP protocol from the test with its own X25519 keys and database. Pairing grants and brings the group, changes go both ways in one exchange, newer change wins on both, unpaired phone and wrong key refused (403), revoked grant blocks both ways, deletion reaches B, and A pairing/syncing with B's code (`pairWithHost`) |
 | `cloud_sync_test.dart` | Google Drive cycle with a fake `appDataFolder` and two phones: every group taken without a grant, own snapshot uploaded with what was merged, own shard ignored, deletion propagated and not undone by a stale shard, newer-schema shard skipped, signed out → `cloudUnreachable`, on/off, and `deleteGroup`'s tombstone |
+
+`packages/caravella_gms/test/nearby_bluetooth_sync_channel_test.dart` runs the real `NearbyBluetoothSyncChannel` over a fake `Nearby` (constructor `nearby:`/`requestPermissions:`) against a scripted phone: handshake and encrypted exchange from either side, deltas over 32 KB chunked with every payload within Nearby's limit, chunked hello reassembly, incomplete chunks dropped after 30 s, implausible chunk totals ignored, handshake and response timeouts reported as failures, a sync without a hello ignored, and `startUpdate` answering only the paired device with its stored key.
 
 The one sync test that stays in the root `test/sync/` is `bluetooth_sync_factory_test.dart` — it tests `lib/sync/bluetooth_sync_factory.dart`, an app-level class, not `caravella_core`.
 

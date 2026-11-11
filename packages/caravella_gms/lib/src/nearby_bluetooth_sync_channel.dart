@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/crypto/device_key_manager.dart';
 import 'package:caravella_core/sync/crypto/peer_key_store.dart';
@@ -13,13 +13,15 @@ import 'package:caravella_core/sync/channels/bluetooth_sync_channel.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-/// Maximum payload size before chunking is applied (32 KB).
-///
-/// Not exposed as user/build configuration: no real-world payload or
-/// network condition has yet required tuning it, and the Nearby Connections
-/// transport itself imposes its own limits well above this. Revisit only if
-/// that changes.
-const int _maxChunkSize = 32 * 1024;
+/// Largest bytes payload Nearby Connections sends
+/// (`ConnectionsClient.MAX_BYTES_DATA_SIZE`, 32 KB): a bigger message goes
+/// out in chunks, each of which must fit in it too.
+@visibleForTesting
+const int maxNearbyBytesPayload = 32 * 1024;
+
+/// Characters of base64 data per chunk: the payload limit minus room for
+/// the chunk's JSON wrapper (`{"index":…,"total":…,"data":"…"}`).
+const int _maxChunkSize = maxNearbyBytesPayload - 256;
 
 /// Defensive cap on the number of chunks a single reassembly may buffer
 /// (~128 MB at [_maxChunkSize] each) — guards against a malformed or
@@ -99,7 +101,16 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   final StreamController<BluetoothPeerEvent> _eventController =
       StreamController<BluetoothPeerEvent>.broadcast();
 
-  final Nearby _nearby = Nearby();
+  /// Creates the channel. [nearby] and [requestPermissions] replace the
+  /// Nearby Connections plugin and the Android permission request in tests.
+  NearbyBluetoothSyncChannel({
+    @visibleForTesting Nearby? nearby,
+    @visibleForTesting Future<bool> Function()? requestPermissions,
+  }) : _nearby = nearby ?? Nearby(),
+       _requestPermissions = requestPermissions;
+
+  final Nearby _nearby;
+  final Future<bool> Function()? _requestPermissions;
 
   /// Buffers for reassembling chunked payloads, keyed by endpoint ID.
   final Map<String, List<_ChunkHeader>> _chunkBuffers = {};
@@ -165,6 +176,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   /// apply.
   @override
   Future<bool> requestPermissions() async {
+    if (_requestPermissions != null) return _requestPermissions();
     final statuses = await [
       Permission.bluetoothScan,
       Permission.bluetoothConnect,
@@ -465,15 +477,16 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
         }),
       );
 
+      // No answer is a failed sync, not an empty one: the peer may never
+      // have received our delta.
       final responseJson = await completer.future.timeout(
         _syncResponseTimeout,
         onTimeout: () {
-          LoggerService.warning(
-            'Timeout waiting for sync response from $endpointId',
-            name: _tag,
-          );
           _pendingResponses.remove(endpointId);
-          return <String, dynamic>{};
+          throw TimeoutException(
+            'No sync response from $endpointId',
+            _syncResponseTimeout,
+          );
         },
       );
 
@@ -960,7 +973,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   Future<void> _sendPayload(String endpointId, String data) async {
     final bytes = utf8.encode(data);
 
-    if (bytes.length <= _maxChunkSize) {
+    if (bytes.length <= maxNearbyBytesPayload) {
       // Send as single payload
       await _nearby.sendBytesPayload(endpointId, Uint8List.fromList(bytes));
       LoggerService.debug(
