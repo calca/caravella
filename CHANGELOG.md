@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changes made on a device reach the other one even when the other one started the sync. The device answering a Wi-Fi or Bluetooth sync built its reply after applying the incoming changes, which recorded the sync, so its reply left out everything it had changed before; it now builds the reply first. Also in 2.4.2
 
 ### Changed
+- Group page: the add-expense button shows on Expenses only. On Balances it sat over the payments' paid buttons and on Statistics over the charts; it slides away when you switch section and back on Expenses
 - Sync format 2: deltas carry `"schema": 2` and groups their `payments`. A 2.4.1 device refuses them ("update Caravella on both devices"). When a group arrives from 2.4.0, which sends no version and no payments, this device keeps its own payments for the people still in the group, so an old phone can't erase them (#676)
 - Backups are written as `{"format": 2, "groups": [...]}` with the payments; 2.4 backups (a bare list) are still restored, and 2.4.1 refuses format 2 with "This backup comes from a newer Caravella"
 - Statistics › Participants shows the top 4 payers, in one row, instead of everyone: a big group wrapped onto many rows where the sizes were hard to compare
