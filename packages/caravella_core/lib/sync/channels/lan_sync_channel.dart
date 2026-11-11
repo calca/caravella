@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bonsoir/bonsoir.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
@@ -78,14 +79,25 @@ class LanSyncChannel {
 
   bool _active = false;
 
-  /// Creates a [LanSyncChannel] with the given [port] (default 8765).
-  LanSyncChannel({int port = defaultPort}) : _port = port;
+  /// Whether [start] announces this device and looks for peers over mDNS.
+  /// Off only in tests, which run without the Bonsoir plugin and reach the
+  /// HTTP server directly.
+  final bool _mdns;
+
+  /// Creates a [LanSyncChannel] with the given [port] (default 8765; 0
+  /// picks a free one, see [port]).
+  LanSyncChannel({
+    int port = defaultPort,
+    @visibleForTesting bool mdns = true,
+  }) : _port = port,
+       _mdns = mdns;
 
   /// Whether the channel is currently active.
   bool get isActive => _active;
 
-  /// The port this channel's HTTP server listens on.
-  int get port => _port;
+  /// The port this channel's HTTP server listens on: once started, the one
+  /// it actually bound (the free one picked for port 0).
+  int get port => _httpServer?.port ?? _port;
 
   /// Stream of sync events from this channel.
   Stream<SyncEvent> get events => _eventController.stream;
@@ -121,10 +133,12 @@ class LanSyncChannel {
 
     try {
       await _startHttpServer();
-      await _startBroadcast();
-      await _startDiscovery();
+      if (_mdns) {
+        await _startBroadcast();
+        await _startDiscovery();
+      }
       _active = true;
-      LoggerService.info('LAN sync channel started on port $_port', name: _tag);
+      LoggerService.info('LAN sync channel started on port $port', name: _tag);
     } catch (e, st) {
       LoggerService.error(
         'Failed to start LAN sync channel',
@@ -473,7 +487,7 @@ class LanSyncChannel {
     final service = BonsoirService(
       name: identity.deviceId,
       type: serviceType,
-      port: _port,
+      port: port,
       attributes: {
         'device_name': identity.deviceName,
         'device_id': identity.deviceId,
@@ -485,7 +499,7 @@ class LanSyncChannel {
     await _broadcast!.start();
 
     LoggerService.info(
-      'mDNS broadcast started for "$serviceType" on port $_port',
+      'mDNS broadcast started for "$serviceType" on port $port',
       name: _tag,
     );
   }
