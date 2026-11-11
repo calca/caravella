@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/settings/backup/drive_backup_service.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -62,15 +62,11 @@ void main() {
 
   setUpAll(() {
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+    useTestDatabase();
   });
 
   setUp(() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/${ExpenseGroupStorageV2.fileName}');
-    if (await file.exists()) await file.delete();
-    ExpenseGroupStorageV2.clearCache();
-    ExpenseGroupStorageV2.forceReload();
+    useTestDatabase();
     SharedPreferences.setMockInitialValues({});
     store = _FakeStore();
     DriveBackupService.debugSetStore(store);

@@ -23,6 +23,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../helpers/test_database.dart';
 
 /// Flutter's accessibility guidelines on the app's main screens, in the
 /// light and dark theme and at 200% text: touch targets of at least 48 dp,
@@ -72,8 +73,9 @@ final _group = ExpenseGroup(
 final _emptyGroup = ExpenseGroup(
   id: 'empty',
   title: 'Weekend',
-  participants: [_anna],
-  categories: [_food],
+  // Its own people and categories: ids are unique across groups.
+  participants: [ExpenseParticipant(id: 'empty-a', name: 'Anna')],
+  categories: [ExpenseCategory(id: 'empty-f', name: 'Food')],
   currency: '€',
   expenses: const [],
 );
@@ -172,8 +174,7 @@ void main() {
     PreferencesService.reset();
     await PreferencesService.initialize();
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
-    ExpenseGroupStorageV2.clearCache();
+    useTestDatabase();
     await ExpenseGroupStorageV2.addExpenseGroup(_group);
     await ExpenseGroupStorageV2.addExpenseGroup(_emptyGroup);
   });

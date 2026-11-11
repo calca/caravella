@@ -342,7 +342,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
       );
 
       await ExpenseGroupStorageV2.deleteGroup(_currentTrip.id);
-      ExpenseGroupStorageV2.forceReload();
       groupNotifier.notifyGroupDeleted(_currentTrip.id);
 
       if (!context.mounted) return;

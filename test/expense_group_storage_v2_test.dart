@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -19,25 +19,13 @@ void main() {
   PathProviderPlatform.instance = _FakePathProvider();
 
   setUpAll(() {
-    // Force use of JSON backend for all tests
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+    useTestDatabase();
   });
 
   group('ExpenseGroupStorageV2 - add/update expense', () {
-    const storageFileName = 'expense_group_storage.json';
-
     setUp(() async {
-      // Ensure clean state on disk and cache
-      try {
-        final dir = await getApplicationDocumentsDirectory();
-        final file = File('${dir.path}/$storageFileName');
-        if (await file.exists()) await file.delete();
-      } catch (e) {
-        // ignore
-      }
-      ExpenseGroupStorageV2.clearCache();
-      ExpenseGroupStorageV2.forceReload();
+      useTestDatabase();
     });
 
     test(
@@ -74,6 +62,7 @@ void main() {
         // Prepare an expense that refers to a category not present in the group
         final unknownCategory = ExpenseCategory(name: 'Travel', id: 'c-non');
         final invalidExpense = ExpenseDetails(
+          name: 'Expense',
           id: 'e-invalid',
           category: unknownCategory,
           amount: 10.0,
@@ -152,6 +141,7 @@ void main() {
         final c1 = ExpenseCategory(name: 'Food', id: 'c1');
 
         final initialExpense = ExpenseDetails(
+          name: 'Expense',
           id: 'e1',
           category: c1,
           amount: 30.0,
@@ -196,19 +186,8 @@ void main() {
   });
 
   group('ExpenseGroupStorageV2 - getRecentExpenses', () {
-    const storageFileName = 'expense_group_storage.json';
-
     setUp(() async {
-      // Ensure clean state on disk and cache
-      try {
-        final dir = await getApplicationDocumentsDirectory();
-        final file = File('${dir.path}/$storageFileName');
-        if (await file.exists()) await file.delete();
-      } catch (e) {
-        // ignore
-      }
-      ExpenseGroupStorageV2.clearCache();
-      ExpenseGroupStorageV2.forceReload();
+      useTestDatabase();
     });
 
     test(
@@ -353,19 +332,8 @@ void main() {
   });
 
   group('ExpenseGroupStorageV2 - getTodaySpending', () {
-    const storageFileName = 'expense_group_storage.json';
-
     setUp(() async {
-      // Ensure clean state on disk and cache
-      try {
-        final dir = await getApplicationDocumentsDirectory();
-        final file = File('${dir.path}/$storageFileName');
-        if (await file.exists()) await file.delete();
-      } catch (e) {
-        // ignore
-      }
-      ExpenseGroupStorageV2.clearCache();
-      ExpenseGroupStorageV2.forceReload();
+      useTestDatabase();
     });
 
     test('getTodaySpending: returns 0.0 for non-existent group', () async {

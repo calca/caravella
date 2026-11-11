@@ -48,7 +48,6 @@ This is the authoritative list — every `String.fromEnvironment`/`bool.fromEnvi
 | Flag | Type / default | Where read | Effect |
 |---|---|---|---|
 | `FLAVOR` | String, default `'prod'` | `lib/main/app_initialization.dart` | Sets `AppConfig.environment` |
-| `USE_JSON_BACKEND` | String (`'true'`/`'false'`), default `'false'` | `lib/main/app_initialization.dart` | Selects the legacy JSON repository instead of SQLite — see [Storage Backend](STORAGE_BACKEND.md) |
 | `ENABLE_PLAY_UPDATES` | bool, default `false` | `packages/play_store_updates/lib/src/update_service_factory.dart` | Enables real Google Play in-app-update checks (`PlayStoreUpdateService`) instead of the no-op stub — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) |
 | `ENABLE_GOOGLE_DRIVE_SYNC` | bool, default `false` | `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart` | Builds a real `GoogleDriveCloudChannel` (Google Sign-In + Drive API) for the sync feature's Cloud Sync option instead of leaving it `null`/hidden — see [google_drive_sync package](PACKAGE_GOOGLE_DRIVE_SYNC.md) and its [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md) |
 | `GOOGLE_DRIVE_IOS_CLIENT_ID` | String, default `''` | `packages/google_drive_sync/lib/src/google_drive_sync_factory.dart` | iOS-only OAuth client ID for Google Drive sync; unused/unnecessary on Android — see [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md#step-5--optional-ios-oauth-client) |

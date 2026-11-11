@@ -102,9 +102,6 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
     try {
       final savedGroup = await controller.save();
 
-      // Force repository reload
-      ExpenseGroupStorageV2.forceReload();
-
       // Notify listeners
       if (controller.state.id != null) {
         notifier.notifyGroupUpdated(controller.state.id!);
@@ -224,7 +221,6 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
               try {
                 final saved = await controller.save();
 
-                ExpenseGroupStorageV2.forceReload();
                 try {
                   notifier?.notifyGroupUpdated(saved.id);
                 } catch (e) {

@@ -11,6 +11,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/manager/group/group_edit_mode.dart';
 import 'package:io_caravella_egm/manager/group/pages/expense_group_general_page.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _dir = Directory.systemTemp
@@ -42,8 +43,7 @@ void main() {
     PreferencesService.reset();
     await PreferencesService.initialize();
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
-    ExpenseGroupStorageV2.clearCache();
+    useTestDatabase();
     await ExpenseGroupStorageV2.addExpenseGroup(_group);
   });
 
@@ -119,7 +119,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ExpenseGroupGeneralPage), findsNothing);
-    ExpenseGroupStorageV2.clearCache();
     final stored = await tester.runAsync(
       () => ExpenseGroupStorageV2.getTripById('g1'),
     );

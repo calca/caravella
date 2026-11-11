@@ -8,6 +8,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:provider/provider.dart';
+import 'helpers/test_database.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -18,18 +19,27 @@ class _FakePathProvider extends PathProviderPlatform {
   Future<String?> getApplicationDocumentsPath() async => _tempDir;
 }
 
+// Each group has its own people and categories (ids are unique across
+// groups, as in the app).
 final _anna = ExpenseParticipant(id: 'a', name: 'Anna');
 final _stay = ExpenseCategory(id: 's', name: 'Stay');
+final _anna2 = ExpenseParticipant(id: 'a2', name: 'Anna');
+final _stay2 = ExpenseCategory(id: 's2', name: 'Stay');
 
-ExpenseDetails _expense(String name, DateTime date, {String? note}) =>
-    ExpenseDetails(
-      name: name,
-      amount: 100,
-      date: date,
-      paidBy: _anna,
-      category: _stay,
-      note: note,
-    );
+ExpenseDetails _expense(
+  String name,
+  DateTime date, {
+  String? note,
+  ExpenseParticipant? paidBy,
+  ExpenseCategory? category,
+}) => ExpenseDetails(
+  name: name,
+  amount: 100,
+  date: date,
+  paidBy: paidBy ?? _anna,
+  category: category ?? _stay,
+  note: note,
+);
 
 Widget _app() => MaterialApp(
   localizationsDelegates: appLocalizationsDelegates,
@@ -47,8 +57,7 @@ void main() {
 
   setUpAll(() async {
     ExpenseGroupRepositoryFactory.reset();
-    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
-    ExpenseGroupStorageV2.clearCache();
+    useTestDatabase();
     await ExpenseGroupStorageV2.addExpenseGroup(
       ExpenseGroup(
         id: 'chicago',
@@ -66,12 +75,18 @@ void main() {
       ExpenseGroup(
         id: 'bruges',
         title: 'Weekend in Bruges',
-        participants: [_anna],
-        categories: [_stay],
+        participants: [_anna2],
+        categories: [_stay2],
         currency: '€',
         archived: true,
         expenses: [
-          _expense('Room', DateTime(2026, 10, 9), note: 'Hotel near the canal'),
+          _expense(
+            'Room',
+            DateTime(2026, 10, 9),
+            note: 'Hotel near the canal',
+            paidBy: _anna2,
+            category: _stay2,
+          ),
         ],
       ),
     );

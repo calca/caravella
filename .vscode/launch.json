@@ -60,8 +60,6 @@
         "--dart-define",
         "FLAVOR=dev",
         "--dart-define",
-        "USE_JSON_BACKEND=true",
-        "--dart-define",
         "ENABLE_BLUETOOTH_SYNC=false",
         "--dart-define",
         "UNSPLASH_ACCESS_KEY=${config:caravella.unsplashAccessKey}"

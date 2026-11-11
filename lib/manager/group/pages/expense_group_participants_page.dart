@@ -105,7 +105,6 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
               try {
                 final saved = await controller.save();
 
-                ExpenseGroupStorageV2.forceReload();
                 try {
                   notifier?.notifyGroupUpdated(saved.id);
                 } catch (e) {
