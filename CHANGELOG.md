@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- A deleted group no longer comes back after syncing with another device. Deleting a group used to remove it from the database, so nothing told the other devices, and the next Wi-Fi or Bluetooth sync brought it back; it now leaves a tombstone (`deleted = 1`, new `updated_at`) that sync sends in `deleted_groups`
+- Changes made on a device reach the other one even when the other one started the sync. The device answering a Wi-Fi or Bluetooth sync built its reply after applying the incoming changes, which recorded the sync, so its reply left out everything it had changed before; it now builds the reply first
+
 ## [2.4.1] - 2026-11-10
 
 ### Fixed

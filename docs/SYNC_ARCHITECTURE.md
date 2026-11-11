@@ -199,14 +199,17 @@ sequenceDiagram
     A->>A: PeerKeyStore.get(B) — abort with a<br/>"re-pair required" log if no key on file
     A->>A: build outgoing delta (DeltaBuilder, see above)<br/>SyncEnvelope.encrypt
     A->>B: POST /sync/delta {envelope}
-    B->>B: isPeerAuthorized(A) check; SyncEnvelope.decrypt;<br/>ConflictResolver.applyDelta (LWW merge, grant re-check)
-    B->>B: build its own outgoing delta for A; encrypt
+    B->>B: isPeerAuthorized(A) check; SyncEnvelope.decrypt
+    B->>B: build its own outgoing delta for A, before applying A's
+    B->>B: ConflictResolver.applyDelta (LWW merge, grant re-check); encrypt its delta
     B-->>A: 200 {envelope}
     A->>A: decrypt; ConflictResolver.applyDelta<br/>(same LWW merge, on A's side)
     Note over A,B: One HTTP round trip achieves<br/>bidirectional convergence
 ```
 
 Confirmed by the integration test titled `'two devices converge after bidirectional sync'` (`packages/caravella_core/test/sync/sync_integration_test.dart:100`).
+
+The order on B matters: `SyncOrchestrator._handleDelta` builds the outgoing delta **before** applying the incoming one, because `applyDelta` records the sync with A in `sync_log` and `DeltaBuilder` takes changes newer than that. Built afterwards, the reply held only changes made during the exchange, so whatever B changed before it (deletions included) never reached A — the next exchange started from the newer `sync_log` time too. Fixed in 2.4.2; `test/sync/group_deletion_sync_test.dart` runs exchanges started from either side.
 
 ## Known gaps / TODOs
 

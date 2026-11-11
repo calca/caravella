@@ -48,6 +48,7 @@ The P2P sync tests live in `packages/caravella_core/test/sync/` — they test cl
 | `conflict_resolver_test.dart` | LWW conflict resolution — 8 cases: remote-newer wins, local-newer wins, tie-break, soft delete, non-existent delete, empty delta, mixed batch |
 | `conflict_resolver_authorship_test.dart` | `createdBy`/`updatedBy` authorship metadata survives `applyDelta` |
 | `sync_integration_test.dart` | Bidirectional exchange between two in-memory repos; verifies convergence to correct LWW winner |
+| `group_deletion_sync_test.dart` | Two phones exchanging through `SyncOrchestrator.handleIncomingDelta`, started from either side: a deleted group stays deleted on both, a change reaches the other phone |
 | `sync_clock_test.dart` | UTC timestamp source correctness |
 | `sync_crypto_test.dart` | `SyncEnvelope` encrypt/decrypt round-trip and X25519 ECDH + HKDF key agreement |
 | `sync_dao_test.dart` | Per-group pairing grants (paired devices, `isPaired`, revocation) |
