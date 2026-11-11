@@ -328,10 +328,10 @@ packages:
     dependency: transitive
     description:
       name: google_sign_in_android
-      sha256: "312e74b3e839896ff30ed98310da4cc24dbfa19ad060b1612f7718d5afa66480"
+      sha256: af51a005b7c3c3f54cb5e7d04dd5db96f081e6f92b36468c60d14726a047f918
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.18"
+    version: "7.2.19"
   google_sign_in_ios:
     dependency: transitive
     description:
@@ -360,10 +360,10 @@ packages:
     dependency: "direct main"
     description:
       name: googleapis
-      sha256: d38bb64016ef27eca7fde992994b9d2999bcea307685807e15d6a08bff05dc61
+      sha256: "4b38c6e217c53404a7f2a785067017846ce9a004a618635674398138fcc2f2ce"
       url: "https://pub.dev"
     source: hosted
-    version: "17.0.0"
+    version: "18.0.0"
   group_button:
     dependency: transitive
     description:
@@ -376,10 +376,10 @@ packages:
     dependency: transitive
     description:
       name: home_widget
-      sha256: "1dbfdfbb3b47de24639adfba352050d85d66af112b9cc3ec5bf7627a7813abcb"
+      sha256: b8d377e6a5aacc65193170addf252cce7868fa621b740cdd7b517a233871c185
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.0"
+    version: "0.9.4"
   hooks:
     dependency: transitive
     description:
@@ -536,10 +536,10 @@ packages:
     dependency: transitive
     description:
       name: objective_c
-      sha256: "322d5f1f0680534acaf557c5d68e97b40c3800ee5e15b63dcacc3c31504674c2"
+      sha256: c965d264fd4b0b4dd402dce9d049b70656bf98d3ca108b9bc55d2544ceadbe5e
       url: "https://pub.dev"
     source: hosted
-    version: "9.6.3"
+    version: "9.6.4"
   package_config:
     dependency: transitive
     description:
