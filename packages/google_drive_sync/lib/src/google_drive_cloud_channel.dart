@@ -64,13 +64,7 @@ class GoogleDriveCloudChannel extends CloudRelayChannel
   @override
   Future<void> uploadShard(String deviceId, String jsonPayload) async {
     final client = await _auth.authenticatedClient();
-    if (client == null) {
-      LoggerService.warning(
-        'uploadShard skipped — not signed in to Google Drive',
-        name: _tag,
-      );
-      return;
-    }
+    if (client == null) throw const CloudNotSignedInException();
     try {
       await GoogleDriveApiClient(client).uploadShard(deviceId, jsonPayload);
     } finally {
@@ -81,13 +75,7 @@ class GoogleDriveCloudChannel extends CloudRelayChannel
   @override
   Future<List<String>> downloadAllShards() async {
     final client = await _auth.authenticatedClient();
-    if (client == null) {
-      LoggerService.warning(
-        'downloadAllShards skipped — not signed in to Google Drive',
-        name: _tag,
-      );
-      return const [];
-    }
+    if (client == null) throw const CloudNotSignedInException();
     try {
       return await GoogleDriveApiClient(client).downloadAllShards();
     } finally {
@@ -96,7 +84,7 @@ class GoogleDriveCloudChannel extends CloudRelayChannel
   }
 
   @override
-  Future<void> start({required DeltaJsonCallback onShards}) async {
+  Future<void> start({required CloudSyncCycle cycle}) async {
     final enabled = await isEnabled();
     if (!enabled) {
       LoggerService.info('Cloud sync is disabled — skipping start', name: _tag);
@@ -108,10 +96,7 @@ class GoogleDriveCloudChannel extends CloudRelayChannel
     void scheduleNext() {
       _pollTimer = Timer(defaultPollInterval, () async {
         try {
-          final shards = await downloadAllShards();
-          if (shards.isNotEmpty) {
-            await onShards(shards, channelName);
-          }
+          await cycle();
         } catch (e, st) {
           LoggerService.error(
             'Periodic cloud sync failed',
@@ -140,21 +125,5 @@ class GoogleDriveCloudChannel extends CloudRelayChannel
     _pollTimer?.cancel();
     _pollTimer = null;
     LoggerService.info('Cloud sync polling stopped', name: _tag);
-  }
-
-  @override
-  Future<SyncResult> syncNow() async {
-    final shards = await downloadAllShards();
-    return SyncResult(
-      applied: shards.length,
-      skipped: 0,
-      errors: 0,
-      channel: channelName,
-      peerId: signedInAccountEmail ?? '',
-      syncedAt: DateTime.fromMillisecondsSinceEpoch(
-        SyncClock.nowMs(),
-        isUtc: true,
-      ),
-    );
   }
 }

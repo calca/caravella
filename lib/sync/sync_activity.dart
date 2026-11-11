@@ -9,10 +9,16 @@ import 'package:material_ui/material_ui.dart';
 /// refresh. Groups shared with this device for the first time get a pending
 /// welcome (see [SharedGroupPreferences]) and are announced once through
 /// [takeReceived]. (Overall sync state is shown by Home's sync button.)
+///
+/// It also asks for a Google Drive exchange shortly after the groups change,
+/// when the app comes back and when it goes to the background
+/// ([SyncOrchestrator.requestCloudSync]; nothing while Drive sync is off).
 class SyncActivity extends ChangeNotifier {
   final ExpenseGroupNotifier _groups;
   SyncOrchestrator? _orchestrator;
   StreamSubscription<SyncEvent>? _sub;
+  AppLifecycleListener? _lifecycle;
+  int _seenRevision = 0;
   final List<({String groupId, String? from})> _received = [];
 
   SyncActivity(this._groups);
@@ -22,8 +28,25 @@ class SyncActivity extends ChangeNotifier {
   void attach(SyncOrchestrator? orchestrator) {
     if (identical(orchestrator, _orchestrator)) return;
     _sub?.cancel();
+    _groups.removeListener(_onGroupsChanged);
+    _lifecycle?.dispose();
+    _lifecycle = null;
     _orchestrator = orchestrator;
     _sub = orchestrator?.events.listen(handle);
+    if (orchestrator == null) return;
+    _seenRevision = _groups.revision;
+    _groups.addListener(_onGroupsChanged);
+    _lifecycle = AppLifecycleListener(
+      onResume: () =>
+          orchestrator.requestCloudSync(delay: const Duration(seconds: 2)),
+      onPause: () => orchestrator.requestCloudSync(delay: Duration.zero),
+    );
+  }
+
+  void _onGroupsChanged() {
+    if (_groups.revision == _seenRevision) return;
+    _seenRevision = _groups.revision;
+    _orchestrator?.requestCloudSync();
   }
 
   /// Applies one sync event (public for tests).
@@ -33,7 +56,8 @@ class SyncActivity extends ChangeNotifier {
       for (final id in result.groupIds) {
         _groups.notifyGroupUpdated(id);
       }
-      if (result.newGroupIds.isNotEmpty) {
+      // From the user's own devices (Google Drive): no "shared with you".
+      if (result.newGroupIds.isNotEmpty && result.channel != 'cloud') {
         for (final id in result.newGroupIds) {
           if (PreferencesService.isInitialized) {
             PreferencesService.instance.sharedGroups.addPendingWelcome(
@@ -59,6 +83,8 @@ class SyncActivity extends ChangeNotifier {
   @override
   void dispose() {
     _sub?.cancel();
+    _groups.removeListener(_onGroupsChanged);
+    _lifecycle?.dispose();
     super.dispose();
   }
 }

@@ -14,6 +14,7 @@ import 'storage_performance.dart';
 import 'sqlite_group_mapper.dart';
 import 'sqlite_schema.dart';
 import 'sqlite_tables.dart';
+import '../sync/utils/sync_clock.dart';
 
 /// SQLite-based implementation of ExpenseGroupRepository
 /// Provides better performance and scalability compared to JSON file storage
@@ -541,11 +542,29 @@ class SqliteExpenseGroupRepository
     );
   }
 
+  /// Leaves a tombstone (`deleted = 1`, a new `updated_at`) instead of
+  /// removing the row, so sync can tell the other devices the group is gone
+  /// rather than getting it back from them. Its expenses, people and
+  /// categories go; reads skip deleted groups.
   @override
   Future<StorageResult<void>> deleteGroup(String groupId) {
     return _guarded('deleteGroup', 'Failed to delete group', () async {
       final db = await database;
-      await db.delete(kTableGroups, where: 'id = ?', whereArgs: [groupId]);
+      await db.transaction((txn) async {
+        for (final table in [
+          kTableExpenses,
+          kTableParticipants,
+          kTableCategories,
+        ]) {
+          await txn.delete(table, where: 'group_id = ?', whereArgs: [groupId]);
+        }
+        await txn.update(
+          kTableGroups,
+          {'deleted': 1, 'pinned': 0, 'updated_at': SyncClock.nowMs()},
+          where: 'id = ?',
+          whereArgs: [groupId],
+        );
+      });
     });
   }
 

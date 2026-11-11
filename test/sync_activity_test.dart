@@ -58,4 +58,31 @@ void main() {
     activity.handle(_done(applied: 1, ids: {'g1'}));
     expect(notified, 1);
   });
+
+  test('a group from my own devices (Google Drive) is not announced', () {
+    final groups = ExpenseGroupNotifier();
+    final activity = SyncActivity(groups);
+    var notified = 0;
+    activity.addListener(() => notified++);
+
+    activity.handle(
+      SyncCompleted(
+        SyncResult(
+          applied: 1,
+          skipped: 0,
+          errors: 0,
+          channel: 'cloud',
+          peerId: 'my-tablet',
+          syncedAt: DateTime(2026, 11, 10),
+          groupIds: {'g1'},
+          newGroupIds: {'g1'},
+          peerName: 'Tablet',
+        ),
+      ),
+    );
+
+    expect(groups.updatedGroupIds, contains('g1'));
+    expect(notified, 0);
+    expect(activity.takeReceived(), isEmpty);
+  });
 }

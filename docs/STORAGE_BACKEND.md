@@ -67,6 +67,8 @@ The v2 upgrade previously created three aggregation views (`v_group_totals`, `v_
 
 `saveGroup` runs inside a `db.transaction`: upserts the group row, then **deletes and re-inserts** all participants/categories/expenses/attachments for that group (no diffing). `updateGroupMetadata` instead diffs participant/category IDs (deletes only removed ones, `REPLACE`s the rest) while leaving expenses untouched — use `updateGroupMetadata` for metadata-only edits to avoid the expense-side churn of a full `saveGroup`.
 
+`deleteGroup` leaves a **tombstone** instead of removing the row: `deleted = 1`, a new `updated_at` (`SyncClock`), `pinned = 0`, and the group's expenses (with their attachment rows), participants and categories deleted, in one transaction. Every read skips deleted groups (`SqliteGroupMapper`, `WHERE deleted = 0`). The tombstone is what tells the other devices the group is gone: it goes out in `deleted_groups` (Wi-Fi/Bluetooth deltas, Google Drive snapshots) and beats their older copy by Last Writer Wins, which is what stops the group coming back from them. Before 2.5 the row was removed, so a deletion never reached the other devices.
+
 ## Backend 2: JSON file (legacy) — `FileBasedExpenseGroupRepository`
 
 `packages/caravella_core/lib/data/file_based_expense_group_repository.dart`. Stores all groups as one JSON array in `${ApplicationDocumentsDirectory}/expense_group_storage.json`.

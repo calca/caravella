@@ -21,7 +21,7 @@ This mirrors `play_store_updates`'s `UpdateServiceFactory` (see [its package ref
 
 ## The `CloudRelayChannel` interface
 
-Defined in `caravella_core` (`packages/caravella_core/lib/sync/channels/cloud_relay_channel.dart`), not here — `caravella_core` stays independent of any concrete cloud provider SDK per the package boundary rules. It's an abstract class with two concrete, shared members (`isEnabled()`/`setEnabled()`, backed by a `shared_preferences` flag `sync_cloud_enabled` common to every implementation) and five abstract ones (`uploadShard`, `downloadAllShards`, `start`, `stop`, `syncNow`, plus a `channelName` getter) that `GoogleDriveCloudChannel` implements. `GoogleDriveCloudChannel` uses `extends`, not `implements`, specifically to inherit those two concrete members instead of reimplementing them.
+Defined in `caravella_core` (`packages/caravella_core/lib/sync/channels/cloud_relay_channel.dart`), not here — `caravella_core` stays independent of any concrete cloud provider SDK per the package boundary rules. It's an abstract class with two concrete, shared members (`isEnabled()`/`setEnabled()`, backed by a `shared_preferences` flag `sync_cloud_enabled` common to every implementation) and four abstract ones (`uploadShard`, `downloadAllShards`, `start({cycle})`, `stop`, plus a `channelName` getter) that `GoogleDriveCloudChannel` implements. The channel only moves files: the cycle itself (download, apply, upload) is `SyncOrchestrator.syncCloudNow`, which `start` runs on the channel's timer. Without a signed-in account both transfer methods throw `CloudNotSignedInException`. `GoogleDriveCloudChannel` uses `extends`, not `implements`, specifically to inherit those two concrete members instead of reimplementing them.
 
 ## Auth: `GoogleDriveAuthService` (`src/google_drive_auth_service.dart`)
 
@@ -31,16 +31,16 @@ Wraps `google_sign_in`'s `GoogleSignIn`, scoped to `drive.DriveApi.driveAppdataS
 
 ## Drive API: `GoogleDriveApiClient` (`src/google_drive_api_client.dart`)
 
-Thin wrapper around `googleapis`'s `drive.DriveApi`, scoped to `spaces: 'appDataFolder'` throughout — a hidden per-app folder invisible in the user's normal Drive UI. Each device gets one file, `caravella_shard_<deviceId>.json`, holding that device's latest delta payload (`uploadShard` finds-or-creates it via `files.list` + `files.update`/`files.create`); `downloadAllShards` lists every `caravella_shard_*` file and downloads each with `files.get(..., downloadOptions: DownloadOptions.fullMedia)`. This mirrors the shard-per-device model the `CloudRelayChannel` interface's method names imply — peers converge by downloading every device's shard and merging through the same `SyncManager`/`ConflictResolver` pipeline LAN/Bluetooth deltas already go through (see [caravella_core reference](PACKAGE_CARAVELLA_CORE.md)).
+Thin wrapper around `googleapis`'s `drive.DriveApi`, scoped to `spaces: 'appDataFolder'` throughout — a hidden per-app folder invisible in the user's normal Drive UI. Each device gets one file, `caravella_shard_<deviceId>.json`, holding that device's latest **full snapshot** (`DeltaBuilder.buildSnapshot`: every group and tombstone, in the Wi-Fi/Bluetooth delta format with its `schema`) (`uploadShard` finds-or-creates it via `files.list` + `files.update`/`files.create`); `downloadAllShards` lists every `caravella_shard_*` file and downloads each with `files.get(..., downloadOptions: DownloadOptions.fullMedia)`. This mirrors the shard-per-device model the `CloudRelayChannel` interface's method names imply — peers converge by downloading every device's shard and merging through the same `SyncManager`/`ConflictResolver` pipeline LAN/Bluetooth deltas already go through (see [caravella_core reference](PACKAGE_CARAVELLA_CORE.md)).
 
 ## `GoogleDriveCloudChannel` (`src/google_drive_cloud_channel.dart`)
 
-Ties auth + API client together and implements the periodic-polling half of `CloudRelayChannel` (`start`/`stop`, manual rescheduling via `Timer` rather than `Timer.periodic` so overlapping sync cycles can't stack — same pattern the LAN channel's own polling would use). Adds Drive-specific surface beyond the base interface that the UI downcasts to when present:
+Ties auth + API client together and runs the orchestrator's cycle every 15 minutes (`start`/`stop`, manual rescheduling via `Timer` rather than `Timer.periodic` so overlapping cycles can't stack). Adds Drive-specific surface beyond the base interface that the UI downcasts to when present:
 
 - `signedInAccountEmail` — shown in `SyncSettingsScreen`'s Cloud Sync card as "Signed in as `<email>`".
 - `signIn()` / `signOut()` / `restoreSession()` (silent sign-in on screen load, so a prior session survives app restarts without prompting again).
 
-`uploadShard`/`downloadAllShards` no-op with a warning log (not an exception) when there's no authenticated session — callers (`SyncOrchestrator`) don't need Drive-specific error handling.
+`uploadShard`/`downloadAllShards` throw `CloudNotSignedInException` (from `caravella_core`) when there's no authenticated session; `SyncOrchestrator` first tries `restoreSession()` and otherwise reports the cycle as `SyncProblemReason.cloudUnreachable` (Settings → Sync → "To fix").
 
 ## Backups: `GoogleDriveBackupStore` (`src/google_drive_backup_store.dart`)
 
@@ -54,7 +54,7 @@ Implements `CloudBackupStore` (`caravella_core`) in the same `appDataFolder` and
 
 ## Known gaps
 
-- **`uploadShard` has no runtime call site.** It's implemented here and exercised in isolation by `test/google_drive_api_client_test.dart`, but nothing in `SyncOrchestrator`, this package's own `start()`/`syncNow()`, or any UI page ever calls `GoogleDriveCloudChannel.uploadShard` — this device's own changes are never pushed to Drive today. Downloaded shards aren't merged into the local DB either (`SyncOrchestrator`'s `onShards` callback only logs a count). See [Sync Architecture § Known gaps](SYNC_ARCHITECTURE.md#known-gaps--todos) for the full picture across all three channels.
+- The cycle (download, apply, upload) is covered with a fake channel in `caravella_core`'s `test/sync/cloud_sync_test.dart`; the real Drive calls only by the manual test on two phones with the same account (see the [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md#verifying-it-works)). Before 2.5 the channel only downloaded, and the shards were never applied: see [Sync Architecture § Google Drive](SYNC_ARCHITECTURE.md#google-drive-the-users-own-devices).
 - Beyond the `google_drive_api_client_test.dart` coverage added for `downloadAllShards`'s error handling, there's no test coverage for `GoogleDriveAuthService`/sign-in — it wraps platform channels and live HTTP calls with no mocking infrastructure in this codebase yet. Verify auth changes via the manual smoke test in the [setup guide](GOOGLE_DRIVE_SYNC_SETUP.md#verifying-it-works).
 - Android sign-in needs the project's Web OAuth client ID as `serverClientId` (`GoogleDriveSyncFactory.serverClientId`, overridable with `GOOGLE_DRIVE_SERVER_CLIENT_ID`) — see [setup § 4c](GOOGLE_DRIVE_SYNC_SETUP.md#4c-create-the-web-client-serverclientid).
 - iOS is supported in code (the `GOOGLE_DRIVE_IOS_CLIENT_ID` define, `GoogleDriveAuthService`'s `iosClientId` parameter) but untested — this repo's CI only builds Android (see [CI Pipelines](CI_PIPELINES.md)).

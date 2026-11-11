@@ -153,8 +153,9 @@ Omit `ENABLE_GOOGLE_DRIVE_SYNC` entirely (the default) and none of this matters 
 2. Settings → Data → Sync → **Cloud Sync** section should now be visible (it's hidden entirely when the flag is off).
 3. Toggle **Enable cloud sync** → accept the privacy dialog → the Google sign-in picker should appear.
 4. Sign in with a test user you added in Step 3. Success shows "Signed in as `<email>`" under the toggle.
-5. On a group with sync enabled, tap **Sync now** — check the app logs (Settings → Debug Logs, or `adb logcat`) for `sync.channel.cloud.drive` entries confirming an upload/download round-trip.
-6. To confirm data actually lands in `appDataFolder` (not visible in the normal Drive UI by design), use the [Drive API Explorer](https://developers.google.com/drive/api/v3/reference/files/list) with `spaces=appDataFolder` while signed in as the same test account.
+5. Tap **Sync now**: a toast says "Received N, sent M" (M = this device's groups). The logs (Settings → Debug Logs, or `adb logcat`) show `Snapshot built` and `Cloud cycle done` under `sync.delta`/`sync.orchestrator`.
+6. Do the same on a second phone signed in to the same account: the first phone's groups appear there. Then add an expense, edit and delete a group on one phone, and tap **Sync now** on both (or wait 30 s after the change): each change shows up on the other one, and a deleted group stays deleted.
+7. To confirm data actually lands in `appDataFolder` (not visible in the normal Drive UI by design), use the [Drive API Explorer](https://developers.google.com/drive/api/v3/reference/files/list) with `spaces=appDataFolder` while signed in as the same test account.
 
 ## Troubleshooting
 

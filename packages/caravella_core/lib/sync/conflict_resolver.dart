@@ -31,11 +31,16 @@ class ConflictResolver {
   /// [SyncResult] with counters of applied / skipped / errored groups.
   ///
   /// The entire merge runs inside a single database transaction for atomicity.
+  ///
+  /// [checkGrants] false skips the per-group grant check: only for Google
+  /// Drive, where every snapshot comes from the user's own devices (the
+  /// same Google account), with all their groups.
   Future<SyncResult> applyDelta(
     Database db,
     Map<String, dynamic> delta,
-    String channel,
-  ) async {
+    String channel, {
+    bool checkGrants = true,
+  }) async {
     final parsed = DeltaBuilder.parseDelta(delta);
 
     final peerId = parsed['device_id'] as String;
@@ -100,7 +105,7 @@ class ConflictResolver {
           // the peer access to this group, rather than trusting that the
           // sender only ever includes groups it was granted — a buggy or
           // compromised peer could otherwise push arbitrary groups.
-          if (!await _isGrantedInTxn(txn, peerId, groupId)) {
+          if (checkGrants && !await _isGrantedInTxn(txn, peerId, groupId)) {
             LoggerService.warning(
               'Rejecting group $groupId from peer=$peerId — not granted',
               name: _tag,
@@ -187,7 +192,7 @@ class ConflictResolver {
             continue;
           }
 
-          if (!await _isGrantedInTxn(txn, peerId, groupId)) {
+          if (checkGrants && !await _isGrantedInTxn(txn, peerId, groupId)) {
             LoggerService.warning(
               'Rejecting deletion of $groupId from peer=$peerId — not granted',
               name: _tag,

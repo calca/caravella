@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:caravella_core/services/logging/logger_service.dart';
-import 'package:caravella_core/sync/models/sync_result.dart';
 
-/// Callback invoked when remote shards are downloaded from cloud storage.
-typedef DeltaJsonCallback =
-    Future<void> Function(List<String> shards, String channel);
+/// One sync cycle, run by the channel's timer (see [CloudRelayChannel.start]).
+typedef CloudSyncCycle = Future<void> Function();
 
 /// Cloud relay channel for syncing device shards via a cloud provider.
 ///
@@ -52,20 +50,28 @@ abstract class CloudRelayChannel {
     );
   }
 
-  /// Upload a device shard to cloud storage.
+  /// Uploads this device's shard (its full snapshot, a delta JSON string),
+  /// replacing the previous one. Throws [CloudNotSignedInException] without
+  /// an account, or the provider's error.
   Future<void> uploadShard(String deviceId, String jsonPayload);
 
-  /// Download all shards from cloud storage.
+  /// Downloads every device's shard, this one's included. Throws
+  /// [CloudNotSignedInException] without an account, or the provider's error.
   Future<List<String>> downloadAllShards();
 
-  /// Starts periodic sync. The [onShards] callback is invoked whenever new
-  /// shards are downloaded. Implementations should no-op if [isEnabled] is
-  /// `false`.
-  Future<void> start({required DeltaJsonCallback onShards});
+  /// Runs [cycle] every so often until [stop]. The cycle itself (download,
+  /// apply, upload) is `SyncOrchestrator`'s. No-op if [isEnabled] is false.
+  Future<void> start({required CloudSyncCycle cycle});
 
   /// Stops periodic sync.
   Future<void> stop();
+}
 
-  /// Triggers an immediate sync cycle.
-  Future<SyncResult> syncNow();
+/// No account is signed in to the cloud provider (never signed in, signed
+/// out, or access revoked).
+class CloudNotSignedInException implements Exception {
+  const CloudNotSignedInException();
+
+  @override
+  String toString() => 'Not signed in to the cloud account';
 }
