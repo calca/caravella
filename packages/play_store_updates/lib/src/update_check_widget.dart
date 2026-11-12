@@ -110,15 +110,8 @@ class UpdateCheckWidget extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      if (notifier.availableVersion != null)
-                        Text(
-                          'v${notifier.availableVersion}',
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onPrimaryContainer.withValues(
-                              alpha: 0.8,
-                            ),
-                          ),
-                        ),
+                      // No version line: Play reports only the version
+                      // code (e.g. 4133), which means nothing to people.
                     ],
                   ),
                 ),
