@@ -3056,4 +3056,21 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get csv_original_currency => 'Moeda original';
+
+  @override
+  String get permission_microphone_title => 'Permitir o microfone?';
+
+  @override
+  String get permission_microphone_message =>
+      'O Caravella usa o microfone para adicionar despesas por voz. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
+
+  @override
+  String balance_paid_and_settled(String amount, String settled) {
+    return 'Pagou $amount no total · devolveu $settled';
+  }
+
+  @override
+  String balance_paid_and_received(String amount, String received) {
+    return 'Pagou $amount no total · recebeu $received';
+  }
 }

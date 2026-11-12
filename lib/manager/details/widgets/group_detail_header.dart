@@ -319,6 +319,9 @@ class _Figure extends StatelessWidget {
             : Semantics(
                 button: true,
                 label: semanticLabel,
+                // excludeSemantics drops the InkWell's tap: carry it here,
+                // or TalkBack reads the budget but can't open it.
+                onTap: onTap,
                 excludeSemantics: semanticLabel != null,
                 child: InkWell(onTap: onTap, child: content),
               ),

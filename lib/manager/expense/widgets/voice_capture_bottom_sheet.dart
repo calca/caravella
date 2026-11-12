@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../services/voice_input_service.dart';
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 
 /// A bottom sheet for voice capture that follows the standard Caravella sheet
 /// style. The user starts and stops listening by tapping the mic button.
@@ -121,6 +122,9 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
           _isProcessing = false;
           _lastError = error;
         });
+        if (error == VoiceInputError.permissionDenied) {
+          showPermissionDeniedDialog(context, DeniedPermission.microphone);
+        }
       },
       onDone: () {
         // Safety net: the session ended without ever calling onResult or

@@ -29,6 +29,8 @@ class GroupTypeCard extends StatelessWidget {
       button: true,
       selected: selected,
       label: '$title, $subtitle',
+      // excludeSemantics drops the InkWell's tap: TalkBack needs it here.
+      onTap: onTap,
       excludeSemantics: true,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),

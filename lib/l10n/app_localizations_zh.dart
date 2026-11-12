@@ -2958,4 +2958,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get csv_original_currency => '原始货币';
+
+  @override
+  String get permission_microphone_title => '允许使用麦克风？';
+
+  @override
+  String get permission_microphone_message =>
+      'Caravella 使用麦克风通过语音添加支出。访问已关闭：你可以在手机设置中开启。';
+
+  @override
+  String balance_paid_and_settled(String amount, String settled) {
+    return '共支付 $amount · 已还 $settled';
+  }
+
+  @override
+  String balance_paid_and_received(String amount, String received) {
+    return '共支付 $amount · 已收到 $received';
+  }
 }

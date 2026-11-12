@@ -14,6 +14,10 @@ class ExpenseAmountCard extends StatelessWidget {
   final String? category;
   final DateTime? date;
   final String currency;
+
+  /// Shown small under the amount: what the receipt said, for an expense
+  /// entered in the group's second currency ("450,00 kr").
+  final String? secondaryAmount;
   final VoidCallback? onTap;
   // Optional: text to highlight (case-insensitive) inside title
   final String? highlightQuery;
@@ -31,6 +35,7 @@ class ExpenseAmountCard extends StatelessWidget {
     this.category,
     this.date,
     this.currency = '€',
+    this.secondaryAmount,
     this.onTap,
     this.highlightQuery,
     this.showDate = true,
@@ -132,14 +137,27 @@ class ExpenseAmountCard extends StatelessWidget {
               ),
             ),
             // Amount
-            CurrencyDisplay(
-              value: amount,
-              currency: currency,
-              valueFontSize: compact ? 24.0 : 32.0,
-              currencyFontSize: compact ? 12.0 : 14.0,
-              alignment: MainAxisAlignment.end,
-              showDecimals: true,
-              fontWeight: FontWeight.w500,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                CurrencyDisplay(
+                  value: amount,
+                  currency: currency,
+                  valueFontSize: compact ? 24.0 : 32.0,
+                  currencyFontSize: compact ? 12.0 : 14.0,
+                  alignment: MainAxisAlignment.end,
+                  showDecimals: true,
+                  fontWeight: FontWeight.w500,
+                ),
+                if (secondaryAmount case final secondary?)
+                  Text(
+                    secondary,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

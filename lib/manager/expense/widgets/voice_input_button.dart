@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../services/voice_input_service.dart';
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 
 class VoiceInputButton extends StatefulWidget {
   final Function(Map<String, dynamic>) onVoiceResult;
@@ -97,11 +98,15 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
           });
           _animationController.stop();
 
-          AppToast.show(
-            context,
-            _errorMessage(gloc, error),
-            type: ToastType.error,
-          );
+          if (error == VoiceInputError.permissionDenied) {
+            showPermissionDeniedDialog(context, DeniedPermission.microphone);
+          } else {
+            AppToast.show(
+              context,
+              _errorMessage(gloc, error),
+              type: ToastType.error,
+            );
+          }
         }
       },
       localeId: widget.localeId,

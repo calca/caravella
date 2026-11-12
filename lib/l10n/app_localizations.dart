@@ -5507,6 +5507,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Original currency'**
   String get csv_original_currency;
+
+  /// Dialog title when the microphone permission is off
+  ///
+  /// In en, this message translates to:
+  /// **'Allow the microphone?'**
+  String get permission_microphone_title;
+
+  /// Dialog text when the microphone permission is off
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella uses the microphone to add expenses by voice. Access is turned off: you can turn it on in your phone’s settings.'**
+  String get permission_microphone_message;
+
+  /// Under a name in Balances: what they paid in expenses and what they paid back in Settle up
+  ///
+  /// In en, this message translates to:
+  /// **'Paid {amount} in all · {settled} paid back'**
+  String balance_paid_and_settled(String amount, String settled);
+
+  /// Under a name in Balances: what they paid in expenses and what they got back in Settle up
+  ///
+  /// In en, this message translates to:
+  /// **'Paid {amount} in all · {received} received'**
+  String balance_paid_and_received(String amount, String received);
 }
 
 class _AppLocalizationsDelegate

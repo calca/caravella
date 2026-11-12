@@ -261,17 +261,22 @@ class _EntryCurrencyLine extends StatelessWidget {
     final inSecond = state.entryCurrency != null;
     final target = inSecond ? groupCurrency : _secondLabel;
 
+    final VoidCallback? toggle = enabled
+        ? () => controller.setEntryCurrency(inSecond ? null : second)
+        : null;
+    // excludeSemantics drops the InkWell's own tap action, so the button
+    // carries it: without onTap here TalkBack reads the link but can't
+    // activate it.
     final link = Semantics(
       button: true,
       label: gloc.entry_in_currency_label(target),
+      onTap: toggle,
       excludeSemantics: true,
       child: InkWell(
-        onTap: enabled
-            ? () => controller.setEntryCurrency(inSecond ? null : second)
-            : null,
+        onTap: toggle,
         borderRadius: BorderRadius.circular(8),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 44),
+          constraints: const BoxConstraints(minHeight: 48),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Center(
@@ -292,7 +297,7 @@ class _EntryCurrencyLine extends StatelessWidget {
 
     final converted = state.groupAmount;
     return SizedBox(
-      height: 44,
+      height: 48,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
