@@ -61,9 +61,14 @@ abstract class GmsIntegrations {
   /// Live camera view that calls [onDetect] with the raw text of every QR
   /// code it reads, and stops the camera once [paused] becomes true. `null`
   /// when [supportsQrScanning] is false.
+  ///
+  /// [onCameraDenied] is called once when the camera permission is refused;
+  /// the view then stays dark and doesn't ask again until it is rebuilt with
+  /// a new key.
   Widget? buildQrScanner({
     required ValueChanged<String> onDetect,
     bool paused = false,
+    VoidCallback? onCameraDenied,
   });
 
   /// In-app updates from the Play Store. `null` → no update checks.
@@ -102,6 +107,7 @@ class NoGmsIntegrations extends GmsIntegrations {
   Widget? buildQrScanner({
     required ValueChanged<String> onDetect,
     bool paused = false,
+    VoidCallback? onCameraDenied,
   }) => null;
 
   @override

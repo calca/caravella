@@ -4524,6 +4524,12 @@ abstract class AppLocalizations {
   /// **'Caravella uses the camera to read receipts. Access is turned off: you can turn it on in your phone’s settings.'**
   String get permission_camera_message;
 
+  /// No description provided for @permission_camera_qr_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella uses the camera to read the QR code on the other phone. Access is turned off: you can turn it on in your phone’s settings.'**
+  String get permission_camera_qr_message;
+
   /// No description provided for @permission_photos_title.
   ///
   /// In en, this message translates to:

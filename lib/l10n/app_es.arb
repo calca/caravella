@@ -937,6 +937,7 @@
   ,"sync_qr_scan_again": "Escanear de nuevo"
   ,"permission_camera_title": "¿Permitir la cámara?"
   ,"permission_camera_message": "Caravella usa la cámara para leer los tickets. El acceso está desactivado: puedes activarlo en los ajustes del teléfono."
+  ,"permission_camera_qr_message": "Caravella usa la cámara para leer el QR del otro teléfono. El acceso está desactivado: puedes activarlo en los ajustes del teléfono."
   ,"permission_photos_title": "¿Permitir el acceso a las fotos?"
   ,"permission_photos_message": "Caravella usa tus fotos para leer un ticket que ya fotografiaste. El acceso está desactivado: puedes activarlo en los ajustes del teléfono."
   ,"permission_notifications_title": "¿Permitir las notificaciones?"

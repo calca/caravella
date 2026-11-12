@@ -913,6 +913,7 @@
   ,"sync_qr_scan_again": "Ler de novo"
   ,"permission_camera_title": "Permitir a câmera?"
   ,"permission_camera_message": "O Caravella usa a câmera para ler recibos. O acesso está desativado: você pode ativá-lo nas configurações do celular."
+  ,"permission_camera_qr_message": "O Caravella usa a câmera para ler o QR do outro telefone. O acesso está desativado: você pode ativá-lo nas configurações do celular."
   ,"permission_photos_title": "Permitir acesso às fotos?"
   ,"permission_photos_message": "O Caravella usa suas fotos para ler um recibo já fotografado. O acesso está desativado: você pode ativá-lo nas configurações do celular."
   ,"permission_notifications_title": "Permitir notificações?"

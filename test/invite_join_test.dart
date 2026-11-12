@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:caravella_core/caravella_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
@@ -68,6 +69,46 @@ SyncResult _ok() => SyncResult(
   peerId: 'phone-2',
   syncedAt: DateTime.utc(2026, 12, 20),
 );
+
+/// A scanner whose camera is always refused: it reports it once, after its
+/// first frame, as the real ones do.
+class _DeniedCameraGms extends NoGmsIntegrations {
+  int scanners = 0;
+
+  @override
+  bool get supportsQrScanning => true;
+
+  @override
+  Widget? buildQrScanner({
+    required ValueChanged<String> onDetect,
+    bool paused = false,
+    VoidCallback? onCameraDenied,
+  }) => _DeniedScanner(onDenied: onCameraDenied, onStart: () => scanners++);
+}
+
+class _DeniedScanner extends StatefulWidget {
+  final VoidCallback? onDenied;
+  final VoidCallback onStart;
+
+  const _DeniedScanner({required this.onDenied, required this.onStart});
+
+  @override
+  State<_DeniedScanner> createState() => _DeniedScannerState();
+}
+
+class _DeniedScannerState extends State<_DeniedScanner> {
+  @override
+  void initState() {
+    super.initState();
+    widget.onStart();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => widget.onDenied?.call(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => const ColoredBox(color: Colors.black);
+}
 
 void main() {
   sqfliteFfiInit();
@@ -420,6 +461,86 @@ void main() {
       expect(bt.discovering, isTrue);
       expect(find.text(loc.sync_bt_off_title), findsNothing);
       expect(find.text(loc.sync_join_searching), findsOneWidget);
+    });
+
+    group('camera refused', () {
+      late _DeniedCameraGms gms;
+      var settingsOpened = 0;
+      const permissions = MethodChannel(
+        'flutter.baseflow.com/permissions/methods',
+      );
+
+      setUp(() {
+        gms = _DeniedCameraGms();
+        GmsIntegrations.instance = gms;
+        settingsOpened = 0;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(permissions, (call) async {
+              if (call.method == 'openAppSettings') settingsOpened++;
+              return true;
+            });
+      });
+
+      tearDown(() {
+        GmsIntegrations.instance = const NoGmsIntegrations();
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(permissions, null);
+      });
+
+      testWidgets('explains it once, then leaves Open settings in the panel', (
+        tester,
+      ) async {
+        await open(tester, _FakeBluetooth());
+        await tester.pump();
+        final loc = AppLocalizations.of(
+          tester.element(find.byType(JoinGroupPage)),
+        );
+        expect(find.text(loc.permission_camera_qr_message), findsOneWidget);
+
+        await tester.tap(find.text(loc.permission_not_now));
+        await tester.pumpAndSettle();
+        expect(find.text(loc.permission_camera_qr_message), findsNothing);
+        expect(find.text(loc.sync_join_scan_hint), findsNothing);
+        expect(find.text(loc.permission_camera_title), findsOneWidget);
+
+        // Back from the permission prompt: no new scanner, no new dialog.
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
+        await tester.pumpAndSettle();
+        expect(gms.scanners, 1);
+        expect(find.text(loc.permission_camera_qr_message), findsNothing);
+      });
+
+      testWidgets('starts the camera again back from the settings', (
+        tester,
+      ) async {
+        await open(tester, _FakeBluetooth());
+        await tester.pump();
+        final loc = AppLocalizations.of(
+          tester.element(find.byType(JoinGroupPage)),
+        );
+        await tester.tap(find.text(loc.permission_not_now));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text(loc.permission_open_settings));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.descendant(
+            of: find.byType(Dialog),
+            matching: find.text(loc.permission_open_settings),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(settingsOpened, 1);
+        expect(gms.scanners, 1);
+
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
+        await tester.pump();
+        expect(gms.scanners, 2);
+      });
     });
   });
 }
