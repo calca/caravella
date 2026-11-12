@@ -32,6 +32,7 @@ import xml.etree.ElementTree as ET
 path, density = sys.argv[1], float(sys.argv[2])
 scale = density / 160  # px per dp
 root = ET.parse(path).getroot()
+screen_h = max(int(re.findall(r"\d+", n.get("bounds", "0,0,0,0"))[3]) for n in root.iter("node"))
 
 
 def label(node):
@@ -53,10 +54,13 @@ for node in root.iter("node"):
     if w == 0 or h == 0:
         continue  # off screen
     name = label(node)
+    # Cut by the screen's edge (scrolled under a pinned bar or the bottom):
+    # its size here isn't its real size.
+    clipped = y1 <= 0 or y2 >= screen_h
     where = f"at ({x1},{y1}) {w:.0f}x{h:.0f} dp"
     if not name:
         problems.append(f"no label        {where}  [{node.get('class')}]")
-    elif w < 47.5 or h < 47.5:
+    elif (w < 47.5 or h < 47.5) and not clipped:
         problems.append(f"under 48 dp     {where}  \"{name[:50]}\"")
 
 package = next((n.get("package") for n in root.iter("node")), "?")
