@@ -1,3 +1,10 @@
+## 2.4.4 (12.11.2026)
+
+- **Changed**: The add-expense button shows on Expenses only, so it no longer covers the payments or the charts
+- **Fixed**: Groups with many expenses can be shared over Bluetooth again
+- **Fixed**: An expense said by voice with only an amount ("20 euro") is no longer lost: the form opens to add the name
+- **Fixed**: Join a group: if you don't allow the camera, Caravella explains why it needs it, with Open settings, instead of asking again and again
+
 ## 2.4.3 (11.11.2026)
 
 - **Changed**: Sync with your own devices through Google Drive is hidden until it's ready: it arrives in the next version. Backup to Google Drive works as before

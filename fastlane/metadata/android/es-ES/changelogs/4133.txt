@@ -1,0 +1,7 @@
+Versión 2.4.4 - Pequeñas correcciones
+
+• El botón para añadir un gasto solo aparece en Gastos, así ya no tapa los pagos ni los gráficos
+• Un gasto dicho por voz con solo el importe ("20 euros") ya no se pierde: se abre el formulario para añadir el nombre
+• Unirse a un grupo: si no permites la cámara, Caravella explica para qué la necesita, con Abrir ajustes, en lugar de pedirla una y otra vez
+
+¡Gracias por usar Caravella!
