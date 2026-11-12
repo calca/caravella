@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Google Drive sync now moves data (Play builds). Settings › Sync › "Sync devices" was there in 2.4, but it never uploaded and ignored what it downloaded. Each device now keeps its full snapshot (every group, deleted ones included) in the account's hidden Drive folder, applies the other devices' snapshots by last-writer-wins, and uploads its own. It runs when turned on, every 15 minutes, 30 seconds after a change, when the app comes back or goes to the background, and from "Sync now", which now says what was received and sent. It covers all your groups and needs no pairing, because the devices are yours. Groups from your other devices get no "shared with you" welcome. Photos and attachments stay on the device they were added on, as over Wi-Fi (#688)
 
 ### Fixed
+- Found by the non-regression pass on v2.5.0-rc.1 (docs/NRT.md):
+  - TalkBack couldn't activate some buttons it read: "in kr" under the amount, the group type cards (new group, and the type sheet), the period presets and, on the welcome screen, Settings and Get started. Their semantics hid the inner button's tap without carrying it
+  - The add-expense sheet stays readable when the phone switches to dark mode while it is open: its background came from the theme at the moment it opened
+  - Voice with the microphone refused opens "Allow the microphone?" with Open settings, instead of "Voice recognition not available"
+  - Home's recent expenses show the receipt amount (450.00 kr) under an expense entered in the second currency, as the group's list does
+  - Balances: under a name, what that person paid back or received in Settle up, next to what they paid in expenses ("Paid 0.00 € in all · 23.30 € paid back")
+  - Home: the group's title is at least 48 dp to tap, also with no dates
 - Settings › Check for updates: the “Update available” card no longer shows “v4133”. Play reports only the version code (the build number), not the version name, so the line is gone
 
 ### Changed

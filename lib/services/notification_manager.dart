@@ -349,7 +349,9 @@ class NotificationManager {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      // No backgroundColor: the theme's modalBackgroundColor (the same
+      // surfaceContainer) is read when the sheet builds, so it follows a
+      // switch to dark mode while it is open.
       // Taller now that the details are always there: keep it below the
       // status bar.
       useSafeArea: true,

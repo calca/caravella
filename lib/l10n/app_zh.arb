@@ -1415,4 +1415,12 @@
   ,"@csv_original_amount": {"description": "CSV column: the receipt amount of an expense entered in the second currency"}
   ,"csv_original_currency": "原始货币"
   ,"@csv_original_currency": {"description": "CSV column: the ISO code of that currency"}
+  ,"permission_microphone_title": "允许使用麦克风？"
+  ,"@permission_microphone_title": {"description": "Dialog title when the microphone permission is off"}
+  ,"permission_microphone_message": "Caravella 使用麦克风通过语音添加支出。访问已关闭：你可以在手机设置中开启。"
+  ,"@permission_microphone_message": {"description": "Dialog text when the microphone permission is off"}
+  ,"balance_paid_and_settled": "共支付 {amount} · 已还 {settled}"
+  ,"@balance_paid_and_settled": {"description": "Under a name in Balances: what they paid in expenses and what they paid back in Settle up", "placeholders": {"amount": {"type": "String"}, "settled": {"type": "String"}}}
+  ,"balance_paid_and_received": "共支付 {amount} · 已收到 {received}"
+  ,"@balance_paid_and_received": {"description": "Under a name in Balances: what they paid in expenses and what they got back in Settle up", "placeholders": {"amount": {"type": "String"}, "received": {"type": "String"}}}
 }

@@ -54,6 +54,24 @@ class GroupBalancesView extends StatelessWidget {
     String money(double v) => '${number.format(v.abs())} ${group.currency}';
     final day = DateFormat.MMMd(Localizations.localeOf(context).toString());
     final paid = [...group.payments]..sort((a, b) => b.date.compareTo(a.date));
+    // Payments ticked in Settle up move money too: say so next to what
+    // each person paid in expenses, or "Paid 0.00 € in all" looks wrong for
+    // someone who just paid back.
+    final sent = <String, double>{};
+    final received = <String, double>{};
+    for (final pay in group.payments) {
+      sent[pay.fromId] = (sent[pay.fromId] ?? 0) + pay.amount;
+      received[pay.toId] = (received[pay.toId] ?? 0) + pay.amount;
+    }
+    String paidLabel(String id) {
+      final total = money(paidTotals[id] ?? 0);
+      final out = sent[id] ?? 0;
+      final back = received[id] ?? 0;
+      if (out > 0) return gloc.balance_paid_and_settled(total, money(out));
+      if (back > 0) return gloc.balance_paid_and_received(total, money(back));
+      return gloc.balance_paid_total(total);
+    }
+
     final onChanged = onPaymentsChanged;
 
     String summary() => [
@@ -106,12 +124,10 @@ class GroupBalancesView extends StatelessWidget {
                 balance: balances[p.id] ?? 0,
                 maxAbs: maxAbs,
                 currency: group.currency,
-                paidLabel: gloc.balance_paid_total(
-                  money(paidTotals[p.id] ?? 0),
-                ),
+                paidLabel: paidLabel(p.id),
                 semanticLabel:
                     '${(balances[p.id] ?? 0) >= 0 ? gloc.balance_gets_back(p.name, money(balances[p.id] ?? 0)) : gloc.balance_owes(p.name, money(balances[p.id] ?? 0))}, '
-                    '${gloc.balance_paid_total(money(paidTotals[p.id] ?? 0))}',
+                    '${paidLabel(p.id)}',
               ),
           ]),
           Padding(

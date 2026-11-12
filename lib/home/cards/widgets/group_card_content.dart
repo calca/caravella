@@ -73,11 +73,15 @@ class GroupCardContent extends StatelessWidget {
       child: Semantics(
         button: onOpen != null,
         onTap: onOpen,
-        child: GroupCardHeader(
-          group: group,
-          localizations: localizations,
-          theme: theme,
-          isSynced: isSynced,
+        // At least 48 dp to tap, also with a one-line title and no dates.
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: GroupCardHeader(
+            group: group,
+            localizations: localizations,
+            theme: theme,
+            isSynced: isSynced,
+          ),
         ),
       ),
     );

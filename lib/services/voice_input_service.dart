@@ -1,6 +1,7 @@
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// Reasons a voice-input session can fail to produce a result, surfaced to
 /// the UI so it can show an actionable, specific message instead of a
@@ -81,7 +82,13 @@ class VoiceInputService {
     if (!_isInitialized) {
       final available = await isAvailable();
       if (!available) {
-        onError(VoiceInputError.notAvailable);
+        // The recognizer can't start without the microphone: a refused
+        // permission is not a device without speech recognition.
+        onError(
+          await _microphoneRefused()
+              ? VoiceInputError.permissionDenied
+              : VoiceInputError.notAvailable,
+        );
         return;
       }
     }
@@ -112,6 +119,15 @@ class VoiceInputService {
         partialResults: onPartial != null,
       ),
     );
+  }
+
+  static Future<bool> _microphoneRefused() async {
+    try {
+      final status = await Permission.microphone.status;
+      return status.isDenied || status.isPermanentlyDenied;
+    } catch (_) {
+      return false;
+    }
   }
 
   static void _dispatchError(SpeechRecognitionError error) {

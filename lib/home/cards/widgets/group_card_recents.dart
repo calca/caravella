@@ -186,6 +186,14 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
                     compact: true,
                     fullWidth: true,
                     currency: widget.group.currency,
+                    secondaryAmount: switch (e.original) {
+                      final o? => CurrencyDisplay.formatLocalizedText(
+                        o.amount,
+                        o.symbol,
+                        Localizations.localeOf(ctx),
+                      ),
+                      null => null,
+                    },
                     onTap: () {
                       Navigator.of(ctx).push(
                         MaterialPageRoute(

@@ -117,6 +117,8 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                           key: const ValueKey('settings_button_semantics'),
                           button: true,
                           label: gloc.settings_tab,
+                          // excludeSemantics drops the button's own tap.
+                          onTap: _openSettings,
                           excludeSemantics: true,
                           child: Material(
                             color: onBackground.withValues(alpha: 0.18),
@@ -193,6 +195,7 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                               key: const ValueKey('forward_button_semantics'),
                               button: true,
                               label: gloc.welcome_v3_cta,
+                              onTap: _start,
                               excludeSemantics: true,
                               child: FilledButton(
                                 onPressed: _start,

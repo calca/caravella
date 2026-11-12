@@ -421,6 +421,8 @@ class _PresetPill extends StatelessWidget {
       button: true,
       selected: selected,
       label: label,
+      // excludeSemantics drops the InkWell's tap: TalkBack needs it here.
+      onTap: onTap,
       excludeSemantics: true,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: FormPill.touchMargin),

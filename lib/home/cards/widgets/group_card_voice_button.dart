@@ -8,6 +8,7 @@ import '../../../services/voice_input_service.dart';
 import '../../../manager/expense/pages/expense_form_page.dart';
 import '../../../services/notification_manager.dart';
 import '../../home_constants.dart';
+import 'package:io_caravella_egm/services/permission_dialog.dart';
 
 /// A microphone icon button shown next to the "Add expense" CTA on each group card.
 ///
@@ -139,7 +140,11 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
             _isListening = false;
             _isProcessing = false;
           });
-          _showSnack(_getError(error));
+          if (error == VoiceInputError.permissionDenied) {
+            showPermissionDeniedDialog(context, DeniedPermission.microphone);
+          } else {
+            _showSnack(_getError(error));
+          }
         }
       },
       onDone: () {

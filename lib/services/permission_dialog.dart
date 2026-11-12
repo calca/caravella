@@ -10,6 +10,9 @@ enum DeniedPermission {
 
   /// The camera, for the QR code on the Join a group page.
   cameraForQr,
+
+  /// The microphone, for adding an expense by voice.
+  microphone,
   photos,
   notifications,
   location,
@@ -32,6 +35,10 @@ Future<bool> showPermissionDeniedDialog(
     DeniedPermission.cameraForQr => (
       gloc.permission_camera_title,
       gloc.permission_camera_qr_message,
+    ),
+    DeniedPermission.microphone => (
+      gloc.permission_microphone_title,
+      gloc.permission_microphone_message,
     ),
     DeniedPermission.photos => (
       gloc.permission_photos_title,

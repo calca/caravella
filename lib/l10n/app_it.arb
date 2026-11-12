@@ -1095,4 +1095,12 @@
   ,"@csv_original_amount": {"description": "CSV column: the receipt amount of an expense entered in the second currency"}
   ,"csv_original_currency": "Valuta originale"
   ,"@csv_original_currency": {"description": "CSV column: the ISO code of that currency"}
+  ,"permission_microphone_title": "Consentire il microfono?"
+  ,"@permission_microphone_title": {"description": "Dialog title when the microphone permission is off"}
+  ,"permission_microphone_message": "Caravella usa il microfono per aggiungere spese a voce. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono."
+  ,"@permission_microphone_message": {"description": "Dialog text when the microphone permission is off"}
+  ,"balance_paid_and_settled": "Ha messo {amount} · ha restituito {settled}"
+  ,"@balance_paid_and_settled": {"description": "Under a name in Balances: what they paid in expenses and what they paid back in Settle up", "placeholders": {"amount": {"type": "String"}, "settled": {"type": "String"}}}
+  ,"balance_paid_and_received": "Ha messo {amount} · ha ricevuto {received}"
+  ,"@balance_paid_and_received": {"description": "Under a name in Balances: what they paid in expenses and what they got back in Settle up", "placeholders": {"amount": {"type": "String"}, "received": {"type": "String"}}}
 }
