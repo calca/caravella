@@ -243,6 +243,9 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                         showGroupHeader: false,
                         showActionsRow: false,
                         currency: widget.group.currency,
+                        secondCurrency: widget.group.secondCurrency,
+                        startInSecondCurrency:
+                            widget.group.lastExpenseInSecondCurrency,
                         autoLocationEnabled: widget.group.autoLocationEnabled,
                         onExpenseAdded: widget.onExpenseSaved,
                         onCategoryAdded: widget.onCategoryAdded,

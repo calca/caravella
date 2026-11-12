@@ -2898,4 +2898,64 @@ class AppLocalizationsZh extends AppLocalizations {
   String budget_today_open(String spent) {
     return '今天 $spent。打开预算';
   }
+
+  @override
+  String get currency_section_group => '群组货币';
+
+  @override
+  String get currency_group_hint => '余额、总计和预算';
+
+  @override
+  String get currency_change => '更改';
+
+  @override
+  String get second_currency_section => '支出也可用';
+
+  @override
+  String get second_currency_add => '添加一种货币';
+
+  @override
+  String get second_currency_add_hint => '用于出国旅行';
+
+  @override
+  String second_currency_empty_hint(String currency) {
+    return '按收据上的货币记录支出：群组以 $currency 计算。';
+  }
+
+  @override
+  String get second_currency_rate_hint => '汇率适用于新的支出。可在银行卡账单上找到。';
+
+  @override
+  String second_currency_rate_label(String group, String second) {
+    return '汇率：1 $group 等于多少 $second';
+  }
+
+  @override
+  String second_currency_remove(String currency) {
+    return '移除 $currency';
+  }
+
+  @override
+  String second_currency_subtitle(String currency, String rate) {
+    return '支出也可用 $currency · $rate';
+  }
+
+  @override
+  String get done => '完成';
+
+  @override
+  String entry_in_currency(String currency) {
+    return '用 $currency';
+  }
+
+  @override
+  String entry_in_currency_label(String currency) {
+    return '以 $currency 输入金额';
+  }
+
+  @override
+  String get csv_original_amount => '原始金额';
+
+  @override
+  String get csv_original_currency => '原始货币';
 }

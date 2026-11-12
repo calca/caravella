@@ -4,6 +4,7 @@ import 'expense_participant.dart';
 import 'expense_category.dart';
 import 'expense_group_type.dart';
 import 'group_budget.dart';
+import 'second_currency.dart';
 import 'settle_payment.dart';
 
 class ExpenseGroup {
@@ -33,6 +34,10 @@ class ExpenseGroup {
   /// How much the group means to spend, or null for no budget.
   final GroupBudget? budget;
 
+  /// A currency the group also takes expenses in, with its rate to
+  /// [currency]; null for one currency only.
+  final SecondCurrency? secondCurrency;
+
   ExpenseGroup({
     required this.title,
     required this.expenses,
@@ -53,6 +58,7 @@ class ExpenseGroup {
     this.syncEnabled = false,
     this.payments = const [],
     this.budget,
+    this.secondCurrency,
   }) : timestamp = timestamp ?? DateTime.now(),
        id = id ?? const Uuid().v4();
 
@@ -99,6 +105,7 @@ class ExpenseGroup {
               .toList() ??
           const [],
       budget: GroupBudget.fromJson(json['budget']),
+      secondCurrency: SecondCurrency.fromJson(json['secondCurrency']),
     );
   }
 
@@ -122,6 +129,7 @@ class ExpenseGroup {
     'syncEnabled': syncEnabled,
     'payments': payments.map((p) => p.toJson()).toList(),
     'budget': budget?.toJson(),
+    'secondCurrency': secondCurrency?.toJson(),
   };
 
   ExpenseGroup copyWith({
@@ -145,6 +153,7 @@ class ExpenseGroup {
     bool? syncEnabled,
     List<SettlePayment>? payments,
     Object? budget = _notProvided,
+    Object? secondCurrency = _notProvided,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -169,11 +178,23 @@ class ExpenseGroup {
       syncEnabled: syncEnabled ?? this.syncEnabled,
       payments: payments ?? this.payments,
       budget: budget == _notProvided ? this.budget : budget as GroupBudget?,
+      secondCurrency: secondCurrency == _notProvided
+          ? this.secondCurrency
+          : secondCurrency as SecondCurrency?,
     );
   }
 
   // Sentinel value to distinguish between null and not provided
   static const Object _notProvided = Object();
+
+  /// Whether the latest expense (by date) was entered in [secondCurrency]:
+  /// the expense form then starts in it.
+  bool get lastExpenseInSecondCurrency {
+    final second = secondCurrency;
+    if (second == null || expenses.isEmpty) return false;
+    final latest = expenses.reduce((a, b) => b.date.isAfter(a.date) ? b : a);
+    return latest.original?.code == second.code;
+  }
 
   /// Total of the group's expenses.
   double getTotalExpenses() {

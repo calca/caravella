@@ -107,7 +107,8 @@ class ExpenseFormOrchestrator {
   ExpenseDetails _buildExpenseFromState() {
     return ExpenseDetails(
       name: controller.state.name,
-      amount: controller.state.amount,
+      amount: controller.state.groupAmount,
+      original: controller.state.original,
       paidBy: controller.state.paidBy!,
       category: controller.state.category!,
       date: controller.state.date,

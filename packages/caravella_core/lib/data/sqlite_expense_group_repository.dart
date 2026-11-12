@@ -28,7 +28,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 9;
+  static const int _databaseVersion = 10;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -289,6 +289,18 @@ class SqliteExpenseGroupRepository
       );
       LoggerService.info(
         'Database migration to v9 complete',
+        name: 'storage.sqlite',
+      );
+    }
+    if (oldVersion < 10) {
+      // A second currency per group (`SecondCurrency`) and, per expense,
+      // the receipt's amount in it (`OriginalAmount`): JSON, null for none.
+      await db.execute(
+        'ALTER TABLE $kTableGroups ADD COLUMN second_currency TEXT',
+      );
+      await db.execute('ALTER TABLE $kTableExpenses ADD COLUMN original TEXT');
+      LoggerService.info(
+        'Database migration to v10 complete',
         name: 'storage.sqlite',
       );
     }

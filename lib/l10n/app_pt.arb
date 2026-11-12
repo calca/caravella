@@ -1061,4 +1061,36 @@
   ,"budget_today_within": "Hoje {spent}, dentro dos {share} previstos para hoje. Abrir o orçamento"
   ,"budget_today_over": "Hoje {spent}, acima dos {share} previstos para hoje. Abrir o orçamento"
   ,"budget_today_open": "Hoje {spent}. Abrir o orçamento"
+  ,"currency_section_group": "Do grupo"
+  ,"@currency_section_group": {"description": "Currency sheet: heading of the group's own currency"}
+  ,"currency_group_hint": "Saldos, totais e orçamento"
+  ,"@currency_group_hint": {"description": "Under the group's currency in the currency sheet: what it is used for"}
+  ,"currency_change": "Alterar"
+  ,"@currency_change": {"description": "Button to pick another group currency"}
+  ,"second_currency_section": "Despesas também em"
+  ,"@second_currency_section": {"description": "Currency sheet: heading of the second currency expenses can be typed in"}
+  ,"second_currency_add": "Adicionar uma moeda"
+  ,"@second_currency_add": {"description": "Currency sheet: add a second currency"}
+  ,"second_currency_add_hint": "Para uma viagem ao exterior"
+  ,"@second_currency_add_hint": {"description": "Under 'Add a currency'"}
+  ,"second_currency_empty_hint": "Digite as despesas na moeda do recibo: o grupo as conta em {currency}."
+  ,"@second_currency_empty_hint": {"description": "Currency sheet, no second currency yet", "placeholders": {"currency": {"type": "String"}}}
+  ,"second_currency_rate_hint": "O câmbio vale para as despesas novas. Você o encontra no extrato do cartão."
+  ,"@second_currency_rate_hint": {"description": "Under the rate field"}
+  ,"second_currency_rate_label": "Câmbio: quantos {second} valem 1 {group}"
+  ,"@second_currency_rate_label": {"description": "Screen reader label of the rate field", "placeholders": {"group": {"type": "String"}, "second": {"type": "String"}}}
+  ,"second_currency_remove": "Remover {currency}"
+  ,"@second_currency_remove": {"description": "Screen reader label of the ✕ removing the second currency", "placeholders": {"currency": {"type": "String"}}}
+  ,"second_currency_subtitle": "Despesas também em {currency} · {rate}"
+  ,"@second_currency_subtitle": {"description": "Second line under Currency in General settings", "placeholders": {"currency": {"type": "String"}, "rate": {"type": "String"}}}
+  ,"done": "Pronto"
+  ,"@done": {"description": "Button closing a sheet"}
+  ,"entry_in_currency": "em {currency}"
+  ,"@entry_in_currency": {"description": "Quiet link under the amount: type the amount in this currency", "placeholders": {"currency": {"type": "String"}}}
+  ,"entry_in_currency_label": "Digite o valor em {currency}"
+  ,"@entry_in_currency_label": {"description": "Screen reader label of the link under the amount", "placeholders": {"currency": {"type": "String"}}}
+  ,"csv_original_amount": "Valor original"
+  ,"@csv_original_amount": {"description": "CSV column: the receipt amount of an expense entered in the second currency"}
+  ,"csv_original_currency": "Moeda original"
+  ,"@csv_original_currency": {"description": "CSV column: the ISO code of that currency"}
 }

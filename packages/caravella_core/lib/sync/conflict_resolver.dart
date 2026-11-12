@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:caravella_core/data/sqlite_expense_group_repository.dart';
 import 'package:caravella_core/data/sqlite_group_mapper.dart';
 import 'package:caravella_core/model/expense_group.dart';
+import 'package:caravella_core/model/second_currency.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/delta_builder.dart';
 import 'package:caravella_core/sync/models/sync_problem.dart';
@@ -44,8 +45,8 @@ class ConflictResolver {
     final parsed = DeltaBuilder.parseDelta(delta);
 
     final peerId = parsed['device_id'] as String;
-    // Deltas older than schema 2 don't know `payments` or `budget`: keep
-    // ours.
+    // Deltas older than schema 2 don't know `payments`, `budget`,
+    // `secondCurrency` or an expense's `original`: keep ours.
     final keepLocalPayments = (parsed['schema'] as int? ?? 1) < 2;
     final peerName = parsed['device_name'] as String? ?? 'Unknown';
     final remoteGroups = (parsed['groups'] as List)
@@ -126,6 +127,7 @@ class ConflictResolver {
               'payments',
               'budget_amount',
               'budget_period',
+              'second_currency',
             ],
             where: 'id = ?',
             whereArgs: [groupId],
@@ -148,12 +150,38 @@ class ConflictResolver {
           // Parse the full ExpenseGroup from the remote JSON
           var group = ExpenseGroup.fromJson(remoteJson);
 
-          // A peer on 2.4 doesn't know payments or budgets and sends the
-          // group without them: keep the ones this device has (payments for
-          // people still in it).
+          // A peer on 2.4 doesn't know payments, budgets or second
+          // currencies and sends the group without them: keep the ones this
+          // device has (payments for people still in it; an expense's
+          // original amount while the peer left its amount as it was).
           if (keepLocalPayments && localRows.isNotEmpty) {
             final ids = {for (final p in group.participants) p.id};
+            final localExpenses = {
+              for (final row in await txn.query(
+                SqliteExpenseGroupRepository.tableExpenses,
+                columns: ['id', 'amount', 'original'],
+                where: 'group_id = ? AND original IS NOT NULL',
+                whereArgs: [groupId],
+              ))
+                row['id'] as String: row,
+            };
             group = group.copyWith(
+              expenses: [
+                for (final e in group.expenses)
+                  switch (localExpenses[e.id]) {
+                    final row? when row['amount'] == e.amount => e.copyWith(
+                      original: SqliteGroupMapper.jsonColumn(
+                        row['original'],
+                        OriginalAmount.fromJson,
+                      ),
+                    ),
+                    _ => e,
+                  },
+              ],
+              secondCurrency: SqliteGroupMapper.jsonColumn(
+                localRows.first['second_currency'],
+                SecondCurrency.fromJson,
+              ),
               payments: [
                 for (final p in SqliteGroupMapper.paymentsFromColumn(
                   localRows.first['payments'],
@@ -345,6 +373,9 @@ class ConflictResolver {
       'sync_enabled': group.syncEnabled ? 1 : 0,
       'payments': SqliteGroupMapper.paymentsToColumn(group.payments),
       ...SqliteGroupMapper.budgetToColumns(group.budget),
+      'second_currency': SqliteGroupMapper.toJsonColumn(
+        group.secondCurrency?.toJson(),
+      ),
       'device_id': deviceId,
       'updated_at': updatedAt,
       'deleted': 0,

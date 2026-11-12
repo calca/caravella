@@ -10,6 +10,9 @@ class CsvExporter {
   static String generate(ExpenseGroup? group, gen.AppLocalizations loc) {
     if (group == null || group.expenses.isEmpty) return '';
     final buffer = StringBuffer();
+    // Two more columns only when some expense was entered in the second
+    // currency: what the receipt said, and in which currency.
+    final withOriginal = group.expenses.any((e) => e.original != null);
 
     // Intestazione localizzata
     buffer.writeln(
@@ -21,6 +24,10 @@ class CsvExporter {
         loc.csv_date,
         loc.csv_note,
         loc.csv_location,
+        if (withOriginal) ...[
+          loc.csv_original_amount,
+          loc.csv_original_currency,
+        ],
       ].join(','),
     );
 
@@ -34,6 +41,16 @@ class CsvExporter {
           e.date.toIso8601String().split('T').first,
           _escape(e.note ?? ''),
           _escape(e.location?.displayText ?? ''),
+          if (withOriginal) ...[
+            switch (e.original) {
+              final o? => CurrencyDisplay.formatCurrencyText(
+                o.amount,
+                '',
+              ).trim(),
+              null => '',
+            },
+            e.original?.code ?? '',
+          ],
         ].join(','),
       );
     }

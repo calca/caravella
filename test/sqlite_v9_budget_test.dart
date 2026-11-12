@@ -30,6 +30,9 @@ void main() {
     await createSqliteSchema(db);
     await db.execute('ALTER TABLE groups DROP COLUMN budget_amount');
     await db.execute('ALTER TABLE groups DROP COLUMN budget_period');
+    // v10's columns too: the upgrade adds them again.
+    await db.execute('ALTER TABLE groups DROP COLUMN second_currency');
+    await db.execute('ALTER TABLE expenses DROP COLUMN original');
     await db.insert('groups', {
       'id': 'g',
       'title': 'Norway',
@@ -64,9 +67,7 @@ void main() {
     expect(saved.isSuccess, isTrue, reason: '${saved.error}');
     expect((await repository.getGroupById('g')).unwrap()!.budget, budget);
 
-    final cleared = await repository.saveGroup(
-      group.copyWith(budget: null),
-    );
+    final cleared = await repository.saveGroup(group.copyWith(budget: null));
     expect(cleared.isSuccess, isTrue, reason: '${cleared.error}');
     expect((await repository.getGroupById('g')).unwrap()!.budget, isNull);
   });

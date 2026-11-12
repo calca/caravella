@@ -133,6 +133,9 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
     return ExpenseFormState.initial(
       participants: config.participants,
       categories: config.categories,
+      entryCurrency: config.startInSecondCurrency
+          ? config.secondCurrency
+          : null,
     );
   }
 

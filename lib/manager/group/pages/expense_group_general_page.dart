@@ -16,7 +16,8 @@ import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../group_type/group_type_selector_sheet.dart';
 import '../widgets/background_picker.dart';
-import '../widgets/currency_selector_sheet.dart';
+import '../data/currencies.dart';
+import '../widgets/group_currency_sheet.dart';
 
 class ExpenseGroupGeneralPage extends StatelessWidget {
   final ExpenseGroup? trip;
@@ -250,19 +251,44 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
               icon: Icons.payments_outlined,
               title: gloc.currency,
               subtitle:
-                  '${currency['symbol'] ?? ''}  ${currency['name'] ?? ''} · '
+                  '${currency['symbol'] ?? ''}  '
+                  '${localizedCurrencyName(gloc, currency['code'] ?? '')} · '
                   '${currency['code'] ?? ''}',
+              subtitleWidget: switch (state.secondCurrency) {
+                final second? => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${currency['symbol'] ?? ''}  '
+                      '${localizedCurrencyName(gloc, currency['code'] ?? '')}'
+                      ' · ${currency['code'] ?? ''}',
+                    ),
+                    Text(
+                      gloc.second_currency_subtitle(
+                        second.symbol,
+                        CurrencyDisplay.formatRateLine(
+                          currency['symbol'] ?? '',
+                          second.rate,
+                          second.symbol,
+                          Localizations.localeOf(context),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                null => null,
+              },
               onTap: () async {
-                final selected =
-                    await showModalBottomSheet<Map<String, String>>(
-                      context: context,
-                      isScrollControlled: true,
-                      useSafeArea: true,
-                      builder: (_) =>
-                          CurrencySelectorSheet(selectedCode: currency['code']),
-                    );
-                if (selected != null && context.mounted) {
-                  context.read<GroupFormState>().setCurrency(selected);
+                final choice = await showGroupCurrencySheet(
+                  context,
+                  currency: currency,
+                  second: state.secondCurrency,
+                );
+                if (choice != null && context.mounted) {
+                  context.read<GroupFormState>().setCurrencies(
+                    choice.currency,
+                    choice.second,
+                  );
                 }
               },
             ),
@@ -294,6 +320,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
             state.startDate,
             state.endDate,
             state.currency['code'],
+            state.secondCurrency,
             state.groupType,
             state.imagePath,
             state.color,

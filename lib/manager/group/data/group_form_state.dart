@@ -16,6 +16,9 @@ class GroupFormState extends ChangeNotifier {
     'code': 'EUR',
     'name': 'Euro',
   };
+
+  /// A currency expenses can also be typed in, with its rate; null for one.
+  SecondCurrency? secondCurrency;
   ExpenseGroupType? groupType = ExpenseGroupType.personal;
   int? customTemplateIconCodePoint;
   String? customTemplateId;
@@ -102,6 +105,13 @@ class GroupFormState extends ChangeNotifier {
 
   void setCurrency(Map<String, String> c) {
     currency = c;
+    notifyListeners();
+  }
+
+  /// The group's currency and its second one, from the currency sheet.
+  void setCurrencies(Map<String, String> c, SecondCurrency? second) {
+    currency = c;
+    secondCurrency = second;
     notifyListeners();
   }
 

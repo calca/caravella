@@ -3,6 +3,7 @@ import 'expense_category.dart';
 import 'expense_participant.dart';
 import 'expense_location.dart';
 import 'expense_author.dart';
+import 'second_currency.dart';
 
 class ExpenseDetails {
   final String id;
@@ -18,6 +19,11 @@ class ExpenseDetails {
   final ExpenseAuthor? createdBy;
   final ExpenseAuthor? updatedBy;
 
+  /// The receipt's amount when the expense was entered in the group's
+  /// second currency; null for one in the group's own. [amount] is always
+  /// the group-currency one.
+  final OriginalAmount? original;
+
   ExpenseDetails({
     required this.category,
     required this.amount,
@@ -30,6 +36,7 @@ class ExpenseDetails {
     String? id,
     this.createdBy,
     this.updatedBy,
+    this.original,
   }) : id = id ?? const Uuid().v4(),
        attachments = attachments != null ? List.from(attachments) : [];
 
@@ -56,6 +63,7 @@ class ExpenseDetails {
       updatedBy: json['updatedBy'] != null
           ? ExpenseAuthor.fromJson(json['updatedBy'])
           : null,
+      original: OriginalAmount.fromJson(json['original']),
     );
   }
 
@@ -71,6 +79,7 @@ class ExpenseDetails {
     if (attachments.isNotEmpty) 'attachments': attachments,
     if (createdBy != null) 'createdBy': createdBy!.toJson(),
     if (updatedBy != null) 'updatedBy': updatedBy!.toJson(),
+    if (original != null) 'original': original!.toJson(),
   };
 
   ExpenseDetails copyWith({
@@ -85,6 +94,7 @@ class ExpenseDetails {
     List<String>? attachments,
     ExpenseAuthor? createdBy,
     ExpenseAuthor? updatedBy,
+    Object? original = _notProvided,
   }) {
     return ExpenseDetails(
       id: id ?? this.id,
@@ -98,6 +108,12 @@ class ExpenseDetails {
       attachments: attachments ?? List.from(this.attachments),
       createdBy: createdBy ?? this.createdBy,
       updatedBy: updatedBy ?? this.updatedBy,
+      original: original == _notProvided
+          ? this.original
+          : original as OriginalAmount?,
     );
   }
+
+  // Sentinel value to distinguish between null and not provided
+  static const Object _notProvided = Object();
 }

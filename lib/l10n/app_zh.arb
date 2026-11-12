@@ -1383,4 +1383,36 @@
   ,"budget_today_within": "今天 {spent}，未超出今天计划的 {share}。打开预算"
   ,"budget_today_over": "今天 {spent}，超出今天计划的 {share}。打开预算"
   ,"budget_today_open": "今天 {spent}。打开预算"
+  ,"currency_section_group": "群组货币"
+  ,"@currency_section_group": {"description": "Currency sheet: heading of the group's own currency"}
+  ,"currency_group_hint": "余额、总计和预算"
+  ,"@currency_group_hint": {"description": "Under the group's currency in the currency sheet: what it is used for"}
+  ,"currency_change": "更改"
+  ,"@currency_change": {"description": "Button to pick another group currency"}
+  ,"second_currency_section": "支出也可用"
+  ,"@second_currency_section": {"description": "Currency sheet: heading of the second currency expenses can be typed in"}
+  ,"second_currency_add": "添加一种货币"
+  ,"@second_currency_add": {"description": "Currency sheet: add a second currency"}
+  ,"second_currency_add_hint": "用于出国旅行"
+  ,"@second_currency_add_hint": {"description": "Under 'Add a currency'"}
+  ,"second_currency_empty_hint": "按收据上的货币记录支出：群组以 {currency} 计算。"
+  ,"@second_currency_empty_hint": {"description": "Currency sheet, no second currency yet", "placeholders": {"currency": {"type": "String"}}}
+  ,"second_currency_rate_hint": "汇率适用于新的支出。可在银行卡账单上找到。"
+  ,"@second_currency_rate_hint": {"description": "Under the rate field"}
+  ,"second_currency_rate_label": "汇率：1 {group} 等于多少 {second}"
+  ,"@second_currency_rate_label": {"description": "Screen reader label of the rate field", "placeholders": {"group": {"type": "String"}, "second": {"type": "String"}}}
+  ,"second_currency_remove": "移除 {currency}"
+  ,"@second_currency_remove": {"description": "Screen reader label of the ✕ removing the second currency", "placeholders": {"currency": {"type": "String"}}}
+  ,"second_currency_subtitle": "支出也可用 {currency} · {rate}"
+  ,"@second_currency_subtitle": {"description": "Second line under Currency in General settings", "placeholders": {"currency": {"type": "String"}, "rate": {"type": "String"}}}
+  ,"done": "完成"
+  ,"@done": {"description": "Button closing a sheet"}
+  ,"entry_in_currency": "用 {currency}"
+  ,"@entry_in_currency": {"description": "Quiet link under the amount: type the amount in this currency", "placeholders": {"currency": {"type": "String"}}}
+  ,"entry_in_currency_label": "以 {currency} 输入金额"
+  ,"@entry_in_currency_label": {"description": "Screen reader label of the link under the amount", "placeholders": {"currency": {"type": "String"}}}
+  ,"csv_original_amount": "原始金额"
+  ,"@csv_original_amount": {"description": "CSV column: the receipt amount of an expense entered in the second currency"}
+  ,"csv_original_currency": "原始货币"
+  ,"@csv_original_currency": {"description": "CSV column: the ISO code of that currency"}
 }

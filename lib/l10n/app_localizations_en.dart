@@ -2987,4 +2987,65 @@ class AppLocalizationsEn extends AppLocalizations {
   String budget_today_open(String spent) {
     return 'Today $spent. Open the budget';
   }
+
+  @override
+  String get currency_section_group => 'Group currency';
+
+  @override
+  String get currency_group_hint => 'Balances, totals and budget';
+
+  @override
+  String get currency_change => 'Change';
+
+  @override
+  String get second_currency_section => 'Expenses also in';
+
+  @override
+  String get second_currency_add => 'Add a currency';
+
+  @override
+  String get second_currency_add_hint => 'For a trip abroad';
+
+  @override
+  String second_currency_empty_hint(String currency) {
+    return 'Type expenses in the receipt’s currency: the group counts them in $currency.';
+  }
+
+  @override
+  String get second_currency_rate_hint =>
+      'The rate applies to new expenses. You’ll find it on your card statement.';
+
+  @override
+  String second_currency_rate_label(String group, String second) {
+    return 'Rate: how many $second make 1 $group';
+  }
+
+  @override
+  String second_currency_remove(String currency) {
+    return 'Remove $currency';
+  }
+
+  @override
+  String second_currency_subtitle(String currency, String rate) {
+    return 'Expenses also in $currency · $rate';
+  }
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String entry_in_currency(String currency) {
+    return 'in $currency';
+  }
+
+  @override
+  String entry_in_currency_label(String currency) {
+    return 'Type the amount in $currency';
+  }
+
+  @override
+  String get csv_original_amount => 'Original amount';
+
+  @override
+  String get csv_original_currency => 'Original currency';
 }

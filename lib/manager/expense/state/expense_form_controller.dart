@@ -133,6 +133,13 @@ class ExpenseFormController extends ChangeNotifier {
     }
   }
 
+  /// Types the amount in [currency] (the group's second one) or, with
+  /// null, in the group's own. The typed number stays as it is.
+  void setEntryCurrency(SecondCurrency? currency) {
+    if (currency == _state.entryCurrency) return;
+    _updateState(_state.copyWith(entryCurrency: currency, isDirty: true));
+  }
+
   // State update methods
   void _updateState(ExpenseFormState newState) {
     _state = newState;
@@ -256,6 +263,8 @@ class ExpenseFormController extends ChangeNotifier {
     _state = ExpenseFormState.initial(
       participants: participants,
       categories: categories,
+      // The next expense starts in the currency of the last one.
+      entryCurrency: _state.entryCurrency,
     );
     _initializeFromState();
     _isInitializing = false;

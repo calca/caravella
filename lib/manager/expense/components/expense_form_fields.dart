@@ -20,6 +20,10 @@ class ExpenseFormFields extends StatelessWidget {
   final Function(List<ExpenseCategory>) onCategoriesUpdated;
   final Function(List<ExpenseParticipant>)? onParticipantsUpdated;
   final String? currency;
+
+  /// The group's second currency: a quiet link under the amount types it
+  /// in that currency instead.
+  final SecondCurrency? secondCurrency;
   final VoidCallback onSaveExpense;
   final bool isReadOnly;
 
@@ -34,6 +38,7 @@ class ExpenseFormFields extends StatelessWidget {
     required this.onCategoryAdded,
     this.onParticipantAdded,
     required this.currency,
+    this.secondCurrency,
     required this.onSaveExpense,
     required this.onCategoriesUpdated,
     this.onParticipantsUpdated,
@@ -53,7 +58,15 @@ class ExpenseFormFields extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildAmountField(context, gloc, style),
-            SizedBox(height: FormTheme.fieldSpacing),
+            if (_second case final second?)
+              _EntryCurrencyLine(
+                controller: controller,
+                groupCurrency: currency ?? '',
+                second: second,
+                enabled: !isReadOnly,
+              )
+            else
+              SizedBox(height: FormTheme.fieldSpacing),
             _buildNameField(context, gloc, style),
             _buildParticipantCategorySection(context),
           ],
@@ -61,6 +74,11 @@ class ExpenseFormFields extends StatelessWidget {
       },
     );
   }
+
+  /// The currency the link offers: the group's, or the one an older expense
+  /// was entered in (the group may have changed or dropped it since).
+  SecondCurrency? get _second =>
+      controller.state.entryCurrency ?? secondCurrency;
 
   Widget _buildAmountField(
     BuildContext context,
@@ -76,7 +94,7 @@ class ExpenseFormFields extends StatelessWidget {
           focusNode: controller.amountFocus,
           categories: categories,
           label: gloc.amount,
-          currency: currency,
+          currency: controller.state.entryCurrency?.symbol ?? currency,
           textInputAction: controller.isFormValid
               ? TextInputAction.done
               : TextInputAction.next,
@@ -210,5 +228,84 @@ class ExpenseFormFields extends StatelessWidget {
     // Await the callback so the parent component (_onParticipantAdded) can update
     // the lifecycle manager and auto-select the participant before the sheet closes.
     await onParticipantAdded!(participantName);
+  }
+}
+
+/// Under the amount, one quiet grey line with a fixed height (switching never
+/// moves the form): "in kr" while the amount is in the group's currency;
+/// "= 38,69 € · in €" while it is in [second].
+class _EntryCurrencyLine extends StatelessWidget {
+  final ExpenseFormController controller;
+  final String groupCurrency;
+  final SecondCurrency second;
+  final bool enabled;
+
+  const _EntryCurrencyLine({
+    required this.controller,
+    required this.groupCurrency,
+    required this.second,
+    required this.enabled,
+  });
+
+  /// The symbol, or the code where both currencies share a symbol ("\$").
+  String get _secondLabel =>
+      second.symbol == groupCurrency ? second.code : second.symbol;
+
+  @override
+  Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
+    final textStyle = theme.textTheme.bodySmall?.copyWith(color: muted);
+    final state = controller.state;
+    final inSecond = state.entryCurrency != null;
+    final target = inSecond ? groupCurrency : _secondLabel;
+
+    final link = Semantics(
+      button: true,
+      label: gloc.entry_in_currency_label(target),
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: enabled
+            ? () => controller.setEntryCurrency(inSecond ? null : second)
+            : null,
+        borderRadius: BorderRadius.circular(8),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 44),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Center(
+              widthFactor: 1,
+              child: Text(
+                gloc.entry_in_currency(target),
+                style: textStyle?.copyWith(
+                  decoration: TextDecoration.underline,
+                  decorationStyle: TextDecorationStyle.dotted,
+                  decorationColor: muted,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final converted = state.groupAmount;
+    return SizedBox(
+      height: 44,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (inSecond && converted != null && converted > 0) ...[
+            Text(
+              '= ${CurrencyDisplay.formatLocalizedText(converted, groupCurrency, Localizations.localeOf(context))}',
+              style: textStyle,
+            ),
+            Text('  ·', style: textStyle),
+          ],
+          if (enabled) link,
+        ],
+      ),
+    );
   }
 }
