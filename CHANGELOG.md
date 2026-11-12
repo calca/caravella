@@ -15,20 +15,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Settings › Check for updates: the “Update available” card no longer shows “v4133”. Play reports only the version code (the build number), not the version name, so the line is gone
-- Bluetooth: groups whose data is over 32 KB (many expenses) can be shared again. Big messages are sent in chunks, but each chunk was 32 KB of data plus its header, just over what Nearby Connections sends; chunks now leave room for the header. A sync the other phone never answers now fails instead of reporting "done" with nothing received (#675)
-- Expenses added by voice with only an amount ("20 euro") or by an Android assistant (App Functions) are no longer lost. They had no name, which the database refuses, so nothing was saved while the app said it was. Voice now opens the form when the name is missing, as it does for a missing payer or category; an assistant's expense is named after its note, or its category
-- A deleted group no longer comes back from the other devices. Deleting used to remove the group's row, so Wi-Fi and Bluetooth never told the other devices, and the group returned with their next change. It now leaves a tombstone (`deleted = 1` with a new `updated_at`, its expenses removed), which syncs like any change (#688). Also in 2.4.2
-- Changes made on a device reach the other one even when the other one started the sync. The device answering a Wi-Fi or Bluetooth sync built its reply after applying the incoming changes, which recorded the sync, so its reply left out everything it had changed before; it now builds the reply first. Also in 2.4.2
-- Join a group: refusing the camera no longer brings the permission prompt straight back (F-Droid build), and no longer leaves a black screen. “Allow the camera?” explains what it's for, with Open settings, and the panel keeps an Open settings button; the camera starts again on the way back from the settings. `buildQrScanner` gained `onCameraDenied`; `ZxingQrView` stops retrying on resume once the camera is refused
 
 ### Changed
 - Removed the JSON storage backend (`FileBasedExpenseGroupRepository`, the `USE_JSON_BACKEND` define and its indexes): SQLite has been the default since 1.6. The old `expense_group_storage.json` is still read once at first launch, by `LegacyJsonGroupReader`, to move it into SQLite. Tests now run on a temporary SQLite database (`useTestDatabase()`), (#678)
-- Group page: the add-expense button shows on Expenses only. On Balances it sat over the payments' paid buttons and on Statistics over the charts; it slides away when you switch section and back on Expenses
 - Sync format 2: deltas carry `"schema": 2` and groups their `payments`. A 2.4.1 device refuses them ("update Caravella on both devices"). When a group arrives from 2.4.0, which sends no version and no payments, this device keeps its own payments for the people still in the group, so an old phone can't erase them (#676)
 - Backups are written as `{"format": 2, "groups": [...]}` with the payments; 2.4 backups (a bare list) are still restored, and 2.4.1 refuses format 2 with "This backup comes from a newer Caravella"
 - Statistics › Participants shows the top 4 payers, in one row, instead of everyone: a big group wrapped onto many rows where the sizes were hard to compare
 - Upgraded Flutter from 3.47.6 to 3.47.9 (stable patch releases), pinned in all three Android CI workflows
 - Major dependency upgrades: `file_picker` 12→13, `flutter_local_notifications` 22→23, `zentoast` 0.2→1.0; all other dependencies refreshed to their latest compatible versions (root + every `packages/*` lockfile, plus `pubspec.fdroid.lock`). No source changes were needed. `home_widget` stays on 0.9.x: 0.10.0 doesn't compile on Android (its plugin references a `HomeWidgetLaunchIntent` class missing from the published package). Then `googleapis` 17→18 (Google Drive sync and backup; only other APIs changed), `google_mlkit_text_recognition` 0.17→1.0 (receipt OCR; the plugin moved iOS to Swift Package Manager, Android unchanged), `gpt_markdown` 1.3→1.4 (the What's new page; adds `flutter_svg`), and the patch releases (`flutter_local_notifications` 23.0.1, `google_sign_in_android`, `sqflite_common_ffi`). Flutter stays on 3.47.9, the latest stable (#677)
+
+## [2.4.4] - 2026-11-12
+
+### Changed
+- Group page: the add-expense button shows on Expenses only. On Balances it sat over the payments' reminder buttons and on Statistics over the charts; it slides away when you switch section and back on Expenses
+
+### Fixed
+- Bluetooth: groups whose data is over 32 KB (many expenses) can be shared again. Big messages are sent in chunks, but each chunk was 32 KB of data plus its header, just over what Nearby Connections sends; chunks now leave room for the header. A sync the other phone never answers now fails instead of reporting "done" with nothing received (#675)
+- Expenses added by voice with only an amount ("20 euro") or by an Android assistant (App Functions) are no longer lost. They had no name, which the database refuses, so nothing was saved while the app said it was. Voice now opens the form when the name is missing, as it does for a missing payer or category; an assistant's expense is named after its note, or its category
+- Join a group: refusing the camera no longer brings the permission prompt straight back (F-Droid build), and no longer leaves a black screen. “Allow the camera?” explains what it's for, with Open settings, and the panel keeps an Open settings button; the camera starts again on the way back from the settings. `buildQrScanner` gained `onCameraDenied`; `ZxingQrView` stops retrying on resume once the camera is refused
+
+## [2.4.3] - 2026-11-11
+
+### Changed
+- Settings › Sync no longer shows "Sync your devices" (Google Drive), and the sync subtitles no longer mention Google Drive: the channel never moved any data in 2.4. It comes back, working, in 2.5 (#688). The Play listing drops the line about it. Google Drive backup is unchanged (`SyncBootstrap.driveSyncAvailable = false`, which leaves the orchestrator without a cloud channel)
+
+## [2.4.2] - 2026-11-11
+
+### Fixed
+- A deleted group no longer comes back after syncing with another device. Deleting a group used to remove it from the database, so nothing told the other devices, and the next Wi-Fi or Bluetooth sync brought it back; it now leaves a tombstone (`deleted = 1`, new `updated_at`) that sync sends in `deleted_groups`
+- Changes made on a device reach the other one even when the other one started the sync. The device answering a Wi-Fi or Bluetooth sync built its reply after applying the incoming changes, which recorded the sync, so its reply left out everything it had changed before; it now builds the reply first
 
 ## [2.4.1] - 2026-11-10
 
@@ -690,7 +705,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.4.1...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.4.4...HEAD
+[2.4.4]: https://github.com/calca/caravella/compare/v2.4.3...v2.4.4
+[2.4.3]: https://github.com/calca/caravella/compare/v2.4.2...v2.4.3
+[2.4.2]: https://github.com/calca/caravella/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/calca/caravella/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/calca/caravella/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/calca/caravella/compare/v2.2.1...v2.3.0

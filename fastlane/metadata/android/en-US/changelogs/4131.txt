@@ -1,0 +1,6 @@
+Version 2.4.2 - Sync you can trust
+
+• A deleted group stays deleted: it no longer comes back after syncing with another phone
+• Changes made on a phone reach the other one, whichever phone starts the sync
+
+Thanks for using Caravella!

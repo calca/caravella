@@ -1,0 +1,6 @@
+Versão 2.4.2 - Sincronização confiável
+
+• Um grupo excluído continua excluído: não volta mais depois de sincronizar com outro telefone
+• As alterações feitas em um telefone chegam ao outro, não importa qual deles inicie a sincronização
+
+Obrigado por usar o Caravella!
