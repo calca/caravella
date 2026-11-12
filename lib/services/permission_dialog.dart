@@ -5,12 +5,21 @@ import 'package:material_ui/material_ui.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// A permission Caravella asked for and the system now refuses.
-enum DeniedPermission { camera, photos, notifications, location }
+enum DeniedPermission {
+  camera,
+
+  /// The camera, for the QR code on the Join a group page.
+  cameraForQr,
+  photos,
+  notifications,
+  location,
+}
 
 /// "Allow the camera?": what the permission is for, that it's off, and
 /// "Open settings" (the app's page in the system settings) or "Not now".
-/// Instead of a toast, which had nothing to tap.
-Future<void> showPermissionDeniedDialog(
+/// Instead of a toast, which had nothing to tap. `true` when the settings
+/// were opened, so the caller can try again once the app is back.
+Future<bool> showPermissionDeniedDialog(
   BuildContext context,
   DeniedPermission permission,
 ) async {
@@ -19,6 +28,10 @@ Future<void> showPermissionDeniedDialog(
     DeniedPermission.camera => (
       gloc.permission_camera_title,
       gloc.permission_camera_message,
+    ),
+    DeniedPermission.cameraForQr => (
+      gloc.permission_camera_title,
+      gloc.permission_camera_qr_message,
     ),
     DeniedPermission.photos => (
       gloc.permission_photos_title,
@@ -48,10 +61,11 @@ Future<void> showPermissionDeniedDialog(
       ],
     ),
   );
-  if (open != true) return;
+  if (open != true) return false;
   try {
-    await openAppSettings();
+    return await openAppSettings();
   } catch (e) {
     LoggerService.warning('Could not open the app settings: $e', name: 'ui');
+    return false;
   }
 }

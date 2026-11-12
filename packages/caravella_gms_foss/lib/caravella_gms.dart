@@ -29,5 +29,10 @@ class FossGmsIntegrations extends NoGmsIntegrations {
   Widget? buildQrScanner({
     required ValueChanged<String> onDetect,
     bool paused = false,
-  }) => ZxingQrView(onDetect: onDetect, paused: paused);
+    VoidCallback? onCameraDenied,
+  }) => ZxingQrView(
+    onDetect: onDetect,
+    paused: paused,
+    onCameraDenied: onCameraDenied,
+  );
 }

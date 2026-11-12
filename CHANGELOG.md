@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Bluetooth: groups whose data is over 32 KB (many expenses) can be shared again. Big messages are sent in chunks, but each chunk was 32 KB of data plus its header, just over what Nearby Connections sends; chunks now leave room for the header. A sync the other phone never answers now fails instead of reporting "done" with nothing received (#675)
 - Expenses added by voice with only an amount ("20 euro") or by an Android assistant (App Functions) are no longer lost. They had no name, which the database refuses, so nothing was saved while the app said it was. Voice now opens the form when the name is missing, as it does for a missing payer or category; an assistant's expense is named after its note, or its category
+- Join a group: refusing the camera no longer brings the permission prompt straight back (F-Droid build), and no longer leaves a black screen. “Allow the camera?” explains what it's for, with Open settings, and the panel keeps an Open settings button; the camera starts again on the way back from the settings. `buildQrScanner` gained `onCameraDenied`; `ZxingQrView` stops retrying on resume once the camera is refused
 
 ## [2.4.3] - 2026-11-11
 

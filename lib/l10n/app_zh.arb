@@ -1235,6 +1235,7 @@
   ,"sync_qr_scan_again": "重新扫描"
   ,"permission_camera_title": "允许使用相机？"
   ,"permission_camera_message": "Caravella 使用相机读取收据。访问已关闭：你可以在手机设置中开启。"
+  ,"permission_camera_qr_message": "Caravella 使用相机读取另一部手机上的二维码。访问已关闭：你可以在手机设置中开启。"
   ,"permission_photos_title": "允许访问照片？"
   ,"permission_photos_message": "Caravella 使用你的照片读取已拍摄的收据。访问已关闭：你可以在手机设置中开启。"
   ,"permission_notifications_title": "允许通知？"

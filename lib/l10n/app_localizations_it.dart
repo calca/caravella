@@ -2452,6 +2452,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Caravella usa la fotocamera per leggere gli scontrini. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono.';
 
   @override
+  String get permission_camera_qr_message =>
+      'Caravella usa la fotocamera per leggere il QR dell’altro telefono. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono.';
+
+  @override
   String get permission_photos_title => 'Consentire l’accesso alle foto?';
 
   @override

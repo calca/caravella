@@ -1053,6 +1053,7 @@
   ,"@location_not_found_short": {"description": "In the expense's empty Place pill: no position found. Keep it short"}
   ,"permission_camera_title": "Allow the camera?"
   ,"permission_camera_message": "Caravella uses the camera to read receipts. Access is turned off: you can turn it on in your phone’s settings."
+  ,"permission_camera_qr_message": "Caravella uses the camera to read the QR code on the other phone. Access is turned off: you can turn it on in your phone’s settings."
   ,"permission_photos_title": "Allow access to photos?"
   ,"permission_photos_message": "Caravella needs your photos to read a receipt you already took. Access is turned off: you can turn it on in your phone’s settings."
   ,"permission_notifications_title": "Allow notifications?"
