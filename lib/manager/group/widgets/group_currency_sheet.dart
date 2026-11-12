@@ -167,7 +167,7 @@ class _GroupCurrencySheetState extends State<GroupCurrencySheet> {
       ),
     );
 
-    Widget symbolBadge(String symbol) => Container(
+    Widget badge(Widget child) => Container(
       width: 40,
       height: 40,
       alignment: Alignment.center,
@@ -175,7 +175,11 @@ class _GroupCurrencySheetState extends State<GroupCurrencySheet> {
         shape: BoxShape.circle,
         color: s.onSurface.withValues(alpha: 0.06),
       ),
-      child: Text(
+      child: child,
+    );
+
+    Widget symbolBadge(String symbol) => badge(
+      Text(
         symbol,
         style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.w700,
@@ -219,7 +223,7 @@ class _GroupCurrencySheetState extends State<GroupCurrencySheet> {
             if (second == null)
               card(
                 ListTile(
-                  leading: symbolBadge('+'),
+                  leading: badge(const Icon(Icons.add_rounded, size: 20)),
                   title: Text(gloc.second_currency_add),
                   subtitle: Text(gloc.second_currency_add_hint),
                   onTap: _addSecond,
