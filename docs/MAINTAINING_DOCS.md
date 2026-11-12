@@ -26,6 +26,7 @@ This applies to both directions:
 | `packages/google_drive_sync/lib/**` | [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md), [GOOGLE_DRIVE_SYNC_SETUP.md](GOOGLE_DRIVE_SYNC_SETUP.md) |
 | `packages/caravella_core/lib/sync/**`, `lib/sync/**` | [SYNC_ARCHITECTURE.md](SYNC_ARCHITECTURE.md), [PACKAGE_GOOGLE_DRIVE_SYNC.md](PACKAGE_GOOGLE_DRIVE_SYNC.md) |
 | `lib/main.dart`, `lib/main/**` | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| A user-visible feature added or removed | [NRT.md](NRT.md) (a row to check it by hand) |
 | `lib/home/**`, `lib/main/app_shell.dart` | [APP_HOME.md](APP_HOME.md) |
 | `lib/manager/group/**` | [APP_GROUP_MANAGEMENT.md](APP_GROUP_MANAGEMENT.md) |
 | `lib/manager/expense/**` (excluding `location/`) | [APP_EXPENSE_ENTRY.md](APP_EXPENSE_ENTRY.md) |

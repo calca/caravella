@@ -37,6 +37,8 @@ If you're about to change code and aren't sure which page(s) to update afterward
 
 ## Build & distribution
 
+- **[Non-regression tests](NRT.md)** — the manual pass on each release candidate's APK, accessibility included (`nrt_a11y_check.sh`)
+
 - **[Build Variants & Flavors](BUILD_VARIANTS.md)** — dev/staging/prod, every dart-define flag
 - **[CI Pipelines](CI_PIPELINES.md)** — what GitHub Actions actually runs
 - **[F-Droid Submission](FDROID_SUBMISSION.md)** — F-Droid-specific packaging notes
