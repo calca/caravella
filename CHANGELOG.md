@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.4] - 2026-11-12
+
 ### Changed
 - Group page: the add-expense button shows on Expenses only. On Balances it sat over the payments' reminder buttons and on Statistics over the charts; it slides away when you switch section and back on Expenses
 
@@ -686,7 +688,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.4.3...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.4.4...HEAD
+[2.4.4]: https://github.com/calca/caravella/compare/v2.4.3...v2.4.4
 [2.4.3]: https://github.com/calca/caravella/compare/v2.4.2...v2.4.3
 [2.4.2]: https://github.com/calca/caravella/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/calca/caravella/compare/v2.4.0...v2.4.1
