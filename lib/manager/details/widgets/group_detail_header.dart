@@ -186,7 +186,12 @@ class GroupDetailHeader extends StatelessWidget {
               value: spentToday,
               currency: group.currency,
               ring: switch (budget?.todayFraction) {
-                final f? => BudgetRing(fraction: f, over: budget!.overToday),
+                final f? => BudgetRing(
+                  fraction: f,
+                  over: budget!.overToday,
+                  size: 26,
+                  strokeWidth: 3,
+                ),
                 null => null,
               },
               onTap: budget == null ? null : onOpenBudget,
@@ -236,7 +241,8 @@ class _Figure extends StatelessWidget {
   final String currency;
   final bool big;
 
-  /// The budget ring at the end of the box ("Today" with a budget).
+  /// The budget ring after the amount, on its line ("Today" with a
+  /// budget).
   final Widget? ring;
   final VoidCallback? onTap;
 
@@ -275,31 +281,32 @@ class _Figure extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
-          child: CurrencyDisplay(
-            value: value,
-            currency: currency,
-            valueFontSize: big ? 26 : 20,
-            currencyFontSize: big ? 14 : 12,
-            showDecimals: true,
-            alignment: MainAxisAlignment.start,
-          ),
+        // The ring sits on the amount's line, centred on it, so it reads
+        // with the figure instead of floating between the two lines.
+        Row(
+          children: [
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: CurrencyDisplay(
+                  value: value,
+                  currency: currency,
+                  valueFontSize: big ? 26 : 20,
+                  currencyFontSize: big ? 14 : 12,
+                  showDecimals: true,
+                  alignment: MainAxisAlignment.start,
+                ),
+              ),
+            ),
+            if (ring case final ring?) ...[const SizedBox(width: 8), ring],
+          ],
         ),
       ],
     );
     final content = Padding(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
-      child: ring == null
-          ? figure
-          : Row(
-              children: [
-                Expanded(child: figure),
-                const SizedBox(width: 8),
-                ring!,
-              ],
-            ),
+      child: figure,
     );
     return CardOutline(
       borderRadius: radius,
