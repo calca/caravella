@@ -30,7 +30,7 @@ Play Core needs a separate `completeFlexibleUpdate()` call once a flexible downl
 
 Both `UpdateCheckWidget` and the home-page auto-check surface `updateDownloaded` with an "Install" action wired to `completeFlexibleUpdate()` — see below.
 
-`src/app_update_notifier.dart` (`AppUpdateNotifier extends ChangeNotifier`) wraps state: `isChecking`, `updateAvailable`, `availableVersion`, `updatePriority`, `immediateAllowed`/`flexibleAllowed`, `isDownloading`, `isInstalling`, `updateDownloaded`, `error`.
+`src/app_update_notifier.dart` (`AppUpdateNotifier extends ChangeNotifier`) wraps state: `isChecking`, `updateAvailable`, `availableVersion`, `updatePriority`, `immediateAllowed`/`flexibleAllowed`, `isDownloading`, `isInstalling`, `updateDownloaded`, `error`. `availableVersion` is Play's version code (e.g. `4133`), not a version name, so the update card doesn't show it.
 
 `src/update_check_helper.dart`'s `checkAndShowUpdateIfNeeded()` is called once per session shortly after `HomePage` first renders. It first checks `isUpdateReadyToInstall()` (regardless of the 7-day interval) and, if true, shows a bottom sheet offering to call `completeFlexibleUpdate()` — this is the path that catches a flexible download that finished in the background. Otherwise it checks the interval, checks for a *new* update, records the check, and shows a bottom sheet via a caller-supplied builder. If the user accepts, it starts the flexible update, shows an `AppToast` (from `caravella_core_ui`) when the download starts, and when it finishes shows the same ready-to-install sheet.
 
