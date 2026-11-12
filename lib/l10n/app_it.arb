@@ -915,6 +915,7 @@
   ,"sync_qr_scan_again": "Scansiona di nuovo"
   ,"permission_camera_title": "Consentire la fotocamera?"
   ,"permission_camera_message": "Caravella usa la fotocamera per leggere gli scontrini. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono."
+  ,"permission_camera_qr_message": "Caravella usa la fotocamera per leggere il QR dell’altro telefono. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono."
   ,"permission_photos_title": "Consentire l’accesso alle foto?"
   ,"permission_photos_message": "Caravella usa le tue foto per leggere uno scontrino già fotografato. L’accesso è disattivato: puoi attivarlo nelle impostazioni del telefono."
   ,"permission_notifications_title": "Consentire le notifiche?"

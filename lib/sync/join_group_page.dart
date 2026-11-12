@@ -5,6 +5,8 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
+import '../services/permission_dialog.dart';
+
 /// "Join a group": the receiving side of [InviteSheet], over every
 /// transport at once. The camera reads the QR code another phone shows
 /// (same Wi-Fi), and, when [bluetooth] is given, the panel at the bottom
@@ -14,7 +16,9 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 ///
 /// Pops with `true` once joined. A QR code that can't be used (expired,
 /// from an emulator, pairing failed) is explained in the panel with "Scan
-/// again"; a Bluetooth exchange that fails, under the nearby list.
+/// again"; a Bluetooth exchange that fails, under the nearby list. A
+/// refused camera opens the "Allow the camera?" dialog once, then leaves
+/// "Open settings" in the panel; the camera starts again on the way back.
 class JoinGroupPage extends StatefulWidget {
   final SyncOrchestrator orchestrator;
 
@@ -57,13 +61,25 @@ class _NearbyPeer {
   const _NearbyPeer(this.endpointId, this.name, this.groupTitle);
 }
 
-class _JoinGroupPageState extends State<JoinGroupPage> {
+class _JoinGroupPageState extends State<JoinGroupPage>
+    with WidgetsBindingObserver {
   late bool _wifi = widget.wifiEnabled;
   bool _turningOnWifi = false;
 
   // QR
   bool _handling = false;
   String? _qrProblem;
+
+  /// The camera permission was refused; the scanner stays dark.
+  bool _cameraOff = false;
+
+  /// The dialog shows by itself only the first time.
+  bool _asked = false;
+
+  /// "Open settings" was tapped: on the way back the scanner is rebuilt
+  /// (new key) and asks for the camera again.
+  bool _inSettings = false;
+  int _scannerKey = 0;
 
   // Bluetooth
   late bool _btOn = widget.bluetoothEnabled;
@@ -79,7 +95,19 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (_btOn) _startBluetooth();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _inSettings) {
+      setState(() {
+        _inSettings = false;
+        _cameraOff = false;
+        _scannerKey++;
+      });
+    }
   }
 
   void _startBluetooth() {
@@ -99,6 +127,7 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _btEvents?.cancel();
     final bt = widget.bluetooth;
     if (bt != null) unawaited(bt.stopAll().then((_) => bt.dispose()));
@@ -108,6 +137,25 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
   // ---------------------------------------------------------------------------
   // QR
   // ---------------------------------------------------------------------------
+
+  void _onCameraDenied() {
+    if (!mounted || _cameraOff) return;
+    final first = !_asked;
+    setState(() => _cameraOff = true);
+    // The dialog once; after that the panel's button opens it.
+    if (first) {
+      _asked = true;
+      _explainCamera();
+    }
+  }
+
+  Future<void> _explainCamera() async {
+    final opened = await showPermissionDeniedDialog(
+      context,
+      DeniedPermission.cameraForQr,
+    );
+    if (opened && mounted) _inSettings = true;
+  }
 
   Future<void> _onDetect(String raw) async {
     if (_handling || _qrProblem != null || _joining != null) return;
@@ -243,11 +291,17 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
           fit: StackFit.expand,
           children: [
             if (_canScan)
-              GmsIntegrations.instance.buildQrScanner(
-                    onDetect: _onDetect,
-                    paused: _handling || _qrProblem != null || _joining != null,
-                  ) ??
-                  const SizedBox.shrink(),
+              KeyedSubtree(
+                key: ValueKey(_scannerKey),
+                child:
+                    GmsIntegrations.instance.buildQrScanner(
+                      onDetect: _onDetect,
+                      paused:
+                          _handling || _qrProblem != null || _joining != null,
+                      onCameraDenied: _onCameraDenied,
+                    ) ??
+                    const SizedBox.shrink(),
+              ),
             Column(
               children: [
                 Expanded(
@@ -322,6 +376,25 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
             ),
           ],
         ),
+      );
+    }
+    if (_cameraOff) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.no_photography_outlined, color: Colors.white),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            loc.permission_camera_title,
+            textAlign: TextAlign.center,
+            style: white,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          FilledButton(
+            onPressed: _explainCamera,
+            child: Text(loc.permission_open_settings),
+          ),
+        ],
       );
     }
     return Text(

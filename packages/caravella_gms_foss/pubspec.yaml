@@ -23,4 +23,5 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  camera_platform_interface: ^2.15.0
   flutter_lints: ^6.0.0

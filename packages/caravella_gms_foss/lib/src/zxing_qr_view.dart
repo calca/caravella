@@ -11,12 +11,19 @@ import 'package:zxing2/qrcode.dart';
 /// (a pure Dart port of ZXing) to decode them off the UI isolate.
 ///
 /// Same contract as the Play build's scanner: reports every decoded value
-/// through [onDetect], and stops looking at frames while [paused].
+/// through [onDetect], stops looking at frames while [paused], and calls
+/// [onCameraDenied] once when the camera permission is refused.
 class ZxingQrView extends StatefulWidget {
   final ValueChanged<String> onDetect;
   final bool paused;
+  final VoidCallback? onCameraDenied;
 
-  const ZxingQrView({super.key, required this.onDetect, this.paused = false});
+  const ZxingQrView({
+    super.key,
+    required this.onDetect,
+    this.paused = false,
+    this.onCameraDenied,
+  });
 
   @override
   State<ZxingQrView> createState() => _ZxingQrViewState();
@@ -30,6 +37,12 @@ class _ZxingQrViewState extends State<ZxingQrView> with WidgetsBindingObserver {
 
   CameraController? _controller;
   bool _failed = false;
+
+  /// The permission prompt pauses and resumes the app: without these, every
+  /// resume after "Don't allow" would ask again, and a refused camera would
+  /// be asked for forever.
+  bool _starting = false;
+  bool _denied = false;
   bool _decoding = false;
   DateTime _lastDecode = DateTime.fromMillisecondsSinceEpoch(0);
 
@@ -46,12 +59,16 @@ class _ZxingQrViewState extends State<ZxingQrView> with WidgetsBindingObserver {
     if (state == AppLifecycleState.inactive ||
         state == AppLifecycleState.paused) {
       _stop();
-    } else if (state == AppLifecycleState.resumed && _controller == null) {
+    } else if (state == AppLifecycleState.resumed &&
+        _controller == null &&
+        !_denied) {
       _start();
     }
   }
 
   Future<void> _start() async {
+    if (_starting) return;
+    _starting = true;
     try {
       final cameras = await availableCameras();
       if (cameras.isEmpty) throw CameraException('none', 'No camera');
@@ -75,11 +92,25 @@ class _ZxingQrViewState extends State<ZxingQrView> with WidgetsBindingObserver {
         _controller = controller;
         _failed = false;
       });
+    } on CameraException catch (e) {
+      if (e.code == 'CameraAccessDenied' ||
+          e.code == 'CameraAccessDeniedWithoutPrompt' ||
+          e.code == 'CameraAccessRestricted') {
+        _denied = true;
+        if (mounted) widget.onCameraDenied?.call();
+      }
+      _fail();
     } catch (_) {
-      // Permission denied or no usable camera: the page around this view
-      // keeps its own instructions and the Bluetooth path.
-      if (mounted) setState(() => _failed = true);
+      _fail();
+    } finally {
+      _starting = false;
     }
+  }
+
+  /// Permission denied or no usable camera: the page around this view keeps
+  /// its own instructions and the Bluetooth path.
+  void _fail() {
+    if (mounted) setState(() => _failed = true);
   }
 
   Future<void> _stop() async {

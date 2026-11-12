@@ -50,7 +50,12 @@ class PlayGmsIntegrations extends GmsIntegrations {
   Widget? buildQrScanner({
     required ValueChanged<String> onDetect,
     bool paused = false,
-  }) => MobileScannerQrView(onDetect: onDetect, paused: paused);
+    VoidCallback? onCameraDenied,
+  }) => MobileScannerQrView(
+    onDetect: onDetect,
+    paused: paused,
+    onCameraDenied: onCameraDenied,
+  );
 
   // The service behind it is still gated on --dart-define=ENABLE_PLAY_UPDATES.
   @override

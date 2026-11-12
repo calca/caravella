@@ -8,10 +8,14 @@ class MobileScannerQrView extends StatefulWidget {
   final ValueChanged<String> onDetect;
   final bool paused;
 
+  /// Called once when the camera permission is refused.
+  final VoidCallback? onCameraDenied;
+
   const MobileScannerQrView({
     super.key,
     required this.onDetect,
     this.paused = false,
+    this.onCameraDenied,
   });
 
   @override
@@ -20,6 +24,7 @@ class MobileScannerQrView extends StatefulWidget {
 
 class _MobileScannerQrViewState extends State<MobileScannerQrView> {
   final MobileScannerController _controller = MobileScannerController();
+  bool _reportedDenied = false;
 
   @override
   void didUpdateWidget(MobileScannerQrView oldWidget) {
@@ -43,6 +48,21 @@ class _MobileScannerQrViewState extends State<MobileScannerQrView> {
 
   @override
   Widget build(BuildContext context) {
-    return MobileScanner(controller: _controller, onDetect: _onDetect);
+    return MobileScanner(
+      controller: _controller,
+      onDetect: _onDetect,
+      errorBuilder: (context, error) {
+        if (error.errorCode == MobileScannerErrorCode.permissionDenied &&
+            !_reportedDenied) {
+          _reportedDenied = true;
+          // Not during build: the page answers with a dialog.
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => widget.onCameraDenied?.call(),
+          );
+        }
+        // The page around it says what's wrong and what to do.
+        return const ColoredBox(color: Colors.black);
+      },
+    );
   }
 }
