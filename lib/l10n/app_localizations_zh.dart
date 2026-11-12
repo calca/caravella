@@ -2380,6 +2380,10 @@ class AppLocalizationsZh extends AppLocalizations {
       'Caravella 使用相机读取收据。访问已关闭：你可以在手机设置中开启。';
 
   @override
+  String get permission_camera_qr_message =>
+      'Caravella 使用相机读取另一部手机上的二维码。访问已关闭：你可以在手机设置中开启。';
+
+  @override
   String get permission_photos_title => '允许访问照片？';
 
   @override

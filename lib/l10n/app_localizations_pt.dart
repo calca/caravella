@@ -2447,6 +2447,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'O Caravella usa a câmera para ler recibos. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
 
   @override
+  String get permission_camera_qr_message =>
+      'O Caravella usa a câmera para ler o QR do outro telefone. O acesso está desativado: você pode ativá-lo nas configurações do celular.';
+
+  @override
   String get permission_photos_title => 'Permitir acesso às fotos?';
 
   @override
