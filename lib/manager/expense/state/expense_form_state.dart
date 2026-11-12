@@ -14,6 +14,10 @@ class ExpenseFormState {
   final List<String> attachments;
   final List<ExpenseParticipant> assignedTo;
 
+  /// The group's second currency when [amount] is typed in it; null when
+  /// it is in the group's own currency.
+  final SecondCurrency? entryCurrency;
+
   // UI state
   final bool isDirty;
   final bool isExpanded;
@@ -35,6 +39,7 @@ class ExpenseFormState {
     this.note = '',
     this.attachments = const [],
     this.assignedTo = const [],
+    this.entryCurrency,
     this.isDirty = false,
     this.isExpanded = false,
     this.isRetrievingLocation = false,
@@ -43,6 +48,23 @@ class ExpenseFormState {
     this.paidByTouched = false,
     this.categoryTouched = false,
   });
+
+  /// [amount] in the group's currency, which totals and balances count.
+  double? get groupAmount => switch ((amount, entryCurrency)) {
+    (final a?, final c?) => c.toGroup(a),
+    (final a, _) => a,
+  };
+
+  /// What the receipt said, when [amount] is in the second currency.
+  OriginalAmount? get original => switch ((amount, entryCurrency)) {
+    (final a?, final c?) when a > 0 => OriginalAmount(
+      amount: a,
+      code: c.code,
+      symbol: c.symbol,
+      rate: c.rate,
+    ),
+    _ => null,
+  };
 
   // Computed validation state
   bool get isNameValid => name.trim().isNotEmpty;
@@ -61,9 +83,11 @@ class ExpenseFormState {
   factory ExpenseFormState.initial({
     required List<ExpenseParticipant> participants,
     required List<ExpenseCategory> categories,
+    SecondCurrency? entryCurrency,
   }) {
     return ExpenseFormState(
       date: DateTime.now(),
+      entryCurrency: entryCurrency,
       paidBy: participants.isNotEmpty ? participants.first : null,
       category: categories.isNotEmpty ? categories.first : null,
     );
@@ -81,7 +105,10 @@ class ExpenseFormState {
             ? categories.first
             : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
       ),
-      amount: expense.amount,
+      // An expense entered in the second currency is edited in it, at the
+      // rate it was entered with.
+      amount: expense.original?.amount ?? expense.amount,
+      entryCurrency: expense.original?.currency,
       paidBy: expense.paidBy,
       date: expense.date,
       location: expense.location,
@@ -102,6 +129,7 @@ class ExpenseFormState {
     String? note,
     List<String>? attachments,
     List<ExpenseParticipant>? assignedTo,
+    Object? entryCurrency = _notProvided,
     bool? isDirty,
     bool? isExpanded,
     bool? isRetrievingLocation,
@@ -120,6 +148,9 @@ class ExpenseFormState {
       note: note ?? this.note,
       attachments: attachments ?? this.attachments,
       assignedTo: assignedTo ?? this.assignedTo,
+      entryCurrency: entryCurrency == _notProvided
+          ? this.entryCurrency
+          : entryCurrency as SecondCurrency?,
       isDirty: isDirty ?? this.isDirty,
       isExpanded: isExpanded ?? this.isExpanded,
       isRetrievingLocation: isRetrievingLocation ?? this.isRetrievingLocation,
@@ -136,12 +167,15 @@ class ExpenseFormState {
       id: id,
       category: category!,
       name: name.isEmpty ? null : name,
-      amount: amount,
+      amount: groupAmount,
       paidBy: paidBy!,
       date: date,
       location: location,
       note: note.isEmpty ? null : note,
       attachments: attachments,
+      original: original,
     );
   }
+
+  static const Object _notProvided = Object();
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 // ...existing code...
+import 'data/currencies.dart';
 import 'data/group_form_state.dart';
 import 'group_edit_mode.dart';
 
@@ -33,6 +34,7 @@ class GroupFormController {
     state.startDate = group.startDate;
     state.endDate = group.endDate;
     state.currency = _currencyFromGroup(group.currency);
+    state.secondCurrency = group.secondCurrency;
     state.imagePath = group.file;
     state.color = group.color;
     state.notificationEnabled = group.notificationEnabled;
@@ -58,16 +60,30 @@ class GroupFormController {
   }
 
   Map<String, String> _currencyFromGroup(String codeOrSymbol) {
-    // Minimal mapping: if code length 3 treat as code, else assume EUR.
-    if (codeOrSymbol.length == 3) {
+    // Minimal mapping: if code length 3 treat as code.
+    if (codeOrSymbol.length == 3 &&
+        codeOrSymbol.toUpperCase() == codeOrSymbol) {
       return {
         'symbol': _symbolFor(codeOrSymbol),
         'code': codeOrSymbol,
         'name': codeOrSymbol,
       };
     }
+    // Groups keep only the symbol: the most common currency with it ("\$"
+    // is shared), rather than Euro for any symbol.
+    for (final code in _preferredCodes) {
+      final match = kCurrencies.where(
+        (c) => c['code'] == code && c['symbol'] == codeOrSymbol,
+      );
+      if (match.isNotEmpty) return {...match.first, 'name': code};
+    }
+    for (final c in kCurrencies) {
+      if (c['symbol'] == codeOrSymbol) return {...c, 'name': c['code']!};
+    }
     return {'symbol': codeOrSymbol, 'code': 'EUR', 'name': 'Euro'};
   }
+
+  static const _preferredCodes = ['EUR', 'USD', 'GBP', 'JPY', 'SEK', 'RUB'];
 
   String _symbolFor(String code) {
     switch (code) {
@@ -110,6 +126,7 @@ class GroupFormController {
         g.currency != state.currency['symbol']) {
       return true;
     }
+    if (g.secondCurrency != state.secondCurrency) return true;
     if (g.file != state.imagePath) return true;
     if (g.color != state.color) return true;
     if (g.groupType != state.groupType) return true;
@@ -161,6 +178,7 @@ class GroupFormController {
         startDate: state.startDate,
         endDate: state.endDate,
         currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
+        secondCurrency: state.secondCurrency,
         file: state.imagePath,
         // A new group with no background chosen gets its type's color.
         color:

@@ -52,6 +52,12 @@ class ExpenseDayRow extends StatelessWidget {
           currency,
           Localizations.maybeLocaleOf(context),
         ),
+        if (expense.original case final original?)
+          CurrencyDisplay.formatLocalizedText(
+            original.amount,
+            original.symbol,
+            Localizations.maybeLocaleOf(context),
+          ),
       ].join(', '),
       onTap: onTap,
       excludeSemantics: true,
@@ -121,12 +127,31 @@ class ExpenseDayRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              CurrencyDisplay(
-                value: expense.amount ?? 0,
-                currency: currency,
-                valueFontSize: 20,
-                currencyFontSize: 12,
-                showDecimals: true,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CurrencyDisplay(
+                    value: expense.amount ?? 0,
+                    currency: currency,
+                    valueFontSize: 20,
+                    currencyFontSize: 12,
+                    showDecimals: true,
+                  ),
+                  // Entered in the second currency: the receipt's amount,
+                  // small underneath.
+                  if (expense.original case final original?)
+                    Text(
+                      CurrencyDisplay.formatLocalizedText(
+                        original.amount,
+                        original.symbol,
+                        Localizations.maybeLocaleOf(context),
+                      ),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: s.onSurfaceVariant,
+                      ),
+                    ),
+                ],
               ),
             ],
           ),

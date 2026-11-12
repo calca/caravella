@@ -31,6 +31,9 @@ void main() {
     await db.execute('ALTER TABLE groups DROP COLUMN payments');
     await db.execute('ALTER TABLE groups DROP COLUMN budget_amount');
     await db.execute('ALTER TABLE groups DROP COLUMN budget_period');
+    // v10's columns too: the upgrade adds them again.
+    await db.execute('ALTER TABLE groups DROP COLUMN second_currency');
+    await db.execute('ALTER TABLE expenses DROP COLUMN original');
     await db.insert('groups', {
       'id': 'g',
       'title': 'Norway',

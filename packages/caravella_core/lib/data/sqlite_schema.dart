@@ -27,7 +27,8 @@ Future<void> createSqliteSchema(Database db) async {
       sync_enabled INTEGER NOT NULL DEFAULT 0,
       payments TEXT,
       budget_amount REAL,
-      budget_period TEXT
+      budget_period TEXT,
+      second_currency TEXT
     )
   ''');
 
@@ -72,6 +73,7 @@ Future<void> createSqliteSchema(Database db) async {
       updated_by_device_id TEXT,
       updated_by_device_name TEXT,
       updated_by_user_name TEXT,
+      original TEXT,
       FOREIGN KEY (group_id) REFERENCES $kTableGroups (id) ON DELETE CASCADE,
       FOREIGN KEY (category_id) REFERENCES $kTableCategories (id),
       FOREIGN KEY (paid_by_id) REFERENCES $kTableParticipants (id)

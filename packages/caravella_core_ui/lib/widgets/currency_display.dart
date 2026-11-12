@@ -52,6 +52,24 @@ class CurrencyDisplay extends StatelessWidget {
     return '$amount $currency';
   }
 
+  /// An exchange rate as text: up to four decimals, no trailing zeros
+  /// ("11,63", "0,0865", "10"), with the decimal separator of [locale].
+  static String formatRate(double rate, Locale? locale) {
+    var text = rate.toStringAsFixed(4);
+    text = text
+        .replaceFirst(RegExp(r'0+$'), '')
+        .replaceFirst(RegExp(r'\.$'), '');
+    return text.replaceAll('.', _decimalSeparator(locale));
+  }
+
+  /// "1 € = 11,63 kr": one unit of [from] in [to], at [rate].
+  static String formatRateLine(
+    String from,
+    double rate,
+    String to,
+    Locale? locale,
+  ) => '1 $from = ${formatRate(rate, locale)} $to';
+
   static String _decimalSeparator(Locale? locale) {
     if (locale == null) return '.';
     try {

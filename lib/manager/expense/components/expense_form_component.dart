@@ -261,6 +261,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 setState(() {});
               },
               currency: widget.config.currency,
+              secondCurrency: widget.config.secondCurrency,
               onSaveExpense: () => _orchestrator.saveExpense(context),
               isReadOnly: widget.config.isReadOnly,
               // The sheets stay short: one line of pills each.

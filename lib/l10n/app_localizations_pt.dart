@@ -2995,4 +2995,65 @@ class AppLocalizationsPt extends AppLocalizations {
   String budget_today_open(String spent) {
     return 'Hoje $spent. Abrir o orçamento';
   }
+
+  @override
+  String get currency_section_group => 'Do grupo';
+
+  @override
+  String get currency_group_hint => 'Saldos, totais e orçamento';
+
+  @override
+  String get currency_change => 'Alterar';
+
+  @override
+  String get second_currency_section => 'Despesas também em';
+
+  @override
+  String get second_currency_add => 'Adicionar uma moeda';
+
+  @override
+  String get second_currency_add_hint => 'Para uma viagem ao exterior';
+
+  @override
+  String second_currency_empty_hint(String currency) {
+    return 'Digite as despesas na moeda do recibo: o grupo as conta em $currency.';
+  }
+
+  @override
+  String get second_currency_rate_hint =>
+      'O câmbio vale para as despesas novas. Você o encontra no extrato do cartão.';
+
+  @override
+  String second_currency_rate_label(String group, String second) {
+    return 'Câmbio: quantos $second valem 1 $group';
+  }
+
+  @override
+  String second_currency_remove(String currency) {
+    return 'Remover $currency';
+  }
+
+  @override
+  String second_currency_subtitle(String currency, String rate) {
+    return 'Despesas também em $currency · $rate';
+  }
+
+  @override
+  String get done => 'Pronto';
+
+  @override
+  String entry_in_currency(String currency) {
+    return 'em $currency';
+  }
+
+  @override
+  String entry_in_currency_label(String currency) {
+    return 'Digite o valor em $currency';
+  }
+
+  @override
+  String get csv_original_amount => 'Valor original';
+
+  @override
+  String get csv_original_currency => 'Moeda original';
 }

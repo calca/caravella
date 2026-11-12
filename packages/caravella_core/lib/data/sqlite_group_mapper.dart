@@ -9,6 +9,7 @@ import '../model/expense_location.dart';
 import '../model/expense_author.dart';
 import '../model/expense_group_type.dart';
 import '../model/group_budget.dart';
+import '../model/second_currency.dart';
 import '../model/settle_payment.dart';
 import '../services/logging/logger_service.dart';
 import '../sync/device_identity.dart';
@@ -127,6 +128,10 @@ class SqliteGroupMapper {
       syncEnabled: (map['sync_enabled'] as int?) == 1,
       payments: paymentsFromColumn(map['payments']),
       budget: budgetFromColumns(map),
+      secondCurrency: jsonColumn(
+        map['second_currency'],
+        SecondCurrency.fromJson,
+      ),
     );
   }
 
@@ -165,6 +170,26 @@ class SqliteGroupMapper {
         'period': row['budget_period'],
       });
 
+  /// A JSON object column ([SecondCurrency], [OriginalAmount]): null for
+  /// none.
+  static String? toJsonColumn(Map<String, dynamic>? json) =>
+      json == null ? null : jsonEncode(json);
+
+  /// Reads a JSON object column back with [parse]; an unreadable one counts
+  /// as none.
+  static T? jsonColumn<T>(Object? value, T? Function(Object?) parse) {
+    if (value is! String || value.isEmpty) return null;
+    try {
+      return parse(jsonDecode(value));
+    } catch (e) {
+      LoggerService.warning(
+        'Unreadable JSON column, ignored: $e',
+        name: 'storage.sqlite',
+      );
+      return null;
+    }
+  }
+
   /// Convert ExpenseGroup to database map
   Map<String, dynamic> groupToMap(ExpenseGroup group) {
     final nowMs = SyncClock.nowMs();
@@ -195,6 +220,7 @@ class SqliteGroupMapper {
       'sync_enabled': group.syncEnabled ? 1 : 0,
       'payments': paymentsToColumn(group.payments),
       ...budgetToColumns(group.budget),
+      'second_currency': toJsonColumn(group.secondCurrency?.toJson()),
       'device_id': deviceId,
       'updated_at': nowMs,
       'deleted': 0,
@@ -256,6 +282,7 @@ class SqliteGroupMapper {
               userName: map['updated_by_user_name'] as String?,
             )
           : null,
+      original: jsonColumn(map['original'], OriginalAmount.fromJson),
     );
   }
 
@@ -308,6 +335,7 @@ class SqliteGroupMapper {
       'updated_by_device_id': expense.updatedBy?.deviceId,
       'updated_by_device_name': expense.updatedBy?.deviceName,
       'updated_by_user_name': expense.updatedBy?.userName,
+      'original': toJsonColumn(expense.original?.toJson()),
     };
   }
 }

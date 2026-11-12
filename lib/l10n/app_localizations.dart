@@ -5411,6 +5411,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today {spent}. Open the budget'**
   String budget_today_open(String spent);
+
+  /// Currency sheet: heading of the group's own currency
+  ///
+  /// In en, this message translates to:
+  /// **'Group currency'**
+  String get currency_section_group;
+
+  /// Under the group's currency in the currency sheet: what it is used for
+  ///
+  /// In en, this message translates to:
+  /// **'Balances, totals and budget'**
+  String get currency_group_hint;
+
+  /// Button to pick another group currency
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get currency_change;
+
+  /// Currency sheet: heading of the second currency expenses can be typed in
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses also in'**
+  String get second_currency_section;
+
+  /// Currency sheet: add a second currency
+  ///
+  /// In en, this message translates to:
+  /// **'Add a currency'**
+  String get second_currency_add;
+
+  /// Under 'Add a currency'
+  ///
+  /// In en, this message translates to:
+  /// **'For a trip abroad'**
+  String get second_currency_add_hint;
+
+  /// Currency sheet, no second currency yet
+  ///
+  /// In en, this message translates to:
+  /// **'Type expenses in the receipt’s currency: the group counts them in {currency}.'**
+  String second_currency_empty_hint(String currency);
+
+  /// Under the rate field
+  ///
+  /// In en, this message translates to:
+  /// **'The rate applies to new expenses. You’ll find it on your card statement.'**
+  String get second_currency_rate_hint;
+
+  /// Screen reader label of the rate field
+  ///
+  /// In en, this message translates to:
+  /// **'Rate: how many {second} make 1 {group}'**
+  String second_currency_rate_label(String group, String second);
+
+  /// Screen reader label of the ✕ removing the second currency
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {currency}'**
+  String second_currency_remove(String currency);
+
+  /// Second line under Currency in General settings
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses also in {currency} · {rate}'**
+  String second_currency_subtitle(String currency, String rate);
+
+  /// Button closing a sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// Quiet link under the amount: type the amount in this currency
+  ///
+  /// In en, this message translates to:
+  /// **'in {currency}'**
+  String entry_in_currency(String currency);
+
+  /// Screen reader label of the link under the amount
+  ///
+  /// In en, this message translates to:
+  /// **'Type the amount in {currency}'**
+  String entry_in_currency_label(String currency);
+
+  /// CSV column: the receipt amount of an expense entered in the second currency
+  ///
+  /// In en, this message translates to:
+  /// **'Original amount'**
+  String get csv_original_amount;
+
+  /// CSV column: the ISO code of that currency
+  ///
+  /// In en, this message translates to:
+  /// **'Original currency'**
+  String get csv_original_currency;
 }
 
 class _AppLocalizationsDelegate

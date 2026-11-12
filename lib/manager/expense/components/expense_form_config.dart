@@ -37,6 +37,14 @@ class ExpenseFormConfig {
   // Group context
   final String? groupTitle;
   final String? currency;
+
+  /// The group's second currency: the amount can be typed in it ("in kr"
+  /// under the amount). Null for a group with one currency.
+  final SecondCurrency? secondCurrency;
+
+  /// Whether a new expense starts in [secondCurrency]: the group's latest
+  /// expense was entered in it.
+  final bool startInSecondCurrency;
   final DateTime? tripStartDate;
   final DateTime? tripEndDate;
   final String? newlyAddedCategory;
@@ -77,6 +85,8 @@ class ExpenseFormConfig {
     // Group context
     this.groupTitle,
     this.currency,
+    this.secondCurrency,
+    this.startInSecondCurrency = false,
     this.tripStartDate,
     this.tripEndDate,
     this.newlyAddedCategory,
