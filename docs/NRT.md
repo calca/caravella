@@ -118,7 +118,7 @@ Then the manual part, on the device:
 
 | # | Step | Expected |
 |---|---|---|
-| 10.1 | `./nrt_a11y_check.sh $DEV` on Home, the group page (each tab), the expense form, the currency and budget sheets, Settings | No **unlabeled** tappable element and no tap target under 48 dp. The script lists any it finds |
+| 10.1 | `./nrt_a11y_check.sh $DEV` on Home, the group page (each tab), the expense form, the currency and budget sheets, Settings | No **unlabeled** tappable element, no tap target under 48 dp, and no button TalkBack reads but **can't activate**. The script lists any it finds |
 | 10.2 | Large text: `adb -s $DEV shell settings put system font_scale 2.0`, then repeat the tour of sections 1, 3, 4 and 5 | Nothing is cut off or overlaps and nothing turns into "…" where it matters (amounts never). Figures stack instead of shrinking. Reset with `font_scale 1.0` |
 | 10.3 | Dark mode: `adb -s $DEV shell cmd uimode night yes`, same tour. Switch it once **with a sheet open** (the expense form) | Text, rings, bars and dotted links stay readable. Budget amber isn't harsh. An open sheet follows the theme too |
 | 10.4 | TalkBack (on a device that has it: Settings › Accessibility › TalkBack), swipe through the group page and the expense form | Each element is read in a sensible order with a meaningful label: the Today card reads the budget, an expense row reads its receipt amount, and the "in kr" link reads "Type the amount in kr" |

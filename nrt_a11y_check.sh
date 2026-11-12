@@ -4,7 +4,9 @@
 #
 # Dumps the current screen's accessibility tree with uiautomator and lists
 # every tappable element that has no label (text or content description,
-# its own or a child's: what TalkBack reads) or is smaller than 48 dp.
+# its own or a child's: what TalkBack reads) or is smaller than 48 dp, and
+# every element announced as a button that TalkBack can't activate (no
+# click action: a Semantics with excludeSemantics that hides the inner tap).
 #
 # Usage: ./nrt_a11y_check.sh [adb-device]   (default: the only device)
 # Exit code 1 when it finds a problem.
@@ -44,6 +46,13 @@ def label(node):
 
 problems = []
 for node in root.iter("node"):
+    if (
+        node.get("class") == "android.widget.Button"
+        and node.get("enabled") == "true"
+        and node.get("clickable") != "true"
+    ):
+        problems.append(f"can't activate  at {node.get('bounds')}  \"{label(node)[:50]}\"")
+        continue
     if node.get("clickable") != "true" and node.get("long-clickable") != "true":
         continue
     m = re.findall(r"\d+", node.get("bounds", ""))
@@ -68,5 +77,5 @@ print(f"Screen of {package}: {sum(1 for _ in root.iter('node'))} nodes")
 if problems:
     print("\n".join(problems))
     sys.exit(1)
-print("OK: every tappable element has a label and is at least 48 dp")
+print("OK: every button can be activated, has a label and is at least 48 dp")
 PY
