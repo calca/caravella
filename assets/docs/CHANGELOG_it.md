@@ -1,3 +1,19 @@
+## 2.4.4 (12.11.2026)
+
+- **Modifiche**: Il pulsante per aggiungere una spesa compare solo in Spese, così non copre più i pagamenti e i grafici
+- **Correzioni**: I gruppi con tante spese si possono di nuovo condividere via Bluetooth
+- **Correzioni**: Una spesa detta a voce con il solo importo ("20 euro") non va più persa: si apre il modulo per aggiungere il nome
+- **Correzioni**: Unisciti a un gruppo: se non consenti la fotocamera, Caravella spiega a cosa serve, con Apri impostazioni, invece di chiederla di continuo
+
+## 2.4.3 (11.11.2026)
+
+- **Modifiche**: La sincronizzazione dei tuoi dispositivi tramite Google Drive è nascosta finché non è pronta: arriva con la prossima versione. Il backup su Google Drive funziona come prima
+
+## 2.4.2 (11.11.2026)
+
+- **Correzioni**: Un gruppo cancellato resta cancellato: non ricompare più dopo la sincronizzazione con un altro telefono
+- **Correzioni**: Le modifiche fatte su un telefono arrivano all'altro, qualunque dei due avvii la sincronizzazione
+
 ## 2.4.1 (10.11.2026)
 
 - **Miglioramenti**: La sincronizzazione con un telefono che ha un Caravella più recente aspetta che tu aggiorni, invece di perdere quello che la nuova versione ha aggiunto

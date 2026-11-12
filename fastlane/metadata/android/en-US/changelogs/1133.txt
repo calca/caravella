@@ -1,0 +1,7 @@
+Version 2.4.4 - Small fixes
+
+• The add-expense button shows on Expenses only, so it no longer covers the payments or the charts
+• An expense said by voice with only an amount ("20 euro") is no longer lost: the form opens to add the name
+• Join a group: if you don't allow the camera, Caravella explains why it needs it, with Open settings, instead of asking again and again
+
+Thanks for using Caravella!
