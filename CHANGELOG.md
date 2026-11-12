@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Found by the non-regression pass on v2.5.0-rc.1 (docs/NRT.md):
-  - TalkBack couldn't activate some buttons it read: "in kr" under the amount, the group type cards (new group, and the type sheet), the period presets and, on the welcome screen, Settings and Get started. Their semantics hid the inner button's tap without carrying it
+  - TalkBack couldn't activate some buttons it read: "in kr" under the amount, the group type cards (new group, and the type sheet), the period presets, the group page's Today card with a budget and, on the welcome screen, Settings and Get started. Their semantics hid the inner button's tap without carrying it
   - The add-expense sheet stays readable when the phone switches to dark mode while it is open: its background came from the theme at the moment it opened
   - Voice with the microphone refused opens "Allow the microphone?" with Open settings, instead of "Voice recognition not available"
   - Home's recent expenses show the receipt amount (450.00 kr) under an expense entered in the second currency, as the group's list does
