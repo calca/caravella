@@ -302,7 +302,7 @@ class PhotoBand extends StatelessWidget {
             height: fade + 1,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                gradient: PhotoVeilGradient.smooth(tone, fade + 1),
+                gradient: PhotoBandGradient.smooth(tone, fade + 1),
               ),
             ),
           ),
@@ -313,7 +313,7 @@ class PhotoBand extends StatelessWidget {
 }
 
 /// Smoothstep gradient from clear to [color] over [height].
-abstract final class PhotoVeilGradient {
+abstract final class PhotoBandGradient {
   static LinearGradient smooth(Color color, double height) {
     const steps = 8;
     return LinearGradient(

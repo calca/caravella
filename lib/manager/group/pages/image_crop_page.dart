@@ -12,7 +12,8 @@ import 'package:material_ui/material_ui.dart';
 /// Crops the group photo: a fixed 3:2 frame (the shape the photo has on the
 /// group page, close to the Home card's) over the photo, which the user
 /// moves by dragging and enlarges by pinching. Below, live previews of the
-/// photo on Home, the group page and a Groups card.
+/// photo on Home, the group page and a Groups card, each melting into the
+/// tone the crop gives it.
 ///
 /// Returns the cropped photo, at most [maxSide] px on its long side.
 class ImageCropPage extends StatefulWidget {
@@ -38,6 +39,13 @@ class ImageCropPage extends StatefulWidget {
 class _ImageCropPageState extends State<ImageCropPage> {
   final _transform = TransformationController();
   ui.Image? _image;
+
+  /// The photo decoded [_thumbWidth] px wide (RGBA), to take the tone of
+  /// the crop's lower part as the cards will (see [PhotoTone]).
+  ByteData? _thumb;
+  int _thumbHeight = 0;
+  static const _thumbWidth = 64;
+
   Size _frame = Size.zero;
   bool _saving = false;
 
@@ -59,11 +67,50 @@ class _ImageCropPageState extends State<ImageCropPage> {
     // Decoded by the engine, which applies the EXIF orientation.
     final codec = await ui.instantiateImageCodec(bytes);
     final frame = await codec.getNextFrame();
+    final small = await ui.instantiateImageCodec(
+      bytes,
+      targetWidth: _thumbWidth,
+    );
+    final thumb = (await small.getNextFrame()).image;
+    final data = await thumb.toByteData(format: ui.ImageByteFormat.rawRgba);
+    final thumbHeight = thumb.height;
+    thumb.dispose();
+    small.dispose();
     if (mounted) {
-      setState(() => _image = frame.image);
+      setState(() {
+        _image = frame.image;
+        _thumb = data;
+        _thumbHeight = thumbHeight;
+      });
     } else {
       frame.image.dispose();
     }
+  }
+
+  /// The average color of the lower 45% of [crop] (photo pixels), as
+  /// [PhotoTone] measures the saved photo; null before the photo is read.
+  Color? _averageOf(Rect crop, ui.Image image) {
+    final data = _thumb;
+    if (data == null || crop.isEmpty) return null;
+    final k = _thumbWidth / image.width;
+    final x0 = (crop.left * k).floor().clamp(0, _thumbWidth - 1);
+    final x1 = (crop.right * k).ceil().clamp(x0 + 1, _thumbWidth);
+    final y0 = ((crop.top + crop.height * 0.55) * k).floor().clamp(
+      0,
+      _thumbHeight - 1,
+    );
+    final y1 = (crop.bottom * k).ceil().clamp(y0 + 1, _thumbHeight);
+    var r = 0, g = 0, b = 0, n = 0;
+    for (var y = y0; y < y1; y++) {
+      for (var x = x0; x < x1; x++) {
+        final i = (y * _thumbWidth + x) * 4;
+        r += data.getUint8(i);
+        g += data.getUint8(i + 1);
+        b += data.getUint8(i + 2);
+        n++;
+      }
+    }
+    return n == 0 ? null : Color.fromARGB(255, r ~/ n, g ~/ n, b ~/ n);
   }
 
   /// Scale at which the photo just covers the frame.
@@ -201,6 +248,13 @@ class _ImageCropPageState extends State<ImageCropPage> {
                         : _Previews(
                             image: image,
                             crop: _cropRect,
+                            tone: switch (_averageOf(_cropRect, image)) {
+                              final c? => PhotoTone.fromAverage(
+                                c,
+                                theme.brightness,
+                              ),
+                              null => PhotoTone.fallbackDark,
+                            },
                             labels: [
                               gloc.nav_home,
                               gloc.group,
@@ -347,19 +401,20 @@ class _CornersPainter extends CustomPainter {
   bool shouldRepaint(_CornersPainter old) => old.radius != radius;
 }
 
-/// How the cropped photo will look: on Home, on the group page and on a
-/// Groups card, each melting into the surface like the real ones.
-/// The cropped photo as each screen shows it: the same shape and the same
-/// [PhotoVeil] fade as the Home card, the group page and a Groups card
-/// ([PhotoVeilSpot]), with bars where the title and dates sit.
+/// How the cropped photo will look on Home, on the group page and on a
+/// Groups card: the same shape as each card, the photo on top melting into
+/// its own [tone] (as the cards take it from the photo), with bars where the
+/// title and figures sit in the tone's text color.
 class _Previews extends StatelessWidget {
   final ui.Image image;
   final Rect crop;
+  final PhotoTone tone;
   final List<String> labels;
 
   const _Previews({
     required this.image,
     required this.crop,
+    required this.tone,
     required this.labels,
   });
 
@@ -367,19 +422,19 @@ class _Previews extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
-    Widget tile(PhotoVeilSpot spot, Color surface, String label) => Column(
+    // Width / height of each card and the share of it the photo covers.
+    Widget tile(double aspect, double photo, String label) => Column(
       children: [
         AspectRatio(
-          aspectRatio: spot.aspectRatio,
+          aspectRatio: aspect,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: CustomPaint(
               painter: _PreviewPainter(
                 image: image,
                 crop: crop,
-                spot: spot,
-                surface: surface,
-                ink: s.onSurface,
+                photoShare: photo,
+                tone: tone,
               ),
             ),
           ),
@@ -396,20 +451,11 @@ class _Previews extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Expanded(
-          flex: 5,
-          child: tile(PhotoVeilSpot.home, s.surface, labels[0]),
-        ),
+        Expanded(flex: 5, child: tile(368 / 390, 0.62, labels[0])),
         const SizedBox(width: 8),
-        Expanded(
-          flex: 4,
-          child: tile(PhotoVeilSpot.groupPage, s.surfaceContainer, labels[1]),
-        ),
+        Expanded(flex: 5, child: tile(412 / 380, 0.66, labels[1])),
         const SizedBox(width: 8),
-        Expanded(
-          flex: 3,
-          child: tile(PhotoVeilSpot.groupsCard, s.raisedSurface, labels[2]),
-        ),
+        Expanded(flex: 4, child: tile(179 / 170, 0.52, labels[2])),
       ],
     );
   }
@@ -418,26 +464,26 @@ class _Previews extends StatelessWidget {
 class _PreviewPainter extends CustomPainter {
   final ui.Image image;
   final Rect crop;
-  final PhotoVeilSpot spot;
-  final Color surface;
-
-  /// Color of the title and dates bars.
-  final Color ink;
+  final double photoShare;
+  final PhotoTone tone;
 
   _PreviewPainter({
     required this.image,
     required this.crop,
-    required this.spot,
-    required this.surface,
-    required this.ink,
+    required this.photoShare,
+    required this.tone,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     if (crop.isEmpty) return;
-    // Cover, as Image.file with BoxFit.cover: the middle of the crop in
-    // this spot's shape.
-    final aspect = size.width / size.height;
+    final card = Offset.zero & size;
+    canvas.drawRect(card, Paint()..color = tone.tone);
+
+    // The photo on top, covering its area as Image.file with BoxFit.cover:
+    // the middle of the crop in that shape.
+    final photo = Rect.fromLTWH(0, 0, size.width, size.height * photoShare);
+    final aspect = photo.width / photo.height;
     var src = crop;
     if (crop.width / crop.height > aspect) {
       final w = crop.height * aspect;
@@ -446,60 +492,57 @@ class _PreviewPainter extends CustomPainter {
       final h = crop.width / aspect;
       src = Rect.fromLTWH(crop.left, crop.center.dy - h / 2, crop.width, h);
     }
-    final dst = Offset.zero & size;
     canvas.drawImageRect(
       image,
       src,
-      dst,
+      photo,
       Paint()..filterQuality = FilterQuality.medium,
     );
 
-    // The screen's own veil, scaled down to the tile.
-    final k = size.height / spot.height;
-    final veil = PhotoVeil(
-      path: '',
-      color: surface,
-      solidExtent: spot.solidExtent * k,
-      fadeExtent: spot.fadeExtent * k,
+    // Melting into the tone, as PhotoBand does.
+    final fade = photo.height * 0.42;
+    final fadeRect = Rect.fromLTWH(
+      0,
+      photo.bottom - fade,
+      size.width,
+      fade + 1,
     );
     canvas.drawRect(
-      dst,
-      Paint()..shader = veil.gradientFor(size.height).createShader(dst),
+      fadeRect,
+      Paint()
+        ..shader = PhotoBandGradient.smooth(
+          tone.tone,
+          fadeRect.height,
+        ).createShader(fadeRect),
     );
 
-    // Title and dates on the solid part.
-    final bar = Paint()..color = ink.withValues(alpha: 0.16);
-    final top = size.height - spot.solidExtent * k;
+    // Title, dates and figures at the bottom, in the tone's text color.
+    final bar = Paint()..color = tone.onTone.withValues(alpha: 0.55);
     final left = size.width * 0.08;
-    final barHeight = math.max(3.0, spot.solidExtent * k * 0.16);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(left, top + barHeight, size.width * 0.55, barHeight),
-        Radius.circular(barHeight / 2),
-      ),
-      bar,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          left,
-          top + barHeight * 2.6,
-          size.width * 0.35,
-          barHeight * 0.7,
+    final unit = math.max(2.0, size.height * 0.03);
+    final bottom = size.height - size.height * 0.09;
+    // (top from the bottom, height, width share) of each line.
+    for (final (y, h, w) in [
+      (unit * 6.2, unit * 1.4, 0.55),
+      (unit * 4.1, unit * 0.8, 0.34),
+      (unit * 1.6, unit * 1.6, 0.42),
+    ]) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(left, bottom - y, size.width * w, h),
+          Radius.circular(h / 2),
         ),
-        Radius.circular(barHeight / 2),
-      ),
-      bar,
-    );
+        bar,
+      );
+    }
   }
 
   @override
   bool shouldRepaint(_PreviewPainter old) =>
       old.crop != crop ||
       old.image != image ||
-      old.spot != spot ||
-      old.surface != surface ||
-      old.ink != ink;
+      old.photoShare != photoShare ||
+      old.tone.tone != tone.tone;
 }
 
 /// What [cropAndResize] crops: the photo file, the part to keep in photo

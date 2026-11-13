@@ -33,7 +33,6 @@ export 'widgets/empty_state_view.dart';
 export 'widgets/expense_amount_card.dart';
 export 'widgets/floating_nav_bar.dart';
 export 'widgets/form_pill.dart';
-export 'widgets/photo_veil.dart';
 export 'widgets/media_top_bar.dart';
 export 'widgets/pill_segmented_control.dart';
 export 'widgets/status_bar_fade.dart';
