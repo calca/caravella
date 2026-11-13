@@ -189,12 +189,12 @@ class AppInitialization {
     scheduleWeeklyDriveBackup();
   }
 
-  /// Measures the tone of the active groups' photos not measured yet, in the
-  /// background, so their cards don't change color after they show.
+  /// Tones are measured when a photo is set; this catches the photos set
+  /// before that (once each) and forgets unused ones, in the background.
   static void warmPhotoTones() {
     unawaited(() async {
       try {
-        final groups = await ExpenseGroupStorageV2.getActiveGroups();
+        final groups = await ExpenseGroupStorageV2.getAllGroups();
         await PhotoTone.warmUp([for (final g in groups) ?GroupLook.photoOf(g)]);
       } catch (e) {
         LoggerService.warning('Photo tones not warmed: $e', name: 'ui.card');

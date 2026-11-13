@@ -77,10 +77,11 @@ class GroupLook {
   }
 }
 
-/// The tone a style B card takes under a photo: the average color of the
+/// The tone a group card takes under a photo: the average color of the
 /// photo's lower part, made very dark (white text) or, for a light photo in
-/// the light theme, very light (dark text). Computed once per photo from a
-/// small decode, kept in memory and, through [onChanged], between launches.
+/// the light theme, very light (dark text). Measured once per photo from a
+/// small decode, when the photo is set ([load] from the group form), kept in
+/// memory and, through [onChanged], between launches.
 class PhotoTone {
   final Color tone;
   final Color onTone;
@@ -113,13 +114,25 @@ class PhotoTone {
     }
   }
 
-  /// Measures the photos not measured yet, one at a time (at startup, so
-  /// the cards don't wait for them).
+  /// At startup, with every group's photo: measures those set before tones
+  /// were measured on saving (one time each), and forgets the photos no
+  /// group uses any more.
   static Future<void> warmUp(Iterable<String> paths) async {
-    for (final path in paths) {
+    final used = paths.toSet();
+    final before = _averages.length;
+    _averages.removeWhere((key, _) {
+      final at = key.lastIndexOf('@');
+      return !used.contains(at < 0 ? key : key.substring(0, at));
+    });
+    if (_averages.length != before) _notify();
+    for (final path in used) {
       await load(path, Brightness.dark);
     }
   }
+
+  static void _notify() => onChanged?.call({
+    for (final e in _averages.entries) e.key: e.value.toARGB32(),
+  });
 
   /// The tone for [average] (the photo's lower part) in [brightness].
   static PhotoTone fromAverage(Color average, Brightness brightness) {
@@ -164,9 +177,7 @@ class PhotoTone {
     if (average == null) return null;
     if (_averages[key] == null) {
       _averages[key] = average;
-      onChanged?.call({
-        for (final e in _averages.entries) e.key: e.value.toARGB32(),
-      });
+      _notify();
     }
     return fromAverage(average, brightness);
   }

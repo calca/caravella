@@ -96,4 +96,13 @@ void main() {
       await dir.delete(recursive: true);
     });
   });
+
+  test('startup forgets the tones of photos no group uses', () async {
+    Map<String, int>? stored;
+    PhotoTone.onChanged = (all) => stored = all;
+    addTearDown(() => PhotoTone.onChanged = null);
+    PhotoTone.seed({'/gone/old.jpg@1': 0xFF102030});
+    await PhotoTone.warmUp(const []);
+    expect(stored, isEmpty);
+  });
 }

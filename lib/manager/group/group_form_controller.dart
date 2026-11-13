@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:material_ui/material_ui.dart' show Brightness;
 // ...existing code...
 import 'data/currencies.dart';
 import 'data/group_form_state.dart';
@@ -318,6 +320,9 @@ class GroupFormController {
       final name = 'group_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final target = File('${dir.path}/$name');
       await file.copy(target.path);
+      // The card's tone under this photo, measured now and kept, so every
+      // card shows it from the first frame.
+      await PhotoTone.load(target.path, Brightness.dark);
       state.setImage(target.path);
       return target.path;
     } catch (e, st) {
