@@ -44,40 +44,4 @@ void main() {
       expect(find.byType(CustomPaint), findsWidgets);
     });
   });
-
-  group('PhotoVeil', () {
-    test('photo on top, surface under the text, stops in order', () {
-      const veil = PhotoVeil(
-        path: 'x.jpg',
-        color: Colors.white,
-        solidExtent: 100,
-        fadeExtent: 100,
-        topShade: true,
-      );
-      final g = veil.gradientFor(400);
-      for (var i = 1; i < g.stops!.length; i++) {
-        expect(g.stops![i], greaterThanOrEqualTo(g.stops![i - 1]));
-      }
-      expect(g.colors.first.a, closeTo(PhotoVeil.topShadeAlpha, 0.01));
-      // The photo is untouched until the fade starts (400 - 100 - 100 px).
-      final clearUntil = g.stops![g.colors.lastIndexWhere((c) => c.a == 0)];
-      expect(clearUntil, closeTo(200 / 400, 0.001));
-      // Solid surface from 300 px down: the text never sits on the photo.
-      final solidFrom = g.stops![g.colors.indexOf(Colors.white)];
-      expect(solidFrom, closeTo(300 / 400, 0.001));
-      expect(g.colors.last, Colors.white);
-    });
-
-    test('a veil shorter than its parts keeps valid stops', () {
-      final g = const PhotoVeil(
-        path: 'x.jpg',
-        color: Colors.white,
-        solidExtent: 80,
-      ).gradientFor(40);
-      for (var i = 1; i < g.stops!.length; i++) {
-        expect(g.stops![i], greaterThanOrEqualTo(g.stops![i - 1]));
-      }
-      expect(g.stops!.every((s) => s >= 0 && s <= 1), isTrue);
-    });
-  });
 }

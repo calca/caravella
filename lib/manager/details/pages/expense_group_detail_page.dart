@@ -568,34 +568,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                 controller: _scrollController,
                 slivers: [
                   SliverToBoxAdapter(
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: GroupHeaderBand(
-                            group: trip,
-                            pageColor: pageColor,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            20,
-                            topInset +
-                                GroupDetailTopBar.height +
-                                4 +
-                                (hasPhoto || bandColor != null
-                                    ? GroupHeaderBand.photoExtraTop
-                                    : 0),
-                            20,
-                            20,
-                          ),
-                          child: GroupDetailHeader(
-                            group: trip,
-                            foreground: s.onSurface,
-                            onOpenSync: _showSyncPage,
-                            onOpenBudget: _showBudget,
-                          ),
-                        ),
-                      ],
+                    child: GroupHeaderBand(
+                      group: trip,
+                      topInset: topInset,
+                      header: (foreground) => GroupDetailHeader(
+                        group: trip,
+                        foreground: foreground,
+                        onOpenSync: _showSyncPage,
+                        onOpenBudget: _showBudget,
+                      ),
                     ),
                   ),
                   if (_welcomeFrom case final from?)
