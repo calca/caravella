@@ -449,10 +449,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     }
   }
 
+  /// Voice input is open above the buttons (inside the sheet, not a sheet
+  /// on top of it).
+  bool _voiceOpen = false;
+
   Widget _buildActionsRow() {
     final canScan =
         _receiptScanner.isAvailable && widget.config.initialExpense == null;
-    return ExpenseFormActionsWidget(
+    final actions = ExpenseFormActionsWidget(
       onSave: _controller.isFormValid
           ? () => _orchestrator.saveExpense(context)
           : null,
@@ -472,22 +476,39 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       showVoiceButton: _showVoice,
       onVoiceTap: _showVoice ? () => _showVoiceCapture(context) : null,
     );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedSize(
+          duration: const Duration(milliseconds: 240),
+          curve: Curves.easeOutCubic,
+          alignment: Alignment.topCenter,
+          child: _voiceOpen ? _buildVoicePanel(context) : const SizedBox(),
+        ),
+        actions,
+      ],
+    );
+  }
+
+  Widget _buildVoicePanel(BuildContext context) {
+    final locale =
+        LocaleNotifier.of(context)?.locale ?? LocalePreferences.deviceDefault();
+    return VoiceCaptureBottomSheet(
+      participantNames: _lifecycleManager.participants
+          .map((p) => p.name)
+          .toList(),
+      localeId: '${locale}_${locale.toUpperCase()}',
+      onVoiceResult: _applyVoiceResult,
+      onClose: () {
+        if (mounted) setState(() => _voiceOpen = false);
+      },
+    );
   }
 
   Future<void> _showVoiceCapture(BuildContext context) async {
-    final locale =
-        LocaleNotifier.of(context)?.locale ?? LocalePreferences.deviceDefault();
-    final localeId = '${locale}_${locale.toUpperCase()}';
-    final participantNames = _lifecycleManager.participants
-        .map((p) => p.name)
-        .toList();
-
-    await VoiceCaptureBottomSheet.show(
-      context: context,
-      participantNames: participantNames,
-      localeId: localeId,
-      onVoiceResult: (parsed) => _applyVoiceResult(parsed),
-    );
+    FocusScope.of(context).unfocus();
+    setState(() => _voiceOpen = !_voiceOpen);
   }
 
   void _applyVoiceResult(Map<String, dynamic> parsed) {

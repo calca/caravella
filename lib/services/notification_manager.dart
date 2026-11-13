@@ -1,10 +1,10 @@
+import '../home/cards/widgets/add_expense_controller.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'notification_service.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../manager/details/widgets/expense_entry_sheet.dart';
 import '../manager/details/pages/expense_group_detail_page.dart';
 
 /// Helper class to manage notification updates when expense groups change
@@ -340,82 +340,17 @@ class NotificationManager {
     }
   }
 
-  /// Shows the add expense bottom sheet
+  /// The add-expense sheet from the notification: the same quick sheet as
+  /// Home's, with "More details" opening the full page, so no sheet ever
+  /// opens on top of it (location and attachments are on that page).
   static void _showAddExpenseSheet(
     BuildContext context,
     ExpenseGroup group,
     ExpenseGroupNotifier notifier,
   ) {
-    showAppBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      // No backgroundColor: the theme's modalBackgroundColor (the same
-      // surfaceContainer) is read when the sheet builds, so it follows a
-      // switch to dark mode while it is open.
-      // Taller now that the details are always there: keep it below the
-      // status bar.
-      useSafeArea: true,
-      builder: (sheetContext) => Consumer<ExpenseGroupNotifier>(
-        builder: (context, groupNotifier, child) {
-          final currentGroup = groupNotifier.currentGroup ?? group;
-          return ExpenseEntrySheet(
-            group: currentGroup,
-            fullEdit: false,
-            showGroupHeader: false,
-            onExpenseSaved: (expense) async {
-              final nav = Navigator.of(sheetContext);
-              final gloc = gen.AppLocalizations.of(sheetContext);
-
-              final expenseWithId = expense.copyWith(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-              );
-
-              // Persist using the new storage API
-              await ExpenseGroupStorageV2.addExpenseToGroup(
-                currentGroup.id,
-                expenseWithId,
-              );
-
-              // Refresh notifier state and notify UI
-              await groupNotifier.refreshGroup();
-              groupNotifier.notifyGroupUpdated(currentGroup.id);
-
-              // Update notification if enabled
-              if (sheetContext.mounted) {
-                await NotificationManager().updateNotificationForGroupById(
-                  currentGroup.id,
-                  gloc,
-                );
-              }
-
-              // Check if we should prompt for rating
-              RatingService.checkAndPromptForRating();
-
-              if (!sheetContext.mounted) return;
-              AppToast.show(
-                sheetContext,
-                gloc.expense_added_success,
-                type: ToastType.success,
-              );
-              nav.pop();
-            },
-            onCategoryAdded: (categoryId) {
-              // Category was added inline in the form, no need to do anything
-              LoggerService.debug(
-                'Category added: $categoryId',
-                name: 'notification',
-              );
-            },
-            onParticipantAdded: (participantName) {
-              // Participant was added inline in the form, no need to do anything
-              LoggerService.debug(
-                'Participant added: $participantName',
-                name: 'notification',
-              );
-            },
-          );
-        },
-      ),
-    );
+    AddExpenseController(
+      group: group,
+      onExpenseAdded: () {},
+    ).showAddExpenseSheet(context, group);
   }
 }

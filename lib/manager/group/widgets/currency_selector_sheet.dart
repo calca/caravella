@@ -93,132 +93,138 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
             return name.contains(lower) || code.contains(lower);
           }).toList();
 
-    return CaravellaBottomSheetScaffold(
-      title: l.select_currency,
-      child: SizedBox(
-        // Room for the keyboard below the list.
-        height:
-            MediaQuery.sizeOf(context).height * 0.8 -
-            MediaQuery.viewInsetsOf(context).bottom,
-        child: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              autofocus: true,
-              textInputAction: TextInputAction.search,
-              decoration: FormTheme.getSearchPillDecoration(
-                backgroundColor: colorScheme.raisedSurface,
-                hintText: l.search_currency,
-                prefixIcon: const Icon(Icons.search_rounded),
-                suffixIcon: _query.isEmpty
-                    ? null
-                    : IconButton(
-                        tooltip: MaterialLocalizations.of(
-                          context,
-                        ).deleteButtonTooltip,
-                        icon: const Icon(Icons.close_rounded),
-                        onPressed: () {
-                          setState(() {
-                            _query = '';
-                            _controller.clear();
-                          });
-                        },
-                      ),
-              ),
-              onChanged: _onSearchChanged,
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: filtered.isEmpty
-                  ? Center(
-                      child: Text(
-                        '—',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    )
-                  : CardOutline(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Material(
-                        color: colorScheme.raisedSurface,
-                        borderRadius: BorderRadius.circular(20),
-                        clipBehavior: Clip.antiAlias,
-                        child: ListView.separated(
-                          itemCount: filtered.length,
-                          separatorBuilder: (_, _) => Divider(
-                            height: 1,
-                            indent: 64,
-                            endIndent: 16,
-                            color: colorScheme.outlineVariant.withValues(
-                              alpha: 0.5,
-                            ),
-                          ),
-                          itemBuilder: (c, i) {
-                            final currency = filtered[i];
-                            final name = localizedCurrencyName(
-                              l,
-                              currency['code']!,
-                            );
-                            final query = _query;
-                            final isSelected =
-                                currency['code'] == widget.selectedCode;
-                            return ListTile(
-                              minVerticalPadding: 10,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                              ),
-                              selected: isSelected,
-                              trailing: isSelected
-                                  ? Icon(
-                                      Icons.check_rounded,
-                                      color: colorScheme.primary,
-                                    )
-                                  : null,
-                              leading: Container(
-                                width: 38,
-                                height: 38,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: colorScheme.onSurface.withValues(
-                                    alpha: 0.06,
-                                  ),
-                                ),
-                                child: Text(
-                                  currency['symbol'] ?? '',
-                                  style: Theme.of(context).textTheme.titleSmall
-                                      ?.copyWith(fontWeight: FontWeight.w700),
-                                  semanticsLabel: currency['symbol'] ?? '',
-                                ),
-                              ),
-                              title: _buildHighlighted(
-                                name,
-                                query,
-                                Theme.of(context).textTheme.bodyLarge,
-                              ),
-                              subtitle: _buildHighlighted(
-                                '${currency['code']}',
-                                query,
-                                Theme.of(context).textTheme.bodySmall,
-                              ),
-                              onTap: () {
-                                final selected = Map<String, String>.from(
-                                  currency,
-                                );
-                                selected['name'] = name;
-                                Navigator.pop<Map<String, String>>(
-                                  context,
-                                  selected,
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
+    // A second screen of the group's currency sheet brings its own title
+    // ([showSheetPage]); opened on its own, the sheet has it.
+    final inPage = isSheetPage(context);
+    final body = SizedBox(
+      // Room for the keyboard below the list.
+      // Less under a second screen's back button and title (about 100 dp)
+      // when opened from the group's currency sheet.
+      height:
+          MediaQuery.sizeOf(context).height * 0.8 -
+          (inPage ? 100 : 0) -
+          MediaQuery.viewInsetsOf(context).bottom,
+      child: Column(
+        children: [
+          TextField(
+            controller: _controller,
+            autofocus: true,
+            textInputAction: TextInputAction.search,
+            decoration: FormTheme.getSearchPillDecoration(
+              backgroundColor: colorScheme.raisedSurface,
+              hintText: l.search_currency,
+              prefixIcon: const Icon(Icons.search_rounded),
+              suffixIcon: _query.isEmpty
+                  ? null
+                  : IconButton(
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).deleteButtonTooltip,
+                      icon: const Icon(Icons.close_rounded),
+                      onPressed: () {
+                        setState(() {
+                          _query = '';
+                          _controller.clear();
+                        });
+                      },
                     ),
             ),
-          ],
-        ),
+            onChanged: _onSearchChanged,
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: filtered.isEmpty
+                ? Center(
+                    child: Text(
+                      '—',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  )
+                : CardOutline(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Material(
+                      color: colorScheme.raisedSurface,
+                      borderRadius: BorderRadius.circular(20),
+                      clipBehavior: Clip.antiAlias,
+                      child: ListView.separated(
+                        itemCount: filtered.length,
+                        separatorBuilder: (_, _) => Divider(
+                          height: 1,
+                          indent: 64,
+                          endIndent: 16,
+                          color: colorScheme.outlineVariant.withValues(
+                            alpha: 0.5,
+                          ),
+                        ),
+                        itemBuilder: (c, i) {
+                          final currency = filtered[i];
+                          final name = localizedCurrencyName(
+                            l,
+                            currency['code']!,
+                          );
+                          final query = _query;
+                          final isSelected =
+                              currency['code'] == widget.selectedCode;
+                          return ListTile(
+                            minVerticalPadding: 10,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                            ),
+                            selected: isSelected,
+                            trailing: isSelected
+                                ? Icon(
+                                    Icons.check_rounded,
+                                    color: colorScheme.primary,
+                                  )
+                                : null,
+                            leading: Container(
+                              width: 38,
+                              height: 38,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.06,
+                                ),
+                              ),
+                              child: Text(
+                                currency['symbol'] ?? '',
+                                style: Theme.of(context).textTheme.titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w700),
+                                semanticsLabel: currency['symbol'] ?? '',
+                              ),
+                            ),
+                            title: _buildHighlighted(
+                              name,
+                              query,
+                              Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            subtitle: _buildHighlighted(
+                              '${currency['code']}',
+                              query,
+                              Theme.of(context).textTheme.bodySmall,
+                            ),
+                            onTap: () {
+                              final selected = Map<String, String>.from(
+                                currency,
+                              );
+                              selected['name'] = name;
+                              closeSheetPage<Map<String, String>>(
+                                context,
+                                selected,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
+    return inPage
+        ? body
+        : CaravellaBottomSheetScaffold(title: l.select_currency, child: body);
   }
 }

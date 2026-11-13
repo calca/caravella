@@ -16,19 +16,59 @@ int firstDayOfWeekOf(BuildContext context) {
 
 /// The budget sheet opened from "Today" on the group page: today at the
 /// top, the current period under it, the periods before, and "Change
-/// budget" ([onChangeBudget], after the sheet closes).
+/// budget", which opens the budget's settings inside the same sheet
+/// ([SheetPager]). A saved change goes to [onBudgetResult] and the sheet
+/// shows the new budget; a removed one closes the sheet.
 Future<void> showBudgetDetailSheet(
   BuildContext context, {
   required ExpenseGroup group,
-  required VoidCallback onChangeBudget,
-}) async {
-  final change = await showAppBottomSheet<bool>(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    builder: (_) => BudgetDetailSheet(group: group),
-  );
-  if (change == true) onChangeBudget();
+  required Future<void> Function(BudgetSheetResult result) onBudgetResult,
+}) => showAppBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  useSafeArea: true,
+  builder: (_) => SheetPager(
+    child: _BudgetDetailHost(group: group, onBudgetResult: onBudgetResult),
+  ),
+);
+
+class _BudgetDetailHost extends StatefulWidget {
+  final ExpenseGroup group;
+  final Future<void> Function(BudgetSheetResult result) onBudgetResult;
+
+  const _BudgetDetailHost({required this.group, required this.onBudgetResult});
+
+  @override
+  State<_BudgetDetailHost> createState() => _BudgetDetailHostState();
+}
+
+class _BudgetDetailHostState extends State<_BudgetDetailHost> {
+  late ExpenseGroup _group = widget.group;
+
+  Future<void> _change() async {
+    final result = await showSheetPage<BudgetSheetResult>(
+      context,
+      title: gen.AppLocalizations.of(context).budget,
+      builder: (_) => BudgetSettingsSheet(
+        budget: _group.budget,
+        currency: _group.currency,
+        groupType: _group.groupType,
+      ),
+    );
+    if (result == null || !mounted) return;
+    await widget.onBudgetResult(result);
+    if (!mounted) return;
+    switch (result) {
+      case BudgetSaved(:final budget):
+        setState(() => _group = _group.copyWith(budget: budget));
+      case BudgetRemoved():
+        Navigator.of(context).pop();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      BudgetDetailSheet(group: _group, onChange: _change);
 }
 
 class BudgetDetailSheet extends StatelessWidget {
@@ -37,7 +77,15 @@ class BudgetDetailSheet extends StatelessWidget {
   /// "Today" for the figures; now when null (tests set it).
   final DateTime? today;
 
-  const BudgetDetailSheet({super.key, required this.group, this.today});
+  /// "Change budget"; closes the sheet with `true` when null.
+  final VoidCallback? onChange;
+
+  const BudgetDetailSheet({
+    super.key,
+    required this.group,
+    this.today,
+    this.onChange,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +265,7 @@ class BudgetDetailSheet extends StatelessWidget {
           ],
           const SizedBox(height: 16),
           OutlinedButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: onChange ?? () => Navigator.of(context).pop(true),
             style: OutlinedButton.styleFrom(
               minimumSize: const Size.fromHeight(52),
               shape: const StadiumBorder(),

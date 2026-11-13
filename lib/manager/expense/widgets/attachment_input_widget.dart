@@ -7,7 +7,10 @@ import '../errors/expense_error_handler.dart';
 
 /// The expense's attachments: an "Attachments" section label with the count,
 /// one [AttachmentRow] per file in a card, then an "Add attachment" pill
-/// while there's room, or the limit once it's full. [AttachmentStateManager] holds the logic.
+/// while there's room, or the limit once it's full. The pill opens the
+/// sources (photo, video, gallery, file) in place, as pills under it: no
+/// sheet, so none opens on top of the expense sheet.
+/// [AttachmentStateManager] holds the logic.
 class AttachmentInputWidget extends StatefulWidget {
   final String groupId;
   final String groupName;
@@ -40,6 +43,9 @@ class AttachmentInputWidget extends StatefulWidget {
 class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
   late AttachmentStateManager _stateManager;
 
+  /// The sources are open under the pill.
+  bool _choosing = false;
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +75,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
 
     if (widget.asPill) {
       final busy = _stateManager.isProcessing;
-      return FormPill(
+      final pill = FormPill(
         icon: busy ? null : Icons.attach_file_rounded,
         leading: busy
             ? SizedBox.square(
@@ -82,9 +88,12 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
             : null,
         label: loc.attachments,
         style: FormPillStyle.add,
-        onTap: widget.enabled && !busy
-            ? () => _showAttachmentSourcePicker(context)
-            : null,
+        onTap: widget.enabled && !busy ? _toggleSources : null,
+      );
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [pill, _sources(context)],
       );
     }
 
@@ -157,10 +166,12 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
                     : null,
                 label: loc.attachment_source,
                 style: FormPillStyle.add,
-                onTap: busy ? null : () => _showAttachmentSourcePicker(context),
+                onTap: busy ? null : _toggleSources,
               ),
             ),
-          )
+          ),
+        if (widget.enabled && _stateManager.canAddMore)
+          _sources(context)
         else if (widget.enabled)
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
@@ -175,60 +186,74 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
     );
   }
 
-  Future<void> _showAttachmentSourcePicker(BuildContext context) async {
-    final loc = gen.AppLocalizations.of(context);
-
-    // Full: the pill is gone and the limit shows in its place.
+  void _toggleSources() {
     if (!_stateManager.canAddMore) return;
+    setState(() => _choosing = !_choosing);
+  }
 
-    final source = await showAppBottomSheet<AttachmentSource>(
-      context: context,
-      builder: (context) => CaravellaBottomSheetScaffold(
-        title: loc.attachment_source,
-        child: SettingsGroup(
-          topSpacing: 0,
-          children: [
-            SettingsTile(
-              icon: Icons.photo_camera_outlined,
-              title: loc.from_camera,
-              chevron: false,
-              onTap: () => Navigator.pop(context, AttachmentSource.camera),
-            ),
-            SettingsTile(
-              icon: Icons.photo_library_outlined,
-              title: loc.from_gallery,
-              chevron: false,
-              onTap: () => Navigator.pop(context, AttachmentSource.gallery),
-            ),
-            SettingsTile(
-              icon: Icons.attach_file_rounded,
-              title: loc.from_files,
-              chevron: false,
-              onTap: () => Navigator.pop(context, AttachmentSource.files),
-            ),
-          ],
-        ),
-      ),
+  /// Photo, video, gallery and file as pills, under the "add" pill while
+  /// [_choosing]; the sheet grows to show them.
+  Widget _sources(BuildContext context) {
+    final loc = gen.AppLocalizations.of(context);
+    Widget source(
+      IconData icon,
+      String label,
+      AttachmentSource source, [
+      CameraMediaType? media,
+    ]) => FormPill(
+      icon: icon,
+      label: label,
+      onTap: () {
+        setState(() => _choosing = false);
+        _handleAttachmentSelection(context, source, mediaType: media);
+      },
     );
-
-    if (source != null && context.mounted) {
-      await _handleAttachmentSelection(context, source);
-    }
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 240),
+      curve: Curves.easeOutCubic,
+      alignment: Alignment.topLeft,
+      child: !_choosing
+          ? const SizedBox(width: double.infinity)
+          : Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  source(
+                    Icons.photo_camera_outlined,
+                    loc.attachment_take_photo,
+                    AttachmentSource.camera,
+                    CameraMediaType.photo,
+                  ),
+                  source(
+                    Icons.videocam_outlined,
+                    loc.attachment_record_video,
+                    AttachmentSource.camera,
+                    CameraMediaType.video,
+                  ),
+                  source(
+                    Icons.photo_library_outlined,
+                    loc.from_gallery,
+                    AttachmentSource.gallery,
+                  ),
+                  source(
+                    Icons.attach_file_rounded,
+                    loc.from_files,
+                    AttachmentSource.files,
+                  ),
+                ],
+              ),
+            ),
+    );
   }
 
   Future<void> _handleAttachmentSelection(
     BuildContext context,
-    AttachmentSource source,
-  ) async {
+    AttachmentSource source, {
+    CameraMediaType? mediaType,
+  }) async {
     try {
-      CameraMediaType? mediaType;
-
-      // For camera, ask user to choose between photo and video
-      if (source == AttachmentSource.camera) {
-        mediaType = await _showCameraMediaTypePicker(context);
-        if (mediaType == null) return;
-      }
-
       final filePath = await _stateManager.addAttachment(
         source,
         cameraMediaType: mediaType,
@@ -242,35 +267,5 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
         ExpenseErrorHandler.showAttachmentAddError(context, e);
       }
     }
-  }
-
-  Future<CameraMediaType?> _showCameraMediaTypePicker(
-    BuildContext context,
-  ) async {
-    final loc = gen.AppLocalizations.of(context);
-
-    return showAppBottomSheet<CameraMediaType>(
-      context: context,
-      builder: (ctx) => CaravellaBottomSheetScaffold(
-        title: loc.from_camera,
-        child: SettingsGroup(
-          topSpacing: 0,
-          children: [
-            SettingsTile(
-              icon: Icons.photo_camera_outlined,
-              title: loc.attachment_take_photo,
-              chevron: false,
-              onTap: () => Navigator.of(ctx).pop(CameraMediaType.photo),
-            ),
-            SettingsTile(
-              icon: Icons.videocam_outlined,
-              title: loc.attachment_record_video,
-              chevron: false,
-              onTap: () => Navigator.of(ctx).pop(CameraMediaType.video),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

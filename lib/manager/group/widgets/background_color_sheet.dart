@@ -24,57 +24,74 @@ class ColorSheet extends StatelessWidget {
         child: Padding(padding: const EdgeInsets.all(16), child: child),
       ),
     );
-    return CaravellaBottomSheetScaffold(
-      title: loc.color_suggested_title,
-      subtitle: loc.color_suggested_subtitle,
-      child: Column(
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        card(
+          Builder(
+            builder: (ctx) {
+              final scheme = Theme.of(ctx).colorScheme;
+              final palette = ExpenseGroupColorPalette.getPaletteColors(scheme);
+              final firstRow = palette.take(6).toList();
+              final secondRow = palette.skip(6).take(6).toList();
+              return Column(
+                children: [
+                  _ColorPaletteRow(
+                    state: state,
+                    colors: firstRow,
+                    startIndex: 0,
+                  ),
+                  const SizedBox(height: 14),
+                  _ColorPaletteRow(
+                    state: state,
+                    colors: secondRow,
+                    startIndex: 6,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        SettingsGroup(
+          topSpacing: 12,
+          children: [
+            SettingsTile(
+              icon: Icons.casino_outlined,
+              title: loc.background_random_color,
+              subtitle: loc.color_random_subtitle,
+              chevron: false,
+              onTap: () {
+                state.setColor(_randomOtherIndex(state.color));
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+    // Opened from the background sheet, it is a second screen of it
+    // ([showSheetPage], which shows the title); on its own, a sheet.
+    if (isSheetPage(context)) {
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          card(
-            Builder(
-              builder: (ctx) {
-                final scheme = Theme.of(ctx).colorScheme;
-                final palette = ExpenseGroupColorPalette.getPaletteColors(
-                  scheme,
-                );
-                final firstRow = palette.take(6).toList();
-                final secondRow = palette.skip(6).take(6).toList();
-                return Column(
-                  children: [
-                    _ColorPaletteRow(
-                      state: state,
-                      colors: firstRow,
-                      startIndex: 0,
-                    ),
-                    const SizedBox(height: 14),
-                    _ColorPaletteRow(
-                      state: state,
-                      colors: secondRow,
-                      startIndex: 6,
-                    ),
-                  ],
-                );
-              },
-            ),
+          Text(
+            loc.color_suggested_subtitle,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: s.onSurfaceVariant),
           ),
-          SettingsGroup(
-            topSpacing: 12,
-            children: [
-              SettingsTile(
-                icon: Icons.casino_outlined,
-                title: loc.background_random_color,
-                subtitle: loc.color_random_subtitle,
-                chevron: false,
-                onTap: () {
-                  state.setColor(_randomOtherIndex(state.color));
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
+          const SizedBox(height: 12),
+          body,
         ],
-      ),
+      );
+    }
+    return CaravellaBottomSheetScaffold(
+      title: loc.color_suggested_title,
+      subtitle: loc.color_suggested_subtitle,
+      child: body,
     );
   }
 }

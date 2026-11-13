@@ -11,11 +11,17 @@ class VoiceCaptureBottomSheet extends StatefulWidget {
   final String? localeId;
   final void Function(Map<String, dynamic> result) onVoiceResult;
 
+  /// Shown inside the expense sheet (above its buttons) instead of as a
+  /// sheet of its own: done or cancelled, it calls this instead of closing
+  /// a route, and it has no sheet title or handle.
+  final VoidCallback? onClose;
+
   const VoiceCaptureBottomSheet({
     super.key,
     required this.participantNames,
     required this.onVoiceResult,
     this.localeId,
+    this.onClose,
   });
 
   /// Convenience method to show the bottom sheet.
@@ -112,7 +118,7 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
         if (!mounted) return;
 
         widget.onVoiceResult(parsed);
-        Navigator.of(context).pop();
+        _close();
       },
       onError: (error) {
         if (!mounted) return;
@@ -142,7 +148,16 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
 
   Future<void> _cancel() async {
     await _voiceService.cancel();
-    if (mounted) Navigator.of(context).pop();
+    if (mounted) _close();
+  }
+
+  void _close() {
+    final onClose = widget.onClose;
+    if (onClose != null) {
+      onClose();
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   String _statusText(gen.AppLocalizations gloc) {
@@ -168,39 +183,39 @@ class _VoiceCaptureBottomSheetState extends State<VoiceCaptureBottomSheet>
     final colorScheme = Theme.of(context).colorScheme;
     final hasError = _lastError != null;
 
-    return CaravellaBottomSheetScaffold(
-      title: gloc.voice_input_button,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 16),
-          Center(child: _buildMicButton(colorScheme, gloc)),
-          const SizedBox(height: 20),
-          Center(
-            child: Semantics(
-              liveRegion: true,
-              child: Text(
-                _statusText(gloc),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: hasError
-                      ? colorScheme.error
-                      : colorScheme.onSurfaceVariant,
-                  fontStyle: hasError ? FontStyle.normal : FontStyle.italic,
-                  fontWeight: hasError ? FontWeight.w600 : FontWeight.normal,
-                ),
-                textAlign: TextAlign.center,
+    final body = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 16),
+        Center(child: _buildMicButton(colorScheme, gloc)),
+        const SizedBox(height: 20),
+        Center(
+          child: Semantics(
+            liveRegion: true,
+            child: Text(
+              _statusText(gloc),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: hasError
+                    ? colorScheme.error
+                    : colorScheme.onSurfaceVariant,
+                fontStyle: hasError ? FontStyle.normal : FontStyle.italic,
+                fontWeight: hasError ? FontWeight.w600 : FontWeight.normal,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(onPressed: _cancel, child: Text(gloc.cancel)),
-            ],
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [TextButton(onPressed: _cancel, child: Text(gloc.cancel))],
+        ),
+      ],
+    );
+    if (widget.onClose != null) return body;
+    return CaravellaBottomSheetScaffold(
+      title: gloc.voice_input_button,
+      child: body,
     );
   }
 
