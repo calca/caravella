@@ -3,7 +3,7 @@ name: Android CI - Store Promote
 # Promotes a bundle already uploaded by "Android CI - Store" (e.g. on the
 # internal track) to another track, with release notes from
 # store/changelog/release-notes-<version>.xml, and syncs the store listing
-# full descriptions from store/metadata/listing_<lang>.md. Promoting to
+# titles and descriptions from store/metadata/listing_<lang>.md. Promoting to
 # production also publishes the draft GitHub release v<version> that
 # "Android CI - Store" prepared (prod APK + CHANGELOG notes).
 
@@ -27,9 +27,13 @@ on:
         type: boolean
         default: true
       update_listing:
-        description: 'Update store listing (descriptions, feature graphic, screenshots)'
+        description: 'Update store listing (title, descriptions, feature graphic, screenshots)'
         type: boolean
         default: true
+      titles_only:
+        description: 'With update_listing: change only the listing titles'
+        type: boolean
+        default: false
       dry_run:
         description: 'Validate only, do not commit the edit'
         type: boolean
@@ -67,6 +71,7 @@ jobs:
             --rollout "${{ github.event.inputs.rollout }}" \
             ${{ github.event.inputs.promote_release == 'false' && '--skip-release' || '' }} \
             ${{ github.event.inputs.update_listing == 'false' && '--skip-listing' || '' }} \
+            ${{ github.event.inputs.titles_only == 'true' && '--titles-only' || '' }} \
             ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
       - name: Publish the GitHub release
         if: >-
