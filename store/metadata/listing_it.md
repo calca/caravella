@@ -1,5 +1,5 @@
 ## Nome dell'App
-Caravella: un Gestionale Spese
+Caravella: Dividi le Spese
 
 ## Descrizione Breve
 Dividi le spese di gruppo, scopri chi deve a chi e sincronizza con gli amici.

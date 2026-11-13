@@ -1,5 +1,5 @@
 ## Nome do App
-Caravella: um Gestor de Despesas
+Caravella: Dividir Despesas
 
 ## Descrição Breve
 Divida despesas em grupo, veja quem deve a quem e sincronize com amigos.

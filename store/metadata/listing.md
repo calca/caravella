@@ -1,5 +1,5 @@
 ## App Name
-Caravella: an Expense Tracker
+Caravella: Split Expenses
 
 ## Short Description
 Modern group expense management app for trips, shared costs, and participants.

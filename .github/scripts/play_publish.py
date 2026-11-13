@@ -4,9 +4,9 @@ Uses the Google Play Developer API (androidpublisher v3) with the same
 service account as the "Android CI - Store" upload step. In one edit it:
   * sets the target track to the given version code with release notes
     parsed from store/changelog/release-notes-<version>.xml;
-  * updates the short and full description of every existing store listing
-    from store/metadata/listing_<lang>.md (the title is left untouched: the
-    repo titles exceed Play's 30-char limit in some languages);
+  * updates the title, short and full description of every existing store
+    listing from store/metadata/listing_<lang>.md (--titles-only updates
+    just the title and leaves descriptions and images alone);
   * replaces each listing's feature graphic with
     store/assets/feature-graphic/<lang>.png (1024x500) and its phone
     screenshots with store/screenshots/<lang>/*.jpg|png (sorted by name),
@@ -31,6 +31,7 @@ from googleapiclient.http import MediaFileUpload
 PACKAGE = "io.caravella.egm"
 SCOPES = ["https://www.googleapis.com/auth/androidpublisher"]
 MAX_NOTES = 500
+MAX_TITLE = 30
 MAX_SHORT_DESCRIPTION = 80
 MAX_FULL_DESCRIPTION = 4000
 
@@ -45,17 +46,19 @@ def parse_release_notes(path):
 
 
 def parse_listing(path):
-    # Files have three "## " sections: name, short description, full description.
+    # Files have three "## " sections: title, short description, full description.
     with open(path, encoding="utf-8") as f:
         sections = re.split(r"^## .*$", f.read(), flags=re.M)
     if len(sections) != 4:
         sys.exit(f"{path}: expected 3 '## ' sections, found {len(sections) - 1}")
-    short, full = sections[2].strip(), sections[3].strip()
+    title, short, full = sections[1].strip(), sections[2].strip(), sections[3].strip()
+    if not title or len(title) > MAX_TITLE:
+        sys.exit(f"{path}: title is {len(title)} chars (max {MAX_TITLE})")
     if not short or len(short) > MAX_SHORT_DESCRIPTION:
         sys.exit(f"{path}: short description is {len(short)} chars (max {MAX_SHORT_DESCRIPTION})")
     if not full or len(full) > MAX_FULL_DESCRIPTION:
         sys.exit(f"{path}: full description is {len(full)} chars (max {MAX_FULL_DESCRIPTION})")
-    return short, full
+    return title, short, full
 
 
 def listing_file_for(language):
@@ -92,6 +95,8 @@ def main():
     parser.add_argument("--rollout", type=float, default=1.0,
                         help="User fraction (0-1]; below 1 creates a staged rollout")
     parser.add_argument("--skip-listing", action="store_true")
+    parser.add_argument("--titles-only", action="store_true",
+                        help="Update only the listing titles (no descriptions or images)")
     parser.add_argument("--skip-release", action="store_true",
                         help="Leave the track untouched (listing-only update)")
     parser.add_argument("--dry-run", action="store_true",
@@ -143,12 +148,18 @@ def main():
             if not os.path.exists(path):
                 print(f"  no {path}, keeping {listing['language']} listing as is")
                 continue
-            short, full = parse_listing(path)
+            title, short, full = parse_listing(path)
+            if args.titles_only:
+                edits.listings().patch(packageName=PACKAGE, editId=edit_id,
+                                       language=listing["language"],
+                                       body={"title": title}).execute()
+                print(f"  listing {listing['language']}: title \"{title}\" from {path}")
+                continue
             edits.listings().patch(packageName=PACKAGE, editId=edit_id,
                                    language=listing["language"],
-                                   body={"shortDescription": short,
+                                   body={"title": title, "shortDescription": short,
                                          "fullDescription": full}).execute()
-            print(f"  listing {listing['language']}: descriptions from {path}")
+            print(f"  listing {listing['language']}: title and descriptions from {path}")
 
             graphic = feature_graphic_for(listing["language"])
             if os.path.exists(graphic):
