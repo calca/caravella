@@ -1,5 +1,5 @@
 ## App Name
-Caravella: an Expense Tracker
+Caravella: Split Expenses
 
 ## Short Description
 Split group expenses, see who owes whom and sync with friends. No account.
