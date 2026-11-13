@@ -5,15 +5,15 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import '../../details/pages/expense_group_detail_page.dart';
 import '../../details/pages/tabs/usecase/date_range_formatter.dart';
+import '../../group/group_type/group_type_localization.dart';
 import 'group_options.dart';
 
-/// Card of the Groups page: a grid tile, or the wide card used for the
-/// favorite group at the top. What it shows is a [GroupCardFace].
+/// Card of the Groups page, a grid tile; the favorite has a heart on its
+/// chip. What it shows is a [GroupCardFace].
 ///
 /// Tap opens the group; long press opens [showGroupOptionsSheet].
 class GroupPhotoCard extends StatelessWidget {
   final ExpenseGroup group;
-  final bool wide;
   final Future<void> Function(String groupId, bool archived) onArchiveToggle;
   final VoidCallback? onChanged;
 
@@ -22,20 +22,16 @@ class GroupPhotoCard extends StatelessWidget {
     required this.group,
     required this.onArchiveToggle,
     this.onChanged,
-    this.wide = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final s = Theme.of(context).colorScheme;
     final gloc = gen.AppLocalizations.of(context);
-    final radius = GroupCardFace.borderRadiusFor(wide: wide);
+    final radius = GroupCardFace.borderRadiusFor(wide: false);
 
-    final Color? color = group.color == null
-        ? null
-        : ExpenseGroupColorPalette.isLegacyColorValue(group.color)
-        ? Color(group.color!)
-        : ExpenseGroupColorPalette.resolveColor(group.color, s);
+    final Color? color = GroupLook.colorOf(group, s);
+    final type = group.groupType ?? ExpenseGroupType.other;
 
     final people = gloc.participant_count(group.participants.length);
     final dates = (group.startDate != null || group.endDate != null)
@@ -85,14 +81,14 @@ class GroupPhotoCard extends StatelessWidget {
             onLongPress: options,
             child: GroupCardFace(
               title: group.title,
-              subtitle: !wide || dates == null ? people : '$dates · $people',
+              subtitle: people,
               total: total,
               currency: group.currency,
               photoPath: group.file,
               color: color,
-              icon: (group.groupType ?? ExpenseGroupType.other).icon,
-              wide: wide,
-              favoriteLabel: wide ? gloc.pin : null,
+              icon: type.icon,
+              typeLabel: GroupTypeLocalization.typeName(gloc, type),
+              favorite: group.pinned,
             ),
           ),
         ),

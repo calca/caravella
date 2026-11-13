@@ -156,56 +156,77 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
           },
           child: Column(
             key: ValueKey<String>(shown.map((e) => e.id).join('-')),
-            children: shown.asMap().entries.map((entry) {
-              final index = entry.key;
-              final e = entry.value;
-              return TweenAnimationBuilder<double>(
-                duration: Duration(milliseconds: 400 + (index * 100)),
-                tween: Tween<double>(begin: 0.0, end: 1.0),
-                curve: Curves.easeOutCubic,
-                builder: (context, value, child) {
-                  return Opacity(
-                    opacity: value,
-                    child: Transform.translate(
-                      offset: Offset(0, 20 * (1 - value)),
-                      child: child,
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(bottom: 6.0),
-                  child: ExpenseAmountCard(
-                    title: e.name ?? '',
-                    amount: e.amount ?? 0,
-                    checked: true,
-                    paidBy: e.paidBy,
-                    category: e.category.name,
-                    date: e.date,
-                    showDate: false,
-                    compact: true,
-                    fullWidth: true,
-                    currency: widget.group.currency,
-                    secondaryAmount: switch (e.original) {
-                      final o? => CurrencyDisplay.formatLocalizedText(
-                        o.amount,
-                        o.symbol,
-                        Localizations.localeOf(ctx),
-                      ),
-                      null => null,
-                    },
-                    onTap: () {
-                      Navigator.of(ctx).push(
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              ExpenseGroupDetailPage(trip: widget.group),
+            // Always room for [count] rows: the first card on Home fills
+            // what's left, so it keeps its height from the first expense
+            // to the third.
+            children:
+                [
+                  ...shown,
+                  if (shown.isNotEmpty)
+                    for (var i = shown.length; i < widget.count; i++)
+                      shown.first,
+                ].asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final e = entry.value;
+                  final row = TweenAnimationBuilder<double>(
+                    duration: Duration(milliseconds: 400 + (index * 100)),
+                    tween: Tween<double>(begin: 0.0, end: 1.0),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 20 * (1 - value)),
+                          child: child,
                         ),
                       );
                     },
-                  ),
-                ),
-              );
-            }).toList(),
+                    child: Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 6.0),
+                      child: ExpenseAmountCard(
+                        title: e.name ?? '',
+                        amount: e.amount ?? 0,
+                        checked: true,
+                        paidBy: e.paidBy,
+                        category: e.category.name,
+                        date: e.date,
+                        showDate: false,
+                        compact: true,
+                        fullWidth: true,
+                        currency: widget.group.currency,
+                        secondaryAmount: switch (e.original) {
+                          final o? => CurrencyDisplay.formatLocalizedText(
+                            o.amount,
+                            o.symbol,
+                            Localizations.localeOf(ctx),
+                          ),
+                          null => null,
+                        },
+                        onTap: () {
+                          Navigator.of(ctx).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  ExpenseGroupDetailPage(trip: widget.group),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                  if (index < shown.length) return row;
+                  return ExcludeSemantics(
+                    child: IgnorePointer(
+                      child: Visibility(
+                        visible: false,
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: row,
+                      ),
+                    ),
+                  );
+                }).toList(),
           ),
         ),
       ],

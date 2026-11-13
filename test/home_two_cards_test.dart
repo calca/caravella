@@ -2,6 +2,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/home/cards/widgets/group_card.dart';
+import 'package:io_caravella_egm/home/cards/widgets/group_card_content.dart';
 import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
@@ -96,15 +97,34 @@ void main() {
     expect(pushed.length, routesBefore + 1);
   });
 
-  testWidgets('first card: the spending wave from the first day to today', (
+  testWidgets('first card: Total | Today, no chart (it is in Statistics)', (
     tester,
   ) async {
     await pump(
       tester,
       groupWith([expense('Ferry', 2, 86), expense('Soup', 0, 54.5)]),
     );
-    expect(find.byType(SpendingWave), findsOneWidget);
-    expect(find.text('Today'), findsOneWidget);
+    expect(find.byType(SpendingWave), findsNothing);
+    expect(find.byType(FigureRow), findsOneWidget);
+    expect(find.text('Total'), findsOneWidget);
+  });
+
+  testWidgets('the cards keep their height from one expense to three', (
+    tester,
+  ) async {
+    Future<double> firstCardHeight(List<ExpenseDetails> expenses) async {
+      await pump(tester, groupWith(expenses));
+      await tester.pumpAndSettle();
+      return tester.getSize(find.byType(GroupCardContent)).height;
+    }
+
+    final one = await firstCardHeight([expense('Soup', 0, 54.5)]);
+    final three = await firstCardHeight([
+      expense('Ferry', 2, 86),
+      expense('Cabin', 1, 312),
+      expense('Soup', 0, 54.5),
+    ]);
+    expect(one, three);
   });
 
   testWidgets('one day of spending: no wave', (tester) async {

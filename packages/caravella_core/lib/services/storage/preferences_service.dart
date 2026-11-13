@@ -10,6 +10,7 @@ abstract class _PreferenceKeys {
 
   // Theme
   static const String themeMode = 'theme_mode';
+  static const String photoTones = 'group_photo_tones';
 
   // Security
   static const String flagSecure = 'flag_secure_enabled';
@@ -248,6 +249,24 @@ class ThemePreferences {
   /// Set the user's selected theme mode
   Future<void> set(String mode) async {
     await _prefs.setString(_PreferenceKeys.themeMode, mode);
+  }
+
+  /// The tone of each group photo, measured once (photo key → ARGB), so
+  /// the group cards show it from the first frame.
+  Map<String, int> getPhotoTones() {
+    final raw = _prefs.getString(_PreferenceKeys.photoTones);
+    if (raw == null) return {};
+    try {
+      return (jsonDecode(raw) as Map<String, dynamic>).map(
+        (k, v) => MapEntry(k, v as int),
+      );
+    } catch (_) {
+      return {};
+    }
+  }
+
+  Future<void> setPhotoTones(Map<String, int> tones) async {
+    await _prefs.setString(_PreferenceKeys.photoTones, jsonEncode(tones));
   }
 }
 

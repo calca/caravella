@@ -14,12 +14,18 @@ class BudgetRing extends StatelessWidget {
   final double size;
   final double strokeWidth;
 
+  /// The ring's color within the budget, for a ring on a group's tint (the
+  /// tint's text color; its track is a faint version of it). Over the
+  /// budget it is still muted amber.
+  final Color? color;
+
   const BudgetRing({
     super.key,
     required this.fraction,
     this.over = false,
     this.size = 30,
     this.strokeWidth = 3.5,
+    this.color,
   });
 
   @override
@@ -31,8 +37,10 @@ class BudgetRing extends StatelessWidget {
         child: CustomPaint(
           painter: _RingPainter(
             fraction: over ? 1 : fraction.clamp(0.0, 1.0),
-            color: over ? s.budgetOver : s.budgetFill,
-            track: over ? s.budgetOver : s.budgetTrack,
+            color: over ? s.budgetOver : (color ?? s.budgetFill),
+            track: over
+                ? s.budgetOver
+                : (color?.withValues(alpha: 0.22) ?? s.budgetTrack),
             strokeWidth: strokeWidth,
           ),
         ),
@@ -56,9 +64,12 @@ class _RingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = Rect.fromLTWH(0, 0, size.width, size.height).deflate(
-      strokeWidth / 2 + size.width * 0.05,
-    );
+    final rect = Rect.fromLTWH(
+      0,
+      0,
+      size.width,
+      size.height,
+    ).deflate(strokeWidth / 2 + size.width * 0.05);
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;

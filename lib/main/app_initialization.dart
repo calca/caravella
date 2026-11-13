@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -6,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_gms/caravella_gms.dart';
 
 import '../settings/backup/drive_backup_service.dart';
@@ -179,8 +181,25 @@ class AppInitialization {
     configureSystemUI();
     configureImageCache();
     await initFlagSecure();
+    // Photo tones of the group cards, measured on earlier launches.
+    PhotoTone.seed(PreferencesService.instance.theme.getPhotoTones());
+    PhotoTone.onChanged = PreferencesService.instance.theme.setPhotoTones;
     await initStorage();
+    warmPhotoTones();
     scheduleWeeklyDriveBackup();
+  }
+
+  /// Tones are measured when a photo is set; this catches the photos set
+  /// before that (once each) and forgets unused ones, in the background.
+  static void warmPhotoTones() {
+    unawaited(() async {
+      try {
+        final groups = await ExpenseGroupStorageV2.getAllGroups();
+        await PhotoTone.warmUp([for (final g in groups) ?GroupLook.photoOf(g)]);
+      } catch (e) {
+        LoggerService.warning('Photo tones not warmed: $e', name: 'ui.card');
+      }
+    }());
   }
 
   /// The weekly Google Drive backup, if the user turned it on: shortly
