@@ -24,7 +24,7 @@ Future<GroupCurrencyChoice?> showGroupCurrencySheet(
   required Map<String, String> currency,
   required SecondCurrency? second,
 }) {
-  return showModalBottomSheet<GroupCurrencyChoice>(
+  return showAppBottomSheet<GroupCurrencyChoice>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
@@ -90,7 +90,7 @@ class _GroupCurrencySheetState extends State<GroupCurrencySheet> {
   bool get _canSave => _second == null || _rateValue != null;
 
   Future<Map<String, String>?> _pick(String? selectedCode) =>
-      showModalBottomSheet<Map<String, String>>(
+      showAppBottomSheet<Map<String, String>>(
         context: context,
         isScrollControlled: true,
         useSafeArea: true,

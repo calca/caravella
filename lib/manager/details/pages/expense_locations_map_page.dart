@@ -111,7 +111,7 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
   }
 
   void _showExpenseDetails(List<ExpenseDetails> expenses) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => ExpenseMapDetailSheet(

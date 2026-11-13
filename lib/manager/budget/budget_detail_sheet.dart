@@ -22,7 +22,7 @@ Future<void> showBudgetDetailSheet(
   required ExpenseGroup group,
   required VoidCallback onChangeBudget,
 }) async {
-  final change = await showModalBottomSheet<bool>(
+  final change = await showAppBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,

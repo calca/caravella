@@ -51,7 +51,7 @@ class AddExpenseController {
     // the current group: the sheet closing underneath must not clear it.
     var expanded = false;
 
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
       isScrollControlled: true,
       // No backgroundColor: the theme's modalBackgroundColor (the same
@@ -60,7 +60,6 @@ class AddExpenseController {
       // Taller now that the details are always there: keep it below the
       // status bar.
       useSafeArea: true,
-      sheetAnimationStyle: AppMotion.sheet,
       builder: (context) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;

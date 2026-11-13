@@ -42,7 +42,7 @@ void showGroupTypeSelectorSheet(BuildContext context) {
     return null;
   }
 
-  showModalBottomSheet(
+  showAppBottomSheet(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,

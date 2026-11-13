@@ -182,7 +182,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   }
 
   void _showLocationDetails() {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
       builder: (context) => _LocationDetailsSheet(
         location: _currentLocation!,

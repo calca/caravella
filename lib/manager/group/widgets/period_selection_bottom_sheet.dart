@@ -474,7 +474,7 @@ Future<void> showPeriodSelectionBottomSheet({
   required void Function(DateTime? startDate, DateTime? endDate)
   onSelectionChanged,
 }) async {
-  return showModalBottomSheet<void>(
+  return showAppBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,

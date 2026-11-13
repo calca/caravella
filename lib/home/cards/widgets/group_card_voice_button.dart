@@ -167,7 +167,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
     _level.value = 0;
     final navigator = Navigator.of(context);
     _panelNavigator = navigator;
-    showModalBottomSheet<void>(
+    showAppBottomSheet<void>(
       context: context,
       showDragHandle: true,
       builder: (_) => _ListeningPanel(

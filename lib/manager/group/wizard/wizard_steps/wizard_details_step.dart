@@ -119,7 +119,7 @@ class WizardDetailsPills extends StatelessWidget {
       );
 
   Future<void> _pickCurrency(BuildContext context, GroupFormState state) async {
-    final selected = await showModalBottomSheet<Map<String, String>>(
+    final selected = await showAppBottomSheet<Map<String, String>>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,

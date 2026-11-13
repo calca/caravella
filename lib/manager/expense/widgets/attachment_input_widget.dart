@@ -181,7 +181,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
     // Full: the pill is gone and the limit shows in its place.
     if (!_stateManager.canAddMore) return;
 
-    final source = await showModalBottomSheet<AttachmentSource>(
+    final source = await showAppBottomSheet<AttachmentSource>(
       context: context,
       builder: (context) => CaravellaBottomSheetScaffold(
         title: loc.attachment_source,
@@ -249,7 +249,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
   ) async {
     final loc = gen.AppLocalizations.of(context);
 
-    return showModalBottomSheet<CameraMediaType>(
+    return showAppBottomSheet<CameraMediaType>(
       context: context,
       builder: (ctx) => CaravellaBottomSheetScaffold(
         title: loc.from_camera,

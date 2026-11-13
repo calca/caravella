@@ -194,7 +194,7 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
   Future<void> _openFilters() async {
     _searchFocusNode.unfocus();
     final gloc = gen.AppLocalizations.of(context);
-    await showModalBottomSheet<void>(
+    await showAppBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,

@@ -114,7 +114,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
   }
 
   void _invite(BuildContext context, SyncOrchestrator orchestrator) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (_) => InviteSheet(

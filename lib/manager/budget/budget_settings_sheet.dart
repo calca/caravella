@@ -35,7 +35,7 @@ Future<BudgetSheetResult?> showBudgetSettingsSheet(
   required String currency,
   ExpenseGroupType? groupType,
 }) {
-  return showModalBottomSheet<BudgetSheetResult>(
+  return showAppBottomSheet<BudgetSheetResult>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,

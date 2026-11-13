@@ -25,7 +25,7 @@ class VoiceCaptureBottomSheet extends StatefulWidget {
     required void Function(Map<String, dynamic>) onVoiceResult,
     String? localeId,
   }) {
-    return showModalBottomSheet<void>(
+    return showAppBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (_) => VoiceCaptureBottomSheet(

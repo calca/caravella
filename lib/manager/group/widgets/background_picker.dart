@@ -160,7 +160,7 @@ class BackgroundPicker extends StatelessWidget {
 void showBackgroundPickerSheet(BuildContext context) {
   final state = context.read<GroupFormState>();
   final controller = context.read<GroupFormController>();
-  showModalBottomSheet(
+  showAppBottomSheet(
     context: context,
     builder: (ctx) => _BackgroundSheet(
       state: state,
@@ -314,7 +314,7 @@ class _BackgroundSheet extends StatelessWidget {
         onTap: () {
           final sheetNav = Navigator.of(context);
           if (sheetNav.mounted) sheetNav.pop();
-          showModalBottomSheet(
+          showAppBottomSheet(
             context: parentContext,
             builder: (_) => ColorSheet(state: state),
           );
