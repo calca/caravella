@@ -120,7 +120,7 @@ class _DriveBackupSectionState extends State<DriveBackupSection> {
     if (!mounted || entries == null) return;
     setState(() => _noBackups = entries!.isEmpty);
     if (entries!.isEmpty) return;
-    final picked = await showModalBottomSheet<CloudBackupEntry>(
+    final picked = await showAppBottomSheet<CloudBackupEntry>(
       context: context,
       builder: (context) => CaravellaBottomSheetScaffold(
         title: loc.drive_backup_restore,

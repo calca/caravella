@@ -44,6 +44,8 @@ export 'widgets/round_back_button.dart';
 export 'widgets/material3_dialog.dart';
 export 'widgets/no_expense.dart';
 export 'widgets/section_header.dart';
+export 'widgets/app_bottom_sheet.dart';
+export 'widgets/sheet_pager.dart';
 export 'widgets/selection_bottom_sheet.dart';
 
 // Chart widgets

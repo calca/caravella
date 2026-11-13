@@ -385,7 +385,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   Future<void> _openFilters() async {
     _unfocus();
     final gloc = gen.AppLocalizations.of(context);
-    await showModalBottomSheet<void>(
+    await showAppBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,

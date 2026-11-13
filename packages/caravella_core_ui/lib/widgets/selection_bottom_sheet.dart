@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
+import 'app_bottom_sheet.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'app_toast.dart';
 import '../themes/form_theme.dart';
@@ -28,7 +29,7 @@ Future<T?> showSelectionBottomSheet<T>({
   String? addErrorMessage,
   bool autoStartAdd = false,
 }) async {
-  return showModalBottomSheet<T>(
+  return showAppBottomSheet<T>(
     context: context,
     isScrollControlled: true,
     builder: (ctx) => _SelectionSheet<T>(

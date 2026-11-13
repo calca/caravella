@@ -15,7 +15,7 @@ import '../export/markdown_exporter.dart';
 /// each with a "download to a chosen directory" and a "share" action),
 /// wiring each option to the matching exporter, file IO, and a result toast.
 void showExpenseExportOptionsSheet(BuildContext context, ExpenseGroup? trip) {
-  showModalBottomSheet(
+  showAppBottomSheet(
     context: context,
     isScrollControlled: true,
     builder: (sheetCtx) => ExportOptionsSheet(

@@ -14,7 +14,7 @@ Future<bool?> showUpdateRecommendationSheet(
   Widget Function(BuildContext, {required String title, required Widget child})
   bottomSheetBuilder,
 ) async {
-  return showModalBottomSheet<bool>(
+  return showAppBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     builder: (context) => bottomSheetBuilder(
@@ -60,7 +60,7 @@ Future<void> _promptInstallReadyUpdate(
   Widget Function(BuildContext, {required String title, required Widget child})
   bottomSheetBuilder,
 ) async {
-  final shouldInstall = await showModalBottomSheet<bool>(
+  final shouldInstall = await showAppBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     builder: (context) => bottomSheetBuilder(

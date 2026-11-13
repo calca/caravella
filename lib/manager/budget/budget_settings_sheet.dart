@@ -35,7 +35,7 @@ Future<BudgetSheetResult?> showBudgetSettingsSheet(
   required String currency,
   ExpenseGroupType? groupType,
 }) {
-  return showModalBottomSheet<BudgetSheetResult>(
+  return showAppBottomSheet<BudgetSheetResult>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
@@ -94,9 +94,10 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
   void _save() {
     final value = _value;
     if (value == null) return;
-    Navigator.of(
+    closeSheetPage<BudgetSheetResult>(
       context,
-    ).pop(BudgetSaved(GroupBudget(amount: value, period: _period)));
+      BudgetSaved(GroupBudget(amount: value, period: _period)),
+    );
   }
 
   @override
@@ -110,79 +111,103 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
       BudgetPeriod.weekly => gloc.budget_amount_weekly,
       BudgetPeriod.daily => gloc.budget_amount_daily,
     };
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      child: CaravellaBottomSheetScaffold(
-        title: gloc.budget,
-        subtitle: gloc.budget_sheet_description,
-        scrollable: true,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    // A second screen of the budget sheet ([showSheetPage]) has its title
+    // there; opened on its own (group settings), it is a sheet.
+    final inPage = isSheetPage(context);
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: PillSegmentedControl(
+            labels: [for (final p in periods) budgetPeriodName(gloc, p)],
+            selectedIndex: periods.indexOf(_period),
+            onChanged: (i) => setState(() => _period = periods[i]),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Text(
+          amountLabel,
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 8),
+        AmountField(
+          controller: _amount,
+          currency: widget.currency,
+          label: amountLabel,
+          textInputAction: TextInputAction.done,
+          onSubmitted: _save,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          gloc.budget_currency_hint,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.outline,
+          ),
+        ),
+        const SizedBox(height: 24),
+        Row(
           children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: PillSegmentedControl(
-                labels: [for (final p in periods) budgetPeriodName(gloc, p)],
-                selectedIndex: periods.indexOf(_period),
-                onChanged: (i) => setState(() => _period = periods[i]),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              amountLabel,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-            AmountField(
-              controller: _amount,
-              currency: widget.currency,
-              label: amountLabel,
-              textInputAction: TextInputAction.done,
-              onSubmitted: _save,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              gloc.budget_currency_hint,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.outline,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                if (widget.budget != null) ...[
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () =>
-                          Navigator.of(context).pop(const BudgetRemoved()),
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(52),
-                        shape: const StadiumBorder(),
-                      ),
-                      child: Text(gloc.budget_remove),
-                    ),
+            if (widget.budget != null) ...[
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => closeSheetPage<BudgetSheetResult>(
+                    context,
+                    const BudgetRemoved(),
                   ),
-                  const SizedBox(width: 12),
-                ],
-                Expanded(
-                  child: FilledButton(
-                    onPressed: _value == null ? null : _save,
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(52),
-                      shape: const StadiumBorder(),
-                      elevation: 0,
-                    ),
-                    child: Text(gloc.save),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(52),
+                    shape: const StadiumBorder(),
                   ),
+                  child: Text(gloc.budget_remove),
                 ),
-              ],
+              ),
+              const SizedBox(width: 12),
+            ],
+            Expanded(
+              child: FilledButton(
+                onPressed: _value == null ? null : _save,
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  shape: const StadiumBorder(),
+                  elevation: 0,
+                ),
+                child: Text(gloc.save),
+              ),
             ),
           ],
         ),
+      ],
+    );
+    return Padding(
+      // A second screen is already kept above the keyboard.
+      padding: EdgeInsets.only(
+        bottom: inPage ? 0 : MediaQuery.viewInsetsOf(context).bottom,
       ),
+      child: inPage
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  gloc.budget_sheet_description,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                body,
+              ],
+            )
+          : CaravellaBottomSheetScaffold(
+              title: gloc.budget,
+              subtitle: gloc.budget_sheet_description,
+              scrollable: true,
+              child: body,
+            ),
     );
   }
 }

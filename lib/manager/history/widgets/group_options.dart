@@ -18,7 +18,7 @@ void showGroupOptionsSheet(
 }) {
   HapticFeedback.mediumImpact();
 
-  showModalBottomSheet(
+  showAppBottomSheet(
     context: context,
     isScrollControlled: true,
     builder: (sheetCtx) => HistoryOptionsSheet(

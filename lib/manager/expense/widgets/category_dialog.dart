@@ -6,7 +6,7 @@ class CategoryDialog {
   static Future<String?> show({required BuildContext context}) async {
     final controller = TextEditingController();
 
-    return showModalBottomSheet<String>(
+    return showAppBottomSheet<String>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => _CategoryBottomSheet(controller: controller),

@@ -160,12 +160,15 @@ class BackgroundPicker extends StatelessWidget {
 void showBackgroundPickerSheet(BuildContext context) {
   final state = context.read<GroupFormState>();
   final controller = context.read<GroupFormController>();
-  showModalBottomSheet(
+  showAppBottomSheet(
     context: context,
-    builder: (ctx) => _BackgroundSheet(
-      state: state,
-      controller: controller,
-      parentContext: context,
+    // Color opens inside this sheet ([SheetPager]).
+    builder: (ctx) => SheetPager(
+      child: _BackgroundSheet(
+        state: state,
+        controller: controller,
+        parentContext: context,
+      ),
     ),
   );
 }
@@ -311,14 +314,11 @@ class _BackgroundSheet extends StatelessWidget {
         title: loc.color,
         subtitle: _defaultColorNote(loc),
         chevron: false,
-        onTap: () {
-          final sheetNav = Navigator.of(context);
-          if (sheetNav.mounted) sheetNav.pop();
-          showModalBottomSheet(
-            context: parentContext,
-            builder: (_) => ColorSheet(state: state),
-          );
-        },
+        onTap: () => showSheetPage<void>(
+          context,
+          title: loc.color_suggested_title,
+          builder: (_) => ColorSheet(state: state),
+        ),
       ),
     ];
     final remove = [

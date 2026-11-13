@@ -21,7 +21,7 @@ Future<void> showPairedDeviceSheet(
   required List<String> groupTitles,
   String? groupId,
   String? groupTitle,
-}) => showModalBottomSheet<void>(
+}) => showAppBottomSheet<void>(
   context: context,
   isScrollControlled: true,
   builder: (_) => PairedDeviceSheet(

@@ -191,25 +191,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     await showBudgetDetailSheet(
       context,
       group: trip,
-      onChangeBudget: _changeBudget,
+      onBudgetResult: _applyBudget,
     );
   }
 
-  Future<void> _changeBudget() async {
+  /// A budget changed or removed from the budget sheet: saved at once.
+  Future<void> _applyBudget(BudgetSheetResult result) async {
     final trip = _trip;
     if (trip == null || !mounted) return;
-    final result = await showBudgetSettingsSheet(
-      context,
-      budget: trip.budget,
-      currency: trip.currency,
-      groupType: trip.groupType,
-    );
     final budget = switch (result) {
       BudgetSaved(:final budget) => budget,
       BudgetRemoved() => null,
-      null => trip.budget,
     };
-    if (result == null || budget == trip.budget) return;
+    if (budget == trip.budget) return;
     setState(() => _trip = trip.copyWith(budget: budget));
     final saved = await ExpenseGroupStorageV2.updateGroupBudget(
       trip.id,

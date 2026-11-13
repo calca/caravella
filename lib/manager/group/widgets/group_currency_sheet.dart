@@ -24,11 +24,14 @@ Future<GroupCurrencyChoice?> showGroupCurrencySheet(
   required Map<String, String> currency,
   required SecondCurrency? second,
 }) {
-  return showModalBottomSheet<GroupCurrencyChoice>(
+  return showAppBottomSheet<GroupCurrencyChoice>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    builder: (_) => GroupCurrencySheet(currency: currency, second: second),
+    // The currency list opens inside this sheet ([SheetPager]).
+    builder: (_) => SheetPager(
+      child: GroupCurrencySheet(currency: currency, second: second),
+    ),
   );
 }
 
@@ -90,10 +93,9 @@ class _GroupCurrencySheetState extends State<GroupCurrencySheet> {
   bool get _canSave => _second == null || _rateValue != null;
 
   Future<Map<String, String>?> _pick(String? selectedCode) =>
-      showModalBottomSheet<Map<String, String>>(
-        context: context,
-        isScrollControlled: true,
-        useSafeArea: true,
+      showSheetPage<Map<String, String>>(
+        context,
+        title: gen.AppLocalizations.of(context).select_currency,
         builder: (_) => CurrencySelectorSheet(selectedCode: selectedCode),
       );
 

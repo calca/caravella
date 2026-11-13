@@ -195,7 +195,7 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
   }
 
   Future<void> _previewPhoto(UnsplashPhoto photo) async {
-    final confirmed = await showModalBottomSheet<bool>(
+    final confirmed = await showAppBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
