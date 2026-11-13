@@ -26,6 +26,8 @@ export 'widgets/caravella_tab_bar.dart';
 export 'widgets/chip_selector_row.dart';
 export 'widgets/currency_display.dart';
 export 'widgets/group_card_face.dart';
+export 'widgets/group_look.dart';
+export 'widgets/figure_row.dart';
 export 'widgets/empty_state_card.dart';
 export 'widgets/empty_state_view.dart';
 export 'widgets/expense_amount_card.dart';

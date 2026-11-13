@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_gms/caravella_gms.dart';
 
 import '../settings/backup/drive_backup_service.dart';
@@ -179,6 +180,10 @@ class AppInitialization {
     configureSystemUI();
     configureImageCache();
     await initFlagSecure();
+    // Settings › Appearance › Card style (A/B test of the group cards).
+    GroupCardStyle.current.value = GroupCardStyle.parse(
+      PreferencesService.instance.theme.getGroupCardStyle(),
+    );
     await initStorage();
     scheduleWeeklyDriveBackup();
   }

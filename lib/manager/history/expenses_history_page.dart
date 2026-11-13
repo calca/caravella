@@ -111,16 +111,20 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
     }
   }
 
-  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {
-    // Sort: pinned groups first, then the rest
-    final filtered = List<ExpenseGroup>.from(trips);
-    filtered.sort((a, b) {
-      if (a.pinned != b.pinned) {
-        return a.pinned ? -1 : 1;
-      }
-      return 0;
-    });
-    return filtered;
+  /// Most recent activity first (the last expense, or when the group was
+  /// created or changed): the favorite has no place of its own, Home
+  /// already shows it.
+  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) =>
+      List<ExpenseGroup>.from(trips)
+        ..sort((a, b) => lastActivityOf(b).compareTo(lastActivityOf(a)));
+
+  @visibleForTesting
+  static DateTime lastActivityOf(ExpenseGroup group) {
+    var latest = group.timestamp;
+    for (final e in group.expenses) {
+      if (e.date.isAfter(latest)) latest = e.date;
+    }
+    return latest;
   }
 
   void _onScroll() {
@@ -176,8 +180,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
     await _loadTrips();
   }
 
-  /// Favorite group as a wide card on top (active groups only), the others
-  /// as a two-column grid of photo tiles.
+  /// A two-column grid of group tiles, all the same size.
   List<Widget> _buildGroupSlivers(List<ExpenseGroup> trips, double bottom) {
     if (_loading) {
       return const [
@@ -206,43 +209,25 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
       ];
     }
 
-    final favorite = _showArchived
-        ? null
-        : trips.where((t) => t.pinned).firstOrNull;
-    final others = trips.where((t) => t != favorite).toList();
     return [
-      if (favorite != null)
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
-          sliver: SliverToBoxAdapter(
-            child: SizedBox(
-              // Room for the photo above the text it melts into.
-              height: 196,
-              child: GroupPhotoCard(
-                group: favorite,
-                wide: true,
-                onArchiveToggle: _onArchiveToggle,
-                onChanged: _loadTrips,
-              ),
-            ),
-          ),
-        ),
       SliverPadding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, bottom),
         sliver: SliverGrid(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            mainAxisSpacing: 14,
-            crossAxisSpacing: 14,
-            childAspectRatio: 0.82,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            mainAxisExtent: GroupCardFace.tileHeight(
+              MediaQuery.textScalerOf(context),
+            ),
           ),
           delegate: SliverChildBuilderDelegate(
             (context, i) => GroupPhotoCard(
-              group: others[i],
+              group: trips[i],
               onArchiveToggle: _onArchiveToggle,
               onChanged: _loadTrips,
             ),
-            childCount: others.length,
+            childCount: trips.length,
           ),
         ),
       ),

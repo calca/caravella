@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -7,73 +5,145 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../sync/group_sync_badge.dart';
 import '../../budget/budget_detail_sheet.dart';
+import '../../group/group_type/group_type_localization.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
+import 'group_detail_top_bar.dart';
 
-/// The group's photo or color behind the top of its page, melting into
-/// [pageColor] at the bottom. A photo (as on the Home and Groups cards) is in
-/// full color at the top and melts into the page color, where dates, title
-/// and figure cards keep the theme's colors; a color does the same
-/// ([ColorVeil]).
+/// The top of the group page, under the round buttons of
+/// [GroupDetailTopBar], following [GroupCardStyle.current]:
+/// - **A**: the photo, the color or neutral grey in a rounded cover (16 from
+///   the edges) with the type chip at its bottom and the big faint type icon
+///   under the buttons; the [header] below it on the page color;
+/// - **B**: a block in the group's tint (under a photo, the photo's own
+///   tone) from the top of the screen, with the chip and the [header] on it.
 class GroupHeaderBand extends StatelessWidget {
   final ExpenseGroup group;
-  final Color pageColor;
+
+  /// The title block, in the given text color.
+  final Widget Function(Color foreground) header;
+
+  final double topInset;
+
+  /// Overrides [GroupCardStyle.current] (tests).
+  final GroupCardStyle? style;
 
   const GroupHeaderBand({
     super.key,
     required this.group,
-    required this.pageColor,
+    required this.header,
+    required this.topInset,
+    this.style,
   });
 
   /// The group's resolved color, when it has one and no photo.
-  static Color? colorOf(ExpenseGroup group, ColorScheme s) {
-    if (photoOf(group) != null || group.color == null) return null;
-    return ExpenseGroupColorPalette.isLegacyColorValue(group.color)
-        ? Color(group.color!)
-        : ExpenseGroupColorPalette.resolveColor(group.color, s);
-  }
+  static Color? colorOf(ExpenseGroup group, ColorScheme s) =>
+      photoOf(group) != null ? null : GroupLook.colorOf(group, s);
 
-  static String? photoOf(ExpenseGroup group) {
-    final file = group.file;
-    return file != null && file.isNotEmpty && File(file).existsSync()
-        ? file
-        : null;
-  }
+  static String? photoOf(ExpenseGroup group) => GroupLook.photoOf(group);
 
-  /// Extra room above the title with a photo or a color, so it shows.
-  static const double photoExtraTop = 96;
-
-  /// Text color for the top bar over the band (the title sits on the page
-  /// color, in the theme's text color).
+  /// Text color for the top bar's title over the band, before it turns
+  /// opaque.
   static Color foregroundOf(ExpenseGroup group, ColorScheme s) {
-    final color = colorOf(group, s);
-    return color == null
-        ? s.onSurface
-        : ExpenseGroupColorPalette.getContrastingTextColor(color);
+    if (photoOf(group) != null) return s.onSurface;
+    final look = GroupLook.of(colorOf(group, s), s.brightness);
+    return GroupCardStyle.current.value == GroupCardStyle.b
+        ? look.onTint
+        : ExpenseGroupColorPalette.getContrastingTextColor(look.cover);
   }
+
+  /// Under the top bar: where the cover's content and the big icon start.
+  double get _barBottom => topInset + GroupDetailTopBar.height;
+
+  static const double _markSize = 170;
+  static const double _markOverflow = 0.24;
 
   @override
   Widget build(BuildContext context) {
-    final s = Theme.of(context).colorScheme;
-    final photo = photoOf(group);
-    final color = colorOf(group, s);
-    if (photo == null && color == null) return ColoredBox(color: pageColor);
+    if (style case final style?) return _build(context, style);
+    return GroupCardStyleBuilder(builder: _build);
+  }
 
-    if (photo != null) {
-      // Dates, title and figure cards on the page color; the photo melts
-      // into it above them, the same all the way up (no shade under the
-      // top bar).
-      return PhotoVeil(
-        path: photo,
-        color: pageColor,
-        solidExtent: PhotoVeilSpot.groupPage.solidExtent,
-        fadeExtent: PhotoVeilSpot.groupPage.fadeExtent,
+  Widget _build(BuildContext context, GroupCardStyle style) {
+    final s = Theme.of(context).colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+    final photo = photoOf(group);
+    final look = GroupLook.of(colorOf(group, s), s.brightness);
+    final type = group.groupType ?? ExpenseGroupType.other;
+    final chip = TypeChip(
+      icon: type.icon,
+      label: GroupTypeLocalization.typeName(gloc, type),
+    );
+    Widget mark(Color color) => TypeMark(
+      icon: type.icon,
+      size: _markSize,
+      color: color,
+      overflow: _markOverflow,
+    ).positioned(top: _barBottom + _markOverflow * _markSize);
+
+    if (style == GroupCardStyle.a) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: SizedBox(
+              height: _barBottom + 132,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    if (photo != null)
+                      GroupCoverPhoto(path: photo, fallback: look.cover)
+                    else ...[
+                      ColoredBox(color: look.cover),
+                      mark(look.coverMark),
+                    ],
+                    Positioned(left: 14, bottom: 14, child: chip),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(30, 16, 30, 18),
+            child: header(s.onSurface),
+          ),
+        ],
       );
     }
-    return ColorVeil(
-      color: color!,
-      surface: pageColor,
-      solidExtent: PhotoVeilSpot.groupPage.solidExtent,
-      fadeExtent: PhotoVeilSpot.groupPage.fadeExtent,
+
+    Widget band(Color background, Color fg, Color? markColor) => Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: photo != null
+                  ? PhotoBand(
+                      path: photo,
+                      tone: background,
+                      photoHeight: _barBottom + 150,
+                    )
+                  : ColoredBox(color: background),
+            ),
+            if (markColor != null) mark(markColor),
+            Padding(
+              padding: EdgeInsets.fromLTRB(30, _barBottom + 52, 30, 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [chip, const SizedBox(height: 14), header(fg)],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (photo == null) return band(look.tint, look.onTint, look.tintMark);
+    return PhotoToneBuilder(
+      path: photo,
+      builder: (context, tone) => band(tone.tone, tone.onTone, null),
     );
   }
 }
@@ -161,171 +231,57 @@ class GroupDetailHeader extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 16),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final total = _Figure(
-              label: gloc.group_total,
-              value: group.getTotalExpenses(),
-              currency: group.currency,
-              big: true,
-            );
-            final spentToday = group.getTodaySpendingSync(this.today);
+        const SizedBox(height: 14),
+        Builder(
+          builder: (context) {
+            final spentToday = group.getTodaySpendingSync(today);
             // With a budget, a ring of how today is going against what can
-            // be spent today; tapping it opens the budget.
+            // be spent today; tapping "Today" opens the budget.
             final budget = BudgetStatus.of(
               group,
-              today: this.today,
+              today: today,
               firstDayOfWeek: firstDayOfWeekOf(context),
             );
             final locale = Localizations.localeOf(context);
             String money(double v) =>
                 CurrencyDisplay.formatLocalizedText(v, group.currency, locale);
-            final today = _Figure(
-              label: gloc.today,
-              value: spentToday,
-              currency: group.currency,
-              ring: switch (budget?.todayFraction) {
-                final f? => BudgetRing(
-                  fraction: f,
-                  over: budget!.overToday,
-                  size: 26,
-                  strokeWidth: 3,
+            return FigureRow(
+              color: foreground,
+              items: [
+                FigureRowItem(
+                  label: gloc.group_total,
+                  value: group.getTotalExpenses(),
+                  currency: group.currency,
                 ),
-                null => null,
-              },
-              onTap: budget == null ? null : onOpenBudget,
-              semanticLabel: switch (budget) {
-                null => null,
-                BudgetStatus(todayShare: final share?) when budget.overToday =>
-                  gloc.budget_today_over(money(spentToday), money(share)),
-                BudgetStatus(todayShare: final share?) =>
-                  gloc.budget_today_within(money(spentToday), money(share)),
-                _ => gloc.budget_today_open(money(spentToday)),
-              },
-            );
-            // Side by side when "Today" has room for its amount at full
-            // size; one under the other with large text, rather than
-            // shrinking them. (The per-person figure is in Statistics.)
-            final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
-            final todayWidth = (constraints.maxWidth - 8) * 3 / 7;
-            if (todayWidth >= _Figure.minSmallWidth * scale) {
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(flex: 4, child: total),
-                    const SizedBox(width: 8),
-                    Expanded(flex: 3, child: today),
-                  ],
+                FigureRowItem(
+                  label: gloc.today,
+                  value: spentToday,
+                  currency: group.currency,
+                  trailing: switch (budget?.todayFraction) {
+                    final f? => BudgetRing(
+                      fraction: f,
+                      over: budget!.overToday,
+                      size: 24,
+                      strokeWidth: 3,
+                    ),
+                    null => null,
+                  },
+                  onTap: budget == null ? null : onOpenBudget,
+                  semanticLabel: switch (budget) {
+                    null => null,
+                    BudgetStatus(todayShare: final share?)
+                        when budget.overToday =>
+                      gloc.budget_today_over(money(spentToday), money(share)),
+                    BudgetStatus(todayShare: final share?) =>
+                      gloc.budget_today_within(money(spentToday), money(share)),
+                    _ => gloc.budget_today_open(money(spentToday)),
+                  },
                 ),
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [total, const SizedBox(height: 8), today],
+              ],
             );
           },
         ),
       ],
-    );
-  }
-}
-
-class _Figure extends StatelessWidget {
-  /// Width a small figure needs for a four-digit amount at full size.
-  static const double minSmallWidth = 128;
-
-  final String label;
-  final double value;
-  final String currency;
-  final bool big;
-
-  /// The budget ring after the amount, on its line ("Today" with a
-  /// budget).
-  final Widget? ring;
-  final VoidCallback? onTap;
-
-  /// Replaces label and amount for screen readers when tappable.
-  final String? semanticLabel;
-
-  const _Figure({
-    required this.label,
-    required this.value,
-    required this.currency,
-    this.big = false,
-    this.ring,
-    this.onTap,
-    this.semanticLabel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
-    final radius = BorderRadius.circular(18);
-    final figure = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Shrinks rather than truncates with large text.
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
-          child: Text(
-            label,
-            maxLines: 1,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: s.onSurfaceVariant,
-            ),
-          ),
-        ),
-        const SizedBox(height: 4),
-        // The ring sits on the amount's line, centred on it, so it reads
-        // with the figure instead of floating between the two lines.
-        Row(
-          children: [
-            Expanded(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: CurrencyDisplay(
-                  value: value,
-                  currency: currency,
-                  valueFontSize: big ? 26 : 20,
-                  currencyFontSize: big ? 14 : 12,
-                  showDecimals: true,
-                  alignment: MainAxisAlignment.start,
-                ),
-              ),
-            ),
-            if (ring case final ring?) ...[const SizedBox(width: 8), ring],
-          ],
-        ),
-      ],
-    );
-    final content = Padding(
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
-      child: figure,
-    );
-    return CardOutline(
-      borderRadius: radius,
-      child: Material(
-        color: s.raisedSurface,
-        borderRadius: radius,
-        clipBehavior: Clip.antiAlias,
-        child: onTap == null
-            ? content
-            : Semantics(
-                button: true,
-                label: semanticLabel,
-                // excludeSemantics drops the InkWell's tap: carry it here,
-                // or TalkBack reads the budget but can't open it.
-                onTap: onTap,
-                excludeSemantics: semanticLabel != null,
-                child: InkWell(onTap: onTap, child: content),
-              ),
-      ),
     );
   }
 }

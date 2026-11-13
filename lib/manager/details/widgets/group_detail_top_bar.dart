@@ -62,10 +62,15 @@ class GroupDetailTopBar extends StatelessWidget {
       ),
     );
 
+    // At rest over card style A's cover, the buttons sit inside it (the
+    // cover is 16 from the edges); otherwise near the edges.
+    final side = !opaque && GroupCardStyle.current.value == GroupCardStyle.a
+        ? 24.0
+        : 12.0;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       color: opaque ? pageColor : pageColor.withValues(alpha: 0),
-      padding: EdgeInsets.fromLTRB(12, topInset + 4, 12, 4),
+      padding: EdgeInsets.fromLTRB(side, topInset + 4, side, 4),
       child: SizedBox(
         height: height - 8,
         child: Row(

@@ -3080,4 +3080,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return 'Ha puesto $amount · ha recibido $received';
   }
+
+  @override
+  String get settings_card_style => 'Estilo de las tarjetas';
+
+  @override
+  String get settings_card_style_a => 'A · Portada';
+
+  @override
+  String get settings_card_style_b => 'B · Color completo';
 }

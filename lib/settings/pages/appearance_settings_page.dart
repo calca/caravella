@@ -29,6 +29,15 @@ class AppearanceSettingsPage extends StatelessWidget {
             ],
           ),
           SettingsGroup(
+            label: loc.settings_card_style,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: _buildCardStyleSelector(context, loc),
+              ),
+            ],
+          ),
+          SettingsGroup(
             children: [
               _buildDynamicColorRow(context, loc),
               _buildLanguageRow(context, locale, loc),
@@ -76,6 +85,51 @@ class AppearanceSettingsPage extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+
+  /// The A/B test of the group cards: Home, Groups and the group page
+  /// follow it at once.
+  Widget _buildCardStyleSelector(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) {
+    return GroupCardStyleBuilder(
+      builder: (context, current) {
+        final options = <(GroupCardStyle, String, IconData)>[
+          (
+            GroupCardStyle.a,
+            loc.settings_card_style_a,
+            Icons.web_asset_outlined,
+          ),
+          (
+            GroupCardStyle.b,
+            loc.settings_card_style_b,
+            Icons.crop_square_rounded,
+          ),
+        ];
+        return Row(
+          children: [
+            for (final option in options) ...[
+              if (option != options.first) const SizedBox(width: 8),
+              Expanded(
+                child: _buildThemeOption(
+                  context,
+                  icon: option.$3,
+                  label: option.$2,
+                  selected: option.$1 == current,
+                  onTap: () {
+                    GroupCardStyle.current.value = option.$1;
+                    PreferencesService.instance.theme.setGroupCardStyle(
+                      option.$1.name,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 

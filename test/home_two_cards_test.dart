@@ -96,15 +96,16 @@ void main() {
     expect(pushed.length, routesBefore + 1);
   });
 
-  testWidgets('first card: the spending wave from the first day to today', (
+  testWidgets('first card: Total | Today, no chart (it is in Statistics)', (
     tester,
   ) async {
     await pump(
       tester,
       groupWith([expense('Ferry', 2, 86), expense('Soup', 0, 54.5)]),
     );
-    expect(find.byType(SpendingWave), findsOneWidget);
-    expect(find.text('Today'), findsOneWidget);
+    expect(find.byType(SpendingWave), findsNothing);
+    expect(find.byType(FigureRow), findsOneWidget);
+    expect(find.text('Total'), findsOneWidget);
   });
 
   testWidgets('one day of spending: no wave', (tester) async {

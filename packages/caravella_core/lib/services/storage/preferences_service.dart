@@ -10,6 +10,7 @@ abstract class _PreferenceKeys {
 
   // Theme
   static const String themeMode = 'theme_mode';
+  static const String groupCardStyle = 'group_card_style';
 
   // Security
   static const String flagSecure = 'flag_secure_enabled';
@@ -248,6 +249,14 @@ class ThemePreferences {
   /// Set the user's selected theme mode
   Future<void> set(String mode) async {
     await _prefs.setString(_PreferenceKeys.themeMode, mode);
+  }
+
+  /// The group card style being tried ('a' or 'b'; null: not chosen).
+  String? getGroupCardStyle() =>
+      _prefs.getString(_PreferenceKeys.groupCardStyle);
+
+  Future<void> setGroupCardStyle(String style) async {
+    await _prefs.setString(_PreferenceKeys.groupCardStyle, style);
   }
 }
 

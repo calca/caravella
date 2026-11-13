@@ -2975,4 +2975,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return '共支付 $amount · 已收到 $received';
   }
+
+  @override
+  String get settings_card_style => '卡片样式';
+
+  @override
+  String get settings_card_style_a => 'A · 封面';
+
+  @override
+  String get settings_card_style_b => 'B · 全色';
 }
