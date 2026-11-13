@@ -10,12 +10,10 @@ import 'add_expense_controller.dart';
 /// dates, then "Total | Today". The charts are in Statistics; the recent
 /// expenses are in the second card ([GroupCardActivity]).
 ///
-/// Follows [GroupCardStyle.current]:
-/// - **A**: the photo, the color or neutral grey in a rounded cover on top
-///   with the chip and the big faint type icon; title and figures below on
-///   the card surface;
-/// - **B**: the whole card in the group's tint (under a photo, the photo's
-///   own tone), chip on top, title and figures at the bottom.
+/// The whole card is in the group's tint ([GroupLook]: neutral grey without
+/// a color) with the big faint type icon in the corner, or under a photo the
+/// photo's own tone ([PhotoTone]) that it melts into; chip on top, title and
+/// figures at the bottom.
 class GroupCardContent extends StatelessWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
@@ -39,9 +37,6 @@ class GroupCardContent extends StatelessWidget {
   /// The group's color, drawn as the cover when there's no [photoPath].
   final Color? coverColor;
 
-  /// Overrides [GroupCardStyle.current] (tests).
-  final GroupCardStyle? style;
-
   /// "Today" for the figures; now when null (tests set it).
   final DateTime? today;
 
@@ -57,36 +52,20 @@ class GroupCardContent extends StatelessWidget {
     this.showAddButton = true,
     this.photoPath,
     this.coverColor,
-    this.style,
     this.today,
   });
 
-  /// Share of the card's height the style A cover takes.
-  static const double coverShare = 0.53;
-
-  /// Cover height when the card sizes to its content (large text).
-  static const double _coverUnbounded = 160;
-
   @override
   Widget build(BuildContext context) {
-    if (style case final style?) return _build(context, style);
-    return GroupCardStyleBuilder(builder: _build);
-  }
-
-  Widget _build(BuildContext context, GroupCardStyle style) {
     final photo = photoPath;
-    final look = GroupLook.of(
-      photo == null ? coverColor : null,
-      theme.brightness,
-    );
-    if (style == GroupCardStyle.a) return _buildA(context, photo, look);
     if (photo == null) {
-      return _buildB(context, null, look.tint, look.onTint, look.tintMark);
+      final look = GroupLook.of(coverColor, theme.brightness);
+      return _build(context, null, look.tint, look.onTint, look.mark);
     }
     return PhotoToneBuilder(
       path: photo,
       builder: (context, tone) =>
-          _buildB(context, photo, tone.tone, tone.onTone, null),
+          _build(context, photo, tone.tone, tone.onTone, null),
     );
   }
 
@@ -146,64 +125,7 @@ class GroupCardContent extends StatelessWidget {
         )
       : null;
 
-  Widget _buildA(BuildContext context, String? photo, GroupLook look) {
-    final fg = theme.colorScheme.onSurface;
-    final cover = ClipRRect(
-      borderRadius: BorderRadius.circular(24),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          if (photo != null)
-            GroupCoverPhoto(path: photo, fallback: look.cover)
-          else ...[
-            ColoredBox(color: look.cover),
-            TypeMark(
-              icon: _type.icon,
-              size: 180,
-              color: look.coverMark,
-            ).positioned(),
-          ],
-          Positioned(top: 14, left: 14, child: _chip()),
-        ],
-      ),
-    );
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final bounded = constraints.hasBoundedHeight;
-        final body = Padding(
-          padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
-          child: Column(
-            mainAxisSize: bounded ? MainAxisSize.max : MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _header(fg),
-              if (bounded) const Spacer() else const SizedBox(height: 16),
-              _figures(fg),
-              ?_addButton(),
-            ],
-          ),
-        );
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisSize: bounded ? MainAxisSize.max : MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: bounded
-                    ? (constraints.maxHeight - 16) * coverShare
-                    : _coverUnbounded,
-                child: cover,
-              ),
-              if (bounded) Expanded(child: body) else body,
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildB(
+  Widget _build(
     BuildContext context,
     String? photo,
     Color background,

@@ -3065,13 +3065,4 @@ class AppLocalizationsEn extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return 'Paid $amount in all · $received received';
   }
-
-  @override
-  String get settings_card_style => 'Card style';
-
-  @override
-  String get settings_card_style_a => 'A · Cover';
-
-  @override
-  String get settings_card_style_b => 'B · Full color';
 }

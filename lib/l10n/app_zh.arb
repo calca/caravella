@@ -1423,7 +1423,4 @@
   ,"@balance_paid_and_settled": {"description": "Under a name in Balances: what they paid in expenses and what they paid back in Settle up", "placeholders": {"amount": {"type": "String"}, "settled": {"type": "String"}}}
   ,"balance_paid_and_received": "共支付 {amount} · 已收到 {received}"
   ,"@balance_paid_and_received": {"description": "Under a name in Balances: what they paid in expenses and what they got back in Settle up", "placeholders": {"amount": {"type": "String"}, "received": {"type": "String"}}}
-  ,"settings_card_style": "卡片样式"
-  ,"settings_card_style_a": "A · 封面"
-  ,"settings_card_style_b": "B · 全色"
 }

@@ -5531,24 +5531,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Paid {amount} in all · {received} received'**
   String balance_paid_and_received(String amount, String received);
-
-  /// Settings › Appearance: title of the A/B choice of how group cards look
-  ///
-  /// In en, this message translates to:
-  /// **'Card style'**
-  String get settings_card_style;
-
-  /// Card style A: the group photo or color in a cover on top, text below
-  ///
-  /// In en, this message translates to:
-  /// **'A · Cover'**
-  String get settings_card_style_a;
-
-  /// Card style B: the whole card in the group color, text on it
-  ///
-  /// In en, this message translates to:
-  /// **'B · Full color'**
-  String get settings_card_style_b;
 }
 
 class _AppLocalizationsDelegate

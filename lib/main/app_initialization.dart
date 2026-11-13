@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -180,12 +181,25 @@ class AppInitialization {
     configureSystemUI();
     configureImageCache();
     await initFlagSecure();
-    // Settings › Appearance › Card style (A/B test of the group cards).
-    GroupCardStyle.current.value = GroupCardStyle.parse(
-      PreferencesService.instance.theme.getGroupCardStyle(),
-    );
+    // Photo tones of the group cards, measured on earlier launches.
+    PhotoTone.seed(PreferencesService.instance.theme.getPhotoTones());
+    PhotoTone.onChanged = PreferencesService.instance.theme.setPhotoTones;
     await initStorage();
+    warmPhotoTones();
     scheduleWeeklyDriveBackup();
+  }
+
+  /// Measures the tone of the active groups' photos not measured yet, in the
+  /// background, so their cards don't change color after they show.
+  static void warmPhotoTones() {
+    unawaited(() async {
+      try {
+        final groups = await ExpenseGroupStorageV2.getActiveGroups();
+        await PhotoTone.warmUp([for (final g in groups) ?GroupLook.photoOf(g)]);
+      } catch (e) {
+        LoggerService.warning('Photo tones not warmed: $e', name: 'ui.card');
+      }
+    }());
   }
 
   /// The weekly Google Drive backup, if the user turned it on: shortly

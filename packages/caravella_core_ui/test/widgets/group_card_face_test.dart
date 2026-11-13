@@ -23,8 +23,8 @@ void main() {
   const icon = Icons.flight_takeoff;
   const sky = Color(0xFFAED6EE);
 
-  for (final style in GroupCardStyle.values) {
-    group('style ${style.name}', () {
+  {
+    group('tile and wide card', () {
       testWidgets('wide card: name, line, total; type icon on chip and mark', (
         tester,
       ) async {
@@ -38,7 +38,6 @@ void main() {
             icon: icon,
             color: sky,
             wide: true,
-            style: style,
           ),
         );
         expect(find.text('Lisbon'), findsOneWidget);
@@ -59,7 +58,6 @@ void main() {
             icon: icon,
             favorite: true,
             typeLabel: 'Travel',
-            style: style,
           ),
           width: 170,
           height: 170,
@@ -81,7 +79,6 @@ void main() {
             icon: icon,
             photoPath: '/nowhere/photo.jpg',
             color: sky,
-            style: style,
           ),
           width: 170,
           height: 170,
@@ -102,7 +99,6 @@ void main() {
             color: sky,
             wide: true,
             compact: true,
-            style: style,
           ),
           height: GroupCardFace.compactHeight,
         );
@@ -123,7 +119,6 @@ void main() {
             currency: '€',
             icon: icon,
             color: sky,
-            style: style,
           ),
           width: 170,
           height: GroupCardFace.tileHeight(const TextScaler.linear(1.6)),
@@ -133,7 +128,7 @@ void main() {
     });
   }
 
-  testWidgets('A: theme text below the color cover', (tester) async {
+  testWidgets('the whole card in the tint, its own text color', (tester) async {
     await pump(
       tester,
       const GroupCardFace(
@@ -142,34 +137,6 @@ void main() {
         currency: '€',
         icon: icon,
         color: sky,
-        style: GroupCardStyle.a,
-      ),
-      width: 170,
-      height: 170,
-    );
-    final scheme = Theme.of(tester.element(find.text('Lisbon'))).colorScheme;
-    expect(
-      tester.widget<Text>(find.text('Lisbon')).style?.color,
-      scheme.onSurface,
-    );
-    expect(
-      find.byWidgetPredicate((w) => w is ColoredBox && w.color == sky),
-      findsOneWidget,
-    );
-  });
-
-  testWidgets('B: the whole card in the tint, its own text color', (
-    tester,
-  ) async {
-    await pump(
-      tester,
-      const GroupCardFace(
-        title: 'Lisbon',
-        total: 0,
-        currency: '€',
-        icon: icon,
-        color: sky,
-        style: GroupCardStyle.b,
       ),
       width: 170,
       height: 170,

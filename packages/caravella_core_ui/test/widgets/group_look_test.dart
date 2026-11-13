@@ -25,11 +25,16 @@ void main() {
       }
     });
 
-    test('chip text reads on its pill over any cover, ${brightness.name}', () {
+    test('chip text reads on its pill over any tint or photo, '
+        '${brightness.name}', () {
       final fg = TypeChip.foreground(brightness);
       final pill = TypeChip.background(brightness);
-      for (final color in [...palette, Colors.black, Colors.white, null]) {
-        final under = GroupLook.of(color, brightness).cover;
+      for (final under in [
+        for (final color in [...palette, null])
+          GroupLook.of(color, brightness).tint,
+        Colors.black,
+        Colors.white,
+      ]) {
         final over = Color.alphaBlend(pill, under);
         expect(
           GroupLook.contrast(fg, over),
@@ -62,12 +67,6 @@ void main() {
     expect(GroupLook.contrast(darkSnow.onTone, darkSnow.tone), greaterThan(7));
     final lightFjord = PhotoTone.fromAverage(fjord, Brightness.light);
     expect(lightFjord.onTone, Colors.white);
-  });
-
-  test('card style parses what preferences store', () {
-    expect(GroupCardStyle.parse(null), GroupCardStyle.a);
-    expect(GroupCardStyle.parse('b'), GroupCardStyle.b);
-    expect(GroupCardStyle.parse('x'), GroupCardStyle.a);
   });
 
   testWidgets('photo tone loads from a file: a light photo gets a light band', (

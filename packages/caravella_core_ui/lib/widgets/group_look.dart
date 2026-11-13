@@ -5,66 +5,26 @@ import 'dart:ui' as ui;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// The two group card styles being compared on device (Settings ›
-/// Appearance › Card style):
-/// - [a] "clean cover": the photo, color or neutral grey in a rounded cover
-///   on top, the text below it on the card surface;
-/// - [b] "full tint": the whole card in a soft tint of the group color (or
-///   the photo's own tone under the photo), the text on it.
-enum GroupCardStyle {
-  a,
-  b;
-
-  static GroupCardStyle parse(String? value) =>
-      value == 'b' ? GroupCardStyle.b : GroupCardStyle.a;
-
-  /// The style every card follows; set from preferences at startup and by
-  /// the setting.
-  static final ValueNotifier<GroupCardStyle> current = ValueNotifier(
-    GroupCardStyle.a,
-  );
-}
-
-/// Rebuilds [builder] when the card style changes.
-class GroupCardStyleBuilder extends StatelessWidget {
-  final Widget Function(BuildContext context, GroupCardStyle style) builder;
-
-  const GroupCardStyleBuilder({super.key, required this.builder});
-
-  @override
-  Widget build(BuildContext context) => ValueListenableBuilder<GroupCardStyle>(
-    valueListenable: GroupCardStyle.current,
-    builder: (context, style, _) => builder(context, style),
-  );
-}
-
-/// How a group is painted, from its palette color (or none) and the theme.
-///
-/// - [cover] and [coverMark]: style A's cover (the palette color as is, or
-///   neutral grey) and the big type icon on it.
-/// - [tint], [onTint] and [tintMark]: style B's background (the palette
-///   color softened towards the page), its text color and big icon.
+/// How a group card is painted, from the group's palette color (or none)
+/// and the theme: the whole card in [tint] (the palette color softened
+/// towards the page, or neutral grey without one), text in [onTint] (a deep
+/// shade of the same hue) and the big type icon in [mark].
 ///
 /// Every [onTint] keeps at least 4.5:1 on its [tint] (WCAG AA; tested for
 /// all twelve palette colors in both themes).
 class GroupLook {
-  final Color cover;
-  final Color coverMark;
   final Color tint;
   final Color onTint;
-  final Color tintMark;
+  final Color mark;
 
   const GroupLook({
-    required this.cover,
-    required this.coverMark,
     required this.tint,
     required this.onTint,
-    required this.tintMark,
+    required this.mark,
   });
 
-  static const _noneLight = Color(0xFFECEDEF);
+  static const _noneLight = Color(0xFFE4E5E8);
   static const _noneDark = Color(0xFF2A2B2E);
-  static const _noneTintLight = Color(0xFFE4E5E8);
   static const _darkPage = Color(0xFF121212);
 
   /// The look for [color] (a resolved palette or legacy color; null: none).
@@ -72,34 +32,22 @@ class GroupLook {
     final dark = brightness == Brightness.dark;
     if (color == null) {
       return GroupLook(
-        cover: dark ? _noneDark : _noneLight,
-        coverMark: (dark ? Colors.white : Colors.black).withValues(alpha: 0.07),
-        tint: dark ? _noneDark : _noneTintLight,
+        tint: dark ? _noneDark : _noneLight,
         onTint: dark ? const Color(0xFFEDEDED) : const Color(0xFF1B1B1B),
-        tintMark: (dark ? Colors.white : Colors.black).withValues(alpha: 0.07),
+        mark: (dark ? Colors.white : Colors.black).withValues(alpha: 0.07),
       );
     }
     final hsl = HSLColor.fromColor(color);
-    final saturation = hsl.saturation.clamp(0.0, 0.5);
     final onTint = hsl
-        .withSaturation(saturation)
+        .withSaturation(hsl.saturation.clamp(0.0, 0.5))
         .withLightness(dark ? 0.9 : 0.15)
         .toColor();
-    final tint = dark
-        ? Color.lerp(color, _darkPage, 0.45)!
-        : Color.lerp(color, Colors.white, 0.45)!;
     return GroupLook(
-      cover: color,
-      coverMark: dark
-          ? Colors.white.withValues(alpha: 0.10)
-          : hsl
-                .withSaturation(saturation)
-                .withLightness(0.2)
-                .toColor()
-                .withValues(alpha: 0.14),
-      tint: tint,
+      tint: dark
+          ? Color.lerp(color, _darkPage, 0.45)!
+          : Color.lerp(color, Colors.white, 0.45)!,
       onTint: onTint,
-      tintMark: onTint.withValues(alpha: dark ? 0.08 : 0.10),
+      mark: onTint.withValues(alpha: dark ? 0.08 : 0.10),
     );
   }
 
@@ -132,7 +80,7 @@ class GroupLook {
 /// The tone a style B card takes under a photo: the average color of the
 /// photo's lower part, made very dark (white text) or, for a light photo in
 /// the light theme, very light (dark text). Computed once per photo from a
-/// small decode and kept in memory.
+/// small decode, kept in memory and, through [onChanged], between launches.
 class PhotoTone {
   final Color tone;
   final Color onTone;
@@ -141,8 +89,37 @@ class PhotoTone {
 
   static const fallbackDark = PhotoTone(Color(0xFF1F2532), Colors.white);
 
+  /// Keyed by [_key]: the path and the file's modification time, so a photo
+  /// replaced at the same path is measured again.
   static final Map<String, Color> _averages = {};
   static final Map<String, Future<Color?>> _pending = {};
+
+  /// Called with every measured photo (key → ARGB) after a new one, for the
+  /// app to store; [seed] gives them back at the next launch, so cards
+  /// show their tone from the first frame.
+  static void Function(Map<String, int> all)? onChanged;
+
+  static void seed(Map<String, int> stored) {
+    for (final e in stored.entries) {
+      _averages.putIfAbsent(e.key, () => Color(e.value));
+    }
+  }
+
+  static String? _key(String path) {
+    try {
+      return '$path@${File(path).lastModifiedSync().millisecondsSinceEpoch}';
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Measures the photos not measured yet, one at a time (at startup, so
+  /// the cards don't wait for them).
+  static Future<void> warmUp(Iterable<String> paths) async {
+    for (final path in paths) {
+      await load(path, Brightness.dark);
+    }
+  }
 
   /// The tone for [average] (the photo's lower part) in [brightness].
   static PhotoTone fromAverage(Color average, Brightness brightness) {
@@ -169,20 +146,28 @@ class PhotoTone {
 
   /// The cached tone of [path], or null until [load] has run for it.
   static PhotoTone? cached(String path, Brightness brightness) {
-    final average = _averages[path];
+    final key = _key(path);
+    final average = key == null ? null : _averages[key];
     return average == null ? null : fromAverage(average, brightness);
   }
 
   /// Averages the lower 45% of the photo at [path] (decoded 24 px wide).
   static Future<PhotoTone?> load(String path, Brightness brightness) async {
-    final average =
-        _averages[path] ??
-        await (_pending[path] ??= _average(path).whenComplete(() {
-          // A block: returning the removed future would wait on itself.
-          _pending.remove(path);
-        }));
+    final key = _key(path);
+    if (key == null) return null;
+    final known = _averages[key];
+    if (known != null) return fromAverage(known, brightness);
+    final average = await (_pending[key] ??= _average(path).whenComplete(() {
+      // A block: returning the removed future would wait on itself.
+      _pending.remove(key);
+    }));
     if (average == null) return null;
-    _averages[path] = average;
+    if (_averages[key] == null) {
+      _averages[key] = average;
+      onChanged?.call({
+        for (final e in _averages.entries) e.key: e.value.toARGB32(),
+      });
+    }
     return fromAverage(average, brightness);
   }
 
@@ -287,6 +272,16 @@ class PhotoBand extends StatelessWidget {
                   ? null
                   : (width * MediaQuery.devicePixelRatioOf(context)).round(),
               errorBuilder: (_, _, _) => const SizedBox.shrink(),
+              // Decoded off the first frame: the tone shows at once and the
+              // photo fades in over it, instead of popping in late.
+              frameBuilder: (context, child, frame, sync) => sync
+                  ? child
+                  : AnimatedOpacity(
+                      opacity: frame == null ? 0 : 1,
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeOut,
+                      child: child,
+                    ),
             ),
           ),
           Positioned(

@@ -9,13 +9,11 @@ import '../../group/group_type/group_type_localization.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
 import 'group_detail_top_bar.dart';
 
-/// The top of the group page, under the round buttons of
-/// [GroupDetailTopBar], following [GroupCardStyle.current]:
-/// - **A**: the photo, the color or neutral grey in a rounded cover (16 from
-///   the edges) with the type chip at its bottom and the big faint type icon
-///   under the buttons; the [header] below it on the page color;
-/// - **B**: a block in the group's tint (under a photo, the photo's own
-///   tone) from the top of the screen, with the chip and the [header] on it.
+/// The top of the group page: a block in the group's tint ([GroupLook]:
+/// neutral grey without a color; under a photo, the photo melting into its
+/// own tone, [PhotoTone]) from the top of the screen, under the round
+/// buttons of [GroupDetailTopBar], with the big faint type icon below them
+/// and the [header] in the tint's text color.
 class GroupHeaderBand extends StatelessWidget {
   final ExpenseGroup group;
 
@@ -24,15 +22,11 @@ class GroupHeaderBand extends StatelessWidget {
 
   final double topInset;
 
-  /// Overrides [GroupCardStyle.current] (tests).
-  final GroupCardStyle? style;
-
   const GroupHeaderBand({
     super.key,
     required this.group,
     required this.header,
     required this.topInset,
-    this.style,
   });
 
   /// The group's resolved color, when it has one and no photo.
@@ -43,15 +37,12 @@ class GroupHeaderBand extends StatelessWidget {
 
   /// Text color for the top bar's title over the band, before it turns
   /// opaque.
-  static Color foregroundOf(ExpenseGroup group, ColorScheme s) {
-    if (photoOf(group) != null) return s.onSurface;
-    final look = GroupLook.of(colorOf(group, s), s.brightness);
-    return GroupCardStyle.current.value == GroupCardStyle.b
-        ? look.onTint
-        : ExpenseGroupColorPalette.getContrastingTextColor(look.cover);
-  }
+  static Color foregroundOf(ExpenseGroup group, ColorScheme s) =>
+      photoOf(group) != null
+      ? s.onSurface
+      : GroupLook.of(colorOf(group, s), s.brightness).onTint;
 
-  /// Under the top bar: where the cover's content and the big icon start.
+  /// Under the top bar: where the band's content and the big icon start.
   double get _barBottom => topInset + GroupDetailTopBar.height;
 
   static const double _markSize = 170;
@@ -59,59 +50,9 @@ class GroupHeaderBand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (style case final style?) return _build(context, style);
-    return GroupCardStyleBuilder(builder: _build);
-  }
-
-  Widget _build(BuildContext context, GroupCardStyle style) {
     final s = Theme.of(context).colorScheme;
-    final gloc = gen.AppLocalizations.of(context);
     final photo = photoOf(group);
-    final look = GroupLook.of(colorOf(group, s), s.brightness);
     final type = group.groupType ?? ExpenseGroupType.other;
-    final chip = TypeChip(
-      icon: type.icon,
-      label: GroupTypeLocalization.typeName(gloc, type),
-    );
-    Widget mark(Color color) => TypeMark(
-      icon: type.icon,
-      size: _markSize,
-      color: color,
-      overflow: _markOverflow,
-    ).positioned(top: _barBottom + _markOverflow * _markSize);
-
-    if (style == GroupCardStyle.a) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-            child: SizedBox(
-              height: _barBottom + 132,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(28),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    if (photo != null)
-                      GroupCoverPhoto(path: photo, fallback: look.cover)
-                    else ...[
-                      ColoredBox(color: look.cover),
-                      mark(look.coverMark),
-                    ],
-                    Positioned(left: 14, bottom: 14, child: chip),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(30, 16, 30, 18),
-            child: header(s.onSurface),
-          ),
-        ],
-      );
-    }
 
     Widget band(Color background, Color fg, Color? markColor) => Padding(
       padding: const EdgeInsets.only(bottom: 14),
@@ -128,19 +69,30 @@ class GroupHeaderBand extends StatelessWidget {
                     )
                   : ColoredBox(color: background),
             ),
-            if (markColor != null) mark(markColor),
+            if (markColor != null)
+              TypeMark(
+                icon: type.icon,
+                size: _markSize,
+                color: markColor,
+                overflow: _markOverflow,
+              ).positioned(top: _barBottom + _markOverflow * _markSize),
             Padding(
-              padding: EdgeInsets.fromLTRB(30, _barBottom + 52, 30, 22),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [chip, const SizedBox(height: 14), header(fg)],
+              padding: EdgeInsets.fromLTRB(
+                30,
+                _barBottom + (photo != null ? 96 : 56),
+                30,
+                22,
               ),
+              child: header(fg),
             ),
           ],
         ),
       ),
     );
-    if (photo == null) return band(look.tint, look.onTint, look.tintMark);
+    if (photo == null) {
+      final look = GroupLook.of(colorOf(group, s), s.brightness);
+      return band(look.tint, look.onTint, look.mark);
+    }
     return PhotoToneBuilder(
       path: photo,
       builder: (context, tone) => band(tone.tone, tone.onTone, null),
@@ -189,7 +141,8 @@ class GroupDetailHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            // Favorite moved to the ⋯ menu: the heart here shows the state.
+            // Favorite moved to the ⋯ menu: the heart here shows the state,
+            // then the group's type as an icon.
             if (group.pinned) ...[
               Icon(
                 Icons.favorite_rounded,
@@ -199,6 +152,16 @@ class GroupDetailHeader extends StatelessWidget {
               ),
               const SizedBox(width: 6),
             ],
+            Icon(
+              (group.groupType ?? ExpenseGroupType.other).icon,
+              size: 16,
+              color: foreground,
+              semanticLabel: GroupTypeLocalization.typeName(
+                gloc,
+                group.groupType ?? ExpenseGroupType.other,
+              ),
+            ),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 dates == null ? people : '$dates · $people',
@@ -263,6 +226,7 @@ class GroupDetailHeader extends StatelessWidget {
                       over: budget!.overToday,
                       size: 24,
                       strokeWidth: 3,
+                      color: foreground,
                     ),
                     null => null,
                   },

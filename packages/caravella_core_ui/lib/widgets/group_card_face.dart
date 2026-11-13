@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
 
-import '../themes/caravella_themes.dart';
 import 'currency_display.dart';
 import 'group_look.dart';
 
@@ -12,12 +11,10 @@ import 'group_look.dart';
 /// same before and after saving. The caller adds the outline, the clipping
 /// and any tap.
 ///
-/// Follows [GroupCardStyle.current] (or [style]):
-/// - **A**: the photo, the color or neutral grey in a rounded cover on top,
-///   with the type chip and the big faint type icon; the text below on the
-///   card surface;
-/// - **B**: the whole card in the group's tint (or under the photo, the
-///   photo's own tone), the chip on top and the text at the bottom.
+/// The whole card is in the group's tint ([GroupLook]: neutral grey without
+/// a color) with the big faint type icon cropped by the corner, or under a
+/// photo the photo's own tone ([PhotoTone]) that it melts into; the type
+/// chip on top and the text at the bottom.
 class GroupCardFace extends StatelessWidget {
   final String title;
 
@@ -45,9 +42,6 @@ class GroupCardFace extends StatelessWidget {
   /// The wide card at [compactHeight]: same text, smaller cover and margins.
   final bool compact;
 
-  /// Overrides [GroupCardStyle.current] (tests).
-  final GroupCardStyle? style;
-
   const GroupCardFace({
     super.key,
     required this.title,
@@ -61,7 +55,6 @@ class GroupCardFace extends StatelessWidget {
     this.favorite = false,
     this.wide = false,
     this.compact = false,
-    this.style,
   });
 
   static const double wideHeight = 196;
@@ -75,24 +68,18 @@ class GroupCardFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (style case final style?) return _build(context, style);
-    return GroupCardStyleBuilder(builder: _build);
-  }
-
-  Widget _build(BuildContext context, GroupCardStyle style) {
     final path = photoPath;
     final photo = path != null && path.isNotEmpty && File(path).existsSync()
         ? path
         : null;
-    final look = GroupLook.of(color, Theme.of(context).brightness);
-    if (style == GroupCardStyle.a) return _buildA(context, photo, look);
     if (photo == null) {
-      return _buildB(context, null, look.tint, look.onTint, look.tintMark);
+      final look = GroupLook.of(color, Theme.of(context).brightness);
+      return _build(context, null, look.tint, look.onTint, look.mark);
     }
     return PhotoToneBuilder(
       path: photo,
       builder: (context, tone) =>
-          _buildB(context, photo, tone.tone, tone.onTone, null),
+          _build(context, photo, tone.tone, tone.onTone, null),
     );
   }
 
@@ -156,56 +143,7 @@ class GroupCardFace extends StatelessWidget {
     );
   }
 
-  Widget _buildA(BuildContext context, String? photo, GroupLook look) {
-    final s = Theme.of(context).colorScheme;
-    final coverHeight = wide ? (compact ? 40.0 : 100.0) : 72.0;
-    final inner = wide ? 8.0 : 6.0;
-    final inset = wide ? 10.0 : 8.0;
-    return ColoredBox(
-      color: s.raisedSurface,
-      child: Padding(
-        padding: EdgeInsets.all(inner),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: coverHeight,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(wide ? 22 : 18),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    if (photo != null)
-                      GroupCoverPhoto(path: photo, fallback: look.cover)
-                    else ...[
-                      ColoredBox(color: look.cover),
-                      TypeMark(
-                        icon: icon,
-                        size: wide ? (compact ? 80 : 150) : 84,
-                        color: look.coverMark,
-                      ).positioned(),
-                    ],
-                    Positioned(top: inset, left: inset, child: _chip(context)),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(inset, 4, inset, inset - 2),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: _text(context, s.onSurface),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildB(
+  Widget _build(
     BuildContext context,
     String? photo,
     Color background,
@@ -244,30 +182,4 @@ class GroupCardFace extends StatelessWidget {
       ),
     );
   }
-}
-
-/// A group photo filling its box, decoded at the size it shows at; the
-/// [fallback] color when it can't be read.
-class GroupCoverPhoto extends StatelessWidget {
-  final String path;
-  final Color fallback;
-
-  const GroupCoverPhoto({
-    super.key,
-    required this.path,
-    required this.fallback,
-  });
-
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) => Image.file(
-      File(path),
-      fit: BoxFit.cover,
-      cacheWidth: constraints.maxWidth.isFinite
-          ? (constraints.maxWidth * MediaQuery.devicePixelRatioOf(context))
-                .round()
-          : null,
-      errorBuilder: (_, _, _) => ColoredBox(color: fallback),
-    ),
-  );
 }
