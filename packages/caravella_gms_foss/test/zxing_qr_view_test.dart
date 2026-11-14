@@ -1,6 +1,6 @@
 import 'package:caravella_gms/src/zxing_qr_view.dart';
 import 'package:camera_platform_interface/camera_platform_interface.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// One back camera whose permission is always refused, as after "Don't

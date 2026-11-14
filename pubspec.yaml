@@ -81,7 +81,7 @@ dependencies:
   # this file. See docs/PACKAGE_CARAVELLA_GMS.md.
   caravella_gms:
     path: packages/caravella_gms
-  home_widget: ^0.9.3
+  home_widget: ^0.10.0
   permission_handler: ^13.0.1
   qr_flutter: ^4.1.0
   material_ui: ^1.0.0
