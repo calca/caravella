@@ -1307,7 +1307,7 @@
   ,"@budget_today_date": {"description": "Budget detail, daily budget: above the figure", "placeholders": {"date": {"type": "String"}}}
   ,"budget_can_spend_today": "Today you can still spend {amount}"
   ,"@budget_can_spend_today": {"description": "Budget detail: what is left of today's share", "placeholders": {"amount": {"type": "String"}}}
-  ,"budget_over_today_share": "Today {amount} over today's share"
+  ,"budget_over_today_share": "Today {amount} over today’s share"
   ,"@budget_over_today_share": {"description": "Budget detail: spent today over today's share", "placeholders": {"amount": {"type": "String"}}}
   ,"budget_run_out_month": "The budget for {month} has run out"
   ,"@budget_run_out_month": {"description": "Budget detail: the monthly budget is spent; month name", "placeholders": {"month": {"type": "String"}}}

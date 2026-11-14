@@ -2959,7 +2959,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String budget_over_today_share(String amount) {
-    return 'Today $amount over today\'s share';
+    return 'Today $amount over today’s share';
   }
 
   @override

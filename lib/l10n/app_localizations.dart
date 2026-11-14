@@ -5361,7 +5361,7 @@ abstract class AppLocalizations {
   /// Budget detail: spent today over today's share
   ///
   /// In en, this message translates to:
-  /// **'Today {amount} over today\'s share'**
+  /// **'Today {amount} over today’s share'**
   String budget_over_today_share(String amount);
 
   /// Budget detail: the monthly budget is spent; month name
