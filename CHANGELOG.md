@@ -28,8 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Paid by and Category look and work the same in the quick sheet and on the full page: one line of pills, with "+N" opening the rest in place
 - Attachments: the pill says "Add attachment" before the first one too, as it does under the list
 - Tapping a recent expense on Home opens the group page with that expense open; back lands on the group
-- Group page with a budget: the ring sits before today's amount, with "of 50.00 € · 12.50 € left" under it, instead of alone after it
-- Group page of a shared group: "Shared" is now a round sync button next to search, with the dot of how its sync is doing, instead of a pill on the dates line
+- Group page with a budget: the ring sits before today's amount instead of alone after it
+- Group page of a shared group: "Shared" is now a round sync button next to search whose icon says how its sync is doing (arrows; with "!" in amber after a failed exchange; struck through when it hasn't synced for a day), instead of a pill on the dates line
 - A group's photo no longer fades in after its page or card: it is decoded once, shared by every screen, and the active groups' photos are decoded at startup
 - No sheet opens on top of another any more, nor closes to let another rise. The currency list, Background › Color and Budget › Change budget open as a second screen inside the same sheet, sliding in with a back arrow (the other choices in the sheet are kept). An attachment's sources (photo, video, gallery, file) open in place under its pill, and voice input opens in place above the expense sheet's buttons. The expense sheet from the notification is now the same quick sheet as Home's, with "More details" opening the full page
 - Every bottom sheet now opens and closes with the same gentle motion as the add-expense sheet (320 ms in, 220 ms out): currency, budget, period, group type, background, options, export, location and the others used Flutter's quicker default. They all go through `showAppBottomSheet` (`caravella_core_ui`), and a test keeps it that way

@@ -3080,14 +3080,4 @@ class AppLocalizationsEs extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return 'Ha puesto $amount · ha recibido $received';
   }
-
-  @override
-  String budget_today_caption_left(String share, String left) {
-    return 'de $share · quedan $left';
-  }
-
-  @override
-  String budget_today_caption_over(String share, String over) {
-    return 'de $share · $over de más';
-  }
 }
