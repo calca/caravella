@@ -203,12 +203,11 @@ class GroupDetailHeader extends StatelessWidget {
                   currency: group.currency,
                 ),
                 FigureRowItem(
-                  // With a budget the ring and "of 50 € · 12.50 € left" say
-                  // what this is: no "Today" label (its line stays, so the
-                  // amounts line up).
-                  label: budget == null ? gloc.today : '',
+                  label: gloc.today,
                   value: spentToday,
                   currency: group.currency,
+                  // With a budget, the ring of how today is going before
+                  // the amount (the detail is one tap away).
                   leading: switch (budget?.todayFraction) {
                     final f? => BudgetRing(
                       fraction: f,
@@ -218,20 +217,6 @@ class GroupDetailHeader extends StatelessWidget {
                       color: foreground,
                     ),
                     null => null,
-                  },
-                  caption: switch (budget) {
-                    BudgetStatus(todayShare: final share?)
-                        when budget.overToday =>
-                      gloc.budget_today_caption_over(
-                        money(share),
-                        money(spentToday - share),
-                      ),
-                    BudgetStatus(todayShare: final share?) =>
-                      gloc.budget_today_caption_left(
-                        money(share),
-                        money(share - spentToday),
-                      ),
-                    _ => null,
                   },
                   onTap: budget == null ? null : onOpenBudget,
                   semanticLabel: switch (budget) {

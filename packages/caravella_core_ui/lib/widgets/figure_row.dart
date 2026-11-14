@@ -14,8 +14,6 @@ class FigureRowItem {
   /// After the amount, on its line.
   final Widget? trailing;
 
-  /// A small line under the amount ("of 50 € · 12,50 € left").
-  final String? caption;
   final VoidCallback? onTap;
 
   /// Replaces label and amount for screen readers.
@@ -27,7 +25,6 @@ class FigureRowItem {
     required this.currency,
     this.leading,
     this.trailing,
-    this.caption,
     this.onTap,
     this.semanticLabel,
   });
@@ -92,13 +89,6 @@ class FigureRow extends StatelessWidget {
               ],
             ],
           ),
-          if (item.caption case final caption?)
-            Text(
-              caption,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.labelMedium?.copyWith(color: muted),
-            ),
         ],
       );
       final onTap = item.onTap;
