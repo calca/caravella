@@ -3,7 +3,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
-import '../../../sync/group_sync_badge.dart';
 import '../../budget/budget_detail_sheet.dart';
 import '../../group/group_type/group_type_localization.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
@@ -106,9 +105,6 @@ class GroupDetailHeader extends StatelessWidget {
   final ExpenseGroup group;
   final Color foreground;
 
-  /// Opens the group's sync page from the "Shared" badge.
-  final VoidCallback? onOpenSync;
-
   /// Opens the budget sheet from "Today", when the group has a budget.
   final VoidCallback? onOpenBudget;
 
@@ -119,7 +115,6 @@ class GroupDetailHeader extends StatelessWidget {
     super.key,
     required this.group,
     required this.foreground,
-    this.onOpenSync,
     this.onOpenBudget,
     this.today,
   });
@@ -172,15 +167,6 @@ class GroupDetailHeader extends StatelessWidget {
                 ),
               ),
             ),
-            if (group.syncEnabled) ...[
-              const SizedBox(width: 8),
-              GroupSyncBadge(
-                group: group,
-                background: foreground.withValues(alpha: 0.1),
-                foreground: foreground,
-                onTap: onOpenSync,
-              ),
-            ],
           ],
         ),
         const SizedBox(height: 2),
@@ -217,18 +203,35 @@ class GroupDetailHeader extends StatelessWidget {
                   currency: group.currency,
                 ),
                 FigureRowItem(
-                  label: gloc.today,
+                  // With a budget the ring and "of 50 € · 12.50 € left" say
+                  // what this is: no "Today" label (its line stays, so the
+                  // amounts line up).
+                  label: budget == null ? gloc.today : '',
                   value: spentToday,
                   currency: group.currency,
-                  trailing: switch (budget?.todayFraction) {
+                  leading: switch (budget?.todayFraction) {
                     final f? => BudgetRing(
                       fraction: f,
                       over: budget!.overToday,
-                      size: 24,
+                      size: 22,
                       strokeWidth: 3,
                       color: foreground,
                     ),
                     null => null,
+                  },
+                  caption: switch (budget) {
+                    BudgetStatus(todayShare: final share?)
+                        when budget.overToday =>
+                      gloc.budget_today_caption_over(
+                        money(share),
+                        money(spentToday - share),
+                      ),
+                    BudgetStatus(todayShare: final share?) =>
+                      gloc.budget_today_caption_left(
+                        money(share),
+                        money(share - spentToday),
+                      ),
+                    _ => null,
                   },
                   onTap: budget == null ? null : onOpenBudget,
                   semanticLabel: switch (budget) {

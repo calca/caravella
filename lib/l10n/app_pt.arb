@@ -1101,4 +1101,6 @@
   ,"@balance_paid_and_settled": {"description": "Under a name in Balances: what they paid in expenses and what they paid back in Settle up", "placeholders": {"amount": {"type": "String"}, "settled": {"type": "String"}}}
   ,"balance_paid_and_received": "Pagou {amount} no total · recebeu {received}"
   ,"@balance_paid_and_received": {"description": "Under a name in Balances: what they paid in expenses and what they got back in Settle up", "placeholders": {"amount": {"type": "String"}, "received": {"type": "String"}}}
+  ,"budget_today_caption_left": "de {share} · restam {left}"
+  ,"budget_today_caption_over": "de {share} · {over} a mais"
 }

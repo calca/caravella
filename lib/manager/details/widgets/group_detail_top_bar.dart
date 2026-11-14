@@ -1,6 +1,9 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
+
+import '../../../sync/group_sync_badge.dart';
 
 /// One entry of the group page's ⋯ menu.
 class GroupMenuItem {
@@ -28,6 +31,11 @@ class GroupDetailTopBar extends StatelessWidget {
   final VoidCallback? onSearch;
   final List<GroupMenuItem> menuItems;
 
+  /// A shared group: a round sync button before search, with the dot of
+  /// how its sync is doing, opening the sync page ([onSync]).
+  final ExpenseGroup? syncGroup;
+  final VoidCallback? onSync;
+
   const GroupDetailTopBar({
     super.key,
     required this.title,
@@ -37,6 +45,8 @@ class GroupDetailTopBar extends StatelessWidget {
     required this.pageColor,
     required this.onSearch,
     required this.menuItems,
+    this.syncGroup,
+    this.onSync,
   });
 
   @override
@@ -91,6 +101,16 @@ class GroupDetailTopBar extends StatelessWidget {
                 ),
               ),
             ),
+            if (syncGroup case final group?) ...[
+              GroupSyncBadge(
+                group: group,
+                round: true,
+                background: buttonBackground,
+                foreground: s.onSurface,
+                onTap: onSync,
+              ),
+              const SizedBox(width: 8),
+            ],
             if (onSearch case final search?) ...[
               roundButton(
                 icon: Icons.search_rounded,

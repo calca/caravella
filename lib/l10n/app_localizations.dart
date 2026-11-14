@@ -5531,6 +5531,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Paid {amount} in all · {received} received'**
   String balance_paid_and_received(String amount, String received);
+
+  /// Under today's amount on the group page with a budget: today's share and what is left of it
+  ///
+  /// In en, this message translates to:
+  /// **'of {share} · {left} left'**
+  String budget_today_caption_left(String share, String left);
+
+  /// Under today's amount on the group page with a budget: today's share and how much over it
+  ///
+  /// In en, this message translates to:
+  /// **'of {share} · {over} over'**
+  String budget_today_caption_over(String share, String over);
 }
 
 class _AppLocalizationsDelegate

@@ -3073,4 +3073,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return 'Pagou $amount no total · recebeu $received';
   }
+
+  @override
+  String budget_today_caption_left(String share, String left) {
+    return 'de $share · restam $left';
+  }
+
+  @override
+  String budget_today_caption_over(String share, String over) {
+    return 'de $share · $over a mais';
+  }
 }

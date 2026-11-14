@@ -20,12 +20,17 @@ class GroupSyncBadge extends StatefulWidget {
   final Color foreground;
   final VoidCallback? onTap;
 
+  /// A round button with the sync icon and the dot on its corner (the
+  /// group page's top bar) instead of the "Shared" pill.
+  final bool round;
+
   const GroupSyncBadge({
     super.key,
     required this.group,
     required this.background,
     required this.foreground,
     this.onTap,
+    this.round = false,
   });
 
   @override
@@ -123,6 +128,47 @@ class _GroupSyncBadgeState extends State<GroupSyncBadge> {
           GroupSyncHealth.stale => gloc.sync_badge_stale,
         },
     ].join(', ');
+    if (widget.round) {
+      return Semantics(
+        button: true,
+        label: semantics,
+        excludeSemantics: true,
+        onTap: widget.onTap,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Material(
+              color: widget.background,
+              shape: const CircleBorder(),
+              child: IconButton(
+                icon: const Icon(Icons.sync_rounded),
+                color: fg,
+                tooltip: gloc.sync_group_shared,
+                onPressed: widget.onTap,
+              ),
+            ),
+            if (dot != null)
+              // In the button's corner, clear of the icon's arrows.
+              Positioned(
+                right: 5,
+                top: 5,
+                child: IgnorePointer(
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: (dot.decoration as BoxDecoration).copyWith(
+                      // A ring of the button's color around the dot.
+                      border:
+                          (dot.decoration as BoxDecoration).border ??
+                          Border.all(color: widget.background, width: 1.5),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
     final radius = BorderRadius.circular(16);
     final content = Row(
       mainAxisSize: MainAxisSize.min,
