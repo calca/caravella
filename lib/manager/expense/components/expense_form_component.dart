@@ -264,8 +264,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               secondCurrency: widget.config.secondCurrency,
               onSaveExpense: () => _orchestrator.saveExpense(context),
               isReadOnly: widget.config.isReadOnly,
-              // The sheets stay short: one line of pills each.
-              compactPills: !widget.config.fullEdit && !_controller.isExpanded,
+              // One line of pills each, in the sheet and on the full page
+              // alike: "+N" opens the rest in place (no sheet on top).
+              compactPills: true,
             ),
             ListenableBuilder(
               listenable: _controller,

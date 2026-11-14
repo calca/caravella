@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings › Check for updates: the “Update available” card no longer shows “v4133”. Play reports only the version code (the build number), not the version name, so the line is gone
 
 ### Changed
+- Paid by and Category look and work the same in the quick sheet and on the full page: one line of pills, with "+N" opening the rest in place
+- Attachments: the pill says "Add attachment" before the first one too, as it does under the list
+- Tapping a recent expense on Home opens the group page with that expense open; back lands on the group
+- A group's photo no longer fades in after its page or card: it is decoded once, shared by every screen, and the active groups' photos are decoded at startup
 - No sheet opens on top of another any more, nor closes to let another rise. The currency list, Background › Color and Budget › Change budget open as a second screen inside the same sheet, sliding in with a back arrow (the other choices in the sheet are kept). An attachment's sources (photo, video, gallery, file) open in place under its pill, and voice input opens in place above the expense sheet's buttons. The expense sheet from the notification is now the same quick sheet as Home's, with "More details" opening the full page
 - Every bottom sheet now opens and closes with the same gentle motion as the add-expense sheet (320 ms in, 220 ms out): currency, budget, period, group type, background, options, export, location and the others used Flutter's quicker default. They all go through `showAppBottomSheet` (`caravella_core_ui`), and a test keeps it that way
 - Removed the JSON storage backend (`FileBasedExpenseGroupRepository`, the `USE_JSON_BACKEND` define and its indexes): SQLite has been the default since 1.6. The old `expense_group_storage.json` is still read once at first launch, by `LegacyJsonGroupReader`, to move it into SQLite. Tests now run on a temporary SQLite database (`useTestDatabase()`), (#678)

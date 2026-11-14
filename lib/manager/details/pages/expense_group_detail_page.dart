@@ -31,7 +31,16 @@ import '../../budget/budget_settings_sheet.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
-  const ExpenseGroupDetailPage({super.key, required this.trip});
+
+  /// Opens this expense as soon as the group is loaded (a recent expense
+  /// tapped on Home): back from it lands on the group.
+  final String? openExpenseId;
+
+  const ExpenseGroupDetailPage({
+    super.key,
+    required this.trip,
+    this.openExpenseId,
+  });
 
   @override
   State<ExpenseGroupDetailPage> createState() => _ExpenseGroupDetailPageState();
@@ -157,8 +166,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     });
     if (_deleted && mounted) {
       Navigator.of(context).pop(true); // back to Home, which refreshes
+      return;
+    }
+    final openId = widget.openExpenseId;
+    if (openId != null && !_openedRequestedExpense) {
+      _openedRequestedExpense = true;
+      final expense = trip?.expenses.where((e) => e.id == openId).firstOrNull;
+      if (expense != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _openEditExpense(expense);
+        });
+      }
     }
   }
+
+  bool _openedRequestedExpense = false;
 
   Future<void> _reloadFromStorage() async {
     if (_trip == null) return;

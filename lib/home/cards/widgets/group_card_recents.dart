@@ -206,8 +206,11 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
                         onTap: () {
                           Navigator.of(ctx).push(
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  ExpenseGroupDetailPage(trip: widget.group),
+                              // The group with this expense open on top.
+                              builder: (_) => ExpenseGroupDetailPage(
+                                trip: widget.group,
+                                openExpenseId: e.id,
+                              ),
                             ),
                           );
                         },
