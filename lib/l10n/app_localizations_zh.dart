@@ -2809,28 +2809,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get budget_amount_daily => '每天金额';
 
   @override
-  String get budget_currency_hint => '使用群组货币';
-
-  @override
   String get budget_remove => '移除预算';
 
   @override
   String get budget_change => '更改预算';
 
   @override
-  String get budget_left_today => '今天剩余';
-
-  @override
-  String get budget_over_today => '今天超出';
-
-  @override
   String budget_spent_of_share(String spent, String share) {
     return '已花 $spent，计划 $share';
-  }
-
-  @override
-  String budget_header(String period) {
-    return '预算 · $period';
   }
 
   @override
@@ -2840,30 +2826,65 @@ class AppLocalizationsZh extends AppLocalizations {
   String get budget_over => '超出预算';
 
   @override
-  String budget_spent_percent(String amount, int percent) {
-    return '已花 $amount · $percent%';
-  }
-
-  @override
-  String budget_day_of(int day, int count) {
-    return '今天 · 第 $day 天，共 $count 天';
-  }
-
-  @override
   String budget_bar_semantics(int spent, int elapsed) {
     return '已花预算的 $spent%，时段已过 $elapsed%';
   }
 
   @override
-  String budget_per_day_until(String date) {
-    return '截至 $date 每天';
+  String get budget_set_dates_hint => '设置群组日期，即可查看每天可花多少。';
+
+  @override
+  String budget_rate_total(String amount) {
+    return '共 $amount';
   }
 
   @override
-  String get budget_average_so_far => '目前每天';
+  String budget_rate_monthly(String amount) {
+    return '每月 $amount';
+  }
 
   @override
-  String get budget_set_dates_hint => '设置群组日期，即可查看每天可花多少。';
+  String budget_rate_weekly(String amount) {
+    return '每周 $amount';
+  }
+
+  @override
+  String budget_rate_daily(String amount) {
+    return '每天 $amount';
+  }
+
+  @override
+  String budget_period_day(String period, int day, int count) {
+    return '$period · 第 $day 天，共 $count 天';
+  }
+
+  @override
+  String budget_today_date(String date) {
+    return '今天，$date';
+  }
+
+  @override
+  String budget_can_spend_today(String amount) {
+    return '今天还可以花 $amount';
+  }
+
+  @override
+  String budget_over_today_share(String amount) {
+    return '今天超出当日额度 $amount';
+  }
+
+  @override
+  String budget_run_out_month(String month) {
+    return '$month的预算已用完';
+  }
+
+  @override
+  String get budget_run_out => '预算已用完';
+
+  @override
+  String budget_so_far_per_day(String amount) {
+    return '目前平均每天 $amount';
+  }
 
   @override
   String get budget_past_months => '之前几个月';

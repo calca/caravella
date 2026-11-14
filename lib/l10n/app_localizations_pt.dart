@@ -2905,28 +2905,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get budget_amount_daily => 'Valor por dia';
 
   @override
-  String get budget_currency_hint => 'Na moeda do grupo';
-
-  @override
   String get budget_remove => 'Remover orçamento';
 
   @override
   String get budget_change => 'Alterar orçamento';
 
   @override
-  String get budget_left_today => 'restam hoje';
-
-  @override
-  String get budget_over_today => 'a mais, hoje';
-
-  @override
   String budget_spent_of_share(String spent, String share) {
     return '$spent gastos de $share previstos';
-  }
-
-  @override
-  String budget_header(String period) {
-    return 'Orçamento · $period';
   }
 
   @override
@@ -2936,31 +2922,66 @@ class AppLocalizationsPt extends AppLocalizations {
   String get budget_over => 'acima do orçamento';
 
   @override
-  String budget_spent_percent(String amount, int percent) {
-    return '$amount gastos · $percent%';
-  }
-
-  @override
-  String budget_day_of(int day, int count) {
-    return 'hoje · dia $day de $count';
-  }
-
-  @override
   String budget_bar_semantics(int spent, int elapsed) {
     return 'Gasto $spent% do orçamento, passou $elapsed% do período';
   }
 
   @override
-  String budget_per_day_until(String date) {
-    return 'Por dia, até $date';
+  String get budget_set_dates_hint =>
+      'Defina as datas do grupo para ver quanto podem gastar por dia.';
+
+  @override
+  String budget_rate_total(String amount) {
+    return '$amount no total';
   }
 
   @override
-  String get budget_average_so_far => 'Até agora por dia';
+  String budget_rate_monthly(String amount) {
+    return '$amount por mês';
+  }
 
   @override
-  String get budget_set_dates_hint =>
-      'Defina as datas do grupo para ver quanto podem gastar por dia.';
+  String budget_rate_weekly(String amount) {
+    return '$amount por semana';
+  }
+
+  @override
+  String budget_rate_daily(String amount) {
+    return '$amount por dia';
+  }
+
+  @override
+  String budget_period_day(String period, int day, int count) {
+    return '$period · dia $day de $count';
+  }
+
+  @override
+  String budget_today_date(String date) {
+    return 'Hoje, $date';
+  }
+
+  @override
+  String budget_can_spend_today(String amount) {
+    return 'Hoje ainda podem gastar $amount';
+  }
+
+  @override
+  String budget_over_today_share(String amount) {
+    return 'Hoje $amount acima do previsto para hoje';
+  }
+
+  @override
+  String budget_run_out_month(String month) {
+    return 'O orçamento de $month acabou';
+  }
+
+  @override
+  String get budget_run_out => 'O orçamento acabou';
+
+  @override
+  String budget_so_far_per_day(String amount) {
+    return 'Até agora $amount por dia';
+  }
 
   @override
   String get budget_past_months => 'Os meses anteriores';
