@@ -343,7 +343,15 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
                     children: [
                       Row(
                         children: [
-                          const RoundBackButton(),
+                          // The same shadow as the title pill, so the white
+                          // button stays visible over a light map.
+                          const Material(
+                            shape: CircleBorder(),
+                            color: Colors.transparent,
+                            elevation: 2,
+                            shadowColor: Colors.black26,
+                            child: RoundBackButton(),
+                          ),
                           const SizedBox(width: 10),
                           Flexible(
                             child: Material(
