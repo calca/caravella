@@ -112,11 +112,16 @@ void main() {
     await tester.enterText(find.byType(TextField).first, 'Fjords');
     await tester.pump();
 
-    await tester.runAsync(() async {
-      await tester.binding.handlePopRoute();
-      await Future<void>.delayed(const Duration(milliseconds: 300));
-    });
-    await tester.pumpAndSettle();
+    await tester.runAsync(() => tester.binding.handlePopRoute());
+    // The save runs on the real database: wait for the page to leave
+    // instead of a fixed delay, which a slow CI machine sometimes outran.
+    for (var i = 0; i < 50; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 100)),
+      );
+      await tester.pumpAndSettle();
+      if (find.byType(ExpenseGroupGeneralPage).evaluate().isEmpty) break;
+    }
 
     expect(find.byType(ExpenseGroupGeneralPage), findsNothing);
     final stored = await tester.runAsync(
