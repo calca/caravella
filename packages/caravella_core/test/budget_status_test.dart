@@ -34,6 +34,47 @@ void main() {
     expect(BudgetStatus.of(groupWith(null, {})), isNull);
   });
 
+  group('onTrack', () {
+    const monthly = GroupBudget(amount: 300, period: BudgetPeriod.monthly);
+    final day10 = DateTime(2026, 11, 10, 12);
+
+    test('within the share of the days gone', () {
+      // Day 10 of 30: up to 100 is in line.
+      final s = BudgetStatus.of(
+        groupWith(monthly, {DateTime(2026, 11, 2): 100}),
+        today: day10,
+      )!;
+      expect(s.onTrack, isTrue);
+    });
+
+    test('above it, even with budget left', () {
+      final s = BudgetStatus.of(
+        groupWith(monthly, {DateTime(2026, 11, 2): 101}),
+        today: day10,
+      )!;
+      expect(s.remaining, greaterThan(0));
+      expect(s.onTrack, isFalse);
+    });
+
+    test('no days to count: against the whole budget', () {
+      const total = GroupBudget(amount: 1500, period: BudgetPeriod.total);
+      expect(
+        BudgetStatus.of(
+          groupWith(total, {DateTime(2026, 11, 2): 1500}),
+          today: day10,
+        )!.onTrack,
+        isTrue,
+      );
+      expect(
+        BudgetStatus.of(
+          groupWith(total, {DateTime(2026, 11, 2): 1600}),
+          today: day10,
+        )!.onTrack,
+        isFalse,
+      );
+    });
+  });
+
   group('total', () {
     const budget = GroupBudget(amount: 1500, period: BudgetPeriod.total);
 

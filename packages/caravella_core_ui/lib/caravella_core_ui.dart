@@ -18,6 +18,7 @@ export 'widgets/app_toast.dart' show AppToast, ToastType;
 export 'widgets/avatars.dart';
 export 'widgets/base_card.dart';
 export 'widgets/card_outline.dart';
+export 'widgets/link_card.dart';
 export 'widgets/bottom_action_bar.dart';
 export 'widgets/budget_meter.dart';
 export 'widgets/caravella_app_bar.dart';

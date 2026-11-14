@@ -1,13 +1,17 @@
 import 'section_swipe.dart';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+
 import 'dart:async';
 import 'dart:io';
+
 import 'package:provider/provider.dart';
 
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+
 import '../../../home/cards/widgets/add_expense_controller.dart';
 import '../widgets/delete_expense_dialog.dart';
 import '../../expense/pages/expense_form_page.dart';
@@ -205,11 +209,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     _groupNotifier?.notifyGroupUpdated(trip.id);
   }
 
-  /// "Today" tapped with a budget: its sheet, and from there the budget's
-  /// settings.
+  /// The budget card of the statistics: the budget sheet (and from there
+  /// its settings), or, without a budget, its settings to set one.
   Future<void> _showBudget() async {
     final trip = _trip;
     if (trip == null) return;
+    if (trip.budget == null) {
+      final result = await showBudgetSettingsSheet(
+        context,
+        budget: null,
+        currency: trip.currency,
+        groupType: trip.groupType,
+      );
+      if (result != null) await _applyBudget(result);
+      return;
+    }
     await showBudgetDetailSheet(
       context,
       group: trip,
@@ -553,6 +567,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
         child: GroupStatisticsView(
           group: trip,
           onEnableLocation: _openLocationSetting,
+          onOpenBudget: _showBudget,
         ),
       ),
     };
@@ -590,7 +605,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                       header: (foreground) => GroupDetailHeader(
                         group: trip,
                         foreground: foreground,
-                        onOpenBudget: _showBudget,
                       ),
                     ),
                   ),

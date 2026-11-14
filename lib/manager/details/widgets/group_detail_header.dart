@@ -3,7 +3,6 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
-import '../../budget/budget_detail_sheet.dart';
 import '../../group/group_type/group_type_localization.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
 import 'group_detail_top_bar.dart';
@@ -105,9 +104,6 @@ class GroupDetailHeader extends StatelessWidget {
   final ExpenseGroup group;
   final Color foreground;
 
-  /// Opens the budget sheet from "Today", when the group has a budget.
-  final VoidCallback? onOpenBudget;
-
   /// "Today" for the figures; now when null (tests set it).
   final DateTime? today;
 
@@ -115,7 +111,6 @@ class GroupDetailHeader extends StatelessWidget {
     super.key,
     required this.group,
     required this.foreground,
-    this.onOpenBudget,
     this.today,
   });
 
@@ -181,57 +176,21 @@ class GroupDetailHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-        Builder(
-          builder: (context) {
-            final spentToday = group.getTodaySpendingSync(today);
-            // With a budget, a ring of how today is going against what can
-            // be spent today; tapping "Today" opens the budget.
-            final budget = BudgetStatus.of(
-              group,
-              today: today,
-              firstDayOfWeek: firstDayOfWeekOf(context),
-            );
-            final locale = Localizations.localeOf(context);
-            String money(double v) =>
-                CurrencyDisplay.formatLocalizedText(v, group.currency, locale);
-            return FigureRow(
-              color: foreground,
-              items: [
-                FigureRowItem(
-                  label: gloc.group_total,
-                  value: group.getTotalExpenses(),
-                  currency: group.currency,
-                ),
-                FigureRowItem(
-                  label: gloc.today,
-                  value: spentToday,
-                  currency: group.currency,
-                  // With a budget, the ring of how today is going before
-                  // the amount (the detail is one tap away).
-                  leading: switch (budget?.todayFraction) {
-                    final f? => BudgetRing(
-                      fraction: f,
-                      over: budget!.overToday,
-                      size: 22,
-                      strokeWidth: 3,
-                      color: foreground,
-                    ),
-                    null => null,
-                  },
-                  onTap: budget == null ? null : onOpenBudget,
-                  semanticLabel: switch (budget) {
-                    null => null,
-                    BudgetStatus(todayShare: final share?)
-                        when budget.overToday =>
-                      gloc.budget_today_over(money(spentToday), money(share)),
-                    BudgetStatus(todayShare: final share?) =>
-                      gloc.budget_today_within(money(spentToday), money(share)),
-                    _ => gloc.budget_today_open(money(spentToday)),
-                  },
-                ),
-              ],
-            );
-          },
+        // The budget is in the statistics (its card), not here.
+        FigureRow(
+          color: foreground,
+          items: [
+            FigureRowItem(
+              label: gloc.group_total,
+              value: group.getTotalExpenses(),
+              currency: group.currency,
+            ),
+            FigureRowItem(
+              label: gloc.today,
+              value: group.getTodaySpendingSync(today),
+              currency: group.currency,
+            ),
+          ],
         ),
       ],
     );

@@ -92,6 +92,15 @@ class BudgetStatus {
     final share => (spentToday / share).clamp(0.0, 1.0),
   };
 
+  /// Spending is in line with the budget: no more spent in the period than
+  /// its share of the days gone (today included), or than the whole budget
+  /// when there are no days to count (a total budget without dates or past
+  /// them). The calm word the statistics show instead of figures.
+  bool get onTrack => switch ((dayNumber, dayCount)) {
+    (final d?, final c?) => spent <= budget.amount * d / c + 0.005,
+    _ => spent <= budget.amount + 0.005,
+  };
+
   /// Average spent per day so far in the period; null when [dayNumber] is.
   double? get averagePerDay => switch (dayNumber) {
     final day? => spent / day,

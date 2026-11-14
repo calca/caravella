@@ -9,13 +9,15 @@ import 'package:material_ui/material_ui.dart';
 import '../pages/tabs/categories_overview_tab.dart';
 import '../pages/tabs/usecase/daily_totals_utils.dart';
 import '../pages/tabs/usecase/date_range_formatter.dart';
+import 'group_budget_card.dart';
 import 'group_map_card.dart';
 import 'grouped_expense_list.dart';
 import 'stat_card.dart';
 
 /// Statistics view of the group page: one spending chart over the whole
 /// group ([buildGroupSpendingSeries]), who paid how much,
-/// map card ([GroupMapCard]), spending pace ([SpendingPaceCard]), highest expense and most
+/// map card ([GroupMapCard]), spending pace ([SpendingPaceCard]) with the
+/// budget card under it ([GroupBudgetCard]), highest expense and most
 /// expensive day (or month, for long groups),
 /// then the categories. The total, period
 /// and participant count are already in the page header, so they aren't
@@ -27,10 +29,15 @@ class GroupStatisticsView extends StatelessWidget {
   /// when no expense has a place and the setting is off).
   final VoidCallback? onEnableLocation;
 
+  /// Opens the budget sheet, or the budget's settings without one (from
+  /// the budget card).
+  final VoidCallback? onOpenBudget;
+
   const GroupStatisticsView({
     super.key,
     required this.group,
     this.onEnableLocation,
+    this.onOpenBudget,
   });
 
   @override
@@ -57,6 +64,9 @@ class GroupStatisticsView extends StatelessWidget {
             ),
             const SizedBox(height: 12),
           ],
+          // Next to the pace, where the budget is worth comparing.
+          GroupBudgetCard(group: group, onOpen: onOpenBudget),
+          const SizedBox(height: 12),
           // One chart over the whole group, step chosen by its length.
           if (buildGroupSpendingSeries(group) case final series?
               when _hasSpending(series.values))

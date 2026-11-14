@@ -2887,6 +2887,15 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get budget_on_track => '符合预期';
+
+  @override
+  String get budget_above_plan => '略高于预期';
+
+  @override
+  String get budget_not_set => '未设置';
+
+  @override
   String get budget_past_months => '之前几个月';
 
   @override
@@ -2903,21 +2912,6 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String budget_past_semantics(String period, String spent, String budget) {
     return '$period：$spent，预算 $budget';
-  }
-
-  @override
-  String budget_today_within(String spent, String share) {
-    return '今天 $spent，未超出今天计划的 $share。打开预算';
-  }
-
-  @override
-  String budget_today_over(String spent, String share) {
-    return '今天 $spent，超出今天计划的 $share。打开预算';
-  }
-
-  @override
-  String budget_today_open(String spent) {
-    return '今天 $spent。打开预算';
   }
 
   @override

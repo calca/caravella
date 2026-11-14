@@ -2976,6 +2976,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get budget_on_track => 'on track';
+
+  @override
+  String get budget_above_plan => 'a bit above plan';
+
+  @override
+  String get budget_not_set => 'Not set';
+
+  @override
   String get budget_past_months => 'The months before';
 
   @override
@@ -2992,21 +3001,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String budget_past_semantics(String period, String spent, String budget) {
     return '$period: $spent of $budget';
-  }
-
-  @override
-  String budget_today_within(String spent, String share) {
-    return 'Today $spent, within the $share planned for today. Open the budget';
-  }
-
-  @override
-  String budget_today_over(String spent, String share) {
-    return 'Today $spent, over the $share planned for today. Open the budget';
-  }
-
-  @override
-  String budget_today_open(String spent) {
-    return 'Today $spent. Open the budget';
   }
 
   @override
