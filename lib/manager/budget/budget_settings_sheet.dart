@@ -112,7 +112,8 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
       BudgetPeriod.daily => gloc.budget_amount_daily,
     };
     // A second screen of the budget sheet ([showSheetPage]) has its title
-    // there; opened on its own (group settings), it is a sheet.
+    // there and needs no description (the budget is right behind it);
+    // opened on its own (group settings), it is a sheet.
     final inPage = isSheetPage(context);
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,10 +127,14 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
           ),
         ),
         const SizedBox(height: 20),
-        Text(
-          amountLabel,
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+        // Labels at 20 (the grid), like the title.
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Text(
+            amountLabel,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -140,46 +145,30 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
           textInputAction: TextInputAction.done,
           onSubmitted: _save,
         ),
-        const SizedBox(height: 4),
-        Text(
-          gloc.budget_currency_hint,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.outline,
-          ),
-        ),
         const SizedBox(height: 24),
-        Row(
-          children: [
-            if (widget.budget != null) ...[
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => closeSheetPage<BudgetSheetResult>(
-                    context,
-                    const BudgetRemoved(),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(52),
-                    shape: const StadiumBorder(),
-                  ),
-                  child: Text(gloc.budget_remove),
-                ),
-              ),
-              const SizedBox(width: 12),
-            ],
-            Expanded(
-              child: FilledButton(
-                onPressed: _value == null ? null : _save,
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                  shape: const StadiumBorder(),
-                  elevation: 0,
-                ),
-                child: Text(gloc.save),
-              ),
-            ),
-          ],
+        FilledButton(
+          onPressed: _value == null ? null : _save,
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(52),
+            shape: const StadiumBorder(),
+            elevation: 0,
+          ),
+          child: Text(gloc.save),
         ),
+        if (widget.budget != null) ...[
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: () => closeSheetPage<BudgetSheetResult>(
+              context,
+              const BudgetRemoved(),
+            ),
+            style: TextButton.styleFrom(
+              minimumSize: const Size.fromHeight(48),
+              foregroundColor: theme.colorScheme.error,
+            ),
+            child: Text(gloc.budget_remove),
+          ),
+        ],
       ],
     );
     return Padding(
@@ -188,20 +177,7 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
         bottom: inPage ? 0 : MediaQuery.viewInsetsOf(context).bottom,
       ),
       child: inPage
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  gloc.budget_sheet_description,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                body,
-              ],
-            )
+          ? body
           : CaravellaBottomSheetScaffold(
               title: gloc.budget,
               subtitle: gloc.budget_sheet_description,

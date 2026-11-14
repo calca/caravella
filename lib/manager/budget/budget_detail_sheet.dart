@@ -71,6 +71,11 @@ class _BudgetDetailHostState extends State<_BudgetDetailHost> {
       BudgetDetailSheet(group: _group, onChange: _change);
 }
 
+/// The budget, top to bottom as one story: the title with the budget
+/// ("600 € a month"), what is left of the current period (or how far over
+/// it), its bar with today marked on it, a line on today, the periods
+/// before and "Change budget". A daily budget's period is today, so it has
+/// no line on today.
 class BudgetDetailSheet extends StatelessWidget {
   final ExpenseGroup group;
 
@@ -93,6 +98,7 @@ class BudgetDetailSheet extends StatelessWidget {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final locale = Localizations.localeOf(context);
+    final lang = locale.toString();
     final status = BudgetStatus.of(
       group,
       today: today,
@@ -102,27 +108,45 @@ class BudgetDetailSheet extends StatelessWidget {
     String money(double v) =>
         CurrencyDisplay.formatLocalizedText(v, group.currency, locale);
     final budget = status.budget;
+    final daily = budget.period == BudgetPeriod.daily;
     final small = theme.textTheme.bodySmall?.copyWith(color: s.outline);
     final caps = theme.textTheme.labelSmall?.copyWith(
       color: s.outline,
       letterSpacing: 0.7,
     );
 
+    final rate = switch (budget.period) {
+      BudgetPeriod.total => gloc.budget_rate_total,
+      BudgetPeriod.monthly => gloc.budget_rate_monthly,
+      BudgetPeriod.weekly => gloc.budget_rate_weekly,
+      BudgetPeriod.daily => gloc.budget_rate_daily,
+    }(money(budget.amount));
     final periodName = switch (budget.period) {
       BudgetPeriod.total => gloc.budget_period_total,
-      BudgetPeriod.monthly => DateFormat.MMMM(
-        locale.toString(),
-      ).format(status.start!),
+      BudgetPeriod.monthly => toBeginningOfSentenceCase(
+        DateFormat.MMMM(lang).format(status.start!),
+        lang,
+      ),
       BudgetPeriod.weekly => formatDateRange(
         start: status.start,
         end: status.end,
         locale: locale,
       ),
-      BudgetPeriod.daily => gloc.today,
+      BudgetPeriod.daily => gloc.budget_today_date(
+        DateFormat.MMMMEEEEd(lang).format(status.start!),
+      ),
+    };
+    final caption = switch ((status.dayNumber, status.dayCount)) {
+      (final d?, final c?) when !daily => gloc.budget_period_day(
+        periodName,
+        d,
+        c,
+      ),
+      _ => periodName,
     };
     final spentPercent = (status.spent / budget.amount * 100).round();
     final elapsed = switch ((status.dayNumber, status.dayCount)) {
-      (final d?, final c?) => d / c,
+      (final d?, final c?) when !daily => d / c,
       _ => null,
     };
     final overPeriod = status.spent > budget.amount;
@@ -132,115 +156,102 @@ class BudgetDetailSheet extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Text on the sheet at 20 (the grid), the button at 16.
+          // Text on the sheet at 20 (the grid), the card and button at 16.
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _Today(status: status, currency: group.currency, money: money),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Expanded(
+                      child: Semantics(
+                        header: true,
+                        child: Text(
+                          gloc.budget,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      rate,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: s.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(caption, style: small),
+                const SizedBox(height: 2),
+                _Figure(
+                  value: overPeriod ? status.overBy : status.remaining,
+                  currency: group.currency,
+                  size: 30,
+                  after: overPeriod ? gloc.budget_over : gloc.budget_left,
+                  color: overPeriod ? s.onBudgetOver : null,
+                ),
+                const SizedBox(height: 10),
+                if (elapsed != null)
+                  // "today" over the marker on the bar.
+                  ExcludeSemantics(
+                    child: Align(
+                      alignment: Alignment(elapsed * 2 - 1, 0),
+                      child: Text(gloc.today.toLowerCase(), style: small),
+                    ),
+                  ),
+                Semantics(
+                  label: gloc.budget_bar_semantics(
+                    spentPercent,
+                    ((elapsed ?? 0) * 100).round(),
+                  ),
+                  child: BudgetBar(
+                    fraction: status.spent / budget.amount,
+                    over: overPeriod,
+                    marker: elapsed,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  gloc.budget_spent_of_share(
+                    money(status.spent),
+                    money(budget.amount),
+                  ),
+                  style: small,
+                ),
                 if (budget.period == BudgetPeriod.total &&
                     (group.startDate == null || group.endDate == null)) ...[
                   const SizedBox(height: 8),
                   Text(gloc.budget_set_dates_hint, style: small),
                 ],
-                if (budget.period != BudgetPeriod.daily) ...[
-                  const SizedBox(height: 16),
-                  const Divider(height: 1),
-                  const SizedBox(height: 14),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          gloc.budget_header(periodName).toUpperCase(),
-                          style: caps,
-                        ),
-                      ),
-                      Text(
-                        budget.period == BudgetPeriod.total
-                            ? money(budget.amount)
-                            : '${money(budget.amount)} · '
-                                  '${budgetPeriodName(gloc, budget.period)}',
-                        style: small,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  _Figure(
-                    value: overPeriod ? status.overBy : status.remaining,
-                    currency: group.currency,
-                    size: 26,
-                    after: overPeriod ? gloc.budget_over : gloc.budget_left,
-                    color: overPeriod ? s.onBudgetOver : null,
-                  ),
-                  const SizedBox(height: 10),
-                  Semantics(
-                    label: gloc.budget_bar_semantics(
-                      spentPercent,
-                      ((elapsed ?? 0) * 100).round(),
-                    ),
-                    child: BudgetBar(
-                      fraction: status.spent / budget.amount,
-                      over: overPeriod,
-                      marker: elapsed,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          gloc.budget_spent_percent(
-                            money(status.spent),
-                            spentPercent,
-                          ),
-                          style: small,
-                        ),
-                      ),
-                      if (status.dayNumber != null && status.dayCount != null)
-                        Text(
-                          gloc.budget_day_of(
-                            status.dayNumber!,
-                            status.dayCount!,
-                          ),
-                          style: small,
-                        ),
-                    ],
-                  ),
-                  if (status.todayShare != null) ...[
-                    const SizedBox(height: 16),
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            child: _Box(
-                              label: gloc.budget_per_day_until(
-                                DateFormat.MMMd(
-                                  locale.toString(),
-                                ).format(status.end!),
-                              ),
-                              value: status.todayShare!,
-                              currency: group.currency,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _Box(
-                              label: gloc.budget_average_so_far,
-                              value: status.averagePerDay!,
-                              currency: group.currency,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-                if (status.pastPeriods.isNotEmpty) ...[
-                  const SizedBox(height: 18),
-                  const Divider(height: 1),
-                  const SizedBox(height: 14),
+              ],
+            ),
+          ),
+          if (!daily && status.todayShare != null) ...[
+            const SizedBox(height: 16),
+            _TodayCard(
+              status: status,
+              money: money,
+              runOut: overPeriod || status.remaining <= 0,
+              runOutText: budget.period == BudgetPeriod.monthly
+                  ? gloc.budget_run_out_month(
+                      DateFormat.MMMM(lang).format(status.start!),
+                    )
+                  : gloc.budget_run_out,
+            ),
+          ],
+          if (status.pastPeriods.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
                   Text(
                     switch (budget.period) {
                       BudgetPeriod.monthly => gloc.budget_past_months,
@@ -254,8 +265,8 @@ class BudgetDetailSheet extends StatelessWidget {
                     periods: status.pastPeriods,
                     labelOf: (p) => switch (budget.period) {
                       BudgetPeriod.monthly => toBeginningOfSentenceCase(
-                        DateFormat.MMMM(locale.toString()).format(p.start),
-                        locale.toString(),
+                        DateFormat.MMMM(lang).format(p.start),
+                        lang,
                       ),
                       BudgetPeriod.weekly => formatDateRange(
                         start: p.start,
@@ -263,8 +274,8 @@ class BudgetDetailSheet extends StatelessWidget {
                         locale: locale,
                       ),
                       _ => toBeginningOfSentenceCase(
-                        DateFormat.MMMEd(locale.toString()).format(p.start),
-                        locale.toString(),
+                        DateFormat.MMMEd(lang).format(p.start),
+                        lang,
                       ),
                     },
                     amount: budget.amount,
@@ -272,10 +283,9 @@ class BudgetDetailSheet extends StatelessWidget {
                     money: money,
                   ),
                 ],
-              ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           OutlinedButton(
             onPressed: onChange ?? () => Navigator.of(context).pop(true),
             style: OutlinedButton.styleFrom(
@@ -290,17 +300,20 @@ class BudgetDetailSheet extends StatelessWidget {
   }
 }
 
-/// Today: the big ring, what's left of today's share (or how far over it)
-/// and what was spent of it.
-class _Today extends StatelessWidget {
+/// Today, in one card under the period: what can still be spent today
+/// (with the ring), how far over today's share, or, the period's budget
+/// spent, that it has run out; and the average per day so far.
+class _TodayCard extends StatelessWidget {
   final BudgetStatus status;
-  final String currency;
   final String Function(double) money;
+  final bool runOut;
+  final String runOutText;
 
-  const _Today({
+  const _TodayCard({
     required this.status,
-    required this.currency,
     required this.money,
+    required this.runOut,
+    required this.runOutText,
   });
 
   @override
@@ -308,98 +321,55 @@ class _Today extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final s = theme.colorScheme;
-    final share = status.todayShare;
-    final left = status.remainingToday;
-    return MergeSemantics(
-      child: Row(
-        children: [
-          if (status.todayFraction case final f?) ...[
-            BudgetRing(
-              fraction: f,
-              over: status.overToday,
-              size: 56,
-              strokeWidth: 6,
-            ),
-            const SizedBox(width: 14),
-          ],
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  gloc.today.toUpperCase(),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: s.outline,
-                    letterSpacing: 0.7,
-                  ),
-                ),
-                if (share != null && left != null) ...[
-                  _Figure(
-                    value: left.abs(),
-                    currency: currency,
-                    size: 22,
-                    after: status.overToday
-                        ? gloc.budget_over_today
-                        : gloc.budget_left_today,
-                    color: status.overToday ? s.onBudgetOver : null,
-                  ),
-                  Text(
-                    gloc.budget_spent_of_share(
-                      money(status.spentToday),
-                      money(share),
-                    ),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: s.outline,
-                    ),
-                  ),
-                ] else
-                  _Figure(
-                    value: status.spentToday,
-                    currency: currency,
-                    size: 22,
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Box extends StatelessWidget {
-  final String label;
-  final double value;
-  final String currency;
-
-  const _Box({
-    required this.label,
-    required this.value,
-    required this.currency,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final s = theme.colorScheme;
+    final left = status.remainingToday ?? 0;
+    final line = runOut
+        ? runOutText
+        : status.overToday
+        ? gloc.budget_over_today_share(money(-left))
+        : gloc.budget_can_spend_today(money(left));
     return MergeSemantics(
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
         decoration: BoxDecoration(
           color: s.raisedSurface,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: s.onSurfaceVariant,
+            if (runOut)
+              Icon(Icons.warning_rounded, size: 24, color: s.onBudgetOver)
+            else
+              BudgetRing(
+                fraction: status.todayFraction ?? 0,
+                over: status.overToday,
+                size: 32,
+                strokeWidth: 4,
+              ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    line,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: status.overToday && !runOut
+                          ? s.onBudgetOver
+                          : null,
+                    ),
+                  ),
+                  if (status.averagePerDay case final avg?) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      gloc.budget_so_far_per_day(money(avg)),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: s.outline,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
-            const SizedBox(height: 2),
-            _Figure(value: value, currency: currency, size: 18),
           ],
         ),
       ),

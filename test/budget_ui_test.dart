@@ -120,7 +120,7 @@ void main() {
     expect(tester.widget<BudgetRing>(find.byType(BudgetRing)).over, isTrue);
   });
 
-  testWidgets('the detail sheet: today, the month and the months before', (
+  testWidgets('the detail sheet: the month, today and the months before', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -131,13 +131,14 @@ void main() {
         ),
       ),
     );
-    expect(_amount(11.305), findsOneWidget);
-    expect(find.text('left today'), findsOneWidget);
-    expect(find.text('8.40 € spent of 19.71 € planned'), findsOneWidget);
-    expect(find.text('BUDGET · NOVEMBER'), findsOneWidget);
+    expect(find.text('Budget'), findsOneWidget);
+    expect(find.text('600.00 € a month'), findsOneWidget);
+    expect(find.text('November · day 11 of 30'), findsOneWidget);
     expect(_amount(385.7), findsOneWidget);
     expect(find.text('left'), findsOneWidget);
-    expect(find.text('today · day 11 of 30'), findsOneWidget);
+    expect(find.text('214.30 € spent of 600.00 € planned'), findsOneWidget);
+    expect(find.text('Today you can still spend 11.31 €'), findsOneWidget);
+    expect(find.text('So far 19.48 € a day'), findsOneWidget);
     expect(find.text('THE MONTHS BEFORE'), findsOneWidget);
     // October within, September over (August has no expenses: not shown,
     // being before the first one).
@@ -148,6 +149,48 @@ void main() {
     expect(find.text('42.00 € over'), findsOneWidget);
     expect(find.text('August'), findsNothing);
     expect(find.text('Change budget'), findsOneWidget);
+  });
+
+  testWidgets('over the month: the figure is over, the budget ran out', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        BudgetDetailSheet(
+          group: _home(
+            budget: const GroupBudget(
+              amount: 200,
+              period: BudgetPeriod.monthly,
+            ),
+          ),
+          today: _today,
+        ),
+      ),
+    );
+    expect(_amount(14.3), findsOneWidget);
+    expect(find.text('over budget'), findsOneWidget);
+    expect(find.text('The budget for November has run out'), findsOneWidget);
+    // Nothing about today's share, which is 0.
+    expect(find.textContaining('Today'), findsNothing);
+  });
+
+  testWidgets('a daily budget: today is the period', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        BudgetDetailSheet(
+          group: _home(
+            budget: const GroupBudget(amount: 40, period: BudgetPeriod.daily),
+          ),
+          today: _today,
+        ),
+      ),
+    );
+    expect(find.text('40.00 € a day'), findsOneWidget);
+    expect(find.text('Today, Wednesday, November 11'), findsOneWidget);
+    expect(_amount(31.6), findsOneWidget);
+    expect(find.text('8.40 € spent of 40.00 € planned'), findsOneWidget);
+    expect(find.textContaining('can still spend'), findsNothing);
+    expect(find.text('THE DAYS BEFORE'), findsOneWidget);
   });
 
   testWidgets('a total budget has no comparison', (tester) async {
@@ -161,7 +204,10 @@ void main() {
         ),
       ),
     );
-    expect(find.text('BUDGET · IN TOTAL'), findsOneWidget);
+    expect(find.text('1500.00 € in total'), findsOneWidget);
+    expect(find.text('In total'), findsOneWidget);
+    // No dates: no day to spread it on, so no line on today.
+    expect(find.textContaining('Today'), findsNothing);
     expect(find.textContaining('BEFORE'), findsNothing);
     expect(
       find.text(
