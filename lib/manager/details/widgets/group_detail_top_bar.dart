@@ -75,7 +75,7 @@ class GroupDetailTopBar extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       color: opaque ? pageColor : pageColor.withValues(alpha: 0),
-      padding: EdgeInsets.fromLTRB(12, topInset + 4, 12, 4),
+      padding: EdgeInsets.fromLTRB(16, topInset + 4, 16, 4),
       child: SizedBox(
         height: height - 8,
         child: Row(

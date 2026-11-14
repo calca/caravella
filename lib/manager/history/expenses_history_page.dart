@@ -195,7 +195,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
         SliverFillRemaining(
           hasScrollBody: false,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, bottom),
+            padding: EdgeInsets.fromLTRB(16, 0, 16, bottom),
             child: Align(
               alignment: Alignment.topCenter,
               child: ExpenseGroupEmptyStates(
@@ -211,7 +211,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
 
     return [
       SliverPadding(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, bottom),
+        padding: EdgeInsets.fromLTRB(16, 0, 16, bottom),
         sliver: SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -287,8 +287,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
                   SliverToBoxAdapter(child: SizedBox(height: top + 16)),
                   // Same header language as Home: count above a large title,
                   // search in a raised circle like Home's settings button.
+                  // Text at 20, the button at 16 (the page margin).
                   SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 16, 16),
                     sliver: SliverToBoxAdapter(
                       child: Row(
                         children: [
@@ -338,7 +339,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
                     ),
                   ),
                   SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     sliver: SliverToBoxAdapter(
                       child: Align(
                         alignment: Alignment.centerLeft,

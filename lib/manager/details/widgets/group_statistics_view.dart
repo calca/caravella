@@ -35,25 +35,17 @@ class GroupStatisticsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
     final pace = SpendingPace.of(group);
 
+    // The section labels of the whole app ([SettingsLabel]): 20 above.
     Widget title(String text) => Padding(
-      padding: const EdgeInsets.fromLTRB(6, 24, 6, 10),
-      child: Semantics(
-        header: true,
-        child: Text(
-          text,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.only(top: 20),
+      child: SettingsLabel(text),
     );
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -199,7 +191,9 @@ class _ChartCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(6, 4, 6, 10),
+          // 8 more under the 12 after the pace card: 20 above a section
+          // label, as everywhere.
+          padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
           // Title left, period right; the period goes under the title when
           // they don't fit on one line (large text).
           child: Wrap(
@@ -210,16 +204,14 @@ class _ChartCard extends StatelessWidget {
               Semantics(
                 header: true,
                 child: Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                  title.toUpperCase(),
+                  style: SettingsLabel.styleOf(theme),
                 ),
               ),
               if (subtitle != null)
                 Text(
                   subtitle!,
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  style: theme.textTheme.labelMedium?.copyWith(
                     color: s.onSurfaceVariant,
                   ),
                 ),
@@ -232,7 +224,7 @@ class _ChartCard extends StatelessWidget {
             color: s.raisedSurface,
             borderRadius: radius,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
+              padding: const EdgeInsets.fromLTRB(14, 20, 14, 20),
               child: chart,
             ),
           ),
@@ -347,7 +339,8 @@ class SpendingPaceCard extends StatelessWidget {
           color: s.raisedSurface,
           borderRadius: radius,
           child: Padding(
-            padding: const EdgeInsets.all(18),
+            // Content at 30 from the screen's edge, as in every card.
+            padding: const EdgeInsets.all(14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

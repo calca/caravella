@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings › Check for updates: the “Update available” card no longer shows “v4133”. Play reports only the version code (the build number), not the version name, so the line is gone
 
 ### Changed
+- One layout grid on every screen: cards and lists 16 from the edges (Home, Groups and New group were at 20), titles and section labels at 20, the text inside cards at 30 (Home's cards, Balances and Statistics had 40, 32 and 34), 20 from a page title to its content (Other, Sync and General had 36). The group page's section titles (Settle up, Day by day, Participants, Categories) take the same small uppercase label as settings, the round buttons at the top sit at 16 like on every page, and in the expense form the labels line up with the pills under them. Sheets follow the same grid (their cards were at 20, so their text at 34), and so do the notes under sync cards and the template form's labels. On the expenses map the back button has the title pill's shadow, so it stays visible over a light map
 - Paid by and Category look and work the same in the quick sheet and on the full page: one line of pills, with "+N" opening the rest in place
 - Attachments: the pill says "Add attachment" before the first one too, as it does under the list
 - Tapping a recent expense on Home opens the group page with that expense open; back lands on the group

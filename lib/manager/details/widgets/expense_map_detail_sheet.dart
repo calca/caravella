@@ -75,7 +75,7 @@ class ExpenseMapDetailSheet extends StatelessWidget {
     return CaravellaBottomSheetScaffold(
       title: gloc.location,
       scrollable: true,
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -102,16 +102,10 @@ class _GroupTypeTemplateFormPageState extends State<GroupTypeTemplateFormPage> {
     final isEdit = widget.template != null;
     final scheme = Theme.of(context).colorScheme;
 
+    // The app's section label, at 20 like on every page.
     Widget label(String text) => Padding(
-      padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
-      child: Text(
-        text.toUpperCase(),
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: scheme.onSurfaceVariant,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.6,
-        ),
-      ),
+      padding: const EdgeInsets.only(top: 20),
+      child: SettingsLabel(text),
     );
 
     return AppSystemUI.edgeToEdge(

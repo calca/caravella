@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import 'settings_list.dart';
+
 import '../themes/caravella_themes.dart';
 
 /// How a [FormPill] looks.
@@ -251,17 +253,11 @@ class FormSectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
+      // On the same line as the pills and fields under it.
+      padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
       child: Semantics(
         header: true,
-        child: Text(
-          label.toUpperCase(),
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.6,
-          ),
-        ),
+        child: Text(label.toUpperCase(), style: SettingsLabel.styleOf(theme)),
       ),
     );
   }

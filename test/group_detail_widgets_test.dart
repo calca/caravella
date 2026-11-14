@@ -500,7 +500,7 @@ void main() {
         ]),
       );
 
-      expect(find.text('Day by day'), findsOneWidget);
+      expect(find.text('DAY BY DAY'), findsOneWidget);
       expect(find.byKey(SpendingBars.barKey(0)), findsOneWidget);
       expect(find.byKey(SpendingBars.barKey(1)), findsNothing);
       expect(find.text('67.50 €'), findsOneWidget);

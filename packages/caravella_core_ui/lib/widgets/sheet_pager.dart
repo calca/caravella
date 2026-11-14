@@ -153,10 +153,11 @@ class _SheetPageFrame extends StatelessWidget {
     final theme = Theme.of(context);
     // Above the keyboard, as [CaravellaBottomSheetScaffold] is.
     return Padding(
+      // The sheets' grid: back button and cards at 16.
       padding: EdgeInsets.fromLTRB(
-        20,
         16,
-        20,
+        16,
+        16,
         24 + MediaQuery.viewInsetsOf(context).bottom,
       ),
       child: Column(

@@ -155,7 +155,7 @@ class _MultiUserSyncPageState extends State<MultiUserSyncPage> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
               child: Text(
                 loc.sync_device_forget_hint,
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -191,7 +191,7 @@ class _MultiUserSyncPageState extends State<MultiUserSyncPage> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+            padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
             child: Text(
               _bluetooth
                   ? loc.sync_privacy_footer

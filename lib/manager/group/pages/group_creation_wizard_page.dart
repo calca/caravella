@@ -345,7 +345,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                             const SizedBox(height: 12),
                           ],
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: FilledButton(
                               onPressed: enabled ? () => _next(wizard) : null,
                               style: FilledButton.styleFrom(
@@ -459,24 +459,33 @@ class WizardStepLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(20, 28, 20, bottomPadding),
+      // Cards at 16, the titles at 20.
+      padding: EdgeInsets.fromLTRB(16, 28, 16, bottomPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            eyebrow,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Semantics(
-            header: true,
-            child: Text(
-              title,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  eyebrow,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Semantics(
+                  header: true,
+                  child: Text(
+                    title,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 24),

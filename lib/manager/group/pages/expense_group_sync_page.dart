@@ -230,9 +230,7 @@ class _ExpenseGroupSyncPageState extends State<ExpenseGroupSyncPage> {
               ),
               if (_deviceCount > 0)
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
                   child: Text(
                     gloc.sync_device_tap_hint,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(

@@ -132,137 +132,149 @@ class BudgetDetailSheet extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Today(status: status, currency: group.currency, money: money),
-          if (budget.period == BudgetPeriod.total &&
-              (group.startDate == null || group.endDate == null)) ...[
-            const SizedBox(height: 8),
-            Text(gloc.budget_set_dates_hint, style: small),
-          ],
-          if (budget.period != BudgetPeriod.daily) ...[
-            const SizedBox(height: 16),
-            const Divider(height: 1),
-            const SizedBox(height: 14),
-            Row(
+          // Text on the sheet at 20 (the grid), the button at 16.
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: Text(
-                    gloc.budget_header(periodName).toUpperCase(),
-                    style: caps,
-                  ),
-                ),
-                Text(
-                  budget.period == BudgetPeriod.total
-                      ? money(budget.amount)
-                      : '${money(budget.amount)} · '
-                            '${budgetPeriodName(gloc, budget.period)}',
-                  style: small,
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            _Figure(
-              value: overPeriod ? status.overBy : status.remaining,
-              currency: group.currency,
-              size: 26,
-              after: overPeriod ? gloc.budget_over : gloc.budget_left,
-              color: overPeriod ? s.onBudgetOver : null,
-            ),
-            const SizedBox(height: 10),
-            Semantics(
-              label: gloc.budget_bar_semantics(
-                spentPercent,
-                ((elapsed ?? 0) * 100).round(),
-              ),
-              child: BudgetBar(
-                fraction: status.spent / budget.amount,
-                over: overPeriod,
-                marker: elapsed,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    gloc.budget_spent_percent(
-                      money(status.spent),
-                      spentPercent,
-                    ),
-                    style: small,
-                  ),
-                ),
-                if (status.dayNumber != null && status.dayCount != null)
-                  Text(
-                    gloc.budget_day_of(status.dayNumber!, status.dayCount!),
-                    style: small,
-                  ),
-              ],
-            ),
-            if (status.todayShare != null) ...[
-              const SizedBox(height: 16),
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: _Box(
-                        label: gloc.budget_per_day_until(
-                          DateFormat.MMMd(
-                            locale.toString(),
-                          ).format(status.end!),
+                _Today(status: status, currency: group.currency, money: money),
+                if (budget.period == BudgetPeriod.total &&
+                    (group.startDate == null || group.endDate == null)) ...[
+                  const SizedBox(height: 8),
+                  Text(gloc.budget_set_dates_hint, style: small),
+                ],
+                if (budget.period != BudgetPeriod.daily) ...[
+                  const SizedBox(height: 16),
+                  const Divider(height: 1),
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          gloc.budget_header(periodName).toUpperCase(),
+                          style: caps,
                         ),
-                        value: status.todayShare!,
-                        currency: group.currency,
                       ),
+                      Text(
+                        budget.period == BudgetPeriod.total
+                            ? money(budget.amount)
+                            : '${money(budget.amount)} · '
+                                  '${budgetPeriodName(gloc, budget.period)}',
+                        style: small,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  _Figure(
+                    value: overPeriod ? status.overBy : status.remaining,
+                    currency: group.currency,
+                    size: 26,
+                    after: overPeriod ? gloc.budget_over : gloc.budget_left,
+                    color: overPeriod ? s.onBudgetOver : null,
+                  ),
+                  const SizedBox(height: 10),
+                  Semantics(
+                    label: gloc.budget_bar_semantics(
+                      spentPercent,
+                      ((elapsed ?? 0) * 100).round(),
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _Box(
-                        label: gloc.budget_average_so_far,
-                        value: status.averagePerDay!,
-                        currency: group.currency,
+                    child: BudgetBar(
+                      fraction: status.spent / budget.amount,
+                      over: overPeriod,
+                      marker: elapsed,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          gloc.budget_spent_percent(
+                            money(status.spent),
+                            spentPercent,
+                          ),
+                          style: small,
+                        ),
+                      ),
+                      if (status.dayNumber != null && status.dayCount != null)
+                        Text(
+                          gloc.budget_day_of(
+                            status.dayNumber!,
+                            status.dayCount!,
+                          ),
+                          style: small,
+                        ),
+                    ],
+                  ),
+                  if (status.todayShare != null) ...[
+                    const SizedBox(height: 16),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: _Box(
+                              label: gloc.budget_per_day_until(
+                                DateFormat.MMMd(
+                                  locale.toString(),
+                                ).format(status.end!),
+                              ),
+                              value: status.todayShare!,
+                              currency: group.currency,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _Box(
+                              label: gloc.budget_average_so_far,
+                              value: status.averagePerDay!,
+                              currency: group.currency,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
-                ),
-              ),
-            ],
-          ],
-          if (status.pastPeriods.isNotEmpty) ...[
-            const SizedBox(height: 18),
-            const Divider(height: 1),
-            const SizedBox(height: 14),
-            Text(
-              switch (budget.period) {
-                BudgetPeriod.monthly => gloc.budget_past_months,
-                BudgetPeriod.weekly => gloc.budget_past_weeks,
-                _ => gloc.budget_past_days,
-              }.toUpperCase(),
-              style: caps,
+                ],
+                if (status.pastPeriods.isNotEmpty) ...[
+                  const SizedBox(height: 18),
+                  const Divider(height: 1),
+                  const SizedBox(height: 14),
+                  Text(
+                    switch (budget.period) {
+                      BudgetPeriod.monthly => gloc.budget_past_months,
+                      BudgetPeriod.weekly => gloc.budget_past_weeks,
+                      _ => gloc.budget_past_days,
+                    }.toUpperCase(),
+                    style: caps,
+                  ),
+                  const SizedBox(height: 12),
+                  _PastTable(
+                    periods: status.pastPeriods,
+                    labelOf: (p) => switch (budget.period) {
+                      BudgetPeriod.monthly => toBeginningOfSentenceCase(
+                        DateFormat.MMMM(locale.toString()).format(p.start),
+                        locale.toString(),
+                      ),
+                      BudgetPeriod.weekly => formatDateRange(
+                        start: p.start,
+                        end: p.end,
+                        locale: locale,
+                      ),
+                      _ => toBeginningOfSentenceCase(
+                        DateFormat.MMMEd(locale.toString()).format(p.start),
+                        locale.toString(),
+                      ),
+                    },
+                    amount: budget.amount,
+                    currency: group.currency,
+                    money: money,
+                  ),
+                ],
+              ],
             ),
-            const SizedBox(height: 12),
-            _PastTable(
-              periods: status.pastPeriods,
-              labelOf: (p) => switch (budget.period) {
-                BudgetPeriod.monthly => toBeginningOfSentenceCase(
-                  DateFormat.MMMM(locale.toString()).format(p.start),
-                  locale.toString(),
-                ),
-                BudgetPeriod.weekly => formatDateRange(
-                  start: p.start,
-                  end: p.end,
-                  locale: locale,
-                ),
-                _ => toBeginningOfSentenceCase(
-                  DateFormat.MMMEd(locale.toString()).format(p.start),
-                  locale.toString(),
-                ),
-              },
-              amount: budget.amount,
-              currency: group.currency,
-              money: money,
-            ),
-          ],
+          ),
           const SizedBox(height: 16),
           OutlinedButton(
             onPressed: onChange ?? () => Navigator.of(context).pop(true),

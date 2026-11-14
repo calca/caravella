@@ -185,7 +185,7 @@ class WizardDetailsPills extends StatelessWidget {
     // field off the screen while the keyboard is up.
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         spacing: 8,
         children: [
