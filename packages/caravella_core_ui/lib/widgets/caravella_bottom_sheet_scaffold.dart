@@ -20,7 +20,7 @@ class CaravellaBottomSheetScaffold extends StatelessWidget {
     this.title,
     this.subtitle,
     required this.child,
-    this.padding = const EdgeInsets.fromLTRB(20, 20, 20, 24),
+    this.padding = const EdgeInsets.fromLTRB(16, 20, 16, 24),
     this.spacing = 12,
     this.scrollable = false,
     this.showHandle = true,
@@ -48,25 +48,34 @@ class CaravellaBottomSheetScaffold extends StatelessWidget {
             ),
           ),
         ],
+        // The grid of the pages: title at 20 (4 in), cards at 16.
         if (title != null) ...[
-          Semantics(
-            header: true,
-            child: Text(
-              title!,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    title!,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle!,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          if (subtitle != null) ...[
-            const SizedBox(height: 2),
-            Text(
-              subtitle!,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
           SizedBox(height: spacing + 4),
         ],
         child,
