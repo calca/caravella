@@ -95,7 +95,7 @@ class GroupBalancesView extends StatelessWidget {
         color: s.raisedSurface,
         borderRadius: BorderRadius.circular(20),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           child: Column(children: children),
         ),
       ),
@@ -131,16 +131,8 @@ class GroupBalancesView extends StatelessWidget {
               ),
           ]),
           Padding(
-            padding: const EdgeInsets.fromLTRB(6, 20, 6, 8),
-            child: Semantics(
-              header: true,
-              child: Text(
-                gloc.settle_up,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
+            padding: const EdgeInsets.only(top: 20),
+            child: SettingsLabel(gloc.settle_up),
           ),
           card([
             if (settlements.isEmpty)

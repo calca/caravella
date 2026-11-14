@@ -136,7 +136,7 @@ class GroupCardContent extends StatelessWidget {
       builder: (context, constraints) {
         final bounded = constraints.hasBoundedHeight;
         final content = Padding(
-          padding: const EdgeInsets.all(22),
+          padding: const EdgeInsets.all(14),
           child: Column(
             mainAxisSize: bounded ? MainAxisSize.max : MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,

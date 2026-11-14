@@ -164,8 +164,9 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
       children: [
         // Name: the same outlined field as an expense's description,
         // green while editing and red when empty.
+        // 20 below the title, as every settings page (SettingsScaffold).
         Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: EdgeInsets.zero,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

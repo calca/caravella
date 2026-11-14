@@ -33,7 +33,7 @@ class HomeLayoutConstants {
   // ==================== Spacing ====================
 
   /// Standard horizontal padding for content
-  static const double horizontalPadding = 20.0;
+  static const double horizontalPadding = 16.0;
 
   /// Standard vertical spacing between sections
   static const double sectionSpacing = 16.0;

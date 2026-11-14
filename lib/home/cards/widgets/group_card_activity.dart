@@ -30,7 +30,7 @@ class GroupCardActivity extends StatelessWidget {
   Widget build(BuildContext context) {
     if (group.expenses.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+        padding: const EdgeInsets.fromLTRB(14, 20, 14, 12),
         child: GroupCardGetStarted(
           group: group,
           theme: theme,
@@ -42,7 +42,7 @@ class GroupCardActivity extends StatelessWidget {
 
     final s = theme.colorScheme;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+      padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
       child: GroupCardRecents(
         key: ValueKey('recents_${group.id}_${group.expenses.length}'),
         group: group,

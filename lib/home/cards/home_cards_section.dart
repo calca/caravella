@@ -263,9 +263,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     final topSafeArea = MediaQuery.paddingOf(context).top;
     _registerPrimaryAction(loc);
 
+    // Greeting at 20 (text), the settings button at 16 (the page margin).
     final header = Padding(
       padding: const EdgeInsets.fromLTRB(
-        HomeLayoutConstants.horizontalPadding,
+        HomeLayoutConstants.horizontalPadding + 4,
         16.0,
         HomeLayoutConstants.horizontalPadding,
         16.0,

@@ -100,7 +100,10 @@ class SettingsScaffold extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              // 20 from the title to the first content: a group brings its
+              // own 20 above it.
+              if (children.isEmpty || children.first is! SettingsGroup)
+                const SizedBox(height: 20),
               ...children,
             ],
           ),
@@ -251,26 +254,31 @@ class SettingsGroup extends StatelessWidget {
 
 /// The small uppercase heading above a [SettingsGroup], also for a field
 /// that stands on its own (e.g. a name field) between groups.
+///
+/// The grid: cards 16 from the screen's edges, titles and section labels at
+/// 20 (this label's 4 in from the card), the text inside cards at 30.
 class SettingsLabel extends StatelessWidget {
   final String text;
 
   const SettingsLabel(this.text, {super.key});
 
+  /// The one style of a section label, wherever a section is named (settings,
+  /// the group page's sections, forms).
+  static TextStyle? styleOf(ThemeData theme) =>
+      theme.textTheme.labelMedium?.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.6,
+      );
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
       child: Semantics(
         header: true,
-        child: Text(
-          text.toUpperCase(),
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.6,
-          ),
-        ),
+        child: Text(text.toUpperCase(), style: styleOf(theme)),
       ),
     );
   }
