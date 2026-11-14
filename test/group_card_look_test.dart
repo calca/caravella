@@ -90,7 +90,7 @@ void main() {
   });
 
   testWidgets('group page: type icon on the favorite row, no chip; '
-      'budget ring in the text color', (tester) async {
+      'no budget ring (the budget is in Statistics)', (tester) async {
     final index = ExpenseGroupColorPalette.defaultIndexFor(
       ExpenseGroupType.travel,
     );
@@ -118,9 +118,6 @@ void main() {
     final s = Theme.of(tester.element(find.text('Lisbon'))).colorScheme;
     final look = GroupLook.of(GroupLook.colorOf(g, s), s.brightness);
     expect(tester.widget<Text>(find.text('Lisbon')).style?.color, look.onTint);
-    expect(
-      tester.widget<BudgetRing>(find.byType(BudgetRing)).color,
-      look.onTint,
-    );
+    expect(find.byType(BudgetRing), findsNothing);
   });
 }

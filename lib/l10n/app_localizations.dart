@@ -5382,6 +5382,24 @@ abstract class AppLocalizations {
   /// **'So far {amount} a day'**
   String budget_so_far_per_day(String amount);
 
+  /// Statistics, budget card: spending in line with the budget so far
+  ///
+  /// In en, this message translates to:
+  /// **'on track'**
+  String get budget_on_track;
+
+  /// Statistics, budget card: spending above the budget so far (kept calm on purpose)
+  ///
+  /// In en, this message translates to:
+  /// **'a bit above plan'**
+  String get budget_above_plan;
+
+  /// Statistics, budget card: the group has no budget; tapping sets one
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get budget_not_set;
+
   /// Budget detail: small caps title of the comparison with the previous months
   ///
   /// In en, this message translates to:
@@ -5411,24 +5429,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{period}: {spent} of {budget}'**
   String budget_past_semantics(String period, String spent, String budget);
-
-  /// Screen reader label of the Today box with a budget, within today's share
-  ///
-  /// In en, this message translates to:
-  /// **'Today {spent}, within the {share} planned for today. Open the budget'**
-  String budget_today_within(String spent, String share);
-
-  /// Screen reader label of the Today box with a budget, over today's share
-  ///
-  /// In en, this message translates to:
-  /// **'Today {spent}, over the {share} planned for today. Open the budget'**
-  String budget_today_over(String spent, String share);
-
-  /// Screen reader label of the Today box with a budget but no share for today
-  ///
-  /// In en, this message translates to:
-  /// **'Today {spent}. Open the budget'**
-  String budget_today_open(String spent);
 
   /// Currency sheet: heading of the group's own currency
   ///

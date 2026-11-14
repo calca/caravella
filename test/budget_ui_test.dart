@@ -6,6 +6,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/manager/budget/budget_detail_sheet.dart';
 import 'package:io_caravella_egm/manager/budget/budget_settings_sheet.dart';
 import 'package:io_caravella_egm/manager/details/pages/group_settings_page.dart';
+import 'package:io_caravella_egm/manager/details/widgets/group_budget_card.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_detail_header.dart';
 import 'helpers/test_database.dart';
 import 'package:material_ui/material_ui.dart';
@@ -56,68 +57,52 @@ Widget _wrap(Widget child) => MaterialApp(
 );
 
 void main() {
-  testWidgets('without a budget Today has no ring and does nothing', (
-    tester,
-  ) async {
-    var opened = 0;
-    await tester.pumpWidget(
-      _wrap(
-        GroupDetailHeader(
-          group: _home(),
-          foreground: Colors.black,
-          today: _today,
-          onOpenBudget: () => opened++,
-        ),
-      ),
-    );
-    expect(find.byType(BudgetRing), findsNothing);
-    await tester.tap(find.text('Today'));
-    expect(opened, 0);
-  });
-
-  testWidgets('with a budget Today has the ring and opens the budget', (
-    tester,
-  ) async {
-    var opened = 0;
+  testWidgets('the group page header shows no budget', (tester) async {
     await tester.pumpWidget(
       _wrap(
         GroupDetailHeader(
           group: _home(budget: _monthly),
           foreground: Colors.black,
           today: _today,
-          onOpenBudget: () => opened++,
         ),
       ),
     );
-    final ring = tester.widget<BudgetRing>(find.byType(BudgetRing));
-    expect(ring.over, isFalse);
-    // 394.10 left this morning over 20 days: 19.705 a day, 8.40 spent.
-    expect(ring.fraction, closeTo(8.4 / 19.705, 1e-9));
-    expect(
-      find.bySemanticsLabel(
-        'Today 8.40 €, within the 19.71 € planned for today. Open the budget',
-      ),
-      findsOneWidget,
-    );
-    await tester.tap(find.byType(BudgetRing));
-    expect(opened, 1);
+    expect(find.byType(BudgetRing), findsNothing);
+    expect(find.text('Today'), findsOneWidget);
   });
 
-  testWidgets('over today: a full amber ring', (tester) async {
-    await tester.pumpWidget(
-      _wrap(
-        GroupDetailHeader(
-          group: _home(
-            budget: const GroupBudget(amount: 40, period: BudgetPeriod.daily),
-            expenses: {DateTime(2026, 11, 11, 9): 52},
-          ),
-          foreground: Colors.black,
-          today: _today,
-          onOpenBudget: () {},
+  group('statistics › Budget card', () {
+    Future<int> pump(WidgetTester tester, ExpenseGroup group) async {
+      var opened = 0;
+      await tester.pumpWidget(
+        _wrap(
+          GroupBudgetCard(group: group, today: _today, onOpen: () => opened++),
         ),
-      ),
-    );
-    expect(tester.widget<BudgetRing>(find.byType(BudgetRing)).over, isTrue);
+      );
+      await tester.tap(find.byType(GroupBudgetCard));
+      return opened;
+    }
+
+    testWidgets('on track: the budget and a calm word', (tester) async {
+      // 214.30 spent on day 11 of 30 of 600: within 220.
+      expect(await pump(tester, _home(budget: _monthly)), 1);
+      expect(find.text('600.00 € a month · on track'), findsOneWidget);
+    });
+
+    testWidgets('above plan: still no figures or alarm', (tester) async {
+      await pump(
+        tester,
+        _home(
+          budget: const GroupBudget(amount: 500, period: BudgetPeriod.monthly),
+        ),
+      );
+      expect(find.text('500.00 € a month · a bit above plan'), findsOneWidget);
+    });
+
+    testWidgets('without a budget: not set, and it opens', (tester) async {
+      expect(await pump(tester, _home()), 1);
+      expect(find.text('Not set'), findsOneWidget);
+    });
   });
 
   testWidgets('the detail sheet: the month, today and the months before', (

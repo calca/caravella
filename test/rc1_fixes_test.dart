@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localization_delegates.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_balances_view.dart';
-import 'package:io_caravella_egm/manager/details/widgets/group_detail_header.dart';
+import 'package:io_caravella_egm/manager/details/widgets/group_budget_card.dart';
 import 'package:io_caravella_egm/manager/expense/components/expense_form_component.dart';
 import 'package:io_caravella_egm/manager/expense/components/expense_form_config.dart';
 import 'package:io_caravella_egm/manager/group/group_type/group_type_card.dart';
@@ -89,14 +89,12 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('Today with a budget can be opened with TalkBack', (
-    tester,
-  ) async {
+  testWidgets('the budget card can be opened with TalkBack', (tester) async {
     final handle = tester.ensureSemantics();
     var opened = false;
     await tester.pumpWidget(
       wrap(
-        GroupDetailHeader(
+        GroupBudgetCard(
           group: ExpenseGroup(
             title: 'Norway',
             currency: '€',
@@ -113,17 +111,13 @@ void main() {
               ),
             ],
           ),
-          foreground: Colors.black,
           today: DateTime(2026, 11, 12, 18),
-          onOpenBudget: () => opened = true,
+          onOpen: () => opened = true,
         ),
       ),
     );
     await tester.pumpAndSettle();
-    final loc = AppLocalizations.of(
-      tester.element(find.byType(GroupDetailHeader)),
-    );
-    tapWithTalkBack(tester, loc.budget_today_over('93.19 €', '60.00 €'));
+    tapWithTalkBack(tester, 'Budget, 60.00 € a day · a bit above plan');
     expect(opened, isTrue);
     handle.dispose();
   });

@@ -69,10 +69,10 @@ Without screenshots you can still read the screen: `adb -s $DEV shell uiautomato
 | # | Step | Expected |
 |---|---|---|
 | 5.1 | Settings › Budget: try each period (in total, monthly, weekly, daily), set 150 a day | The row shows the budget. A trip starts on "In total" |
-| 5.2 | Group page, Today card | A ring after the amount, on its line: grey within the budget, full muted amber when over, never red |
-| 5.3 | Tap Today | The budget sheet: title with the budget, what's left of the period, its bar with "today" on the marker, one line on today and the average per day. Over the budget: amber figure and "The budget for … has run out", no 0.00 € lines. Monthly, weekly and daily budgets also show the three periods before |
-| 5.4 | Spend over today's share | The ring is full amber and the sheet says how much over |
-| 5.5 | Remove the budget | The ring is gone and Today no longer opens a sheet |
+| 5.2 | Group page header; Statistics | The header shows Total \| Today only, no ring. In Statistics, under the pace card, a Budget card like the map one: "150.00 € a day · on track" |
+| 5.3 | Tap the Budget card | The budget sheet: title with the budget, what's left of the period, its bar with "today" on the marker, one line on today and the average per day. Over the budget: amber figure and "The budget for … has run out", no 0.00 € lines. Monthly, weekly and daily budgets also show the three periods before |
+| 5.4 | Spend over today's share | The card says "a bit above plan", no colors; the sheet says how much over |
+| 5.5 | Remove the budget | The card says "Not set"; tapping it sets a budget again |
 
 ## 6. Balances and settle up
 
