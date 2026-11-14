@@ -129,43 +129,32 @@ class _GroupSyncBadgeState extends State<GroupSyncBadge> {
         },
     ].join(', ');
     if (widget.round) {
+      // The icon says how the sync is doing, no dot: arrows when it synced
+      // in the last 24 hours (or before the status is known), with "!" in
+      // amber when the last exchange failed, struck through and faded when
+      // it hasn't synced for a day or ever.
+      final (icon, color) = switch (status?.health) {
+        GroupSyncHealth.failed => (Icons.sync_problem_rounded, s.warning),
+        GroupSyncHealth.stale => (
+          Icons.sync_disabled_rounded,
+          fg.withValues(alpha: 0.55),
+        ),
+        _ => (Icons.sync_rounded, fg),
+      };
       return Semantics(
         button: true,
         label: semantics,
         excludeSemantics: true,
         onTap: widget.onTap,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Material(
-              color: widget.background,
-              shape: const CircleBorder(),
-              child: IconButton(
-                icon: const Icon(Icons.sync_rounded),
-                color: fg,
-                tooltip: gloc.sync_group_shared,
-                onPressed: widget.onTap,
-              ),
-            ),
-            if (dot != null)
-              // In the button's corner, clear of the icon's arrows.
-              Positioned(
-                right: 5,
-                top: 5,
-                child: IgnorePointer(
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: (dot.decoration as BoxDecoration).copyWith(
-                      // A ring of the button's color around the dot.
-                      border:
-                          (dot.decoration as BoxDecoration).border ??
-                          Border.all(color: widget.background, width: 1.5),
-                    ),
-                  ),
-                ),
-              ),
-          ],
+        child: Material(
+          color: widget.background,
+          shape: const CircleBorder(),
+          child: IconButton(
+            icon: Icon(icon),
+            color: color,
+            tooltip: gloc.sync_group_shared,
+            onPressed: widget.onTap,
+          ),
         ),
       );
     }
