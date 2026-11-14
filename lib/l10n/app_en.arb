@@ -1365,4 +1365,8 @@
   ,"@balance_paid_and_settled": {"description": "Under a name in Balances: what they paid in expenses and what they paid back in Settle up", "placeholders": {"amount": {"type": "String"}, "settled": {"type": "String"}}}
   ,"balance_paid_and_received": "Paid {amount} in all · {received} received"
   ,"@balance_paid_and_received": {"description": "Under a name in Balances: what they paid in expenses and what they got back in Settle up", "placeholders": {"amount": {"type": "String"}, "received": {"type": "String"}}}
+  ,"budget_today_caption_left": "of {share} · {left} left"
+  ,"@budget_today_caption_left": {"description": "Under today's amount on the group page with a budget: today's share and what is left of it", "placeholders": {"share": {"type": "String"}, "left": {"type": "String"}}}
+  ,"budget_today_caption_over": "of {share} · {over} over"
+  ,"@budget_today_caption_over": {"description": "Under today's amount on the group page with a budget: today's share and how much over it", "placeholders": {"share": {"type": "String"}, "over": {"type": "String"}}}
 }

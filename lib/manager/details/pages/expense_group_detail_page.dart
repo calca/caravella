@@ -31,7 +31,16 @@ import '../../budget/budget_settings_sheet.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
-  const ExpenseGroupDetailPage({super.key, required this.trip});
+
+  /// Opens this expense as soon as the group is loaded (a recent expense
+  /// tapped on Home): back from it lands on the group.
+  final String? openExpenseId;
+
+  const ExpenseGroupDetailPage({
+    super.key,
+    required this.trip,
+    this.openExpenseId,
+  });
 
   @override
   State<ExpenseGroupDetailPage> createState() => _ExpenseGroupDetailPageState();
@@ -157,8 +166,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     });
     if (_deleted && mounted) {
       Navigator.of(context).pop(true); // back to Home, which refreshes
+      return;
+    }
+    final openId = widget.openExpenseId;
+    if (openId != null && !_openedRequestedExpense) {
+      _openedRequestedExpense = true;
+      final expense = trip?.expenses.where((e) => e.id == openId).firstOrNull;
+      if (expense != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _openEditExpense(expense);
+        });
+      }
     }
   }
+
+  bool _openedRequestedExpense = false;
 
   Future<void> _reloadFromStorage() async {
     if (_trip == null) return;
@@ -568,7 +590,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                       header: (foreground) => GroupDetailHeader(
                         group: trip,
                         foreground: foreground,
-                        onOpenSync: _showSyncPage,
                         onOpenBudget: _showBudget,
                       ),
                     ),
@@ -624,6 +645,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
               bandForeground: bandForeground,
               pageColor: pageColor,
               onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
+              syncGroup: trip.syncEnabled ? trip : null,
+              onSync: _showSyncPage,
               menuItems: [
                 if (!trip.archived)
                   GroupMenuItem(
@@ -633,12 +656,14 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                     trip.pinned ? gloc.unpin : gloc.pin,
                     _handlePinToggle,
                   ),
-                // The map opens from its card in Statistics.
-                GroupMenuItem(
-                  Icons.sync_rounded,
-                  gloc.sync_title,
-                  _showSyncPage,
-                ),
+                // The map opens from its card in Statistics. A shared group
+                // has its sync button in the bar instead.
+                if (!trip.syncEnabled)
+                  GroupMenuItem(
+                    Icons.sync_rounded,
+                    gloc.sync_title,
+                    _showSyncPage,
+                  ),
                 // Share & export lives in the group's settings
                 // (rarely used, kept out of this menu).
                 GroupMenuItem(

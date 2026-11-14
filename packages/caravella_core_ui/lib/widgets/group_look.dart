@@ -249,7 +249,12 @@ class _PhotoToneBuilderState extends State<PhotoToneBuilder> {
 }
 
 /// A photo filling the top [photoHeight] of its box and melting into
-/// [tone] below (style B), no dark veil.
+/// [tone] below, no dark veil.
+///
+/// The photo is a local file: it is decoded once at its own size and shared
+/// by every card and page showing it ([providerFor]), and [precache] decodes
+/// the groups' photos at startup, so a card shows its photo from the first
+/// frame instead of the tone with the photo arriving after.
 class PhotoBand extends StatelessWidget {
   final String path;
   final Color tone;
@@ -262,54 +267,62 @@ class PhotoBand extends StatelessWidget {
     required this.photoHeight,
   });
 
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final width = constraints.maxWidth.isFinite ? constraints.maxWidth : null;
-      final fade = photoHeight * 0.42;
-      return Stack(
-        fit: StackFit.expand,
-        children: [
-          ColoredBox(color: tone),
-          Positioned(
-            left: 0,
-            right: 0,
-            top: 0,
-            height: photoHeight,
-            child: Image.file(
-              File(path),
-              fit: BoxFit.cover,
-              cacheWidth: width == null
-                  ? null
-                  : (width * MediaQuery.devicePixelRatioOf(context)).round(),
-              errorBuilder: (_, _, _) => const SizedBox.shrink(),
-              // Decoded off the first frame: the tone shows at once and the
-              // photo fades in over it, instead of popping in late.
-              frameBuilder: (context, child, frame, sync) => sync
-                  ? child
-                  : AnimatedOpacity(
-                      opacity: frame == null ? 0 : 1,
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeOut,
-                      child: child,
-                    ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            top: photoHeight - fade,
-            height: fade + 1,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: PhotoBandGradient.smooth(tone, fade + 1),
-              ),
-            ),
-          ),
-        ],
+  static ImageProvider providerFor(String path) => FileImage(File(path));
+
+  /// Decodes [paths] into the image cache, one at a time.
+  static Future<void> precache(Iterable<String> paths) async {
+    for (final path in paths) {
+      final done = Completer<void>();
+      final stream = providerFor(path).resolve(ImageConfiguration.empty);
+      late final ImageStreamListener listener;
+      listener = ImageStreamListener(
+        (_, _) {
+          stream.removeListener(listener);
+          if (!done.isCompleted) done.complete();
+        },
+        onError: (_, _) {
+          stream.removeListener(listener);
+          if (!done.isCompleted) done.complete();
+        },
       );
-    },
-  );
+      stream.addListener(listener);
+      await done.future;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final fade = photoHeight * 0.42;
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ColoredBox(color: tone),
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 0,
+          height: photoHeight,
+          child: Image(
+            image: providerFor(path),
+            fit: BoxFit.cover,
+            gaplessPlayback: true,
+            errorBuilder: (_, _, _) => const SizedBox.shrink(),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          top: photoHeight - fade,
+          height: fade + 1,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: PhotoBandGradient.smooth(tone, fade + 1),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 /// Smoothstep gradient from clear to [color] over [height].

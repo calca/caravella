@@ -2975,4 +2975,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return '共支付 $amount · 已收到 $received';
   }
+
+  @override
+  String budget_today_caption_left(String share, String left) {
+    return '共 $share · 剩余 $left';
+  }
+
+  @override
+  String budget_today_caption_over(String share, String over) {
+    return '共 $share · 超出 $over';
+  }
 }

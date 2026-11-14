@@ -3077,4 +3077,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return 'Ha messo $amount · ha ricevuto $received';
   }
+
+  @override
+  String budget_today_caption_left(String share, String left) {
+    return 'di $share · $left rimasti';
+  }
+
+  @override
+  String budget_today_caption_over(String share, String over) {
+    return 'di $share · $over oltre';
+  }
 }

@@ -195,6 +195,13 @@ class AppInitialization {
     unawaited(() async {
       try {
         final groups = await ExpenseGroupStorageV2.getAllGroups();
+        // First the active groups' photos, decoded ahead so their cards and
+        // pages show them at once (local files: they must never arrive
+        // late); then the tones of photos set before 2.5.
+        await PhotoBand.precache([
+          for (final g in groups)
+            if (!g.archived) ?GroupLook.photoOf(g),
+        ]);
         await PhotoTone.warmUp([for (final g in groups) ?GroupLook.photoOf(g)]);
       } catch (e) {
         LoggerService.warning('Photo tones not warmed: $e', name: 'ui.card');

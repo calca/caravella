@@ -86,7 +86,8 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
                 ),
               )
             : null,
-        label: loc.attachments,
+        // Same pill as under the list once there is one.
+        label: loc.attachment_source,
         style: FormPillStyle.add,
         onTap: widget.enabled && !busy ? _toggleSources : null,
       );

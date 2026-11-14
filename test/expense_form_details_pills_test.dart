@@ -72,7 +72,7 @@ void main() {
     );
     expect(pill(tester, l10n.today).style, FormPillStyle.normal);
     expect(pill(tester, l10n.location).style, FormPillStyle.add);
-    expect(pill(tester, l10n.attachments).style, FormPillStyle.add);
+    expect(pill(tester, l10n.attachment_source).style, FormPillStyle.add);
     expect(pill(tester, l10n.note).style, FormPillStyle.add);
     expect(find.byType(NoteInputWidget), findsNothing);
   });
