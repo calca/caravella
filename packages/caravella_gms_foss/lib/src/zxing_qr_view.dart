@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:zxing2/qrcode.dart';
 
 /// Live camera QR scanner for the F-Droid build, with no Google libraries:

@@ -19,6 +19,7 @@ dependencies:
     path: ../caravella_core
   camera: ^0.12.0
   zxing2: ^0.2.4
+  material_ui: ^1.0.0
 
 dev_dependencies:
   flutter_test:

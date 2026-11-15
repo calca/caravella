@@ -101,8 +101,11 @@ class _InfoSettingsSectionState extends State<InfoSettingsSection> {
                         // "No MaterialLocalizations found".
                         builder: (context) => Localizations.override(
                           context: context,
+                          // The classic delegates on purpose (see above).
                           delegates: const [
+                            // ignore: deprecated_member_use
                             legacy.GlobalMaterialLocalizations.delegate,
+                            // ignore: deprecated_member_use
                             legacy.GlobalCupertinoLocalizations.delegate,
                           ],
                           child: TalkerScreen(talker: LoggerService.instance),
