@@ -64,7 +64,8 @@
         android:localeConfig="@xml/locales_config"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="false"
-        android:hasFragileUserData="true">
+        android:hasFragileUserData="true"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
