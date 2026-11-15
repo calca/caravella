@@ -1,6 +1,6 @@
 # Package: `android_app_functions`
 
-Exposes app capabilities to Android AI agents (e.g. Gemini) as [App Functions](https://developer.android.com/reference/androidx/appfunctions), on Android 16 (API 36) and later. The functions themselves are native Kotlin in `android/app`; this Dart package is only the bridge that opens the new-expense form when an agent asks for it. Depends only on `flutter` + local `caravella_core`.
+Exposes app capabilities to Android AI agents (e.g. Gemini) as [App Functions](https://developer.android.com/reference/androidx/appfunctions), on Android 16 (API 36) and later. The functions themselves are native Kotlin in `android/app`; this Dart package is only the bridge that opens the group when an agent's link is opened. Depends only on `flutter` + local `caravella_core`.
 
 Barrel: `android_app_functions.dart` exports `src/app_functions_service.dart`, `src/platform_app_functions_manager.dart`, and model files.
 
@@ -11,7 +11,7 @@ Declared in `android/app/src/main/kotlin/io/caravella/egm/appfunctions/Caravella
 | Function | Kind | Returns |
 |---|---|---|
 | `listGroups()` | read | `List<ExpenseGroupInfo>` (`groupId`, `title`, `currency`) — the active groups, so the agent has the ids the others need |
-| `addExpense(groupId, amount?, categoryName?, note?)` | write | `AddedExpense` (`expenseId`, `groupId`, `amount`, `intentToOpen`). With an amount (> 0) the expense is saved at once (category matched by name, else the first; paid by the first participant). Without one nothing is saved and `intentToOpen` is a `PendingIntent` that opens Caravella on the group's new-expense form, for the agent to open (a service can't start an activity from the background) |
+| `addExpense(groupId, amount?, categoryName?, note?)` | write | `AddedExpense` (`expenseId`, `groupId`, `amount`, `intentToOpen`). With an amount (> 0) the expense is saved at once (category matched by name, else the first; paid by the first participant). Without one nothing is saved and `intentToOpen` is a `PendingIntent` that opens the group in Caravella, where the user adds it, for the agent to open (a service can't start an activity from the background) |
 | `getGroupBalance(groupId)` | read | `GroupBalance` (`totalBalance`, the group's total spending) |
 | `getRecentExpenses(groupId)` | read | `RecentExpenses` (the last 3 `ExpenseInfo`, newest first) |
 | `getTodayTotal(groupId)` | read | `TodayTotal` |
@@ -28,7 +28,7 @@ Settings › Privacy has the App Functions toggle (`PreferencesService.instance.
 
 - `androidx.appfunctions:appfunctions` and its KSP compiler `appfunctions-compiler` (same version, `android/app/build.gradle.kts`; KSP plugin in `android/settings.gradle.kts`). From `@AppFunctionServiceEntryPoint(serviceName = "CaravellaAppFunctionService", appFunctionXmlFileName = "caravella_app_functions")` the compiler generates the concrete `CaravellaAppFunctionService` and `assets/caravella_app_functions.xml` (ids `io.caravella.egm.appfunctions.BaseCaravellaAppFunctionService#<name>`).
 - `AndroidManifest.xml` declares the generated service: exported, `android:permission="android.permission.BIND_APP_FUNCTION_SERVICE"` (only the system binds it), action `android.app.appfunctions.AppFunctionService`, properties `android.app.appfunctions.schema` → `app_functions_schema.xsd` and `android.app.appfunctions.v2` → `caravella_app_functions.xml`.
-- The form: the `PendingIntent` targets `MainActivity` with action `io.caravella.egm.ADD_EXPENSE` and the group (plus category and note when given). `MainActivity` forwards it on `MethodChannel('io.caravella.egm/app_functions')` as `onAddExpense`, which `PlatformAppFunctionsManager.initialize({required onAddExpense})` (a no-op off Android) hands to `AppFunctionsInitialization._handleAddExpense` (`lib/home/services/app_functions_initialization.dart`, called at startup): it checks the privacy toggle, saves the expense if an amount came with it (`AppFunctionsInitialization.expenseFor`), and opens `ExpenseGroupDetailPage` via the global `navigatorKey`.
+- The link: the `PendingIntent` targets `MainActivity` with action `io.caravella.egm.ADD_EXPENSE` and the group (plus category and note when given). `MainActivity` forwards it on `MethodChannel('io.caravella.egm/app_functions')` as `onAddExpense` (with a category or note; with neither, it takes the shortcuts' `onShortcutTapped` path, which also opens the group), which `PlatformAppFunctionsManager.initialize({required onAddExpense})` (a no-op off Android) hands to `AppFunctionsInitialization._handleAddExpense` (`lib/home/services/app_functions_initialization.dart`, called at startup): it checks the privacy toggle, saves the expense if an amount came with it (`AppFunctionsInitialization.expenseFor`; the link carries none), and opens `ExpenseGroupDetailPage` via the global `navigatorKey`.
 - Release builds keep what the library loads by name (the `@AppFunctionSerializable` classes and their generated `$…Factory`) through the library's own R8 rules; the inventory is created directly by the generated service.
 
 ## Tests

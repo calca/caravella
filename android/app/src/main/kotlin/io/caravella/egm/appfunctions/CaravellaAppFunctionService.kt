@@ -59,8 +59,8 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
     /**
      * Adds an expense to a Caravella group. With an amount the expense is
      * saved right away, paid by the group's first participant; without one,
-     * nothing is saved and the result carries intentToOpen, which opens
-     * Caravella on the group's new-expense form for the user to finish.
+     * nothing is saved and the result carries intentToOpen, which opens the
+     * group in Caravella, where the user can add it.
      *
      * @param groupId The group's id, from listGroups.
      * @param amount The amount in the group's currency, greater than 0; null
@@ -68,7 +68,7 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
      * @param categoryName The category, matched by name ignoring case; the
      *   group's first category when null or not found.
      * @param note What the expense was for, used as its name.
-     * @return The saved expense, or, without an amount, the form to open.
+     * @return The saved expense, or, without an amount, the group to open.
      */
     @AppFunctionDeclaration(isDescribedByKDoc = true)
     suspend fun addExpense(
@@ -236,8 +236,8 @@ class AddedExpense(
     /** The saved amount; null when nothing was saved. */
     val amount: Double?,
     /**
-     * Without an amount: opens Caravella on the group's new-expense form, for
-     * the user to finish. Null when the expense was saved.
+     * Without an amount: opens the group in Caravella, where the user can add
+     * the expense. Null when the expense was saved.
      */
     val intentToOpen: PendingIntent?,
 )
