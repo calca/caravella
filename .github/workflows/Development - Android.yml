@@ -91,6 +91,12 @@ jobs:
           ./build_variant.sh gms
       - name: Build staging APK (signed)
         run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+      # Native unit tests in android/app/src/test (App Functions on Robolectric,
+      # widget formatting). After the APK build, so Gradle and Flutter's
+      # android/local.properties are already set up.
+      - name: Android unit tests
+        working-directory: android
+        run: ./gradlew :app:testStagingDebugUnitTest --no-daemon
       - name: Get app version
         id: get_version
         run: |
