@@ -43,6 +43,7 @@ android {
     // Robolectric needs the merged manifest and resources (App Functions tests).
     testOptions {
         unitTests.isIncludeAndroidResources = true
+        unitTests.all { it.maxHeapSize = "2g" }
     }
 
     compileOptions {

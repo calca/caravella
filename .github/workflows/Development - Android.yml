@@ -96,7 +96,13 @@ jobs:
       # android/local.properties are already set up.
       - name: Android unit tests
         working-directory: android
-        run: ./gradlew :app:testStagingDebugUnitTest --no-daemon
+        timeout-minutes: 25
+        # Stop the APK build's Gradle daemon first and cap this run's heap:
+        # two 8 GB Gradle JVMs plus Robolectric starve the hosted runner.
+        run: |
+          ./gradlew --stop
+          ./gradlew :app:testStagingDebugUnitTest --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
       - name: Get app version
         id: get_version
         run: |
