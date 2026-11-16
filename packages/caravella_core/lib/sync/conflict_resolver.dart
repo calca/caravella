@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:caravella_core/data/sqlite_expense_group_repository.dart';
 import 'package:caravella_core/data/sqlite_group_mapper.dart';
+import 'package:caravella_core/data/sqlite_group_writer.dart';
 import 'package:caravella_core/model/expense_group.dart';
 import 'package:caravella_core/model/second_currency.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
@@ -355,8 +356,7 @@ class ConflictResolver {
     required int updatedAt,
     required int syncVersion,
   }) async {
-    // Upsert group row with sync columns set atomically.
-    await txn.insert(SqliteExpenseGroupRepository.tableGroups, {
+    final row = <String, Object?>{
       'id': group.id,
       'title': group.title,
       'currency': group.currency,
@@ -380,57 +380,15 @@ class ConflictResolver {
       'updated_at': updatedAt,
       'deleted': 0,
       'sync_version': syncVersion,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
-
-    // Delete existing child rows
-    await txn.delete(
-      SqliteExpenseGroupRepository.tableParticipants,
-      where: 'group_id = ?',
-      whereArgs: [group.id],
+    };
+    // The rows that changed only; an expense the remote copy doesn't have is
+    // removed without a tombstone: it is not this device's deletion.
+    await SqliteGroupWriter.write(
+      txn,
+      group,
+      row,
+      changedAt: updatedAt,
+      recordDeletions: false,
     );
-    await txn.delete(
-      SqliteExpenseGroupRepository.tableCategories,
-      where: 'group_id = ?',
-      whereArgs: [group.id],
-    );
-    await txn.delete(
-      SqliteExpenseGroupRepository.tableExpenses,
-      where: 'group_id = ?',
-      whereArgs: [group.id],
-    );
-
-    // Re-insert participants
-    for (final p in group.participants) {
-      await txn.insert(SqliteExpenseGroupRepository.tableParticipants, {
-        'id': p.id,
-        'group_id': group.id,
-        'name': p.name,
-      });
-    }
-
-    // Re-insert categories
-    for (final c in group.categories) {
-      await txn.insert(SqliteExpenseGroupRepository.tableCategories, {
-        'id': c.id,
-        'group_id': group.id,
-        'name': c.name,
-      });
-    }
-
-    // Re-insert expenses + attachments
-    const mapper = SqliteGroupMapper();
-    for (final expense in group.expenses) {
-      await txn.insert(
-        SqliteExpenseGroupRepository.tableExpenses,
-        mapper.expenseToMap(expense, group.id),
-      );
-
-      for (final attachment in expense.attachments) {
-        await txn.insert(SqliteExpenseGroupRepository.tableAttachments, {
-          'expense_id': expense.id,
-          'file_path': attachment,
-        });
-      }
-    }
   }
 }

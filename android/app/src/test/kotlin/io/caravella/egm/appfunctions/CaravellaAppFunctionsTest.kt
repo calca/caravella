@@ -62,7 +62,8 @@ class CaravellaAppFunctionsTest {
                 "CREATE TABLE expenses (id TEXT PRIMARY KEY, group_id TEXT, name TEXT, " +
                     "amount REAL, date INTEGER, category_id TEXT, paid_by_id TEXT, note TEXT, " +
                     "created_by_device_id TEXT, created_by_user_name TEXT, " +
-                    "updated_by_device_id TEXT, updated_by_user_name TEXT)",
+                    "updated_by_device_id TEXT, updated_by_user_name TEXT, " +
+                    "updated_at INTEGER NOT NULL DEFAULT 0)",
             )
             db.execSQL("INSERT INTO groups VALUES ('g1', 'Norway', '€', 2, NULL, NULL, 0, '', 1)")
             db.execSQL("INSERT INTO groups VALUES ('old', 'Archived', '€', 1, NULL, NULL, 1, '', 1)")
@@ -71,7 +72,7 @@ class CaravellaAppFunctionsTest {
             db.execSQL("INSERT INTO categories VALUES ('ferry', 'g1', 'Transport')")
             db.execSQL(
                 "INSERT INTO expenses VALUES ('e1', 'g1', 'Fish soup', 54.5, " +
-                    "${System.currentTimeMillis()}, 'food', 'anna', NULL, NULL, NULL, NULL, NULL)",
+                    "${System.currentTimeMillis()}, 'food', 'anna', NULL, NULL, NULL, NULL, NULL, 1)",
             )
         }
     }
@@ -184,14 +185,15 @@ class CaravellaAppFunctionsTest {
                 assertEquals(1L, it.getLong(0))
             }
             db.rawQuery(
-                "SELECT created_by_device_id, created_by_user_name, updated_by_device_id " +
-                    "FROM expenses WHERE id = ?",
+                "SELECT created_by_device_id, created_by_user_name, updated_by_device_id, " +
+                    "updated_at FROM expenses WHERE id = ?",
                 arrayOf(id),
             ).use {
                 assertTrue(it.moveToFirst())
                 assertEquals("this-phone", it.getString(0))
                 assertEquals("Anna", it.getString(1))
                 assertEquals("this-phone", it.getString(2))
+                assertTrue(it.getLong(3) >= before)
             }
         }
     }

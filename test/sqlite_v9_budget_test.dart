@@ -33,6 +33,9 @@ void main() {
     // v10's columns too: the upgrade adds them again.
     await db.execute('ALTER TABLE groups DROP COLUMN second_currency');
     await db.execute('ALTER TABLE expenses DROP COLUMN original');
+    // What v11 adds: each expense's own time, and deleted expenses.
+    await db.execute('ALTER TABLE expenses DROP COLUMN updated_at');
+    await db.execute('DROP TABLE expense_tombstones');
     await db.insert('groups', {
       'id': 'g',
       'title': 'Norway',

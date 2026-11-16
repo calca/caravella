@@ -74,6 +74,7 @@ Future<void> createSqliteSchema(Database db) async {
       updated_by_device_name TEXT,
       updated_by_user_name TEXT,
       original TEXT,
+      updated_at INTEGER NOT NULL DEFAULT 0,
       FOREIGN KEY (group_id) REFERENCES $kTableGroups (id) ON DELETE CASCADE,
       FOREIGN KEY (category_id) REFERENCES $kTableCategories (id),
       FOREIGN KEY (paid_by_id) REFERENCES $kTableParticipants (id)
@@ -89,6 +90,8 @@ Future<void> createSqliteSchema(Database db) async {
       FOREIGN KEY (expense_id) REFERENCES $kTableExpenses (id) ON DELETE CASCADE
     )
   ''');
+
+  await createExpenseTombstonesTable(db);
 
   // Indexes for performance
   await db.execute(
@@ -157,4 +160,19 @@ Future<void> createSqliteSchema(Database db) async {
       PRIMARY KEY (device_id, group_id)
     )
   ''');
+}
+
+/// Deleted expenses (schema v11), see [kTableExpenseTombstones].
+Future<void> createExpenseTombstonesTable(DatabaseExecutor db) async {
+  await db.execute('''
+    CREATE TABLE $kTableExpenseTombstones (
+      expense_id TEXT PRIMARY KEY,
+      group_id TEXT NOT NULL,
+      deleted_at INTEGER NOT NULL
+    )
+  ''');
+  await db.execute(
+    'CREATE INDEX idx_expense_tombstones_group '
+    'ON $kTableExpenseTombstones(group_id)',
+  );
 }

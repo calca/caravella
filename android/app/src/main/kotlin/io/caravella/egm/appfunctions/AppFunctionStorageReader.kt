@@ -825,6 +825,9 @@ internal object AppFunctionStorageReader {
                         values.put("updated_by_user_name", userName)
                     }
                 }
+                // The expense's own last-change time (schema v11), which sync
+                // merges by.
+                if ("updated_at" in expenseColumns) values.put("updated_at", now)
                 db.beginTransaction()
                 try {
                     // insertOrThrow throws on constraint violation – no -1 check needed
