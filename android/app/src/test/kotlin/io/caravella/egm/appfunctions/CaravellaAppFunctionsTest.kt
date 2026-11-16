@@ -53,22 +53,25 @@ class CaravellaAppFunctionsTest {
         SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
             db.execSQL(
                 "CREATE TABLE groups (id TEXT PRIMARY KEY, title TEXT, currency TEXT, " +
-                    "timestamp INTEGER, color INTEGER, file TEXT, archived INTEGER DEFAULT 0)",
+                    "timestamp INTEGER, color INTEGER, file TEXT, archived INTEGER DEFAULT 0, " +
+                    "device_id TEXT NOT NULL DEFAULT '', updated_at INTEGER NOT NULL DEFAULT 0)",
             )
             db.execSQL("CREATE TABLE participants (id TEXT PRIMARY KEY, group_id TEXT, name TEXT)")
             db.execSQL("CREATE TABLE categories (id TEXT PRIMARY KEY, group_id TEXT, name TEXT)")
             db.execSQL(
                 "CREATE TABLE expenses (id TEXT PRIMARY KEY, group_id TEXT, name TEXT, " +
-                    "amount REAL, date INTEGER, category_id TEXT, paid_by_id TEXT, note TEXT)",
+                    "amount REAL, date INTEGER, category_id TEXT, paid_by_id TEXT, note TEXT, " +
+                    "created_by_device_id TEXT, created_by_user_name TEXT, " +
+                    "updated_by_device_id TEXT, updated_by_user_name TEXT)",
             )
-            db.execSQL("INSERT INTO groups VALUES ('g1', 'Norway', '€', 2, NULL, NULL, 0)")
-            db.execSQL("INSERT INTO groups VALUES ('old', 'Archived', '€', 1, NULL, NULL, 1)")
+            db.execSQL("INSERT INTO groups VALUES ('g1', 'Norway', '€', 2, NULL, NULL, 0, '', 1)")
+            db.execSQL("INSERT INTO groups VALUES ('old', 'Archived', '€', 1, NULL, NULL, 1, '', 1)")
             db.execSQL("INSERT INTO participants VALUES ('anna', 'g1', 'Anna')")
             db.execSQL("INSERT INTO categories VALUES ('food', 'g1', 'Food')")
             db.execSQL("INSERT INTO categories VALUES ('ferry', 'g1', 'Transport')")
             db.execSQL(
                 "INSERT INTO expenses VALUES ('e1', 'g1', 'Fish soup', 54.5, " +
-                    "${System.currentTimeMillis()}, 'food', 'anna', NULL)",
+                    "${System.currentTimeMillis()}, 'food', 'anna', NULL, NULL, NULL, NULL, NULL)",
             )
         }
     }
@@ -152,6 +155,45 @@ class CaravellaAppFunctionsTest {
         val total = call("getGroupBalance") { setString("groupId", "g1") }
             .value().getAppFunctionData(returned)!!
         assertEquals(67.0, total.getDouble("totalBalance"), 1e-9)
+    }
+
+    @Test
+    fun `an added expense is stamped for sync`() = runBlocking {
+        context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE).edit()
+            .putString("flutter.sync_device_id", "this-phone")
+            .putString("flutter.user_name", "Anna")
+            .commit()
+        val before = System.currentTimeMillis()
+        val id = call("addExpense") {
+            setString("groupId", "g1")
+            setDouble("amount", 5.0)
+        }.value().getAppFunctionData(returned)!!.getString("expenseId")
+
+        SQLiteDatabase.openDatabase(
+            context.getDatabasePath("expense_groups.db").path, null, SQLiteDatabase.OPEN_READONLY,
+        ).use { db ->
+            // The group moved, or sync would never send the expense.
+            db.rawQuery("SELECT updated_at, device_id FROM groups WHERE id = 'g1'", null).use {
+                assertTrue(it.moveToFirst())
+                assertTrue(it.getLong(0) >= before)
+                assertEquals("this-phone", it.getString(1))
+            }
+            // The archived group is untouched.
+            db.rawQuery("SELECT updated_at FROM groups WHERE id = 'old'", null).use {
+                assertTrue(it.moveToFirst())
+                assertEquals(1L, it.getLong(0))
+            }
+            db.rawQuery(
+                "SELECT created_by_device_id, created_by_user_name, updated_by_device_id " +
+                    "FROM expenses WHERE id = ?",
+                arrayOf(id),
+            ).use {
+                assertTrue(it.moveToFirst())
+                assertEquals("this-phone", it.getString(0))
+                assertEquals("Anna", it.getString(1))
+                assertEquals("this-phone", it.getString(2))
+            }
+        }
     }
 
     @Test

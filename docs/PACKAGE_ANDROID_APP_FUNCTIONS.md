@@ -20,6 +20,8 @@ Errors are `AppFunctionException`s: `AppFunctionInvalidArgumentException` (amoun
 
 All data access is native, without starting Flutter: `AppFunctionStorageReader.kt` reads (and, for `addExpense`, writes) the app's SQLite database (`expense_groups.db`) through two views it creates on demand (`group_summary_view`, `expense_details_view`; re-created whenever missing, since the database file can be replaced while the process lives, e.g. by a backup restore). The same reader serves the home widget.
 
+`addExpense` writes as the app does: in one transaction it inserts the expense, stamped with this device's sync id and the user's name (`flutter.sync_device_id`, `flutter.user_name`), and moves the group's `updated_at` / `device_id`. Without that, sync never sends the expense and the next incoming copy of the group drops it. Then it refreshes the home widget and, through `AppFunctionEvents` → `MainActivity` → `onExpenseAdded` on the method channel, tells a running app to reload the group (`AppFunctionsInitialization._handleExpenseAdded` → `ExpenseGroupNotifier.notifyGroupUpdated`).
+
 ## Privacy toggle
 
 Settings › Privacy has the App Functions toggle (`PreferencesService.instance.appFunctions`, off by default). It works at two levels:

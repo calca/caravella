@@ -4,6 +4,7 @@ import android.app.backup.BackupManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.WindowCompat
+import io.caravella.egm.appfunctions.AppFunctionEvents
 import io.caravella.egm.appfunctions.AppFunctionsState
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -166,6 +167,12 @@ class MainActivity : FlutterActivity() {
         )
         // No Dart→native calls on this channel; all method calls go native→Dart.
         appFunctionsChannel?.setMethodCallHandler { _, result -> result.notImplemented() }
+        // An agent added an expense while the app is open: reload the group.
+        AppFunctionEvents.onExpenseAdded = { groupId ->
+            runOnUiThread {
+                appFunctionsChannel?.invokeMethod("onExpenseAdded", mapOf("groupId" to groupId))
+            }
+        }
         
         // Send any pending shortcut action
         pendingShortcutAction?.let { data ->
@@ -181,6 +188,8 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        AppFunctionEvents.onExpenseAdded = null
+        appFunctionsChannel = null
         locationChannel?.dispose()
         locationChannel = null
         super.cleanUpFlutterEngine(flutterEngine)
