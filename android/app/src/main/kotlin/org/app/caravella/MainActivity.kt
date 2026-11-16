@@ -4,6 +4,7 @@ import android.app.backup.BackupManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.WindowCompat
+import io.caravella.egm.appfunctions.AppFunctionsState
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -33,6 +34,8 @@ class MainActivity : FlutterActivity() {
         // Handle both shortcut and App Function intents
         handleAddExpenseIntent(intent)
         HomeWidgetProvider.updateAllWidgets(this)
+        // Agents see the App Functions only while the privacy toggle is on.
+        AppFunctionsState.watch(this)
     }
     
     override fun onNewIntent(intent: Intent) {
