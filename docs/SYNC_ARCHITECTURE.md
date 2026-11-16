@@ -114,7 +114,7 @@ SyncOrchestrator(
 }
 ```
 
-This is a **full-snapshot-per-changed-group** delta, not a field-level diff — every entry in `groups` is the entire group (participants, categories, expenses, attachments) as of now, not just what changed. Since 2.5 its `_sync` block also carries each expense's last-change time (`expenses.updated_at`), the group's deleted expenses (`expense_tombstones`) and the time of the group's own fields (`groups.meta_updated_at`), which is what lets the receiver merge instead of replacing (see [Conflict resolution](#conflict-resolution)). They are extra keys, not a new `schema`: an app before 2.5 ignores them and goes on replacing whole groups, so the two can still sync.
+This is a **full-snapshot-per-changed-group** delta, not a field-level diff — every entry in `groups` is the entire group (participants, categories, expenses, attachments) as of now, not just what changed. Since 2.5 its `_sync` block also carries each expense's last-change time (`expenses.updated_at`), the group's deleted expenses (`expense_tombstones`) and the time of the group's own fields (`groups.meta_updated_at`), which is what lets the receiver merge instead of replacing (see [Conflict resolution](#conflict-resolution)). They are extra keys, not a new `schema`, so the earlier 2.5 test builds (rc.1–rc.8) still read these deltas: they ignore the keys and go on replacing whole groups. 2.4.1–2.4.4 refuse any schema 2 delta already (see [Format version](#format-version)), and a 2.4 delta received here has no expense times, so it is applied by Last Writer Wins as before.
 
 ### Format version
 
@@ -133,6 +133,8 @@ Inclusion in a delta requires all three: changed since the last recorded sync *w
 - **The group's own fields** (name, dates, currency, people, categories, budget, payments…): from the side with the later `meta_updated_at` (`SqliteGroupWriter` moves it only when they change, not when an expense does), plus any person or category a kept expense refers to, and payments only between people still in the group.
 - **When anything changed here**, the group's `updated_at` moves to now, so the merged group goes on to the other devices this one syncs with (`updated_at` is the "changed here" cursor `DeltaBuilder` selects by; the comparisons use the per-expense and metadata times). When nothing changed nothing is written and the group counts as skipped, so a repeated exchange stops.
 
+Limits: a deletion made before updating to this version and not yet synced left no tombstone, so the other phone can bring that expense back once. Writing an older copy of a shared group (a restore) now deletes the missing expenses everywhere, as replacing the whole group did before.
+
 Tests: `packages/caravella_core/test/sync/expense_merge_sync_test.dart` (both phones adding, deletions either way, edit vs deletion, a new name and a new expense, a new person with an expense, a third phone relaying, a repeated exchange writing nothing, a delta from 2.4).
 
 **Last Writer Wins on the whole group** — a group new to this device, one deleted here, or one from an app before 2.5 (no expense times):
@@ -140,7 +142,7 @@ Tests: `packages/caravella_core/test/sync/expense_merge_sync_test.dart` (both ph
 1. No local row for this group → upsert unconditionally (new group). From a 2.5 sender its expense times, metadata time and deleted expenses are kept.
 2. Local row exists → compare incoming `_sync.updated_at` against the local `groups.updated_at`:
    - Remote newer → overwrite (upsert).
-   - **Tie or local newer → skip.** A tie means **local wins** (`conflict_resolver_test.dart:244`, `'same timestamp — local wins (tie-break)'`). An expense only this device has is lost when an older app's copy wins: mixed 2.4/2.5 groups keep that limit until every device is on 2.5.
+   - **Tie or local newer → skip.** A tie means **local wins** (`conflict_resolver_test.dart:244`, `'same timestamp — local wins (tie-break)'`). An expense only this device has is lost when an older app's copy wins: a group shared with a phone on 2.4 or on a 2.5 test build keeps that limit until every phone has this version. Against such a phone a merge here counts as the newer write (its `updated_at` moves to now).
 3. Deletions follow the identical comparison, applied as a soft delete (`deleted = 1`) rather than a row removal.
 4. Deleting a group this device never saw is a no-op.
 

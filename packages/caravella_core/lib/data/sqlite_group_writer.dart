@@ -50,19 +50,8 @@ class SqliteGroupWriter {
     final row = {...groupRow};
     if (!row.containsKey('meta_updated_at')) {
       final old = existingRows.isEmpty ? null : existingRows.first;
-      final metaChanged =
-          old == null ||
-          old['deleted'] == 1 ||
-          row.entries.any(
-            (e) => !_notMetadata.contains(e.key) && old[e.key] != e.value,
-          ) ||
-          await _namesChanged(txn, kTableParticipants, group.id, {
-            for (final p in group.participants) p.id: p.name,
-          }) ||
-          await _namesChanged(txn, kTableCategories, group.id, {
-            for (final c in group.categories) c.id: c.name,
-          });
-      row['meta_updated_at'] = metaChanged
+      row['meta_updated_at'] =
+          old == null || await metadataChanged(txn, group, row, old)
           ? changedAt
           : old['meta_updated_at'] as int? ?? changedAt;
     }
@@ -105,7 +94,8 @@ class SqliteGroupWriter {
   }
 
   /// The `groups` columns that are not the group's own fields: sync
-  /// bookkeeping, and `timestamp` (when the group was last used).
+  /// bookkeeping, `timestamp` (when the group was last used) and this
+  /// phone's own switches (its notification, sharing, automatic place).
   static const _notMetadata = {
     'device_id',
     'updated_at',
@@ -113,7 +103,30 @@ class SqliteGroupWriter {
     'deleted',
     'sync_version',
     'timestamp',
+    'notification_enabled',
+    'sync_enabled',
+    'auto_location_enabled',
   };
+
+  /// Whether saving [group] as [row] over the stored row [old] changes the
+  /// group's own fields: its columns but [_notMetadata], or its people and
+  /// categories.
+  static Future<bool> metadataChanged(
+    Transaction txn,
+    ExpenseGroup group,
+    Map<String, Object?> row,
+    Map<String, Object?> old,
+  ) async =>
+      old['deleted'] == 1 ||
+      row.entries.any(
+        (e) => !_notMetadata.contains(e.key) && old[e.key] != e.value,
+      ) ||
+      await _namesChanged(txn, kTableParticipants, group.id, {
+        for (final p in group.participants) p.id: p.name,
+      }) ||
+      await _namesChanged(txn, kTableCategories, group.id, {
+        for (final c in group.categories) c.id: c.name,
+      });
 
   /// Whether the rows of [table] (id → name) differ from [wanted].
   static Future<bool> _namesChanged(

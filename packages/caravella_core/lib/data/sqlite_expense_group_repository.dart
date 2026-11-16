@@ -482,12 +482,27 @@ class SqliteExpenseGroupRepository
         final db = await database;
 
         await db.transaction((txn) async {
-          // Update group metadata: its own fields changed, so their time
-          // moves too (sync takes them from the newer side).
+          // Update group metadata. Their time moves only when the group's
+          // own fields change (sync takes them from the newer side), not for
+          // this phone's switches.
           final row = _mapper.groupToMap(group);
+          final old = await txn.query(
+            kTableGroups,
+            where: 'id = ?',
+            whereArgs: [group.id],
+          );
+          if (old.isNotEmpty &&
+              await SqliteGroupWriter.metadataChanged(
+                txn,
+                group,
+                row,
+                old.first,
+              )) {
+            row['meta_updated_at'] = row['updated_at'];
+          }
           await txn.update(
             kTableGroups,
-            {...row, 'meta_updated_at': row['updated_at']},
+            row,
             where: 'id = ?',
             whereArgs: [group.id],
           );
