@@ -77,11 +77,7 @@ internal object AppFunctionStorageReader {
 
     private const val TAG = "AppFunctionStorageReader"
     @Volatile
-    private var isGroupSummaryViewEnsured = false
-    @Volatile
     private var groupSummaryViewFirstDay: Int? = null
-    @Volatile
-    private var isExpenseDetailsViewEnsured = false
     private val viewsLock = Any()
 
     // ------------------------------------------------------------------
@@ -464,7 +460,9 @@ internal object AppFunctionStorageReader {
      */
     private fun ensureGroupSummaryView(db: SQLiteDatabase, firstDayOfWeekSqlite: Int) {
         synchronized(viewsLock) {
-            if (isGroupSummaryViewEnsured && groupSummaryViewFirstDay == firstDayOfWeekSqlite) return
+            // No early return on a remembered "done": the database file can be
+            // replaced while the process lives (backup restore, cleared data),
+            // taking the views with it. CREATE VIEW IF NOT EXISTS is cheap.
             if (groupSummaryViewFirstDay != null && groupSummaryViewFirstDay != firstDayOfWeekSqlite) {
                 db.execSQL("DROP VIEW IF EXISTS $VIEW_GROUP_SUMMARY")
             }
@@ -519,7 +517,6 @@ internal object AppFunctionStorageReader {
                 GROUP BY g.id, g.title, g.timestamp, g.currency, g.color, g.file
                 """.trimIndent(),
             )
-            isGroupSummaryViewEnsured = true
             groupSummaryViewFirstDay = firstDayOfWeekSqlite
         }
     }
@@ -533,7 +530,6 @@ internal object AppFunctionStorageReader {
      */
     private fun ensureExpenseDetailsView(db: SQLiteDatabase) {
         synchronized(viewsLock) {
-            if (isExpenseDetailsViewEnsured) return
             db.execSQL(
                 """
                 CREATE VIEW IF NOT EXISTS $VIEW_EXPENSE_DETAILS AS
@@ -551,7 +547,6 @@ internal object AppFunctionStorageReader {
                 LEFT JOIN $TABLE_PARTICIPANTS p ON e.paid_by_id = p.id
                 """.trimIndent(),
             )
-            isExpenseDetailsViewEnsured = true
         }
     }
 

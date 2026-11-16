@@ -1,34 +1,39 @@
 # Package: `android_app_functions`
 
-Exposes app capabilities to Android AI agents and shortcuts (e.g. Google Gemini/Assistant "App Functions") via a native Kotlin service plus a Dart `MethodChannel` bridge. Depends only on `flutter` + local `caravella_core`.
+Exposes app capabilities to Android AI agents (e.g. Gemini) as [App Functions](https://developer.android.com/reference/androidx/appfunctions), on Android 16 (API 36) and later. The functions themselves are native Kotlin in `android/app`; this Dart package is only the bridge that opens the group when an agent's link is opened. Depends only on `flutter` + local `caravella_core`.
 
 Barrel: `android_app_functions.dart` exports `src/app_functions_service.dart`, `src/platform_app_functions_manager.dart`, and model files.
 
 ## Exposed functions
 
-| Function | Kind | Result model | Handled by |
-|---|---|---|---|
-| `onAddExpense` | write | — (navigates to group after creating) | Kotlin forwards to Dart via `MethodChannel('io.caravella.egm/app_functions')` |
-| `getGroupBalance` | read | `ExpenseBalanceResult` (`groupId`, `groupTitle`, `totalBalance`, `currency`) | Kotlin directly |
-| `getRecentExpenses` | read | `RecentExpensesResult` (list of `ExpenseSummary`, capped at `kRecentExpensesCount = 3`) | Kotlin directly |
-| `getTodayTotal` | read | `TodayTotalResult` (`groupId`, `groupTitle`, `todayTotal`, `currency`) | Kotlin directly |
+Declared in `android/app/src/main/kotlin/io/caravella/egm/appfunctions/CaravellaAppFunctionService.kt`, on `BaseCaravellaAppFunctionService` (an `androidx.appfunctions.AppFunctionService`), each with `@AppFunctionDeclaration(isDescribedByKDoc = true)`: the KDoc is what the agent reads, so keep it accurate. Results are `@AppFunctionSerializable` classes in the same file.
 
-The three read-only functions are handled **entirely in native Kotlin** (`android/app/src/main/kotlin/io/caravella/egm/appfunctions/CaravellaAppFunctionService.kt` + `AppFunctionStorageReader.kt`) — they read the storage JSON directly without starting the Flutter engine, for fast/lightweight responses. Only `addExpense` round-trips through Dart, because it needs the running app (to let the user confirm/navigate into the UI).
+| Function | Kind | Returns |
+|---|---|---|
+| `listGroups()` | read | `List<ExpenseGroupInfo>` (`groupId`, `title`, `currency`) — the active groups, so the agent has the ids the others need |
+| `addExpense(groupId, amount?, categoryName?, note?)` | write | `AddedExpense` (`expenseId`, `groupId`, `amount`, `intentToOpen`). With an amount (> 0) the expense is saved at once (category matched by name, else the first; paid by the first participant). Without one nothing is saved and `intentToOpen` is a `PendingIntent` that opens the group in Caravella, where the user adds it, for the agent to open (a service can't start an activity from the background) |
+| `getGroupBalance(groupId)` | read | `GroupBalance` (`totalBalance`, the group's total spending) |
+| `getRecentExpenses(groupId)` | read | `RecentExpenses` (the last 3 `ExpenseInfo`, newest first) |
+| `getTodayTotal(groupId)` | read | `TodayTotal` |
 
-## Registration flow
+Errors are `AppFunctionException`s: `AppFunctionInvalidArgumentException` (amount ≤ 0), `AppFunctionElementNotFoundException` (unknown group), `AppFunctionDisabledException` (see below). They are returned from the I/O dispatcher as a value and thrown on the service's coroutine (`io { }`), because an `AppFunctionException` thrown across `withContext` is copied by kotlinx.coroutines through reflection, which fails fatally where the system's App Functions extension classes are missing.
 
-`PlatformAppFunctionsManager.initialize({required onAddExpense})` is a platform guard — no-ops unless `Platform.isAndroid`, otherwise delegates to `AppFunctionsService.initialize`.
+All data access is native, without starting Flutter: `AppFunctionStorageReader.kt` reads (and, for `addExpense`, writes) the app's SQLite database (`expense_groups.db`) through two views it creates on demand (`group_summary_view`, `expense_details_view`; re-created whenever missing, since the database file can be replaced while the process lives, e.g. by a backup restore). The same reader serves the home widget.
 
-Called from `lib/home/services/app_functions_initialization.dart` (`AppFunctionsInitialization.initialize()`), synchronously, during app startup (see [Architecture Overview § startup sequence](ARCHITECTURE.md#app-startup-sequence)). Its `_handleAddExpense` callback:
+## Privacy toggle
 
-1. Checks the privacy toggle `PreferencesService.instance.appFunctions.isEnabled()` — if disabled, the request is silently ignored (logged only). This toggle is surfaced in Settings → Privacy (see [App: Settings](APP_SETTINGS.md)).
-2. If `params.amount > 0`, resolves a category (case-insensitive match, falling back to first/"Other"), builds the `ExpenseDetails` with `AppFunctionsInitialization.expenseFor` (named after the agent's `note`, or the category without one: an expense needs a name, and before 2.4.4/2.5 the unnamed one was refused by SQLite and never saved), and calls `ExpenseGroupStorageV2.addExpenseToGroup`.
-3. If amount is `0.0` (not provided by the agent), skips creating an expense and only navigates.
-4. Always navigates to `ExpenseGroupDetailPage` via the global `navigatorKey`.
+Settings › Privacy has the App Functions toggle (`PreferencesService.instance.appFunctions`, off by default). The Kotlin side reads it from Flutter's `SharedPreferences` (`flutter.app_functions_enabled`) on every call; when off, every function returns `AppFunctionDisabledException` and touches no data. The functions stay declared (`enabledByDefault` in the generated XML), so agents can see them but not use them.
 
-## Native dependency note
+## How it is wired
 
-`android/app/build.gradle.kts` pins `androidx.appfunctions:appfunctions:1.0.0-alpha01` deliberately — `CaravellaAppFunctionService` uses a `Builder(qualifiedName, id)` constructor that was made internal starting in `alpha09`. Don't bump this dependency without re-verifying that API is still public in the target version.
+- `androidx.appfunctions:appfunctions` and its KSP compiler `appfunctions-compiler` (same version, `android/app/build.gradle.kts`; KSP plugin in `android/settings.gradle.kts`). From `@AppFunctionServiceEntryPoint(serviceName = "CaravellaAppFunctionService", appFunctionXmlFileName = "caravella_app_functions")` the compiler generates the concrete `CaravellaAppFunctionService` and `assets/caravella_app_functions.xml` (ids `io.caravella.egm.appfunctions.BaseCaravellaAppFunctionService#<name>`).
+- `AndroidManifest.xml` declares the generated service: exported, `android:permission="android.permission.BIND_APP_FUNCTION_SERVICE"` (only the system binds it), action `android.app.appfunctions.AppFunctionService`, properties `android.app.appfunctions.schema` → `app_functions_schema.xsd` and `android.app.appfunctions.v2` → `caravella_app_functions.xml`.
+- The link: the `PendingIntent` targets `MainActivity` with action `io.caravella.egm.ADD_EXPENSE` and the group (plus category and note when given). `MainActivity` forwards it on `MethodChannel('io.caravella.egm/app_functions')` as `onAddExpense` (with a category or note; with neither, it takes the shortcuts' `onShortcutTapped` path, which also opens the group), which `PlatformAppFunctionsManager.initialize({required onAddExpense})` (a no-op off Android) hands to `AppFunctionsInitialization._handleAddExpense` (`lib/home/services/app_functions_initialization.dart`, called at startup): it checks the privacy toggle, saves the expense if an amount came with it (`AppFunctionsInitialization.expenseFor`; the link carries none), and opens `ExpenseGroupDetailPage` via the global `navigatorKey`.
+- Release builds keep what the library loads by name (the `@AppFunctionSerializable` classes and their generated `$…Factory`) through the library's own R8 rules; the inventory is created directly by the generated service.
+
+## Tests
+
+`android/app/src/test/kotlin/io/caravella/egm/appfunctions/CaravellaAppFunctionsTest.kt` runs on Robolectric (SDK 36) with `appfunctions-testing`'s `AppFunctionTestRule`: functions are found by search and executed through the generated service as declared in the manifest, over a small SQLite database shaped like the app's (search, each function, the invalid amount, the unknown group, the toggle off). Run with `cd android && ./gradlew :app:testDevDebugUnitTest`. A real call from an agent needs an Android 16 device with one; the emulator images have no `cmd app_function`.
 
 ## See also
 

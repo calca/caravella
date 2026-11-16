@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.devtools.ksp")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -38,6 +39,12 @@ android {
     // breaking-change note); Flutter 3.47.2's own default is still 36.
     compileSdk = 37
     ndkVersion = "28.2.13676358"
+
+    // Robolectric needs the merged manifest and resources (App Functions tests).
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all { it.maxHeapSize = "2g" }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -112,9 +119,11 @@ dependencies {
 
     // Android App Functions – exposes Caravella capabilities to Android AI agents.
     // See: https://developer.android.com/reference/androidx/appfunctions
-    // Pinned to alpha01: CaravellaAppFunctionService uses Builder(qualifiedName, id) which
-    // was made internal in alpha09. Update together with CaravellaAppFunctionService.kt.
-    implementation("androidx.appfunctions:appfunctions:1.0.0-alpha01")
+    // The compiler (KSP) generates CaravellaAppFunctionService and its XML from the
+    // @AppFunctionDeclaration functions of BaseCaravellaAppFunctionService.
+    // Keep the two versions together.
+    implementation("androidx.appfunctions:appfunctions:1.0.0-rc01")
+    ksp("androidx.appfunctions:appfunctions-compiler:1.0.0-rc01")
     implementation("androidx.glance:glance-appwidget:1.1.1")
     implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
@@ -123,4 +132,11 @@ dependencies {
     // Plain-JVM unit tests (android/app/src/test) for pure Kotlin logic that
     // doesn't touch the Android framework — see WidgetFormattingTest.
     testImplementation("junit:junit:4.13.2")
+    // App Functions run through their generated service on Robolectric
+    // (AppFunctionTestRule) — see CaravellaAppFunctionsTest.
+    testImplementation("androidx.appfunctions:appfunctions-testing:1.0.0-rc01")
+    kspTest("androidx.appfunctions:appfunctions-compiler:1.0.0-rc01")
+    testImplementation("org.robolectric:robolectric:4.18")
+    testImplementation("androidx.test:core:1.7.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
 }

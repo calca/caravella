@@ -34,7 +34,7 @@ flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-defin
 flutter gen-l10n
 ```
 
-CI (`.github/workflows/Development - Android.yml`) runs exactly: `flutter pub get` → `flutter analyze` → `flutter test` → **`flutter test` inside each `packages/*` (own `pub get` + `flutter test`, since they're separate Dart packages the root `flutter test` never reaches)** → F-Droid (FOSS) variant guard → signed staging APK build. Match this locally before pushing — when touching a package, also run `(cd packages/<name> && flutter pub get && flutter test)`.
+CI (`.github/workflows/Development - Android.yml`) runs exactly: `flutter pub get` → `flutter analyze` → `flutter test` → **`flutter test` inside each `packages/*` (own `pub get` + `flutter test`, since they're separate Dart packages the root `flutter test` never reaches)** → F-Droid (FOSS) variant guard → signed staging APK build → native unit tests (`cd android && ./gradlew :app:testStagingDebugUnitTest`). Match this locally before pushing — when touching a package, also run `(cd packages/<name> && flutter pub get && flutter test)`.
 
 ## Package boundaries
 

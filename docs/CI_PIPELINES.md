@@ -17,7 +17,7 @@ Triggers: push/PR to `main`.
     --dart-define=ENABLE_ANDROID_WIDGET=true \
     --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
   ```
-  This is the sequence CLAUDE.md means by "match this locally before pushing" — reproduce it with `flutter pub get && flutter analyze && flutter test` before opening a PR.
+  then the **native unit tests** (`cd android && ./gradlew :app:testStagingDebugUnitTest`: `android/app/src/test`, App Functions on Robolectric and the widget formatting). This is the sequence CLAUDE.md means by "match this locally before pushing" — reproduce it with `flutter pub get && flutter analyze && flutter test` before opening a PR.
 
 Publishing a release on GitHub no longer builds anything or bumps `pubspec.yaml` (an older `release` job did both, which is where the bot-authored "Bump version" commits and the `v1.9.x-dev` pre-releases come from). The version is bumped by hand as part of preparing a release (`.claude/skills/plan-create-release`).
 

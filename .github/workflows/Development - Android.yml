@@ -91,6 +91,18 @@ jobs:
           ./build_variant.sh gms
       - name: Build staging APK (signed)
         run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true --dart-define=ENABLE_PLAY_UPDATES=true --dart-define=ENABLE_BLUETOOTH_SYNC=true --dart-define=ENABLE_GOOGLE_DRIVE_SYNC=true --dart-define=ENABLE_ANDROID_WIDGET=true --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
+      # Native unit tests in android/app/src/test (App Functions on Robolectric,
+      # widget formatting). After the APK build, so Gradle and Flutter's
+      # android/local.properties are already set up.
+      - name: Android unit tests
+        working-directory: android
+        timeout-minutes: 25
+        # Stop the APK build's Gradle daemon first and cap this run's heap:
+        # two 8 GB Gradle JVMs plus Robolectric starve the hosted runner.
+        run: |
+          ./gradlew --stop
+          ./gradlew :app:testStagingDebugUnitTest --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
       - name: Get app version
         id: get_version
         run: |
