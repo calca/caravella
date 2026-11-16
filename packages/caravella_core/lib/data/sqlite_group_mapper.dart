@@ -21,12 +21,18 @@ import 'sqlite_tables.dart';
 class SqliteGroupMapper {
   const SqliteGroupMapper();
 
-  /// Load all groups from database (excludes soft-deleted groups)
-  Future<List<ExpenseGroup>> loadAllGroups(DatabaseExecutor db) async {
+  /// Load groups from database (excludes soft-deleted groups). [where]
+  /// narrows them in SQL (e.g. `archived = 0`), so the groups left out are
+  /// not read at all, expenses included.
+  Future<List<ExpenseGroup>> loadAllGroups(
+    DatabaseExecutor db, {
+    String? where,
+    List<Object?> whereArgs = const [],
+  }) async {
     final groupMaps = await db.query(
       kTableGroups,
-      where: 'deleted = ?',
-      whereArgs: [0],
+      where: where == null ? 'deleted = 0' : 'deleted = 0 AND ($where)',
+      whereArgs: whereArgs,
     );
     final groups = <ExpenseGroup>[];
 
@@ -97,16 +103,29 @@ class SqliteGroupMapper {
       orderBy: 'date DESC',
     );
 
-    final expenses = <ExpenseDetails>[];
-    for (final expenseMap in expenseMaps) {
-      final expense = await mapToExpense(
-        db,
-        expenseMap,
-        participants,
-        categories,
+    // The group's attachments in one query, not one per expense.
+    final attachments = <String, List<String>>{};
+    for (final row in await db.rawQuery(
+      'SELECT a.expense_id, a.file_path FROM $kTableAttachments a '
+      'JOIN $kTableExpenses e ON e.id = a.expense_id '
+      'WHERE e.group_id = ? ORDER BY a.id',
+      [groupId],
+    )) {
+      (attachments[row['expense_id'] as String] ??= []).add(
+        row['file_path'] as String,
       );
-      expenses.add(expense);
     }
+    final participantsById = {for (final p in participants) p.id: p};
+    final categoriesById = {for (final c in categories) c.id: c};
+    final expenses = [
+      for (final expenseMap in expenseMaps)
+        expenseFromMap(
+          expenseMap,
+          participantsById,
+          categoriesById,
+          attachments[expenseMap['id']] ?? const [],
+        ),
+    ];
 
     return ExpenseGroup(
       id: groupId,
@@ -234,35 +253,46 @@ class SqliteGroupMapper {
     };
   }
 
-  /// Convert database map to ExpenseDetails
+  /// Convert database map to ExpenseDetails, reading its attachments.
+  /// For many expenses use [expenseFromMap] with the attachments read in
+  /// one query.
   Future<ExpenseDetails> mapToExpense(
     DatabaseExecutor db,
     Map<String, dynamic> map,
     List<ExpenseParticipant> participants,
     List<ExpenseCategory> categories,
   ) async {
+    final attachmentMaps = await db.query(
+      kTableAttachments,
+      where: 'expense_id = ?',
+      whereArgs: [map['id']],
+      orderBy: 'id',
+    );
+    return expenseFromMap(
+      map,
+      {for (final p in participants) p.id: p},
+      {for (final c in categories) c.id: c},
+      [for (final m in attachmentMaps) m['file_path'] as String],
+    );
+  }
+
+  /// Convert database map to ExpenseDetails with these [attachments].
+  ExpenseDetails expenseFromMap(
+    Map<String, dynamic> map,
+    Map<String, ExpenseParticipant> participants,
+    Map<String, ExpenseCategory> categories,
+    List<String> attachments,
+  ) {
     final paidById = map['paid_by_id'] as String;
     final categoryId = map['category_id'] as String;
     final expenseId = map['id'] as String;
 
-    final paidBy = participants.firstWhere(
-      (p) => p.id == paidById,
-      orElse: () => ExpenseParticipant(id: paidById, name: 'Unknown'),
-    );
-    final category = categories.firstWhere(
-      (c) => c.id == categoryId,
-      orElse: () => ExpenseCategory(id: categoryId, name: 'Unknown'),
-    );
-
-    // Load attachments
-    final attachmentMaps = await db.query(
-      kTableAttachments,
-      where: 'expense_id = ?',
-      whereArgs: [expenseId],
-    );
-    final attachments = attachmentMaps
-        .map((m) => m['file_path'] as String)
-        .toList();
+    final paidBy =
+        participants[paidById] ??
+        ExpenseParticipant(id: paidById, name: 'Unknown');
+    final category =
+        categories[categoryId] ??
+        ExpenseCategory(id: categoryId, name: 'Unknown');
 
     return ExpenseDetails(
       id: expenseId,
