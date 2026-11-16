@@ -48,6 +48,9 @@ abstract class IExpenseGroupRepository {
   /// Gets all archived groups, sorted by timestamp (newest first)
   Future<StorageResult<List<ExpenseGroup>>> getArchivedGroups();
 
+  /// How many groups there are, active and archived, without reading them.
+  Future<StorageResult<int>> getGroupCount();
+
   /// Gets a specific group by ID
   Future<StorageResult<ExpenseGroup?>> getGroupById(String id);
 
