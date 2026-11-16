@@ -66,19 +66,20 @@ class SqliteGroupWriter {
       );
     }
 
-    // People and categories first: expenses refer to them.
-    final removedParticipants = await _writeNamed(
-      txn,
-      kTableParticipants,
-      group.id,
-      {for (final p in group.participants) p.id: p.name},
-    );
-    final removedCategories = await _writeNamed(
-      txn,
-      kTableCategories,
-      group.id,
-      {for (final c in group.categories) c.id: c.name},
-    );
+    // People and categories first: expenses refer to them (foreign keys).
+    // One an expense names but the group's lists lack (a copy from an older
+    // app, an import) is kept with the expense's own copy of it, rather
+    // than failing the whole save.
+    final removedParticipants =
+        await _writeNamed(txn, kTableParticipants, group.id, {
+          for (final e in group.expenses) e.paidBy.id: e.paidBy.name,
+          for (final p in group.participants) p.id: p.name,
+        });
+    final removedCategories =
+        await _writeNamed(txn, kTableCategories, group.id, {
+          for (final e in group.expenses) e.category.id: e.category.name,
+          for (final c in group.categories) c.id: c.name,
+        });
 
     await _writeExpenses(
       txn,
