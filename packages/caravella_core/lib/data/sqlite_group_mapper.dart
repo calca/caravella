@@ -22,7 +22,7 @@ class SqliteGroupMapper {
   const SqliteGroupMapper();
 
   /// Load all groups from database (excludes soft-deleted groups)
-  Future<List<ExpenseGroup>> loadAllGroups(Database db) async {
+  Future<List<ExpenseGroup>> loadAllGroups(DatabaseExecutor db) async {
     final groupMaps = await db.query(
       kTableGroups,
       where: 'deleted = ?',
@@ -39,7 +39,10 @@ class SqliteGroupMapper {
   }
 
   /// Load a single group by ID (excludes soft-deleted groups)
-  Future<ExpenseGroup?> loadGroupById(Database db, String groupId) async {
+  Future<ExpenseGroup?> loadGroupById(
+    DatabaseExecutor db,
+    String groupId,
+  ) async {
     final groupMaps = await db.query(
       kTableGroups,
       where: 'id = ? AND deleted = ?',
@@ -52,7 +55,10 @@ class SqliteGroupMapper {
   }
 
   /// Convert database map to ExpenseGroup
-  Future<ExpenseGroup> mapToGroup(Database db, Map<String, dynamic> map) async {
+  Future<ExpenseGroup> mapToGroup(
+    DatabaseExecutor db,
+    Map<String, dynamic> map,
+  ) async {
     final groupId = map['id'] as String;
 
     // Load participants
@@ -230,7 +236,7 @@ class SqliteGroupMapper {
 
   /// Convert database map to ExpenseDetails
   Future<ExpenseDetails> mapToExpense(
-    Database db,
+    DatabaseExecutor db,
     Map<String, dynamic> map,
     List<ExpenseParticipant> participants,
     List<ExpenseCategory> categories,

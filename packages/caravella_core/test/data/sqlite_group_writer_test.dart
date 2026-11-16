@@ -108,6 +108,76 @@ void main() {
     expect(await db.query(kTableExpenseTombstones), isEmpty);
   });
 
+  test("the group's own time moves only when its fields change", () async {
+    Future<int> metaAt() async =>
+        (await db.query(kTableGroups)).single['meta_updated_at'] as int;
+    await save(group([expense('a')]));
+    final first = await metaAt();
+
+    await save(group([expense('a'), expense('b')]));
+    expect(await metaAt(), first, reason: 'a new expense');
+
+    await save(group([expense('a'), expense('b')]).copyWith(title: 'Oslo'));
+    final renamed = await metaAt();
+    expect(renamed, greaterThan(first), reason: 'a new name');
+
+    await save(
+      group([
+        expense('a'),
+        expense('b'),
+      ]).copyWith(title: 'Oslo', participants: [anna]),
+    );
+    expect(await metaAt(), greaterThan(renamed), reason: 'one person less');
+  });
+
+  test("a full group's own time: not moved by expenses or this phone's "
+      'switches', () async {
+    Future<int> metaAt() async =>
+        (await db.query(kTableGroups)).single['meta_updated_at'] as int;
+    final full = group([expense('a')]).copyWith(
+      startDate: DateTime(2026, 11, 1),
+      endDate: DateTime(2026, 11, 20),
+      color: 0xFF336699,
+      file: '/photos/norway.jpg',
+      groupType: ExpenseGroupType.travel,
+      budget: const GroupBudget(amount: 600, period: BudgetPeriod.monthly),
+      secondCurrency: const SecondCurrency(
+        code: 'NOK',
+        symbol: 'kr',
+        rate: 11.5,
+      ),
+      payments: [
+        SettlePayment(
+          id: 'pay',
+          fromId: 'bruno',
+          toId: 'anna',
+          amount: 5,
+          date: DateTime(2026, 11, 10),
+        ),
+      ],
+    );
+    await save(full);
+    final first = await metaAt();
+
+    // Through the app's own path for a new expense.
+    ExpenseGroupRepositoryFactory.useForTesting(repo);
+    addTearDown(ExpenseGroupRepositoryFactory.reset);
+    await Future<void>.delayed(const Duration(milliseconds: 3));
+    await ExpenseGroupStorageV2.addExpenseToGroup('g', expense('b'));
+    expect(await metaAt(), first, reason: 'a new expense');
+
+    await Future<void>.delayed(const Duration(milliseconds: 3));
+    final saved = (await repo.getGroupById('g')).unwrap()!;
+    (await repo.updateGroupMetadata(
+      saved.copyWith(notificationEnabled: true, syncEnabled: true),
+    )).unwrap();
+    expect(await metaAt(), first, reason: "this phone's switches");
+
+    await Future<void>.delayed(const Duration(milliseconds: 3));
+    (await repo.updateGroupMetadata(saved.copyWith(title: 'Oslo'))).unwrap();
+    expect(await metaAt(), greaterThan(first), reason: 'a new name');
+  });
+
   test('attachments are not duplicated by saving again', () async {
     final g = group([
       expense('a', attachments: ['one.jpg', 'two.jpg']),
@@ -182,6 +252,8 @@ void main() {
       onCreate: (db, _) async {
         await createSqliteSchema(db);
         await db.execute('DROP TABLE $kTableExpenseTombstones');
+        // What v12 adds: the time of the group's own fields.
+        await db.execute('ALTER TABLE groups DROP COLUMN meta_updated_at');
         await db.execute('ALTER TABLE $kTableExpenses DROP COLUMN updated_at');
         await db.insert(kTableGroups, {
           'id': 'g',
@@ -229,6 +301,7 @@ void main() {
     db = await repo.database;
 
     expect(await stamps(), {'a': 4242});
+    expect((await db.query(kTableGroups)).single['meta_updated_at'], 4242);
     expect(await db.query(kTableExpenseTombstones), isEmpty);
     final loaded = (await repo.getGroupById('g')).unwrap()!;
     expect(loaded.expenses.single.attachments, ['one.jpg', 'two.jpg']);

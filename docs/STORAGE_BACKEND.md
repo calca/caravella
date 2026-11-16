@@ -12,7 +12,7 @@ For where this fits in the wider codebase, see [caravella_core reference § Stor
 
 ## Backend 1: SQLite (default) — `SqliteExpenseGroupRepository`
 
-`packages/caravella_core/lib/data/sqlite_expense_group_repository.dart`. Uses `sqflite`, database file `expense_groups.db`, `_databaseVersion = 11`. Schema creation lives in `sqlite_schema.dart` (`createSqliteSchema`), table name constants in `sqlite_tables.dart`. No in-memory caching — every call reconstructs full `ExpenseGroup` objects via `_loadAllGroups`/`_loadGroupById`/`_mapToGroup`.
+`packages/caravella_core/lib/data/sqlite_expense_group_repository.dart`. Uses `sqflite`, database file `expense_groups.db`, `_databaseVersion = 12`. Schema creation lives in `sqlite_schema.dart` (`createSqliteSchema`), table name constants in `sqlite_tables.dart`. No in-memory caching — every call reconstructs full `ExpenseGroup` objects via `_loadAllGroups`/`_loadGroupById`/`_mapToGroup`.
 
 **Schema** (from `createSqliteSchema`):
 
@@ -64,6 +64,8 @@ paired_device_groups(device_id TEXT NOT NULL, group_id TEXT NOT NULL, granted_at
 **Schema v10** adds `groups.second_currency` (TEXT, JSON `{code, symbol, rate}`: `SecondCurrency`, the currency a group also takes expenses in) and `expenses.original` (TEXT, JSON `{amount, code, symbol, rate}`: `OriginalAmount`, what the receipt said for an expense typed in it); both null for none (`SqliteGroupMapper.toJsonColumn`/`jsonColumn`, an unreadable value reads as none). `expenses.amount` stays the group-currency amount, so totals, balances, statistics and budgets don't look at `original`.
 
 **Schema v11** adds `expenses.updated_at` (INTEGER, UTC ms: when *that expense* last changed, backfilled from its group's `updated_at`) and the table `expense_tombstones (expense_id PK, group_id, deleted_at)`, one row per deleted expense (index `idx_expense_tombstones_group`). Both are written by `SqliteGroupWriter` and are what sync needs to merge two phones' changes expense by expense instead of replacing the whole group (#728). The migration also cleans `attachments`: saves used to delete a group's expenses and insert them again counting on a cascade that never ran (foreign keys are not enforced: no `PRAGMA foreign_keys`), so every save added another copy of each attachment row; it keeps the first of each and drops the rows of expenses that are gone.
+
+**Schema v12** adds `groups.meta_updated_at` (INTEGER, UTC ms, backfilled from `updated_at`): when the group's own fields (name, dates, currency, people, categories, budget, payments…) last changed, as opposed to its expenses. `SqliteGroupWriter` moves it only when one of them changes (`timestamp` and the sync columns don't count); `updateGroupMetadata` always moves it. Sync takes the group's fields from the side with the later one, so a new name on one phone and a new expense on the other are both kept (see [Sync architecture](SYNC_ARCHITECTURE.md#conflict-resolution)).
 
 Indexes: `idx_groups_timestamp(timestamp DESC)`, `idx_groups_pinned(pinned, archived)`, `idx_participants_group`, `idx_categories_group`, `idx_expenses_group`, `idx_expenses_date(date DESC)`, `idx_groups_updated_at`, `idx_groups_deleted`.
 

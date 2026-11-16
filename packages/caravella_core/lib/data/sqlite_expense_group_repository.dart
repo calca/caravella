@@ -29,7 +29,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 11;
+  static const int _databaseVersion = 12;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -334,6 +334,21 @@ class SqliteExpenseGroupRepository
         name: 'storage.sqlite',
       );
     }
+    if (oldVersion < 12) {
+      // When the group's own fields (name, dates, people, budget…) last
+      // changed, apart from its expenses: sync takes them from the newer
+      // side without losing the other side's expenses. Starts from the
+      // group's time.
+      await db.execute(
+        'ALTER TABLE $kTableGroups '
+        'ADD COLUMN meta_updated_at INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute('UPDATE $kTableGroups SET meta_updated_at = updated_at');
+      LoggerService.info(
+        'Database migration to v12 complete',
+        name: 'storage.sqlite',
+      );
+    }
   }
 
   /// Runs [op], measuring its performance (via [measureOperation]) and
@@ -467,10 +482,27 @@ class SqliteExpenseGroupRepository
         final db = await database;
 
         await db.transaction((txn) async {
-          // Update group metadata
+          // Update group metadata. Their time moves only when the group's
+          // own fields change (sync takes them from the newer side), not for
+          // this phone's switches.
+          final row = _mapper.groupToMap(group);
+          final old = await txn.query(
+            kTableGroups,
+            where: 'id = ?',
+            whereArgs: [group.id],
+          );
+          if (old.isNotEmpty &&
+              await SqliteGroupWriter.metadataChanged(
+                txn,
+                group,
+                row,
+                old.first,
+              )) {
+            row['meta_updated_at'] = row['updated_at'];
+          }
           await txn.update(
             kTableGroups,
-            _mapper.groupToMap(group),
+            row,
             where: 'id = ?',
             whereArgs: [group.id],
           );

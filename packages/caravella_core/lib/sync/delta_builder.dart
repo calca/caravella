@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:caravella_core/data/newer_format_exception.dart';
 import 'package:caravella_core/data/sqlite_expense_group_repository.dart';
+import 'package:caravella_core/data/sqlite_tables.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/device_identity.dart';
 import 'package:caravella_core/sync/sync_dao.dart';
@@ -65,7 +66,7 @@ class DeltaBuilder {
     // to — see SyncDao.grantGroupAccess.
     final changedRows = await _syncDao.getGroupsDeltaSince(lastSync, peerId);
     final deletedRows = await _syncDao.getDeletedGroupsSince(lastSync, peerId);
-    final delta = await _assemble(changedRows, deletedRows);
+    final delta = await _assemble(db, changedRows, deletedRows);
 
     LoggerService.info(
       'Delta built: ${(delta['groups'] as List).length} groups, '
@@ -82,6 +83,7 @@ class DeltaBuilder {
   /// is safe (unchanged groups are skipped there).
   Future<Map<String, dynamic>> buildSnapshot() async {
     final snapshot = await _assemble(
+      _syncDao.db,
       await _syncDao.getAllGroupRows(),
       await _syncDao.getAllDeletedGroupRows(),
     );
@@ -95,6 +97,7 @@ class DeltaBuilder {
 
   /// The delta for these group rows and tombstone rows.
   Future<Map<String, dynamic>> _assemble(
+    DatabaseExecutor db,
     List<Map<String, dynamic>> changedRows,
     List<Map<String, dynamic>> deletedRows,
   ) async {
@@ -105,11 +108,32 @@ class DeltaBuilder {
       final result = await _repository.getGroupById(groupId);
       if (result.isSuccess && result.data != null) {
         final json = result.data!.toJson();
-        // Attach sync metadata the receiver needs for conflict resolution
+        // Attach sync metadata the receiver needs for conflict resolution.
+        // `meta_updated_at`, `expenses` and `deleted_expenses` (2.5) let it
+        // merge expense by expense (see ConflictResolver); an older app
+        // ignores them and replaces the whole group by `updated_at`.
         json['_sync'] = {
           'device_id': row['device_id'],
           'updated_at': row['updated_at'],
           'sync_version': row['sync_version'],
+          'meta_updated_at': row['meta_updated_at'] ?? row['updated_at'],
+          'expenses': {
+            for (final e in await db.query(
+              SqliteExpenseGroupRepository.tableExpenses,
+              columns: ['id', 'updated_at'],
+              where: 'group_id = ?',
+              whereArgs: [groupId],
+            ))
+              e['id'] as String: e['updated_at'] as int,
+          },
+          'deleted_expenses': {
+            for (final t in await db.query(
+              kTableExpenseTombstones,
+              where: 'group_id = ?',
+              whereArgs: [groupId],
+            ))
+              t['expense_id'] as String: t['deleted_at'] as int,
+          },
         };
         groups.add(json);
       }
