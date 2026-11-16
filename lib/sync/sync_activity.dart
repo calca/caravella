@@ -23,8 +23,8 @@ class SyncActivity extends ChangeNotifier {
 
   SyncActivity(this._groups);
 
-  /// Connects to [orchestrator] (null until sync has started, or on the
-  /// JSON backend); reconnecting to the same one does nothing.
+  /// Connects to [orchestrator] (null until sync has started);
+  /// reconnecting to the same one does nothing.
   void attach(SyncOrchestrator? orchestrator) {
     if (identical(orchestrator, _orchestrator)) return;
     _sub?.cancel();

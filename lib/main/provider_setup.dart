@@ -31,8 +31,7 @@ class ProviderSetup {
         ChangeNotifierProvider(create: (_) => UserNameNotifier()),
         ChangeNotifierProvider(create: (_) => GroupTypeTemplatesNotifier()),
         // Built asynchronously so LAN/mDNS setup never blocks the first
-        // frame; consumers see null until initialization completes (or
-        // permanently, on the JSON backend where sync isn't available).
+        // frame; consumers see null until initialization completes.
         FutureProvider<SyncOrchestrator?>(
           create: (_) => SyncBootstrap.initialize(),
           initialData: null,
