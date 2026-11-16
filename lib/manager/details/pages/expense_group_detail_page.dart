@@ -92,6 +92,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   @override
   void initState() {
     super.initState();
+    // Shown at once with the group the caller already has, then refreshed
+    // from storage: waiting for the read showed a spinner for the first
+    // frames, a dot in the middle of the screen as the page slid in.
+    _trip = widget.trip;
     _loadTrip();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
