@@ -15,7 +15,6 @@ import 'expense_group_repository_factory.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
-/// Now supports both JSON and SQLite backends via factory
 class ExpenseGroupStorageV2 {
   static const String fileName = 'expense_group_storage.json';
 
@@ -140,6 +139,12 @@ class ExpenseGroupStorageV2 {
   }
 
   /// Returns ALL groups (including archived) sorted by timestamp (newest first)
+  /// Whether there is any group, active or archived, without reading them.
+  static Future<bool> hasGroups() async {
+    final result = await _repository.getGroupCount();
+    return result.unwrapOr(0) > 0;
+  }
+
   static Future<List<ExpenseGroup>> getAllGroups() async {
     final result = await _repository.getAllGroups();
     return result.unwrapOr([]);

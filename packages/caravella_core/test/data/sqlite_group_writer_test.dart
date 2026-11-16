@@ -241,6 +241,65 @@ void main() {
     expect(await db.query(kTableExpenses), isEmpty);
   });
 
+  test(
+    'reads: groups filtered in SQL, attachments per expense, a count',
+    () async {
+      await save(
+        group([
+          expense('a', attachments: ['one.jpg', 'two.jpg']),
+          expense('b'),
+          expense('c', attachments: ['three.jpg']),
+        ]),
+      );
+      final other = ExpenseParticipant(name: 'Carla', id: 'carla');
+      final cat = ExpenseCategory(name: 'Fun', id: 'fun');
+      (await repo.saveGroup(
+        ExpenseGroup(
+          id: 'old',
+          title: 'Old',
+          currency: '€',
+          participants: [other],
+          categories: [cat],
+          expenses: [
+            ExpenseDetails(
+              id: 'x',
+              name: 'x',
+              category: cat,
+              amount: 1,
+              paidBy: other,
+              date: DateTime(2025),
+              attachments: ['old.jpg'],
+            ),
+          ],
+          timestamp: DateTime(2025),
+          archived: true,
+        ),
+      )).unwrap();
+
+      final active = (await repo.getActiveGroups()).unwrap();
+      expect(active.map((g) => g.id), ['g']);
+      expect(
+        {for (final e in active.single.expenses) e.id: e.attachments},
+        {
+          'a': ['one.jpg', 'two.jpg'],
+          'b': <String>[],
+          'c': ['three.jpg'],
+        },
+      );
+      final archived = (await repo.getArchivedGroups()).unwrap();
+      expect(archived.map((g) => g.id), ['old']);
+      expect(archived.single.expenses.single.attachments, ['old.jpg']);
+      expect((await repo.getAllGroups()).unwrap(), hasLength(2));
+      expect((await repo.getGroupCount()).unwrap(), 2);
+      expect((await repo.getPinnedGroup()).unwrap(), isNull);
+
+      (await repo.setPinnedGroup('g')).unwrap();
+      expect((await repo.getPinnedGroup()).unwrap()!.id, 'g');
+      (await repo.deleteGroup('old')).unwrap();
+      expect((await repo.getGroupCount()).unwrap(), 1);
+    },
+  );
+
   test('a version 10 database is upgraded', () async {
     await repo.close();
     final path = '${dir.path}/old.db';

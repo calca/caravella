@@ -29,7 +29,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   // Cached groups to avoid FutureBuilder flash
   List<ExpenseGroup> _activeGroups = [];
-  List<ExpenseGroup> _archivedGroups = [];
+  // Whether only archived groups are left: all Home needs to know of them.
+  bool _hasArchived = false;
 
   @override
   void initState() {
@@ -115,18 +116,31 @@ class _HomePageState extends State<HomePage> with RouteAware {
     );
   }
 
-  Future<void> _loadLocaleAndTrip() async {
-    // Load pinned trip and groups in parallel
-    final results = await Future.wait([
-      ExpenseGroupStorageV2.getPinnedTrip(),
+  /// What Home shows: the active groups (the pinned one among them) and,
+  /// with none, whether archived ones are left. Archived groups are counted,
+  /// not read: the Groups page loads them when it opens.
+  Future<
+    ({
+      ExpenseGroup? pinnedTrip,
+      List<ExpenseGroup> activeGroups,
+      bool hasArchived,
+    })
+  >
+  _loadGroups() async {
+    final (activeGroups, hasGroups) = await (
       ExpenseGroupStorageV2.getActiveGroups(),
-      ExpenseGroupStorageV2.getArchivedGroups(),
-    ]);
+      ExpenseGroupStorageV2.hasGroups(),
+    ).wait;
+    return (
+      pinnedTrip: activeGroups.where((g) => g.pinned).firstOrNull,
+      activeGroups: activeGroups,
+      hasArchived: hasGroups && activeGroups.isEmpty,
+    );
+  }
 
-    final pinnedTrip = results[0] as ExpenseGroup?;
-    final activeGroups = results[1] as List<ExpenseGroup>;
-    final archivedGroups = results[2] as List<ExpenseGroup>;
-    final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
+  Future<void> _loadLocaleAndTrip() async {
+    final (:pinnedTrip, :activeGroups, :hasArchived) = await _loadGroups();
+    final hasGroups = activeGroups.isNotEmpty || hasArchived;
 
     if (!mounted) return;
 
@@ -149,19 +163,19 @@ class _HomePageState extends State<HomePage> with RouteAware {
         ? 'welcome'
         : activeGroups.isNotEmpty
         ? 'cards_active'
-        : archivedGroups.isNotEmpty
+        : hasArchived
         ? 'cards_archived'
         : 'welcome';
 
     LoggerService.debug(
-      'View state: isFirstStart=$shouldShowWelcome, active=${activeGroups.length}, archived=${archivedGroups.length}, viewKey=$newViewKey',
+      'View state: isFirstStart=$shouldShowWelcome, active=${activeGroups.length}, archived=$hasArchived, viewKey=$newViewKey',
       name: 'state.home',
     );
 
     setState(() {
       _pinnedTrip = pinnedTrip;
       _activeGroups = activeGroups;
-      _archivedGroups = archivedGroups;
+      _hasArchived = hasArchived;
       _isFirstStart = shouldShowWelcome;
       _dataLoaded = true;
     });
@@ -196,18 +210,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   /// Soft refresh that only updates the pinned trip and groups without showing loading state
   Future<void> _softRefresh() async {
-    final results = await Future.wait([
-      ExpenseGroupStorageV2.getPinnedTrip(),
-      ExpenseGroupStorageV2.getActiveGroups(),
-      ExpenseGroupStorageV2.getArchivedGroups(),
-    ]);
+    final (:pinnedTrip, :activeGroups, :hasArchived) = await _loadGroups();
 
     if (!mounted) return;
 
-    final pinnedTrip = results[0] as ExpenseGroup?;
-    final activeGroups = results[1] as List<ExpenseGroup>;
-    final archivedGroups = results[2] as List<ExpenseGroup>;
-    final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
+    final hasGroups = activeGroups.isNotEmpty || hasArchived;
 
     // Determine if we should show welcome screen based on data and preferences
     final shouldShowWelcome = _shouldShowWelcomeScreen(
@@ -219,19 +226,19 @@ class _HomePageState extends State<HomePage> with RouteAware {
         ? 'welcome'
         : activeGroups.isNotEmpty
         ? 'cards_active'
-        : archivedGroups.isNotEmpty
+        : hasArchived
         ? 'cards_archived'
         : 'welcome';
 
     LoggerService.debug(
-      'Soft refresh: active=${activeGroups.length}, archived=${archivedGroups.length}, viewKey=$newViewKey',
+      'Soft refresh: active=${activeGroups.length}, archived=$hasArchived, viewKey=$newViewKey',
       name: 'state.home',
     );
 
     setState(() {
       _pinnedTrip = pinnedTrip;
       _activeGroups = activeGroups;
-      _archivedGroups = archivedGroups;
+      _hasArchived = hasArchived;
       _isFirstStart = shouldShowWelcome;
     });
   }
@@ -268,8 +275,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     // loading, so it doesn't flash over it).
     // Welcome shows on first start and whenever no group is left at all.
     final showsWelcome =
-        _isFirstStart == true ||
-        (_activeGroups.isEmpty && _archivedGroups.isEmpty);
+        _isFirstStart == true || (_activeGroups.isEmpty && !_hasArchived);
     AppShellScope.maybeOf(context)?.setNavVisible(_dataLoaded && !showsWelcome);
 
     final scaffoldBody = Scaffold(
@@ -349,7 +355,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     }
 
     // Note: No SafeArea here - HomeCardsSection handles topSafeArea internally
-    if (_archivedGroups.isNotEmpty) {
+    if (_hasArchived) {
       return Semantics(
         key: const ValueKey('cards_archived'),
         label: gloc.accessibility_groups_list,
