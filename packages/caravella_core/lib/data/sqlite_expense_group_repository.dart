@@ -29,7 +29,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 12;
+  static const int _databaseVersion = 13;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -77,6 +77,10 @@ class SqliteExpenseGroupRepository
       return await openDatabase(
         path,
         version: _databaseVersion,
+        // SQLite ignores foreign keys unless each connection asks for them:
+        // without this the schema's REFERENCES and ON DELETE CASCADE did
+        // nothing, and deleted groups and expenses left their rows behind.
+        onConfigure: (db) => db.execute('PRAGMA foreign_keys = ON'),
         onCreate: (db, version) => createSqliteSchema(db),
         onUpgrade: _upgradeDatabase,
       );
@@ -346,6 +350,29 @@ class SqliteExpenseGroupRepository
       await db.execute('UPDATE $kTableGroups SET meta_updated_at = updated_at');
       LoggerService.info(
         'Database migration to v12 complete',
+        name: 'storage.sqlite',
+      );
+    }
+    if (oldVersion < 13) {
+      // Foreign keys are enforced from now on (onConfigure). Until 2.4.2
+      // deleting a group removed its row and counted on a cascade that
+      // never ran, so its expenses, people and categories stayed behind,
+      // unreachable: remove what belongs to no group.
+      const noGroup = 'group_id NOT IN (SELECT id FROM $kTableGroups)';
+      await db.execute(
+        'DELETE FROM $kTableAttachments WHERE expense_id NOT IN '
+        '(SELECT id FROM $kTableExpenses WHERE NOT ($noGroup))',
+      );
+      for (final table in [
+        kTableExpenses,
+        kTableExpenseTombstones,
+        kTableParticipants,
+        kTableCategories,
+      ]) {
+        await db.execute('DELETE FROM $table WHERE $noGroup');
+      }
+      LoggerService.info(
+        'Database migration to v13 complete',
         name: 'storage.sqlite',
       );
     }
