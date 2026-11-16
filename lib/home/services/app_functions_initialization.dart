@@ -28,120 +28,42 @@ class AppFunctionsInitialization {
     if (notifier.currentGroup?.id == groupId) notifier.refreshGroup();
   }
 
-  /// Called when an AI agent requests a new expense to be added.
-  ///
-  /// Guards against the feature being disabled via the privacy toggle before
-  /// processing the request.  Navigates to the expense group detail page so
-  /// the user can review and confirm the pre-filled expense.  If the group
-  /// cannot be found, shows an error snackbar.
+  /// The user opened an AI agent's link to add an expense to a group: open
+  /// the group, where they add it. Ignored while App Functions are off in
+  /// Settings › Privacy.
   static void _handleAddExpense(AddExpenseFunctionParams params) {
-    // Honour the privacy toggle: ignore the request when App Functions are off.
     if (!PreferencesService.instance.appFunctions.isEnabled()) {
       LoggerService.info(
-        'App Function addExpense ignored: App Functions disabled by user',
+        'App Function link ignored: App Functions disabled by user',
         name: 'app_functions',
       );
       return;
     }
-
-    final context = navigatorKey.currentContext;
-    if (context == null) return;
-
-    _handleAddExpenseAsync(context, params);
+    _openGroup(params.groupId);
   }
 
-  static Future<void> _handleAddExpenseAsync(
-    BuildContext context,
-    AddExpenseFunctionParams params,
-  ) async {
+  static Future<void> _openGroup(String groupId) async {
     try {
-      final group = await ExpenseGroupStorageV2.getTripById(params.groupId);
-      if (!context.mounted) return;
-
+      final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
         LoggerService.warning(
-          'App Function addExpense: group not found: ${params.groupId}',
+          'App Function link: group not found: $groupId',
           name: 'app_functions',
         );
         return;
       }
-
-      // If the AI agent supplied a valid amount, create the expense immediately
-      // and navigate to the group detail so the user can see the result.
-      // When no amount is provided (amount == 0.0), navigate to the group detail
-      // page only – the user can create the expense manually with the pre-context.
-      if (params.amount > 0) {
-        final expense = expenseFor(group, params);
-
-        await ExpenseGroupStorageV2.addExpenseToGroup(group.id, expense);
-        LoggerService.info(
-          'App Function addExpense: added ${params.amount} to group ${group.title}',
-          name: 'app_functions',
-        );
-      } else {
-        // No amount provided – just open the group so the user can add it manually.
-        LoggerService.info(
-          'App Function addExpense: opening group ${group.title} (no amount pre-filled)',
-          name: 'app_functions',
-        );
-      }
-
-      // Always navigate to the group detail page
-      final navigator = navigatorKey.currentState;
-      if (navigator == null || !context.mounted) return;
-      await navigator.push(
+      await navigatorKey.currentState?.push(
         MaterialPageRoute(
           builder: (ctx) => ExpenseGroupDetailPage(trip: group),
         ),
       );
     } catch (e, st) {
       LoggerService.error(
-        'App Function addExpense failed',
+        'App Function link failed',
         name: 'app_functions',
         error: e,
         stackTrace: st,
       );
     }
-  }
-
-  /// Resolves the category for a new expense.
-  ///
-  /// If [categoryName] matches an existing category (case-insensitive) in the
-  /// group, that category is returned.  Otherwise the first category is used,
-  /// or a default one is created.
-  /// The expense an agent's request adds to [group]. Its name is the
-  /// agent's note, or the category's name without one: an expense needs a
-  /// name (the form requires it, and SQLite's `expenses.name` is NOT NULL,
-  /// so an unnamed one was never saved).
-  @visibleForTesting
-  static ExpenseDetails expenseFor(
-    ExpenseGroup group,
-    AddExpenseFunctionParams params,
-  ) {
-    final category = _resolveCategory(group, params.categoryName);
-    final note = params.note?.trim();
-    return ExpenseDetails(
-      name: note != null && note.isNotEmpty ? note : category.name,
-      category: category,
-      amount: params.amount,
-      paidBy: group.participants.isNotEmpty
-          ? group.participants.first
-          : ExpenseParticipant(name: 'Me'),
-      date: DateTime.now(),
-    );
-  }
-
-  static ExpenseCategory _resolveCategory(
-    ExpenseGroup group,
-    String? categoryName,
-  ) {
-    if (categoryName != null && group.categories.isNotEmpty) {
-      final match = group.categories
-          .where((c) => c.name.toLowerCase() == categoryName.toLowerCase())
-          .firstOrNull;
-      if (match != null) return match;
-    }
-    if (group.categories.isNotEmpty) return group.categories.first;
-    return ExpenseCategory(name: 'Other');
   }
 }

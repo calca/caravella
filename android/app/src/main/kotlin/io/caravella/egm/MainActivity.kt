@@ -22,7 +22,7 @@ class MainActivity : FlutterActivity() {
     // Pending ADD_EXPENSE data from shortcuts (groupId + groupTitle only)
     private var pendingShortcutAction: Map<String, String>? = null
 
-    // Pending ADD_EXPENSE data from App Functions (may include amount, categoryName, note)
+    // Pending ADD_EXPENSE data from an agent's link (groupId, categoryName, note)
     private var pendingAppFunctionAction: Map<String, Any?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,43 +47,34 @@ class MainActivity : FlutterActivity() {
     
     /**
      * Handles ADD_EXPENSE intents originating from either:
-     *  – an app shortcut (has groupId + groupTitle)
-     *  – an App Function call (also carries optional amount, categoryName, note)
+     *  – an app shortcut (groupId + groupTitle);
+     *  – an AI agent's link from the addExpense App Function, made when the
+     *    agent had no amount (also carries the categoryName and note it
+     *    suggested).
      *
-     * When the App Functions channel is ready the pre-fill data is sent via
-     * [APP_FUNCTIONS_CHANNEL]/onAddExpense so the Flutter UI can open the
-     * add-expense form pre-populated.  When only basic shortcut data is
-     * present the legacy [SHORTCUTS_CHANNEL]/onShortcutTapped call is used
-     * for backward compatibility.
+     * Both open the group in Flutter: the agent's link over
+     * [APP_FUNCTIONS_CHANNEL]/onAddExpense, which checks the privacy toggle,
+     * a shortcut over [SHORTCUTS_CHANNEL]/onShortcutTapped.
      */
     private fun handleAddExpenseIntent(intent: Intent?) {
         if (intent?.action != "io.caravella.egm.ADD_EXPENSE") return
 
         val groupId = intent.getStringExtra("groupId") ?: return
         val groupTitle = intent.getStringExtra("groupTitle") ?: return
-
-        // An amount of 0.0 is treated as "not provided" because no real expense
-        // has zero value; the AI agent omits the extra when no amount was given.
-        val amount: Double? = intent.getDoubleExtra("amount", 0.0).takeIf { it > 0.0 }
         val categoryName: String? = intent.getStringExtra("categoryName")
         val note: String? = intent.getStringExtra("note")
 
-        val hasAppFunctionData = amount != null || categoryName != null || note != null
-
-        if (hasAppFunctionData) {
-            // Rich pre-fill from App Functions → use the dedicated channel
+        if (categoryName != null || note != null) {
             val data = mutableMapOf<String, Any?>(
                 "groupId" to groupId,
                 "groupTitle" to groupTitle,
             )
-            if (amount != null) data["amount"] = amount
             if (categoryName != null) data["categoryName"] = categoryName
             if (note != null) data["note"] = note
 
             appFunctionsChannel?.invokeMethod("onAddExpense", data)
                 ?: run { pendingAppFunctionAction = data }
         } else {
-            // Basic shortcut tap → legacy path
             val data = mapOf("groupId" to groupId, "groupTitle" to groupTitle)
             shortcutsChannel?.invokeMethod("onShortcutTapped", data)
                 ?: run { pendingShortcutAction = data }

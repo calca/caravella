@@ -4,9 +4,6 @@ import android.content.Context
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.File
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -19,16 +16,9 @@ import java.util.UUID
  * Reads Caravella expense data directly from Kotlin, without starting the
  * Flutter engine.
  *
- * The reader transparently supports **both** storage backends used by the app:
- *
- * ## JSON backend (`FileBasedExpenseGroupRepository`)
- * Storage file: `${context.filesDir}/expense_group_storage.json`
- * Enabled when the app was built with `--dart-define=USE_JSON_BACKEND=true`
- * or when the SQLite migration has not yet been performed.
- *
- * ## SQLite backend (`SqliteExpenseGroupRepository`) — default
- * Database file: `expense_groups.db` in the system database directory
- * (`context.getDatabasePath("expense_groups.db")`).
+ * It reads (and, for an agent's new expense, writes) the app's SQLite
+ * database (`SqliteExpenseGroupRepository`), `expense_groups.db` in the
+ * system database directory (`context.getDatabasePath("expense_groups.db")`).
  * Schema:
  *  - `groups`       – id, title, currency, start_date, end_date, timestamp,
  *                     pinned, archived, …
@@ -37,13 +27,7 @@ import java.util.UUID
  *  - `expenses`     – id, group_id, name, amount (REAL), date (epoch ms),
  *                     category_id, paid_by_id, note, …
  *
- * ## Backend selection
- * The active backend is detected at runtime:
- * 1. If the SQLite database file exists → use SQLite.
- * 2. Otherwise fall back to JSON.
- *
- * This mirrors the logic in `ExpenseGroupRepositoryFactory.getRepository()` /
- * `StorageMigrationService.isMigrationCompleted()` on the Dart side.
+ * Without a database (the app never opened) every read finds nothing.
  *
  * All public methods are safe to call from a background [Service] (no Flutter
  * engine required) because they perform their own synchronous I/O.
@@ -53,9 +37,6 @@ internal object AppFunctionStorageReader {
     // ------------------------------------------------------------------
     // Constants – must stay in sync with Flutter side
     // ------------------------------------------------------------------
-
-    /** JSON storage file name (matches `FileBasedExpenseGroupRepository`). */
-    private const val JSON_FILE_NAME = "expense_group_storage.json"
 
     /** SQLite database file name (matches `SqliteExpenseGroupRepository`). */
     private const val SQLITE_DB_NAME = "expense_groups.db"
@@ -87,31 +68,14 @@ internal object AppFunctionStorageReader {
     private val viewsLock = Any()
 
     // ------------------------------------------------------------------
-    // Backend detection
-    // ------------------------------------------------------------------
-
-    /**
-     * Returns `true` when the SQLite database file exists on disk, meaning the
-     * app is (or was last) using the SQLite backend.
-     */
-    private fun isSqliteBackend(context: Context): Boolean {
-        return context.getDatabasePath(SQLITE_DB_NAME).exists()
-    }
-
-    // ------------------------------------------------------------------
     // Public API
     // ------------------------------------------------------------------
 
     /**
      * Returns basic info about all active (non-archived) groups.
-     * Automatically selects the appropriate storage backend.
      */
     fun getActiveGroups(context: Context): List<GroupSummary> {
-        return if (isSqliteBackend(context)) {
-            getActiveGroupsSqlite(context)
-        } else {
-            getActiveGroupsJson(context)
-        }
+        return getActiveGroupsSqlite(context)
     }
 
     /**
@@ -119,11 +83,7 @@ internal object AppFunctionStorageReader {
      * Returns `null` when the group cannot be found.
      */
     fun getTotalBalance(context: Context, groupId: String): BalanceResult? {
-        return if (isSqliteBackend(context)) {
-            getTotalBalanceSqlite(context, groupId)
-        } else {
-            getTotalBalanceJson(context, groupId)
-        }
+        return getTotalBalanceSqlite(context, groupId)
     }
 
     /**
@@ -135,11 +95,7 @@ internal object AppFunctionStorageReader {
         groupId: String,
         count: Int = 3,
     ): RecentExpensesResult? {
-        return if (isSqliteBackend(context)) {
-            getRecentExpensesSqlite(context, groupId, count)
-        } else {
-            getRecentExpensesJson(context, groupId, count)
-        }
+        return getRecentExpensesSqlite(context, groupId, count)
     }
 
     /**
@@ -147,11 +103,7 @@ internal object AppFunctionStorageReader {
      * for [groupId].  Returns `null` when the group cannot be found.
      */
     fun getTodayTotal(context: Context, groupId: String): TodayTotalResult? {
-        return if (isSqliteBackend(context)) {
-            getTodayTotalSqlite(context, groupId)
-        } else {
-            getTodayTotalJson(context, groupId)
-        }
+        return getTodayTotalSqlite(context, groupId)
     }
 
     /**
@@ -159,44 +111,19 @@ internal object AppFunctionStorageReader {
      * Returns `null` when the group cannot be found.
      */
     fun getWeekTotal(context: Context, groupId: String): WeekTotalResult? {
-        return if (isSqliteBackend(context)) {
-            getWeekTotalSqlite(context, groupId)
-        } else {
-            getWeekTotalJson(context, groupId)
-        }
+        return getWeekTotalSqlite(context, groupId)
     }
 
     /**
      * Returns both widget totals in a single read for [groupId].
      */
     fun getWidgetTotals(context: Context, groupId: String): WidgetTotalsResult? {
-        return if (isSqliteBackend(context)) {
-            getWidgetTotalsSqlite(context, groupId)
-        } else {
-            val today = getTodayTotalJson(context, groupId) ?: return null
-            val week = getWeekTotalJson(context, groupId) ?: return null
-            val group = findGroupJson(context, groupId) ?: return null
-            val totalBalance = getTotalBalanceJson(context, groupId)
-            WidgetTotalsResult(
-                groupId = groupId,
-                groupTitle = today.groupTitle,
-                todayTotal = today.todayTotal,
-                weekTotal = week.weekTotal,
-                groupTotal = totalBalance?.totalBalance ?: 0.0,
-                currency = today.currency,
-                groupColor = if (group.has("color") && !group.isNull("color")) {
-                    group.optInt("color")
-                } else {
-                    null
-                },
-                groupBackgroundImagePath = group.optString("file").takeIf { it.isNotBlank() },
-            )
-        }
+        return getWidgetTotalsSqlite(context, groupId)
     }
 
     /**
-     * Persists a new expense entry for [groupId] directly to the active storage
-     * backend **without starting the Flutter engine**.
+     * Persists a new expense entry for [groupId] directly to the database
+     * **without starting the Flutter engine**.
      *
      * This is the write counterpart of the read-only query methods and enables
      * `addExpense` App Function calls to complete silently in the background
@@ -206,8 +133,7 @@ internal object AppFunctionStorageReader {
      * - If [categoryName] matches an existing category (case-insensitive) that
      *   category is reused.
      * - Otherwise the first category of the group is used as a fallback.
-     * - If the group has no categories at all, a new "Other" category is created
-     *   for JSON storage; SQLite inserts are skipped (no orphan rows).
+     * - If the group has no categories at all, nothing is saved.
      *
      * The first participant of the group is set as `paidBy`.
      *
@@ -221,11 +147,7 @@ internal object AppFunctionStorageReader {
         categoryName: String?,
         note: String?,
     ): SaveExpenseResult {
-        return if (isSqliteBackend(context)) {
-            saveExpenseSqlite(context, groupId, amount, categoryName, note)
-        } else {
-            saveExpenseJson(context, groupId, amount, categoryName, note)
-        }
+        return saveExpenseSqlite(context, groupId, amount, categoryName, note)
     }
 
     // ------------------------------------------------------------------
@@ -354,7 +276,6 @@ internal object AppFunctionStorageReader {
                     while (it.moveToNext()) {
                         val epochMs = it.getLong(it.getColumnIndexOrThrow("date"))
                         // Produce an ISO-8601 UTC string compatible with Dart's DateTime.parse
-                        // and consistent with the ISO format stored in the JSON backend.
                         val dateIso = java.time.Instant.ofEpochMilli(epochMs).toString()
                         val amountCol = it.getColumnIndexOrThrow("amount")
                         expenses.add(
@@ -563,160 +484,6 @@ internal object AppFunctionStorageReader {
     }
 
     // ------------------------------------------------------------------
-    // JSON implementation
-    // ------------------------------------------------------------------
-
-    private fun loadGroupsArray(context: Context): JSONArray? {
-        return try {
-            val file = File(context.filesDir, JSON_FILE_NAME)
-            if (!file.exists()) return null
-            val root = JSONObject(file.readText())
-            root.optJSONArray("groups")
-        } catch (_: Exception) {
-            null
-        }
-    }
-
-    private fun findGroupJson(context: Context, groupId: String): JSONObject? {
-        val array = loadGroupsArray(context) ?: return null
-        for (i in 0 until array.length()) {
-            val obj = array.optJSONObject(i) ?: continue
-            if (obj.optString("id") == groupId) return obj
-        }
-        return null
-    }
-
-    private fun getActiveGroupsJson(context: Context): List<GroupSummary> {
-        val array = loadGroupsArray(context) ?: return emptyList()
-        val result = mutableListOf<GroupSummary>()
-        for (i in 0 until array.length()) {
-            val obj = array.optJSONObject(i) ?: continue
-            if (obj.optBoolean("archived", false)) continue
-            result.add(
-                GroupSummary(
-                    id = obj.optString("id"),
-                    title = obj.optString("title"),
-                    currency = obj.optString("currency", DEFAULT_CURRENCY),
-                    color = if (obj.has("color") && !obj.isNull("color")) {
-                        obj.optInt("color")
-                    } else {
-                        null
-                    },
-                    backgroundImagePath = obj.optString("file").takeIf { it.isNotBlank() },
-                )
-            )
-        }
-        return result
-    }
-
-    private fun getTotalBalanceJson(context: Context, groupId: String): BalanceResult? {
-        val group = findGroupJson(context, groupId) ?: return null
-        val expenses = group.optJSONArray("expenses") ?: JSONArray()
-        var total = 0.0
-        for (i in 0 until expenses.length()) {
-            total += expenses.optJSONObject(i)?.optDouble("amount", 0.0) ?: 0.0
-        }
-        return BalanceResult(
-            groupId = groupId,
-            groupTitle = group.optString("title"),
-            totalBalance = total,
-            currency = group.optString("currency", DEFAULT_CURRENCY),
-        )
-    }
-
-    private fun getRecentExpensesJson(
-        context: Context,
-        groupId: String,
-        count: Int,
-    ): RecentExpensesResult? {
-        val group = findGroupJson(context, groupId) ?: return null
-        val expenses = group.optJSONArray("expenses") ?: JSONArray()
-
-        data class RawExpense(val date: String, val obj: JSONObject)
-        val list = mutableListOf<RawExpense>()
-        for (i in 0 until expenses.length()) {
-            val e = expenses.optJSONObject(i) ?: continue
-            list.add(RawExpense(e.optString("date", ""), e))
-        }
-        list.sortByDescending { it.date }
-
-        val summaries = list.take(count).map { raw ->
-            val e = raw.obj
-            ExpenseSummary(
-                id = e.optString("id"),
-                categoryName = e.optJSONObject("category")?.optString("name") ?: "",
-                amount = if (e.has("amount")) e.optDouble("amount") else null,
-                paidByName = e.optJSONObject("paidBy")?.optString("name") ?: "",
-                date = e.optString("date"),
-                note = e.optString("note").takeIf { it.isNotEmpty() },
-                name = e.optString("name").takeIf { it.isNotEmpty() },
-            )
-        }
-
-        return RecentExpensesResult(
-            groupId = groupId,
-            groupTitle = group.optString("title"),
-            currency = group.optString("currency", DEFAULT_CURRENCY),
-            expenses = summaries,
-        )
-    }
-
-    private fun getTodayTotalJson(context: Context, groupId: String): TodayTotalResult? {
-        val group = findGroupJson(context, groupId) ?: return null
-        val expenses = group.optJSONArray("expenses") ?: JSONArray()
-
-        val today = LocalDate.now(ZoneId.systemDefault()).toString() // yyyy-MM-dd
-        var total = 0.0
-        for (i in 0 until expenses.length()) {
-            val e = expenses.optJSONObject(i) ?: continue
-            val dateStr = e.optString("date", "")
-            if (dateStr.startsWith(today)) {
-                total += e.optDouble("amount", 0.0)
-            }
-        }
-
-        return TodayTotalResult(
-            groupId = groupId,
-            groupTitle = group.optString("title"),
-            todayTotal = total,
-            currency = group.optString("currency", DEFAULT_CURRENCY),
-        )
-    }
-
-    private fun getWeekTotalJson(context: Context, groupId: String): WeekTotalResult? {
-        val group = findGroupJson(context, groupId) ?: return null
-        val expenses = group.optJSONArray("expenses") ?: JSONArray()
-
-        val zone = ZoneId.systemDefault()
-        val today = LocalDate.now(zone)
-        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
-        val weekStartDate = today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
-        val weekEndDate = weekStartDate.plusDays(7)
-
-        var total = 0.0
-        for (i in 0 until expenses.length()) {
-            val e = expenses.optJSONObject(i) ?: continue
-            val dateStr = e.optString("date", "")
-            if (dateStr.length < 10) continue
-            val localDate = try {
-                LocalDate.parse(dateStr.substring(0, 10))
-            } catch (_: Exception) {
-                continue
-            }
-            if (!localDate.isBefore(weekStartDate) && localDate.isBefore(weekEndDate)) {
-                total += e.optDouble("amount", 0.0)
-            }
-        }
-
-        return WeekTotalResult(
-            groupId = groupId,
-            groupTitle = group.optString("title"),
-            weekTotal = total,
-            currency = group.optString("currency", DEFAULT_CURRENCY),
-        )
-    }
-
-    // ------------------------------------------------------------------
     // SQLite write implementation
     // ------------------------------------------------------------------
 
@@ -853,133 +620,7 @@ internal object AppFunctionStorageReader {
     }
 
     // ------------------------------------------------------------------
-    // JSON write implementation
-    // ------------------------------------------------------------------
-
-    /**
-     * Appends a new expense object to the JSON storage file.
-     *
-     * The write is performed atomically: data is written to a temporary file
-     * first, then renamed over the original to avoid partial writes on crash.
-     * The expense JSON schema mirrors `ExpenseDetails.toJson()` on the Dart side.
-     */
-    private fun saveExpenseJson(
-        context: Context,
-        groupId: String,
-        amount: Double,
-        categoryName: String?,
-        note: String?,
-    ): SaveExpenseResult {
-        return try {
-            val file = File(context.filesDir, JSON_FILE_NAME)
-            if (!file.exists()) return SaveExpenseResult.Failure("Storage file not found")
-
-            val root = JSONObject(file.readText())
-            val groups = root.optJSONArray("groups")
-                ?: return SaveExpenseResult.Failure("'groups' array missing in storage file")
-
-            // Find group index
-            var groupIndex = -1
-            var groupObj: JSONObject? = null
-            for (i in 0 until groups.length()) {
-                val g = groups.optJSONObject(i) ?: continue
-                if (g.optString("id") == groupId) {
-                    groupIndex = i
-                    groupObj = g
-                    break
-                }
-            }
-            if (groupObj == null) return SaveExpenseResult.Failure("Group not found: $groupId")
-
-            // Resolve category
-            val categoriesArr = groupObj.optJSONArray("categories") ?: JSONArray()
-            var resolvedCategory: JSONObject? = null
-            if (categoryName != null) {
-                for (i in 0 until categoriesArr.length()) {
-                    val c = categoriesArr.optJSONObject(i) ?: continue
-                    if (c.optString("name").equals(categoryName, ignoreCase = true)) {
-                        resolvedCategory = c
-                        break
-                    }
-                }
-            }
-            if (resolvedCategory == null && categoriesArr.length() > 0) {
-                resolvedCategory = categoriesArr.optJSONObject(0)
-            }
-            if (resolvedCategory == null) {
-                // No existing categories – create a new one and persist it to the group's list
-                // so the Flutter app can find it when resolving the expense reference.
-                val now = Instant.now().toString()
-                val newCategory = JSONObject().apply {
-                    put("id", UUID.randomUUID().toString())
-                    put("name", categoryName ?: "Other")
-                    put("createdAt", now)
-                }
-                categoriesArr.put(newCategory)
-                groupObj.put("categories", categoriesArr)
-                resolvedCategory = newCategory
-            }
-
-            // Resolve participant (first in list); if no participants exist, create and persist one
-            // so that the expense reference is consistent when the Flutter app reads the file.
-            val participantsArr = groupObj.optJSONArray("participants") ?: JSONArray().also {
-                groupObj.put("participants", it)
-            }
-            val paidBy: JSONObject = participantsArr.optJSONObject(0) ?: run {
-                val newParticipant = JSONObject().apply {
-                    put("id", UUID.randomUUID().toString())
-                    put("name", "Me")
-                    put("createdAt", Instant.now().toString())
-                }
-                participantsArr.put(newParticipant)
-                groupObj.put("participants", participantsArr)
-                newParticipant
-            }
-
-            // Build the expense JSON (mirrors ExpenseDetails.toJson())
-            // `name` is the user-visible description; use note if available, otherwise category name.
-            val expenseId = UUID.randomUUID().toString()
-            val expenseObj = JSONObject().apply {
-                put("id", expenseId)
-                put("category", resolvedCategory)
-                put("amount", amount)
-                put("paidBy", paidBy)
-                put("date", Instant.now().toString())
-                put("name", note ?: categoryName ?: "Untitled Expense")
-                if (note != null) put("note", note)
-            }
-
-            // Append expense to the group
-            val expenses = groupObj.optJSONArray("expenses") ?: JSONArray().also {
-                groupObj.put("expenses", it)
-            }
-            expenses.put(expenseObj)
-
-            // Replace the group entry in the root array
-            groups.put(groupIndex, groupObj)
-            root.put("groups", groups)
-
-            // Atomic write: write to a temp file then rename over the original
-            val tmpFile = File(context.filesDir, "$JSON_FILE_NAME.tmp")
-            tmpFile.writeText(root.toString())
-            if (!tmpFile.renameTo(file)) {
-                // rename() can fail across file systems; the original file is unchanged so
-                // no data is corrupted, but the new expense was NOT saved.
-                Log.e(TAG, "saveExpenseJson: atomic rename failed – expense $expenseId was not saved")
-                tmpFile.delete()
-                return SaveExpenseResult.Failure("Failed to persist new expense: file rename failed")
-            }
-
-            Log.i(TAG, "saveExpenseJson: inserted expense $expenseId in group $groupId (amount=$amount)")
-            SaveExpenseResult.Success(expenseId)
-        } catch (e: Exception) {
-            Log.e(TAG, "saveExpenseJson failed for group $groupId", e)
-            SaveExpenseResult.Failure(e.message ?: "Unknown error")
-        }
-    }
-
-    // ------------------------------------------------------------------
-    // Result data classes (shared between both backends)
+    // Result data classes
     // ------------------------------------------------------------------
 
     /** Result of [saveExpense]. */

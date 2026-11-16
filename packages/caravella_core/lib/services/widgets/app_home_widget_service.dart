@@ -20,7 +20,7 @@ enum HomeWidgetTapAction { addExpense, openGroup }
 /// Note: Platform checks are handled by [PlatformHomeWidgetManager].
 class AppHomeWidgetService {
   // Must match the provider class in
-  // android/app/src/main/kotlin/org/app/caravella/HomeWidgetProvider.kt
+  // android/app/src/main/kotlin/io/caravella/egm/HomeWidgetProvider.kt
   // and the receiver declared in AndroidManifest.xml.
   static const String _androidWidgetProvider =
       'io.caravella.egm.HomeWidgetProvider';
