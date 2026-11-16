@@ -62,15 +62,24 @@ jobs:
         run: ./validate_design_tokens.sh
       - name: Run tests
         run: flutter test --coverage
+      # Line coverage may not drop below these floors (generated
+      # localizations don't count). Raise a floor when coverage has grown.
+      - name: Coverage floor (app)
+        run: ./check_coverage.sh coverage/lcov.info 59 '^lib/l10n/'
       - name: Test local packages
         run: |
           set -e
           for pkg in packages/*/; do
             if [ -f "${pkg}pubspec.yaml" ]; then
               echo "== flutter test: $pkg =="
-              (cd "$pkg" && flutter pub get && flutter test)
+              (cd "$pkg" && flutter pub get && flutter test --coverage)
             fi
           done
+      - name: Coverage floor (packages)
+        run: |
+          set -e
+          ./check_coverage.sh packages/caravella_core/coverage/lcov.info 46
+          ./check_coverage.sh packages/caravella_core_ui/coverage/lcov.info 58
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
