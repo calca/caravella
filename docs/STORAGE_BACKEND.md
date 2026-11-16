@@ -12,7 +12,7 @@ For where this fits in the wider codebase, see [caravella_core reference § Stor
 
 ## Backend 1: SQLite (default) — `SqliteExpenseGroupRepository`
 
-`packages/caravella_core/lib/data/sqlite_expense_group_repository.dart`. Uses `sqflite`, database file `expense_groups.db`, `_databaseVersion = 13`. Schema creation lives in `sqlite_schema.dart` (`createSqliteSchema`), table name constants in `sqlite_tables.dart`. No in-memory caching — every call reconstructs full `ExpenseGroup` objects via `_loadAllGroups`/`_loadGroupById`/`_mapToGroup`.
+`packages/caravella_core/lib/data/sqlite_expense_group_repository.dart`. Uses `sqflite`, database file `expense_groups.db`, `_databaseVersion = 13`. Schema creation lives in `sqlite_schema.dart` (`createSqliteSchema`), table name constants in `sqlite_tables.dart`. No in-memory caching — every call reconstructs full `ExpenseGroup` objects via `SqliteGroupMapper` (`loadAllGroups`/`loadGroupById`/`mapToGroup`): four queries per group (people, categories, expenses, and all the group's attachments in one join; before 2.5 the attachments were one query per expense, 446 ms for 10 groups of 500 expenses against 15 ms now). `getActiveGroups`, `getArchivedGroups` and `getPinnedGroup` filter in SQL (`loadAllGroups(where:)`), so the other groups aren't read; `getGroupCount` (`ExpenseGroupStorageV2.hasGroups`) counts without reading, which is how Home knows archived groups exist without loading them.
 
 **Schema** (from `createSqliteSchema`):
 

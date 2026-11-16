@@ -417,8 +417,10 @@ class SqliteExpenseGroupRepository
   Future<StorageResult<List<ExpenseGroup>>> getActiveGroups() {
     return _guarded('getActiveGroups', 'Failed to get active groups', () async {
       final db = await database;
-      final groups = await _mapper.loadAllGroups(db);
-      final activeGroups = groups.where((g) => !g.archived).toList();
+      final activeGroups = await _mapper.loadAllGroups(
+        db,
+        where: 'archived = 0',
+      );
       activeGroups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
       return activeGroups;
     });
@@ -431,12 +433,25 @@ class SqliteExpenseGroupRepository
       'Failed to get archived groups',
       () async {
         final db = await database;
-        final groups = await _mapper.loadAllGroups(db);
-        final archivedGroups = groups.where((g) => g.archived).toList();
+        final archivedGroups = await _mapper.loadAllGroups(
+          db,
+          where: 'archived = 1',
+        );
         archivedGroups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
         return archivedGroups;
       },
     );
+  }
+
+  @override
+  Future<StorageResult<int>> getGroupCount() {
+    return _guarded('getGroupCount', 'Failed to count groups', () async {
+      final db = await database;
+      final rows = await db.rawQuery(
+        'SELECT COUNT(*) AS n FROM $kTableGroups WHERE deleted = 0',
+      );
+      return rows.first['n'] as int;
+    });
   }
 
   @override
@@ -468,8 +483,11 @@ class SqliteExpenseGroupRepository
   Future<StorageResult<ExpenseGroup?>> getPinnedGroup() {
     return _guarded('getPinnedGroup', 'Failed to get pinned group', () async {
       final db = await database;
-      final groups = await _mapper.loadAllGroups(db);
-      return groups.where((g) => g.pinned && !g.archived).firstOrNull;
+      final groups = await _mapper.loadAllGroups(
+        db,
+        where: 'pinned = 1 AND archived = 0',
+      );
+      return groups.firstOrNull;
     });
   }
 
