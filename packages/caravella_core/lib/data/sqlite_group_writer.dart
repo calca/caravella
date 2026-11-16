@@ -14,7 +14,9 @@ import 'sqlite_tables.dart';
 /// thousand writes one row, and each expense keeps its own `updated_at`: the
 /// time *it* last changed, which sync needs to merge two phones' changes
 /// expense by expense. A deleted expense leaves a row in
-/// [kTableExpenseTombstones] for the same reason.
+/// [kTableExpenseTombstones] for the same reason, and the group row's
+/// `meta_updated_at` moves only when the group's own fields change (its
+/// name, dates, people, budget…), not when an expense does.
 class SqliteGroupWriter {
   const SqliteGroupWriter._();
 
@@ -22,27 +24,58 @@ class SqliteGroupWriter {
 
   /// Writes [group] inside [txn].
   ///
-  /// [groupRow] is the `groups` row to store (with its sync columns).
+  /// [groupRow] is the `groups` row to store (with its sync columns; with
+  /// `meta_updated_at` too to set it rather than work it out).
   /// [changedAt] stamps the expenses this write inserts or changes, and the
-  /// tombstones of the ones it deletes. [recordDeletions] false deletes
-  /// without tombstones: for a copy of the group received from elsewhere,
-  /// where a missing expense is not this device's deletion.
+  /// tombstones of the ones it deletes; [expenseStamps] gives some expenses
+  /// their own time instead (a copy received by sync keeps the sender's).
+  /// [recordDeletions] false deletes without tombstones: for a copy of the
+  /// group received from elsewhere, where a missing expense is not this
+  /// device's deletion.
   static Future<void> write(
     Transaction txn,
     ExpenseGroup group,
     Map<String, Object?> groupRow, {
     required int changedAt,
+    Map<String, int> expenseStamps = const {},
     bool recordDeletions = true,
   }) async {
     // The group row: updated in place. `INSERT OR REPLACE` would delete the
     // row first, and with it (foreign keys on) every row of the group.
-    final updated = await txn.update(
+    final existingRows = await txn.query(
       kTableGroups,
-      groupRow,
       where: 'id = ?',
       whereArgs: [group.id],
     );
-    if (updated == 0) await txn.insert(kTableGroups, groupRow);
+    final row = {...groupRow};
+    if (!row.containsKey('meta_updated_at')) {
+      final old = existingRows.isEmpty ? null : existingRows.first;
+      final metaChanged =
+          old == null ||
+          old['deleted'] == 1 ||
+          row.entries.any(
+            (e) => !_notMetadata.contains(e.key) && old[e.key] != e.value,
+          ) ||
+          await _namesChanged(txn, kTableParticipants, group.id, {
+            for (final p in group.participants) p.id: p.name,
+          }) ||
+          await _namesChanged(txn, kTableCategories, group.id, {
+            for (final c in group.categories) c.id: c.name,
+          });
+      row['meta_updated_at'] = metaChanged
+          ? changedAt
+          : old['meta_updated_at'] as int? ?? changedAt;
+    }
+    if (existingRows.isEmpty) {
+      await txn.insert(kTableGroups, row);
+    } else {
+      await txn.update(
+        kTableGroups,
+        row,
+        where: 'id = ?',
+        whereArgs: [group.id],
+      );
+    }
 
     // People and categories first: expenses refer to them.
     final removedParticipants = await _writeNamed(
@@ -62,12 +95,41 @@ class SqliteGroupWriter {
       txn,
       group,
       changedAt: changedAt,
+      expenseStamps: expenseStamps,
       recordDeletions: recordDeletions,
     );
 
     // Only now the people and categories no expense refers to any more.
     await _deleteIds(txn, kTableParticipants, removedParticipants);
     await _deleteIds(txn, kTableCategories, removedCategories);
+  }
+
+  /// The `groups` columns that are not the group's own fields: sync
+  /// bookkeeping, and `timestamp` (when the group was last used).
+  static const _notMetadata = {
+    'device_id',
+    'updated_at',
+    'meta_updated_at',
+    'deleted',
+    'sync_version',
+    'timestamp',
+  };
+
+  /// Whether the rows of [table] (id → name) differ from [wanted].
+  static Future<bool> _namesChanged(
+    Transaction txn,
+    String table,
+    String groupId,
+    Map<String, String> wanted,
+  ) async {
+    final rows = await txn.query(
+      table,
+      columns: ['id', 'name'],
+      where: 'group_id = ?',
+      whereArgs: [groupId],
+    );
+    return rows.length != wanted.length ||
+        rows.any((r) => wanted[r['id']] != r['name']);
   }
 
   /// Inserts and renames the rows of [table] (id, group_id, name) to match
@@ -113,6 +175,7 @@ class SqliteGroupWriter {
     Transaction txn,
     ExpenseGroup group, {
     required int changedAt,
+    required Map<String, int> expenseStamps,
     required bool recordDeletions,
   }) async {
     final existing = {
@@ -140,6 +203,7 @@ class SqliteGroupWriter {
       // The same expense twice in the list: the first one counts.
       if (!kept.add(expense.id)) continue;
       final row = _mapper.expenseToMap(expense, group.id);
+      final stamp = expenseStamps[expense.id];
       final old = existing[expense.id];
       final attachmentsChanged = !_sameList(
         existingAttachments[expense.id] ?? const [],
@@ -147,7 +211,10 @@ class SqliteGroupWriter {
       );
 
       if (old == null) {
-        await txn.insert(kTableExpenses, {...row, 'updated_at': changedAt});
+        await txn.insert(kTableExpenses, {
+          ...row,
+          'updated_at': stamp ?? changedAt,
+        });
         // Back after a deletion (an undo, a restore): not deleted any more.
         await txn.delete(
           kTableExpenseTombstones,
@@ -155,10 +222,11 @@ class SqliteGroupWriter {
           whereArgs: [expense.id],
         );
       } else if (attachmentsChanged ||
+          (stamp != null && old['updated_at'] != stamp) ||
           row.entries.any((e) => old[e.key] != e.value)) {
         await txn.update(
           kTableExpenses,
-          {...row, 'updated_at': changedAt},
+          {...row, 'updated_at': stamp ?? changedAt},
           where: 'id = ?',
           whereArgs: [expense.id],
         );

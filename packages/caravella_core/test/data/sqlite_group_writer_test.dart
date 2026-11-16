@@ -108,6 +108,28 @@ void main() {
     expect(await db.query(kTableExpenseTombstones), isEmpty);
   });
 
+  test("the group's own time moves only when its fields change", () async {
+    Future<int> metaAt() async =>
+        (await db.query(kTableGroups)).single['meta_updated_at'] as int;
+    await save(group([expense('a')]));
+    final first = await metaAt();
+
+    await save(group([expense('a'), expense('b')]));
+    expect(await metaAt(), first, reason: 'a new expense');
+
+    await save(group([expense('a'), expense('b')]).copyWith(title: 'Oslo'));
+    final renamed = await metaAt();
+    expect(renamed, greaterThan(first), reason: 'a new name');
+
+    await save(
+      group([expense('a'), expense('b')]).copyWith(
+        title: 'Oslo',
+        participants: [anna],
+      ),
+    );
+    expect(await metaAt(), greaterThan(renamed), reason: 'one person less');
+  });
+
   test('attachments are not duplicated by saving again', () async {
     final g = group([
       expense('a', attachments: ['one.jpg', 'two.jpg']),
@@ -182,6 +204,8 @@ void main() {
       onCreate: (db, _) async {
         await createSqliteSchema(db);
         await db.execute('DROP TABLE $kTableExpenseTombstones');
+        // What v12 adds: the time of the group's own fields.
+        await db.execute('ALTER TABLE groups DROP COLUMN meta_updated_at');
         await db.execute('ALTER TABLE $kTableExpenses DROP COLUMN updated_at');
         await db.insert(kTableGroups, {
           'id': 'g',
