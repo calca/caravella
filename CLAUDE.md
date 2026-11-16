@@ -22,6 +22,9 @@ flutter test test/expense_group_notifier_metadata_test.dart
 # Single test by name
 flutter test test/expense_group_notifier_metadata_test.dart --plain-name "test description"
 
+# Main flows on a running emulator (run for each rc by the pre-release workflow)
+adb shell pm clear io.caravella.egm.dev && flutter test integration_test --flavor dev --dart-define=FLAVOR=dev
+
 # Run app (flavor + FLAVOR define must match)
 flutter run --flavor dev --dart-define=FLAVOR=dev
 flutter run --flavor staging --dart-define=FLAVOR=staging

@@ -27,8 +27,18 @@ Manually triggered with input `target_branch`. A test build for sideloading; **n
 
 - Tag `v<version>-rc.<n>`: `<version>` from `pubspec.yaml`, `<n>` one past the highest existing `rc` tag of that version (`v2.0.2-rc.1`, `-rc.2`, …). Fails if the tag `v<version>` already exists (that version was released) — bump the version first.
 - The APK is built with `--build-name=<version>-rc.<n>`, so the app shows which test build it is (Settings › Info and Android's app info read `2.0.3-rc.30-staging` — the flavor's `versionNameSuffix` is appended). The version code stays the one in `pubspec.yaml`.
+- First the **main flows on an emulator** (job `e2e`, the reusable [`e2e.yml`](#e2eyml-android-ci---main-flows-emulator)); the rest runs only when they pass.
 - Runs `flutter analyze`, the package boundary guard, `flutter test` and every package's tests, then builds the **signed staging APK** with the same flags as the CI `build` job (Talker screen on, widget on). Staging installs next to the Play app (`io.caravella.egm.staging`, "Caravella - Staging", own data).
 - Publishes a GitHub **pre-release** (never marked Latest) on the built commit with `io_caravella_egm-staging-<version>-rc.<n>.apk` + `.sha256`, and notes from `CHANGELOG.md` `[Unreleased]` (via [`.github/scripts/release_notes.py`](../.github/scripts/release_notes.py)) plus a compare link to the previous rc, or to the last store release for `rc.1`. It fails if `[Unreleased]` is empty.
+
+## `e2e.yml` ("Android CI - Main flows (emulator)")
+
+The app's main flows on a real Android build, from a fresh install: `integration_test/app_flow_test.dart` (welcome screen → group wizard with two people → an expense from Home's + → the group page and Balances / Settle up → the expense's amount changed, then deleted). It runs `flutter test integration_test --flavor dev --dart-define=FLAVOR=dev` on an API 34 `google_apis` x86_64 emulator (`reactivecircus/android-emulator-runner`, KVM enabled on the runner), in about 10-15 minutes, so it is **not part of every PR's CI**:
+
+- called by `Pre-release - Android.yml` before each rc (`workflow_call`, with the rc's branch), which publishes only when it passes;
+- on pull requests that change `integration_test/` or this workflow, and by hand (`workflow_dispatch`).
+
+The texts are the English ones, so the device must be in English. Locally, on a running emulator (its dev-flavor data is wiped first): `adb shell pm clear io.caravella.egm.dev && flutter test integration_test --flavor dev --dart-define=FLAVOR=dev`. The test gives `FlutterError.onError` back to the test after `app.main()`: the app's own handler would swallow a failed expectation and leave the run hanging.
 
 ## `Store - Android.yml` ("Android CI - Store")
 

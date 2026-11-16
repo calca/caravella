@@ -1,0 +1,64 @@
+name: Android CI - Main flows (emulator)
+
+# The app's main flows on an Android emulator, from a fresh install
+# (integration_test/, dev flavor): the welcome screen, a new group with two
+# people, an expense from Home, the balances, then the expense changed and
+# deleted. Run by the pre-release workflow before each rc is published, and
+# on pull requests that change these tests or this workflow. Not part of
+# every PR's CI: an emulator adds 10-15 minutes.
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Branch or commit to test'
+        required: false
+        type: string
+        default: ''
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'integration_test/**'
+      - '.github/workflows/e2e.yml'
+
+jobs:
+  flows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.50.0'
+          channel: 'stable'
+          cache: true
+      - uses: ./.github/actions/android-ndk
+      - name: Install dependencies
+        run: |
+          set -e
+          flutter pub get
+          for pkg in packages/*/; do
+            [ -f "${pkg}pubspec.yaml" ] && (cd "$pkg" && flutter pub get)
+          done
+      # The sqlite3 build hook downloads SQLite from GitHub releases and
+      # fails on a bad download; fetch it with retries and a hash check first.
+      - name: Prefetch SQLite binaries
+        run: .github/scripts/prefetch_sqlite3.sh
+      # Hardware acceleration for the emulator on the hosted runner.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Main flows on an emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
+          script: flutter test integration_test --flavor dev --dart-define=FLAVOR=dev
