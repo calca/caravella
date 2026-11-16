@@ -1,7 +1,8 @@
 name: Android CI - Pre-release
 
 # Test build for sideloading: a signed staging APK published as a GitHub
-# pre-release (v<version>-rc.<n>), with notes from CHANGELOG.md [Unreleased].
+# pre-release (v<version>-rc.<n>), with notes from CHANGELOG.md [Unreleased],
+# once the app's main flows have passed on an emulator (job e2e).
 # Nothing goes to Google Play and pubspec.yaml is not touched.
 
 on:
@@ -17,7 +18,16 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # The app's main flows on an Android emulator (integration_test/), from a
+  # fresh install: for each rc, not in every PR's CI. The rc is published
+  # only when they pass.
+  e2e:
+    uses: ./.github/workflows/e2e.yml
+    with:
+      ref: ${{ github.event.inputs.target_branch }}
+
   prerelease:
+    needs: e2e
     runs-on: ubuntu-latest
     permissions:
       contents: write
