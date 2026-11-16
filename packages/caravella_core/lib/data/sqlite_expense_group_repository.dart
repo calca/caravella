@@ -12,6 +12,7 @@ import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
 import 'sqlite_group_mapper.dart';
+import 'sqlite_group_writer.dart';
 import 'sqlite_schema.dart';
 import 'sqlite_tables.dart';
 import '../sync/utils/sync_clock.dart';
@@ -28,7 +29,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 10;
+  static const int _databaseVersion = 11;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = kTableGroups;
@@ -304,6 +305,35 @@ class SqliteExpenseGroupRepository
         name: 'storage.sqlite',
       );
     }
+    if (oldVersion < 11) {
+      // Each expense's own last-change time and a record of deleted ones
+      // (SqliteGroupWriter), so sync can merge expense by expense. Existing
+      // expenses start from their group's time.
+      await db.execute(
+        'ALTER TABLE $kTableExpenses '
+        'ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute(
+        'UPDATE $kTableExpenses SET updated_at = COALESCE('
+        '(SELECT g.updated_at FROM $kTableGroups g '
+        'WHERE g.id = $kTableExpenses.group_id), 0)',
+      );
+      await createExpenseTombstonesTable(db);
+      // Saves used to delete a group's expenses and insert them again
+      // counting on a cascade that never ran (foreign keys are off), so
+      // every save added another copy of each attachment row. Keep the
+      // first of each, and drop the ones of expenses that are gone.
+      await db.execute(
+        'DELETE FROM $kTableAttachments WHERE id NOT IN ('
+        'SELECT MIN(id) FROM $kTableAttachments '
+        'GROUP BY expense_id, file_path) '
+        'OR expense_id NOT IN (SELECT id FROM $kTableExpenses)',
+      );
+      LoggerService.info(
+        'Database migration to v11 complete',
+        name: 'storage.sqlite',
+      );
+    }
   }
 
   /// Runs [op], measuring its performance (via [measureOperation]) and
@@ -410,66 +440,16 @@ class SqliteExpenseGroupRepository
 
       final db = await database;
 
-      await db.transaction((txn) async {
-        // Save group metadata
-        await txn.insert(
-          kTableGroups,
-          _mapper.groupToMap(group),
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-
-        // Delete existing related data
-        await txn.delete(
-          kTableParticipants,
-          where: 'group_id = ?',
-          whereArgs: [group.id],
-        );
-        await txn.delete(
-          kTableCategories,
-          where: 'group_id = ?',
-          whereArgs: [group.id],
-        );
-        await txn.delete(
-          kTableExpenses,
-          where: 'group_id = ?',
-          whereArgs: [group.id],
-        );
-        // Attachments will be deleted by CASCADE
-
-        // Save participants
-        for (final participant in group.participants) {
-          await txn.insert(kTableParticipants, {
-            'id': participant.id,
-            'group_id': group.id,
-            'name': participant.name,
-          });
-        }
-
-        // Save categories
-        for (final category in group.categories) {
-          await txn.insert(kTableCategories, {
-            'id': category.id,
-            'group_id': group.id,
-            'name': category.name,
-          });
-        }
-
-        // Save expenses and attachments
-        for (final expense in group.expenses) {
-          await txn.insert(
-            kTableExpenses,
-            _mapper.expenseToMap(expense, group.id),
-          );
-
-          // Save attachments
-          for (final attachment in expense.attachments) {
-            await txn.insert(kTableAttachments, {
-              'expense_id': expense.id,
-              'file_path': attachment,
-            });
-          }
-        }
-      });
+      // Only the rows that changed are written (see SqliteGroupWriter).
+      final row = _mapper.groupToMap(group);
+      await db.transaction(
+        (txn) => SqliteGroupWriter.write(
+          txn,
+          group,
+          row,
+          changedAt: row['updated_at'] as int,
+        ),
+      );
     });
   }
 
@@ -578,8 +558,18 @@ class SqliteExpenseGroupRepository
     return _guarded('deleteGroup', 'Failed to delete group', () async {
       final db = await database;
       await db.transaction((txn) async {
+        // Attachments first, by hand: foreign keys are not enforced, so
+        // nothing cascades. The group's own tombstone covers its expenses.
+        await txn.delete(
+          kTableAttachments,
+          where:
+              'expense_id IN '
+              '(SELECT id FROM $kTableExpenses WHERE group_id = ?)',
+          whereArgs: [groupId],
+        );
         for (final table in [
           kTableExpenses,
+          kTableExpenseTombstones,
           kTableParticipants,
           kTableCategories,
         ]) {

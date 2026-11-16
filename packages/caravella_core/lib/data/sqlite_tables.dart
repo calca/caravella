@@ -5,6 +5,11 @@ const String kTableCategories = 'categories';
 const String kTableExpenses = 'expenses';
 const String kTableAttachments = 'attachments';
 
+/// Deleted expenses (schema v11): the id, its group and when it was deleted,
+/// so sync can tell the other devices an expense is gone instead of getting
+/// it back from them. Written by `SqliteGroupWriter`.
+const String kTableExpenseTombstones = 'expense_tombstones';
+
 /// Sync metadata tables (schema v3), used by `SyncDao` and other sync
 /// infrastructure.
 const String kTableDeviceMeta = 'device_meta';
