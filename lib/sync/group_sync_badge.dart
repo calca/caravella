@@ -45,8 +45,8 @@ class _GroupSyncBadgeState extends State<GroupSyncBadge> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Null on the JSON backend or before sync has started (or without the
-    // app's providers, in widget tests): no dot then.
+    // Null before sync has started (or without the app's providers, in
+    // widget tests): no dot then.
     SyncOrchestrator? orchestrator;
     try {
       orchestrator = context.watch<SyncOrchestrator?>();
