@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'main/app_initialization.dart';
 import 'main/caravella_app.dart';
+import 'main/expected_errors.dart';
 import 'home/services/shortcuts_initialization.dart';
 import 'home/services/app_functions_initialization.dart';
 
@@ -21,7 +22,6 @@ void main() async {
         : LogLevel.debug,
   );
 
-  // Catch all uncaught async errors (e.g., from tile loading)
   runZonedGuarded(
     () async {
       await AppInitialization.initialize();
@@ -35,26 +35,15 @@ void main() async {
       runApp(const CaravellaApp());
     },
     (error, stackTrace) {
-      // Network errors from tile loading are expected and non-critical - silently ignore them
-      final errorString = error.toString();
-      if (errorString.contains('SocketException') ||
-          errorString.contains('NetworkImageLoadException') ||
-          errorString.contains('Failed host lookup') ||
-          errorString.contains('HttpException') ||
-          errorString.contains('Connection') ||
-          errorString.contains('NetworkTileImageProvider') ||
-          errorString.contains('TileLayer') ||
-          errorString.contains('flutter_map') ||
-          errorString.contains('MapController') ||
-          errorString.contains('fitCamera') ||
-          errorString.contains('_loadImage')) {
-        // Silently ignore network-related and map-related errors from tile loading
-        return;
-      }
-
-      // Log only unexpected errors
-      LoggerService.warning('Uncaught async error: $error');
-      LoggerService.warning('Stack trace: $stackTrace');
+      // Uncaught async errors: an expected network failure (a map tile, a
+      // remote image) is dropped, anything else is logged as an error.
+      if (isExpectedNetworkError(error, stackTrace)) return;
+      LoggerService.error(
+        'Uncaught async error: $error',
+        name: 'app.error',
+        error: error,
+        stackTrace: stackTrace,
+      );
     },
   );
 }

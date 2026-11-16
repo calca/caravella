@@ -12,53 +12,37 @@ import 'package:caravella_gms/caravella_gms.dart';
 
 import '../settings/backup/drive_backup_service.dart';
 import '../settings/flag_secure_android.dart';
+import 'expected_errors.dart';
 
 /// Initializes the app: platform-specific setup, orientation, system UI, and image cache.
 class AppInitialization {
-  /// Configures error handling for Flutter framework errors
+  /// Configures error handling for errors nothing else caught: an expected
+  /// network failure ([isExpectedNetworkError]) is dropped, anything else is
+  /// logged as an error with its stack trace.
   static void configureErrorHandling() {
-    // Handle Flutter framework errors (e.g., widget build errors)
+    // Flutter framework errors (e.g. a widget failing to build).
     FlutterError.onError = (details) {
-      // Network-related errors from tile loading are expected - silently ignore them
-      final errorString = details.exception.toString();
-      if (errorString.contains('NetworkImage') ||
-          errorString.contains('SocketException') ||
-          errorString.contains('Failed host lookup') ||
-          errorString.contains('HttpException') ||
-          errorString.contains('Connection') ||
-          errorString.contains('NetworkTileImageProvider') ||
-          errorString.contains('Image provider')) {
-        // Silently ignore network-related errors from tile loading
-        return;
-      }
-
-      // For other errors, log and show in debug mode
-      LoggerService.warning('Flutter error: ${details.exception}');
+      if (isExpectedNetworkError(details.exception, details.stack)) return;
+      LoggerService.error(
+        'Flutter error: ${details.exceptionAsString()}',
+        name: 'app.error',
+        error: details.exception,
+        stackTrace: details.stack,
+      );
       FlutterError.presentError(details);
     };
 
-    // Handle errors from the platform dispatcher (isolate errors)
+    // Errors outside the framework (other isolates, platform callbacks).
     PlatformDispatcher.instance.onError = (error, stack) {
-      final errorString = error.toString();
-      if (errorString.contains('NetworkImage') ||
-          errorString.contains('SocketException') ||
-          errorString.contains('Failed host lookup') ||
-          errorString.contains('HttpException') ||
-          errorString.contains('Connection') ||
-          errorString.contains('NetworkTileImageProvider') ||
-          errorString.contains('Image provider') ||
-          errorString.contains('_loadImage') ||
-          errorString.contains('TileLayer') ||
-          errorString.contains('flutter_map') ||
-          errorString.contains('MapController') ||
-          errorString.contains('fitCamera')) {
-        // Silently ignore network-related and map-related errors
-        return true; // Mark as handled
+      if (!isExpectedNetworkError(error, stack)) {
+        LoggerService.error(
+          'Uncaught error: $error',
+          name: 'app.error',
+          error: error,
+          stackTrace: stack,
+        );
       }
-
-      // Log unexpected errors
-      LoggerService.warning('Platform error: $error');
-      return true; // Mark as handled to prevent crash
+      return true; // Handled: logged, and the app keeps running.
     };
   }
 
