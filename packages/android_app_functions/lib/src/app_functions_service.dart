@@ -13,6 +13,10 @@ const int kRecentExpensesCount = 3;
 /// The app should navigate to the add-expense screen pre-filled with [params].
 typedef AddExpenseCallback = void Function(AddExpenseFunctionParams params);
 
+/// Callback invoked when an AI agent has added an expense to [groupId]
+/// natively, while the app is open: its screens should reload the group.
+typedef ExpenseAddedCallback = void Function(String groupId);
+
 /// Dart-side service for Android App Functions.
 ///
 /// Communicates with the native [CaravellaAppFunctionService] via a
@@ -29,13 +33,18 @@ class AppFunctionsService {
   );
 
   static AddExpenseCallback? _onAddExpense;
+  static ExpenseAddedCallback? _onExpenseAdded;
 
   /// Sets up the method-call handler and registers the [onAddExpense] callback.
   ///
   /// [onAddExpense] is called when an AI agent (e.g. Google Gemini) asks
   /// the app to open the add-expense screen for a given group.
-  static void initialize({required AddExpenseCallback onAddExpense}) {
+  static void initialize({
+    required AddExpenseCallback onAddExpense,
+    ExpenseAddedCallback? onExpenseAdded,
+  }) {
     _onAddExpense = onAddExpense;
+    _onExpenseAdded = onExpenseAdded;
     _channel.setMethodCallHandler(_handleMethodCall);
   }
 
@@ -46,6 +55,11 @@ class AppFunctionsService {
         final args = call.arguments as Map<dynamic, dynamic>;
         final params = AddExpenseFunctionParams.fromMap(args);
         _onAddExpense?.call(params);
+        return null;
+
+      case 'onExpenseAdded':
+        final args = call.arguments as Map<dynamic, dynamic>;
+        _onExpenseAdded?.call(args['groupId'] as String);
         return null;
 
       case 'getGroupBalance':

@@ -76,6 +76,12 @@ internal object AppFunctionStorageReader {
     private const val DEFAULT_CURRENCY = "€"
 
     private const val TAG = "AppFunctionStorageReader"
+
+    // Flutter's SharedPreferences (it adds "flutter." to its keys): this
+    // device's sync id (DeviceIdentity) and the user's name.
+    private const val FLUTTER_PREFS = "FlutterSharedPreferences"
+    private const val PREF_DEVICE_ID = "flutter.sync_device_id"
+    private const val PREF_USER_NAME = "flutter.user_name"
     @Volatile
     private var groupSummaryViewFirstDay: Int? = null
     private val viewsLock = Any()
@@ -230,6 +236,12 @@ internal object AppFunctionStorageReader {
     // read-only connection: the shared views (group_summary_view,
     // expense_details_view) are created lazily on first access via
     // CREATE VIEW IF NOT EXISTS, which needs write access.
+    /** The names of [table]'s columns (older databases lack the sync ones). */
+    private fun columnsOf(db: SQLiteDatabase, table: String): Set<String> =
+        db.rawQuery("PRAGMA table_info($table)", null).use { c ->
+            buildSet { while (c.moveToNext()) add(c.getString(1)) }
+        }
+
     private fun openDbReadWrite(context: Context): SQLiteDatabase {
         val path = context.getDatabasePath(SQLITE_DB_NAME).absolutePath
         return SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE)
@@ -796,8 +808,38 @@ internal object AppFunctionStorageReader {
                     put("paid_by_id", paidById)
                     if (note != null) put("note", note)
                 }
-                // insertOrThrow throws on constraint violation – no -1 check needed
-                db.insertOrThrow(TABLE_EXPENSES, null, values)
+                // As the app does on every save (SqliteGroupMapper): say who
+                // wrote the expense and move the group's updated_at, or sync
+                // never sends it and the next incoming copy of the group
+                // (Last Writer Wins) drops it.
+                val now = Instant.now().toEpochMilli()
+                val prefs = context.getSharedPreferences(FLUTTER_PREFS, Context.MODE_PRIVATE)
+                val deviceId = prefs.getString(PREF_DEVICE_ID, null)?.takeIf { it.isNotEmpty() }
+                val expenseColumns = columnsOf(db, TABLE_EXPENSES)
+                if (deviceId != null && "created_by_device_id" in expenseColumns) {
+                    val userName = prefs.getString(PREF_USER_NAME, null)
+                    values.put("created_by_device_id", deviceId)
+                    values.put("updated_by_device_id", deviceId)
+                    if (userName != null) {
+                        values.put("created_by_user_name", userName)
+                        values.put("updated_by_user_name", userName)
+                    }
+                }
+                db.beginTransaction()
+                try {
+                    // insertOrThrow throws on constraint violation – no -1 check needed
+                    db.insertOrThrow(TABLE_EXPENSES, null, values)
+                    if ("updated_at" in columnsOf(db, TABLE_GROUPS)) {
+                        val stamp = ContentValues().apply {
+                            put("updated_at", now)
+                            if (deviceId != null) put("device_id", deviceId)
+                        }
+                        db.update(TABLE_GROUPS, stamp, "id = ?", arrayOf(groupId))
+                    }
+                    db.setTransactionSuccessful()
+                } finally {
+                    db.endTransaction()
+                }
                 Log.i(TAG, "saveExpenseSqlite: inserted expense $expenseId in group $groupId (amount=$amount)")
                 SaveExpenseResult.Success(expenseId)
             }

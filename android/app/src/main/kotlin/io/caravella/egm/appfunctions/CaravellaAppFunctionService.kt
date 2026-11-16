@@ -12,6 +12,7 @@ import androidx.appfunctions.AppFunctionInvalidArgumentException
 import androidx.appfunctions.AppFunctionSerializable
 import androidx.appfunctions.AppFunctionService
 import androidx.appfunctions.AppFunctionServiceEntryPoint
+import io.caravella.egm.HomeWidgetProvider
 import io.caravella.egm.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -88,13 +89,17 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
                     this, groupId, amount, categoryName, note,
                 )
             ) {
-                is AppFunctionStorageReader.SaveExpenseResult.Success ->
+                is AppFunctionStorageReader.SaveExpenseResult.Success -> {
+                    // Show it: the home widget, and the app if it is open.
+                    HomeWidgetProvider.updateAllWidgets(this)
+                    AppFunctionEvents.expenseAdded(groupId)
                     AddedExpense(
                         expenseId = result.expenseId,
                         groupId = groupId,
                         amount = amount,
                         intentToOpen = null,
                     )
+                }
                 is AppFunctionStorageReader.SaveExpenseResult.Failure ->
                     throw AppFunctionInvalidArgumentException(result.reason)
             }

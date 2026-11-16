@@ -1,6 +1,7 @@
 import 'package:android_app_functions/android_app_functions.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:provider/provider.dart';
 
 import '../../manager/details/pages/expense_group_detail_page.dart';
 
@@ -11,7 +12,20 @@ import '../../manager/details/pages/expense_group_detail_page.dart';
 class AppFunctionsInitialization {
   /// Set up the [PlatformAppFunctionsManager] with the add-expense callback.
   static void initialize() {
-    PlatformAppFunctionsManager.initialize(onAddExpense: _handleAddExpense);
+    PlatformAppFunctionsManager.initialize(
+      onAddExpense: _handleAddExpense,
+      onExpenseAdded: _handleExpenseAdded,
+    );
+  }
+
+  /// An agent added an expense natively while the app is open: tell the
+  /// screens that show the group to reload it.
+  static void _handleExpenseAdded(String groupId) {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    final notifier = context.read<ExpenseGroupNotifier>();
+    notifier.notifyGroupUpdated(groupId);
+    if (notifier.currentGroup?.id == groupId) notifier.refreshGroup();
   }
 
   /// Called when an AI agent requests a new expense to be added.
