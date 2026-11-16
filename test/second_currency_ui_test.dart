@@ -363,6 +363,8 @@ void main() {
     // What v11 adds: each expense's own time, and deleted expenses.
     await db.execute('ALTER TABLE expenses DROP COLUMN updated_at');
     await db.execute('DROP TABLE expense_tombstones');
+    // What v12 adds: the time of the group's own fields.
+    await db.execute('ALTER TABLE groups DROP COLUMN meta_updated_at');
     await db.insert('groups', {
       'id': 'g',
       'title': 'Norway',

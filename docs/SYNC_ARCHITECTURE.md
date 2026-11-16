@@ -17,7 +17,7 @@ flowchart TB
     subgraph core["packages/caravella_core/lib/sync/"]
         Orch["SyncOrchestrator\ntransport-aware coordinator"]
         Mgr["SyncManager\ntransport-agnostic core"]
-        Resolver["ConflictResolver\nLWW merge"]
+        Resolver["ConflictResolver\nexpense-by-expense merge"]
         Builder["DeltaBuilder"]
         Dao["SyncDao\n(SQLite)"]
         LAN["LanSyncChannel\nmDNS + HTTP"]
@@ -53,7 +53,7 @@ flowchart TB
 |---|---|---|
 | `SyncOrchestrator` | `packages/caravella_core/lib/sync/sync_orchestrator.dart` | Single entry point the UI/DI talk to. Owns `LanSyncChannel` + optional `CloudRelayChannel`, merges their event streams, exposes pairing (`buildOwnPairingPayload`/`pairWithScannedPayload`), manual sync (`triggerManualSync`), history (`getHistory`) and the problems still to fix (`problems`, a `SyncProblemLog`). |
 | `SyncManager` | `packages/caravella_core/lib/sync/sync_manager.dart` | Transport-agnostic core — doc comment explicitly says transport channels are "not part of this class." Owns `DeltaBuilder` + `ConflictResolver`, exposes `syncWithPeer`/`getOutgoingDelta` and all paired-device/grant CRUD (thin `SyncDao` passthroughs). |
-| `ConflictResolver` | `packages/caravella_core/lib/sync/conflict_resolver.dart` | Applies an incoming delta with Last-Writer-Wins semantics inside one DB transaction; independently re-verifies the per-group grant before writing anything (see [Trust model](#trust-model-per-channel)). |
+| `ConflictResolver` | `packages/caravella_core/lib/sync/conflict_resolver.dart` | Applies an incoming delta inside one DB transaction, merging a group both sides have expense by expense (Last Writer Wins on the whole group for apps before 2.5); independently re-verifies the per-group grant before writing anything (see [Trust model](#trust-model-per-channel)). |
 | `DeltaBuilder` | `packages/caravella_core/lib/sync/delta_builder.dart` | Builds the outgoing delta for a peer: every `sync_enabled` group changed since the last recorded sync *with that peer* and granted to it, each as a **full group snapshot**, not a field-level diff. `buildSnapshot` builds the Google Drive one: every group and tombstone. |
 | `SyncDao` | `packages/caravella_core/lib/sync/sync_dao.dart` | SQLite query layer over the sync tables added to the same DB `SqliteExpenseGroupRepository` uses (see [Storage](#storage-sqlite-schema) below). |
 | `LanSyncChannel` | `packages/caravella_core/lib/sync/channels/lan_sync_channel.dart` | mDNS discovery (`bonsoir`) + an embedded `shelf`/`shelf_router` HTTP server (`/pair`, `/sync/delta`, `/sync/ping`) for the actual exchange. |
@@ -109,12 +109,12 @@ SyncOrchestrator(
   "device_id": "...",
   "device_name": "...",
   "timestamp": 1234567890,
-  "groups": [ /* full ExpenseGroup.toJson() output, each with an added "_sync" block: device_id, updated_at, sync_version */ ],
+  "groups": [ /* full ExpenseGroup.toJson() output, each with an added "_sync" block: device_id, updated_at, sync_version, and since 2.5 meta_updated_at, expenses { id: updated_at }, deleted_expenses { id: deleted_at } */ ],
   "deleted_groups": [ { "id": "...", "updated_at": 1234567890 } ]
 }
 ```
 
-This is a **full-snapshot-per-changed-group** delta, not a field-level diff — every entry in `groups` is the entire group (participants, categories, expenses, attachments) as of now, not just what changed. `ConflictResolver._saveGroupInTransaction` (`packages/caravella_core/lib/sync/conflict_resolver.dart:268-351`) applies it the same way: replace the group row, delete-and-reinsert every child row. There is no field-level merge anywhere in this pipeline.
+This is a **full-snapshot-per-changed-group** delta, not a field-level diff — every entry in `groups` is the entire group (participants, categories, expenses, attachments) as of now, not just what changed. Since 2.5 its `_sync` block also carries each expense's last-change time (`expenses.updated_at`), the group's deleted expenses (`expense_tombstones`) and the time of the group's own fields (`groups.meta_updated_at`), which is what lets the receiver merge instead of replacing (see [Conflict resolution](#conflict-resolution)). They are extra keys, not a new `schema`, so the earlier 2.5 test builds (rc.1–rc.8) still read these deltas: they ignore the keys and go on replacing whole groups. 2.4.1–2.4.4 refuse any schema 2 delta already (see [Format version](#format-version)), and a 2.4 delta received here has no expense times, so it is applied by Last Writer Wins as before.
 
 ### Format version
 
@@ -122,14 +122,27 @@ Because the whole group is replaced, an older app that doesn't know a field drop
 
 Inclusion in a delta requires all three: changed since the last recorded sync *with that specific peer*, `sync_enabled = 1`, and explicitly granted to that peer (`SyncDao.getGroupsDeltaSince`/`getDeletedGroupsSince`, `packages/caravella_core/lib/sync/sync_dao.dart:37-80`).
 
-## Conflict resolution: Last-Writer-Wins
+## Conflict resolution
 
-`ConflictResolver.applyDelta` (`packages/caravella_core/lib/sync/conflict_resolver.dart:35-234`), one DB transaction per call:
+`ConflictResolver.applyDelta` (`packages/caravella_core/lib/sync/conflict_resolver.dart`), one DB transaction per call.
 
-1. No local row for this group → upsert unconditionally (new group).
+**Merge, expense by expense** (2.5, #728): when this device has the group (not deleted) and the sender sent expense times (`_sync.expenses`), `_mergeGroup` combines the two copies instead of letting one replace the other — before, two phones that each added an expense before syncing lost one of them:
+
+- **Each expense:** the copy with the later `updated_at`; one only one side has is kept. A tie keeps this device's.
+- **Deleted expenses:** the later deletion of each id from both sides is kept, and passed on. An expense whose last change is no later than its deletion is removed; one changed after it is deleted comes back, and its tombstone goes.
+- **The group's own fields** (name, dates, currency, people, categories, budget, payments…): from the side with the later `meta_updated_at` (`SqliteGroupWriter` moves it only when they change, not when an expense does), plus any person or category a kept expense refers to, and payments only between people still in the group.
+- **When anything changed here**, the group's `updated_at` moves to now, so the merged group goes on to the other devices this one syncs with (`updated_at` is the "changed here" cursor `DeltaBuilder` selects by; the comparisons use the per-expense and metadata times). When nothing changed nothing is written and the group counts as skipped, so a repeated exchange stops.
+
+Limits: a deletion made before updating to this version and not yet synced left no tombstone, so the other phone can bring that expense back once. Writing an older copy of a shared group (a restore) now deletes the missing expenses everywhere, as replacing the whole group did before.
+
+Tests: `packages/caravella_core/test/sync/expense_merge_sync_test.dart` (both phones adding, deletions either way, edit vs deletion, a new name and a new expense, a new person with an expense, a third phone relaying, a repeated exchange writing nothing, a delta from 2.4).
+
+**Last Writer Wins on the whole group** — a group new to this device, one deleted here, or one from an app before 2.5 (no expense times):
+
+1. No local row for this group → upsert unconditionally (new group). From a 2.5 sender its expense times, metadata time and deleted expenses are kept.
 2. Local row exists → compare incoming `_sync.updated_at` against the local `groups.updated_at`:
    - Remote newer → overwrite (upsert).
-   - **Tie or local newer → skip.** A tie means **local wins** (`conflict_resolver_test.dart:244`, `'same timestamp — local wins (tie-break)'`).
+   - **Tie or local newer → skip.** A tie means **local wins** (`conflict_resolver_test.dart:244`, `'same timestamp — local wins (tie-break)'`). An expense only this device has is lost when an older app's copy wins: a group shared with a phone on 2.4 or on a 2.5 test build keeps that limit until every phone has this version. Against such a phone a merge here counts as the newer write (its `updated_at` moves to now).
 3. Deletions follow the identical comparison, applied as a soft delete (`deleted = 1`) rather than a row removal.
 4. Deleting a group this device never saw is a no-op.
 
@@ -201,9 +214,9 @@ sequenceDiagram
     A->>B: POST /sync/delta {envelope}
     B->>B: isPeerAuthorized(A) check; SyncEnvelope.decrypt
     B->>B: build its own outgoing delta for A, before applying A's
-    B->>B: ConflictResolver.applyDelta (LWW merge, grant re-check); encrypt its delta
+    B->>B: ConflictResolver.applyDelta (merge, grant re-check); encrypt its delta
     B-->>A: 200 {envelope}
-    A->>A: decrypt; ConflictResolver.applyDelta<br/>(same LWW merge, on A's side)
+    A->>A: decrypt; ConflictResolver.applyDelta<br/>(same merge, on A's side)
     Note over A,B: One HTTP round trip achieves<br/>bidirectional convergence
 ```
 
