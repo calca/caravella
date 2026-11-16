@@ -114,6 +114,12 @@ kotlin {
     }
 }
 
+ksp {
+    // Also the older index format, the one Android 16's system indexer reads
+    // (property android.app.appfunctions in AndroidManifest.xml).
+    arg("appfunctions:generateV1Xml", "true")
+}
+
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 

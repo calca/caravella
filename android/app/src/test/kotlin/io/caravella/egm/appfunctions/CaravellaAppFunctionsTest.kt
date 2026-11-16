@@ -7,6 +7,7 @@ import androidx.appfunctions.AppFunctionData
 import androidx.appfunctions.AppFunctionDisabledException
 import androidx.appfunctions.AppFunctionElementNotFoundException
 import androidx.appfunctions.AppFunctionInvalidArgumentException
+import androidx.appfunctions.AppFunctionManager
 import androidx.appfunctions.AppFunctionSearchSpec
 import androidx.appfunctions.ExecuteAppFunctionRequest
 import androidx.appfunctions.ExecuteAppFunctionResponse
@@ -72,9 +73,15 @@ class CaravellaAppFunctionsTest {
         }
     }
 
+    /** The privacy toggle, as the app sets it: the preference, then the system state. */
     private fun enable(on: Boolean) {
         context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
             .edit().putBoolean("flutter.app_functions_enabled", on).commit()
+        runBlocking { AppFunctionsState.sync(manager, on) }
+    }
+
+    private fun enabledInSystem(): List<Boolean> = runBlocking {
+        AppFunctionsState.FUNCTION_IDS.map { manager.isAppFunctionEnabled(it) }
     }
 
     private suspend fun function(name: String): AppFunctionMetadata =
@@ -193,5 +200,27 @@ class CaravellaAppFunctionsTest {
         enable(false)
         val error = call("listGroups").error()
         assertTrue(error.toString(), error is AppFunctionDisabledException)
+    }
+
+    @Test
+    fun `the system sees the functions enabled only with the toggle on`() {
+        assertEquals(List(5) { true }, enabledInSystem())
+        enable(false)
+        assertEquals(List(5) { false }, enabledInSystem())
+        enable(true)
+        assertEquals(List(5) { true }, enabledInSystem())
+    }
+
+    @Test
+    fun `the functions are declared disabled`() = runBlocking {
+        val declared = manager.searchAppFunctions(
+            AppFunctionSearchSpec(packageNames = setOf(context.packageName)),
+        )
+        assertEquals(AppFunctionsState.FUNCTION_IDS.toSet(), declared.map { it.id }.toSet())
+        // Reset to what the XML declares: off until the user turns them on.
+        AppFunctionsState.FUNCTION_IDS.forEach {
+            manager.setAppFunctionEnabled(it, AppFunctionManager.APP_FUNCTION_STATE_DEFAULT)
+        }
+        assertEquals(List(5) { false }, enabledInSystem())
     }
 }

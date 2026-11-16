@@ -30,8 +30,10 @@ import kotlinx.coroutines.withContext
  *
  * Data is read and written natively by [AppFunctionStorageReader], without
  * starting Flutter. Every function is gated by the user's toggle in Settings →
- * Privacy (`app_functions_enabled`, off by default): when off, the agent gets
- * [AppFunctionDisabledException] and nothing is read.
+ * Privacy (`app_functions_enabled`, off by default): the functions are
+ * declared disabled and [AppFunctionsState] enables them in the system only
+ * while the toggle is on; each call checks it too, and when off the agent
+ * gets [AppFunctionDisabledException] and nothing is read.
  *
  * Runs on Android 16 (API 36) and later, where the platform provides App
  * Functions.
@@ -49,7 +51,7 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
      *
      * @return The active groups, most recently used first.
      */
-    @AppFunctionDeclaration(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true, isEnabled = false)
     suspend fun listGroups(): List<ExpenseGroupInfo> = io {
         AppFunctionStorageReader.getActiveGroups(this).map {
             ExpenseGroupInfo(groupId = it.id, title = it.title, currency = it.currency)
@@ -70,7 +72,7 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
      * @param note What the expense was for, used as its name.
      * @return The saved expense, or, without an amount, the group to open.
      */
-    @AppFunctionDeclaration(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true, isEnabled = false)
     suspend fun addExpense(
         groupId: String,
         amount: Double?,
@@ -131,7 +133,7 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
      * @param groupId The group's id, from listGroups.
      * @return The group's total spending and its currency.
      */
-    @AppFunctionDeclaration(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true, isEnabled = false)
     suspend fun getGroupBalance(groupId: String): GroupBalance = io {
         val r = AppFunctionStorageReader.getTotalBalance(this, groupId)
             ?: throw AppFunctionElementNotFoundException("Group not found: $groupId")
@@ -144,7 +146,7 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
      * @param groupId The group's id, from listGroups.
      * @return The newest expenses first, with who paid and the category.
      */
-    @AppFunctionDeclaration(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true, isEnabled = false)
     suspend fun getRecentExpenses(groupId: String): RecentExpenses = io {
         val r = AppFunctionStorageReader.getRecentExpenses(this, groupId, count = RECENT_COUNT)
             ?: throw AppFunctionElementNotFoundException("Group not found: $groupId")
@@ -172,7 +174,7 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
      * @param groupId The group's id, from listGroups.
      * @return Today's total and the group's currency.
      */
-    @AppFunctionDeclaration(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true, isEnabled = false)
     suspend fun getTodayTotal(groupId: String): TodayTotal = io {
         val r = AppFunctionStorageReader.getTodayTotal(this, groupId)
             ?: throw AppFunctionElementNotFoundException("Group not found: $groupId")
@@ -206,12 +208,14 @@ abstract class BaseCaravellaAppFunctionService : AppFunctionService() {
 
         // Flutter's SharedPreferences file and key (Flutter adds "flutter.").
         private const val FLUTTER_PREFS_NAME = "FlutterSharedPreferences"
-        private const val PREF_KEY_ENABLED = "flutter.app_functions_enabled"
+        const val PREF_KEY_ENABLED = "flutter.app_functions_enabled"
+
+        /** Flutter's SharedPreferences, where the privacy toggle lives. */
+        fun prefs(context: Context) =
+            context.getSharedPreferences(FLUTTER_PREFS_NAME, Context.MODE_PRIVATE)
 
         /** The privacy toggle; off by default, as `_PreferenceDefaults`. */
-        fun isEnabled(context: Context): Boolean =
-            context.getSharedPreferences(FLUTTER_PREFS_NAME, Context.MODE_PRIVATE)
-                .getBoolean(PREF_KEY_ENABLED, false)
+        fun isEnabled(context: Context): Boolean = prefs(context).getBoolean(PREF_KEY_ENABLED, false)
     }
 }
 
