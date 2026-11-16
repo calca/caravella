@@ -1,11 +1,21 @@
-# Caravella: an Expense Tracker
+# Caravella: Split Expenses
 
 <p align="center">
   <img src="store/assets/caravella-icon-store.png" alt="Caravella Icon" width="150"/>
 </p>
 
 <p align="center">
-  <strong>Modern group expense management for trips, shared costs, and participants</strong>
+  <strong>Split group expenses, see who owes whom and sync with friends. No account.</strong>
+</p>
+
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=io.caravella.egm">Get it on Google Play</a> ·
+  <a href="https://duea.page/caravella/">Website</a> ·
+  <a href="https://github.com/calca/caravella/releases">Download the APK</a>
+</p>
+
+<p align="center">
+  <img src="store/marketing/caravella-sync.gif" alt="Sharing a group: the Invite a device sheet shows a QR code, then the Norway Road Trip group appears with the same expenses on both phones, end-to-end encrypted, with no server and no account" width="480"/>
 </p>
 
 **Caravella** is a modern, multi-platform Flutter application designed to simplify expense management for groups, trips, and events. Built with Material 3, it offers an intuitive and clean user experience for tracking shared costs, managing participants, and settling debts.
@@ -23,7 +33,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Participant Management**: Easy addition and management of group members
 - **Data Export**: Export your data to CSV or JSON formats for external analysis
 - **Backup & Restore**: Back up to a file, or to your Google Drive with an optional weekly backup (Play Store version)
-- **Device Sync (optional)**: Share a group with other people's devices over Wi-Fi or Bluetooth (QR pairing, end-to-end encrypted), or keep your own devices in sync through your personal Google Drive — off by default, enabled per group
+- **Sync With Friends (optional)**: Share a group with other people's phones over Wi-Fi or Bluetooth — pair once with a QR code or pick a nearby phone; end-to-end encrypted, no server and no account — off by default, enabled per group
 
 ### Location & Maps
 - **Interactive Maps**: Visualize all expenses with locations on an OpenStreetMap view
@@ -142,7 +152,7 @@ For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Per
 ### iOS
 - **App Store**: Coming soon
 
-Visit our [website](https://duea.page) for more information.
+Visit the [website](https://duea.page/caravella/) for more information.
 
 ## 🤝 Contributing
 
@@ -152,7 +162,7 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 - **Project Repository**: https://github.com/calca/caravella
 - **Issues**: https://github.com/calca/caravella/issues
-- **Website**: https://duea.page
+- **Website**: https://duea.page/caravella/
 - **Privacy Inquiries**: gianluigi.calcaterra@gmail.com
 
 ## 📄 License
