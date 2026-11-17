@@ -267,6 +267,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               // One line of pills each, in the sheet and on the full page
               // alike: "+N" opens the rest in place (no sheet on top).
               compactPills: true,
+              editHeader: widget.config.editHeader,
+              groupTitle: widget.config.headerGroupName,
             ),
             ListenableBuilder(
               listenable: _controller,

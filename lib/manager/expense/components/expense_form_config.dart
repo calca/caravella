@@ -34,6 +34,17 @@ class ExpenseFormConfig {
   /// already there and the user came for the date, place or note.
   final bool autofocusAmount;
 
+  /// The expense page's header (an expense being edited or looked at): the
+  /// group and date on a line, the description as the title, the amount at
+  /// the start with its currency after, who paid and each one's share; and
+  /// Save only once something changed ([onFormValidityChanged] reports the
+  /// form valid only then).
+  final bool editHeader;
+
+  /// The group's name on [editHeader]'s first line. Not [groupTitle], which
+  /// also names the folder new attachments are saved in.
+  final String? headerGroupName;
+
   // Group context
   final String? groupTitle;
   final String? currency;
@@ -81,6 +92,8 @@ class ExpenseFormConfig {
     this.showActionsRow = true,
     this.shouldAutoClose = true,
     this.autofocusAmount = true,
+    this.editHeader = false,
+    this.headerGroupName,
 
     // Group context
     this.groupTitle,
