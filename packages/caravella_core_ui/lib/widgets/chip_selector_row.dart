@@ -402,7 +402,11 @@ extension<T> on _ChipSelectorRowState<T> {
           FormPill(
             label: '+$hidden',
             style: FormPillStyle.add,
-            semanticsLabel: widget.sheetTitle,
+            // "Category, +2": what it opens and how many more there are.
+            semanticsLabel: switch (widget.sheetTitle) {
+              final title? => '$title, +$hidden',
+              null => '+$hidden',
+            },
             tooltip: widget.sheetTitle,
             onTap: enabled ? _expand : null,
           ),

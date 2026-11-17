@@ -482,30 +482,33 @@ class _Figure extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Wrap(
-      spacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.end,
-      children: [
-        CurrencyDisplay(
-          value: value,
-          currency: currency,
-          valueFontSize: size,
-          currencyFontSize: (size * 0.55).roundToDouble(),
-          showDecimals: true,
-          alignment: MainAxisAlignment.start,
-          color: color,
-        ),
-        if (after case final words?)
-          Padding(
-            padding: EdgeInsets.only(bottom: size * 0.08),
-            child: Text(
-              words,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: color ?? theme.colorScheme.onSurfaceVariant,
+    // "18.00 € left" in one stop.
+    return MergeSemantics(
+      child: Wrap(
+        spacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.end,
+        children: [
+          CurrencyDisplay(
+            value: value,
+            currency: currency,
+            valueFontSize: size,
+            currencyFontSize: (size * 0.55).roundToDouble(),
+            showDecimals: true,
+            alignment: MainAxisAlignment.start,
+            color: color,
+          ),
+          if (after case final words?)
+            Padding(
+              padding: EdgeInsets.only(bottom: size * 0.08),
+              child: Text(
+                words,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: color ?? theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -42,6 +42,7 @@ class ExpenseDayRow extends StatelessWidget {
     final subtitle = '${expense.paidBy.name} · ${expense.category.name}';
 
     return Semantics(
+      container: true,
       button: onTap != null,
       label: [
         title,

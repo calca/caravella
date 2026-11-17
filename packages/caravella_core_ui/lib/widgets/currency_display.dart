@@ -90,38 +90,44 @@ class CurrencyDisplay extends StatelessWidget {
         ? value.toStringAsFixed(2).replaceAll('.', decimalSeparator)
         : value.truncate().toString();
 
-    return Row(
-      mainAxisAlignment: alignment,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Flexible(
-          child: showDecimals
-              ? _buildValueWithSeparateDecimals(
-                  context,
-                  formattedValue,
-                  decimalSeparator,
-                )
-              : Text(
-                  formattedValue,
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                    color: color ?? Theme.of(context).colorScheme.onSurface,
-                    fontSize: valueFontSize,
-                    fontWeight: fontWeight,
+    // Read as one amount ("42.00 €"), not the figure and the currency
+    // as two stops.
+    return Semantics(
+      label: '$formattedValue $currency',
+      excludeSemantics: true,
+      child: Row(
+        mainAxisAlignment: alignment,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: showDecimals
+                ? _buildValueWithSeparateDecimals(
+                    context,
+                    formattedValue,
+                    decimalSeparator,
+                  )
+                : Text(
+                    formattedValue,
+                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                      color: color ?? Theme.of(context).colorScheme.onSurface,
+                      fontSize: valueFontSize,
+                      fontWeight: fontWeight,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          currency,
-          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-            color: color ?? Theme.of(context).colorScheme.onSurface,
-            fontSize: currencyFontSize,
           ),
-        ),
-      ],
+          const SizedBox(width: 4),
+          Text(
+            currency,
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              color: color ?? Theme.of(context).colorScheme.onSurface,
+              fontSize: currencyFontSize,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

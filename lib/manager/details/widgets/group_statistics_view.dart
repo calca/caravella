@@ -83,7 +83,12 @@ class GroupStatisticsView extends StatelessWidget {
               ),
               chart: SpendingBars(
                 values: series.values,
-                semanticLabel: gloc.dateRangeExpensesChart,
+                semanticLabel: _chartSemantics(
+                  gloc.dateRangeExpensesChart,
+                  series,
+                  group.currency,
+                  Localizations.localeOf(context),
+                ),
                 height: _ChartCard.chartHeight,
                 amountLabel: (value) => _barAmount(
                   value,
@@ -249,6 +254,40 @@ class _ChartCard extends StatelessWidget {
 bool _hasSpending(List<double> series) => series.any((v) => v > 0);
 
 /// Amount above a bar: decimals only when it has any, there's little room.
+/// What the bars show, for screen readers: each step with spending and its
+/// amount ("Nov 17: 42 €; Nov 18: 12 €"), after [title].
+String _chartSemantics(
+  String title,
+  SpendingSeries series,
+  String currency,
+  Locale locale,
+) {
+  final monthly = series.step == SpendingStep.month;
+  final fmt = monthly
+      ? DateFormat.yMMM(locale.toString())
+      : DateFormat.MMMd(locale.toString());
+  final steps = <String>[];
+  for (var i = 0; i < series.values.length; i++) {
+    final value = series.values[i];
+    if (value <= 0) continue;
+    final date = switch (series.step) {
+      SpendingStep.day => DateTime(
+        series.start.year,
+        series.start.month,
+        series.start.day + i,
+      ),
+      SpendingStep.week => DateTime(
+        series.start.year,
+        series.start.month,
+        series.start.day + 7 * i,
+      ),
+      SpendingStep.month => DateTime(series.start.year, series.start.month + i),
+    };
+    steps.add('${fmt.format(date)}: ${_barAmount(value, currency, locale)}');
+  }
+  return steps.isEmpty ? title : '$title. ${steps.join('; ')}';
+}
+
 String _barAmount(double value, String currency, Locale locale) {
   final format = NumberFormat.decimalPatternDigits(
     locale: locale.toString(),
@@ -391,7 +430,10 @@ class SpendingPaceCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(over, style: AppTextStyles.subtle(context)),
+                // Already in the card's label above.
+                ExcludeSemantics(
+                  child: Text(over, style: AppTextStyles.subtle(context)),
+                ),
                 const SizedBox(height: 14),
                 Wrap(
                   spacing: 8,

@@ -118,8 +118,9 @@ class _BudgetSettingsSheetState extends State<BudgetSettingsSheet> {
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        FittedBox(
-          fit: BoxFit.scaleDown,
+        // Not scaled down as a whole: with large text the control keeps its
+        // 48 dp and the segments share the width (each label shrinks inside).
+        Center(
           child: PillSegmentedControl(
             labels: [for (final p in periods) budgetPeriodName(gloc, p)],
             selectedIndex: periods.indexOf(_period),
