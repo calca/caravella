@@ -61,8 +61,13 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
       if (widget.initialPlace != null) {
         _centerAboveCard();
       } else {
-        _controller.loadUserLocation(context);
-        _controller.searchFocusNode.requestFocus();
+        // Opens on where the phone is, already picked: one tap on Confirm.
+        // No keyboard on top of it; the search is a tap away.
+        _controller.loadUserLocation(context).then((_) {
+          if (mounted && _controller.state.hasSelectedLocation) {
+            _centerAboveCard();
+          }
+        });
       }
     });
   }
@@ -102,16 +107,6 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                 message: gloc.map_loading,
               ),
             ),
-            // Not a modal sheet: the search above and the map stay usable,
-            // to search for another place or tap one.
-            if (_controller.state.hasSelectedLocation &&
-                !_controller.searchFocusNode.hasFocus)
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: MediaQuery.paddingOf(context).bottom + 16,
-                child: _buildSelectionCard(theme, colorScheme, gloc),
-              ),
             Positioned(
               top: topInset + 8,
               left: 16,
@@ -138,39 +133,48 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                     message: gloc.map_unavailable_place_message,
                     retryLabel: gloc.map_retry,
                   ),
-                  if (_controller.state.hasError)
+                  if (_messageCard(gloc) case final message?)
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
-                      child: MapErrorOverlay(
-                        message:
-                            _controller.state.errorMessage ==
-                                PlaceSearchController.locationFailed
-                            ? gloc.location_error
-                            : gloc.place_search_failed,
-                      ),
+                      child: message,
                     ),
                 ],
               ),
             ),
-            // Round button to center on the current position.
+            // At the bottom: the round button to center on the position,
+            // above the card (the picked point, or why there's none), so
+            // neither covers the other. Not a modal sheet: the search above
+            // and the map stay usable, to search another place or tap one.
             Positioned(
-              bottom: 16 + MediaQuery.paddingOf(context).bottom,
+              left: 16,
               right: 16,
-              child: FloatingActionButton(
-                onPressed: _controller.state.isCenteringOnLocation
-                    ? null
-                    : () => _controller.centerOnCurrentLocation(context),
-                tooltip: gloc.get_current_location,
-                child: _controller.state.isCenteringOnLocation
-                    ? SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          color: colorScheme.onPrimaryContainer,
-                        ),
-                      )
-                    : const Icon(Icons.my_location),
+              bottom: MediaQuery.paddingOf(context).bottom + 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    onPressed: _controller.state.isCenteringOnLocation
+                        ? null
+                        : () => _controller.centerOnCurrentLocation(context),
+                    tooltip: gloc.get_current_location,
+                    child: _controller.state.isCenteringOnLocation
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: colorScheme.onPrimaryContainer,
+                            ),
+                          )
+                        : const Icon(Icons.my_location),
+                  ),
+                  if (!_controller.searchFocusNode.hasFocus)
+                    if (_bottomCard(theme, colorScheme, gloc) case final card?)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: SizedBox(width: double.infinity, child: card),
+                      ),
+                ],
               ),
             ),
           ],
@@ -278,6 +282,18 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
         _centerAboveCard();
       },
       layers: [
+        // Where the phone is: a blue dot, as in every map app.
+        if (_controller.state.userLocation case final here?)
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: here,
+                width: 32,
+                height: 32,
+                child: const ExcludeSemantics(child: _UserDot()),
+              ),
+            ],
+          ),
         if (_controller.state.hasSearchResults)
           MarkerLayer(
             markers: _controller.state.searchResults.map((place) {
@@ -294,9 +310,10 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                     behavior: HitTestBehavior.opaque,
                     onTap: () => Navigator.of(context).pop(place),
                     child: Center(
+                      // The app's color: red on a map reads as an error.
                       child: Icon(
                         Icons.location_on,
-                        color: colorScheme.error,
+                        color: colorScheme.primary,
                         size: 40,
                       ),
                     ),
@@ -328,6 +345,67 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
           ),
       ],
     );
+  }
+
+  /// Under the search: why it found nothing, or that it failed (with Try
+  /// again), or that the position couldn't be found; never red text on the
+  /// map. Null when there's nothing to say.
+  Widget? _messageCard(gen.AppLocalizations gloc) {
+    final state = _controller.state;
+    if (state.isSearching) return null;
+    if (state.errorMessage == PlaceSearchController.searchFailed) {
+      return _MessageCard(
+        icon: Icons.wifi_off_rounded,
+        title: gloc.place_search_failed_title,
+        message: gloc.place_search_failed,
+        actionLabel: gloc.map_retry,
+        onAction: _controller.retrySearch,
+      );
+    }
+    if (state.errorMessage == PlaceSearchController.locationFailed) {
+      return _MessageCard(
+        icon: Icons.location_disabled_outlined,
+        title: gloc.location_error,
+        message: gloc.place_location_unavailable,
+      );
+    }
+    final query = state.noResultsQuery;
+    if (query != null && _controller.searchController.text.isNotEmpty) {
+      return _MessageCard(
+        icon: Icons.search_off_rounded,
+        title: gloc.place_no_results(query),
+        message: gloc.place_no_results_hint,
+      );
+    }
+    return null;
+  }
+
+  /// At the bottom: the picked point with Confirm; while the position is
+  /// being found, that; without one, that it couldn't be found.
+  Widget? _bottomCard(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    gen.AppLocalizations gloc,
+  ) {
+    final state = _controller.state;
+    if (state.hasSelectedLocation) {
+      return _buildSelectionCard(theme, colorScheme, gloc);
+    }
+    if (state.isLocating) {
+      return _MessageCard(
+        icon: null,
+        title: gloc.getting_location,
+        message: gloc.place_pick_hint,
+      );
+    }
+    if (state.locationUnavailable) {
+      return _MessageCard(
+        icon: Icons.location_disabled_outlined,
+        title: gloc.location_error,
+        message: gloc.place_location_unavailable,
+      );
+    }
+    return null;
   }
 
   /// Keeps the selected point visible above the selection card.
@@ -364,6 +442,23 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (_controller.state.selectedIsUserLocation)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  children: [
+                    const _UserDot(size: 12),
+                    const SizedBox(width: 8),
+                    Text(
+                      gloc.place_you_are_here,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             Semantics(
               liveRegion: true,
               child: _controller.state.isGeocodingLocation
@@ -409,7 +504,134 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
               ),
               child: Text(gloc.crop_confirm),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                gloc.place_pick_hint,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The phone's position: a blue dot with a white ring and a soft halo.
+class _UserDot extends StatelessWidget {
+  final double size;
+  const _UserDot({this.size = 32});
+
+  /// The blue of "you are here" in every map app, in both themes.
+  static const Color _blue = Color(0xFF1A73E8);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: size,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: _blue.withValues(alpha: 0.18),
+        ),
+        child: Center(
+          child: Container(
+            width: size * 0.55,
+            height: size * 0.55,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _blue,
+              border: Border.all(color: Colors.white, width: size * 0.08),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A calm card on the map (raised surface, no red): an icon, or a spinner
+/// when [icon] is null, a title, a line under it and an optional action.
+class _MessageCard extends StatelessWidget {
+  final IconData? icon;
+  final String title;
+  final String message;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  const _MessageCard({
+    required this.icon,
+    required this.title,
+    required this.message,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    return Semantics(
+      liveRegion: true,
+      container: true,
+      child: Material(
+        color: s.raisedSurface,
+        elevation: 3,
+        shadowColor: Colors.black26,
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 24,
+                height: 24,
+                child: icon == null
+                    ? Padding(
+                        padding: const EdgeInsets.all(3),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: s.primary,
+                        ),
+                      )
+                    : Icon(icon, color: s.onSurfaceVariant),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      message,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: s.onSurfaceVariant,
+                      ),
+                    ),
+                    if (actionLabel case final label?)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: OutlinedButton(
+                          onPressed: onAction,
+                          child: Text(label),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
