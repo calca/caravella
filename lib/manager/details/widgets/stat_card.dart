@@ -44,9 +44,14 @@ class StatCard extends StatelessWidget {
       Localizations.maybeLocaleOf(context),
     );
 
-    final semanticLabel =
-        (subtitle ?? _inlineSpansToPlain(subtitleSpans)) != null
-        ? '$title: $formattedValue (${(subtitle ?? _inlineSpansToPlain(subtitleSpans))!})'
+    final spoken =
+        subtitle ??
+        _inlineSpansToPlain(
+          subtitleSpans,
+          Localizations.maybeLocaleOf(context),
+        );
+    final semanticLabel = spoken != null
+        ? '$title: $formattedValue ($spoken)'
         : '$title: $formattedValue';
 
     return Semantics(
@@ -176,12 +181,24 @@ class StatCard extends StatelessWidget {
   }
 
   // Extract plain text from inline spans for semantic labels
-  String? _inlineSpansToPlain(List<InlineSpan>? spans) {
+  /// The subtitle as text for screen readers; an amount drawn as a
+  /// [CurrencyDisplay] in a [WidgetSpan] is read as its text ("42.00 €"),
+  /// not dropped.
+  String? _inlineSpansToPlain(List<InlineSpan>? spans, Locale? locale) {
     if (spans == null || spans.isEmpty) return null;
     final buffer = StringBuffer();
     for (final s in spans) {
       if (s is TextSpan) {
         buffer.write(s.text ?? '');
+      } else if (s is WidgetSpan && s.child is CurrencyDisplay) {
+        final amount = s.child as CurrencyDisplay;
+        buffer.write(
+          CurrencyDisplay.formatLocalizedText(
+            amount.value,
+            amount.currency,
+            locale,
+          ),
+        );
       }
     }
     final text = buffer.toString().trim();

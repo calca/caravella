@@ -194,4 +194,27 @@ void main() {
     );
     handle.dispose();
   });
+
+  testWidgets('a category reads its amount per day', (tester) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      _wrap(
+        GroupStatisticsView(
+          group: ExpenseGroup(
+            title: 'Norway',
+            currency: '€',
+            participants: [_anna],
+            categories: [_food],
+            expenses: [_expense('Pizza', 42, DateTime.now())],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.bySemanticsLabel('Food: 42.00 € (42.00 € /day)'),
+      findsOneWidget,
+    );
+    handle.dispose();
+  });
 }

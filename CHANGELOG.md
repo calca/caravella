@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The spending pace no longer reads its period twice, and the day-by-day chart reads each day with spending and its amount instead of only "Date range expenses"
   - A week's heading in the expense list ("THIS WEEK") is its own heading again, no longer read as the start of the first expense
   - The "+2" pill for more categories reads "Category, +2" instead of only "Category"
+  - Each category in Statistics reads its amount per day ("Food: 42.00 € (42.00 € /day)"); the per-day amount was missing, so it read "(/day)"
 - Found by the non-regression pass on v2.5.0-rc.1 (docs/NRT.md):
   - TalkBack couldn't activate some buttons it read: "in kr" under the amount, the group type cards (new group, and the type sheet), the period presets, the group page's Today card with a budget and, on the welcome screen, Settings and Get started. Their semantics hid the inner button's tap without carrying it
   - The add-expense sheet stays readable when the phone switches to dark mode while it is open: its background came from the theme at the moment it opened
