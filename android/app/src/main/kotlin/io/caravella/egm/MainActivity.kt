@@ -124,6 +124,17 @@ class MainActivity : FlutterActivity() {
                 }
             }
 
+        // The app's theme choice, so Android draws the splash and the window
+        // in it too (AppNightMode.kt).
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, AppNightMode.CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method == "apply") {
+                    result.success(AppNightMode.apply(this, call.argument<String>("themeMode")))
+                } else {
+                    result.notImplemented()
+                }
+            }
+
         // Shortcuts channel
         shortcutsChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SHORTCUTS_CHANNEL)
         shortcutsChannel?.setMethodCallHandler { call, result ->
