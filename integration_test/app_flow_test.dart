@@ -78,8 +78,15 @@ void main() {
     // Change the amount: the balances follow.
     await _tap(tester, find.text('Expenses'));
     await _tap(tester, find.text('Dinner').first, frames: 16);
-    expect(find.text('Edit expense'), findsOneWidget);
-    await tester.enterText(find.byType(TextField).at(0), '80');
+    // The expense is the page's title; "Edit expense" is its heading for
+    // screen readers only.
+    expect(find.bySemanticsLabel('Edit expense'), findsOneWidget);
+    await tester.enterText(
+      find.byWidgetPredicate(
+        (w) => w is EditableText && w.controller.text == '60',
+      ),
+      '80',
+    );
     await _settle(tester);
     await _tap(tester, find.text('Save'), frames: 20);
     await _tap(tester, find.text('Balances'), frames: 20);
@@ -91,7 +98,9 @@ void main() {
     // Delete it: nothing left to settle, the total back to zero.
     await _tap(tester, find.text('Expenses'));
     await _tap(tester, find.text('Dinner').first, frames: 16);
-    await _tap(tester, find.byTooltip('Delete expense'));
+    // Share and Delete are in the ⋯ menu.
+    await _tap(tester, find.byTooltip('More options'));
+    await _tap(tester, find.text('Delete expense'));
     await _tap(tester, find.text('Delete').last, frames: 20);
     expect(find.text('Dinner'), findsNothing);
     expect(_amountAfter('Total'), '0.00');
