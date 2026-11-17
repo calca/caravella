@@ -16,8 +16,11 @@
          running.
 
          This Theme is only used starting with V2 of Flutter's Android embedding. -->
+    <!-- The window behind Flutter is Home's page color (as the splash), not
+         pure white or black: coming back to the app it shows for a frame
+         before Flutter draws, and then nothing changes color. -->
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
-        <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:windowBackground">@color/splash_background</item>
         <!-- Android 15+: Edge-to-edge via SystemChrome.setEnabledSystemUIMode -->
         <!-- Bar colors controlled by SystemUiOverlayStyle in Flutter code -->
         <item name="android:windowLightStatusBar">false</item>
