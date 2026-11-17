@@ -3,6 +3,7 @@ library;
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/amount_input_widget.dart';
 import '../widgets/category_dialog.dart';
@@ -30,6 +31,12 @@ class ExpenseFormFields extends StatelessWidget {
   /// Paid-by and category on one line each (quick-add sheet).
   final bool compactPills;
 
+  /// See [ExpenseFormConfig.editHeader].
+  final bool editHeader;
+
+  /// The group's name, on the line above the title with [editHeader].
+  final String? groupTitle;
+
   const ExpenseFormFields({
     super.key,
     required this.controller,
@@ -44,6 +51,8 @@ class ExpenseFormFields extends StatelessWidget {
     this.onParticipantsUpdated,
     this.isReadOnly = false,
     this.compactPills = false,
+    this.editHeader = false,
+    this.groupTitle,
   });
 
   @override
@@ -54,6 +63,7 @@ class ExpenseFormFields extends StatelessWidget {
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
+        if (editHeader) return _buildEditHeader(context, gloc);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -73,6 +83,100 @@ class ExpenseFormFields extends StatelessWidget {
         );
       },
     );
+  }
+
+  /// The expense page's top: "Norway · Tue 17 Nov", the description as the
+  /// title, the amount with its currency after it, who paid and each one's
+  /// share, then paid-by and category as in the sheet.
+  Widget _buildEditHeader(BuildContext context, gen.AppLocalizations gloc) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final locale = Localizations.localeOf(context);
+    final state = controller.state;
+    final date = DateFormat.MMMEd(locale.toString()).format(state.date);
+    final where = [?groupTitle, date].join(' · ');
+    final share = _shareLine(gloc, locale);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(where, style: muted, maxLines: 1, overflow: TextOverflow.ellipsis),
+        const SizedBox(height: 4),
+        KeyedSubtree(
+          key: controller.nameFieldKey,
+          child: AmountInputWidget(
+            controller: controller.nameController,
+            focusNode: controller.nameFocus,
+            label: gloc.expense_name,
+            textInputAction: controller.isFormValid
+                ? TextInputAction.done
+                : TextInputAction.next,
+            validator: (v) =>
+                v == null || v.trim().isEmpty ? gloc.enter_title : null,
+            onSaved: (v) {},
+            onSubmitted: controller.isFormValid ? onSaveExpense : null,
+            isText: true,
+            headline: true,
+            enabled: !isReadOnly,
+          ),
+        ),
+        const SizedBox(height: 12),
+        KeyedSubtree(
+          key: controller.amountFieldKey,
+          child: AmountInputWidget(
+            controller: controller.amountController,
+            focusNode: controller.amountFocus,
+            categories: categories,
+            label: gloc.amount,
+            currency: state.entryCurrency?.symbol ?? currency,
+            currencyAfter: true,
+            textStyle: theme.textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              height: 1.05,
+              letterSpacing: -0.5,
+            ),
+            textInputAction: controller.isFormValid
+                ? TextInputAction.done
+                : TextInputAction.next,
+            validator: (v) {
+              final parsed = controller.parseLocalizedAmount(v ?? '');
+              if (parsed == null || parsed <= 0) return gloc.invalid_amount;
+              return null;
+            },
+            onSaved: (v) {},
+            onSubmitted: onSaveExpense,
+            enabled: !isReadOnly,
+          ),
+        ),
+        if (_second case final second?)
+          _EntryCurrencyLine(
+            controller: controller,
+            groupCurrency: currency ?? '',
+            second: second,
+            enabled: !isReadOnly,
+            alignStart: true,
+          ),
+        if (share != null) Text(share, style: muted),
+        const SizedBox(height: 8),
+        _buildParticipantCategorySection(context),
+      ],
+    );
+  }
+
+  /// "Paid by Anna · 21.00 € per person": the expense is split evenly among
+  /// the group's people. Null with one person or no amount yet.
+  String? _shareLine(gen.AppLocalizations gloc, Locale locale) {
+    final paidBy = controller.state.paidBy;
+    final total = controller.state.groupAmount;
+    if (paidBy == null || total == null || total <= 0) return null;
+    if (participants.length < 2) return null;
+    final each = CurrencyDisplay.formatLocalizedText(
+      total / participants.length,
+      currency ?? '',
+      locale,
+    );
+    return '${gloc.paid_by} ${paidBy.name} · ${gloc.stats_per_person(each)}';
   }
 
   /// The currency the link offers: the group's, or the one an older expense
@@ -240,11 +344,16 @@ class _EntryCurrencyLine extends StatelessWidget {
   final SecondCurrency second;
   final bool enabled;
 
+  /// At the start of the line, under an amount at the start (the expense
+  /// page's header); centered otherwise.
+  final bool alignStart;
+
   const _EntryCurrencyLine({
     required this.controller,
     required this.groupCurrency,
     required this.second,
     required this.enabled,
+    this.alignStart = false,
   });
 
   /// The symbol, or the code where both currencies share a symbol ("\$").
@@ -299,7 +408,9 @@ class _EntryCurrencyLine extends StatelessWidget {
     return SizedBox(
       height: 48,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: alignStart
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.center,
         children: [
           if (inSecond && converted != null && converted > 0) ...[
             Text(

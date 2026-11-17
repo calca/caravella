@@ -21,6 +21,13 @@ class AmountInputWidget extends StatelessWidget {
   final TextInputAction? textInputAction; // override default textInputAction
   final bool enabled;
 
+  /// Text mode: the field as the page's title (large, bold, no box, a
+  /// dashed line under it) instead of a card (the expense page's header).
+  final bool headline;
+
+  /// Amount mode: see [AmountField.currencyAfter].
+  final bool currencyAfter;
+
   const AmountInputWidget({
     super.key,
     required this.controller,
@@ -37,6 +44,8 @@ class AmountInputWidget extends StatelessWidget {
     this.leading,
     this.textInputAction,
     this.enabled = true,
+    this.headline = false,
+    this.currencyAfter = false,
   });
 
   @override
@@ -44,26 +53,51 @@ class AmountInputWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
     if (isText) {
+      final line = UnderlineInputBorder(
+        borderSide: BorderSide(color: theme.colorScheme.outlineVariant),
+      );
       final textField = TextFormField(
         controller: controller,
         focusNode: focusNode,
         enabled: enabled,
-        style: textStyle ?? FormTheme.getFieldTextStyle(context),
-        decoration:
-            FormTheme.getCardDecoration(
-              fillColor: theme.colorScheme.raisedSurface,
-              borderColor: CardOutline.colorFor(theme.brightness),
-              focusColor: theme.colorScheme.primary,
-              errorColor: theme.colorScheme.error,
-              hintText: label != null ? '${label!} *' : null,
-            ).copyWith(
-              suffixIcon: leading == null && trailing != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: trailing,
-                    )
-                  : null,
-            ),
+        style: headline
+            ? theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                height: 1.15,
+              )
+            : textStyle ?? FormTheme.getFieldTextStyle(context),
+        maxLines: headline ? null : 1,
+        decoration: headline
+            ? InputDecoration(
+                hintText: label != null ? '${label!} *' : null,
+                isDense: true,
+                // 48 dp: a touch target, even with a short title.
+                constraints: const BoxConstraints(minHeight: 48),
+                contentPadding: const EdgeInsets.only(top: 4, bottom: 8),
+                border: line,
+                enabledBorder: line,
+                disabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.primary,
+                    width: 2,
+                  ),
+                ),
+              )
+            : FormTheme.getCardDecoration(
+                fillColor: theme.colorScheme.raisedSurface,
+                borderColor: CardOutline.colorFor(theme.brightness),
+                focusColor: theme.colorScheme.primary,
+                errorColor: theme.colorScheme.error,
+                hintText: label != null ? '${label!} *' : null,
+              ).copyWith(
+                suffixIcon: leading == null && trailing != null
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: trailing,
+                      )
+                    : null,
+              ),
         keyboardType: TextInputType.text,
         textInputAction: textInputAction ?? TextInputAction.next,
         validator: validator,
@@ -102,6 +136,7 @@ class AmountInputWidget extends StatelessWidget {
       textInputAction: textInputAction,
       textStyle: textStyle,
       enabled: enabled,
+      currencyAfter: currencyAfter,
     );
   }
 }

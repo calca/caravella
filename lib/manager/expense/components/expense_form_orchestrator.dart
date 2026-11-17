@@ -101,7 +101,9 @@ class ExpenseFormOrchestrator {
   // Private methods
 
   void _notifyFormValidity() {
-    config.onFormValidityChanged?.call(controller.isFormValid);
+    // Editing an expense, nothing to save until something changed.
+    final changed = !config.editHeader || controller.state.isDirty;
+    config.onFormValidityChanged?.call(controller.isFormValid && changed);
   }
 
   ExpenseDetails _buildExpenseFromState() {

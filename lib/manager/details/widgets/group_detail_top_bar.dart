@@ -136,47 +136,12 @@ class _GroupMenuButton extends StatelessWidget {
   const _GroupMenuButton({required this.background, required this.items});
 
   @override
-  Widget build(BuildContext context) {
-    final s = Theme.of(context).colorScheme;
-    final gloc = gen.AppLocalizations.of(context);
-    // Items at least [menuWidth] wide give the menu a known width, so its end
-    // lines up with the button's (and the page margin) instead of running to
-    // the screen edge.
-    const menuWidth = 248.0;
-    const buttonSize = 48.0;
-    return MenuAnchor(
-      alignmentOffset: const Offset(buttonSize - menuWidth, 4),
-      style: MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(s.raisedSurface),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        ),
-      ),
-      menuChildren: [
-        for (final item in items)
-          MenuItemButton(
-            style: MenuItemButton.styleFrom(
-              minimumSize: const Size(menuWidth, 48),
-            ),
-            leadingIcon: Icon(item.icon),
-            onPressed: item.onTap,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 24),
-              child: Text(item.label),
-            ),
-          ),
-      ],
-      builder: (context, controller, _) => Material(
-        color: background,
-        shape: const CircleBorder(),
-        child: IconButton(
-          icon: const Icon(Icons.more_horiz_rounded),
-          color: s.onSurface,
-          tooltip: gloc.more_options,
-          onPressed: () =>
-              controller.isOpen ? controller.close() : controller.open(),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => RoundMenuButton(
+    background: background,
+    tooltip: gen.AppLocalizations.of(context).more_options,
+    items: [
+      for (final item in items)
+        RoundMenuItem(item.icon, item.label, item.onTap),
+    ],
+  );
 }

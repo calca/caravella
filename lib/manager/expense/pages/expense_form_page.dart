@@ -177,59 +177,65 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                         // ExpenseFormComponent's unsaved-changes guard.
                         const RoundBackButton(),
                         const Spacer(),
-                        if (isEdit) ...[
-                          RoundIconButton(
-                            icon: Icons.share_outlined,
-                            tooltip: gloc.share_label,
-                            onPressed: _handleShare,
+                        // Share and delete are rare: in the ⋯ menu, so the
+                        // top of the page is the expense itself.
+                        if (isEdit)
+                          RoundMenuButton(
+                            tooltip: gloc.more_options,
+                            items: [
+                              RoundMenuItem(
+                                Icons.share_outlined,
+                                gloc.share_label,
+                                _handleShare,
+                              ),
+                              if (widget.onDelete case final onDelete?
+                                  when !isReadOnly)
+                                RoundMenuItem(
+                                  Icons.delete_outline_rounded,
+                                  gloc.delete_expense,
+                                  onDelete,
+                                  destructive: true,
+                                ),
+                            ],
                           ),
-                          if (widget.onDelete != null && !isReadOnly) ...[
-                            const SizedBox(width: 8),
-                            RoundIconButton(
-                              icon: Icons.delete_outline_rounded,
-                              tooltip: gloc.delete_expense,
-                              destructive: true,
-                              onPressed: widget.onDelete,
-                            ),
-                          ],
-                        ],
                       ],
                     ),
                     const SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.group.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                            ),
-                          ),
-                          Semantics(
-                            header: true,
-                            child: Text(
-                              title,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
+                    // Editing, the expense is its own title (the form's
+                    // header): the page's name is for screen readers only.
+                    if (isEdit)
+                      Semantics(
+                        header: true,
+                        label: title,
+                        child: const SizedBox.shrink(),
+                      )
+                    else
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.group.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: scheme.onSurfaceVariant,
                               ),
                             ),
-                          ),
-                        ],
+                            Semantics(
+                              header: true,
+                              child: Text(
+                                title,
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    if (isEdit &&
-                        syncOrchestrator != null &&
-                        widget.group.syncEnabled)
-                      ExpenseAuthorshipInfo(
-                        orchestrator: syncOrchestrator,
-                        group: widget.group,
-                        expense: widget.initialExpense!,
-                      ),
-                    const SizedBox(height: 16),
+                    if (!isEdit) const SizedBox(height: 16),
                     // The form at 20, with the title: labels, pills and
                     // fields on one line (the sheet's margin is 20 too).
                     Padding(
@@ -264,9 +270,22 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                               _updateScanFromGalleryCallback,
                           groupId: widget.group.id,
                           isReadOnly: isReadOnly,
+                          editHeader: isEdit,
+                          headerGroupName: widget.group.title,
                         ),
                       ),
                     ),
+                    // Who added it, at the end: details, not the expense.
+                    if (isEdit &&
+                        syncOrchestrator != null &&
+                        widget.group.syncEnabled) ...[
+                      const SizedBox(height: 16),
+                      ExpenseAuthorshipInfo(
+                        orchestrator: syncOrchestrator,
+                        group: widget.group,
+                        expense: widget.initialExpense!,
+                      ),
+                    ],
                   ],
                 ),
               ),

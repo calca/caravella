@@ -25,6 +25,11 @@ class AmountField extends StatelessWidget {
   final TextStyle? textStyle;
   final bool enabled;
 
+  /// The amount at the start of the line with the currency after it
+  /// ("42 €", the expense page's header) instead of centered with the
+  /// currency before it ("€ 42", the quick-add sheet).
+  final bool currencyAfter;
+
   const AmountField({
     super.key,
     required this.controller,
@@ -37,6 +42,7 @@ class AmountField extends StatelessWidget {
     this.textInputAction,
     this.textStyle,
     this.enabled = true,
+    this.currencyAfter = false,
   });
 
   /// The amount in [text], with a comma or a dot as decimal separator;
@@ -75,7 +81,7 @@ class AmountField extends StatelessWidget {
       Localizations.localeOf(context),
     );
 
-    final amountField = TextFormField(
+    Widget field({required bool showHint}) => TextFormField(
       controller: controller,
       focusNode: focusNode,
       enabled: enabled,
@@ -83,7 +89,7 @@ class AmountField extends StatelessWidget {
       textAlign: TextAlign.left,
       maxLines: 1,
       decoration: FormTheme.getBorderlessAmountDecoration(
-        hintText: '0${decimalSeparator}00',
+        hintText: showHint ? '0${decimalSeparator}00' : '',
         hintStyle: amountStyle?.copyWith(color: color.withValues(alpha: 0.35)),
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -96,24 +102,42 @@ class AmountField extends StatelessWidget {
         _SimpleDecimalFormatter(decimalSeparator),
       ],
     );
+    // The field is as wide as its text; with the currency right after it,
+    // the "0.00" hint would also widen it once an amount is typed ("42   €"),
+    // so it only shows on an empty field.
+    final Widget amountField = currencyAfter
+        ? ValueListenableBuilder<TextEditingValue>(
+            valueListenable: controller,
+            builder: (context, value, _) => field(showHint: value.text.isEmpty),
+          )
+        : field(showHint: true);
 
     // Merged into the text field's own node, so TalkBack reads "Amount (€)"
     // on the field instead of only its "0.00" hint.
     return MergeSemantics(
       child: Semantics(
         label: '${label.replaceAll(' *', '')} ($currencySymbol)',
-        child: Center(
+        child: Align(
+          alignment: currencyAfter
+              ? AlignmentDirectional.centerStart
+              : Alignment.center,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(currencySymbol, style: currencyStyle),
-              const SizedBox(width: 10),
+              if (!currencyAfter) ...[
+                Text(currencySymbol, style: currencyStyle),
+                const SizedBox(width: 10),
+              ],
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 300),
                 child: IntrinsicWidth(child: amountField),
               ),
+              if (currencyAfter) ...[
+                const SizedBox(width: 8),
+                Text(currencySymbol, style: currencyStyle),
+              ],
             ],
           ),
         ),
