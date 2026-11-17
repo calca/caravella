@@ -25,7 +25,11 @@ class MainActivity : FlutterActivity() {
     // Pending ADD_EXPENSE data from an agent's link (groupId, categoryName, note)
     private var pendingAppFunctionAction: Map<String, Any?>? = null
 
+    private lateinit var startupSplash: StartupSplash
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Before super.onCreate: it swaps LaunchTheme for NormalTheme.
+        startupSplash = StartupSplash.install(this)
         super.onCreate(savedInstanceState)
         
         // Edge-to-edge on every supported version (Android 15+ enforces it):
@@ -108,6 +112,17 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+
+        // Home tells the launch splash it can go.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, StartupSplash.CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method == "homeReady") {
+                    startupSplash.homeReady = true
+                    result.success(null)
+                } else {
+                    result.notImplemented()
+                }
+            }
 
         // Shortcuts channel
         shortcutsChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SHORTCUTS_CHANNEL)

@@ -6,6 +6,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../main/route_observer.dart';
+import '../main/startup_splash.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../settings/update/app_update_localizations.dart';
 import 'welcome/home_welcome_section.dart';
@@ -31,6 +32,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
   List<ExpenseGroup> _activeGroups = [];
   // Whether only archived groups are left: all Home needs to know of them.
   bool _hasArchived = false;
+
+  // The first content shows at once, under the launch splash (which goes when
+  // it's drawn); later switches (welcome ↔ cards) cross-fade.
+  Duration _switchDuration = Duration.zero;
 
   @override
   void initState() {
@@ -179,6 +184,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _isFirstStart = shouldShowWelcome;
       _dataLoaded = true;
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _switchDuration = const Duration(milliseconds: 350);
+      StartupSplash.homeReady();
+    });
 
     // Update shortcuts after data is loaded
     PlatformShortcutsManager.updateShortcuts();
@@ -281,8 +290,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final scaffoldBody = Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 350),
-        reverseDuration: const Duration(milliseconds: 250),
+        duration: _switchDuration,
+        reverseDuration: _switchDuration == Duration.zero
+            ? Duration.zero
+            : const Duration(milliseconds: 250),
         switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
         transitionBuilder: (child, animation) {

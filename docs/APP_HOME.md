@@ -15,13 +15,13 @@ Covers `lib/home/**`, plus the `lib/main/` wiring that presents the home screen.
 
 `CaravellaHomePage` (`lib/main/caravella_home_page.dart`) is a thin wrapper around `HomePage`. On first build it subscribes to the global `routeObserver` (see [Architecture Overview](ARCHITECTURE.md)) and calls `NotificationManager.restoreNotifications(context)` exactly once — this is what re-shows persistent notifications for all groups after an app restart (see [Notifications](NOTIFICATIONS.md)).
 
-`HomePage` (`lib/home/home_page.dart`) is a `StatefulWidget` with `RouteAware`. State: `_pinnedTrip`, `_activeGroups`, `_archivedGroups`, `_isFirstStart` (`null` = unknown/loading), `_dataLoaded`.
+`HomePage` (`lib/home/home_page.dart`) is a `StatefulWidget` with `RouteAware`. State: `_pinnedTrip`, `_activeGroups`, `_hasArchived` (only archived groups left), `_isFirstStart` (`null` = unknown/loading), `_dataLoaded`.
 
 - `_loadLocaleAndTrip()` loads pinned/active/archived groups in parallel (`Future.wait`), then decides whether to show the welcome screen via `_shouldShowWelcomeScreen`, which combines the `is_first_start` preference with the **actual data** (`!hasGroups && prefValue`) — a deliberate correction so a stale "first start" flag never hides real groups.
 - Listens to `ExpenseGroupNotifier` (`context.read<ExpenseGroupNotifier>().addListener(_onGroupUpdated)`): reads `updatedGroupIds`, triggers `setState`, then calls `clearUpdatedGroups()` and `consumeLastEvent()`.
 - `didPopNext()` (RouteAware) triggers a lighter `_softRefresh()` — no loading flicker — when returning from a pushed page.
 - `_performUpdateCheckIfNeeded()` runs once per session (1s after first frame) and calls `GmsIntegrations.instance.appUpdates?.checkAndShowUpdateIfNeeded(...)` (`play_store_updates` in Play builds; nothing in the F-Droid build) — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) and [caravella_gms](PACKAGE_CARAVELLA_GMS.md).
-- `build()` crossfades (`AnimatedSwitcher`) between a loading placeholder, `HomeWelcomeSection` (first-run/no-groups state), and `HomeCardsSection` (no pull to refresh: Home reloads by itself through `ExpenseGroupNotifier`, including after a synchronization).
+- `build()` crossfades (`AnimatedSwitcher`) between a loading placeholder, `HomeWelcomeSection` (first-run/no-groups state), and `HomeCardsSection`. The first content shows without the crossfade, under the launch splash, and once it is drawn `StartupSplash.homeReady()` lets the splash go (see [Architecture Overview § startup sequence](ARCHITECTURE.md#app-startup-sequence)); `HomeCardsSection` wraps its header, card and shortcuts in `StartupEntrance`, which fades and lifts them in 100/150/200 ms apart the first time only (no pull to refresh: Home reloads by itself through `ExpenseGroupNotifier`, including after a synchronization).
 
 ## `HomeCardsSection` and cards
 

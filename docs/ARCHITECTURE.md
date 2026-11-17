@@ -30,6 +30,8 @@ See [caravella_core reference](PACKAGE_CARAVELLA_CORE.md), [caravella_core_ui re
 
 ## App startup sequence
 
+Before Flutter draws anything, Android shows the launch splash (`LaunchTheme` in `android/app/src/main/res/values*/styles.xml`, androidx `core-splashscreen`): Home's page color (`splash_background`, `surfaceContainer` in both themes) with the app icon (`splash_icon`, the launcher foreground on `ic_launcher_background`, so each flavor shows its own). `StartupSplash.kt`, installed first thing in `MainActivity.onCreate`, keeps it until `HomePage` has drawn its groups (`StartupSplash.homeReady()`, `lib/main/startup_splash.dart`, over the `io.caravella.egm/splash` channel), at most 1.5 s from the start, so Home never shows empty. Then the icon shrinks and fades (220 ms) while the color fades into Home (300 ms), and Home's header and cards rise in (`StartupEntrance`, `lib/home/cards/widgets/`, only at the app's start). With the phone's animations off, the splash just goes and nothing moves. The splash follows the system's dark mode, not the app's own theme setting.
+
 Entry point `lib/main.dart`:
 
 1. `LoggerService.initialize(...)` (Talker-backed logger; verbosity tuned per `AppConfig.environment` — prod is quieter than dev).

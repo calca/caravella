@@ -10,6 +10,7 @@ import '../home_constants.dart';
 import '../navigation_helpers.dart';
 import '../../main/app_shell.dart';
 import 'widgets/group_quick_actions.dart';
+import 'widgets/startup_entrance.dart';
 import 'widgets/widgets.dart';
 
 class HomeCardsSection extends StatefulWidget {
@@ -271,7 +272,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         HomeLayoutConstants.horizontalPadding,
         16.0,
       ),
-      child: HomeCardsHeader(localizations: loc, theme: theme),
+      child: StartupEntrance(
+        delay: const Duration(milliseconds: 100),
+        child: HomeCardsHeader(localizations: loc, theme: theme),
+      ),
     );
 
     final featured = _featuredGroup;
@@ -337,23 +341,29 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                           height: HomeLayoutConstants.isLargeText(context)
                               ? null
                               : cardHeight,
-                          child: GroupCard(
-                            group: featured,
-                            localizations: loc,
-                            theme: theme,
-                            onGroupUpdated: _handleGroupUpdated,
-                            onCategoryAdded: _softLoadActiveGroups,
-                            showAddButton:
-                                AppShellScope.maybeOf(context) == null,
+                          child: StartupEntrance(
+                            delay: const Duration(milliseconds: 150),
+                            child: GroupCard(
+                              group: featured,
+                              localizations: loc,
+                              theme: theme,
+                              onGroupUpdated: _handleGroupUpdated,
+                              onCategoryAdded: _softLoadActiveGroups,
+                              showAddButton:
+                                  AppShellScope.maybeOf(context) == null,
+                            ),
                           ),
                         ),
                         // The shortcuts stay under the bar until scrolled.
                         const SizedBox(
                           height: 16 + HomeLayoutConstants.navBarGap,
                         ),
-                        GroupQuickActions(
-                          group: featured,
-                          onExpenseAdded: _handleGroupUpdated,
+                        StartupEntrance(
+                          delay: const Duration(milliseconds: 200),
+                          child: GroupQuickActions(
+                            group: featured,
+                            onExpenseAdded: _handleGroupUpdated,
+                          ),
                         ),
                         SizedBox(
                           height:
