@@ -93,8 +93,9 @@ class FigureRow extends StatelessWidget {
       );
       final onTap = item.onTap;
       if (onTap == null) {
+        // Label and amount read together: "Total, 42.00 €".
         return item.semanticLabel == null
-            ? content
+            ? MergeSemantics(child: content)
             : Semantics(
                 label: item.semanticLabel,
                 excludeSemantics: true,
@@ -111,7 +112,9 @@ class FigureRow extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 48),
-            child: content,
+            child: item.semanticLabel == null
+                ? MergeSemantics(child: content)
+                : content,
           ),
         ),
       );

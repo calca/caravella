@@ -126,4 +126,35 @@ void main() {
 
     expect(selected, 'B');
   });
+
+  testWidgets('the "+N" pill reads what it opens and how many more', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      wrap(
+        SizedBox(
+          width: 200,
+          child: ChipSelectorRow<String>(
+            items: const [
+              'Transport',
+              'Food and drinks',
+              'Accommodation',
+              'Activities',
+            ],
+            selected: 'Transport',
+            itemLabel: (v) => v,
+            onSelected: (_) {},
+            singleLine: true,
+            sheetTitle: 'Category',
+          ),
+        ),
+      ),
+    );
+    final more = find.textContaining(RegExp(r'^\+\d$'));
+    expect(more, findsOneWidget);
+    final count = tester.widget<Text>(more).data!;
+    expect(find.bySemanticsLabel('Category, $count'), findsOneWidget);
+    handle.dispose();
+  });
 }

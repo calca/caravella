@@ -120,7 +120,10 @@ class _WeekSection extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
+                  // Its own node: a heading, not the start of the first
+                  // row's reading.
                   child: Semantics(
+                    container: true,
                     header: true,
                     child: Text(
                       label.toUpperCase(),
