@@ -49,6 +49,6 @@ If you're about to change code and aren't sure which page(s) to update afterward
 
 ## Related, non-wiki docs
 
-- Root [`CLAUDE.md`](../CLAUDE.md) / [`.github/copilot-instructions.md`](../.github/copilot-instructions.md) — AI-agent working instructions and command reference
+- Root [`AGENTS.md`](../AGENTS.md) — AI-agent working instructions and command reference (`CLAUDE.md` imports it)
 - [`CHANGELOG.md`](../CHANGELOG.md) — user-facing release history
 - [`store/PRIVACY_POLICY.md`](../store/PRIVACY_POLICY.md), [`store/permissions_documentation.md`](../store/permissions_documentation.md) — store-facing privacy/permissions docs
