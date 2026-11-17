@@ -606,7 +606,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String get map_retry => 'Tentar novamente';
 
   @override
-  String get place_search_failed => 'A busca falhou. Verifique a conexão.';
+  String get place_search_failed =>
+      'Sem conexão com o serviço de mapas. Você ainda pode tocar no mapa para marcar o ponto.';
+
+  @override
+  String get place_search_failed_title => 'Não é possível buscar agora';
+
+  @override
+  String get place_you_are_here => 'Você está aqui';
+
+  @override
+  String get place_pick_hint => 'Ou toque no mapa, ou busque um lugar';
+
+  @override
+  String get place_location_unavailable =>
+      'Busque um lugar ou toque no mapa para marcar o ponto.';
+
+  @override
+  String place_no_results(String query) {
+    return 'Nenhum lugar encontrado para “$query”';
+  }
+
+  @override
+  String get place_no_results_hint =>
+      'Confira a grafia, adicione a cidade ou toque no mapa para marcar o ponto você mesmo.';
 
   @override
   String get settings_general => 'Geral';

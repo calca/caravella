@@ -1259,8 +1259,44 @@ abstract class AppLocalizations {
   /// No description provided for @place_search_failed.
   ///
   /// In en, this message translates to:
-  /// **'Search failed. Check your connection.'**
+  /// **'No connection to the map service. You can still tap the map to put the point.'**
   String get place_search_failed;
+
+  /// No description provided for @place_search_failed_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Can’t search right now'**
+  String get place_search_failed_title;
+
+  /// No description provided for @place_you_are_here.
+  ///
+  /// In en, this message translates to:
+  /// **'You are here'**
+  String get place_you_are_here;
+
+  /// No description provided for @place_pick_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Or tap the map, or search a place'**
+  String get place_pick_hint;
+
+  /// No description provided for @place_location_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a place or tap the map to put the point.'**
+  String get place_location_unavailable;
+
+  /// Place search found nothing
+  ///
+  /// In en, this message translates to:
+  /// **'No places found for “{query}”'**
+  String place_no_results(String query);
+
+  /// No description provided for @place_no_results_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the spelling, add the city, or tap the map to put the point yourself.'**
+  String get place_no_results_hint;
 
   /// No description provided for @settings_general.
   ///

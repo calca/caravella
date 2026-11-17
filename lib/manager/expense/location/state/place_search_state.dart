@@ -13,6 +13,19 @@ class PlaceSearchState {
   final bool isGeocodingLocation;
   final bool isCenteringOnLocation;
 
+  /// Where the phone is, once found (the blue dot).
+  final LatLng? userLocation;
+
+  /// Looking for the phone's position when the page opens.
+  final bool isLocating;
+
+  /// The phone's position couldn't be found (no permission, location off,
+  /// no fix in time): the page says so instead of staying on the default.
+  final bool locationUnavailable;
+
+  /// The last search that found nothing, to say so.
+  final String? noResultsQuery;
+
   const PlaceSearchState({
     this.searchResults = const [],
     this.isSearching = false,
@@ -23,6 +36,10 @@ class PlaceSearchState {
     this.selectedLocationAddress,
     this.isGeocodingLocation = false,
     this.isCenteringOnLocation = false,
+    this.userLocation,
+    this.isLocating = false,
+    this.locationUnavailable = false,
+    this.noResultsQuery,
   });
 
   /// Default state with Rome coordinates
@@ -52,6 +69,11 @@ class PlaceSearchState {
     String? selectedLocationAddress,
     bool? isGeocodingLocation,
     bool? isCenteringOnLocation,
+    LatLng? userLocation,
+    bool? isLocating,
+    bool? locationUnavailable,
+    String? noResultsQuery,
+    bool clearNoResults = false,
     bool clearSelectedLocation = false,
     bool clearError = false,
   }) {
@@ -70,10 +92,20 @@ class PlaceSearchState {
       isGeocodingLocation: isGeocodingLocation ?? this.isGeocodingLocation,
       isCenteringOnLocation:
           isCenteringOnLocation ?? this.isCenteringOnLocation,
+      userLocation: userLocation ?? this.userLocation,
+      isLocating: isLocating ?? this.isLocating,
+      locationUnavailable: locationUnavailable ?? this.locationUnavailable,
+      noResultsQuery: clearNoResults
+          ? null
+          : (noResultsQuery ?? this.noResultsQuery),
     );
   }
 
   bool get hasSearchResults => searchResults.isNotEmpty;
   bool get hasError => errorMessage.isNotEmpty;
   bool get hasSelectedLocation => selectedMapLocation != null;
+
+  /// The selected point is the phone's own position ("You are here").
+  bool get selectedIsUserLocation =>
+      userLocation != null && selectedMapLocation == userLocation;
 }

@@ -606,7 +606,29 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get place_search_failed =>
-      'Ricerca non riuscita. Controlla la connessione.';
+      'Nessuna connessione al servizio delle mappe. Puoi comunque toccare la mappa per mettere il punto.';
+
+  @override
+  String get place_search_failed_title => 'Non riesco a cercare adesso';
+
+  @override
+  String get place_you_are_here => 'Sei qui';
+
+  @override
+  String get place_pick_hint => 'Oppure tocca la mappa o cerca un luogo';
+
+  @override
+  String get place_location_unavailable =>
+      'Cerca un luogo o tocca la mappa per mettere il punto.';
+
+  @override
+  String place_no_results(String query) {
+    return 'Nessun luogo trovato per «$query»';
+  }
+
+  @override
+  String get place_no_results_hint =>
+      'Controlla come è scritto, aggiungi la città, o tocca la mappa per mettere il punto tu.';
 
   @override
   String get settings_general => 'Generali';

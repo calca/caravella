@@ -596,7 +596,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get map_retry => '重试';
 
   @override
-  String get place_search_failed => '搜索失败。请检查网络连接。';
+  String get place_search_failed => '无法连接地图服务。你仍可以点按地图来放置位置。';
+
+  @override
+  String get place_search_failed_title => '暂时无法搜索';
+
+  @override
+  String get place_you_are_here => '你在这里';
+
+  @override
+  String get place_pick_hint => '或点按地图，或搜索地点';
+
+  @override
+  String get place_location_unavailable => '搜索地点，或点按地图来放置位置。';
+
+  @override
+  String place_no_results(String query) {
+    return '未找到“$query”相关的地点';
+  }
+
+  @override
+  String get place_no_results_hint => '请检查拼写、加上城市名称，或点按地图自行放置位置。';
 
   @override
   String get settings_general => '常规';

@@ -58,7 +58,9 @@ class NominatimSearchService {
               'Accept-Language': _acceptLanguage,
             },
           )
-          .timeout(const Duration(seconds: 5));
+          // A phone network can take a while: 5 s turned slow answers
+          // into "search failed".
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
