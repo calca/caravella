@@ -19,7 +19,7 @@ Key features:
 - Custom categories, notes, and descriptions
 - Export to CSV and JSON
 - Full backup and restore
-- Optional sync across devices (Wi-Fi, Bluetooth, your own Google Drive)
+- Optional sync across devices (Wi-Fi, Bluetooth)
 - Works offline, no account required
 - English and Italian language support
 - Modern Material 3 design with light/dark theme

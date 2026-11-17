@@ -44,7 +44,7 @@ Caravella fornisce valore attraverso diversi benefici chiave:
 ### 3. **Privacy e Sicurezza**
 - Tutti i dati archiviati localmente sul dispositivo
 - Nessun account utente o registrazione richiesta
-- La sincronizzazione facoltativa resta tra i tuoi dispositivi o nel tuo Google Drive — mai sui nostri server
+- La sincronizzazione facoltativa resta tra i tuoi dispositivi — mai sui nostri server
 - Controllo completo su esportazione ed eliminazione dei dati
 - Conforme al GDPR
 
@@ -54,7 +54,7 @@ Caravella fornisce valore attraverso diversi benefici chiave:
 - Interfaccia multilingue (Inglese, Italiano, Spagnolo, Portoghese, Cinese)
 - Allegati fotografici per ricevute e ricordi
 - Geolocalizzazione per ricordare il contesto della spesa
-- Sincronizzazione facoltativa tra dispositivi via Wi-Fi, Bluetooth o il tuo Google Drive, cifrata end-to-end tra dispositivi
+- Sincronizzazione facoltativa tra dispositivi via Wi-Fi o Bluetooth, cifrata end-to-end tra dispositivi
 
 ### 5. **Tranquillità**
 - Funzionalità completa di backup e ripristino
