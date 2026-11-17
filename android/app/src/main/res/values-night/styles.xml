@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is on -->
-    <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
-        <!-- Show a splash screen on the activity. Automatically removed when
-             the Flutter engine draws its first frame -->
-        <item name="android:windowBackground">@drawable/launch_background</item>
-        <!-- Android 15+: status/navigation bar colors managed via SystemUiOverlayStyle -->
+    <!-- The launch splash (androidx core-splashscreen, installed in
+         MainActivity): Home's page color with the app icon, kept until Home
+         has its groups, then animated out by StartupSplash.kt. -->
+    <style name="LaunchTheme" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/ic_launcher_background</item>
+        <item name="postSplashScreenTheme">@style/NormalTheme</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
     <!-- Theme applied to the Android Window as soon as the process has started.
          This theme determines the color of the Android Window while your

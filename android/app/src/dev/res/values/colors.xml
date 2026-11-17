@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Development flavor splash screen colors - match dev icon background #FFC107 -->
-    <color name="splash_background_light">#FFC107</color>
-    <color name="splash_background_dark">#FFC107</color>
-	<color name="ic_launcher_background">#FFC107</color>
+    <!-- dev flavor icon background; the launch splash shows this icon on it -->
+    <color name="ic_launcher_background">#FFC107</color>
 </resources>

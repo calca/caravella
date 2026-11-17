@@ -3,9 +3,8 @@
     <!-- Adaptive icon background color for dark theme -->
     <color name="ic_launcher_background">#4A9ACC</color>
     
-    <!-- Dark theme splash screen colors - match icon background -->
-    <color name="splash_background_light">#009688</color>
-    <color name="splash_background_dark">#009688</color>
+    <!-- Launch splash: Home's dark page color (surfaceContainer) -->
+    <color name="splash_background">#242627</color>
 
     <!-- Widget initialLayout placeholder background - matches WidgetTheme.kt's
          WidgetSurfaceColor dark value. See values/colors.xml for why this is

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The launcher icon's foreground, inset as in mipmap-anydpi-v26/ic_launcher.xml:
+     the splash draws it on ic_launcher_background in a circle, like the icon.
+     (An adaptive icon itself would be cropped on Android 10-11.) -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_launcher_foreground"
+    android:inset="16%" />

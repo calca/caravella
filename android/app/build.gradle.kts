@@ -130,6 +130,8 @@ dependencies {
     // Keep the two versions together.
     implementation("androidx.appfunctions:appfunctions:1.0.0-rc01")
     ksp("androidx.appfunctions:appfunctions-compiler:1.0.0-rc01")
+    // The launch splash (LaunchTheme, StartupSplash.kt).
+    implementation("androidx.core:core-splashscreen:1.2.0")
     implementation("androidx.glance:glance-appwidget:1.1.1")
     implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.compose.material:material-icons-core:1.7.8")
