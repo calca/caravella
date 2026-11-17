@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'app_night_mode.dart';
 import '../manager/history/expenses_history_page.dart';
 import 'app_shell.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +48,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
   Future<void> _loadThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
     final themeString = prefs.getString('theme_mode') ?? 'system';
+    AppNightMode.apply(themeString);
     setState(() {
       switch (themeString) {
         case 'light':
@@ -75,6 +77,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
     if (mode == ThemeMode.light) value = 'light';
     if (mode == ThemeMode.dark) value = 'dark';
     await prefs.setString('theme_mode', value);
+    AppNightMode.apply(value);
     setState(() {
       _themeMode = mode;
     });
