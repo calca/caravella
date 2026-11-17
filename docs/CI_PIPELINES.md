@@ -17,7 +17,7 @@ Triggers: push/PR to `main`.
     --dart-define=ENABLE_ANDROID_WIDGET=true \
     --dart-define=UNSPLASH_ACCESS_KEY=$UNSPLASH_ACCESS_KEY
   ```
-  then the **native unit tests** (`cd android && ./gradlew :app:testStagingDebugUnitTest`: `android/app/src/test`, App Functions on Robolectric and the widget formatting). This is the sequence CLAUDE.md means by "match this locally before pushing" — reproduce it with `flutter pub get && flutter analyze && flutter test` before opening a PR.
+  then the **native unit tests** (`cd android && ./gradlew :app:testStagingDebugUnitTest`: `android/app/src/test`, App Functions on Robolectric and the widget formatting). This is the sequence AGENTS.md means by "match this locally before pushing" — reproduce it with `flutter pub get && flutter analyze && flutter test` before opening a PR.
 
 Publishing a release on GitHub no longer builds anything or bumps `pubspec.yaml` (an older `release` job did both, which is where the bot-authored "Bump version" commits and the `v1.9.x-dev` pre-releases come from). The version is bumped by hand as part of preparing a release (`.claude/skills/plan-create-release`).
 
@@ -104,4 +104,4 @@ Version codes are assigned when a release is made: the hotfix takes the next fre
 - [Build Variants & Flavors](BUILD_VARIANTS.md) — what each dart-define flag actually does
 - [F-Droid Submission](FDROID_SUBMISSION.md)
 - [Google Drive Sync Setup Guide](GOOGLE_DRIVE_SYNC_SETUP.md) — required before `ENABLE_GOOGLE_DRIVE_SYNC=true` builds can actually sign in
-- Root `CLAUDE.md` — local command reference
+- Root `AGENTS.md` — local command reference
