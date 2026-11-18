@@ -8,7 +8,7 @@ import '../themes/form_theme.dart';
 /// symbol small on the left, the amount large, typed with the language's
 /// decimal separator (a comma or a dot is accepted either way, two decimals
 /// at most). Read it back with [AmountField.parse].
-class AmountField extends StatelessWidget {
+class AmountField extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;
 
@@ -53,7 +53,30 @@ class AmountField extends StatelessWidget {
   }
 
   @override
+  State<AmountField> createState() => _AmountFieldState();
+}
+
+class _AmountFieldState extends State<AmountField> {
+  /// Used when the caller passes no focus node, so a tap beside the
+  /// digits can still focus the field.
+  FocusNode? _ownFocus;
+
+  FocusNode get _focus => widget.focusNode ?? (_ownFocus ??= FocusNode());
+
+  @override
+  void dispose() {
+    _ownFocus?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final controller = widget.controller;
+    final currency = widget.currency;
+    final label = widget.label;
+    final textStyle = widget.textStyle;
+    final enabled = widget.enabled;
+    final currencyAfter = widget.currencyAfter;
     final theme = Theme.of(context);
     // Amount field: large bold number with smaller currency symbol.
     final currencySymbol = currency;
@@ -83,7 +106,7 @@ class AmountField extends StatelessWidget {
 
     Widget field({required bool showHint}) => TextFormField(
       controller: controller,
-      focusNode: focusNode,
+      focusNode: _focus,
       enabled: enabled,
       style: amountStyle,
       textAlign: TextAlign.left,
@@ -93,10 +116,10 @@ class AmountField extends StatelessWidget {
         hintStyle: amountStyle?.copyWith(color: color.withValues(alpha: 0.35)),
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      textInputAction: textInputAction ?? TextInputAction.next,
-      validator: validator,
-      onSaved: onSaved,
-      onFieldSubmitted: (_) => onSubmitted?.call(),
+      textInputAction: widget.textInputAction ?? TextInputAction.next,
+      validator: widget.validator,
+      onSaved: widget.onSaved,
+      onFieldSubmitted: (_) => widget.onSubmitted?.call(),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
         _SimpleDecimalFormatter(decimalSeparator),
@@ -114,31 +137,38 @@ class AmountField extends StatelessWidget {
 
     // Merged into the text field's own node, so TalkBack reads "Amount (€)"
     // on the field instead of only its "0.00" hint.
-    return MergeSemantics(
-      child: Semantics(
-        label: '${label.replaceAll(' *', '')} ($currencySymbol)',
-        child: Align(
-          alignment: currencyAfter
-              ? AlignmentDirectional.centerStart
-              : Alignment.center,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              if (!currencyAfter) ...[
-                Text(currencySymbol, style: currencyStyle),
-                const SizedBox(width: 10),
+    // The whole line focuses the field: the field is only as wide as its
+    // digits, so a tap on "€" or beside a short amount ("5") did nothing.
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      excludeFromSemantics: true,
+      onTap: enabled ? _focus.requestFocus : null,
+      child: MergeSemantics(
+        child: Semantics(
+          label: '${label.replaceAll(' *', '')} ($currencySymbol)',
+          child: Align(
+            alignment: currencyAfter
+                ? AlignmentDirectional.centerStart
+                : Alignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                if (!currencyAfter) ...[
+                  Text(currencySymbol, style: currencyStyle),
+                  const SizedBox(width: 10),
+                ],
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 300),
+                  child: IntrinsicWidth(child: amountField),
+                ),
+                if (currencyAfter) ...[
+                  const SizedBox(width: 8),
+                  Text(currencySymbol, style: currencyStyle),
+                ],
               ],
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 300),
-                child: IntrinsicWidth(child: amountField),
-              ),
-              if (currencyAfter) ...[
-                const SizedBox(width: 8),
-                Text(currencySymbol, style: currencyStyle),
-              ],
-            ],
+            ),
           ),
         ),
       ),

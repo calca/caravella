@@ -128,7 +128,7 @@
   "backup_error": "Backup failed",
   "backup_share_message": "Here is your Caravella backup",
   "import_confirm_title": "Replace your data?",
-  "import_confirm_message": "Restore from the file “{file}”? Your current groups will be replaced and this can’t be undone.",
+  "import_confirm_message": "Restore from the file “{file}”? Its groups replace their copies on this phone, and this can’t be undone. Groups that aren’t in the file stay.",
   "import_success": "Data restored",
   "import_error": "Restore failed: check the file",
   "import_error_newer": "This backup comes from a newer Caravella: update the app to restore it",
@@ -835,6 +835,8 @@
   ,"@balance_gets_back": {"description": "Screen reader label of a positive balance", "placeholders": {"name": {"type": "String"}, "amount": {"type": "String"}}}
   ,"balance_owes": "{name} owes {amount}"
   ,"@balance_owes": {"description": "Screen reader label of a negative balance", "placeholders": {"name": {"type": "String"}, "amount": {"type": "String"}}}
+  ,"balance_even": "{name} is even"
+  ,"@balance_even": {"description": "Screen reader label of a zero balance: owes nothing, gets nothing back", "placeholders": {"name": {"type": "String"}}}
   ,"settlement_pays": "{from} pays {to} {amount}"
   ,"@settlement_pays": {"description": "Screen reader label of a suggested payment", "placeholders": {"from": {"type": "String"}, "to": {"type": "String"}, "amount": {"type": "String"}}}
   ,"places_count": "{count, plural, one {1 place} other {{count} places}}"
@@ -1268,7 +1270,7 @@
   ,"@budget": {"description": "Group settings: the budget row, and the title of its sheet"}
   ,"budget_none": "None"
   ,"@budget_none": {"description": "Group settings: under Budget when the group has none"}
-  ,"budget_sheet_description": "How much you plan to spend. Tap Today on the group page to see how it’s going."
+  ,"budget_sheet_description": "How much you plan to spend. Statistics shows how it’s going."
   ,"@budget_sheet_description": {"description": "Budget sheet: what the budget is for"}
   ,"budget_period_total": "In total"
   ,"@budget_period_total": {"description": "Budget period: one amount for the whole group"}
@@ -1298,6 +1300,8 @@
   ,"@budget_over": {"description": "Budget detail: after the amount spent over the budget of the period"}
   ,"budget_bar_semantics": "{spent}% of the budget spent, {elapsed}% of the period gone"
   ,"@budget_bar_semantics": {"description": "Screen reader label of the budget bar", "placeholders": {"spent": {"type": "int"}, "elapsed": {"type": "int"}}}
+  ,"budget_bar_semantics_spent": "{spent}% of the budget spent"
+  ,"@budget_bar_semantics_spent": {"description": "Screen reader label of the budget bar when the period has no marker (a daily budget)", "placeholders": {"spent": {"type": "int"}}}
   ,"budget_set_dates_hint": "Set the group’s dates to see how much you can spend each day."
   ,"@budget_set_dates_hint": {"description": "Budget detail, total budget on a group without dates"}
   ,"budget_rate_total": "{amount} in total"

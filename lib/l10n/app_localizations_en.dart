@@ -347,7 +347,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String import_confirm_message(Object file) {
-    return 'Restore from the file “$file”? Your current groups will be replaced and this can’t be undone.';
+    return 'Restore from the file “$file”? Its groups replace their copies on this phone, and this can’t be undone. Groups that aren’t in the file stay.';
   }
 
   @override
@@ -1954,6 +1954,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String balance_even(String name) {
+    return '$name is even';
+  }
+
+  @override
   String settlement_pays(String from, String to, String amount) {
     return '$from pays $to $amount';
   }
@@ -2893,7 +2898,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get budget_sheet_description =>
-      'How much you plan to spend. Tap Today on the group page to see how it’s going.';
+      'How much you plan to spend. Statistics shows how it’s going.';
 
   @override
   String get budget_period_total => 'In total';
@@ -2939,6 +2944,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String budget_bar_semantics(int spent, int elapsed) {
     return '$spent% of the budget spent, $elapsed% of the period gone';
+  }
+
+  @override
+  String budget_bar_semantics_spent(int spent) {
+    return '$spent% of the budget spent';
   }
 
   @override

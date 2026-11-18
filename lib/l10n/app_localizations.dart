@@ -755,7 +755,7 @@ abstract class AppLocalizations {
   /// No description provided for @import_confirm_message.
   ///
   /// In en, this message translates to:
-  /// **'Restore from the file “{file}”? Your current groups will be replaced and this can’t be undone.'**
+  /// **'Restore from the file “{file}”? Its groups replace their copies on this phone, and this can’t be undone. Groups that aren’t in the file stay.'**
   String import_confirm_message(Object file);
 
   /// No description provided for @import_success.
@@ -3776,6 +3776,12 @@ abstract class AppLocalizations {
   /// **'{name} owes {amount}'**
   String balance_owes(String name, String amount);
 
+  /// Screen reader label of a zero balance: owes nothing, gets nothing back
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is even'**
+  String balance_even(String name);
+
   /// Screen reader label of a suggested payment
   ///
   /// In en, this message translates to:
@@ -5259,7 +5265,7 @@ abstract class AppLocalizations {
   /// Budget sheet: what the budget is for
   ///
   /// In en, this message translates to:
-  /// **'How much you plan to spend. Tap Today on the group page to see how it’s going.'**
+  /// **'How much you plan to spend. Statistics shows how it’s going.'**
   String get budget_sheet_description;
 
   /// Budget period: one amount for the whole group
@@ -5345,6 +5351,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{spent}% of the budget spent, {elapsed}% of the period gone'**
   String budget_bar_semantics(int spent, int elapsed);
+
+  /// Screen reader label of the budget bar when the period has no marker (a daily budget)
+  ///
+  /// In en, this message translates to:
+  /// **'{spent}% of the budget spent'**
+  String budget_bar_semantics_spent(int spent);
 
   /// Budget detail, total budget on a group without dates
   ///

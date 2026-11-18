@@ -385,7 +385,8 @@ class _EntryCurrencyLine extends StatelessWidget {
         onTap: toggle,
         borderRadius: BorderRadius.circular(8),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 48),
+          // 48 x 48 dp at least: "in kr" alone is narrower.
+          constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Center(

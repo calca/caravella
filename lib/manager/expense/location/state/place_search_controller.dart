@@ -99,7 +99,13 @@ class PlaceSearchController extends ChangeNotifier {
               locationUnavailable: false,
             ),
           );
+          // Nothing picked yet (the position wasn't found on opening):
+          // pick it, as opening does, so the card offers Confirm instead of
+          // leaving the map with no card at all.
           mapController.move(newCenter, _state.mapZoom);
+          if (!_state.hasSelectedLocation) {
+            await selectMapLocation(newCenter);
+          }
           return;
         }
       }

@@ -342,8 +342,9 @@ extension<T> on _ChipSelectorRowState<T> {
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
     )..layout();
-    // Padding, leading slot, borders: see FormPill.
-    return painter.width + (hasLeading ? 6 + 28 + 6 : 14) + 14 + 2;
+    // Padding, leading slot, borders: see FormPill (48 dp at least).
+    final width = painter.width + (hasLeading ? 6 + 28 + 6 : 14) + 14 + 2;
+    return width < FormPill.touchTarget ? FormPill.touchTarget : width;
   }
 
   Widget _singleLine(BuildContext context, double maxWidth) {
@@ -386,7 +387,15 @@ extension<T> on _ChipSelectorRowState<T> {
       children: [
         for (final (i, item) in visible.indexed) ...[
           if (i > 0) const SizedBox(width: gap),
+          // Flex in proportion to each pill's width: with equal flexes the
+          // free space was split evenly, so a long label ("Transport",
+          // bold when selected) was cut to "Transpo…" on a row that fits.
           Flexible(
+            flex: _pillWidth(
+              context,
+              itemLabel(item),
+              itemLeading != null,
+            ).ceil().clamp(1, 100000),
             child: FormPill(
               label: itemLabel(item),
               leading: itemLeading?.call(item),

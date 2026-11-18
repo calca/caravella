@@ -96,24 +96,19 @@ class BackupArchive {
     return groups;
   }
 
-  /// Saves [groups] one by one, stopping at the first failure. Returns the
-  /// groups saved and, if one failed, why.
+  /// Saves [groups] in one go: all of them or, if one fails, none (it
+  /// used to stop half way, keeping the groups saved before the failure).
+  /// Returns the groups saved and, if it failed, why.
   static Future<({List<ExpenseGroup> saved, String? error})> restore(
     List<ExpenseGroup> groups,
   ) async {
-    final repository = ExpenseGroupStorageV2.repository;
-    final saved = <ExpenseGroup>[];
-    for (final group in groups) {
-      final result = await repository.saveGroup(group);
-      if (!result.isSuccess) {
-        return (
-          saved: saved,
-          error:
-              'Failed to save group "${group.title}": ${result.error?.message}',
-        );
-      }
-      saved.add(group);
+    final result = await ExpenseGroupStorageV2.repository.saveGroups(groups);
+    if (!result.isSuccess) {
+      return (
+        saved: const <ExpenseGroup>[],
+        error: 'Failed to restore the backup: ${result.error?.message}',
+      );
     }
-    return (saved: saved, error: null);
+    return (saved: groups, error: null);
   }
 }

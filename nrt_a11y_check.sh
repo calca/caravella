@@ -38,9 +38,12 @@ screen_h = max(int(re.findall(r"\d+", n.get("bounds", "0,0,0,0"))[3]) for n in r
 
 
 def label(node):
+    # A text field's label is its hint (Flutter puts the semantics label
+    # there), which TalkBack reads while the field is empty.
     for n in node.iter():
-        if n.get("text", "").strip() or n.get("content-desc", "").strip():
-            return (n.get("content-desc") or n.get("text")).strip()
+        for attr in ("content-desc", "text", "hint"):
+            if n.get(attr, "").strip():
+                return n.get(attr).strip()
     return ""
 
 
@@ -67,7 +70,11 @@ for node in root.iter("node"):
     # its size here isn't its real size.
     clipped = y1 <= 0 or y2 >= screen_h
     where = f"at ({x1},{y1}) {w:.0f}x{h:.0f} dp"
-    if not name:
+    if not name and node.get("class") == "android.widget.EditText" and node.get("hint") is None:
+        # uiautomator before Android 16 doesn't dump the hint, where a text
+        # field's label is: it can't be checked here (TalkBack reads it).
+        pass
+    elif not name:
         problems.append(f"no label        {where}  [{node.get('class')}]")
     elif (w < 47.5 or h < 47.5) and not clipped:
         problems.append(f"under 48 dp     {where}  \"{name[:50]}\"")
