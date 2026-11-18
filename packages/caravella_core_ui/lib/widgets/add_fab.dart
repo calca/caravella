@@ -36,9 +36,14 @@ class AddFab extends StatelessWidget {
           ),
         ],
       ),
+      // One node that is both labeled and tappable: a labeled Semantics
+      // around the button's own node gave TalkBack a "button" it couldn't
+      // activate.
       child: Semantics(
         button: true,
         label: semanticLabel ?? tooltip,
+        onTap: onPressed,
+        excludeSemantics: true,
         child: SizedBox.square(
           dimension: 64,
           child: FloatingActionButton(

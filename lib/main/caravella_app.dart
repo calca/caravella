@@ -13,6 +13,7 @@ import 'package:zentoast/zentoast.dart';
 import 'route_observer.dart';
 import 'provider_setup.dart';
 import 'caravella_home_page.dart';
+import '../manager/expense/location/nominatim_search_service.dart';
 
 /// The root widget of the Caravella app, managing locale and theme state.
 class CaravellaApp extends StatefulWidget {
@@ -43,6 +44,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
     setState(() {
       _locale = savedLocale ?? LocalePreferences.deviceDefault();
     });
+    NominatimSearchService.language = _locale;
   }
 
   Future<void> _loadThemeMode() async {
@@ -69,6 +71,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
     setState(() {
       _locale = locale;
     });
+    NominatimSearchService.language = locale;
   }
 
   void _changeTheme(ThemeMode mode) async {

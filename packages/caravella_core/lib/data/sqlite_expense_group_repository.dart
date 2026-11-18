@@ -514,6 +514,27 @@ class SqliteExpenseGroupRepository
   }
 
   @override
+  Future<StorageResult<void>> saveGroups(List<ExpenseGroup> groups) {
+    return _guarded('saveGroups', 'Failed to save groups', () async {
+      for (final group in groups) {
+        validateGroup(group).unwrap();
+      }
+      final db = await database;
+      await db.transaction((txn) async {
+        for (final group in groups) {
+          final row = _mapper.groupToMap(group);
+          await SqliteGroupWriter.write(
+            txn,
+            group,
+            row,
+            changedAt: row['updated_at'] as int,
+          );
+        }
+      });
+    });
+  }
+
+  @override
   Future<StorageResult<void>> addExpenseGroup(ExpenseGroup group) async {
     return await saveGroup(group);
   }

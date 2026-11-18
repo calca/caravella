@@ -1,5 +1,6 @@
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/rendering.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// The quick-add sheet keeps paid-by and category on one line: what fits,
@@ -65,5 +66,37 @@ void main() {
     }
     expect(find.textContaining(RegExp(r'^\+\d$')), findsNothing);
     expect(find.byIcon(Icons.add_rounded), findsOneWidget);
+  });
+
+  testWidgets('a long label is not cut on a row where everything fits', (
+    tester,
+  ) async {
+    // Short ones beside a long, selected one: with equal flexes the long
+    // pill got a third of the row and read "Transpo…".
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(
+              width: 500,
+              child: ChipSelectorRow<String>(
+                items: const ['Hotel', 'Food', 'Transportation'],
+                selected: 'Transportation',
+                itemLabel: (s) => s,
+                onSelected: (_) {},
+                onAddItemInline: (_) async {},
+                sheetTitle: 'Category',
+                singleLine: true,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    expect(find.textContaining(RegExp(r'^\+\d$')), findsNothing);
+    for (final label in ['Hotel', 'Food', 'Transportation']) {
+      final paragraph = tester.renderObject<RenderParagraph>(find.text(label));
+      expect(paragraph.didExceedMaxLines, isFalse, reason: label);
+    }
   });
 }

@@ -105,23 +105,19 @@ class AmountInputWidget extends StatelessWidget {
         onFieldSubmitted: (_) => onSubmitted?.call(),
       );
 
-      if (leading == null) {
-        return Semantics(
-          textField: true,
-          label: label?.replaceAll(' *', ''),
-          child: textField,
-        );
-      }
+      // Merged into the text field's own node: a separate labeled node
+      // around it made TalkBack stop twice ("Description", then
+      // "Description *").
+      final labeled = MergeSemantics(
+        child: Semantics(label: label?.replaceAll(' *', ''), child: textField),
+      );
+      if (leading == null) return labeled;
 
       return IconLeadingField(
         icon: leading!,
         semanticsLabel: (label ?? '').replaceAll(' *', ''),
         tooltip: (label ?? '').replaceAll(' *', ''),
-        child: Semantics(
-          textField: true,
-          label: label?.replaceAll(' *', ''),
-          child: textField,
-        ),
+        child: labeled,
       );
     }
 

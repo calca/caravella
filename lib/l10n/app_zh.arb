@@ -94,7 +94,7 @@
   "end_date_after_start": "结束日期必须在开始日期之后",
   "expenses_by_participant": "按参与者",
   "import_confirm_title": "替换现有数据？",
-  "import_confirm_message": "从文件“{file}”恢复？当前群组将被替换，且无法撤销。",
+  "import_confirm_message": "从文件“{file}”恢复？文件中的群组将替换本机上的对应群组，且无法撤销。不在文件中的群组会保留。",
   "import_success": "数据已恢复",
   "import_error": "恢复失败：请检查文件",
   "import_error_newer": "此备份来自较新版本的 Caravella：请更新应用后再恢复",
@@ -1107,6 +1107,7 @@
   ,"all_settled_up": "已全部结清"
   ,"balance_gets_back": "{name} 应收回 {amount}"
   ,"balance_owes": "{name} 应付 {amount}"
+  ,"balance_even": "{name} 已结清"
   ,"settlement_pays": "{from} 付给 {to} {amount}"
   ,"places_count": "{count, plural, other {{count} 个地点}}"
   ,"more_options": "更多选项"
@@ -1357,7 +1358,7 @@
   ,"balance_paid_total": "共支付 {amount}"
   ,"budget": "预算"
   ,"budget_none": "无"
-  ,"budget_sheet_description": "你们打算花多少。在群组页面点按「今天」查看进度。"
+  ,"budget_sheet_description": "你们打算花多少。在「统计」中查看进度。"
   ,"budget_period_total": "总计"
   ,"budget_period_monthly": "每月"
   ,"budget_period_weekly": "每周"
@@ -1372,6 +1373,7 @@
   ,"budget_left": "剩余"
   ,"budget_over": "超出预算"
   ,"budget_bar_semantics": "已花预算的 {spent}%，时段已过 {elapsed}%"
+  ,"budget_bar_semantics_spent": "已花预算的 {spent}%"
   ,"budget_set_dates_hint": "设置群组日期，即可查看每天可花多少。"
   ,"budget_rate_total": "共 {amount}"
   ,"budget_rate_monthly": "每月 {amount}"

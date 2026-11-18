@@ -343,7 +343,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String import_confirm_message(Object file) {
-    return '从文件“$file”恢复？当前群组将被替换，且无法撤销。';
+    return '从文件“$file”恢复？文件中的群组将替换本机上的对应群组，且无法撤销。不在文件中的群组会保留。';
   }
 
   @override
@@ -1915,6 +1915,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String balance_even(String name) {
+    return '$name 已结清';
+  }
+
+  @override
   String settlement_pays(String from, String to, String amount) {
     return '$from 付给 $to $amount';
   }
@@ -2802,7 +2807,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get budget_none => '无';
 
   @override
-  String get budget_sheet_description => '你们打算花多少。在群组页面点按「今天」查看进度。';
+  String get budget_sheet_description => '你们打算花多少。在「统计」中查看进度。';
 
   @override
   String get budget_period_total => '总计';
@@ -2848,6 +2853,11 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String budget_bar_semantics(int spent, int elapsed) {
     return '已花预算的 $spent%，时段已过 $elapsed%';
+  }
+
+  @override
+  String budget_bar_semantics_spent(int spent) {
+    return '已花预算的 $spent%';
   }
 
   @override

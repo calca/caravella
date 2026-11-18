@@ -112,7 +112,7 @@
   "backup_error": "Backup non riuscito",
   "backup_share_message": "Ecco il backup di Caravella",
   "import_confirm_title": "Sostituire i dati?",
-  "import_confirm_message": "Ripristinare dal file «{file}»? I gruppi attuali verranno sostituiti e non si potrà annullare.",
+  "import_confirm_message": "Ripristinare dal file «{file}»? I suoi gruppi sostituiscono le loro copie su questo telefono e non si potrà annullare. I gruppi che non sono nel file restano.",
   "import_success": "Dati ripristinati",
   "import_error": "Ripristino non riuscito: controlla il file",
   "import_error_newer": "Questo backup viene da un Caravella più recente: aggiorna l’app per ripristinarlo",
@@ -789,6 +789,7 @@
   ,"all_settled_up": "Siete pari"
   ,"balance_gets_back": "{name} deve ricevere {amount}"
   ,"balance_owes": "{name} deve dare {amount}"
+  ,"balance_even": "{name} è in pari"
   ,"settlement_pays": "{from} dà a {to} {amount}"
   ,"places_count": "{count, plural, one {1 luogo} other {{count} luoghi}}"
   ,"more_options": "Altre opzioni"
@@ -1037,7 +1038,7 @@
   ,"balance_paid_total": "Ha messo {amount}"
   ,"budget": "Budget"
   ,"budget_none": "Nessuno"
-  ,"budget_sheet_description": "Quanto pensate di spendere. Toccando Oggi nella pagina del gruppo vedete come va."
+  ,"budget_sheet_description": "Quanto pensate di spendere. In Statistiche vedete come va."
   ,"budget_period_total": "In tutto"
   ,"budget_period_monthly": "Al mese"
   ,"budget_period_weekly": "A settimana"
@@ -1052,6 +1053,7 @@
   ,"budget_left": "rimasti"
   ,"budget_over": "oltre il budget"
   ,"budget_bar_semantics": "Speso il {spent}% del budget, passato il {elapsed}% del periodo"
+  ,"budget_bar_semantics_spent": "Speso il {spent}% del budget"
   ,"budget_set_dates_hint": "Imposta le date del gruppo per vedere quanto potete spendere al giorno."
   ,"budget_rate_total": "{amount} in tutto"
   ,"budget_rate_monthly": "{amount} al mese"

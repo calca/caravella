@@ -14,8 +14,7 @@ Future<void> restoreBackupGroups(
   try {
     final result = await BackupArchive.restore(groups);
 
-    // Groups saved before a failure still show up instead of the UI
-    // silently staying stale.
+    // All or nothing: after a failure nothing changed.
     if (result.saved.isNotEmpty && context.mounted) {
       final notifier = context.read<ExpenseGroupNotifier>();
       for (final group in result.saved) {
@@ -66,8 +65,8 @@ Future<bool> confirmRestore(
         content: Text(loc.import_confirm_message(name)),
         actions: [
           Material3DialogActions.cancel(context, loc.cancel),
-          // Replaces every group and can't be undone: the one red button
-          // outside deletions.
+          // Replaces the file's groups and can't be undone: the one red
+          // button outside deletions.
           Material3DialogActions.destructive(
             context,
             loc.import_replace,

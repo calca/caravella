@@ -149,7 +149,11 @@ class FormPill extends StatelessWidget {
         onTap: onTap,
         onLongPress: onLongPress,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: height),
+          // 48 dp wide at least: a short pill ("+1") was 42.
+          constraints: const BoxConstraints(
+            minHeight: height,
+            minWidth: touchTarget,
+          ),
           child: Align(widthFactor: 1, heightFactor: 1, child: content),
         ),
       ),

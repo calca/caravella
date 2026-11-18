@@ -206,10 +206,15 @@ class BudgetDetailSheet extends StatelessWidget {
                     ),
                   ),
                 Semantics(
-                  label: gloc.budget_bar_semantics(
-                    spentPercent,
-                    ((elapsed ?? 0) * 100).round(),
-                  ),
+                  // Without a marker (a daily budget, a budget in total
+                  // without dates) only the share spent: "0% of the period
+                  // gone" was read at any hour.
+                  label: elapsed == null
+                      ? gloc.budget_bar_semantics_spent(spentPercent)
+                      : gloc.budget_bar_semantics(
+                          spentPercent,
+                          (elapsed * 100).round(),
+                        ),
                   child: BudgetBar(
                     fraction: status.spent / budget.amount,
                     over: overPeriod,

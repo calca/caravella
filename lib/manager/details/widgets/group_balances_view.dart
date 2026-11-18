@@ -126,7 +126,7 @@ class GroupBalancesView extends StatelessWidget {
                 currency: group.currency,
                 paidLabel: paidLabel(p.id),
                 semanticLabel:
-                    '${(balances[p.id] ?? 0) >= 0 ? gloc.balance_gets_back(p.name, money(balances[p.id] ?? 0)) : gloc.balance_owes(p.name, money(balances[p.id] ?? 0))}, '
+                    '${_balanceLabel(gloc, p.name, balances[p.id] ?? 0, money)}, '
                     '${paidLabel(p.id)}',
               ),
           ]),
@@ -406,9 +406,11 @@ class _BalanceRow extends StatelessWidget {
     // Under the name, past the avatar.
     final paid = Padding(
       padding: const EdgeInsets.only(left: 42, top: 2),
+      // Two lines at most: with large text "· 44.67 € received" was cut,
+      // and amounts are never cut.
       child: Text(
         paidLabel,
-        maxLines: 1,
+        maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: theme.textTheme.bodySmall?.copyWith(color: s.onSurfaceVariant),
       ),
@@ -584,4 +586,18 @@ class _SettleRow extends StatelessWidget {
       ),
     );
   }
+}
+
+/// What TalkBack reads for a balance: who gets back or owes how much, or
+/// that they are even (it read "Anna gets back 0.00 €" once she had paid).
+String _balanceLabel(
+  gen.AppLocalizations gloc,
+  String name,
+  double balance,
+  String Function(double) money,
+) {
+  if (balance.abs() < 0.01) return gloc.balance_even(name);
+  return balance > 0
+      ? gloc.balance_gets_back(name, money(balance))
+      : gloc.balance_owes(name, money(balance));
 }

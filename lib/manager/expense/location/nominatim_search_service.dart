@@ -10,7 +10,13 @@ class NominatimSearchService {
   // Nominatim requires a descriptive User-Agent with contact info
   static const String _userAgent =
       'Caravella/1.2.0 (https://github.com/calca/caravella)';
-  static const String _acceptLanguage = 'it,en';
+
+  /// The app's language (set by the app with its locale): place names come
+  /// back in it, with English as fallback. It was fixed to Italian, so
+  /// everyone read "Oslo, Norvegia".
+  static String language = 'en';
+
+  static String get _acceptLanguage => language == 'en' ? 'en' : '$language,en';
 
   // Rate limiting: Nominatim allows max 1 request per second
   static DateTime? _lastRequestTime;
