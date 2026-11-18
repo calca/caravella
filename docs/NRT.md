@@ -37,7 +37,7 @@ adb -s $DEV install /tmp/old/build/app/outputs/flutter-apk/app-staging-debug.apk
 
 | # | Step | Expected |
 |---|---|---|
-| 0.1 | On the old version: two groups (one with a photo, one with a colour), four people, ten expenses with a place, a note and attachments, a settled payment; delete a third group; archive one; make a backup | All saved |
+| 0.1 | On the old version: two groups (one with a photo, one with a colour), four people, ten expenses with a place, a note and attachments; delete a third group; archive one; make a backup (2.4 has no payments to tick yet). To fill it quickly, restore a 2.4-format backup (a JSON list of groups) and copy the photos into the app's files with `run-as` (the debug build allows it) | All saved |
 | 0.2 | `adb -s $DEV install -r /tmp/new/build/app/outputs/flutter-apk/app-staging-debug.apk`, then open the app | No crash, no empty Home. Every group, expense, attachment (each once, not repeated) and payment is there, the archived group is still archived, the deleted one doesn't come back. The totals and balances are the same as before the upgrade |
 | 0.3 | Edit an expense and a group, then force-stop and reopen | The changes are kept |
 | 0.4 | Restore the 2.4 backup made in 0.1 | It is restored |
@@ -104,7 +104,7 @@ Then uninstall and go on with the rc's own APK, as in the setup.
 |---|---|---|
 | 5.1 | Settings › Budget: try each period (in total, monthly, weekly, daily), set 150 a day | The row shows the budget. A trip starts on "In total" |
 | 5.2 | Group page header; Statistics | The header shows Total \| Today only, no ring. In Statistics, under the pace card, a Budget card like the map one: "150.00 € a day · on track" |
-| 5.3 | Tap the Budget card | The budget sheet: title with the budget, what's left of the period, its bar with "today" on the marker, one line on today and the average per day. Over the budget: amber figure and "The budget for … has run out", no 0.00 € lines. Monthly, weekly and daily budgets also show the three periods before |
+| 5.3 | Tap the Budget card | The budget sheet: title with the budget, what's left of the period, its bar with "today" on the marker, one line on today and the average per day. Over the budget: amber figure and "The budget for … has run out", no 0.00 € lines. A daily budget has no line on today (its period is today). Monthly, weekly and daily budgets also show the three periods before, once there are some |
 | 5.4 | Spend over today's share | The card says "a bit above plan", no colors; the sheet says how much over |
 | 5.5 | Remove the budget | The card says "Not set"; tapping it sets a budget again |
 
