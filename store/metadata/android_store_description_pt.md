@@ -44,7 +44,7 @@ O Caravella entrega valor através de vários benefícios principais:
 ### 3. **Privacidade e Segurança**
 - Todos os dados armazenados localmente no dispositivo
 - Sem contas de usuário ou registro necessário
-- A sincronização opcional fica entre seus dispositivos ou seu próprio Google Drive — nunca em nossos servidores
+- A sincronização opcional fica entre seus dispositivos — nunca em nossos servidores
 - Controle total sobre exportação e exclusão de dados
 - Conforme GDPR
 
@@ -54,7 +54,7 @@ O Caravella entrega valor através de vários benefícios principais:
 - Interface multilíngue (Inglês, Italiano, Espanhol, Português, Chinês)
 - Anexos de fotos para recibos e memórias
 - Marcação de localização para lembrar o contexto da despesa
-- Sincronização opcional entre dispositivos por Wi-Fi, Bluetooth ou seu próprio Google Drive, com criptografia de ponta a ponta entre dispositivos
+- Sincronização opcional entre dispositivos por Wi-Fi ou Bluetooth, com criptografia de ponta a ponta entre dispositivos
 
 ### 5. **Tranquilidade**
 - Funcionalidade completa de backup e restauração

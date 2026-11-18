@@ -44,7 +44,7 @@ Caravella delivers value through several key benefits:
 ### 3. **Privacy & Security**
 - All data stored locally on device
 - No user accounts or registration required
-- Optional sync stays between your devices or your own Google Drive — never on our servers
+- Optional sync stays between your devices — never on our servers
 - Full control over data export and deletion
 - GDPR compliant
 
@@ -54,7 +54,7 @@ Caravella delivers value through several key benefits:
 - Multi-language interface (English, Italian, Spanish, Portuguese, Chinese)
 - Photo attachments for receipts and memories
 - Location tagging to remember expense context
-- Optional sync across devices via Wi-Fi, Bluetooth or your own Google Drive, end-to-end encrypted between devices
+- Optional sync across devices via Wi-Fi or Bluetooth, end-to-end encrypted between devices
 
 ### 5. **Peace of Mind**
 - Complete backup and restore functionality
