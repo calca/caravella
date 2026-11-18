@@ -2,16 +2,17 @@
 
 Manual non-regression pass run on the **release candidate's own APK**, the staging build from the `vX.Y.Z-rc.N` pre-release, before it goes to testers or to the stores. The unit and widget tests (`flutter test`, CI) catch logic regressions. This pass catches what they can't: the real build, real navigation, the system's dialogs, the keyboard, TalkBack and large text.
 
-Run it on an emulator, or on a phone that is not a personal one, since it clears the app's data. One pass takes about an hour. Record each step as **OK** or **KO** in the [report](#report) and attach a screenshot of every KO.
+Run it on an emulator, or on a phone that is not a personal one, since it clears the app's data. One pass takes about an hour and a half. Record each step as **OK** or **KO** in the [report](#report) and attach a screenshot of every KO.
 
 ## Setup
 
 ```bash
 DEV=emulator-5560                      # adb device to use
-APK=Caravella-2.5.0-rc.1-staging.apk   # from the pre-release's assets
+RC=v2.5.0-rc.13
+APK=io_caravella_egm-staging-2.5.0-rc.13.apk   # from the pre-release's assets
 PKG=io.caravella.egm.staging
 
-gh release download v2.5.0-rc.1 -R calca/caravella -p '*.apk' -D /tmp/rc
+gh release download $RC -R calca/caravella -p '*.apk' -D /tmp/rc
 adb -s $DEV install -r /tmp/rc/$APK
 adb -s $DEV shell pm clear $PKG        # fresh start: no groups, no settings
 adb -s $DEV shell settings put system font_scale 1.0
@@ -22,13 +23,38 @@ Screenshots: `adb -s $DEV exec-out screencap -p > shot.png`. They come out **bla
 
 Without screenshots you can still read the screen: `adb -s $DEV shell uiautomator dump` lists every element with its label and bounds, which is how `nrt_a11y_check.sh` works.
 
+## 0. Upgrade from the last release
+
+Run this first, before the fresh install of the setup: it is the only step that tests the database upgrade on real data. The last release's APK on GitHub is the prod build, signed with the release key, and the rc is a staging build, so one can't be installed over the other. Build both from their tags with the same local (debug) key instead, each with the Flutter version its CI pinned:
+
+```bash
+git worktree add /tmp/old v2.4.4 && git worktree add /tmp/new $RC
+(cd /tmp/old && flutter pub get && flutter build apk --flavor staging --debug --dart-define=FLAVOR=staging)  # Flutter 3.47.6
+(cd /tmp/new && flutter pub get && flutter build apk --flavor staging --debug --dart-define=FLAVOR=staging)  # Flutter 3.50.0
+adb -s $DEV uninstall $PKG
+adb -s $DEV install /tmp/old/build/app/outputs/flutter-apk/app-staging-debug.apk
+```
+
+| # | Step | Expected |
+|---|---|---|
+| 0.1 | On the old version: two groups (one with a photo, one with a colour), four people, ten expenses with a place, a note and attachments; delete a third group; archive one; make a backup (2.4 has no payments to tick yet). To fill it quickly, restore a 2.4-format backup (a JSON list of groups) and copy the photos into the app's files with `run-as` (the debug build allows it) | All saved |
+| 0.2 | `adb -s $DEV install -r /tmp/new/build/app/outputs/flutter-apk/app-staging-debug.apk`, then open the app | No crash, no empty Home. Every group, expense, attachment (each once, not repeated) and payment is there, the archived group is still archived, the deleted one doesn't come back. The totals and balances are the same as before the upgrade |
+| 0.3 | Edit an expense and a group, then force-stop and reopen | The changes are kept |
+| 0.4 | Restore the 2.4 backup made in 0.1 | It is restored |
+
+Then uninstall and go on with the rc's own APK, as in the setup.
+
 ## 1. First start and Home
 
 | # | Step | Expected |
 |---|---|---|
 | 1.1 | Open the app on a fresh install | Onboarding, then the empty Home with "create a group". No crash, no permission prompt at start |
-| 1.2 | Create a first group from Home | The wizard opens (see 2.1). Back on Home, the group's card shows its total, today, the wave chart and recent expenses |
+| 1.2 | Create a first group from Home | The wizard opens (see 2.1). Back on Home, the group's card shows its type, title and dates, then Total \| Today, and the recent expenses below. No wave chart |
 | 1.3 | Home shortcuts: Scan (Play) or Photo (F-Droid), Voice, Map, Search | Each one opens. Deny the camera or microphone once: a dialog with **Open settings**, not a toast |
+| 1.4 | Force-stop and open the app again (cold start), in light and in dark | The launch screen has Home's background and the icon, not the teal one; the icon shrinks into Home and its greeting, card and shortcuts rise in one after the other. Home never shows empty first |
+| 1.5 | Phone in dark mode, Caravella in light (Settings › Theme), open Home, go to the launcher, come back. Then the opposite | No dark (or light) frame before Home. Android 12+ only: below it the system's theme may show for a moment |
+| 1.6 | Developer options › animations off, cold start | Home just appears, with no animation |
+| 1.7 | Tap a recent expense on Home | The group page opens with that expense open; back lands on the group |
 
 ## 2. Groups
 
@@ -39,6 +65,9 @@ Without screenshots you can still read the screen: `adb -s $DEV shell uiautomato
 | 2.3 | General with an empty name, then back | Back is blocked, the field is focused and a toast explains why |
 | 2.4 | Archive the group, find it in Groups › Archived, unarchive it | It moves between the tabs. Home no longer shows it while archived |
 | 2.5 | Delete a group | Confirmation, then it is gone from Groups and Home |
+| 2.6 | Cards: a group with a colour, one with none, one with a light photo and one with a dark photo, in both themes | Each card is in a tint of its colour (grey without one) with readable text and the type's icon faint in the corner; under a photo the card takes the photo's tone and the photo fades in over it, never popping in |
+| 2.7 | Groups tab with five or more groups, one of them the favorite | A grid of same-size tiles, most recent activity first; the favorite has a heart on its chip and no wide card on top |
+| 2.8 | Open a group | No spinner or dot in the middle of the screen before the page |
 
 ## 3. Expenses
 
@@ -46,11 +75,16 @@ Without screenshots you can still read the screen: `adb -s $DEV shell uiautomato
 |---|---|---|
 | 3.1 | Quick sheet: amount, description, paid by, category, Add | Saved. Totals, Today and the list update |
 | 3.2 | Quick sheet, then **More details** | The full page opens with what was typed, and the keyboard stays down |
-| 3.3 | Full form: date, place (search and current location), note, two attachments | All saved and shown when the expense is reopened |
-| 3.4 | Edit an expense: change the amount and payer | The list and balances update |
-| 3.5 | Delete an expense | Confirmation, then it is gone, and the totals drop |
-| 3.6 | Search from the group and from Home | Matches are highlighted and tapping one opens the expense |
-| 3.7 | Voice: "20 euro coffee", then "20 euro" alone | The first is saved. The second opens the form to add the name, and nothing is lost |
+| 3.3 | Full form: date, place, note, two attachments (photo and file) | All saved and shown, each attachment once, when the expense is reopened |
+| 3.4 | Open an expense | The top reads like the expense: group · date on a small line, the description as the title, the amount large with its currency after ("42 €"), then "Paid by … · … per person". No "Edit expense" title. Save is grey |
+| 3.5 | Change the amount and payer, Save | Save turns on at the first change. The list and balances update |
+| 3.6 | ⋯ menu: Share, then Delete expense | Share opens the system sheet. Delete asks for confirmation, then the expense is gone and the totals drop |
+| 3.7 | Search from the group and from Home | Matches are highlighted and tapping one opens the expense |
+| 3.8 | Voice: "20 euro coffee", then "20 euro" alone | The first is saved. The second opens the form to add the name, and nothing is lost |
+| 3.9 | Place, with the location allowed (first time: allow it at the prompt) | The map opens on your position with a blue dot and that spot already picked ("You are here" and the address): one tap on Confirm saves it |
+| 3.10 | Place, with the location denied or off | The map opens and says the position couldn't be found; tapping the map or searching still works |
+| 3.11 | Search a place that doesn't exist ("zzqx") | A card "No places found for …" with a hint, not an empty map |
+| 3.12 | Airplane mode, search a place | After about 10 seconds a calm card with Try again, no red text on the map. Back online, Try again finds it |
 
 ## 4. Second currency (2.5)
 
@@ -70,7 +104,7 @@ Without screenshots you can still read the screen: `adb -s $DEV shell uiautomato
 |---|---|---|
 | 5.1 | Settings › Budget: try each period (in total, monthly, weekly, daily), set 150 a day | The row shows the budget. A trip starts on "In total" |
 | 5.2 | Group page header; Statistics | The header shows Total \| Today only, no ring. In Statistics, under the pace card, a Budget card like the map one: "150.00 € a day · on track" |
-| 5.3 | Tap the Budget card | The budget sheet: title with the budget, what's left of the period, its bar with "today" on the marker, one line on today and the average per day. Over the budget: amber figure and "The budget for … has run out", no 0.00 € lines. Monthly, weekly and daily budgets also show the three periods before |
+| 5.3 | Tap the Budget card | The budget sheet: title with the budget, what's left of the period, its bar with "today" on the marker, one line on today and the average per day. Over the budget: amber figure and "The budget for … has run out", no 0.00 € lines. A daily budget has no line on today (its period is today). Monthly, weekly and daily budgets also show the three periods before, once there are some |
 | 5.4 | Spend over today's share | The card says "a bit above plan", no colors; the sheet says how much over |
 | 5.5 | Remove the budget | The card says "Not set"; tapping it sets a budget again |
 
@@ -97,13 +131,18 @@ Without screenshots you can still read the screen: `adb -s $DEV shell uiautomato
 | 8.3 | What's new | The current version's notes, in the app's language |
 | 8.4 | Backup, then delete a group, then restore the backup | The group is back with its expenses, payments, budget and second currency |
 | 8.5 | Check for updates (Play build) | No crash. An available update shows no version line |
+| 8.6 | Predictive back: drag slowly from the left edge on the group page, the expense form and Settings, then let go or drag back | The page underneath shows as the current one shrinks; letting go goes back, dragging back stays. A group without a name and an expense with unsaved changes still hold you back |
+| 8.7 | Sheets: General › Currency › the list, Background › Color, Budget › Change budget; an attachment's sources; voice in the expense sheet | Each opens inside the same sheet (a second screen with a back arrow, or in place), never a sheet on top of another. Every sheet opens and closes with the same gentle motion |
 
 ## 9. Sync
 
 | # | Step | Expected |
 |---|---|---|
 | 9.1 | Sync with others › Join a group: deny the camera | "Allow the camera?" opens once with Open settings. The panel keeps an Open settings button and the prompt doesn't loop |
-| 9.2 | With a second device or emulator: invite, join over Wi-Fi, add an expense on each, sync | Both sides show both expenses. A deleted group stays deleted |
+| 9.2 | With a second device or emulator: invite, join over Wi-Fi, add an expense on each **before** syncing, then sync | Both sides show both expenses, none is lost. An expense deleted on one side stays deleted on both. A deleted group stays deleted |
+| 9.3 | Shared group page | A round sync button next to search; after a failed exchange it shows "!" in amber |
+| 9.4 | Wi-Fi sync with a phone still on 2.4.x | 2.4.1 and later refuse with "update Caravella on both devices"; a 2.4.0 phone doesn't erase this phone's payments |
+| 9.5 | Google Drive (Play build, two devices on the same account): Settings › Sync › Sync devices on both, add an expense on each, Sync now | "Sync now" says what was received and sent; both devices show all the groups and both expenses, with no "shared with you" welcome. Photos stay on the device they were added on |
 
 ## 10. Accessibility
 
@@ -124,6 +163,15 @@ Then the manual part, on the device:
 | 10.4 | TalkBack (on a device that has it: Settings › Accessibility › TalkBack), swipe through the group page and the expense form | Each element is read in a sensible order with a meaningful label: the Today card reads the budget, an expense row reads its receipt amount, and the "in kr" link reads "Type the amount in kr" |
 | 10.5 | Navigate with a keyboard (`adb shell input keyevent 61` = Tab) through the expense form | Focus moves in reading order and is visible |
 
+## 11. Builds and devices
+
+| # | Step | Expected |
+|---|---|---|
+| 11.1 | Run the main steps (1, 3.1, 3.4, 6.2) on an Android 14 and an Android 16 emulator, and on a real phone | Same results everywhere |
+| 11.2 | Android 10 or 11 (minSdk is 29): cold start and resume | The launch screen shows and Home opens; a moment in the system's theme on resume is expected there |
+| 11.3 | F-Droid build (`./build_variant.sh foss`, then a release build): install, cold start, add an expense with a photo | It starts; Photo instead of Scan on Home; no Google sign-in, Drive or Nearby anywhere |
+| 11.4 | Android 16+: Settings › Privacy › the App Functions toggle on and off, checking `adb -s $DEV shell dumpsys app_function \| grep -A3 caravella` | The functions (add an expense, list groups, totals, recent expenses) are listed and enabled only while the toggle is on. Gemini itself calls them only once Caravella is enrolled in Google's programme |
+
 ## Report
 
 Copy this table into the rc's PR or issue and fill it in:
@@ -132,6 +180,7 @@ Copy this table into the rc's PR or issue and fill it in:
 NRT vX.Y.Z-rc.N — device, Android version, date
 | Section | Result | Notes |
 |---|---|---|
+| 0 Upgrade from 2.4 | | |
 | 1 Home | | |
 | 2 Groups | | |
 | 3 Expenses | | |
@@ -142,6 +191,7 @@ NRT vX.Y.Z-rc.N — device, Android version, date
 | 8 Settings | | |
 | 9 Sync | | |
 | 10 Accessibility | | |
+| 11 Builds and devices | | |
 ```
 
 Add a row to the right section above whenever a release adds a feature worth checking by hand, and remove rows for features that are gone.
