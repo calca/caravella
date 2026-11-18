@@ -3113,4 +3113,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return 'Paid $amount in all · $received received';
   }
+
+  @override
+  String get whats_new_all_versions => 'All versions';
+
+  @override
+  String get whats_new_all_versions_desc => 'On the Caravella website';
 }

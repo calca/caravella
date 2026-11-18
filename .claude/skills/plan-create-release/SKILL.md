@@ -51,6 +51,8 @@ Aggiorna i file markdown in `assets/docs/` per mostrare le novità nella pagina 
 - `assets/docs/CHANGELOG_pt.md` (Portuguese)
 - `assets/docs/CHANGELOG_zh.md` (Chinese)
 
+**Solo le ultime 2 versioni minori**: aggiungendo una X.Y.0, togli dai 5 file la versione minore più vecchia (es. con la 2.6.0 restano 2.6.x e 2.5.x; la 2.4.x va via). La storia completa è sul sito (`duea.page/caravella/changelog`), linkato in fondo alla pagina. `test/whats_new_page_test.dart` fallisce se i file ne tengono di più.
+
 **Formato**: Segui lo stile Keep a Changelog
 ```markdown
 # Changelog
@@ -261,7 +263,7 @@ Vedi `docs/CI_PIPELINES.md`.
 - [ ] Tutti i numeri versione corrispondono tra tutti i file
 - [ ] CHANGELOG.md principale formattato correttamente con link
 - [ ] README.md aggiornato con highlights user-friendly
-- [ ] Tutti i CHANGELOG localizzati (assets/docs) aggiornati
+- [ ] Tutti i CHANGELOG localizzati (assets/docs) aggiornati, con solo le ultime 2 versioni minori
 - [ ] Changelog Fastlane per F-Droid creati per tutti i locale (fastlane/metadata/android)
 - [ ] Release notes XML create per tutti i locale store
 - [ ] Store metadata rivisti e aggiornati se necessario

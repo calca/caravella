@@ -4,11 +4,16 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../update/app_update_localizations.dart';
 
+/// The app ships only the last two minor versions' notes; the full history
+/// is on the website (English only).
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});
+
+  static const allVersionsUrl = 'https://duea.page/caravella/changelog/';
 
   @override
   State<WhatsNewPage> createState() => _WhatsNewPageState();
@@ -133,7 +138,43 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
           ),
         ],
       ),
+      SettingsGroup(
+        children: [
+          SettingsTile(
+            icon: Icons.history_rounded,
+            title: loc.whats_new_all_versions,
+            subtitle: loc.whats_new_all_versions_desc,
+            onTap: _openAllVersions,
+            trailing: Icon(
+              Icons.open_in_new_rounded,
+              size: 18,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
     ];
+  }
+
+  Future<void> _openAllVersions() async {
+    try {
+      await launchUrl(
+        Uri.parse(WhatsNewPage.allVersionsUrl),
+        mode: LaunchMode.platformDefault,
+      );
+    } catch (e) {
+      LoggerService.error(
+        'Could not open the version history',
+        name: 'settings.whats_new',
+        error: e,
+      );
+      if (!mounted) return;
+      AppToast.show(
+        context,
+        gen.AppLocalizations.of(context).developer_link_error,
+        type: ToastType.error,
+      );
+    }
   }
 
   Widget _buildMarkdownContent(ThemeData theme) {
