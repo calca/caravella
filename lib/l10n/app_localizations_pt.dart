@@ -3121,4 +3121,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return 'Pagou $amount no total · recebeu $received';
   }
+
+  @override
+  String get whats_new_all_versions => 'Todas as versões';
+
+  @override
+  String get whats_new_all_versions_desc => 'No site do Caravella, em inglês';
 }

@@ -3020,4 +3020,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String balance_paid_and_received(String amount, String received) {
     return '共支付 $amount · 已收到 $received';
   }
+
+  @override
+  String get whats_new_all_versions => '所有版本';
+
+  @override
+  String get whats_new_all_versions_desc => '在 Caravella 网站上（英文）';
 }

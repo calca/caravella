@@ -5597,6 +5597,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Paid {amount} in all · {received} received'**
   String balance_paid_and_received(String amount, String received);
+
+  /// Row at the bottom of What's new that opens the full version history on the website
+  ///
+  /// In en, this message translates to:
+  /// **'All versions'**
+  String get whats_new_all_versions;
+
+  /// Subtitle of the All versions row: where it opens (the website page is in English only)
+  ///
+  /// In en, this message translates to:
+  /// **'On the Caravella website'**
+  String get whats_new_all_versions_desc;
 }
 
 class _AppLocalizationsDelegate

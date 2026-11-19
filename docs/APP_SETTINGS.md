@@ -33,7 +33,7 @@ These templates plug into the group-type selector during group creation — see 
 
 ## What's New
 
-`whats_new_page.dart` (`WhatsNewPage`) loads a locale-specific changelog asset (`assets/docs/CHANGELOG_<lang>.md`, falling back to English) and renders it with `gpt_markdown`. On Android, in Play builds, also embeds the manual "check for updates" card (`GmsIntegrations.instance.appUpdates?.buildUpdateCheckWidget`, i.e. `UpdateCheckWidget` from `play_store_updates`); the F-Droid build has no `appUpdates` and shows no card — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) and [caravella_gms](PACKAGE_CARAVELLA_GMS.md).
+`whats_new_page.dart` (`WhatsNewPage`) loads a locale-specific changelog asset (`assets/docs/CHANGELOG_<lang>.md`, falling back to English) and renders it with `gpt_markdown`. The assets hold only the last two minor versions (e.g. 2.5.x and 2.4.x, patches included; `test/whats_new_page_test.dart` fails otherwise); an **All versions** row at the bottom opens the full history on the website (`WhatsNewPage.allVersionsUrl`, English only). On Android, in Play builds, also embeds the manual "check for updates" card (`GmsIntegrations.instance.appUpdates?.buildUpdateCheckWidget`, i.e. `UpdateCheckWidget` from `play_store_updates`); the F-Droid build has no `appUpdates` and shows no card — see [play_store_updates package](PACKAGE_PLAY_STORE_UPDATES.md) and [caravella_gms](PACKAGE_CARAVELLA_GMS.md).
 
 ## Update localization adapter
 
