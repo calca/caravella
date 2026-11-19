@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
+import '../main/app_initialization.dart';
 import '../main/app_shell.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   bool _dataLoaded = false;
   ExpenseGroupNotifier? _groupNotifier;
   bool _updateCheckPerformed = false;
+  bool _photosWarmed = false;
   bool _whatsNewChecked = false;
   // Start with null to indicate "unknown" state - prevents showing welcome page
   // before we've verified if groups exist. Only set to true/false after data load.
@@ -190,6 +192,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _switchDuration = const Duration(milliseconds: 350);
       StartupSplash.homeReady();
+      // Once Home is on screen: the group photos' decoding and tones, in
+      // the background.
+      if (!_photosWarmed) {
+        _photosWarmed = true;
+        AppInitialization.warmPhotoTones();
+      }
     });
 
     unawaited(_checkWhatsNew(hasGroups));

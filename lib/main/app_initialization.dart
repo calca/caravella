@@ -169,12 +169,14 @@ class AppInitialization {
     PhotoTone.seed(PreferencesService.instance.theme.getPhotoTones());
     PhotoTone.onChanged = PreferencesService.instance.theme.setPhotoTones;
     await initStorage();
-    warmPhotoTones();
+    // warmPhotoTones() runs once Home has drawn its first frame (HomePage):
+    // here it read every group alongside Home's own load.
     scheduleWeeklyDriveBackup();
   }
 
   /// Tones are measured when a photo is set; this catches the photos set
   /// before that (once each) and forgets unused ones, in the background.
+  /// Started by Home after its first frame, so it doesn't compete with it.
   static void warmPhotoTones() {
     unawaited(() async {
       try {

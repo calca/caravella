@@ -46,6 +46,7 @@ Entry point `lib/main.dart`:
    - `configureSystemUI()` / `configureImageCache()`
    - `initFlagSecure()` — applies the FLAG_SECURE preference via `flag_secure`
    - `initStorage()` — picks the JSON or SQLite repository backend and runs the one-time migration if needed (see [Storage Backend](STORAGE_BACKEND.md))
+   - nothing here reads the groups: the photo warm-up (`warmPhotoTones`) starts after Home's first frame, the shortcuts are refreshed by Home once its groups are loaded
 4. `ShortcutsInitialization.initialize()` (`lib/home/services/shortcuts_initialization.dart`) — wires Android App Shortcuts and home-screen-widget tap handling.
 5. `AppFunctionsInitialization.initialize()` (`lib/home/services/app_functions_initialization.dart`) — registers the Android App Functions "add expense" callback (see [android_app_functions](PACKAGE_ANDROID_APP_FUNCTIONS.md)).
 6. `runApp(const CaravellaApp())`.

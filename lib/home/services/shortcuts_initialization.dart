@@ -21,9 +21,9 @@ class ShortcutsInitialization {
       ShortcutsNavigationService.handleShortcutTap,
     );
     await PlatformHomeWidgetManager.initializeTapHandling(_handleHomeWidgetTap);
-
-    // Update shortcuts with current data
-    await PlatformShortcutsManager.updateShortcuts();
+    // The shortcuts themselves are refreshed by Home once its groups are
+    // loaded: doing it here read every group and waited for Android before
+    // the first frame.
   }
 
   /// Navigate to the group detail page (UI implementation)
