@@ -7,6 +7,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/group_type/group_type_localization.dart';
 import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
+import 'package:io_caravella_egm/manager/group/widgets/group_currency_sheet.dart';
 import 'package:io_caravella_egm/manager/group/wizard/wizard_group_preview.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -200,6 +201,30 @@ void main() {
     await tester.pump();
     expect(find.text(l10n.background), findsNothing);
     expect(find.text(l10n.color), findsOneWidget);
+  });
+
+  testWidgets('the currency pill opens the group settings sheet', (
+    tester,
+  ) async {
+    final l10n = await open(tester);
+    await next(tester, l10n);
+
+    final pill = find.textContaining('Euro');
+    await tester.ensureVisible(pill);
+    await tester.pumpAndSettle();
+    await tester.tap(pill);
+    await tester.pumpAndSettle();
+    // The same sheet as General › Currency, with the second currency.
+    expect(find.byType(GroupCurrencySheet), findsOneWidget);
+
+    await tester.tapAt(const Offset(200, 50)); // outside the sheet
+    await tester.pumpAndSettle();
+    form(tester).setCurrencies(
+      form(tester).currency,
+      const SecondCurrency(code: 'NOK', symbol: 'kr', rate: 11.63),
+    );
+    await tester.pump();
+    expect(find.text('Euro · kr'), findsOneWidget);
   });
 
   testWidgets('the keyboard never hides the dates, currency and background', (
