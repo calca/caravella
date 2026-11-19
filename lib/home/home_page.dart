@@ -9,6 +9,8 @@ import '../main/route_observer.dart';
 import '../main/startup_splash.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../settings/update/app_update_localizations.dart';
+import '../settings/pages/whats_new_page.dart';
+import '../settings/whats_new_status.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 
@@ -24,6 +26,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   bool _dataLoaded = false;
   ExpenseGroupNotifier? _groupNotifier;
   bool _updateCheckPerformed = false;
+  bool _whatsNewChecked = false;
   // Start with null to indicate "unknown" state - prevents showing welcome page
   // before we've verified if groups exist. Only set to true/false after data load.
   bool? _isFirstStart;
@@ -189,10 +192,33 @@ class _HomePageState extends State<HomePage> with RouteAware {
       StartupSplash.homeReady();
     });
 
+    unawaited(_checkWhatsNew(hasGroups));
+
     // Update shortcuts after data is loaded
     PlatformShortcutsManager.updateShortcuts();
     // Refresh home widgets so they always display current data on each load.
     unawaited(PlatformHomeWidgetManager.updateHomeWidgets());
+  }
+
+  /// Once per session: on the first start after an update to a new
+  /// release, a toast says so with "What's new"; the dot on the settings
+  /// button stays until the news is opened.
+  Future<void> _checkWhatsNew(bool hasGroups) async {
+    if (_whatsNewChecked) return;
+    _whatsNewChecked = true;
+    final release = await WhatsNewStatus.check(hasData: hasGroups);
+    if (release == null || !mounted) return;
+    final loc = gen.AppLocalizations.of(context);
+    AppToast.show(
+      context,
+      loc.whats_new_updated_to(release),
+      type: ToastType.success,
+      duration: AppToast.actionDuration,
+      actionLabel: loc.whats_new_title,
+      onAction: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const WhatsNewPage())),
+    );
   }
 
   Future<void> _performUpdateCheckIfNeeded() async {
