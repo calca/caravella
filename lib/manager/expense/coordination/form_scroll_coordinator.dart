@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 
@@ -13,63 +16,65 @@ class FormScrollCoordinator {
   }) : _scrollController = scrollController,
        _context = context;
 
-  /// Scrolls to make the specified field key visible
-  /// Takes into account keyboard height and desired margins
+  /// Scrolls so the whole field is visible: above the keyboard and above
+  /// whatever sits under the scrolling area (the expense page's Save bar,
+  /// which rises with the keyboard), and below the top. A tall field (the
+  /// note, four lines at least) is shown from its top when it can't fit.
+  /// Runs again once the keyboard has finished rising.
   void scrollToField(GlobalKey? fieldKey) {
+    if (fieldKey == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _reveal(fieldKey));
+    // The keyboard takes about 300 ms to rise: check again when it's up.
+    _again?.cancel();
+    _again = Timer(const Duration(milliseconds: 350), () => _reveal(fieldKey));
+  }
+
+  Timer? _again;
+
+  /// The form is gone: no check pending.
+  void dispose() => _again?.cancel();
+
+  void _reveal(GlobalKey fieldKey) {
     final controller = _scrollController;
-    if (controller == null || !controller.hasClients || fieldKey == null) {
-      return;
-    }
+    if (controller == null || !controller.hasClients) return;
+    final ctx = fieldKey.currentContext;
+    if (ctx == null || !_context.mounted) return;
+    try {
+      final field = ctx.findRenderObject() as RenderBox?;
+      final scrollable = Scrollable.maybeOf(ctx);
+      final viewport = scrollable?.context.findRenderObject() as RenderBox?;
+      if (field == null || !field.attached || viewport == null) return;
 
-    // Delay to allow layout & keyboard metrics update
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!controller.hasClients) return;
+      // The visible part of the scrolling area, on screen.
+      final viewTop = viewport.localToGlobal(Offset.zero).dy;
+      final keyboardTop =
+          MediaQuery.sizeOf(_context).height -
+          MediaQuery.viewInsetsOf(_context).bottom;
+      final viewBottom = math.min(viewTop + viewport.size.height, keyboardTop);
+      const margin = 12.0;
+      final top = field.localToGlobal(Offset.zero).dy;
+      final bottom = top + field.size.height;
 
-      final ctx = fieldKey.currentContext;
-      if (ctx == null) return;
+      double delta = 0;
+      if (bottom > viewBottom - margin) delta = bottom - (viewBottom - margin);
+      // Never past its top: a field taller than the room shows its start.
+      if (top - delta < viewTop + margin) delta = top - (viewTop + margin);
+      if (delta.abs() < 2) return;
 
-      try {
-        final renderBox = ctx.findRenderObject() as RenderBox?;
-        if (renderBox == null) return;
-
-        final keyboardHeight = MediaQuery.of(_context).viewInsets.bottom;
-        final fieldTop = renderBox.localToGlobal(Offset.zero).dy;
-        final fieldHeight = renderBox.size.height;
-        final fieldBottom = fieldTop + fieldHeight;
-        final screenHeight = MediaQuery.of(_context).size.height;
-        final availableBottom = screenHeight - keyboardHeight - 12;
-
-        double scrollDelta = 0;
-
-        // If bottom obscured by keyboard -> scroll down
-        if (keyboardHeight > 0 && fieldBottom > availableBottom) {
-          scrollDelta = fieldBottom - availableBottom + 8;
-        }
-
-        // If top too high -> scroll up
-        const topMargin = 24.0;
-        if (fieldTop < topMargin) {
-          scrollDelta = fieldTop - topMargin;
-        }
-
-        if (scrollDelta.abs() > 4) {
-          final target = (controller.offset + scrollDelta).clamp(
-            0.0,
-            controller.position.maxScrollExtent,
-          );
-
-          if ((target - controller.offset).abs() > 2) {
-            controller.animateTo(
-              target,
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInOut,
-            );
-          }
-        }
-      } catch (e) {
-        LoggerService.warning('Scroll adjust error', name: 'ui.scroll');
+      final target = (controller.offset + delta).clamp(
+        0.0,
+        controller.position.maxScrollExtent,
+      );
+      if ((target - controller.offset).abs() > 2) {
+        controller.animateTo(
+          target,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+        );
       }
-    });
+    } catch (e) {
+      LoggerService.warning('Scroll adjust error: $e', name: 'ui.scroll');
+    }
   }
 
   /// Determines which field currently has focus and scrolls to it

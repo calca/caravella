@@ -117,6 +117,7 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
+    _scrollCoordinator?.dispose();
     _scrollCoordinator = null;
     _isInitialized = false;
   }

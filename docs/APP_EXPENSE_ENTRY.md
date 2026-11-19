@@ -51,7 +51,7 @@ See the dedicated page: **[Location & Maps](LOCATION_AND_MAPS.md)** for the full
 
 ## Scroll coordination
 
-`coordination/form_scroll_coordinator.dart` (`FormScrollCoordinator`) computes whether a field's rect is obscured by the keyboard or too near the top, and `animateTo` an adjusted scroll offset. `coordination/keyboard_aware_scroll_mixin.dart` (`KeyboardAwareScrollMixin`) is a `WidgetsBindingObserver` mixin watching `didChangeMetrics()` for keyboard height changes, invoking an overridable `scrollToFocusedField()` hook.
+`coordination/form_scroll_coordinator.dart` (`FormScrollCoordinator`) scrolls a focused field fully into view: it compares the field with the visible part of its scrolling area on screen (the viewport's bottom, so the expense page's Save bar that rises with the keyboard counts, capped by the keyboard's top) and the top, and `animateTo`s the difference; a field taller than the room shows its top. It runs after the frame and again 350 ms later, when the keyboard has risen. Both the quick sheet and the full expense page (`ExpenseFormPage` passes its `ScrollController` as `scrollController`) use it. `coordination/keyboard_aware_scroll_mixin.dart` (`KeyboardAwareScrollMixin`) is a `WidgetsBindingObserver` mixin watching `didChangeMetrics()` for keyboard height changes, invoking an overridable `scrollToFocusedField()` hook.
 
 ## See also
 
