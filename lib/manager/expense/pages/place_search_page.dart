@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -38,7 +40,20 @@ class PlaceSearchPage extends StatefulWidget {
 
 class _PlaceSearchPageState extends State<PlaceSearchPage> {
   late final PlaceSearchController _controller;
-  final MapTileStatus _tileStatus = MapTileStatus();
+  // Created with the map, so its "slow" message doesn't count the time
+  // spent finding the position.
+  MapTileStatus? _tileStatusOrNull;
+  MapTileStatus get _tileStatus => _tileStatusOrNull ??= MapTileStatus();
+
+  static const _cardHeight = 200.0;
+
+  /// The map is built once, on where it should open: the place already set,
+  /// or the phone's position once found. Built on a default spot and moved
+  /// there, it loaded two sets of tiles and showed the first in pieces.
+  late bool _showMap;
+  bool _locating = false;
+  bool _shownBeforeFix = false;
+  Timer? _mapWait;
 
   @override
   void initState() {
@@ -50,6 +65,7 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
         : PlaceSearchState.initial();
 
     _controller = PlaceSearchController(initialState: initialState);
+    _showMap = widget.initialPlace != null;
     _controller.addListener(_onStateChanged);
     // The selection card hides while typing a search.
     _controller.searchFocusNode.addListener(_onStateChanged);
@@ -58,13 +74,21 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
 
-      if (widget.initialPlace != null) {
-        _centerAboveCard();
-      } else {
+      if (widget.initialPlace == null) {
         // Opens on where the phone is, already picked: one tap on Confirm.
-        // No keyboard on top of it; the search is a tap away.
+        // No keyboard on top of it; the search is a tap away. A fix that
+        // takes long doesn't keep the map away: it opens on the default
+        // spot and moves when the fix comes.
+        _locating = true;
+        _mapWait = Timer(const Duration(seconds: 3), () {
+          if (!mounted || _showMap) return;
+          _shownBeforeFix = true;
+          setState(() => _showMap = true);
+        });
         _controller.loadUserLocation(context).then((_) {
-          if (mounted && _controller.state.hasSelectedLocation) {
+          if (mounted &&
+              _shownBeforeFix &&
+              _controller.state.hasSelectedLocation) {
             _centerAboveCard();
           }
         });
@@ -73,14 +97,34 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
   }
 
   void _onStateChanged() {
-    if (mounted) {
-      setState(() {});
+    if (!mounted) return;
+    final state = _controller.state;
+    // The fix came, or there is none, or a search result was picked.
+    if (!_showMap &&
+        _locating &&
+        (!state.isLocating || state.hasSelectedLocation)) {
+      _mapWait?.cancel();
+      _showMap = true;
     }
+    setState(() {});
+  }
+
+  /// Where the map opens: the selected point above the card, else the
+  /// default spot.
+  LatLng _initialCenter() {
+    final selected = _controller.state.selectedMapLocation;
+    if (selected == null) return _controller.state.mapCenter;
+    return PlaceSearchController.aboveCard(
+      selected,
+      _cardHeight,
+      MediaQuery.sizeOf(context).height,
+    );
   }
 
   @override
   void dispose() {
-    _tileStatus.dispose();
+    _mapWait?.cancel();
+    _tileStatusOrNull?.dispose();
     _controller.removeListener(_onStateChanged);
     _controller.searchFocusNode.removeListener(_onStateChanged);
     _controller.dispose();
@@ -100,13 +144,18 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
       child: Scaffold(
         body: Stack(
           children: [
-            Positioned.fill(child: _buildFullScreenMap(colorScheme)),
             Positioned.fill(
-              child: MapLoadingOverlay(
-                status: _tileStatus,
-                message: gloc.map_loading,
-              ),
+              child: _showMap
+                  ? _buildFullScreenMap(colorScheme)
+                  : ColoredBox(color: colorScheme.surface),
             ),
+            if (_showMap)
+              Positioned.fill(
+                child: MapLoadingOverlay(
+                  status: _tileStatus,
+                  message: gloc.map_loading,
+                ),
+              ),
             Positioned(
               top: topInset + 8,
               left: 16,
@@ -127,12 +176,13 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
                   if (_controller.state.hasSearchResults &&
                       _controller.searchController.text.isNotEmpty)
                     _buildAutocompleteResults(theme, colorScheme),
-                  MapUnavailableCard(
-                    status: _tileStatus,
-                    title: gloc.map_unavailable_title,
-                    message: gloc.map_unavailable_place_message,
-                    retryLabel: gloc.map_retry,
-                  ),
+                  if (_showMap)
+                    MapUnavailableCard(
+                      status: _tileStatus,
+                      title: gloc.map_unavailable_title,
+                      message: gloc.map_unavailable_place_message,
+                      retryLabel: gloc.map_retry,
+                    ),
                   if (_messageCard(gloc) case final message?)
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
@@ -271,8 +321,9 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
       semanticLabel: gen.AppLocalizations.of(context).location,
       tileStatus: _tileStatus,
       mapController: _controller.mapController,
-      initialCenter: _controller.state.mapCenter,
+      initialCenter: _initialCenter(),
       initialZoom: _controller.state.mapZoom,
+      onMapReady: () => _controller.mapReady = true,
       minZoom: 3.0,
       maxZoom: 18.0,
       onTap: (tapPosition, point) {
@@ -412,9 +463,8 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
   void _centerAboveCard() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      const cardHeight = 200.0;
       _controller.adjustMapCenterForBottomSheet(
-        cardHeight,
+        _cardHeight,
         MediaQuery.of(context).size.height,
       );
     });
