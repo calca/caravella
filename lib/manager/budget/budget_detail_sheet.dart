@@ -71,18 +71,20 @@ class _BudgetDetailHostState extends State<_BudgetDetailHost> {
       BudgetDetailSheet(group: _group, onChange: _change);
 }
 
-/// The budget, top to bottom as one story: the title with the budget
-/// ("600 € a month"), what is left of the current period (or how far over
-/// it), its bar with today marked on it, a line on today, the periods
-/// before and "Change budget". A daily budget's period is today, so it has
-/// no line on today.
+/// The budget, top to bottom as one answer to "will it last?": the title
+/// with the budget and its period ("600 € a month · November") and a pencil
+/// to change it; what is left of the current period (or how far over it),
+/// its bar with today marked on it, what was spent and the days left; how
+/// much a day keeps it within the budget against the pace so far, with a
+/// forecast of the day it runs out (or, spent, when it starts again); the
+/// periods before. A daily budget's period is today: no pace.
 class BudgetDetailSheet extends StatelessWidget {
   final ExpenseGroup group;
 
   /// "Today" for the figures; now when null (tests set it).
   final DateTime? today;
 
-  /// "Change budget"; closes the sheet with `true` when null.
+  /// The pencil; closes the sheet with `true` when null.
   final VoidCallback? onChange;
 
   const BudgetDetailSheet({
@@ -109,9 +111,12 @@ class BudgetDetailSheet extends StatelessWidget {
         CurrencyDisplay.formatLocalizedText(v, group.currency, locale);
     final budget = status.budget;
     final daily = budget.period == BudgetPeriod.daily;
-    final small = theme.textTheme.bodySmall?.copyWith(color: s.outline);
+    final small = theme.textTheme.bodySmall?.copyWith(
+      color: s.onSurfaceVariant,
+    );
     final caps = theme.textTheme.labelSmall?.copyWith(
-      color: s.outline,
+      color: s.onSurfaceVariant,
+      fontWeight: FontWeight.w600,
       letterSpacing: 0.7,
     );
 
@@ -122,27 +127,14 @@ class BudgetDetailSheet extends StatelessWidget {
       BudgetPeriod.daily => gloc.budget_rate_daily,
     }(money(budget.amount));
     final periodName = switch (budget.period) {
-      BudgetPeriod.total => gloc.budget_period_total,
-      BudgetPeriod.monthly => toBeginningOfSentenceCase(
-        DateFormat.MMMM(lang).format(status.start!),
-        lang,
-      ),
+      BudgetPeriod.total => null,
+      BudgetPeriod.monthly => DateFormat.MMMM(lang).format(status.start!),
       BudgetPeriod.weekly => formatDateRange(
         start: status.start,
         end: status.end,
         locale: locale,
       ),
-      BudgetPeriod.daily => gloc.budget_today_date(
-        DateFormat.MMMMEEEEd(lang).format(status.start!),
-      ),
-    };
-    final caption = switch ((status.dayNumber, status.dayCount)) {
-      (final d?, final c?) when !daily => gloc.budget_period_day(
-        periodName,
-        d,
-        c,
-      ),
-      _ => periodName,
+      BudgetPeriod.daily => gloc.today.toLowerCase(),
     };
     final spentPercent = (status.spent / budget.amount * 100).round();
     final elapsed = switch ((status.dayNumber, status.dayCount)) {
@@ -150,24 +142,28 @@ class BudgetDetailSheet extends StatelessWidget {
       _ => null,
     };
     final overPeriod = status.spent > budget.amount;
+    final daysLeft = daily ? null : status.daysLeft;
+
+    // Text written on the sheet sits 4 in from the cards (the grid: 20
+    // from the screen's edge, cards at 16).
+    Widget onSheet(Widget child) => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
+      child: child,
+    );
 
     return CaravellaBottomSheetScaffold(
       scrollable: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Text on the sheet at 20 (the grid), the card and button at 16.
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Expanded(
-                      child: Semantics(
+          Row(
+            children: [
+              Expanded(
+                child: onSheet(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Semantics(
                         header: true,
                         child: Text(
                           gloc.budget,
@@ -176,35 +172,33 @@ class BudgetDetailSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      rate,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: s.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                      const SizedBox(height: AppSpacing.xxs),
+                      Text([rate, ?periodName].join(' · '), style: small),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                Text(caption, style: small),
-                const SizedBox(height: 2),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              IconButton.outlined(
+                tooltip: gloc.budget_change,
+                onPressed: onChange ?? () => Navigator.of(context).pop(true),
+                icon: const Icon(Icons.edit_outlined),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          onSheet(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
                 _Figure(
                   value: overPeriod ? status.overBy : status.remaining,
                   currency: group.currency,
-                  size: 30,
+                  size: 36,
                   after: overPeriod ? gloc.budget_over : gloc.budget_left,
                   color: overPeriod ? s.onBudgetOver : null,
                 ),
-                const SizedBox(height: 10),
-                if (elapsed != null)
-                  // "today" over the marker on the bar.
-                  ExcludeSemantics(
-                    child: Align(
-                      alignment: Alignment(elapsed * 2 - 1, 0),
-                      child: Text(gloc.today.toLowerCase(), style: small),
-                    ),
-                  ),
+                const SizedBox(height: AppSpacing.sm),
                 Semantics(
                   // Without a marker (a daily budget, a budget in total
                   // without dates) only the share spent: "0% of the period
@@ -221,42 +215,85 @@ class BudgetDetailSheet extends StatelessWidget {
                     marker: elapsed,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  gloc.budget_spent_of_share(
-                    money(status.spent),
-                    money(budget.amount),
-                  ),
-                  style: small,
+                const SizedBox(height: AppSpacing.xs),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        overPeriod
+                            ? gloc.budget_spent_of_share(
+                                money(status.spent),
+                                money(budget.amount),
+                              )
+                            : gloc.budget_spent(money(status.spent)),
+                        style: small,
+                      ),
+                    ),
+                    // Over the budget, the card below says when it
+                    // starts again.
+                    if (daysLeft != null && !overPeriod) ...[
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(gloc.budget_days_left(daysLeft), style: small),
+                    ],
+                  ],
                 ),
                 if (budget.period == BudgetPeriod.total &&
                     (group.startDate == null || group.endDate == null)) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.xs),
                   Text(gloc.budget_set_dates_hint, style: small),
                 ],
               ],
             ),
           ),
-          if (!daily && status.todayShare != null) ...[
-            const SizedBox(height: 16),
-            _TodayCard(
-              status: status,
-              money: money,
-              runOut: overPeriod || status.remaining <= 0,
-              runOutText: budget.period == BudgetPeriod.monthly
-                  ? gloc.budget_run_out_month(
-                      DateFormat.MMMM(lang).format(status.start!),
-                    )
-                  : gloc.budget_run_out,
-            ),
-          ],
-          if (status.pastPeriods.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Column(
+          if (!daily && daysLeft != null)
+            if (overPeriod || status.remaining <= 0)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.lg),
+                child: budget.period == BudgetPeriod.total
+                    ? _NoteCard(
+                        icon: Icons.warning_amber_rounded,
+                        title: gloc.budget_run_out,
+                        subtitle: switch (status.averagePerDay) {
+                          final avg? => gloc.budget_so_far_per_day(money(avg)),
+                          null => null,
+                        },
+                      )
+                    : _NoteCard(
+                        icon: Icons.event_outlined,
+                        title: gloc.budget_restarts(
+                          DateFormat.MMMMEEEEd(lang).format(
+                            DateTime(
+                              status.end!.year,
+                              status.end!.month,
+                              status.end!.day + 1,
+                            ),
+                          ),
+                        ),
+                        subtitle: gloc.budget_restarts_in(daysLeft),
+                      ),
+              )
+            else if (status.perDayToEnd case final perDay?)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.lg),
+                child: _PaceCard(
+                  perDay: perDay,
+                  soFar: status.averagePerDay ?? 0,
+                  currency: group.currency,
+                  forecast: switch (status.runOutDay) {
+                    final day? => gloc.budget_pace_runs_out(
+                      DateFormat.MMMMEEEEd(lang).format(day),
+                    ),
+                    null => gloc.budget_pace_lasts,
+                  },
+                ),
+              ),
+          if (status.pastPeriods.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.lg),
+            onSheet(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 20),
                   Text(
                     switch (budget.period) {
                       BudgetPeriod.monthly => gloc.budget_past_months,
@@ -265,7 +302,7 @@ class BudgetDetailSheet extends StatelessWidget {
                     }.toUpperCase(),
                     style: caps,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.xs),
                   _PastTable(
                     periods: status.pastPeriods,
                     labelOf: (p) => switch (budget.period) {
@@ -290,35 +327,27 @@ class BudgetDetailSheet extends StatelessWidget {
                 ],
               ),
             ),
-          const SizedBox(height: 20),
-          OutlinedButton(
-            onPressed: onChange ?? () => Navigator.of(context).pop(true),
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size.fromHeight(52),
-              shape: const StadiumBorder(),
-            ),
-            child: Text(gloc.budget_change),
-          ),
+          ],
         ],
       ),
     );
   }
 }
 
-/// Today, in one card under the period: what can still be spent today
-/// (with the ring), how far over today's share, or, the period's budget
-/// spent, that it has run out; and the average per day so far.
-class _TodayCard extends StatelessWidget {
-  final BudgetStatus status;
-  final String Function(double) money;
-  final bool runOut;
-  final String runOutText;
+/// "To stay within budget": what can be spent a day from today to the end
+/// of the period beside what was spent a day so far, and a forecast in
+/// words. Calm: no colour, the words say whether the pace lasts.
+class _PaceCard extends StatelessWidget {
+  final double perDay;
+  final double soFar;
+  final String currency;
+  final String forecast;
 
-  const _TodayCard({
-    required this.status,
-    required this.money,
-    required this.runOut,
-    required this.runOutText,
+  const _PaceCard({
+    required this.perDay,
+    required this.soFar,
+    required this.currency,
+    required this.forecast,
   });
 
   @override
@@ -326,49 +355,91 @@ class _TodayCard extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final s = theme.colorScheme;
-    final left = status.remainingToday ?? 0;
-    final line = runOut
-        ? runOutText
-        : status.overToday
-        ? gloc.budget_over_today_share(money(-left))
-        : gloc.budget_can_spend_today(money(left));
-    return MergeSemantics(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-        decoration: BoxDecoration(
-          color: s.raisedSurface,
-          borderRadius: BorderRadius.circular(16),
+    final small = theme.textTheme.bodySmall?.copyWith(
+      color: s.onSurfaceVariant,
+    );
+    Widget figure(double value, String words) => Expanded(
+      child: MergeSemantics(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CurrencyDisplay(
+              value: value,
+              currency: currency,
+              valueFontSize: 17,
+              currencyFontSize: 12,
+              showDecimals: true,
+              alignment: MainAxisAlignment.start,
+              fontWeight: FontWeight.w600,
+            ),
+            const SizedBox(height: 2),
+            Text(words, style: small),
+          ],
         ),
+      ),
+    );
+    return _CardBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            gloc.budget_stay_within,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: s.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              figure(perDay, gloc.budget_per_day_to_end),
+              const SizedBox(width: AppSpacing.sm),
+              figure(soFar, gloc.budget_per_day_so_far),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(forecast, style: small),
+        ],
+      ),
+    );
+  }
+}
+
+/// A card with an icon and a line or two: when a spent budget starts
+/// again, or that a budget in total has run out.
+class _NoteCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+
+  const _NoteCard({required this.icon, required this.title, this.subtitle});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = theme.colorScheme;
+    return MergeSemantics(
+      child: _CardBox(
         child: Row(
           children: [
-            if (runOut)
-              Icon(Icons.warning_rounded, size: 24, color: s.onBudgetOver)
-            else
-              BudgetRing(
-                fraction: status.todayFraction ?? 0,
-                over: status.overToday,
-                size: 32,
-                strokeWidth: 4,
-              ),
-            const SizedBox(width: 12),
+            Icon(icon, size: 24, color: s.onSurface),
+            const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    line,
+                    title,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: status.overToday && !runOut
-                          ? s.onBudgetOver
-                          : null,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  if (status.averagePerDay case final avg?) ...[
+                  if (subtitle case final line?) ...[
                     const SizedBox(height: 2),
                     Text(
-                      gloc.budget_so_far_per_day(money(avg)),
+                      line,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: s.outline,
+                        color: s.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -382,9 +453,28 @@ class _TodayCard extends StatelessWidget {
   }
 }
 
-/// The periods before, one row each: name, a bar on the budget's scale
-/// and what it spent (in amber, with how much over under it, when it went
-/// over). A table, so the bars line up whatever the amounts.
+/// A card on the sheet: text inside at 30 from the screen's edge (14 of
+/// padding on a card at 16).
+class _CardBox extends StatelessWidget {
+  final Widget child;
+
+  const _CardBox({required this.child});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.raisedSurface,
+      borderRadius: BorderRadius.circular(AppRadius.lg),
+    ),
+    child: child,
+  );
+}
+
+/// The periods before, one row each, all the same height: name, a bar on
+/// the budget's scale and what it spent, in whole units, with "+42" in
+/// amber beside it when it went over. A table, so the bars line up
+/// whatever the amounts.
 class _PastTable extends StatelessWidget {
   final List<BudgetPastPeriod> periods;
   final String Function(BudgetPastPeriod) labelOf;
@@ -408,20 +498,23 @@ class _PastTable extends StatelessWidget {
     TableRow row(BudgetPastPeriod p) {
       final label = labelOf(p);
       final over = p.spent > amount;
-      Widget cell(Widget child) => Semantics(
-        label: gloc.budget_past_semantics(label, money(p.spent), money(amount)),
-        excludeSemantics: true,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: child,
-        ),
-      );
       return TableRow(
         children: [
-          cell(Text(label, style: theme.textTheme.bodyMedium)),
+          Semantics(
+            label: gloc.budget_past_semantics(
+              label,
+              money(p.spent),
+              money(amount),
+            ),
+            excludeSemantics: true,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+              child: Text(label, style: theme.textTheme.bodyMedium),
+            ),
+          ),
           ExcludeSemantics(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
               child: BudgetBar(
                 fraction: p.spent / amount,
                 over: over,
@@ -430,24 +523,37 @@ class _PastTable extends StatelessWidget {
             ),
           ),
           ExcludeSemantics(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CurrencyDisplay(
-                  value: p.spent,
+                  value: p.spent.roundToDouble(),
                   currency: currency,
                   valueFontSize: 15,
-                  currencyFontSize: 11,
-                  showDecimals: true,
-                  color: over ? s.onBudgetOver : null,
+                  currencyFontSize: 12,
+                  showDecimals: false,
                 ),
-                if (over)
-                  Text(
-                    gloc.budget_over_by(money(p.spent - amount)),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: s.onBudgetOver,
+                if (over) ...[
+                  const SizedBox(width: AppSpacing.xs),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: s.budgetOver.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                    ),
+                    child: Text(
+                      '+${(p.spent - amount).round()}',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: s.onBudgetOver,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
+                ],
               ],
             ),
           ),

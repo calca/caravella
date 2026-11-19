@@ -104,8 +104,8 @@ Then uninstall and go on with the rc's own APK, as in the setup.
 |---|---|---|
 | 5.1 | Settings › Budget: try each period (in total, monthly, weekly, daily), set 150 a day | The row shows the budget. A trip starts on "In total" |
 | 5.2 | Group page header; Statistics | The header shows Total \| Today only, no ring. In Statistics, under the pace card, a Budget card like the map one: "150.00 € a day · on track" |
-| 5.3 | Tap the Budget card | The budget sheet: title with the budget, what's left of the period, its bar with "today" on the marker, one line on today and the average per day. Over the budget: amber figure and "The budget for … has run out", no 0.00 € lines. A daily budget has no line on today (its period is today). Monthly, weekly and daily budgets also show the three periods before, once there are some |
-| 5.4 | Spend over today's share | The card says "a bit above plan", no colors; the sheet says how much over |
+| 5.3 | Tap the Budget card | The budget sheet: "Budget", the budget and its period ("600.00 € a month · November") and a pencil; what's left, its bar with today marked, "… spent" and the days left; a card "To stay within budget": a day from now to the end beside a day so far, and "At this pace the budget runs out around …" (or "lasts to the end"). Over the budget: amber figure, "… spent of … planned" and a card with the day it starts again, no 0.00 € lines. A daily budget has no pace card (its period is today). Monthly, weekly and daily budgets also show the three periods before, once there are some: rows of the same height, "+42" in amber beside a period that went over |
+| 5.4 | Spend faster than the budget allows | The card says "a bit above plan", no colors; the sheet's pace card gives the day it would run out, in words, no amber |
 | 5.5 | Remove the budget | The card says "Not set"; tapping it sets a budget again |
 
 ## 6. Balances and settle up
@@ -132,7 +132,7 @@ Then uninstall and go on with the rc's own APK, as in the setup.
 | 8.4 | Backup, then delete a group, then restore the backup | The group is back with its expenses, payments, budget and second currency |
 | 8.5 | Check for updates (Play build) | No crash. An available update shows no version line |
 | 8.6 | Predictive back: drag slowly from the left edge on the group page, the expense form and Settings, then let go or drag back | The page underneath shows as the current one shrinks; letting go goes back, dragging back stays. A group without a name and an expense with unsaved changes still hold you back |
-| 8.7 | Sheets: General › Currency › the list, Background › Color, Budget › Change budget; an attachment's sources; voice in the expense sheet | Each opens inside the same sheet (a second screen with a back arrow, or in place), never a sheet on top of another. Every sheet opens and closes with the same gentle motion |
+| 8.7 | Sheets: General › Currency › the list, Background › Color, Budget › the pencil; an attachment's sources; voice in the expense sheet | Each opens inside the same sheet (a second screen with a back arrow, or in place), never a sheet on top of another. Every sheet opens and closes with the same gentle motion |
 
 ## 9. Sync
 
