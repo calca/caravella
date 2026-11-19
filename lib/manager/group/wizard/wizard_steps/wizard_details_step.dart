@@ -11,7 +11,7 @@ import '../../data/group_form_state.dart';
 import '../../group_type/group_type_localization.dart';
 import '../../pages/group_creation_wizard_page.dart';
 import '../../widgets/background_picker.dart';
-import '../../widgets/currency_selector_sheet.dart';
+import '../../widgets/group_currency_sheet.dart';
 import '../../widgets/period_selection_bottom_sheet.dart';
 import '../wizard_group_preview.dart';
 
@@ -118,16 +118,15 @@ class WizardDetailsPills extends StatelessWidget {
             state.setDates(start: start, end: end),
       );
 
+  /// The same sheet as the group's General › Currency: the currency and,
+  /// for a trip abroad, a second one with its rate.
   Future<void> _pickCurrency(BuildContext context, GroupFormState state) async {
-    final selected = await showAppBottomSheet<Map<String, String>>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (_) => CurrencySelectorSheet(
-        selectedCode: context.read<GroupFormState>().currency['code'],
-      ),
+    final choice = await showGroupCurrencySheet(
+      context,
+      currency: state.currency,
+      second: state.secondCurrency,
     );
-    if (selected != null) state.setCurrency(selected);
+    if (choice != null) state.setCurrencies(choice.currency, choice.second);
   }
 
   /// "Background" until one is chosen, then the photo or the color.
@@ -180,6 +179,12 @@ class WizardDetailsPills extends StatelessWidget {
     final state = context.watch<GroupFormState>();
     final hasDates = state.startDate != null || state.endDate != null;
     final currency = state.currency;
+    final currencyName = currency['name'] ?? currency['code'] ?? '';
+    // "Euro · kr" once a second currency is set.
+    final currencyLabel = switch (state.secondCurrency) {
+      final second? => '$currencyName · ${second.symbol}',
+      null => currencyName,
+    };
 
     // One row that scrolls: on two lines they'd push the card and the name
     // field off the screen while the keyboard is up.
@@ -211,9 +216,8 @@ class WizardDetailsPills extends StatelessWidget {
                 fontWeight: FontWeight.w800,
               ),
             ),
-            label: currency['name'] ?? currency['code'] ?? '',
-            semanticsLabel:
-                '${gloc.currency}: ${currency['name'] ?? currency['code']}',
+            label: currencyLabel,
+            semanticsLabel: '${gloc.currency}: $currencyLabel',
             onTap: () => _pickCurrency(context, state),
           ),
           _backgroundPill(context, state, gloc),

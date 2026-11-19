@@ -60,7 +60,7 @@ Then uninstall and go on with the rc's own APK, as in the setup.
 
 | # | Step | Expected |
 |---|---|---|
-| 2.1 | Wizard: type Travel, a name, dates, currency, background (photo, colour, none), participants, categories | The preview card updates as you type. Continue stays off without a name. The new group opens |
+| 2.1 | Wizard: type Travel, a name, dates, currency (with a second one and its rate), background (photo, colour, none), participants, categories | The preview card updates as you type. Currency opens the same sheet as General › Currency; the pill reads "Euro · kr". Continue stays off without a name. The new group opens, and a new expense offers "in kr" |
 | 2.2 | Settings › General: rename, change the dates, change the type and background, then back | The changes are saved on back, and the header shows them |
 | 2.3 | General with an empty name, then back | Back is blocked, the field is focused and a toast explains why |
 | 2.4 | Archive the group, find it in Groups › Archived, unarchive it | It moves between the tabs. Home no longer shows it while archived |
