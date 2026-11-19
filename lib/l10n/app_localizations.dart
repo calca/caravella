@@ -5388,36 +5388,6 @@ abstract class AppLocalizations {
   /// **'{amount} a day'**
   String budget_rate_daily(String amount);
 
-  /// Budget detail: above the figure, the period and today's day in it
-  ///
-  /// In en, this message translates to:
-  /// **'{period} · day {day} of {count}'**
-  String budget_period_day(String period, int day, int count);
-
-  /// Budget detail, daily budget: above the figure
-  ///
-  /// In en, this message translates to:
-  /// **'Today, {date}'**
-  String budget_today_date(String date);
-
-  /// Budget detail: what is left of today's share
-  ///
-  /// In en, this message translates to:
-  /// **'Today you can still spend {amount}'**
-  String budget_can_spend_today(String amount);
-
-  /// Budget detail: spent today over today's share
-  ///
-  /// In en, this message translates to:
-  /// **'Today {amount} over today’s share'**
-  String budget_over_today_share(String amount);
-
-  /// Budget detail: the monthly budget is spent; month name
-  ///
-  /// In en, this message translates to:
-  /// **'The budget for {month} has run out'**
-  String budget_run_out_month(String month);
-
   /// Budget detail: the budget of the period is spent
   ///
   /// In en, this message translates to:
@@ -5466,17 +5436,65 @@ abstract class AppLocalizations {
   /// **'The days before'**
   String get budget_past_days;
 
-  /// Budget detail: a past period that went over its budget, after what it spent
-  ///
-  /// In en, this message translates to:
-  /// **'{amount} over'**
-  String budget_over_by(String amount);
-
   /// Screen reader label of a past period in the budget comparison
   ///
   /// In en, this message translates to:
   /// **'{period}: {spent} of {budget}'**
   String budget_past_semantics(String period, String spent, String budget);
+
+  /// Budget detail: heading of the card with the daily pace
+  ///
+  /// In en, this message translates to:
+  /// **'To stay within budget'**
+  String get budget_stay_within;
+
+  /// Budget detail: under the amount that can be spent each day until the end of the period
+  ///
+  /// In en, this message translates to:
+  /// **'a day from now to the end'**
+  String get budget_per_day_to_end;
+
+  /// Budget detail: under the average spent per day so far
+  ///
+  /// In en, this message translates to:
+  /// **'a day so far'**
+  String get budget_per_day_so_far;
+
+  /// Budget detail: a forecast, the day the budget runs out if spending goes on at the same pace; date with weekday
+  ///
+  /// In en, this message translates to:
+  /// **'At this pace the budget runs out around {date}'**
+  String budget_pace_runs_out(String date);
+
+  /// Budget detail: the same pace stays within the budget until the end of the period
+  ///
+  /// In en, this message translates to:
+  /// **'At this pace the budget lasts to the end'**
+  String get budget_pace_lasts;
+
+  /// Budget detail: days left in the period, today included
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{last day} other{{count} days left}}'**
+  String budget_days_left(int count);
+
+  /// Budget detail, budget spent: the day the next period starts; date with weekday
+  ///
+  /// In en, this message translates to:
+  /// **'Starts again on {date}'**
+  String budget_restarts(String date);
+
+  /// Budget detail, budget spent: how far the next period is
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{tomorrow} other{in {count} days}}'**
+  String budget_restarts_in(int count);
+
+  /// Budget detail: spent so far in the period, under the bar
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} spent'**
+  String budget_spent(String amount);
 
   /// Currency sheet: heading of the group's own currency
   ///

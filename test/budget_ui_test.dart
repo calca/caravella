@@ -117,13 +117,19 @@ void main() {
       ),
     );
     expect(find.text('Budget'), findsOneWidget);
-    expect(find.text('600.00 € a month'), findsOneWidget);
-    expect(find.text('November · day 11 of 30'), findsOneWidget);
+    expect(find.text('600.00 € a month · November'), findsOneWidget);
     expect(_amount(385.7), findsOneWidget);
     expect(find.text('left'), findsOneWidget);
-    expect(find.text('214.30 € spent of 600.00 € planned'), findsOneWidget);
-    expect(find.text('Today you can still spend 11.31 €'), findsOneWidget);
-    expect(find.text('So far 19.48 € a day'), findsOneWidget);
+    expect(find.text('214.30 € spent'), findsOneWidget);
+    expect(find.text('20 days left'), findsOneWidget);
+    // The pace: 385.70 € over 20 days against 214.30 € in 11.
+    expect(find.text('To stay within budget'), findsOneWidget);
+    expect(_amount(385.7 / 20), findsOneWidget);
+    expect(_amount(214.3 / 11), findsOneWidget);
+    expect(
+      find.text('At this pace the budget lasts to the end'),
+      findsOneWidget,
+    );
     expect(find.text('THE MONTHS BEFORE'), findsOneWidget);
     // October within, September over (August has no expenses: not shown,
     // being before the first one).
@@ -131,9 +137,37 @@ void main() {
     expect(_amount(560), findsOneWidget);
     expect(find.text('September'), findsOneWidget);
     expect(_amount(642), findsOneWidget);
-    expect(find.text('42.00 € over'), findsOneWidget);
+    expect(find.text('+42'), findsOneWidget);
+    // October, within: a check instead.
+    expect(find.byIcon(Icons.check_rounded), findsOneWidget);
     expect(find.text('August'), findsNothing);
-    expect(find.text('Change budget'), findsOneWidget);
+    expect(find.byTooltip('Change budget'), findsOneWidget);
+  });
+
+  testWidgets('spending fast: a forecast of the day it runs out', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        BudgetDetailSheet(
+          group: _home(
+            budget: _monthly,
+            expenses: {
+              DateTime(2026, 11, 2): 205.9,
+              DateTime(2026, 11, 10): 180,
+              DateTime(2026, 11, 19, 9): 38.4,
+            },
+          ),
+          today: DateTime(2026, 11, 19, 18),
+        ),
+      ),
+    );
+    expect(find.text('12 days left'), findsOneWidget);
+    expect(_amount(175.7 / 12), findsOneWidget);
+    expect(
+      find.text('At this pace the budget runs out around Friday, November 27'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('over the month: the figure is over, the budget ran out', (
@@ -154,9 +188,12 @@ void main() {
     );
     expect(_amount(14.3), findsOneWidget);
     expect(find.text('over budget'), findsOneWidget);
-    expect(find.text('The budget for November has run out'), findsOneWidget);
-    // Nothing about today's share, which is 0.
-    expect(find.textContaining('Today'), findsNothing);
+    expect(find.text('214.30 € spent of 200.00 € planned'), findsOneWidget);
+    // When it starts again, not a pace there's no budget for.
+    expect(find.text('Starts again on Tuesday, December 1'), findsOneWidget);
+    expect(find.text('in 20 days'), findsOneWidget);
+    expect(find.text('To stay within budget'), findsNothing);
+    expect(find.textContaining('days left'), findsNothing);
   });
 
   testWidgets('a daily budget: today is the period', (tester) async {
@@ -170,11 +207,12 @@ void main() {
         ),
       ),
     );
-    expect(find.text('40.00 € a day'), findsOneWidget);
-    expect(find.text('Today, Wednesday, November 11'), findsOneWidget);
+    expect(find.text('40.00 € a day · today'), findsOneWidget);
     expect(_amount(31.6), findsOneWidget);
-    expect(find.text('8.40 € spent of 40.00 € planned'), findsOneWidget);
-    expect(find.textContaining('can still spend'), findsNothing);
+    expect(find.text('8.40 € spent'), findsOneWidget);
+    // Today is the whole period: no pace, no days left.
+    expect(find.text('To stay within budget'), findsNothing);
+    expect(find.textContaining('left'), findsOneWidget);
     expect(find.text('THE DAYS BEFORE'), findsOneWidget);
   });
 
@@ -190,9 +228,9 @@ void main() {
       ),
     );
     expect(find.text('1500.00 € in total'), findsOneWidget);
-    expect(find.text('In total'), findsOneWidget);
-    // No dates: no day to spread it on, so no line on today.
-    expect(find.textContaining('Today'), findsNothing);
+    // No dates: no day to spread it on, so no pace.
+    expect(find.text('To stay within budget'), findsNothing);
+    expect(find.textContaining('days left'), findsNothing);
     expect(find.textContaining('BEFORE'), findsNothing);
     expect(
       find.text(
