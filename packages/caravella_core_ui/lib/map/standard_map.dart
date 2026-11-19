@@ -14,6 +14,9 @@ class StandardMap extends StatelessWidget {
   final double minZoom;
   final double maxZoom;
   final void Function(TapPosition, LatLng)? onTap;
+
+  /// Called once the map is laid out and its [mapController] can move it.
+  final VoidCallback? onMapReady;
   final List<Widget> layers;
 
   /// Accessible name of the map area (e.g. "Expenses Map"). Markers keep
@@ -31,6 +34,7 @@ class StandardMap extends StatelessWidget {
     this.minZoom = 2,
     this.maxZoom = 18,
     this.onTap,
+    this.onMapReady,
     this.layers = const [],
     this.semanticLabel,
     this.tileStatus,
@@ -46,6 +50,7 @@ class StandardMap extends StatelessWidget {
         minZoom: minZoom,
         maxZoom: maxZoom,
         onTap: onTap,
+        onMapReady: onMapReady,
         // Shows until the tiles arrive, or instead of them when offline:
         // flutter_map's default is a light grey, also in dark.
         backgroundColor: Theme.of(context).colorScheme.surface,

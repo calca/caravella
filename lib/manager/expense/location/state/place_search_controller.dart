@@ -11,6 +11,26 @@ import 'place_search_state.dart';
 class PlaceSearchController extends ChangeNotifier {
   PlaceSearchState _state;
   final MapController mapController = MapController();
+
+  /// Set by the page once the map is built. Until then a move is not
+  /// possible, nor needed: the page builds the map on the selected point.
+  bool mapReady = false;
+
+  void _moveMap(LatLng center) {
+    if (mapReady) mapController.move(center, _state.mapZoom);
+  }
+
+  /// [point] a little below the middle of the map, so it shows above a
+  /// [cardHeight] card at the bottom of a [screenHeight] screen.
+  static LatLng aboveCard(
+    LatLng point,
+    double cardHeight,
+    double screenHeight,
+  ) {
+    final latitudeOffset = (cardHeight / 2 / screenHeight) * 0.003;
+    return LatLng(point.latitude - latitudeOffset, point.longitude);
+  }
+
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
   final Debouncer _debouncer = Debouncer(
@@ -69,7 +89,7 @@ class PlaceSearchController extends ChangeNotifier {
     if (!_state.hasSelectedLocation) {
       await selectMapLocation(found);
     } else {
-      mapController.move(found, _state.mapZoom);
+      _moveMap(found);
     }
   }
 
@@ -102,7 +122,7 @@ class PlaceSearchController extends ChangeNotifier {
           // Nothing picked yet (the position wasn't found on opening):
           // pick it, as opening does, so the card offers Confirm instead of
           // leaving the map with no card at all.
-          mapController.move(newCenter, _state.mapZoom);
+          _moveMap(newCenter);
           if (!_state.hasSelectedLocation) {
             await selectMapLocation(newCenter);
           }
@@ -202,7 +222,7 @@ class PlaceSearchController extends ChangeNotifier {
       ),
     );
     searchController.clear();
-    mapController.move(location, _state.mapZoom);
+    _moveMap(location);
   }
 
   /// Handle map tap to select a location
@@ -247,17 +267,9 @@ class PlaceSearchController extends ChangeNotifier {
     double bottomSheetHeight,
     double screenHeight,
   ) {
-    if (_state.selectedMapLocation == null) return;
-
-    final offsetPixels = bottomSheetHeight / 2;
-    final latitudeOffset = (offsetPixels / screenHeight) * 0.003;
-
-    final adjustedCenter = LatLng(
-      _state.selectedMapLocation!.latitude - latitudeOffset,
-      _state.selectedMapLocation!.longitude,
-    );
-
-    mapController.move(adjustedCenter, _state.mapZoom);
+    final selected = _state.selectedMapLocation;
+    if (selected == null) return;
+    _moveMap(aboveCard(selected, bottomSheetHeight, screenHeight));
   }
 
   bool _disposed = false;
