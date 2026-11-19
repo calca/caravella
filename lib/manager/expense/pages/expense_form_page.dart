@@ -4,6 +4,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+
 import '../components/expense_form_component.dart';
 import '../components/expense_form_config.dart';
 import '../widgets/expense_authorship_info.dart';
@@ -295,26 +296,29 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
         ),
         bottomNavigationBar: isReadOnly
             ? null
-            : ColoredBox(
-                // Also under the system navigation bar (edge to edge).
-                color: scheme.surfaceContainer,
-                child: AnimatedPadding(
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOut,
-                  padding: EdgeInsets.only(bottom: viewInsetsBottom),
-                  child: SafeArea(
-                    top: false,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                      child: ExpenseFormActionsWidget(
-                        onSave: _isFormValid ? _handleSave : null,
-                        isFormValid: _isFormValid,
-                        isEdit: isEdit,
-                        showExpandButton: false,
-                        showVoiceButton: !isEdit,
-                        onVoiceTap: _voiceCallback,
-                        onScanReceipt: _scanCallback,
-                        onScanReceiptFromGallery: _scanFromGalleryCallback,
+            // Toasts rise above the Save bar.
+            : ToastClearance(
+                child: ColoredBox(
+                  // Also under the system navigation bar (edge to edge).
+                  color: scheme.surfaceContainer,
+                  child: AnimatedPadding(
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeOut,
+                    padding: EdgeInsets.only(bottom: viewInsetsBottom),
+                    child: SafeArea(
+                      top: false,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                        child: ExpenseFormActionsWidget(
+                          onSave: _isFormValid ? _handleSave : null,
+                          isFormValid: _isFormValid,
+                          isEdit: isEdit,
+                          showExpandButton: false,
+                          showVoiceButton: !isEdit,
+                          onVoiceTap: _voiceCallback,
+                          onScanReceipt: _scanCallback,
+                          onScanReceiptFromGallery: _scanFromGalleryCallback,
+                        ),
                       ),
                     ),
                   ),

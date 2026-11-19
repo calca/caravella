@@ -15,6 +15,7 @@ export 'widgets/add_fab.dart';
 export 'widgets/amount_field.dart';
 export 'widgets/app_system_ui.dart';
 export 'widgets/app_toast.dart' show AppToast, ToastType;
+export 'widgets/toast_clearance.dart';
 export 'widgets/avatars.dart';
 export 'widgets/base_card.dart';
 export 'widgets/card_outline.dart';
