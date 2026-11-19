@@ -96,14 +96,12 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
     // A second screen of the group's currency sheet brings its own title
     // ([showSheetPage]); opened on its own, the sheet has it.
     final inPage = isSheetPage(context);
+    final keyboard = MediaQuery.viewInsetsOf(context).bottom;
     final body = SizedBox(
-      // Room for the keyboard below the list.
-      // Less under a second screen's back button and title (about 100 dp)
-      // when opened from the group's currency sheet.
-      height:
-          MediaQuery.sizeOf(context).height * 0.8 -
-          (inPage ? 100 : 0) -
-          MediaQuery.viewInsetsOf(context).bottom,
+      // Room for the keyboard below the list, and for the title above it
+      // (about 100 dp): a second screen's back button and title, or the
+      // sheet's own handle and title.
+      height: MediaQuery.sizeOf(context).height * 0.8 - 100 - keyboard,
       child: Column(
         children: [
           TextField(
@@ -223,8 +221,15 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
         ],
       ),
     );
-    return inPage
-        ? body
-        : CaravellaBottomSheetScaffold(title: l.select_currency, child: body);
+    if (inPage) return body;
+    // On its own (the group wizard) the sheet rises above the keyboard; it
+    // sat behind it, with the search field focused, hiding the whole list.
+    return Padding(
+      padding: EdgeInsets.only(bottom: keyboard),
+      child: CaravellaBottomSheetScaffold(
+        title: l.select_currency,
+        child: body,
+      ),
+    );
   }
 }
