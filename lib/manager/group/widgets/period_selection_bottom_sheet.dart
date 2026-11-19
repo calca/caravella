@@ -186,71 +186,73 @@ class _PeriodSelectionBottomSheetState
         // Calendar grid
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SizedBox(
-            height: 240, // Fixed height for 6 weeks
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 7,
-                childAspectRatio: 1,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-              ),
-              itemCount: 42, // 6 weeks * 7 days
-              itemBuilder: (context, index) {
-                if (index < leadingEmptyCells) {
-                  return const SizedBox(); // Empty cell
-                }
+          // Always six weeks tall, sized by the cells themselves: a month
+          // that starts late in the week (November 2026) needs the sixth
+          // row, and the sheet doesn't jump between 5- and 6-week months.
+          child: GridView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7,
+              childAspectRatio: 1,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+            ),
+            itemCount: 42, // 6 weeks * 7 days
+            itemBuilder: (context, index) {
+              if (index < leadingEmptyCells) {
+                return const SizedBox(); // Empty cell
+              }
 
-                final dayNumber = index - leadingEmptyCells + 1;
-                if (dayNumber > daysInMonth) {
-                  return const SizedBox(); // Empty cell
-                }
+              final dayNumber = index - leadingEmptyCells + 1;
+              if (dayNumber > daysInMonth) {
+                return const SizedBox(); // Empty cell
+              }
 
-                final date = DateTime(
-                  _displayedMonth.year,
-                  _displayedMonth.month,
-                  dayNumber,
-                );
-                final isSelected = _isDateSelected(date);
-                final isInRange = _isDateInRange(date);
-                final isToday = _isToday(date);
+              final date = DateTime(
+                _displayedMonth.year,
+                _displayedMonth.month,
+                dayNumber,
+              );
+              final isSelected = _isDateSelected(date);
+              final isInRange = _isDateInRange(date);
+              final isToday = _isToday(date);
 
-                return GestureDetector(
-                  onTap: () => _onDateTapped(date),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? theme.colorScheme.primary
-                          : isInRange
-                          ? theme.colorScheme.primaryContainer.withValues(
-                              alpha: 0.3,
-                            )
-                          : null,
-                      borderRadius: BorderRadius.circular(6),
-                      border: isToday && !isSelected
-                          ? Border.all(color: theme.colorScheme.primary)
-                          : null,
-                    ),
-                    child: Center(
-                      child: Text(
-                        dayNumber.toString(),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: isSelected
-                              ? theme.colorScheme.onPrimary
-                              : isInRange
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface,
-                          fontWeight: isSelected || isToday
-                              ? FontWeight.w600
-                              : null,
-                        ),
+              return GestureDetector(
+                onTap: () => _onDateTapped(date),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : isInRange
+                        ? theme.colorScheme.primaryContainer.withValues(
+                            alpha: 0.3,
+                          )
+                        : null,
+                    borderRadius: BorderRadius.circular(6),
+                    border: isToday && !isSelected
+                        ? Border.all(color: theme.colorScheme.primary)
+                        : null,
+                  ),
+                  child: Center(
+                    child: Text(
+                      dayNumber.toString(),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: isSelected
+                            ? theme.colorScheme.onPrimary
+                            : isInRange
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.onSurface,
+                        fontWeight: isSelected || isToday
+                            ? FontWeight.w600
+                            : null,
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ],
