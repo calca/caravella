@@ -41,6 +41,10 @@ abstract class _PreferenceKeys {
 
   // Groups received from another device, not opened yet
   static const String pendingGroupWelcomes = 'pending_group_welcomes';
+
+  // What's new after an update
+  static const String whatsNewSeen = 'whats_new_seen';
+  static const String whatsNewAnnounced = 'whats_new_announced';
 }
 
 /// Default values for preferences
@@ -164,6 +168,9 @@ class PreferencesService {
   /// Group type templates preferences management
   /// Recent searches (group search suggestions).
   SearchPreferences get search => SearchPreferences._(_prefs);
+
+  /// What's new after an update: the versions seen and announced
+  WhatsNewPreferences get whatsNew => WhatsNewPreferences._(_prefs);
 
   /// Groups shared with this device that haven't been opened yet.
   SharedGroupPreferences get sharedGroups => SharedGroupPreferences._(_prefs);
@@ -432,6 +439,28 @@ class AppStatePreferences {
   Future<void> setIsFirstStart(bool value) async {
     await _prefs.setBool(_PreferenceKeys.isFirstStart, value);
   }
+}
+
+// ==============================================================================
+// What's New Preferences
+// ==============================================================================
+
+/// Which release's news the user has opened ([seen]) and which one the app
+/// has already announced with a toast ([announced]), as "major.minor"
+/// ("2.5"): patches bring nothing to announce.
+class WhatsNewPreferences {
+  WhatsNewPreferences._(this._prefs);
+  final SharedPreferences _prefs;
+
+  String? seen() => _prefs.getString(_PreferenceKeys.whatsNewSeen);
+
+  Future<void> setSeen(String release) =>
+      _prefs.setString(_PreferenceKeys.whatsNewSeen, release);
+
+  String? announced() => _prefs.getString(_PreferenceKeys.whatsNewAnnounced);
+
+  Future<void> setAnnounced(String release) =>
+      _prefs.setString(_PreferenceKeys.whatsNewAnnounced, release);
 }
 
 // ==============================================================================

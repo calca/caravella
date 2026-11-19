@@ -5627,6 +5627,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On the Caravella website'**
   String get whats_new_all_versions_desc;
+
+  /// Toast on the first start after an update to a new release ("2.5"), with the What's new action
+  ///
+  /// In en, this message translates to:
+  /// **'Updated to {version}'**
+  String whats_new_updated_to(String version);
+
+  /// Screen reader: the dot on the settings button and on the What's new row, news not opened yet
+  ///
+  /// In en, this message translates to:
+  /// **'new features to see'**
+  String get whats_new_unread;
 }
 
 class _AppLocalizationsDelegate
