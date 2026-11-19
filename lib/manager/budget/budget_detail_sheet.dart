@@ -179,9 +179,15 @@ class BudgetDetailSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              IconButton.outlined(
+              // Like the app's other round buttons (Home's settings): a
+              // raised fill, no border.
+              IconButton(
                 tooltip: gloc.budget_change,
                 onPressed: onChange ?? () => Navigator.of(context).pop(true),
+                style: IconButton.styleFrom(
+                  backgroundColor: s.raisedSurface,
+                  foregroundColor: s.onSurface,
+                ),
                 icon: const Icon(Icons.edit_outlined),
               ),
             ],

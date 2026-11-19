@@ -57,6 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings › Check for updates: the “Update available” card no longer shows “v4133”. Play reports only the version code (the build number), not the version name, so the line is gone
 
 ### Changed
+- Home: the favorite group shows a "♥ Favorite" pill like the "Shared" one, instead of a heart that looked lost on its own; dates and pills stay on one line
+- Budget sheet: the pencil is a filled round button like the app's others, without a border
 - Caravella opens a little faster: before showing Home it no longer reads every group to refresh the app shortcuts (Home does it once it has loaded) nor prepares the group photos (that waits until Home is on screen)
 - Budget sheet: one answer to "will it last?". What's left, then how much a day keeps you within the budget beside how much a day you've spent so far, and when the budget would run out at this pace; over the budget, when it starts again. The periods before are rows of the same height with "+42" beside the ones that went over. A pencil by the title changes the budget
 - Settings › What's new keeps only the last two versions (2.5 and 2.4, with their fixes); "All versions" at the bottom opens the full history on the website (in English)
