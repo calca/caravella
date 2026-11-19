@@ -115,7 +115,9 @@ void main() {
         ),
       ),
     );
-    await settle(tester);
+    // The list loads from the database: on a slow runner that takes
+    // longer than one settle.
+    await settleUntil(tester, () => find.text('Pixel 9').evaluate().isNotEmpty);
     expect(find.text('Pixel 9'), findsOneWidget);
     expect(find.textContaining('Never updated'), findsOneWidget);
 
@@ -197,7 +199,7 @@ void main() {
       ),
     );
     await tester.pumpWidget(list());
-    await settle(tester);
+    await settleUntil(tester, () => count == 0);
     expect(find.text('nobody yet'), findsOneWidget);
     expect(find.text('invite another'), findsNothing);
     expect(count, 0);
