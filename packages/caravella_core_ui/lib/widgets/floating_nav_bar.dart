@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
 
+import 'toast_clearance.dart';
+
 /// One destination of a [FloatingNavBar].
 class FloatingNavItem {
   final IconData icon;
@@ -117,8 +119,12 @@ class _FloatingNavBarState extends State<FloatingNavBar>
     super.dispose();
   }
 
+  // Toasts rise above the bar.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      ToastClearance(child: _buildBar(context));
+
+  Widget _buildBar(BuildContext context) {
     final theme = Theme.of(context);
     final s = theme.colorScheme;
     final dark = s.brightness == Brightness.dark;

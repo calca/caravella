@@ -1,7 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
+
 import 'app_night_mode.dart';
 import '../manager/history/expenses_history_page.dart';
 import 'app_shell.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -165,36 +169,43 @@ class AppFrame extends StatelessWidget {
         // after switching to light theme in Appearance. Pages
         // with their own AppSystemUI still take precedence.
         Positioned.fill(child: AppSystemUI(child: child ?? const SizedBox())),
-        // Toasts at the bottom, above the floating navigation
-        // (and the keyboard), so they never cover a page's
-        // title.
-        Builder(
-          builder: (context) => Padding(
-            padding: EdgeInsets.only(
-              bottom:
-                  FloatingNavBar.reservedHeight +
-                  MediaQuery.viewInsetsOf(context).bottom,
-            ),
-            child: SafeArea(
-              // Around the viewer only: zentoast is built on Flutter's own
-              // Theme, which doesn't see the app's and sets the light
-              // defaults, so around the pages it turned every icon without
-              // a color of its own black in the dark theme.
-              child: ToastThemeProvider(
-                data: const ToastTheme(
-                  gap: 8,
-                  viewerPadding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
+        // Toasts at the bottom of the screen, just above whatever the page
+        // on top keeps there (the floating navigation, a "+" button, a Save
+        // bar: see ToastClearance) and the keyboard, so they never cover a
+        // page's title or its main button.
+        ValueListenableBuilder<double>(
+          valueListenable: ToastClearance.bottom,
+          builder: (context, clearance, viewer) {
+            final media = MediaQuery.of(context);
+            final bottom = math.max(
+              clearance,
+              math.max(media.viewInsets.bottom, media.viewPadding.bottom + 8),
+            );
+            return Padding(
+              padding: EdgeInsets.only(bottom: bottom),
+              child: viewer,
+            );
+          },
+          child: SafeArea(
+            bottom: false,
+            // Around the viewer only: zentoast is built on Flutter's own
+            // Theme, which doesn't see the app's and sets the light
+            // defaults, so around the pages it turned every icon without
+            // a color of its own black in the dark theme.
+            child: ToastThemeProvider(
+              data: const ToastTheme(
+                gap: 8,
+                viewerPadding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
                 ),
-                // No viewer delay: each AppToast hides itself
-                // after its type's time.
-                child: ToastViewer(
-                  alignment: Alignment.bottomCenter,
-                  delay: null,
-                  visibleCount: 3,
-                ),
+              ),
+              // No viewer delay: each AppToast hides itself
+              // after its type's time.
+              child: ToastViewer(
+                alignment: Alignment.bottomCenter,
+                delay: null,
+                visibleCount: 3,
               ),
             ),
           ),
