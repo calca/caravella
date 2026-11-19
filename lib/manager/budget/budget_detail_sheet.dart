@@ -472,9 +472,10 @@ class _CardBox extends StatelessWidget {
 }
 
 /// The periods before, one row each, all the same height: name, a bar on
-/// the budget's scale and what it spent, in whole units, with "+42" in
-/// amber beside it when it went over. A table, so the bars line up
-/// whatever the amounts.
+/// the budget's scale, what it spent in whole units, and "+42" in amber
+/// when it went over. The amounts line up on the right and the "+42"s in
+/// a column of their own, the same width whether any period went over or
+/// not, so the bars are always as long.
 class _PastTable extends StatelessWidget {
   final List<BudgetPastPeriod> periods;
   final String Function(BudgetPastPeriod) labelOf;
@@ -490,11 +491,22 @@ class _PastTable extends StatelessWidget {
     required this.money,
   });
 
+  /// One row: tall enough for a 48 dp-ish touch line and the chip.
+  static const double rowHeight = 40;
+
+  /// Room for "+999" (wider ones still fit: the column grows).
+  static const double overWidth = 56;
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final s = theme.colorScheme;
+    Widget line(Widget child, {Alignment alignment = Alignment.centerLeft}) =>
+        SizedBox(
+          height: rowHeight,
+          child: Align(alignment: alignment, child: child),
+        );
     TableRow row(BudgetPastPeriod p) {
       final label = labelOf(p);
       final over = p.spent > amount;
@@ -507,54 +519,50 @@ class _PastTable extends StatelessWidget {
               money(amount),
             ),
             excludeSemantics: true,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-              child: Text(label, style: theme.textTheme.bodyMedium),
-            ),
+            child: line(Text(label, style: theme.textTheme.bodyMedium)),
           ),
           ExcludeSemantics(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-              child: BudgetBar(
-                fraction: p.spent / amount,
-                over: over,
-                height: 8,
+              child: line(
+                BudgetBar(fraction: p.spent / amount, over: over, height: 8),
               ),
             ),
           ),
           ExcludeSemantics(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CurrencyDisplay(
-                  value: p.spent.roundToDouble(),
-                  currency: currency,
-                  valueFontSize: 15,
-                  currencyFontSize: 12,
-                  showDecimals: false,
-                ),
-                if (over) ...[
-                  const SizedBox(width: AppSpacing.xs),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: s.budgetOver.withValues(alpha: 0.16),
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                    ),
-                    child: Text(
-                      '+${(p.spent - amount).round()}',
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: s.onBudgetOver,
-                        fontWeight: FontWeight.w600,
+            child: line(
+              alignment: Alignment.centerRight,
+              CurrencyDisplay(
+                value: p.spent.roundToDouble(),
+                currency: currency,
+                valueFontSize: 15,
+                currencyFontSize: 12,
+                showDecimals: false,
+              ),
+            ),
+          ),
+          ExcludeSemantics(
+            child: line(
+              alignment: Alignment.centerRight,
+              over
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
                       ),
-                    ),
-                  ),
-                ],
-              ],
+                      decoration: BoxDecoration(
+                        color: s.budgetOver.withValues(alpha: 0.16),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                      ),
+                      child: Text(
+                        '+${(p.spent - amount).round()}',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: s.onBudgetOver,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
         ],
@@ -566,6 +574,7 @@ class _PastTable extends StatelessWidget {
         0: IntrinsicColumnWidth(),
         1: FlexColumnWidth(),
         2: IntrinsicColumnWidth(),
+        3: MaxColumnWidth(FixedColumnWidth(overWidth), IntrinsicColumnWidth()),
       },
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [for (final p in periods) row(p)],
