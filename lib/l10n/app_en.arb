@@ -1386,4 +1386,8 @@
   ,"@whats_new_all_versions": {"description": "Row at the bottom of What's new that opens the full version history on the website"}
   ,"whats_new_all_versions_desc": "On the Caravella website"
   ,"@whats_new_all_versions_desc": {"description": "Subtitle of the All versions row: where it opens (the website page is in English only)"}
+  ,"whats_new_updated_to": "Updated to {version}"
+  ,"@whats_new_updated_to": {"description": "Toast on the first start after an update to a new release (\"2.5\"), with the What's new action", "placeholders": {"version": {"type": "String"}}}
+  ,"whats_new_unread": "new features to see"
+  ,"@whats_new_unread": {"description": "Screen reader: the dot on the settings button and on the What's new row, news not opened yet"}
 }

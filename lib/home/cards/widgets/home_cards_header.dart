@@ -5,6 +5,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../../settings/pages/settings_page.dart';
 import '../../../sync/settings_sync_badge.dart';
+import '../../../settings/whats_new_status.dart';
 
 class HomeCardsHeader extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -117,17 +118,28 @@ class HomeCardsHeader extends StatelessWidget {
         Material(
           color: theme.colorScheme.raisedSurface,
           shape: const CircleBorder(),
-          child: IconButton(
-            icon: Icon(
-              Icons.settings_outlined,
-              color: theme.colorScheme.onSurface,
+          // A dot while there's news not opened yet (after an update).
+          child: ValueListenableBuilder<bool>(
+            valueListenable: WhatsNewStatus.unread,
+            builder: (context, unread, _) => IconButton(
+              icon: Badge(
+                isLabelVisible: unread,
+                smallSize: 8,
+                backgroundColor: theme.colorScheme.primary,
+                child: Icon(
+                  Icons.settings_outlined,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              tooltip: unread
+                  ? '${localizations.settings}, ${localizations.whats_new_unread}'
+                  : localizations.settings,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => const SettingsPage()),
+                );
+              },
             ),
-            tooltip: localizations.settings,
-            onPressed: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (ctx) => const SettingsPage()));
-            },
           ),
         ),
       ],

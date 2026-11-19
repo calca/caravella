@@ -3127,4 +3127,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get whats_new_all_versions_desc => 'No site do Caravella, em inglês';
+
+  @override
+  String whats_new_updated_to(String version) {
+    return 'Atualizado para a $version';
+  }
+
+  @override
+  String get whats_new_unread => 'novidades para ver';
 }

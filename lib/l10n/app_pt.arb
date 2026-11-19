@@ -1114,4 +1114,6 @@
   ,"@balance_paid_and_received": {"description": "Under a name in Balances: what they paid in expenses and what they got back in Settle up", "placeholders": {"amount": {"type": "String"}, "received": {"type": "String"}}}
   ,"whats_new_all_versions": "Todas as versões"
   ,"whats_new_all_versions_desc": "No site do Caravella, em inglês"
+  ,"whats_new_updated_to": "Atualizado para a {version}"
+  ,"whats_new_unread": "novidades para ver"
 }

@@ -3026,4 +3026,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get whats_new_all_versions_desc => '在 Caravella 网站上（英文）';
+
+  @override
+  String whats_new_updated_to(String version) {
+    return '已更新到 $version';
+  }
+
+  @override
+  String get whats_new_unread => '有新功能可查看';
 }

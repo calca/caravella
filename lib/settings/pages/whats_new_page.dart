@@ -7,6 +7,7 @@ import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../update/app_update_localizations.dart';
+import '../whats_new_status.dart';
 
 /// The app ships only the last two minor versions' notes; the full history
 /// is on the website (English only).
@@ -27,6 +28,8 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
   @override
   void initState() {
     super.initState();
+    // Opened: no more dot on the settings button and on its row.
+    WhatsNewStatus.markSeen();
     // Don't load content in initState, wait for didChangeDependencies
   }
 

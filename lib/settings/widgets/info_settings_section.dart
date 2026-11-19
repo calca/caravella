@@ -9,6 +9,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../pages/whats_new_page.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import '../whats_new_status.dart';
 
 /// The last settings sections: "Caravella" (store page, invite friends,
 /// What's new and, in debug builds or with the `ENABLE_TALKER_SCREEN`
@@ -79,12 +80,37 @@ class _InfoSettingsSectionState extends State<InfoSettingsSection> {
                   subtitle: loc.settings_invite_friends_desc,
                   onTap: () => _shareInvite(loc, store != null),
                 ),
-                SettingsTile(
-                  icon: Icons.new_releases_outlined,
-                  title: loc.settings_whats_new_version(version),
-                  subtitle: loc.settings_whats_new_desc,
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (ctx) => const WhatsNewPage()),
+                // A dot while the news of this release isn't opened yet.
+                ValueListenableBuilder<bool>(
+                  valueListenable: WhatsNewStatus.unread,
+                  builder: (context, unread, _) => Semantics(
+                    hint: unread ? loc.whats_new_unread : null,
+                    child: SettingsTile(
+                      icon: Icons.new_releases_outlined,
+                      title: loc.settings_whats_new_version(version),
+                      subtitle: loc.settings_whats_new_desc,
+                      trailing: unread
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Badge(
+                                  smallSize: 8,
+                                  backgroundColor: theme.colorScheme.primary,
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ],
+                            )
+                          : null,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => const WhatsNewPage(),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 if (showDebugLogs)
