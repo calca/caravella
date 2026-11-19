@@ -107,6 +107,38 @@ class BudgetStatus {
     null => null,
   };
 
+  /// Days left in the period, today included; null without [dayCount].
+  int? get daysLeft => switch ((dayNumber, dayCount)) {
+    (final d?, final c?) => c - d + 1,
+    _ => null,
+  };
+
+  /// What can be spent a day, from today to the end of the period, to stay
+  /// within the budget; null without days to count or with nothing left.
+  double? get perDayToEnd => switch (daysLeft) {
+    final days? when days > 0 && remaining > 0 => remaining / days,
+    _ => null,
+  };
+
+  /// The day the budget runs out if spending goes on at [averagePerDay]: a
+  /// forecast, null when that pace stays within it until the end of the
+  /// period (or there is no pace, or nothing left).
+  DateTime? get runOutDay {
+    final (start, day, count, avg) = (
+      this.start,
+      dayNumber,
+      dayCount,
+      averagePerDay,
+    );
+    if (start == null || day == null || count == null || avg == null) {
+      return null;
+    }
+    if (avg <= 0 || remaining <= 0) return null;
+    final runOut = day + (remaining / avg - 1e-9).ceil();
+    if (runOut > count) return null;
+    return DateTime(start.year, start.month, start.day + runOut - 1);
+  }
+
   /// The status of [group] on [today] (default: now), or null when it has
   /// no budget. Weeks start on [firstDayOfWeek] ([DateTime.monday] to
   /// [DateTime.sunday]), as in the user's language.

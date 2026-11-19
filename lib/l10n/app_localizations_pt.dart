@@ -2984,31 +2984,6 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String budget_period_day(String period, int day, int count) {
-    return '$period · dia $day de $count';
-  }
-
-  @override
-  String budget_today_date(String date) {
-    return 'Hoje, $date';
-  }
-
-  @override
-  String budget_can_spend_today(String amount) {
-    return 'Hoje ainda podem gastar $amount';
-  }
-
-  @override
-  String budget_over_today_share(String amount) {
-    return 'Hoje $amount acima do previsto para hoje';
-  }
-
-  @override
-  String budget_run_out_month(String month) {
-    return 'O orçamento de $month acabou';
-  }
-
-  @override
   String get budget_run_out => 'O orçamento acabou';
 
   @override
@@ -3035,13 +3010,57 @@ class AppLocalizationsPt extends AppLocalizations {
   String get budget_past_days => 'Os dias anteriores';
 
   @override
-  String budget_over_by(String amount) {
-    return '$amount a mais';
+  String budget_past_semantics(String period, String spent, String budget) {
+    return '$period: $spent de $budget';
   }
 
   @override
-  String budget_past_semantics(String period, String spent, String budget) {
-    return '$period: $spent de $budget';
+  String get budget_stay_within => 'Para ficar dentro do orçamento';
+
+  @override
+  String get budget_per_day_to_end => 'por dia daqui até o fim';
+
+  @override
+  String get budget_per_day_so_far => 'por dia até agora';
+
+  @override
+  String budget_pace_runs_out(String date) {
+    return 'Neste ritmo o orçamento acaba por volta de $date';
+  }
+
+  @override
+  String get budget_pace_lasts => 'Neste ritmo o orçamento dá até o fim';
+
+  @override
+  String budget_days_left(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'faltam $count dias',
+      one: 'último dia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String budget_restarts(String date) {
+    return 'Recomeça em $date';
+  }
+
+  @override
+  String budget_restarts_in(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'daqui a $count dias',
+      one: 'amanhã',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String budget_spent(String amount) {
+    return '$amount gastos';
   }
 
   @override

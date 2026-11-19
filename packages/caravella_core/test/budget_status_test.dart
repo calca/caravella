@@ -272,4 +272,52 @@ void main() {
     expect(GroupBudget.fromJson({'amount': 0, 'period': 'monthly'}), isNull);
     expect(GroupBudget.fromJson({'amount': 10, 'period': 'yearly'}), isNull);
   });
+
+  group('pace', () {
+    const monthly = GroupBudget(amount: 600, period: BudgetPeriod.monthly);
+    final day19 = DateTime(2026, 11, 19, 18);
+    final spent = {
+      DateTime(2026, 11, 2): 205.9,
+      DateTime(2026, 11, 10): 180.0,
+      DateTime(2026, 11, 19, 9): 38.4,
+    };
+
+    test('per day to the end, and the day it runs out at this pace', () {
+      final s = BudgetStatus.of(groupWith(monthly, spent), today: day19)!;
+      expect(s.daysLeft, 12); // 19 to 30
+      expect(s.perDayToEnd, closeTo(175.7 / 12, 1e-9));
+      // 22.33 a day: 580.6 on the 26th, over on the 27th.
+      expect(s.runOutDay, DateTime(2026, 11, 27));
+    });
+
+    test('a pace that lasts to the end has no run-out day', () {
+      final s = BudgetStatus.of(
+        groupWith(monthly, {DateTime(2026, 11, 3): 200}),
+        today: day19,
+      )!;
+      expect(s.runOutDay, isNull);
+      expect(s.perDayToEnd, closeTo(400 / 12, 1e-9));
+    });
+
+    test('over the budget: nothing per day, no forecast', () {
+      final s = BudgetStatus.of(
+        groupWith(
+          const GroupBudget(amount: 400, period: BudgetPeriod.monthly),
+          spent,
+        ),
+        today: day19,
+      )!;
+      expect(s.perDayToEnd, isNull);
+      expect(s.runOutDay, isNull);
+    });
+
+    test('the last day of the period', () {
+      final s = BudgetStatus.of(
+        groupWith(monthly, {DateTime(2026, 11, 3): 500}),
+        today: DateTime(2026, 11, 30, 9),
+      )!;
+      expect(s.daysLeft, 1);
+      expect(s.perDayToEnd, closeTo(100, 1e-9));
+    });
+  });
 }

@@ -2884,31 +2884,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String budget_period_day(String period, int day, int count) {
-    return '$period · 第 $day 天，共 $count 天';
-  }
-
-  @override
-  String budget_today_date(String date) {
-    return '今天，$date';
-  }
-
-  @override
-  String budget_can_spend_today(String amount) {
-    return '今天还可以花 $amount';
-  }
-
-  @override
-  String budget_over_today_share(String amount) {
-    return '今天超出当日额度 $amount';
-  }
-
-  @override
-  String budget_run_out_month(String month) {
-    return '$month的预算已用完';
-  }
-
-  @override
   String get budget_run_out => '预算已用完';
 
   @override
@@ -2935,13 +2910,57 @@ class AppLocalizationsZh extends AppLocalizations {
   String get budget_past_days => '之前几天';
 
   @override
-  String budget_over_by(String amount) {
-    return '超出 $amount';
+  String budget_past_semantics(String period, String spent, String budget) {
+    return '$period：$spent，预算 $budget';
   }
 
   @override
-  String budget_past_semantics(String period, String spent, String budget) {
-    return '$period：$spent，预算 $budget';
+  String get budget_stay_within => '要不超预算';
+
+  @override
+  String get budget_per_day_to_end => '从今天到结束，每天';
+
+  @override
+  String get budget_per_day_so_far => '目前平均每天';
+
+  @override
+  String budget_pace_runs_out(String date) {
+    return '按这个速度，预算大约在$date用完';
+  }
+
+  @override
+  String get budget_pace_lasts => '按这个速度，预算够用到结束';
+
+  @override
+  String budget_days_left(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '还剩 $count 天',
+      one: '最后一天',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String budget_restarts(String date) {
+    return '$date重新开始';
+  }
+
+  @override
+  String budget_restarts_in(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 天后',
+      one: '明天',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String budget_spent(String amount) {
+    return '已花 $amount';
   }
 
   @override

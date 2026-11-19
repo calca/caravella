@@ -1312,16 +1312,6 @@
   ,"@budget_rate_weekly": {"description": "Budget detail: next to the title, the weekly amount", "placeholders": {"amount": {"type": "String"}}}
   ,"budget_rate_daily": "{amount} a day"
   ,"@budget_rate_daily": {"description": "Budget detail: next to the title, the daily amount", "placeholders": {"amount": {"type": "String"}}}
-  ,"budget_period_day": "{period} · day {day} of {count}"
-  ,"@budget_period_day": {"description": "Budget detail: above the figure, the period and today's day in it", "placeholders": {"period": {"type": "String"}, "day": {"type": "int"}, "count": {"type": "int"}}}
-  ,"budget_today_date": "Today, {date}"
-  ,"@budget_today_date": {"description": "Budget detail, daily budget: above the figure", "placeholders": {"date": {"type": "String"}}}
-  ,"budget_can_spend_today": "Today you can still spend {amount}"
-  ,"@budget_can_spend_today": {"description": "Budget detail: what is left of today's share", "placeholders": {"amount": {"type": "String"}}}
-  ,"budget_over_today_share": "Today {amount} over today’s share"
-  ,"@budget_over_today_share": {"description": "Budget detail: spent today over today's share", "placeholders": {"amount": {"type": "String"}}}
-  ,"budget_run_out_month": "The budget for {month} has run out"
-  ,"@budget_run_out_month": {"description": "Budget detail: the monthly budget is spent; month name", "placeholders": {"month": {"type": "String"}}}
   ,"budget_run_out": "The budget has run out"
   ,"@budget_run_out": {"description": "Budget detail: the budget of the period is spent"}
   ,"budget_so_far_per_day": "So far {amount} a day"
@@ -1338,10 +1328,26 @@
   ,"@budget_past_weeks": {"description": "Budget detail: small caps title of the comparison with the previous weeks"}
   ,"budget_past_days": "The days before"
   ,"@budget_past_days": {"description": "Budget detail: small caps title of the comparison with the previous days"}
-  ,"budget_over_by": "{amount} over"
-  ,"@budget_over_by": {"description": "Budget detail: a past period that went over its budget, after what it spent", "placeholders": {"amount": {"type": "String"}}}
   ,"budget_past_semantics": "{period}: {spent} of {budget}"
   ,"@budget_past_semantics": {"description": "Screen reader label of a past period in the budget comparison", "placeholders": {"period": {"type": "String"}, "spent": {"type": "String"}, "budget": {"type": "String"}}}
+  ,"budget_stay_within": "To stay within budget"
+  ,"@budget_stay_within": {"description": "Budget detail: heading of the card with the daily pace"}
+  ,"budget_per_day_to_end": "a day from now to the end"
+  ,"@budget_per_day_to_end": {"description": "Budget detail: under the amount that can be spent each day until the end of the period"}
+  ,"budget_per_day_so_far": "a day so far"
+  ,"@budget_per_day_so_far": {"description": "Budget detail: under the average spent per day so far"}
+  ,"budget_pace_runs_out": "At this pace the budget runs out around {date}"
+  ,"@budget_pace_runs_out": {"description": "Budget detail: a forecast, the day the budget runs out if spending goes on at the same pace; date with weekday", "placeholders": {"date": {"type": "String"}}}
+  ,"budget_pace_lasts": "At this pace the budget lasts to the end"
+  ,"@budget_pace_lasts": {"description": "Budget detail: the same pace stays within the budget until the end of the period"}
+  ,"budget_days_left": "{count, plural, =1{last day} other{{count} days left}}"
+  ,"@budget_days_left": {"description": "Budget detail: days left in the period, today included", "placeholders": {"count": {"type": "int"}}}
+  ,"budget_restarts": "Starts again on {date}"
+  ,"@budget_restarts": {"description": "Budget detail, budget spent: the day the next period starts; date with weekday", "placeholders": {"date": {"type": "String"}}}
+  ,"budget_restarts_in": "{count, plural, =1{tomorrow} other{in {count} days}}"
+  ,"@budget_restarts_in": {"description": "Budget detail, budget spent: how far the next period is", "placeholders": {"count": {"type": "int"}}}
+  ,"budget_spent": "{amount} spent"
+  ,"@budget_spent": {"description": "Budget detail: spent so far in the period, under the bar", "placeholders": {"amount": {"type": "String"}}}
   ,"currency_section_group": "Group currency"
   ,"@currency_section_group": {"description": "Currency sheet: heading of the group's own currency"}
   ,"currency_group_hint": "Balances, totals and budget"
