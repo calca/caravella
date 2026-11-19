@@ -44,6 +44,16 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   VoidCallback? _scanCallback;
   VoidCallback? _scanFromGalleryCallback;
 
+  /// The page's scroll: the form scrolls a focused field (the note, all of
+  /// it) above the keyboard and the Save bar.
+  final ScrollController _scroll = ScrollController();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
   void _updateFormValidity(bool isValid) {
     if (_isFormValid != isValid && mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -163,6 +173,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
           children: [
             FocusTraversalGroup(
               child: SingleChildScrollView(
+                controller: _scroll,
                 padding: EdgeInsets.fromLTRB(
                   16,
                   padding.top + 8,
@@ -251,6 +262,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                           tripEndDate: widget.group.endDate,
                           shouldAutoClose: true,
                           autofocusAmount: widget.autofocusAmount,
+                          scrollController: _scroll,
                           fullEdit: true,
                           showGroupHeader: false,
                           showActionsRow: false,
