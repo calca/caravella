@@ -39,3 +39,13 @@ Emulator API 34 arm64, the data above (#767):
 | Statistics + scroll | 0.8 / 20 / 43 ms |
 
 Cold start: median 849 ms (823–984, 12 runs); 914 ms before #770.
+
+Samsung Galaxy S25 (Android 16, 120 Hz), same data:
+
+| Action | Frames | Build avg / p99 / worst | Raster avg / p99 / worst |
+|---|---|---|---|
+| Open the group | 49 | 0.7 / 15 / 15 ms | 1.0 / 6.6 / 6.6 ms |
+| Scroll the expenses | 1,117 | 0.6 / 6.4 / 43 ms | 1.5 / 3.7 / 9.8 ms |
+| Statistics + scroll | 401 | 0.8 / 3.5 / 41 ms | 1.7 / 4.3 / 32 ms |
+
+The few frames over budget are single builds of ~40 ms (a new week section while scrolling, the first Statistics frame).
