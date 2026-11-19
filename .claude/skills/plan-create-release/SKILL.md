@@ -189,6 +189,11 @@ Versão X.Y.Z - [Título Atraente]
 - [ ] Mantieni sotto 30 caratteri
 - [ ] Aggiorna solo per cambi di branding importanti
 
+### 6b. Performance (se la release tocca Home, pagina del gruppo, storage o avvio)
+- [ ] Segui `tool/perf/README.md`: frame della pagina del gruppo con 1000 spese (`perf_test.dart`, due giri) e avvio a freddo (`cold_start.sh`), sulla build dev in profile
+- [ ] Confronta con i numeri di riferimento nel README; se peggiorano, apri una issue prima del rilascio
+- [ ] `flutter drive` sempre con `--keep-app-running` (senza, prova a disinstallare `io.caravella.egm`, l'app dello store)
+
 ### 7. Aggiorna Numeri Versione
 
 #### 7.1 pubspec.yaml principale
