@@ -473,7 +473,7 @@ class _CardBox extends StatelessWidget {
 
 /// The periods before, one row each, all the same height: name, a bar on
 /// the budget's scale, what it spent in whole units, and "+42" in amber
-/// when it went over. The amounts line up on the right and the "+42"s in
+/// when it went over or a quiet check when it didn't. The amounts line up on the right and the "+42"s in
 /// a column of their own, the same width whether any period went over or
 /// not, so the bars are always as long.
 class _PastTable extends StatelessWidget {
@@ -562,7 +562,16 @@ class _PastTable extends StatelessWidget {
                         ),
                       ),
                     )
-                  : const SizedBox.shrink(),
+                  // Within the budget: a quiet check, so every row says
+                  // how it went.
+                  : Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: Icon(
+                        Icons.check_rounded,
+                        size: 18,
+                        color: s.onSurfaceVariant,
+                      ),
+                    ),
             ),
           ),
         ],

@@ -138,6 +138,8 @@ void main() {
     expect(find.text('September'), findsOneWidget);
     expect(_amount(642), findsOneWidget);
     expect(find.text('+42'), findsOneWidget);
+    // October, within: a check instead.
+    expect(find.byIcon(Icons.check_rounded), findsOneWidget);
     expect(find.text('August'), findsNothing);
     expect(find.byTooltip('Change budget'), findsOneWidget);
   });
