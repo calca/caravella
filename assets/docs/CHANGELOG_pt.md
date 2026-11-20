@@ -1,3 +1,16 @@
+## 2.5.0 (23.11.2026)
+
+- **Novidade**: Orçamento do grupo: no total ou por mês, semana ou dia. O painel do orçamento mostra quanto resta, quanto pode gastar por dia e quando acabaria neste ritmo
+- **Novidade**: Uma segunda moeda por grupo para viagens ao exterior: anote as despesas na moeda local, com o câmbio da fatura do cartão; os saldos ficam na moeda do grupo
+- **Novidade**: Acerto de contas: marque como pago um pagamento sugerido com um toque
+- **Novidade**: A sincronização entre seus dispositivos pelo Google Drive agora funciona (versão da Play)
+- **Novidade**: Depois de uma atualização, um aviso e um ponto nas Configurações levam às novidades
+- **Melhorias**: Cartões de grupo redesenhados e uma página de despesa mais clara, com a descrição como título
+- **Melhorias**: Mais rápido: os grupos abrem na hora, salvar em grupos grandes é mais rápido e o app abre antes
+- **Melhorias**: Voltar preditivo no Android, o mesmo movimento suave em todos os painéis, TalkBack e texto grande melhorados
+- **Correções**: A sincronização não perde mais despesas quando dois celulares mudam um grupo ao mesmo tempo
+- **Correções**: Escolher o local abre onde você está, o calendário mostra o mês inteiro, e avisos e a nota não ficam mais embaixo dos botões
+
 ## 2.4.4 (12.11.2026)
 
 - **Mudanças**: O botão para adicionar uma despesa aparece só em Despesas, assim não cobre mais os pagamentos nem os gráficos
