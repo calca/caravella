@@ -1,0 +1,9 @@
+Versão 2.5.0 - Orçamento e duas moedas
+
+• Orçamento do grupo: quanto resta e quanto você pode gastar por dia
+• Uma segunda moeda por grupo para viagens ao exterior
+• Marque um pagamento como pago no acerto de contas
+• Cartões de grupo redesenhados, uma página de despesa mais clara, tudo mais rápido
+• A sincronização não perde mais despesas
+
+Obrigado por usar o Caravella!

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-11-23
+
 ### Added
 - After an update to a new version, a short notice says so with a "What's new" button, once; a small dot on the settings button and on Settings › Info › What's new stays until you open it. Nothing on a first install or after a small fix release
 - A clearer expense page. Opening an expense no longer shows "Edit expense" and a centered "€ 42": the top now reads like the expense itself, with the group and date on a small line ("Norway · Tue 17 Nov"), the description as the title (tap to change it) and the amount large at the start with its currency after it ("42 €"), then who paid and each one's share ("Paid by Anna · 21.00 € per person"). Share and Delete moved into a ⋯ menu, so a red bin is no longer the loudest thing on the page; Save stays grey until something changes; who added or edited the expense (shared groups) is at the end. Paid by, category and the details (place, attachments, note) are as before
@@ -767,7 +769,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v2.4.4...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/calca/caravella/compare/v2.4.4...v2.5.0
 [2.4.4]: https://github.com/calca/caravella/compare/v2.4.3...v2.4.4
 [2.4.3]: https://github.com/calca/caravella/compare/v2.4.2...v2.4.3
 [2.4.2]: https://github.com/calca/caravella/compare/v2.4.1...v2.4.2

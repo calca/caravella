@@ -1,0 +1,9 @@
+Versione 2.5.0 - Budget e due valute
+
+• Budget del gruppo: quanto resta e quanto puoi spendere al giorno
+• Una seconda valuta per gruppo per i viaggi all'estero
+• Segna un pagamento come pagato nei conguagli
+• Card dei gruppi ridisegnate, una pagina della spesa più chiara, tutto più veloce
+• La sincronizzazione non perde più spese
+
+Grazie per usare Caravella!

@@ -1,3 +1,16 @@
+## 2.5.0 (23.11.2026)
+
+- **Novità**: Budget del gruppo: in totale o al mese, alla settimana o al giorno. Il pannello del budget dice quanto resta, quanto puoi spendere al giorno e quando finirebbe di questo passo
+- **Novità**: Una seconda valuta per gruppo per i viaggi all'estero: inserisci le spese nella valuta locale, con il cambio dell'estratto conto; i saldi restano nella valuta del gruppo
+- **Novità**: Conguagli: segna come pagato un pagamento suggerito con un tocco
+- **Novità**: La sincronizzazione tra i tuoi dispositivi tramite Google Drive ora funziona (versione Play)
+- **Novità**: Dopo un aggiornamento, un avviso e un puntino sulle Impostazioni ti portano alle novità
+- **Miglioramenti**: Card dei gruppi ridisegnate e una pagina della spesa più chiara, con la descrizione come titolo
+- **Miglioramenti**: Più veloce: i gruppi si aprono subito, salvare nei gruppi grandi è più rapido e l'app parte prima
+- **Miglioramenti**: Indietro predittivo su Android, lo stesso movimento morbido per tutti i pannelli, TalkBack e testo grande migliorati
+- **Correzioni**: La sincronizzazione non perde più spese quando due telefoni modificano un gruppo nello stesso momento
+- **Correzioni**: La scelta del luogo si apre dove sei, il calendario mostra tutto il mese, e notifiche e nota non finiscono più sotto i pulsanti
+
 ## 2.4.4 (12.11.2026)
 
 - **Modifiche**: Il pulsante per aggiungere una spesa compare solo in Spese, così non copre più i pagamenti e i grafici

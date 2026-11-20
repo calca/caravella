@@ -8,11 +8,11 @@ Split group expenses, see who owes whom and sync with friends. No account.
 
 Caravella is the simple way to split expenses with friends, family and roommates. Create a group for a trip, a shared flat or an event, add what everyone spends, and Caravella tells you who owes whom — no spreadsheets, no arguments.
 
-NEW IN 2.3: SMOOTHER AND CLEARER
-• Statistics start with your spending pace: the average per day, how many expenses and each person's share
-• Search finds expenses across all your groups, by name, note or place
-• Groups shared with you say who shared them, and a dot shows how sync is doing
-• Calmer dialogs, a tidy list of attachments and one way to add people everywhere
+NEW IN 2.5: BUDGET AND TWO CURRENCIES
+• Set a group budget, in total or per month, week or day: see what's left and how much a day keeps you within it
+• A second currency per group for trips abroad, with the rate from your card statement
+• Tick a suggested payment as paid in Settle up
+• Sync your own devices through your Google Drive
 
 A CLEAR, CALM DESIGN
 • A clearer Home: your group with its total and spending trend, and your latest expenses below

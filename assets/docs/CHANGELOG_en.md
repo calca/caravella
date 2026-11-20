@@ -1,3 +1,16 @@
+## 2.5.0 (23.11.2026)
+
+- **New**: Group budget: in total or per month, week or day. The budget sheet shows what's left, how much a day keeps you within it and when it would run out at this pace
+- **New**: A second currency per group for trips abroad: type expenses in the local currency, with the rate from your card statement; balances stay in the group's currency
+- **New**: Settle up: tick a suggested payment as paid with one tap
+- **New**: Google Drive sync between your own devices now works (Play version)
+- **New**: After an update, a short notice and a dot on Settings point you to what's new
+- **Improvements**: Redesigned group cards, and a clearer expense page with the description as its title
+- **Improvements**: Faster: groups open at once, saving in big groups is quicker and the app starts sooner
+- **Improvements**: Predictive back on Android, the same gentle motion for every sheet, better TalkBack support and large text
+- **Fixes**: Sync no longer loses expenses when two phones change a group at the same time
+- **Fixes**: The place picker opens on where you are, the calendar shows the whole month, and notifications and the note no longer end up under the buttons
+
 ## 2.4.4 (12.11.2026)
 
 - **Changed**: The add-expense button shows on Expenses only, so it no longer covers the payments or the charts
