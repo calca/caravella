@@ -58,10 +58,19 @@ Widget _app({
   ),
 );
 
+/// The floating bar is the phone layout: the default 800 dp test window
+/// would already be a "medium" window, with the side navigation.
+void _phone(WidgetTester tester) {
+  tester.view.physicalSize = const Size(400, 800);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+}
+
 void main() {
   testWidgets('switches tabs and shows each tab\'s primary action', (
     tester,
   ) async {
+    _phone(tester);
     var home = 0, groups = 0;
     await tester.pumpWidget(
       _app(onHomeAction: () => home++, onGroupsAction: () => groups++),
@@ -80,6 +89,7 @@ void main() {
   });
 
   testWidgets('back on Groups returns to Home', (tester) async {
+    _phone(tester);
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.folder_copy_outlined));
@@ -93,6 +103,7 @@ void main() {
   });
 
   testWidgets('a tab can hide the bar', (tester) async {
+    _phone(tester);
     await tester.pumpWidget(_app(hideNav: true));
     await tester.pumpAndSettle();
     expect(find.byType(FloatingNavBar), findsNothing);
@@ -101,6 +112,7 @@ void main() {
   testWidgets('fade through keeps both tabs alive while switching', (
     tester,
   ) async {
+    _phone(tester);
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.folder_copy_outlined));
@@ -120,6 +132,7 @@ void main() {
   testWidgets('switches instantly when animations are disabled', (
     tester,
   ) async {
+    _phone(tester);
     await tester.pumpWidget(
       MediaQuery(
         data: const MediaQueryData(disableAnimations: true),
@@ -131,5 +144,73 @@ void main() {
     await tester.pump();
     expect(find.text('page home'), findsNothing);
     expect(find.text('page groups'), findsOneWidget);
+  });
+
+  group('wide windows', () {
+    Future<void> pumpAt(WidgetTester tester, double width) async {
+      tester.view.physicalSize = Size(width, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+    }
+
+    testWidgets('phone width keeps the floating bar', (tester) async {
+      await pumpAt(tester, 400);
+      await tester.pumpWidget(_app());
+      await tester.pumpAndSettle();
+      expect(find.byType(FloatingNavBar), findsOneWidget);
+      expect(find.byType(SideNav), findsNothing);
+    });
+
+    testWidgets('medium: a rail with both destinations and the action', (
+      tester,
+    ) async {
+      var home = 0;
+      await pumpAt(tester, 700);
+      await tester.pumpWidget(_app(onHomeAction: () => home++));
+      await tester.pumpAndSettle();
+      expect(find.byType(FloatingNavBar), findsNothing);
+      final rail = tester.widget<SideNav>(find.byType(SideNav));
+      expect(rail.extended, isFalse);
+      // The rail shows every label, the floating bar only the selected one.
+      expect(find.text('Home'), findsOneWidget);
+      expect(find.text('Groups'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.add));
+      expect(home, 1);
+      await tester.tap(find.text('Groups'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<SideNav>(find.byType(SideNav)).selectedIndex,
+        AppTab.groups.index,
+      );
+      expect(find.byIcon(Icons.create_new_folder_outlined), findsOneWidget);
+      // The tab content sits beside the rail, not under it.
+      expect(
+        tester.getTopLeft(find.text('page groups')).dx,
+        greaterThan(SideNav.railWidth),
+      );
+    });
+
+    testWidgets('expanded: the side navigation shows labels and the '
+        'action\'s label', (tester) async {
+      await pumpAt(tester, 1280);
+      await tester.pumpWidget(_app());
+      await tester.pumpAndSettle();
+      expect(tester.widget<SideNav>(find.byType(SideNav)).extended, isTrue);
+      // At the top of the window, not centered beside the page.
+      expect(tester.getTopLeft(find.byType(SideNav)).dy, 0);
+      expect(find.text('home'), findsOneWidget); // the action, labelled
+      expect(
+        AppShellScope.navReserve(tester.element(find.text('page home'))),
+        0,
+      );
+    });
+
+    testWidgets('a tab can hide the side navigation too', (tester) async {
+      await pumpAt(tester, 1280);
+      await tester.pumpWidget(_app(hideNav: true));
+      await tester.pumpAndSettle();
+      expect(find.byType(SideNav), findsNothing);
+    });
   });
 }

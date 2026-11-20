@@ -109,6 +109,23 @@ class _AppShellState extends State<AppShell> {
     final tab = _tab.value;
     // Both tabs use surfaceContainer as page color behind the bar.
     final pageColor = scheme.surfaceContainer;
+    final windowSize = WindowSize.of(context);
+    final navItems = [
+      FloatingNavItem(
+        icon: Icons.home_outlined,
+        selectedIcon: Icons.home_rounded,
+        label: gloc.nav_home,
+      ),
+      FloatingNavItem(
+        icon: Icons.folder_copy_outlined,
+        selectedIcon: Icons.folder_copy_rounded,
+        label: gloc.nav_groups,
+      ),
+    ];
+    final tabs = FadeThroughStack(
+      index: tab.index,
+      children: [widget.home, widget.groups],
+    );
 
     return AppShellScope._(
       tab: _tab,
@@ -121,66 +138,99 @@ class _AppShellState extends State<AppShell> {
         onPopInvokedWithResult: (didPop, _) {
           if (!didPop) _select(AppTab.home);
         },
-        child: Stack(
-          children: [
-            // Page color behind the tabs, so the fade through never shows
-            // the black window between them.
-            ColoredBox(
-              color: pageColor,
-              child: FadeThroughStack(
-                index: tab.index,
-                children: [widget.home, widget.groups],
-              ),
+        child: windowSize.isCompact
+            ? _buildCompact(context, tabs, navItems, pageColor)
+            : _buildWide(context, tabs, navItems, pageColor, windowSize),
+      ),
+    );
+  }
+
+  /// Tablets and desktop windows: the navigation becomes a side column
+  /// (a rail on medium windows, with labels on expanded ones) and the tabs
+  /// take the rest; nothing floats over the content.
+  Widget _buildWide(
+    BuildContext context,
+    Widget tabs,
+    List<FloatingNavItem> navItems,
+    Color pageColor,
+    WindowSize windowSize,
+  ) {
+    final tab = _tab.value;
+    return ColoredBox(
+      color: pageColor,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (_navVisible)
+            SideNav(
+              items: navItems,
+              selectedIndex: tab.index,
+              onSelected: (i) => _select(AppTab.values[i]),
+              action: _actions[tab],
+              extended: windowSize == WindowSize.expanded,
             ),
-            if (_navVisible) ...[
-              // Content scrolling under the bar fades into the page instead
-              // of showing half-hidden items behind it. Only as tall as the
-              // bar, so at rest it doesn't wash the bottom of the Home card.
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: IgnorePointer(
-                  child: Container(
-                    height:
-                        FloatingNavBar.reservedHeight +
-                        MediaQuery.paddingOf(context).bottom,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          pageColor.withValues(alpha: 0),
-                          pageColor.withValues(alpha: 0.92),
-                        ],
-                        stops: const [0, 0.45],
-                      ),
-                    ),
+          Expanded(
+            child: MediaQuery.removePadding(
+              context: context,
+              removeLeft: _navVisible,
+              child: tabs,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Phones: the tabs fill the screen and the floating pill bar sits over
+  /// their bottom.
+  Widget _buildCompact(
+    BuildContext context,
+    Widget tabs,
+    List<FloatingNavItem> navItems,
+    Color pageColor,
+  ) {
+    final tab = _tab.value;
+    return Stack(
+      children: [
+        // Page color behind the tabs, so the fade through never shows
+        // the black window between them.
+        ColoredBox(color: pageColor, child: tabs),
+        if (_navVisible) ...[
+          // Content scrolling under the bar fades into the page instead
+          // of showing half-hidden items behind it. Only as tall as the
+          // bar, so at rest it doesn't wash the bottom of the Home card.
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: IgnorePointer(
+              child: Container(
+                height:
+                    FloatingNavBar.reservedHeight +
+                    MediaQuery.paddingOf(context).bottom,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      pageColor.withValues(alpha: 0),
+                      pageColor.withValues(alpha: 0.92),
+                    ],
+                    stops: const [0, 0.45],
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: FloatingNavBar(
-                  selectedIndex: tab.index,
-                  onSelected: (i) => _select(AppTab.values[i]),
-                  items: [
-                    FloatingNavItem(
-                      icon: Icons.home_outlined,
-                      selectedIcon: Icons.home_rounded,
-                      label: gloc.nav_home,
-                    ),
-                    FloatingNavItem(
-                      icon: Icons.folder_copy_outlined,
-                      selectedIcon: Icons.folder_copy_rounded,
-                      label: gloc.nav_groups,
-                    ),
-                  ],
-                  action: _actions[tab],
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: FloatingNavBar(
+              selectedIndex: tab.index,
+              onSelected: (i) => _select(AppTab.values[i]),
+              items: navItems,
+              action: _actions[tab],
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -220,6 +270,11 @@ class AppShellScope extends InheritedWidget {
   /// Shows or hides the whole bar. Safe to call during build.
   void setNavVisible(bool visible) => WidgetsBinding.instance
       .addPostFrameCallback((_) => _setNavVisible(visible));
+
+  /// Space a tab leaves at its bottom for the floating navigation: none on
+  /// wide windows, where the navigation is a side column.
+  static double navReserve(BuildContext context) =>
+      WindowSize.of(context).isCompact ? FloatingNavBar.reservedHeight : 0;
 
   /// Switches to [tab] (e.g. "see all groups" from Home).
   void select(AppTab tab) => _select(tab);

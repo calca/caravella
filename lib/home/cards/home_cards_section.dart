@@ -6,6 +6,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
 import 'package:caravella_core/caravella_core.dart';
+
 import '../home_constants.dart';
 import '../navigation_helpers.dart';
 import '../../main/app_shell.dart';
@@ -287,11 +288,11 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           header,
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(
+              padding: EdgeInsets.fromLTRB(
                 HomeLayoutConstants.horizontalPadding,
                 0,
                 HomeLayoutConstants.horizontalPadding,
-                FloatingNavBar.reservedHeight,
+                AppShellScope.navReserve(context),
               ),
               child: EmptyGroupsState(
                 localizations: loc,
@@ -317,7 +318,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           constraints.maxHeight -
               topSafeArea -
               HomeLayoutConstants.headerHeight -
-              FloatingNavBar.reservedHeight -
+              AppShellScope.navReserve(context) -
               HomeLayoutConstants.navBarGap -
               bottomSafeArea,
         );
@@ -367,7 +368,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                         ),
                         SizedBox(
                           height:
-                              FloatingNavBar.reservedHeight +
+                              AppShellScope.navReserve(context) +
                               bottomSafeArea +
                               24,
                         ),
