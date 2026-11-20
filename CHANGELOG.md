@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings › Check for updates: the “Update available” card no longer shows “v4133”. Play reports only the version code (the build number), not the version name, so the line is gone
 
 ### Changed
+- Group cards: the type chip over the photo lets the photo show through instead of a solid white label; on Home it is frosted glass
 - Home: the favorite group shows a "♥ Favorite" pill like the "Shared" one, instead of a heart that looked lost on its own; dates and pills stay on one line
 - Budget sheet: the pencil is a filled round button like the app's others, without a border
 - Caravella opens a little faster: before showing Home it no longer reads every group to refresh the app shortcuts (Home does it once it has loaded) nor prepares the group photos (that waits until Home is on screen)

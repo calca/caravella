@@ -413,10 +413,23 @@ class TypeChip extends StatelessWidget {
     this.favorite = false,
     this.semanticLabel,
     this.height = 30,
+    this.frosted = false,
   });
 
-  static Color background(Brightness b) =>
-      b == Brightness.dark ? const Color(0xB8121212) : const Color(0xD9FFFFFF);
+  /// Frosted glass: a 10 px blur of the photo behind the veil. For a single
+  /// card (Home): on the Groups page, one per card, it tripled the raster
+  /// time of a scroll on a Galaxy S25 (1.9 → 5.6 ms on average).
+  final bool frosted;
+
+  /// A veil the photo shows through (white 65%, dark 64%); [frosted] blurs
+  /// what's under it, so the light veil can be thinner (55%). The label
+  /// keeps 4.5:1 even over plain white or black.
+  static Color background(Brightness b, {bool frosted = false}) =>
+      b == Brightness.dark
+      ? const Color(0xA3121212)
+      : frosted
+      ? const Color(0x8CFFFFFF)
+      : const Color(0xA6FFFFFF);
 
   static Color foreground(Brightness b) =>
       b == Brightness.dark ? const Color(0xFFEDEDED) : const Color(0xFF1B1B1B);
@@ -427,43 +440,52 @@ class TypeChip extends StatelessWidget {
     final fg = foreground(theme.brightness);
     final iconSize = height * 0.53;
     final text = label;
+    final chip = Container(
+      constraints: BoxConstraints(minHeight: height, minWidth: height),
+      padding: EdgeInsets.symmetric(
+        horizontal: text == null ? height * 0.23 : 10,
+      ),
+      decoration: BoxDecoration(
+        color: background(theme.brightness, frosted: frosted),
+        borderRadius: BorderRadius.circular(height),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (favorite) ...[
+            Icon(Icons.favorite_rounded, size: iconSize, color: fg),
+            SizedBox(width: height * 0.15),
+          ],
+          Icon(icon, size: iconSize, color: fg),
+          if (text != null) ...[
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: fg,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
     return Semantics(
       label: text ?? semanticLabel,
       excludeSemantics: true,
-      child: Container(
-        constraints: BoxConstraints(minHeight: height, minWidth: height),
-        padding: EdgeInsets.symmetric(
-          horizontal: text == null ? height * 0.23 : 10,
-        ),
-        decoration: BoxDecoration(
-          color: background(theme.brightness),
-          borderRadius: BorderRadius.circular(height),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (favorite) ...[
-              Icon(Icons.favorite_rounded, size: iconSize, color: fg),
-              SizedBox(width: height * 0.15),
-            ],
-            Icon(icon, size: iconSize, color: fg),
-            if (text != null) ...[
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  text,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: fg,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+      child: frosted
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(height),
+              child: BackdropFilter(
+                filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: chip,
               ),
-            ],
-          ],
-        ),
-      ),
+            )
+          : chip,
     );
   }
 }
