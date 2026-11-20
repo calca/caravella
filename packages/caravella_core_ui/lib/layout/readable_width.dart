@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Keeps a page's content to a comfortable width on wide windows (tablets,
 /// desktop browsers): centered, with the page's background on both sides.
@@ -22,6 +22,11 @@ class ReadableWidth extends StatelessWidget {
 
   const ReadableWidth({super.key, this.maxWidth = text, required this.child});
 
+  /// Where a Scaffold's floating action button goes so it stays at the
+  /// bottom end corner of the [maxWidth] column instead of the window's.
+  static FloatingActionButtonLocation fabLocation(double maxWidth) =>
+      _ReadableEndFloat(maxWidth);
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -34,5 +39,26 @@ class ReadableWidth extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class _ReadableEndFloat extends StandardFabLocation
+    with FabEndOffsetX, FabFloatOffsetY {
+  final double maxWidth;
+
+  const _ReadableEndFloat(this.maxWidth);
+
+  @override
+  double getOffsetX(
+    ScaffoldPrelayoutGeometry scaffoldGeometry,
+    double adjustment,
+  ) {
+    final x = super.getOffsetX(scaffoldGeometry, adjustment);
+    final side = (scaffoldGeometry.scaffoldSize.width - maxWidth) / 2;
+    if (side <= 0) return x;
+    return switch (scaffoldGeometry.textDirection) {
+      TextDirection.ltr => x - side,
+      TextDirection.rtl => x + side,
+    };
   }
 }

@@ -266,6 +266,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
       child: Scaffold(
         backgroundColor: scheme.surfaceContainer,
         floatingActionButton: shell == null ? _buildAnimatedFab(gloc) : null,
+        floatingActionButtonLocation: ReadableWidth.fabLocation(
+          ReadableWidth.wide,
+        ),
         body: ReadableWidth(
           maxWidth: ReadableWidth.wide,
           child: Stack(

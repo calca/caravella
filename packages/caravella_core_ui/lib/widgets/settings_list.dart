@@ -41,6 +41,9 @@ class SettingsScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: s.surfaceContainer,
       floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: ReadableWidth.fabLocation(
+        ReadableWidth.text,
+      ),
       // With a bottom bar the keyboard is made room for by lifting the bar
       // (below), which also shrinks the body: resizing too would count the
       // keyboard twice.

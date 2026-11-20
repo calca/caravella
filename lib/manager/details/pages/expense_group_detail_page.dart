@@ -697,6 +697,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
           ),
         ),
         floatingActionButton: _buildAnimatedFab(),
+        floatingActionButtonLocation: ReadableWidth.fabLocation(
+          ReadableWidth.content,
+        ),
       ),
     );
   }

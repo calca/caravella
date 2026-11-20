@@ -35,6 +35,7 @@ export 'widgets/empty_state_view.dart';
 export 'widgets/expense_amount_card.dart';
 export 'widgets/floating_nav_bar.dart';
 export 'widgets/side_nav.dart';
+export 'widgets/side_panel.dart';
 export 'layout/window_size.dart';
 export 'layout/readable_width.dart';
 export 'widgets/form_pill.dart';
