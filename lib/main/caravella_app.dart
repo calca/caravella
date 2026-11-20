@@ -171,19 +171,7 @@ class AppFrame extends StatelessWidget {
         // In a browser window wider than a phone, the app keeps a phone's
         // width, centered on the page color (until the layout adapts to
         // wide windows).
-        Positioned.fill(
-          child: PlatformInfo.isWeb
-              ? ColoredBox(
-                  color: Theme.of(context).colorScheme.surfaceContainer,
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 520),
-                      child: AppSystemUI(child: child ?? const SizedBox()),
-                    ),
-                  ),
-                )
-              : AppSystemUI(child: child ?? const SizedBox()),
-        ),
+        Positioned.fill(child: AppSystemUI(child: child ?? const SizedBox())),
         // Toasts at the bottom of the screen, just above whatever the page
         // on top keeps there (the floating navigation, a "+" button, a Save
         // bar: see ToastClearance) and the keyboard, so they never cover a

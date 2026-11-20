@@ -2,9 +2,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+
 import 'dart:async';
+
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+
 import '../group/pages/group_creation_wizard_page.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/group_photo_card.dart';
@@ -253,7 +256,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
     );
     final top = MediaQuery.paddingOf(context).top;
     final bottom = shell != null
-        ? FloatingNavBar.reservedHeight +
+        ? AppShellScope.navReserve(context) +
               MediaQuery.paddingOf(context).bottom +
               16
         : 100.0;

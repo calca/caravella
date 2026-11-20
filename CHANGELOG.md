@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Tablets and wide windows: Home and Groups get a side navigation instead of the floating bar, with the main action on top
+
 ## [2.5.0] - 2026-11-23
 
 ### Added
