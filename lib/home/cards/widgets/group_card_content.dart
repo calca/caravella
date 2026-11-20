@@ -71,9 +71,11 @@ class GroupCardContent extends StatelessWidget {
 
   ExpenseGroupType get _type => group.groupType ?? ExpenseGroupType.other;
 
+  // Frosted glass on Home's one card (too costly on the Groups page).
   Widget _chip() => TypeChip(
     icon: _type.icon,
     label: GroupTypeLocalization.typeName(localizations, _type),
+    frosted: true,
   );
 
   Widget _header(Color fg) => MergeSemantics(

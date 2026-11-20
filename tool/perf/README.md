@@ -13,7 +13,7 @@ flutter drive --profile --no-dds --keep-app-running \
   -d <device>
 ```
 
-- The **first** run fills the dev app ("Perf 1000": 1,000 expenses, a monthly budget, pinned; five groups of 100) and stops. The **second** run measures: open the group, scroll the expenses, open Statistics and scroll. Results in `build/integration_response_data.json` (`average_frame_build_time_millis`, `90th_percentile_…`, `worst_…`, and the same for the rasterizer).
+- The **first** run fills the dev app ("Perf 1000": 1,000 expenses, a monthly budget, pinned; 23 groups of 40 in the palette's colors) and stops. The **second** run measures: open the group, scroll the expenses, open Statistics and scroll, then scroll the Groups page (`groups_page`: a card per group, each with its frosted type chip). Results in `build/integration_response_data.json` (`average_frame_build_time_millis`, `90th_percentile_…`, `worst_…`, and the same for the rasterizer).
 - **Always pass `--keep-app-running`.** Without it `flutter drive` stops the app at the end and tries to uninstall `io.caravella.egm` — the store app's id, not the dev one — which on a phone would remove Caravella and its data.
 - `--no-dds`: without it `watchPerformance` can't reach the VM service.
 - The test finds the Statistics section in the device's language.
@@ -49,3 +49,5 @@ Samsung Galaxy S25 (Android 16, 120 Hz), same data:
 | Statistics + scroll | 401 | 0.8 / 3.5 / 41 ms | 1.7 / 4.3 / 32 ms |
 
 The few frames over budget are single builds of ~40 ms (a new week section while scrolling, the first Statistics frame).
+
+Groups page on the S25 (24 groups, `groups_page`): raster avg 1.9 ms, p90 1.8, p99 6.7, 7 frames over budget of 664. With a frosted type chip on every card it was 5.6 / 9.0 / 30.5 ms and 19 over budget: the blur stays on Home's single card.

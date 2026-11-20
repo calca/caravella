@@ -28,19 +28,23 @@ void main() {
     test('chip text reads on its pill over any tint or photo, '
         '${brightness.name}', () {
       final fg = TypeChip.foreground(brightness);
-      final pill = TypeChip.background(brightness);
-      for (final under in [
-        for (final color in [...palette, null])
-          GroupLook.of(color, brightness).tint,
-        Colors.black,
-        Colors.white,
+      for (final pill in [
+        TypeChip.background(brightness),
+        TypeChip.background(brightness, frosted: true),
       ]) {
-        final over = Color.alphaBlend(pill, under);
-        expect(
-          GroupLook.contrast(fg, over),
-          greaterThanOrEqualTo(4.5),
-          reason: 'cover $under',
-        );
+        for (final under in [
+          for (final color in [...palette, null])
+            GroupLook.of(color, brightness).tint,
+          Colors.black,
+          Colors.white,
+        ]) {
+          final over = Color.alphaBlend(pill, under);
+          expect(
+            GroupLook.contrast(fg, over),
+            greaterThanOrEqualTo(4.5),
+            reason: 'pill $pill over $under',
+          );
+        }
       }
     });
   }
@@ -104,5 +108,40 @@ void main() {
     PhotoTone.seed({'/gone/old.jpg@1': 0xFF102030});
     await PhotoTone.warmUp(const []);
     expect(stored, isEmpty);
+  });
+
+  testWidgets('frosted only when asked: the photo blurs behind it', (
+    tester,
+  ) async {
+    Finder blur() => find.descendant(
+      of: find.byType(TypeChip),
+      matching: find.byType(BackdropFilter),
+    );
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: TypeChip(
+            icon: Icons.flight_takeoff_rounded,
+            label: 'Travel',
+            frosted: true,
+          ),
+        ),
+      ),
+    );
+    expect(blur(), findsOneWidget);
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: TypeChip(icon: Icons.flight_takeoff_rounded, label: 'Travel'),
+        ),
+      ),
+    );
+    expect(blur(), findsNothing);
+    // Both let the photo through, more than the old 85% white.
+    expect(TypeChip.background(Brightness.light).a, lessThan(0.7));
+    expect(
+      TypeChip.background(Brightness.light, frosted: true).a,
+      lessThan(0.6),
+    );
   });
 }
