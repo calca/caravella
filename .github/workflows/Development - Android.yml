@@ -2,9 +2,9 @@ name: Android CI - Development
 
 on:
   push:
-    branches: [ main, "release/**" ]
+    branches: [ main, "release/**", "feature/**" ]
   pull_request:
-    branches: [ main, "release/**" ]
+    branches: [ main, "release/**", "feature/**" ]
 
 jobs:
   build:
@@ -90,6 +90,15 @@ jobs:
       # variant still compiles and that no proprietary Google artifact
       # (Play Services, ML Kit, Play Core, Firebase) reaches its classpath,
       # then switch back for the Play build below.
+      # The web build (feature/web): it must keep compiling for the browser.
+      - name: Web build
+        run: flutter build web --dart-define=FLAVOR=dev
+      - name: Upload web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: caravella-web
+          path: build/web
+          retention-days: 14
       - name: F-Droid (FOSS) variant guard
         run: |
           set -e

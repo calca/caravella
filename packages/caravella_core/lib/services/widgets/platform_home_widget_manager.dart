@@ -1,4 +1,4 @@
-import 'dart:io';
+import '../../platform/platform_info.dart';
 
 import '../../config/app_config.dart';
 import 'app_home_widget_service.dart';
@@ -7,7 +7,7 @@ import 'app_home_widget_service.dart';
 class PlatformHomeWidgetManager {
   /// Refresh home widgets if platform supports them.
   static Future<void> updateHomeWidgets() async {
-    if (!Platform.isAndroid || !AppConfig.enableAndroidWidget) return;
+    if (!PlatformInfo.isAndroid || !AppConfig.enableAndroidWidget) return;
     await AppHomeWidgetService.updateWidgets();
   }
 
@@ -15,13 +15,13 @@ class PlatformHomeWidgetManager {
   static Future<void> initializeTapHandling(
     HomeWidgetTapCallback callback,
   ) async {
-    if (!Platform.isAndroid || !AppConfig.enableAndroidWidget) return;
+    if (!PlatformInfo.isAndroid || !AppConfig.enableAndroidWidget) return;
     await AppHomeWidgetService.initializeTapHandling(callback);
   }
 
   /// Dispose widget tap handling if platform supports it.
   static Future<void> disposeTapHandling() async {
-    if (!Platform.isAndroid || !AppConfig.enableAndroidWidget) return;
+    if (!PlatformInfo.isAndroid || !AppConfig.enableAndroidWidget) return;
     await AppHomeWidgetService.disposeTapHandling();
   }
 }

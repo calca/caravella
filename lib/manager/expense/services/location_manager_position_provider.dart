@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +14,7 @@ class LocationManagerPositionProvider implements PositionProvider {
 
   @override
   Future<bool> isLocationServiceEnabled() async {
-    if (!Platform.isAndroid) return false;
+    if (!PlatformInfo.isAndroid) return false;
     try {
       return await _channel.invokeMethod<bool>('isLocationEnabled') ?? false;
     } on PlatformException catch (e) {
@@ -40,7 +39,7 @@ class LocationManagerPositionProvider implements PositionProvider {
     LocationAccuracy accuracy = LocationAccuracy.high,
     Duration timeLimit = const Duration(seconds: 10),
   }) async {
-    if (!Platform.isAndroid) return null;
+    if (!PlatformInfo.isAndroid) return null;
     try {
       final result = await _channel
           .invokeMapMethod<String, dynamic>('getCurrentPosition', {

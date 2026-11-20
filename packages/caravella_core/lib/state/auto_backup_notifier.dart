@@ -1,4 +1,4 @@
-import 'dart:io';
+import '../platform/platform_info.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +24,7 @@ class AutoBackupNotifier extends ChangeNotifier {
   /// Last cloud backup (Android), `null` if none recorded yet.
   DateTime? get lastBackup => _lastBackup;
 
-  bool get _isIOS => debugIsIOS ?? (!kIsWeb && Platform.isIOS);
+  bool get _isIOS => debugIsIOS ?? (!kIsWeb && PlatformInfo.isIOS);
 
   AutoBackupNotifier() {
     _load();

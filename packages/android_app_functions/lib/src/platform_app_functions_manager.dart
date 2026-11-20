@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:caravella_core/caravella_core.dart';
 import 'app_functions_service.dart';
 
 /// Platform-aware wrapper for [AppFunctionsService].
@@ -16,7 +16,7 @@ class PlatformAppFunctionsManager {
     required AddExpenseCallback onAddExpense,
     ExpenseAddedCallback? onExpenseAdded,
   }) {
-    if (!Platform.isAndroid) return;
+    if (!PlatformInfo.isAndroid) return;
     AppFunctionsService.initialize(
       onAddExpense: onAddExpense,
       onExpenseAdded: onExpenseAdded,

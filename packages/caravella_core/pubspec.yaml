@@ -28,6 +28,7 @@ dependencies:
   cryptography: ^2.7.0
   flutter_secure_storage: ^11.0.0
   material_ui: ^1.0.0
+  sqflite_common_ffi_web: ^1.2.2
 
 dev_dependencies:
   flutter_test:

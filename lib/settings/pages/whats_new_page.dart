@@ -2,7 +2,6 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -127,7 +126,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     final theme = Theme.of(context);
     return [
       // Update check (only on Android, Play builds)
-      if (Platform.isAndroid && GmsIntegrations.instance.appUpdates != null)
+      if (PlatformInfo.isAndroid && GmsIntegrations.instance.appUpdates != null)
         GmsIntegrations.instance.appUpdates!.buildUpdateCheckWidget(
           localizations: AppUpdateLocalizations(loc),
           cardBuilder: (context, child) => SettingsGroup(children: [child]),
