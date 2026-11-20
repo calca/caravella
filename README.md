@@ -84,34 +84,21 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshots/en/08.jpg" alt="Dark theme" width="200"/>
 </p>
 
-## 🎉 What's New in v2.4.0
+## 🎉 What's New in v2.5.0
+
+- **Group Budget**: Set a budget in total or per month, week or day, and see what's left, how much a day keeps you within it and when it would run out
+- **Two Currencies**: Add a second currency to a group for trips abroad, with the rate from your card statement
+- **Settle Up, Ticked**: Mark a suggested payment as paid with one tap
+- **Your Devices in Sync**: Google Drive sync between your own devices (Play version)
+- **Clearer and Faster**: Redesigned group cards, a clearer expense page, groups that open at once and sync that never loses an expense
+
+### v2.4.0
 
 - **Share With Friends Nearby**: Invite a device shows a QR code and finds nearby phones over Bluetooth; Join a group reads the code or picks a nearby phone
 - **Privacy Switches**: Turn Wi-Fi and Bluetooth sync on or off; with both off, your phone isn't visible to anyone
 - **Paired Devices**: See when each device last updated, and update it in one tap
 - **Fewer Payments**: Settling up suggests as few payments as possible
 - **Smoother Everyday Use**: Colored groups match photo ones, adding an expense is calmer, and places can be changed on the map
-
-### v2.3.0
-
-- **Spending Pace**: Statistics start with your average per day (or per month), how many expenses and each person's share
-- **Search Every Expense**: Search finds expenses across all your groups, by name, note or place
-- **Shared Groups, Clearer**: See who shared a group with you, and a dot on the "Shared" badge tells you how sync is doing
-- **Calmer and Consistent**: Dialogs without icons, a tidy list of attachments, and adding people that works the same everywhere
-- **Steadier**: Places keep their name, charts are right around daylight saving time, and the app reads better with large text and TalkBack
-
-### v2.2.1
-
-- **Swipe Between Tabs**: On the group page, swipe to move between Expenses, Balances and Statistics
-- **One Field Style**: Every text field now looks and behaves the same
-
-### v2.2.0
-
-- **A Fresh New Look**: A floating bar to switch between Home and Groups, and every screen, sheet and dialog redesigned in one calm style
-- **Home in Two Cards**: Your group with its total and today's spending, and the latest expenses right below
-- **Easier Group Creation**: A few short steps, and you can add your friends straight away
-- **Faster Expenses**: Read a receipt or say an expense from Home; the quick form keeps who paid and the category on one line
-- **Softer Colors, Clearer Words**: Gentle group colors, vivid group photos, and texts reviewed in every language
 
 ## 🛠️ Tech Stack & Architecture
 

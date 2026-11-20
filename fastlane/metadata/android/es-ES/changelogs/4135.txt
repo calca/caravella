@@ -1,0 +1,9 @@
+Versión 2.5.0 - Presupuesto y dos monedas
+
+• Presupuesto del grupo: cuánto queda y cuánto puedes gastar al día
+• Una segunda moneda por grupo para viajar al extranjero
+• Marca un pago como pagado al saldar cuentas
+• Tarjetas de grupo rediseñadas, una página de gasto más clara y todo más rápido
+• La sincronización ya no pierde gastos
+
+¡Gracias por usar Caravella!
