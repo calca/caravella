@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import 'side_panel.dart';
+
 /// The layout of every bottom sheet, in the app's style: a handle, a large
 /// [title] with an optional [subtitle] line of context, then the content —
 /// usually [SettingsGroup] cards of actions or a [showSelectionBottomSheet]
@@ -33,21 +35,9 @@ class CaravellaBottomSheetScaffold extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showHandle) ...[
-          Center(
-            child: Container(
-              width: 44,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 14),
-              decoration: BoxDecoration(
-                color: Theme.of(
-                  context,
-                ).colorScheme.outlineVariant.withValues(alpha: 0.7),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-        ],
+        // In a side panel (wide windows) it is a close button, always.
+        if (showHandle || SidePanelScope.isIn(context))
+          const SheetHandle(margin: EdgeInsets.only(bottom: 14)),
         // The grid of the pages: title at 20 (4 in), cards at 16.
         if (title != null) ...[
           Padding(

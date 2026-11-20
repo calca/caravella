@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../expense/components/expense_form_component.dart';
 import '../../expense/components/expense_form_config.dart';
 import '../../expense/state/expense_form_state.dart';
@@ -69,7 +70,6 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final keyboard = MediaQuery.viewInsetsOf(context).bottom;
     final isEdit =
         widget.initialExpense != null && widget.initialExpense!.id.isNotEmpty;
@@ -85,17 +85,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Container(
-                width: 44,
-                height: 4,
-                margin: const EdgeInsets.only(top: 12, bottom: 4),
-                decoration: BoxDecoration(
-                  color: scheme.outlineVariant.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
+            const SheetHandle(),
             Flexible(
               child: SingleChildScrollView(
                 controller: _scrollController,
