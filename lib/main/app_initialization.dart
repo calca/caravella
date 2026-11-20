@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -13,6 +14,8 @@ import 'package:caravella_gms/caravella_gms.dart';
 import '../settings/backup/drive_backup_service.dart';
 import '../settings/flag_secure_android.dart';
 import 'expected_errors.dart';
+import 'web_database_stub.dart'
+    if (dart.library.js_interop) 'web_database_web.dart';
 
 /// Initializes the app: platform-specific setup, orientation, system UI, and image cache.
 class AppInitialization {
@@ -48,7 +51,7 @@ class AppInitialization {
 
   /// Configures Android-specific image picker to use the native photo picker.
   static void configureImagePicker() {
-    if (Platform.isAndroid) {
+    if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) {
       final androidPicker = ImagePickerAndroid();
       androidPicker.useAndroidPhotoPicker = true;
       ImagePickerPlatform.instance = androidPicker;
@@ -108,6 +111,7 @@ class AppInitialization {
 
   /// Initializes storage backend and performs migration if needed.
   static Future<void> initStorage() async {
+    useWebDatabase();
     ExpenseGroupRepositoryFactory.getRepository();
 
     // Using SQLite backend - check if migration is needed

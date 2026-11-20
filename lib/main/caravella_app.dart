@@ -168,7 +168,19 @@ class AppFrame extends StatelessWidget {
         // navigation bar colors — e.g. a black nav bar right
         // after switching to light theme in Appearance. Pages
         // with their own AppSystemUI still take precedence.
-        Positioned.fill(child: AppSystemUI(child: child ?? const SizedBox())),
+        // Web spike: on a wide window the phone layout stays a centered
+        // column (step 1 of responsive), the page color around it.
+        Positioned.fill(
+          child: ColoredBox(
+            color: Theme.of(context).colorScheme.surfaceContainer,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520),
+                child: AppSystemUI(child: child ?? const SizedBox()),
+              ),
+            ),
+          ),
+        ),
         // Toasts at the bottom of the screen, just above whatever the page
         // on top keeps there (the floating navigation, a "+" button, a Save
         // bar: see ToastClearance) and the keyboard, so they never cover a

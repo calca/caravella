@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, visibleForTesting;
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -90,11 +90,11 @@ class DeviceIdentity {
 
   static DevicePlatform _detectPlatform() {
     if (kIsWeb) return DevicePlatform.web;
-    if (Platform.isIOS) return DevicePlatform.ios;
-    if (Platform.isAndroid) return DevicePlatform.android;
-    if (Platform.isMacOS) return DevicePlatform.macos;
-    if (Platform.isWindows) return DevicePlatform.windows;
-    if (Platform.isLinux) return DevicePlatform.linux;
+    if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)) return DevicePlatform.ios;
+    if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) return DevicePlatform.android;
+    if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS)) return DevicePlatform.macos;
+    if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)) return DevicePlatform.windows;
+    if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.linux)) return DevicePlatform.linux;
     return DevicePlatform.unknown;
   }
 
@@ -105,19 +105,19 @@ class DeviceIdentity {
         final web = await info.webBrowserInfo;
         return web.browserName.name;
       }
-      if (Platform.isIOS) {
+      if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)) {
         final ios = await info.iosInfo;
         return ios.name;
       }
-      if (Platform.isAndroid) {
+      if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) {
         final android = await info.androidInfo;
         return android.model;
       }
-      if (Platform.isMacOS) {
+      if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS)) {
         final mac = await info.macOsInfo;
         return mac.computerName;
       }
-      if (Platform.isWindows) {
+      if ((!kIsWeb && defaultTargetPlatform == TargetPlatform.windows)) {
         final win = await info.windowsInfo;
         return win.computerName;
       }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
@@ -88,7 +89,7 @@ class _DataBackupPageState extends State<DataBackupPage> {
     AutoBackupNotifier notifier,
   ) {
     if (!notifier.enabled) return gloc.auto_backup_off;
-    if (!Platform.isAndroid) return gloc.auto_backup_desc;
+    if (!(!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) return gloc.auto_backup_desc;
     final last = notifier.lastBackup;
     if (last == null) return gloc.auto_backup_never;
     final locale = Localizations.localeOf(context).toString();

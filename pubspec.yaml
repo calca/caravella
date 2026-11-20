@@ -85,6 +85,7 @@ dependencies:
   permission_handler: ^13.0.1
   qr_flutter: ^4.1.0
   material_ui: ^1.0.0
+  sqflite_common_ffi_web: ^1.2.2
 
 dev_dependencies:
   flutter_test:

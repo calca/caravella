@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'app_functions_service.dart';
 
@@ -16,7 +17,7 @@ class PlatformAppFunctionsManager {
     required AddExpenseCallback onAddExpense,
     ExpenseAddedCallback? onExpenseAdded,
   }) {
-    if (!Platform.isAndroid) return;
+    if (!(!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) return;
     AppFunctionsService.initialize(
       onAddExpense: onAddExpense,
       onExpenseAdded: onExpenseAdded,

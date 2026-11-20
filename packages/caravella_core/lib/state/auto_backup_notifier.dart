@@ -24,7 +24,7 @@ class AutoBackupNotifier extends ChangeNotifier {
   /// Last cloud backup (Android), `null` if none recorded yet.
   DateTime? get lastBackup => _lastBackup;
 
-  bool get _isIOS => debugIsIOS ?? (!kIsWeb && Platform.isIOS);
+  bool get _isIOS => debugIsIOS ?? (!kIsWeb && (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS));
 
   AutoBackupNotifier() {
     _load();

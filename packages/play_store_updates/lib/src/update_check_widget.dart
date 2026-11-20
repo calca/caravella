@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -28,7 +29,7 @@ class UpdateCheckWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Hide completely on non-Android platforms
-    if (!Platform.isAndroid) {
+    if (!(!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) {
       return const SizedBox.shrink();
     }
 

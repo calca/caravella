@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'app_shortcuts_service.dart';
 
@@ -6,19 +7,19 @@ import 'app_shortcuts_service.dart';
 class PlatformShortcutsManager {
   /// Update shortcuts if platform supports them
   static Future<void> updateShortcuts() async {
-    if (!Platform.isAndroid) return;
+    if (!(!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) return;
     await AppShortcutsService.updateShortcuts();
   }
 
   /// Clear shortcuts if platform supports them
   static Future<void> clearShortcuts() async {
-    if (!Platform.isAndroid) return;
+    if (!(!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) return;
     await AppShortcutsService.clearShortcuts();
   }
 
   /// Initialize shortcuts service if platform supports them
   static Future<void> initialize(ShortcutTapCallback callback) async {
-    if (!Platform.isAndroid) return;
+    if (!(!kIsWeb && defaultTargetPlatform == TargetPlatform.android)) return;
     AppShortcutsService.initialize(callback);
   }
 }
