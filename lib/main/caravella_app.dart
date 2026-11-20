@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
@@ -160,60 +161,104 @@ class AppFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Theme-aware fallback for the system bars: pages that
-        // don't wrap themselves in AppSystemUI would otherwise
-        // keep the previous screen's (or previous theme's)
-        // navigation bar colors — e.g. a black nav bar right
-        // after switching to light theme in Appearance. Pages
-        // with their own AppSystemUI still take precedence.
-        // In a browser window wider than a phone, the app keeps a phone's
-        // width, centered on the page color (until the layout adapts to
-        // wide windows).
-        Positioned.fill(child: AppSystemUI(child: child ?? const SizedBox())),
-        // Toasts at the bottom of the screen, just above whatever the page
-        // on top keeps there (the floating navigation, a "+" button, a Save
-        // bar: see ToastClearance) and the keyboard, so they never cover a
-        // page's title or its main button.
-        ValueListenableBuilder<double>(
-          valueListenable: ToastClearance.bottom,
-          builder: (context, clearance, viewer) {
-            final media = MediaQuery.of(context);
-            final bottom = math.max(
-              clearance,
-              math.max(media.viewInsets.bottom, media.viewPadding.bottom + 8),
-            );
-            return Padding(
-              padding: EdgeInsets.only(bottom: bottom),
-              child: viewer,
-            );
-          },
-          child: SafeArea(
-            bottom: false,
-            // Around the viewer only: zentoast is built on Flutter's own
-            // Theme, which doesn't see the app's and sets the light
-            // defaults, so around the pages it turned every icon without
-            // a color of its own black in the dark theme.
-            child: ToastThemeProvider(
-              data: const ToastTheme(
-                gap: 8,
-                viewerPadding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
+    return WebScale(
+      child: Stack(
+        children: [
+          // Theme-aware fallback for the system bars: pages that
+          // don't wrap themselves in AppSystemUI would otherwise
+          // keep the previous screen's (or previous theme's)
+          // navigation bar colors — e.g. a black nav bar right
+          // after switching to light theme in Appearance. Pages
+          // with their own AppSystemUI still take precedence.
+          Positioned.fill(child: AppSystemUI(child: child ?? const SizedBox())),
+          // Toasts at the bottom of the screen, just above whatever the page
+          // on top keeps there (the floating navigation, a "+" button, a Save
+          // bar: see ToastClearance) and the keyboard, so they never cover a
+          // page's title or its main button.
+          ValueListenableBuilder<double>(
+            valueListenable: ToastClearance.bottom,
+            builder: (context, clearance, viewer) {
+              final media = MediaQuery.of(context);
+              final bottom = math.max(
+                clearance,
+                math.max(media.viewInsets.bottom, media.viewPadding.bottom + 8),
+              );
+              return Padding(
+                padding: EdgeInsets.only(bottom: bottom),
+                child: viewer,
+              );
+            },
+            child: SafeArea(
+              bottom: false,
+              // Around the viewer only: zentoast is built on Flutter's own
+              // Theme, which doesn't see the app's and sets the light
+              // defaults, so around the pages it turned every icon without
+              // a color of its own black in the dark theme.
+              child: ToastThemeProvider(
+                data: const ToastTheme(
+                  gap: 8,
+                  viewerPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                 ),
-              ),
-              // No viewer delay: each AppToast hides itself
-              // after its type's time.
-              child: ToastViewer(
-                alignment: Alignment.bottomCenter,
-                delay: null,
-                visibleCount: 3,
+                // No viewer delay: each AppToast hides itself
+                // after its type's time.
+                child: ToastViewer(
+                  alignment: Alignment.bottomCenter,
+                  delay: null,
+                  visibleCount: 3,
+                ),
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// On a large desktop browser window the app is drawn larger: Flutter's
+/// 1 dp is one CSS pixel there, and type and controls sized for a phone
+/// held at arm's length look tiny on a big monitor. The factor grows with
+/// the window: 1 up to [baseWidth] (a laptop), then proportionally, up to
+/// [maxFactor]. Only on the web; phones, tablets and the Android app are
+/// untouched.
+@visibleForTesting
+class WebScale extends StatelessWidget {
+  static const double baseWidth = 1600;
+  static const double maxFactor = 1.3;
+
+  static double factorFor(double width) =>
+      (width / baseWidth).clamp(1.0, maxFactor);
+
+  final Widget child;
+  final bool enabled;
+
+  const WebScale({super.key, required this.child, this.enabled = kIsWeb});
+
+  @override
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final factor = factorFor(media.size.width);
+    if (!enabled || factor == 1) return child;
+    final size = media.size / factor;
+    return FittedBox(
+      fit: BoxFit.fill,
+      alignment: Alignment.topLeft,
+      child: SizedBox.fromSize(
+        size: size,
+        child: MediaQuery(
+          data: media.copyWith(
+            size: size,
+            devicePixelRatio: media.devicePixelRatio * factor,
+            padding: media.padding / factor,
+            viewPadding: media.viewPadding / factor,
+            viewInsets: media.viewInsets / factor,
+          ),
+          child: child,
         ),
-      ],
+      ),
     );
   }
 }

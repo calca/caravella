@@ -19,6 +19,10 @@ class HomeLayoutConstants {
 
   HomeLayoutConstants._();
 
+  /// Height of Home's featured cards on wide windows (they fill the screen
+  /// on phones).
+  static const double maxWideCardHeight = 400;
+
   // ==================== Border Radius ====================
 
   /// Standard border radius for cards and containers

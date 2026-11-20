@@ -325,6 +325,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       body: ReadableWidth(
         maxWidth: ReadableWidth.content,
+        alignStart: AppShellScope.maybeOf(context) != null,
         child: AnimatedSwitcher(
           duration: _switchDuration,
           reverseDuration: _switchDuration == Duration.zero

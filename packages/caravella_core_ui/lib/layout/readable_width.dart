@@ -18,9 +18,18 @@ class ReadableWidth extends StatelessWidget {
   static const double wide = 1200;
 
   final double maxWidth;
+
+  /// Keeps the column at the start side instead of centering it: for a page
+  /// shown beside a side navigation, so no gap opens between the two.
+  final bool alignStart;
   final Widget child;
 
-  const ReadableWidth({super.key, this.maxWidth = text, required this.child});
+  const ReadableWidth({
+    super.key,
+    this.maxWidth = text,
+    this.alignStart = false,
+    required this.child,
+  });
 
   /// Where a Scaffold's floating action button goes so it stays at the
   /// bottom end corner of the [maxWidth] column instead of the window's.
@@ -33,8 +42,11 @@ class ReadableWidth extends StatelessWidget {
       builder: (context, constraints) {
         final width = constraints.maxWidth;
         if (!width.isFinite || width <= maxWidth) return child;
+        final extra = width - maxWidth;
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: (width - maxWidth) / 2),
+          padding: alignStart
+              ? EdgeInsetsDirectional.only(end: extra)
+              : EdgeInsets.symmetric(horizontal: extra / 2),
           child: child,
         );
       },

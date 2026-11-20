@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Tablets and wide windows: Home and Groups get a side navigation instead of the floating bar, with the main action on top
 - Tablets and wide windows: pages keep a comfortable width, centered, instead of stretching across the screen
+- Wide windows: Home shows the group card at a comfortable height with the last expenses beside it, and the quick actions without scrolling
 - Wide windows (tablets in landscape, browsers): the new expense form and the other sheets open as a panel on the side, closed with ✕, Esc or a tap outside
 
 ## [2.5.0] - 2026-11-23

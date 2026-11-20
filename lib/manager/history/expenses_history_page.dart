@@ -271,6 +271,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
         ),
         body: ReadableWidth(
           maxWidth: ReadableWidth.wide,
+          alignStart: shell != null,
           child: Stack(
             children: [
               // Swipe between Active and Archived, like the sections of the
