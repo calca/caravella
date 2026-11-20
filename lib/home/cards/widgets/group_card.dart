@@ -41,6 +41,10 @@ class GroupCard extends StatefulWidget {
   /// Space between the two cards.
   static const double gap = 12;
 
+  /// From this width (a tablet in landscape, a desktop window) the last
+  /// expenses card sits beside the group card instead of under it.
+  static const double sideBySideMinWidth = 720;
+
   @override
   State<GroupCard> createState() => _GroupCardState();
 }
@@ -170,20 +174,32 @@ class _GroupCardState extends State<GroupCard> {
     // Fills the height Home gives it; with large text Home gives none and
     // the card is as tall as its content.
     return LayoutBuilder(
-      builder: (context, constraints) => Column(
-        mainAxisSize: constraints.hasBoundedHeight
-            ? MainAxisSize.max
-            : MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (constraints.hasBoundedHeight)
-            Expanded(child: groupCard)
-          else
-            groupCard,
-          const SizedBox(height: GroupCard.gap),
-          activityCard,
-        ],
-      ),
+      builder: (context, constraints) =>
+          constraints.hasBoundedHeight &&
+              constraints.maxWidth >= GroupCard.sideBySideMinWidth
+          // Wide windows: the last expenses beside the group, not under it.
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(flex: 3, child: groupCard),
+                const SizedBox(width: GroupCard.gap),
+                Expanded(flex: 2, child: activityCard),
+              ],
+            )
+          : Column(
+              mainAxisSize: constraints.hasBoundedHeight
+                  ? MainAxisSize.max
+                  : MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (constraints.hasBoundedHeight)
+                  Expanded(child: groupCard)
+                else
+                  groupCard,
+                const SizedBox(height: GroupCard.gap),
+                activityCard,
+              ],
+            ),
     );
   }
 }

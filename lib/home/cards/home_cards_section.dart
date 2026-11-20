@@ -313,7 +313,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     final bottomSafeArea = MediaQuery.paddingOf(context).bottom;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final cardHeight = math.max(
+        final fillHeight = math.max(
           HomeLayoutConstants.minFeaturedCardHeight,
           constraints.maxHeight -
               topSafeArea -
@@ -322,6 +322,12 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
               HomeLayoutConstants.navBarGap -
               bottomSafeArea,
         );
+        // On a phone the cards fill the screen; on a wide window that would
+        // be a huge, mostly empty card: it stops at a comfortable height
+        // and the quick actions show below without scrolling.
+        final cardHeight = WindowSize.of(context).isCompact
+            ? fillHeight
+            : math.min(fillHeight, HomeLayoutConstants.maxWideCardHeight);
         return Stack(
           children: [
             SingleChildScrollView(
