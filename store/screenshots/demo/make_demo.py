@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime, timedelta
 
 random.seed(7)
-NOW = datetime(2026, 11, 9, 13, 0)
+NOW = datetime(2026, 11, 20, 14, 0)
 PHOTO_DIR = "/storage/emulated/0/Android/data/io.caravella.egm/files/demo"
 
 
@@ -27,7 +27,7 @@ def cats(*names):
 
 
 def group(title, gtype, ppl, categories, expenses, start, end, photo=None, color=None,
-          pinned=False, sync=False, ts_days=0):
+          pinned=False, sync=False, ts_days=0, budget=None, second=None, originals=None):
     by_name = {p["name"]: p for p in ppl}
     cat_by_name = {c["name"]: c for c in categories}
     exp = []
@@ -43,6 +43,11 @@ def group(title, gtype, ppl, categories, expenses, start, end, photo=None, color
         }
         if place:
             e["location"] = place
+        if originals and name in originals and second:
+            # Typed in the second currency: the receipt's amount, converted.
+            kr = originals[name]
+            e["original"] = {"amount": kr, **second}
+            e["amount"] = round(kr / second["rate"], 2)
         exp.append(e)
     g = {
         "id": uid(),
@@ -63,6 +68,10 @@ def group(title, gtype, ppl, categories, expenses, start, end, photo=None, color
         "autoLocationEnabled": False,
         "syncEnabled": sync,
     }
+    if budget:
+        g["budget"] = budget
+    if second:
+        g["secondCurrency"] = second
     return g
 
 
@@ -90,6 +99,9 @@ norway = group(
         ("Coffee & cinnamon buns", "Food", 23.60, "Luca", 6, 10, None),
     ],
     NOW - timedelta(days=6), NOW + timedelta(days=3), photo="norway.jpg", pinned=True, sync=True,
+    # 2.5: a second currency, two receipts typed in kr.
+    second={"code": "NOK", "symbol": "kr", "rate": 11.63},
+    originals={"Ferry to Lysefjord": 1000.0, "Fish soup & bread": 634.0},
 )
 
 bruges = group(
@@ -116,13 +128,22 @@ ski = group(
 flat = group(
     "Flat 3B", "family", people("Anna", "Tom", "Lea"), cats("Rent", "Bills", "Groceries", "Cleaning"),
     [
-        ("October rent", "Rent", 1350.00, "Anna", 14, 9, None),
+        ("November rent", "Rent", 1350.00, "Anna", 14, 9, None),
         ("Electricity", "Bills", 92.40, "Tom", 9, 18, None),
         ("Internet", "Bills", 29.90, "Lea", 8, 10, None),
         ("Weekly groceries", "Groceries", 74.20, "Lea", 3, 19, None),
         ("Cleaning supplies", "Cleaning", 18.70, "Tom", 2, 17, None),
+        # The months before, for the budget sheet: October within, September over.
+        ("October rent", "Rent", 1350.00, "Anna", 44, 9, None),
+        ("October groceries", "Groceries", 380.00, "Lea", 35, 19, None),
+        ("October bills", "Bills", 150.00, "Tom", 30, 18, None),
+        ("September rent", "Rent", 1350.00, "Anna", 74, 9, None),
+        ("September groceries", "Groceries", 520.00, "Lea", 65, 19, None),
+        ("September bills", "Bills", 210.00, "Tom", 60, 18, None),
     ],
-    NOW - timedelta(days=15), NOW + timedelta(days=15), color=3, ts_days=1,
+    NOW - timedelta(days=80), NOW + timedelta(days=15), color=3, ts_days=1,
+    # 2.5: a monthly budget (434.80 € left on the 20th, a forecast for the 26th).
+    budget={"amount": 2000.0, "period": "monthly"},
 )
 
 chicago = group(
