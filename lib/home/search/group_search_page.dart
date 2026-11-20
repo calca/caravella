@@ -279,29 +279,34 @@ class _GroupSearchPageState extends State<GroupSearchPage> {
     return AppSystemUI.edgeToEdge(
       child: Scaffold(
         backgroundColor: s.surfaceContainer,
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(16, top + 8, 16, 0),
-          child: Column(
-            children: [
-              SearchTopBar(
-                controller: _searchController,
-                focusNode: _searchFocusNode,
-                hintText: gloc.search_groups,
-                onChanged: (v) => setState(() => _query = v),
-                onSubmitted: (_) => _rememberQuery(),
-                onFilters: _openFilters,
-                activeFilters: _activeFilters,
-                filtersTooltip: gloc.filters,
-                clearTooltip: gloc.clear,
-              ),
-              Expanded(
-                child: _loading
-                    ? const Center(child: CircularProgressIndicator.adaptive())
-                    : _showSuggestions
-                    ? _buildSuggestions(gloc)
-                    : _buildResults(gloc),
-              ),
-            ],
+        body: ReadableWidth(
+          maxWidth: ReadableWidth.text,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, top + 8, 16, 0),
+            child: Column(
+              children: [
+                SearchTopBar(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  hintText: gloc.search_groups,
+                  onChanged: (v) => setState(() => _query = v),
+                  onSubmitted: (_) => _rememberQuery(),
+                  onFilters: _openFilters,
+                  activeFilters: _activeFilters,
+                  filtersTooltip: gloc.filters,
+                  clearTooltip: gloc.clear,
+                ),
+                Expanded(
+                  child: _loading
+                      ? const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        )
+                      : _showSuggestions
+                      ? _buildSuggestions(gloc)
+                      : _buildResults(gloc),
+                ),
+              ],
+            ),
           ),
         ),
       ),

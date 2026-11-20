@@ -488,70 +488,76 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     return AppSystemUI.edgeToEdge(
       child: Scaffold(
         backgroundColor: s.surfaceContainer,
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(16, top + 8, 16, 0),
-          child: Column(
-            children: [
-              SearchTopBar(
-                controller: _searchController,
-                focusNode: _searchFocusNode,
-                hintText: gloc.search_in_group(widget.groupName),
-                onChanged: (value) => setState(() => _searchQuery = value),
-                onFilters: _openFilters,
-                activeFilters: _activeFilterCount,
-                filtersTooltip: gloc.filters,
-                clearTooltip: gloc.clear,
-              ),
-              Expanded(
-                child: _showSuggestions
-                    ? ListView(
-                        padding: EdgeInsets.only(bottom: bottom + 24),
-                        children: _filterSections(gloc),
-                      )
-                    : ListView(
-                        keyboardDismissBehavior:
-                            ScrollViewKeyboardDismissBehavior.onDrag,
-                        padding: EdgeInsets.only(top: 12, bottom: bottom + 24),
-                        children: [
-                          if (activePills.isNotEmpty)
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                ...activePills,
-                                if (activePills.length > 1)
-                                  FilterPill(
-                                    icon: Icons.filter_list_off_rounded,
-                                    label: gloc.clear_filters,
-                                    onTap: _clearAllFilters,
-                                  ),
-                              ],
-                            ),
-                          if (activePills.isNotEmpty)
-                            const SizedBox(height: 12),
-                          if (results.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 32),
-                              child: EmptySearchState(
-                                hasActiveFilters: _hasActiveFilters,
+        body: ReadableWidth(
+          maxWidth: ReadableWidth.text,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, top + 8, 16, 0),
+            child: Column(
+              children: [
+                SearchTopBar(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  hintText: gloc.search_in_group(widget.groupName),
+                  onChanged: (value) => setState(() => _searchQuery = value),
+                  onFilters: _openFilters,
+                  activeFilters: _activeFilterCount,
+                  filtersTooltip: gloc.filters,
+                  clearTooltip: gloc.clear,
+                ),
+                Expanded(
+                  child: _showSuggestions
+                      ? ListView(
+                          padding: EdgeInsets.only(bottom: bottom + 24),
+                          children: _filterSections(gloc),
+                        )
+                      : ListView(
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
+                          padding: EdgeInsets.only(
+                            top: 12,
+                            bottom: bottom + 24,
+                          ),
+                          children: [
+                            if (activePills.isNotEmpty)
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: [
+                                  ...activePills,
+                                  if (activePills.length > 1)
+                                    FilterPill(
+                                      icon: Icons.filter_list_off_rounded,
+                                      label: gloc.clear_filters,
+                                      onTap: _clearAllFilters,
+                                    ),
+                                ],
                               ),
-                            )
-                          else ...[
-                            SearchSummaryBar(
-                              count: gloc.expense_count(results.length),
-                              total:
-                                  '${number.format(total)} ${widget.currency}',
-                            ),
-                            SettingsGroup(
-                              children: [
-                                for (final e in results) _resultRow(e),
-                              ],
-                            ),
+                            if (activePills.isNotEmpty)
+                              const SizedBox(height: 12),
+                            if (results.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 32),
+                                child: EmptySearchState(
+                                  hasActiveFilters: _hasActiveFilters,
+                                ),
+                              )
+                            else ...[
+                              SearchSummaryBar(
+                                count: gloc.expense_count(results.length),
+                                total:
+                                    '${number.format(total)} ${widget.currency}',
+                              ),
+                              SettingsGroup(
+                                children: [
+                                  for (final e in results) _resultRow(e),
+                                ],
+                              ),
+                            ],
                           ],
-                        ],
-                      ),
-              ),
-            ],
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

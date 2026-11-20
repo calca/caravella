@@ -36,6 +36,7 @@ export 'widgets/expense_amount_card.dart';
 export 'widgets/floating_nav_bar.dart';
 export 'widgets/side_nav.dart';
 export 'layout/window_size.dart';
+export 'layout/readable_width.dart';
 export 'widgets/form_pill.dart';
 export 'widgets/media_top_bar.dart';
 export 'widgets/pill_segmented_control.dart';

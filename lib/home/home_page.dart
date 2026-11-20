@@ -323,31 +323,34 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
     final scaffoldBody = Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-      body: AnimatedSwitcher(
-        duration: _switchDuration,
-        reverseDuration: _switchDuration == Duration.zero
-            ? Duration.zero
-            : const Duration(milliseconds: 250),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        transitionBuilder: (child, animation) {
-          // Smooth fade transition with slight scale for polish
-          return FadeTransition(
-            opacity: CurvedAnimation(
-              parent: animation,
-              curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
-            ),
-            child: child,
-          );
-        },
-        layoutBuilder: (currentChild, previousChildren) {
-          // Stack children during transition for seamless crossfade
-          return Stack(
-            alignment: Alignment.topCenter,
-            children: [...previousChildren, ?currentChild],
-          );
-        },
-        child: _buildContent(gloc),
+      body: ReadableWidth(
+        maxWidth: ReadableWidth.content,
+        child: AnimatedSwitcher(
+          duration: _switchDuration,
+          reverseDuration: _switchDuration == Duration.zero
+              ? Duration.zero
+              : const Duration(milliseconds: 250),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (child, animation) {
+            // Smooth fade transition with slight scale for polish
+            return FadeTransition(
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
+              ),
+              child: child,
+            );
+          },
+          layoutBuilder: (currentChild, previousChildren) {
+            // Stack children during transition for seamless crossfade
+            return Stack(
+              alignment: Alignment.topCenter,
+              children: [...previousChildren, ?currentChild],
+            );
+          },
+          child: _buildContent(gloc),
+        ),
       ),
     );
 

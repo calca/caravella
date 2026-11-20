@@ -169,142 +169,145 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     return AppSystemUI.edgeToEdge(
       child: Scaffold(
         backgroundColor: scheme.surfaceContainer,
-        body: Stack(
-          children: [
-            FocusTraversalGroup(
-              child: SingleChildScrollView(
-                controller: _scroll,
-                padding: EdgeInsets.fromLTRB(
-                  16,
-                  padding.top + 8,
-                  16,
-                  isReadOnly ? padding.bottom + 32 : 24,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        // maybePop (inside RoundBackButton) respects
-                        // ExpenseFormComponent's unsaved-changes guard.
-                        const RoundBackButton(),
-                        const Spacer(),
-                        // Share and delete are rare: in the ⋯ menu, so the
-                        // top of the page is the expense itself.
-                        if (isEdit)
-                          RoundMenuButton(
-                            tooltip: gloc.more_options,
-                            items: [
-                              RoundMenuItem(
-                                Icons.share_outlined,
-                                gloc.share_label,
-                                _handleShare,
-                              ),
-                              if (widget.onDelete case final onDelete?
-                                  when !isReadOnly)
+        body: ReadableWidth(
+          maxWidth: ReadableWidth.text,
+          child: Stack(
+            children: [
+              FocusTraversalGroup(
+                child: SingleChildScrollView(
+                  controller: _scroll,
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    padding.top + 8,
+                    16,
+                    isReadOnly ? padding.bottom + 32 : 24,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          // maybePop (inside RoundBackButton) respects
+                          // ExpenseFormComponent's unsaved-changes guard.
+                          const RoundBackButton(),
+                          const Spacer(),
+                          // Share and delete are rare: in the ⋯ menu, so the
+                          // top of the page is the expense itself.
+                          if (isEdit)
+                            RoundMenuButton(
+                              tooltip: gloc.more_options,
+                              items: [
                                 RoundMenuItem(
-                                  Icons.delete_outline_rounded,
-                                  gloc.delete_expense,
-                                  onDelete,
-                                  destructive: true,
+                                  Icons.share_outlined,
+                                  gloc.share_label,
+                                  _handleShare,
                                 ),
+                                if (widget.onDelete case final onDelete?
+                                    when !isReadOnly)
+                                  RoundMenuItem(
+                                    Icons.delete_outline_rounded,
+                                    gloc.delete_expense,
+                                    onDelete,
+                                    destructive: true,
+                                  ),
+                              ],
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // Editing, the expense is its own title (the form's
+                      // header): the page's name is for screen readers only.
+                      if (isEdit)
+                        Semantics(
+                          header: true,
+                          label: title,
+                          child: const SizedBox.shrink(),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.group.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: scheme.onSurfaceVariant,
+                                ),
+                              ),
+                              Semantics(
+                                header: true,
+                                child: Text(
+                                  title,
+                                  style: theme.textTheme.headlineMedium
+                                      ?.copyWith(fontWeight: FontWeight.w700),
+                                ),
+                              ),
                             ],
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // Editing, the expense is its own title (the form's
-                    // header): the page's name is for screen readers only.
-                    if (isEdit)
-                      Semantics(
-                        header: true,
-                        label: title,
-                        child: const SizedBox.shrink(),
-                      )
-                    else
+                        ),
+                      if (!isEdit) const SizedBox(height: 16),
+                      // The form at 20, with the title: labels, pills and
+                      // fields on one line (the sheet's margin is 20 too).
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.group.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: scheme.onSurfaceVariant,
-                              ),
-                            ),
-                            Semantics(
-                              header: true,
-                              child: Text(
-                                title,
-                                style: theme.textTheme.headlineMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ],
+                        child: ExpenseFormComponent(
+                          config: ExpenseFormConfig(
+                            initialExpense: widget.initialExpense,
+                            participants: widget.group
+                                .getParticipantsByLastUsed(),
+                            categories: widget.group.getCategoriesByLastUsed(),
+                            tripStartDate: widget.group.startDate,
+                            tripEndDate: widget.group.endDate,
+                            shouldAutoClose: true,
+                            autofocusAmount: widget.autofocusAmount,
+                            scrollController: _scroll,
+                            fullEdit: true,
+                            showGroupHeader: false,
+                            showActionsRow: false,
+                            currency: widget.group.currency,
+                            secondCurrency: widget.group.secondCurrency,
+                            startInSecondCurrency:
+                                widget.group.lastExpenseInSecondCurrency,
+                            autoLocationEnabled:
+                                widget.group.autoLocationEnabled,
+                            onExpenseAdded: widget.onExpenseSaved,
+                            onCategoryAdded: widget.onCategoryAdded,
+                            onParticipantAdded: widget.onParticipantAdded,
+                            onDelete: widget.onDelete,
+                            onFormValidityChanged: _updateFormValidity,
+                            onSaveCallbackChanged: _updateSaveCallback,
+                            onVoiceCallbackChanged: _updateVoiceCallback,
+                            onScanReceiptCallbackChanged: _updateScanCallback,
+                            onScanReceiptFromGalleryCallbackChanged:
+                                _updateScanFromGalleryCallback,
+                            groupId: widget.group.id,
+                            isReadOnly: isReadOnly,
+                            editHeader: isEdit,
+                            headerGroupName: widget.group.title,
+                          ),
                         ),
                       ),
-                    if (!isEdit) const SizedBox(height: 16),
-                    // The form at 20, with the title: labels, pills and
-                    // fields on one line (the sheet's margin is 20 too).
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: ExpenseFormComponent(
-                        config: ExpenseFormConfig(
-                          initialExpense: widget.initialExpense,
-                          participants: widget.group
-                              .getParticipantsByLastUsed(),
-                          categories: widget.group.getCategoriesByLastUsed(),
-                          tripStartDate: widget.group.startDate,
-                          tripEndDate: widget.group.endDate,
-                          shouldAutoClose: true,
-                          autofocusAmount: widget.autofocusAmount,
-                          scrollController: _scroll,
-                          fullEdit: true,
-                          showGroupHeader: false,
-                          showActionsRow: false,
-                          currency: widget.group.currency,
-                          secondCurrency: widget.group.secondCurrency,
-                          startInSecondCurrency:
-                              widget.group.lastExpenseInSecondCurrency,
-                          autoLocationEnabled: widget.group.autoLocationEnabled,
-                          onExpenseAdded: widget.onExpenseSaved,
-                          onCategoryAdded: widget.onCategoryAdded,
-                          onParticipantAdded: widget.onParticipantAdded,
-                          onDelete: widget.onDelete,
-                          onFormValidityChanged: _updateFormValidity,
-                          onSaveCallbackChanged: _updateSaveCallback,
-                          onVoiceCallbackChanged: _updateVoiceCallback,
-                          onScanReceiptCallbackChanged: _updateScanCallback,
-                          onScanReceiptFromGalleryCallbackChanged:
-                              _updateScanFromGalleryCallback,
-                          groupId: widget.group.id,
-                          isReadOnly: isReadOnly,
-                          editHeader: isEdit,
-                          headerGroupName: widget.group.title,
+                      // Who added it, at the end: details, not the expense.
+                      if (isEdit &&
+                          syncOrchestrator != null &&
+                          widget.group.syncEnabled) ...[
+                        const SizedBox(height: 16),
+                        ExpenseAuthorshipInfo(
+                          orchestrator: syncOrchestrator,
+                          group: widget.group,
+                          expense: widget.initialExpense!,
                         ),
-                      ),
-                    ),
-                    // Who added it, at the end: details, not the expense.
-                    if (isEdit &&
-                        syncOrchestrator != null &&
-                        widget.group.syncEnabled) ...[
-                      const SizedBox(height: 16),
-                      ExpenseAuthorshipInfo(
-                        orchestrator: syncOrchestrator,
-                        group: widget.group,
-                        expense: widget.initialExpense!,
-                      ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
-            ),
-            StatusBarFade(color: scheme.surfaceContainer),
-          ],
+              StatusBarFade(color: scheme.surfaceContainer),
+            ],
+          ),
         ),
         bottomNavigationBar: isReadOnly
             ? null
