@@ -64,7 +64,14 @@ class SearchTopBar extends StatelessWidget {
                   focusedBorder: InputBorder.none,
                   filled: false,
                   isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  // 16 at the end: without it the hint ran under the
+                  // pill's rounded end on narrow phones (384 dp).
+                  contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                    0,
+                    14,
+                    16,
+                    14,
+                  ),
                   prefixIcon: Icon(
                     Icons.search_rounded,
                     color: s.onSurfaceVariant,
