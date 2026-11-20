@@ -88,7 +88,7 @@ class _DataBackupPageState extends State<DataBackupPage> {
     AutoBackupNotifier notifier,
   ) {
     if (!notifier.enabled) return gloc.auto_backup_off;
-    if (!Platform.isAndroid) return gloc.auto_backup_desc;
+    if (!PlatformInfo.isAndroid) return gloc.auto_backup_desc;
     final last = notifier.lastBackup;
     if (last == null) return gloc.auto_backup_never;
     final locale = Localizations.localeOf(context).toString();

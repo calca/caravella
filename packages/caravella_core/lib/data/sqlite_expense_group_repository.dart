@@ -16,6 +16,8 @@ import 'sqlite_group_writer.dart';
 import 'sqlite_schema.dart';
 import 'sqlite_tables.dart';
 import '../sync/utils/sync_clock.dart';
+import 'web_database_stub.dart'
+    if (dart.library.js_interop) 'web_database_web.dart';
 
 /// SQLite-based implementation of ExpenseGroupRepository
 /// Provides better performance and scalability compared to JSON file storage
@@ -66,6 +68,8 @@ class SqliteExpenseGroupRepository
   /// Initialize the database
   Future<Database> _initDatabase() async {
     try {
+      // The web runs SQLite in WebAssembly: set its factory first.
+      useWebDatabaseIfNeeded();
       final String path;
       if (_customDatabasePath != null) {
         path = _customDatabasePath;

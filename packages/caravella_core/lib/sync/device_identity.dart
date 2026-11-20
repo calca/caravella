@@ -1,4 +1,4 @@
-import 'dart:io' show Platform;
+import '../platform/platform_info.dart';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, visibleForTesting;
@@ -90,11 +90,11 @@ class DeviceIdentity {
 
   static DevicePlatform _detectPlatform() {
     if (kIsWeb) return DevicePlatform.web;
-    if (Platform.isIOS) return DevicePlatform.ios;
-    if (Platform.isAndroid) return DevicePlatform.android;
-    if (Platform.isMacOS) return DevicePlatform.macos;
-    if (Platform.isWindows) return DevicePlatform.windows;
-    if (Platform.isLinux) return DevicePlatform.linux;
+    if (PlatformInfo.isIOS) return DevicePlatform.ios;
+    if (PlatformInfo.isAndroid) return DevicePlatform.android;
+    if (PlatformInfo.isMacOS) return DevicePlatform.macos;
+    if (PlatformInfo.isWindows) return DevicePlatform.windows;
+    if (PlatformInfo.isLinux) return DevicePlatform.linux;
     return DevicePlatform.unknown;
   }
 
@@ -105,19 +105,19 @@ class DeviceIdentity {
         final web = await info.webBrowserInfo;
         return web.browserName.name;
       }
-      if (Platform.isIOS) {
+      if (PlatformInfo.isIOS) {
         final ios = await info.iosInfo;
         return ios.name;
       }
-      if (Platform.isAndroid) {
+      if (PlatformInfo.isAndroid) {
         final android = await info.androidInfo;
         return android.model;
       }
-      if (Platform.isMacOS) {
+      if (PlatformInfo.isMacOS) {
         final mac = await info.macOsInfo;
         return mac.computerName;
       }
-      if (Platform.isWindows) {
+      if (PlatformInfo.isWindows) {
         final win = await info.windowsInfo;
         return win.computerName;
       }

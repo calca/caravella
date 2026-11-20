@@ -38,6 +38,7 @@ If you're about to change code and aren't sure which page(s) to update afterward
 ## Build & distribution
 
 - **[Non-regression tests](NRT.md)** — the manual pass on each release candidate's APK, accessibility included (`nrt_a11y_check.sh`)
+- **[Caravella in the browser](WEB.md)** — experimental web build on `feature/web`: SQLite in WebAssembly, `PlatformInfo` instead of `dart:io`'s `Platform`
 - **[Performance checks](../tool/perf/README.md)** — frame times of a 1,000-expense group and cold start, in profile on the dev flavor, with reference numbers; before releases that touch Home, the group page, storage or startup
 
 - **[Build Variants & Flavors](BUILD_VARIANTS.md)** — dev/staging/prod, every dart-define flag

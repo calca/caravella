@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:material_ui/material_ui.dart';
@@ -48,7 +47,7 @@ class AppInitialization {
 
   /// Configures Android-specific image picker to use the native photo picker.
   static void configureImagePicker() {
-    if (Platform.isAndroid) {
+    if (PlatformInfo.isAndroid) {
       final androidPicker = ImagePickerAndroid();
       androidPicker.useAndroidPhotoPicker = true;
       ImagePickerPlatform.instance = androidPicker;

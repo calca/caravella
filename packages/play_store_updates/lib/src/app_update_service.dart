@@ -1,5 +1,5 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +24,7 @@ class AppUpdateService {
   /// Returns true if more than 7 days have passed since the last check,
   /// or if no check has been performed yet.
   static Future<bool> shouldCheckForUpdate() async {
-    if (!Platform.isAndroid) {
+    if (!PlatformInfo.isAndroid) {
       return false;
     }
 
@@ -67,7 +67,7 @@ class AppUpdateService {
   /// channel again, and cancelling any of them stops it for all — so the
   /// settings card and the home prompt must not listen separately.
   static Stream<InstallStatus> get installUpdateStream {
-    if (!Platform.isAndroid) {
+    if (!PlatformInfo.isAndroid) {
       return const Stream.empty();
     }
     return _installUpdateStream ??= InAppUpdate.installUpdateListener
@@ -84,7 +84,7 @@ class AppUpdateService {
   /// *newly* available updates) so a download that finished in the
   /// background — e.g. after the app was closed and reopened — isn't lost.
   static Future<bool> isUpdateReadyToInstall() async {
-    if (!Platform.isAndroid) {
+    if (!PlatformInfo.isAndroid) {
       return false;
     }
 
@@ -102,7 +102,7 @@ class AppUpdateService {
   /// or null if no update is available or on unsupported platforms.
   static Future<AppUpdateInfo?> checkForUpdate() async {
     // Only available on Android
-    if (!Platform.isAndroid) {
+    if (!PlatformInfo.isAndroid) {
       return null;
     }
 
@@ -145,7 +145,7 @@ class AppUpdateService {
   static Future<bool> startFlexibleUpdate({
     void Function()? onDownloadStarted,
   }) async {
-    if (!Platform.isAndroid) {
+    if (!PlatformInfo.isAndroid) {
       return false;
     }
 
@@ -184,7 +184,7 @@ class AppUpdateService {
   ///
   /// Returns true if the update was completed successfully.
   static Future<bool> completeFlexibleUpdate() async {
-    if (!Platform.isAndroid) {
+    if (!PlatformInfo.isAndroid) {
       return false;
     }
 
@@ -211,7 +211,7 @@ class AppUpdateService {
   ///
   /// Returns true if the update was started successfully.
   static Future<bool> startImmediateUpdate() async {
-    if (!Platform.isAndroid) {
+    if (!PlatformInfo.isAndroid) {
       return false;
     }
 

@@ -1,10 +1,9 @@
-import 'dart:io';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'update_service_factory.dart';
 import 'update_service_interface.dart';
-import 'update_localizations.dart';
 
 /// Widget for displaying update check functionality in settings.
 ///
@@ -28,7 +27,7 @@ class UpdateCheckWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Hide completely on non-Android platforms
-    if (!Platform.isAndroid) {
+    if (!PlatformInfo.isAndroid) {
       return const SizedBox.shrink();
     }
 

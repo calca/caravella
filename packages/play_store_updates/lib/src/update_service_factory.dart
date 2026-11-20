@@ -6,7 +6,7 @@ import 'update_service_noop.dart';
 // (compile-time safety net); the ENABLE_PLAY_UPDATES dart-define is
 // evaluated separately below and decides which one actually gets used.
 import 'update_service_playstore.dart'
-    if (dart.library.html) 'update_service_noop.dart';
+    if (dart.library.js_interop) 'update_service_playstore_web.dart';
 
 /// Factory for creating update service instances based on build configuration.
 class UpdateServiceFactory {

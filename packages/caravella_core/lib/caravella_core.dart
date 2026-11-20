@@ -4,6 +4,7 @@
 // Configuration
 export 'config/app_config.dart';
 export 'config/app_icons.dart';
+export 'platform/platform_info.dart';
 
 // Data Models
 export 'model/budget_status.dart';
