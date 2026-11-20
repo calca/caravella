@@ -266,105 +266,110 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
       child: Scaffold(
         backgroundColor: scheme.surfaceContainer,
         floatingActionButton: shell == null ? _buildAnimatedFab(gloc) : null,
-        body: Stack(
-          children: [
-            // Swipe between Active and Archived, like the sections of the
-            // group page; the pill control follows.
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onHorizontalDragStart: (_) => _swipeDistance = 0,
-              onHorizontalDragUpdate: (d) => _swipeDistance += d.delta.dx,
-              onHorizontalDragEnd: (d) {
-                final next = sectionAfterSwipe(
-                  current: _showArchived ? 1 : 0,
-                  count: 2,
-                  distance: _swipeDistance,
-                  velocity: d.primaryVelocity ?? 0,
-                  rtl: Directionality.of(context) == TextDirection.rtl,
-                );
-                if (next != null) setState(() => _showArchived = next == 1);
-              },
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverToBoxAdapter(child: SizedBox(height: top + 16)),
-                  // Same header language as Home: count above a large title,
-                  // search in a raised circle like Home's settings button.
-                  // Text at 20, the button at 16 (the page margin).
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 16, 16),
-                    sliver: SliverToBoxAdapter(
-                      child: Row(
-                        children: [
-                          if (shell == null) ...[
-                            const RoundBackButton(),
-                            const SizedBox(width: 12),
-                          ],
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  gloc.groups_active_count(_activeTrips.length),
-                                  style: textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Semantics(
-                                  header: true,
-                                  child: Text(
-                                    gloc.nav_groups,
-                                    style: textTheme.headlineMedium?.copyWith(
-                                      fontWeight: FontWeight.w700,
+        body: ReadableWidth(
+          maxWidth: ReadableWidth.wide,
+          child: Stack(
+            children: [
+              // Swipe between Active and Archived, like the sections of the
+              // group page; the pill control follows.
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onHorizontalDragStart: (_) => _swipeDistance = 0,
+                onHorizontalDragUpdate: (d) => _swipeDistance += d.delta.dx,
+                onHorizontalDragEnd: (d) {
+                  final next = sectionAfterSwipe(
+                    current: _showArchived ? 1 : 0,
+                    count: 2,
+                    distance: _swipeDistance,
+                    velocity: d.primaryVelocity ?? 0,
+                    rtl: Directionality.of(context) == TextDirection.rtl,
+                  );
+                  if (next != null) setState(() => _showArchived = next == 1);
+                },
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(child: SizedBox(height: top + 16)),
+                    // Same header language as Home: count above a large title,
+                    // search in a raised circle like Home's settings button.
+                    // Text at 20, the button at 16 (the page margin).
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 16, 16),
+                      sliver: SliverToBoxAdapter(
+                        child: Row(
+                          children: [
+                            if (shell == null) ...[
+                              const RoundBackButton(),
+                              const SizedBox(width: 12),
+                            ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    gloc.groups_active_count(
+                                      _activeTrips.length,
+                                    ),
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Semantics(
+                                    header: true,
+                                    child: Text(
+                                      gloc.nav_groups,
+                                      style: textTheme.headlineMedium?.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Material(
-                            color: scheme.raisedSurface,
-                            shape: const CircleBorder(),
-                            child: IconButton(
-                              icon: const Icon(Icons.search_rounded),
-                              color: scheme.onSurface,
-                              tooltip: gloc.show_search,
-                              onPressed: () async {
-                                await GroupSearchPage.show(context);
-                                // The user may have changed pin/archive state
-                                // from the search page.
-                                if (mounted) await _loadTrips();
-                              },
+                            Material(
+                              color: scheme.raisedSurface,
+                              shape: const CircleBorder(),
+                              child: IconButton(
+                                icon: const Icon(Icons.search_rounded),
+                                color: scheme.onSurface,
+                                tooltip: gloc.show_search,
+                                onPressed: () async {
+                                  await GroupSearchPage.show(context);
+                                  // The user may have changed pin/archive state
+                                  // from the search page.
+                                  if (mounted) await _loadTrips();
+                                },
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    sliver: SliverToBoxAdapter(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: PillSegmentedControl(
-                          labels: [
-                            '${gloc.status_active} · ${_activeTrips.length}',
-                            '${gloc.status_archived} · ${_archivedTrips.length}',
                           ],
-                          selectedIndex: _showArchived ? 1 : 0,
-                          onChanged: (i) =>
-                              setState(() => _showArchived = i == 1),
                         ),
                       ),
                     ),
-                  ),
-                  ..._buildGroupSlivers(trips, bottom),
-                ],
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      sliver: SliverToBoxAdapter(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: PillSegmentedControl(
+                            labels: [
+                              '${gloc.status_active} · ${_activeTrips.length}',
+                              '${gloc.status_archived} · ${_archivedTrips.length}',
+                            ],
+                            selectedIndex: _showArchived ? 1 : 0,
+                            onChanged: (i) =>
+                                setState(() => _showArchived = i == 1),
+                          ),
+                        ),
+                      ),
+                    ),
+                    ..._buildGroupSlivers(trips, bottom),
+                  ],
+                ),
               ),
-            ),
-            // Edge to edge: scrolled content fades under the clock.
-            StatusBarFade(color: scheme.surfaceContainer),
-          ],
+              // Edge to edge: scrolled content fades under the clock.
+              StatusBarFade(color: scheme.surfaceContainer),
+            ],
+          ),
         ),
       ),
     );

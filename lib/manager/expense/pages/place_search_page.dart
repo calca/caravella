@@ -142,92 +142,96 @@ class _PlaceSearchPageState extends State<PlaceSearchPage> {
     final topInset = MediaQuery.paddingOf(context).top;
     return AppSystemUI.edgeToEdge(
       child: Scaffold(
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: _showMap
-                  ? _buildFullScreenMap(colorScheme)
-                  : ColoredBox(color: colorScheme.surface),
-            ),
-            if (_showMap)
+        body: ReadableWidth(
+          maxWidth: ReadableWidth.text,
+          child: Stack(
+            children: [
               Positioned.fill(
-                child: MapLoadingOverlay(
-                  status: _tileStatus,
-                  message: gloc.map_loading,
+                child: _showMap
+                    ? _buildFullScreenMap(colorScheme)
+                    : ColoredBox(color: colorScheme.surface),
+              ),
+              if (_showMap)
+                Positioned.fill(
+                  child: MapLoadingOverlay(
+                    status: _tileStatus,
+                    message: gloc.map_loading,
+                  ),
                 ),
-              ),
-            Positioned(
-              top: topInset + 8,
-              left: 16,
-              right: 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Semantics(
-                        label: gloc.cancel,
-                        child: const RoundBackButton(),
+              Positioned(
+                top: topInset + 8,
+                left: 16,
+                right: 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Semantics(
+                          label: gloc.cancel,
+                          child: const RoundBackButton(),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(child: _buildSearchBar(theme, colorScheme)),
+                      ],
+                    ),
+                    if (_controller.state.hasSearchResults &&
+                        _controller.searchController.text.isNotEmpty)
+                      _buildAutocompleteResults(theme, colorScheme),
+                    if (_showMap)
+                      MapUnavailableCard(
+                        status: _tileStatus,
+                        title: gloc.map_unavailable_title,
+                        message: gloc.map_unavailable_place_message,
+                        retryLabel: gloc.map_retry,
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(child: _buildSearchBar(theme, colorScheme)),
-                    ],
-                  ),
-                  if (_controller.state.hasSearchResults &&
-                      _controller.searchController.text.isNotEmpty)
-                    _buildAutocompleteResults(theme, colorScheme),
-                  if (_showMap)
-                    MapUnavailableCard(
-                      status: _tileStatus,
-                      title: gloc.map_unavailable_title,
-                      message: gloc.map_unavailable_place_message,
-                      retryLabel: gloc.map_retry,
-                    ),
-                  if (_messageCard(gloc) case final message?)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: message,
-                    ),
-                ],
-              ),
-            ),
-            // At the bottom: the round button to center on the position,
-            // above the card (the picked point, or why there's none), so
-            // neither covers the other. Not a modal sheet: the search above
-            // and the map stay usable, to search another place or tap one.
-            Positioned(
-              left: 16,
-              right: 16,
-              bottom: MediaQuery.paddingOf(context).bottom + 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    onPressed: _controller.state.isCenteringOnLocation
-                        ? null
-                        : () => _controller.centerOnCurrentLocation(context),
-                    tooltip: gloc.get_current_location,
-                    child: _controller.state.isCenteringOnLocation
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: colorScheme.onPrimaryContainer,
-                            ),
-                          )
-                        : const Icon(Icons.my_location),
-                  ),
-                  if (!_controller.searchFocusNode.hasFocus)
-                    if (_bottomCard(theme, colorScheme, gloc) case final card?)
+                    if (_messageCard(gloc) case final message?)
                       Padding(
                         padding: const EdgeInsets.only(top: 12),
-                        child: SizedBox(width: double.infinity, child: card),
+                        child: message,
                       ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              // At the bottom: the round button to center on the position,
+              // above the card (the picked point, or why there's none), so
+              // neither covers the other. Not a modal sheet: the search above
+              // and the map stay usable, to search another place or tap one.
+              Positioned(
+                left: 16,
+                right: 16,
+                bottom: MediaQuery.paddingOf(context).bottom + 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: _controller.state.isCenteringOnLocation
+                          ? null
+                          : () => _controller.centerOnCurrentLocation(context),
+                      tooltip: gloc.get_current_location,
+                      child: _controller.state.isCenteringOnLocation
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: colorScheme.onPrimaryContainer,
+                              ),
+                            )
+                          : const Icon(Icons.my_location),
+                    ),
+                    if (!_controller.searchFocusNode.hasFocus)
+                      if (_bottomCard(theme, colorScheme, gloc)
+                          case final card?)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: SizedBox(width: double.infinity, child: card),
+                        ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

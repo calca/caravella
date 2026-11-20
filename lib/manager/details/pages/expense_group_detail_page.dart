@@ -580,118 +580,121 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
       forceStatusBarLight: forceStatusBarLight,
       child: Scaffold(
         backgroundColor: pageColor,
-        body: Stack(
-          children: [
-            // Swipe left / right over the page to move between Expenses,
-            // Balances and Statistics, like tabs.
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onHorizontalDragStart: (_) => _swipeDistance = 0,
-              onHorizontalDragUpdate: (d) => _swipeDistance += d.delta.dx,
-              onHorizontalDragEnd: (d) {
-                if (trip.expenses.isEmpty) return;
-                final next = sectionAfterSwipe(
-                  current: _section,
-                  count: sections.length,
-                  distance: _swipeDistance,
-                  velocity: d.primaryVelocity ?? 0,
-                  rtl: Directionality.of(context) == TextDirection.rtl,
-                );
-                if (next != null) _selectSection(next);
-              },
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: GroupHeaderBand(
-                      group: trip,
-                      topInset: topInset,
-                      header: (foreground) => GroupDetailHeader(
+        body: ReadableWidth(
+          maxWidth: ReadableWidth.content,
+          child: Stack(
+            children: [
+              // Swipe left / right over the page to move between Expenses,
+              // Balances and Statistics, like tabs.
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onHorizontalDragStart: (_) => _swipeDistance = 0,
+                onHorizontalDragUpdate: (d) => _swipeDistance += d.delta.dx,
+                onHorizontalDragEnd: (d) {
+                  if (trip.expenses.isEmpty) return;
+                  final next = sectionAfterSwipe(
+                    current: _section,
+                    count: sections.length,
+                    distance: _swipeDistance,
+                    velocity: d.primaryVelocity ?? 0,
+                    rtl: Directionality.of(context) == TextDirection.rtl,
+                  );
+                  if (next != null) _selectSection(next);
+                },
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: GroupHeaderBand(
                         group: trip,
-                        foreground: foreground,
-                      ),
-                    ),
-                  ),
-                  if (_welcomeFrom case final from?)
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      sliver: SliverToBoxAdapter(
-                        child: GroupWelcomeCard(
+                        topInset: topInset,
+                        header: (foreground) => GroupDetailHeader(
                           group: trip,
-                          from: from,
-                          onDismiss: _dismissWelcome,
-                          onAddExpense: () {
-                            _dismissWelcome();
-                            _showAddExpenseSheet();
-                          },
+                          foreground: foreground,
                         ),
                       ),
                     ),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverToBoxAdapter(
-                      child: PillSegmentedControl(
-                        labels: sections,
-                        selectedIndex: _section,
-                        onChanged: _selectSection,
-                        expand: true,
-                        disabled: trip.expenses.isEmpty
-                            ? const {1, 2}
-                            : const {},
+                    if (_welcomeFrom case final from?)
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                        sliver: SliverToBoxAdapter(
+                          child: GroupWelcomeCard(
+                            group: trip,
+                            from: from,
+                            onDismiss: _dismissWelcome,
+                            onAddExpense: () {
+                              _dismissWelcome();
+                              _showAddExpenseSheet();
+                            },
+                          ),
+                        ),
+                      ),
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverToBoxAdapter(
+                        child: PillSegmentedControl(
+                          labels: sections,
+                          selectedIndex: _section,
+                          onChanged: _selectSection,
+                          expand: true,
+                          disabled: trip.expenses.isEmpty
+                              ? const {1, 2}
+                              : const {},
+                        ),
                       ),
                     ),
-                  ),
-                  SliverFadeTransition(
-                    opacity: CurvedAnimation(
-                      parent: _sectionFade,
-                      curve: Curves.easeOutCubic,
+                    SliverFadeTransition(
+                      opacity: CurvedAnimation(
+                        parent: _sectionFade,
+                        curve: Curves.easeOutCubic,
+                      ),
+                      sliver: content,
                     ),
-                    sliver: content,
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(height: _calculateBottomPadding()),
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: _calculateBottomPadding()),
+                    ),
+                  ],
+                ),
+              ),
+              // Top bar over the band: round buttons at rest, an opaque bar
+              // with the group name once the title has scrolled away.
+              GroupDetailTopBar(
+                title: trip.title,
+                opaque: _barOpaque,
+                titleVisible: _collapsedTitleVisible,
+                bandForeground: bandForeground,
+                pageColor: pageColor,
+                onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
+                syncGroup: trip.syncEnabled ? trip : null,
+                onSync: _showSyncPage,
+                menuItems: [
+                  if (!trip.archived)
+                    GroupMenuItem(
+                      trip.pinned
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      trip.pinned ? gloc.unpin : gloc.pin,
+                      _handlePinToggle,
+                    ),
+                  // The map opens from its card in Statistics. A shared group
+                  // has its sync button in the bar instead.
+                  if (!trip.syncEnabled)
+                    GroupMenuItem(
+                      Icons.sync_rounded,
+                      gloc.sync_title,
+                      _showSyncPage,
+                    ),
+                  // Share & export lives in the group's settings
+                  // (rarely used, kept out of this menu).
+                  GroupMenuItem(
+                    Icons.settings_outlined,
+                    gloc.settings,
+                    _showSettingsPage,
                   ),
                 ],
               ),
-            ),
-            // Top bar over the band: round buttons at rest, an opaque bar
-            // with the group name once the title has scrolled away.
-            GroupDetailTopBar(
-              title: trip.title,
-              opaque: _barOpaque,
-              titleVisible: _collapsedTitleVisible,
-              bandForeground: bandForeground,
-              pageColor: pageColor,
-              onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
-              syncGroup: trip.syncEnabled ? trip : null,
-              onSync: _showSyncPage,
-              menuItems: [
-                if (!trip.archived)
-                  GroupMenuItem(
-                    trip.pinned
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    trip.pinned ? gloc.unpin : gloc.pin,
-                    _handlePinToggle,
-                  ),
-                // The map opens from its card in Statistics. A shared group
-                // has its sync button in the bar instead.
-                if (!trip.syncEnabled)
-                  GroupMenuItem(
-                    Icons.sync_rounded,
-                    gloc.sync_title,
-                    _showSyncPage,
-                  ),
-                // Share & export lives in the group's settings
-                // (rarely used, kept out of this menu).
-                GroupMenuItem(
-                  Icons.settings_outlined,
-                  gloc.settings,
-                  _showSettingsPage,
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
         floatingActionButton: _buildAnimatedFab(),
       ),

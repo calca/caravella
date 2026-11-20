@@ -282,113 +282,118 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
         },
         child: Scaffold(
           backgroundColor: s.surfaceContainer,
-          body: SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 24, 0),
-                  child: Row(
-                    children: [
-                      RoundBackButton(onPressed: () => _back(wizard)),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _StepProgress(
-                          current: wizard.currentStep,
-                          total: wizard.totalSteps,
-                          label:
-                              '${wizard.currentStep + 1}/${wizard.totalSteps}',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: PageView(
-                    controller: wizard.pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      for (final (i, step) in wizard.steps.indexed)
-                        // Off-screen steps are out of the focus order.
-                        ExcludeFocus(
-                          excluding: wizard.currentStep != i,
-                          child: FocusTraversalGroup(
-                            child: switch (step) {
-                              WizardStep.userName => WizardUserNameStep(
-                                onSubmitted: () => _next(wizard),
-                                showNote: showNotes,
-                              ),
-                              WizardStep.type => const WizardTypeStep(),
-                              WizardStep.details => WizardDetailsStep(
-                                onSubmitted: () => _next(wizard),
-                                keyboardOpen: keyboardOpen,
-                              ),
-                              WizardStep.people => WizardPeopleStep(
-                                showNote: showNotes,
-                              ),
-                            },
+          body: ReadableWidth(
+            maxWidth: ReadableWidth.text,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 24, 0),
+                    child: Row(
+                      children: [
+                        RoundBackButton(onPressed: () => _back(wizard)),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _StepProgress(
+                            current: wizard.currentStep,
+                            total: wizard.totalSteps,
+                            label:
+                                '${wizard.currentStep + 1}/${wizard.totalSteps}',
                           ),
                         ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 16),
-                  child: Consumer<GroupFormState>(
-                    builder: (context, state, _) {
-                      final enabled = !_saving && _canContinue(wizard, state);
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          if (wizard.step == WizardStep.details) ...[
-                            const WizardDetailsPills(),
-                            const SizedBox(height: 12),
-                          ],
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: FilledButton(
-                              onPressed: enabled ? () => _next(wizard) : null,
-                              style: FilledButton.styleFrom(
-                                minimumSize: const Size.fromHeight(52),
-                                shape: const StadiumBorder(),
-                                elevation: 0,
+                  Expanded(
+                    child: PageView(
+                      controller: wizard.pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        for (final (i, step) in wizard.steps.indexed)
+                          // Off-screen steps are out of the focus order.
+                          ExcludeFocus(
+                            excluding: wizard.currentStep != i,
+                            child: FocusTraversalGroup(
+                              child: switch (step) {
+                                WizardStep.userName => WizardUserNameStep(
+                                  onSubmitted: () => _next(wizard),
+                                  showNote: showNotes,
+                                ),
+                                WizardStep.type => const WizardTypeStep(),
+                                WizardStep.details => WizardDetailsStep(
+                                  onSubmitted: () => _next(wizard),
+                                  keyboardOpen: keyboardOpen,
+                                ),
+                                WizardStep.people => WizardPeopleStep(
+                                  showNote: showNotes,
+                                ),
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 16),
+                    child: Consumer<GroupFormState>(
+                      builder: (context, state, _) {
+                        final enabled = !_saving && _canContinue(wizard, state);
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (wizard.step == WizardStep.details) ...[
+                              const WizardDetailsPills(),
+                              const SizedBox(height: 12),
+                            ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
                               ),
-                              child: _saving
-                                  ? SizedBox.square(
-                                      dimension: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: s.onPrimary,
+                              child: FilledButton(
+                                onPressed: enabled ? () => _next(wizard) : null,
+                                style: FilledButton.styleFrom(
+                                  minimumSize: const Size.fromHeight(52),
+                                  shape: const StadiumBorder(),
+                                  elevation: 0,
+                                ),
+                                child: _saving
+                                    ? SizedBox.square(
+                                        dimension: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: s.onPrimary,
+                                        ),
+                                      )
+                                    : Text(
+                                        wizard.isLastStep
+                                            ? gloc.wizard_create
+                                            : gloc.wizard_continue,
+                                        style: theme.textTheme.titleSmall
+                                            ?.copyWith(
+                                              color: enabled
+                                                  ? s.onPrimary
+                                                  : s.onSurfaceVariant,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                       ),
-                                    )
-                                  : Text(
-                                      wizard.isLastStep
-                                          ? gloc.wizard_create
-                                          : gloc.wizard_continue,
-                                      style: theme.textTheme.titleSmall
-                                          ?.copyWith(
-                                            color: enabled
-                                                ? s.onPrimary
-                                                : s.onSurfaceVariant,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                    ),
-                            ),
-                          ),
-                          if (wizard.step == WizardStep.userName)
-                            TextButton(
-                              onPressed: () => _next(wizard),
-                              style: TextButton.styleFrom(
-                                minimumSize: const Size.fromHeight(48),
                               ),
-                              child: Text(gloc.wizard_skip),
                             ),
-                        ],
-                      );
-                    },
+                            if (wizard.step == WizardStep.userName)
+                              TextButton(
+                                onPressed: () => _next(wizard),
+                                style: TextButton.styleFrom(
+                                  minimumSize: const Size.fromHeight(48),
+                                ),
+                                child: Text(gloc.wizard_skip),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -1,3 +1,4 @@
+import '../layout/readable_width.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../themes/caravella_themes.dart';
@@ -50,65 +51,68 @@ class SettingsScaffold extends StatelessWidget {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.viewInsetsOf(context).bottom,
               ),
-              child: bottomBar,
+              child: ReadableWidth(child: bottomBar!),
             ),
-      body: Stack(
-        children: [
-          ListView(
-            padding: EdgeInsets.fromLTRB(
-              16,
-              padding.top + 8,
-              16,
-              padding.bottom + 32,
-            ),
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: const RoundBackButton(),
+      body: ReadableWidth(
+        maxWidth: ReadableWidth.text,
+        child: Stack(
+          children: [
+            ListView(
+              padding: EdgeInsets.fromLTRB(
+                16,
+                padding.top + 8,
+                16,
+                padding.bottom + 32,
               ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (eyebrow != null)
-                      Text(
-                        eyebrow!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: s.onSurfaceVariant,
-                        ),
-                      ),
-                    Semantics(
-                      header: true,
-                      child: Text(
-                        title,
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    if (description != null && description!.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        description!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: s.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ],
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: const RoundBackButton(),
                 ),
-              ),
-              // 20 from the title to the first content: a group brings its
-              // own 20 above it.
-              if (children.isEmpty || children.first is! SettingsGroup)
-                const SizedBox(height: 20),
-              ...children,
-            ],
-          ),
-          StatusBarFade(color: s.surfaceContainer),
-        ],
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (eyebrow != null)
+                        Text(
+                          eyebrow!,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: s.onSurfaceVariant,
+                          ),
+                        ),
+                      Semantics(
+                        header: true,
+                        child: Text(
+                          title,
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      if (description != null && description!.isNotEmpty) ...[
+                        const SizedBox(height: 6),
+                        Text(
+                          description!,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: s.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                // 20 from the title to the first content: a group brings its
+                // own 20 above it.
+                if (children.isEmpty || children.first is! SettingsGroup)
+                  const SizedBox(height: 20),
+                ...children,
+              ],
+            ),
+            StatusBarFade(color: s.surfaceContainer),
+          ],
+        ),
       ),
     );
   }
