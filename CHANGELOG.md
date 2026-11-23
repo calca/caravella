@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Sync: paired phones now find each other on the same Wi-Fi and exchange expenses ("Sync now" too); before, they only synced right after scanning the QR code
+- Sync: pairing with a QR code failed on phones with mobile data (or a VPN) on, e.g. a Galaxy S25: the code carried the mobile-data address instead of the Wi-Fi one
 - Search: the hint no longer runs under the rounded end of the search field on narrow phones (Galaxy S25)
 
 ## [2.5.0] - 2026-11-23
