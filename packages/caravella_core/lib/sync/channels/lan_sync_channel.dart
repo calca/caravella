@@ -86,11 +86,9 @@ class LanSyncChannel {
 
   /// Creates a [LanSyncChannel] with the given [port] (default 8765; 0
   /// picks a free one, see [port]).
-  LanSyncChannel({
-    int port = defaultPort,
-    @visibleForTesting bool mdns = true,
-  }) : _port = port,
-       _mdns = mdns;
+  LanSyncChannel({int port = defaultPort, @visibleForTesting bool mdns = true})
+    : _port = port,
+      _mdns = mdns;
 
   /// Whether the channel is currently active.
   bool get isActive => _active;
@@ -535,7 +533,26 @@ class LanSyncChannel {
     if (!_active) return;
 
     switch (event) {
+      // Bonsoir only reports a service as found: its address comes once we
+      // ask for it. Without this, phones never resolved each other and
+      // paired devices only synced right after scanning the QR code.
+      case BonsoirDiscoveryServiceFoundEvent():
+        final service = event.service;
+        if (_isSelf(service)) return;
+        LoggerService.debug(
+          'Found ${service.name} — resolving its address',
+          name: _tag,
+        );
+        final discovery = _discovery;
+        if (discovery != null) {
+          await service.resolve(discovery.serviceResolver);
+        }
       case BonsoirDiscoveryServiceResolvedEvent():
+        await _onPeerResolved(event.service);
+      // A peer that changed address (Wi-Fi reconnected) comes back as an
+      // update, already resolved.
+      case BonsoirDiscoveryServiceUpdatedEvent()
+          when event.service.hostAddress != null:
         await _onPeerResolved(event.service);
       case BonsoirDiscoveryServiceLostEvent():
         _onPeerLost(event.service);
@@ -544,17 +561,19 @@ class LanSyncChannel {
     }
   }
 
+  /// Our own broadcast, seen by our own discovery.
+  bool _isSelf(BonsoirService service) =>
+      DeviceIdentity.isInitialized &&
+      (service.attributes['device_id'] ?? service.name) ==
+          DeviceIdentity.instance.deviceId;
+
   Future<void> _onPeerResolved(BonsoirService service) async {
     final peerId = service.attributes['device_id'] ?? service.name;
     final peerName = service.attributes['device_name'] ?? 'Unknown';
     final host = service.hostAddress;
     final port = service.port;
 
-    // Skip self
-    if (DeviceIdentity.isInitialized &&
-        peerId == DeviceIdentity.instance.deviceId) {
-      return;
-    }
+    if (_isSelf(service)) return;
 
     if (host == null) {
       LoggerService.warning(
