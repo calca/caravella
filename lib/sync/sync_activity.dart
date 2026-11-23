@@ -10,15 +10,21 @@ import 'package:material_ui/material_ui.dart';
 /// welcome (see [SharedGroupPreferences]) and are announced once through
 /// [takeReceived]. (Overall sync state is shown by Home's sync button.)
 ///
-/// It also asks for a Google Drive exchange shortly after the groups change,
-/// when the app comes back and when it goes to the background
-/// ([SyncOrchestrator.requestCloudSync]; nothing while Drive sync is off).
+/// It also asks for an exchange shortly after the groups change here, when
+/// the app comes back and when it goes to the background: over Google
+/// Drive ([SyncOrchestrator.requestCloudSync]) and with the paired phones
+/// on the same Wi-Fi ([SyncOrchestrator.requestLanSync], looking for them
+/// again when the app comes back); nothing on a channel that is off.
 class SyncActivity extends ChangeNotifier {
   final ExpenseGroupNotifier _groups;
   SyncOrchestrator? _orchestrator;
   StreamSubscription<SyncEvent>? _sub;
   AppLifecycleListener? _lifecycle;
   int _seenRevision = 0;
+
+  /// Set while a sync's changes are being applied to the notifier: they
+  /// came from a phone, so they don't ask for a Wi-Fi exchange back.
+  bool _applyingSync = false;
   final List<({String groupId, String? from})> _received = [];
 
   SyncActivity(this._groups);
@@ -37,9 +43,17 @@ class SyncActivity extends ChangeNotifier {
     _seenRevision = _groups.revision;
     _groups.addListener(_onGroupsChanged);
     _lifecycle = AppLifecycleListener(
-      onResume: () =>
-          orchestrator.requestCloudSync(delay: const Duration(seconds: 2)),
-      onPause: () => orchestrator.requestCloudSync(delay: Duration.zero),
+      onResume: () {
+        orchestrator.requestCloudSync(delay: const Duration(seconds: 2));
+        orchestrator.requestLanSync(
+          delay: const Duration(seconds: 1),
+          rediscover: true,
+        );
+      },
+      onPause: () {
+        orchestrator.requestCloudSync(delay: Duration.zero);
+        orchestrator.requestLanSync(delay: Duration.zero);
+      },
     );
   }
 
@@ -47,14 +61,20 @@ class SyncActivity extends ChangeNotifier {
     if (_groups.revision == _seenRevision) return;
     _seenRevision = _groups.revision;
     _orchestrator?.requestCloudSync();
+    if (!_applyingSync) _orchestrator?.requestLanSync();
   }
 
   /// Applies one sync event (public for tests).
   @visibleForTesting
   void handle(SyncEvent event) {
     if (event case SyncCompleted(:final result) when result.applied > 0) {
-      for (final id in result.groupIds) {
-        _groups.notifyGroupUpdated(id);
+      _applyingSync = true;
+      try {
+        for (final id in result.groupIds) {
+          _groups.notifyGroupUpdated(id);
+        }
+      } finally {
+        _applyingSync = false;
       }
       // From the user's own devices (Google Drive): no "shared with you".
       if (result.newGroupIds.isNotEmpty && result.channel != 'cloud') {

@@ -53,6 +53,14 @@ class SyncOrchestrator {
   Timer? _cloudSoon;
   DateTime? _cloudSoonAt;
 
+  /// A Wi-Fi exchange asked for by [requestLanSync], not started yet, and
+  /// whether it should look for peers again.
+  Timer? _lanSoon;
+  bool _lanSoonRediscover = false;
+
+  /// The Wi-Fi exchanges asked for so far, one after the other.
+  Future<void> _lanQueue = Future.value();
+
   /// Creates a [SyncOrchestrator] with all channel instances.
   ///
   /// [lanChannel] and [syncManager] are required.
@@ -255,6 +263,41 @@ class SyncOrchestrator {
       _cloudSoon?.cancel();
       await cloud.stop();
       _problems.clearReason(SyncProblemReason.cloudUnreachable);
+    }
+  }
+
+  /// Exchanges with the paired phones on the same Wi-Fi after [delay]:
+  /// shortly after a change here (so it reaches a phone that is already
+  /// connected, without "Update now"), and — with [rediscover] — when the
+  /// app comes back, looking for them again. Requests meanwhile share one
+  /// exchange; does nothing while Wi-Fi sync is off. Without it, an
+  /// exchange happened only when mDNS first found the other phone.
+  void requestLanSync({
+    Duration delay = const Duration(seconds: 3),
+    bool rediscover = false,
+  }) {
+    if (!_initialized) return;
+    _lanSoonRediscover |= rediscover;
+    _lanSoon?.cancel();
+    _lanSoon = Timer(delay, () {
+      final again = _lanSoonRediscover;
+      _lanSoonRediscover = false;
+      _lanQueue = _lanQueue.then((_) => _runLanRequest(rediscover: again));
+    });
+  }
+
+  Future<void> _runLanRequest({required bool rediscover}) async {
+    try {
+      if (!_lanChannel.isActive || !await _lanChannel.isEnabled()) return;
+      if (rediscover) {
+        LoggerService.debug('Looking for peers again', name: _tag);
+        await _lanChannel.rediscover();
+      } else {
+        final peers = await _lanChannel.syncKnownPeers();
+        LoggerService.debug('Synced with $peers known peer(s)', name: _tag);
+      }
+    } catch (e) {
+      LoggerService.warning('Requested Wi-Fi sync failed: $e', name: _tag);
     }
   }
 
