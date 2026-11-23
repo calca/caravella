@@ -402,4 +402,75 @@ void main() {
       expect(await phoneB.group('trip'), isNull);
     },
   );
+
+  group('requestLanSync', () {
+    /// A paired with B by scanning B's code (B in A's peers), first sync
+    /// done.
+    Future<void> pairedWithServedB() async {
+      await phoneB.repo.saveGroup(_group('beach', title: 'Beach'));
+      final bPort = await phoneB.serve();
+      final synced = lan.events.firstWhere((e) => e is SyncCompleted);
+      await lan.pairWithHost('127.0.0.1', bPort, groupId: 'beach');
+      await synced.timeout(const Duration(seconds: 10));
+    }
+
+    Future<void> addExpenseOnA() async {
+      final beach = (await onA('beach'))!;
+      await phoneA.saveGroup(
+        beach.copyWith(
+          expenses: [
+            ...beach.expenses,
+            beach.expenses.first.copyWith(id: 'beach_new', name: 'Ice cream'),
+          ],
+        ),
+      );
+    }
+
+    test('a change here reaches a known peer without Update now', () async {
+      await pairedWithServedB();
+      await addExpenseOnA();
+
+      final synced = lan.events.firstWhere((e) => e is SyncCompleted);
+      orchestrator.requestLanSync(delay: Duration.zero);
+      await synced.timeout(const Duration(seconds: 10));
+
+      final names = (await phoneB.group('beach'))!.expenses.map((e) => e.name);
+      expect(names, contains('Ice cream'));
+    });
+
+    test('requests close together make one exchange', () async {
+      await pairedWithServedB();
+      await addExpenseOnA();
+
+      var exchanges = 0;
+      final sub = lan.events.listen((e) {
+        if (e is SyncStarted) exchanges++;
+      });
+      for (var i = 0; i < 3; i++) {
+        orchestrator.requestLanSync(delay: const Duration(milliseconds: 50));
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      await sub.cancel();
+
+      expect(exchanges, 1);
+    });
+
+    test('with Wi-Fi sync off, nothing is exchanged', () async {
+      await pairedWithServedB();
+      await lan.setEnabled(false);
+      await addExpenseOnA();
+
+      var exchanges = 0;
+      final sub = lan.events.listen((e) {
+        if (e is SyncStarted) exchanges++;
+      });
+      orchestrator.requestLanSync(delay: Duration.zero);
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      await sub.cancel();
+
+      expect(exchanges, 0);
+      final names = (await phoneB.group('beach'))!.expenses.map((e) => e.name);
+      expect(names, isNot(contains('Ice cream')));
+    });
+  });
 }
