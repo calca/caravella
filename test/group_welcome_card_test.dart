@@ -34,14 +34,13 @@ Widget _wrap(Widget child) => MaterialApp(
 
 void main() {
   testWidgets('says who shared the group and what is in it', (tester) async {
-    var dismissed = 0, added = 0;
+    var dismissed = 0;
     await tester.pumpWidget(
       _wrap(
         GroupWelcomeCard(
           group: _group,
           from: 'Pixel 9',
           onDismiss: () => dismissed++,
-          onAddExpense: () => added++,
         ),
       ),
     );
@@ -51,21 +50,15 @@ void main() {
     expect(find.textContaining('1 expense'), findsOneWidget);
     expect(find.text('P9'), findsOneWidget);
 
+    // Only a welcome: the page's own + adds expenses.
+    expect(find.text('Add expense'), findsNothing);
     await tester.tap(find.text('OK'));
-    await tester.tap(find.text('Add expense'));
-    expect((dismissed, added), (1, 1));
+    expect(dismissed, 1);
   });
 
   testWidgets('without the device name it skips "shared by"', (tester) async {
     await tester.pumpWidget(
-      _wrap(
-        GroupWelcomeCard(
-          group: _group,
-          from: '',
-          onDismiss: () {},
-          onAddExpense: () {},
-        ),
-      ),
+      _wrap(GroupWelcomeCard(group: _group, from: '', onDismiss: () {})),
     );
     expect(find.textContaining('Shared by'), findsNothing);
     expect(find.byIcon(Icons.group_add_outlined), findsOneWidget);
