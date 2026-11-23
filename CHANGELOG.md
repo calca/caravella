@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Sync over Wi-Fi: a change reaches a paired phone on the same Wi-Fi within seconds, and coming back to the app looks for it again — no "Update now" needed (both apps open)
 - A group received from another phone: its welcome card keeps only "OK" (the page's + is right below)
 
 ### Fixed

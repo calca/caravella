@@ -164,6 +164,30 @@ class LanSyncChannel {
     LoggerService.info('LAN sync channel stopped', name: _tag);
   }
 
+  /// Exchanges with every peer found so far (by mDNS or a QR pairing) —
+  /// e.g. after a change here, so it reaches a phone that is already
+  /// connected without waiting for it to be discovered again. Returns how
+  /// many peers there were.
+  Future<int> syncKnownPeers() async {
+    if (!_active) return 0;
+    final peers = Map.of(_peers);
+    for (final MapEntry(key: id, value: (host, port)) in peers.entries) {
+      await _syncWithPeer(id, host, port);
+    }
+    return peers.length;
+  }
+
+  /// Looks for peers again (mDNS discovery restarted, the HTTP server and
+  /// broadcast untouched), syncing with each one found — e.g. when the app
+  /// comes back: the other phone may have arrived, or changed address,
+  /// while this one was in the background.
+  Future<void> rediscover() async {
+    if (!_active || !_mdns) return;
+    await _stopDiscovery();
+    _peers.clear();
+    await _startDiscovery();
+  }
+
   /// Dispose the event stream. Call when the channel will no longer be used.
   void dispose() {
     _eventController.close();
