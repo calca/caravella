@@ -1637,7 +1637,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sync_bt_permission_denied =>
-      'Caravella non ha il permesso «Dispositivi nelle vicinanze»: concedilo nelle impostazioni del telefono';
+      'Caravella non ha i permessi «Dispositivi nelle vicinanze» e «Posizione»: concedili nelle impostazioni del telefono';
 
   @override
   String get sync_history_empty => 'Nessuna sincronizzazione';

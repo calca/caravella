@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Sync: paired phones now find each other on the same Wi-Fi and exchange expenses ("Sync now" too); before, they only synced right after scanning the QR code
 - Sync: pairing with a QR code failed on phones with mobile data (or a VPN) on, e.g. a Galaxy S25: the code carried the mobile-data address instead of the Wi-Fi one
+- Sync over Bluetooth (Play builds): it never started. Android 12 phones (e.g. a Pixel 3) always reported a missing permission, and newer ones (e.g. a Galaxy S25) couldn't find the other phone because the location permission wasn't asked for; once connected, the first message was sent before the connection was ready and got lost
 - Expense page: tapping the note scrolls the whole note into view; only its first line showed, the rest stayed under the Save bar above the keyboard
 - Notifications sit at the bottom of the screen again on every page: away from Home and Groups they kept the room of the Home/Groups switch and hung high above the bottom. They still rise above the "+" button and the Save bar
 - The period calendar shows the whole month again: in months spanning six weeks, like November 2026, the last week was cut off

@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_gms/src/nearby_bluetooth_sync_channel.dart';
 import 'package:cryptography/cryptography.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nearby_connections/nearby_connections.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// [NearbyBluetoothSyncChannel] against a scripted phone B, through a fake
@@ -25,15 +27,35 @@ class _Air implements Nearby {
   /// Every bytes payload the channel sent, as sent.
   final payloads = <Uint8List>[];
 
+  /// Payloads the channel sent before the connection was established:
+  /// Nearby drops them, so B never sees them.
+  final lost = <Uint8List>[];
+
+  /// Whether the connection to B is established (Status.CONNECTED).
+  var connected = false;
+
+  /// Makes `requestConnection` fail as Nearby does when B already
+  /// connected to the channel.
+  var alreadyConnected = false;
+
+  /// Times the channel called `requestConnection`.
+  var connectionRequests = 0;
+
   /// Phone B's reaction to each complete message from the channel.
   void Function(Map<String, dynamic> message)? onMessage;
 
   final _chunks = <int, String>{};
   var _payloadId = 0;
 
+  /// Phone B's connection to the advertising channel is initiated (and
+  /// accepted), before its result.
+  void initiateFromB() =>
+      _onIncoming!(_endpoint, ConnectionInfo('Phone B', 'token', true));
+
   /// Phone B connects to the advertising channel.
   void connectFromB() {
     _onIncoming!(_endpoint, ConnectionInfo('Phone B', 'token', true));
+    connected = true;
     _onIncomingResult!(_endpoint, Status.CONNECTED);
   }
 
@@ -98,11 +120,23 @@ class _Air implements Nearby {
     required OnConnectionResult onConnectionResult,
     required OnDisconnected onDisconnected,
   }) async {
+    connectionRequests++;
+    if (alreadyConnected) {
+      throw PlatformException(
+        code: 'Failure',
+        message: '8003: STATUS_ALREADY_CONNECTED_TO_ENDPOINT',
+      );
+    }
     onConnectionInitiated(
       endpointId,
       ConnectionInfo('Phone B', 'token', false),
     );
-    onConnectionResult(endpointId, Status.CONNECTED);
+    // As on a phone: the request returns first, the connection is
+    // established a moment later.
+    Timer(Duration.zero, () {
+      connected = true;
+      onConnectionResult(endpointId, Status.CONNECTED);
+    });
     return true;
   }
 
@@ -118,6 +152,10 @@ class _Air implements Nearby {
 
   @override
   Future<void> sendBytesPayload(String endpointId, Uint8List bytes) async {
+    if (!connected) {
+      lost.add(bytes);
+      return;
+    }
     payloads.add(bytes);
     final json = jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
     if (json.containsKey('index') && json.containsKey('total')) {
@@ -140,7 +178,8 @@ class _Air implements Nearby {
   @override
   Future<void> stopDiscovery() async {}
   @override
-  Future<void> disconnectFromEndpoint(String endpointId) async {}
+  Future<void> disconnectFromEndpoint(String endpointId) async =>
+      connected = false;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -286,6 +325,49 @@ void main() {
       expect(received.last, _delta('phone-b'));
     },
   );
+
+  test('the hello waits for the connection: nothing is sent early', () async {
+    answerAsAdvertiser(_delta('phone-b'));
+
+    final result = await channel.syncWithPeer(_endpoint);
+
+    expect(result.errors, 0);
+    expect(air.lost, isEmpty, reason: 'sent before Status.CONNECTED');
+  });
+
+  test('B already connected to A: A uses that connection', () async {
+    answerAsAdvertiser(_delta('phone-b'));
+    await channel.startAdvertising(groupId: 'trip');
+    // B's connection reached A, but A hasn't seen it as CONNECTED yet.
+    air
+      ..initiateFromB()
+      ..connected = true
+      ..alreadyConnected = true;
+
+    final result = await channel.syncWithPeer(_endpoint);
+
+    expect(result.errors, 0);
+    expect(received.last, _delta('phone-b'));
+  });
+
+  testWidgets('a failed sync drops the connection: the retry reconnects', (
+    tester,
+  ) async {
+    SyncResult? first;
+    channel.syncWithPeer(_endpoint).then((r) => first = r);
+    await tester.pump(const Duration(seconds: 16)); // no hello_ack
+    expect(first?.errors, 1);
+    expect(air.connected, isFalse);
+
+    answerAsAdvertiser(_delta('phone-b'));
+    SyncResult? retry;
+    channel.syncWithPeer(_endpoint).then((r) => retry = r);
+    await tester.pump(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(milliseconds: 10));
+
+    expect(air.connectionRequests, 2);
+    expect(retry?.errors, 0);
+  });
 
   test('over 32 KB both ways: chunks that each fit a Nearby payload', () async {
     // A sends 100 KB, B answers with 70 KB in chunks.
@@ -442,6 +524,34 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 10));
       expect(acks, isEmpty);
+    });
+  });
+
+  group('nearbyPermissionsFor', () {
+    test('Android 11: location only', () {
+      expect(nearbyPermissionsFor(30), [Permission.location]);
+    });
+
+    test('Android 12: location and Bluetooth, no nearby Wi-Fi devices', () {
+      expect(nearbyPermissionsFor(31), [
+        Permission.location,
+        Permission.bluetoothScan,
+        Permission.bluetoothConnect,
+        Permission.bluetoothAdvertise,
+      ]);
+      expect(
+        nearbyPermissionsFor(32),
+        isNot(contains(Permission.nearbyWifiDevices)),
+      );
+    });
+
+    test('Android 13+: also nearby Wi-Fi devices, and still location', () {
+      for (final sdk in [33, 37]) {
+        expect(
+          nearbyPermissionsFor(sdk),
+          containsAll([Permission.location, Permission.nearbyWifiDevices]),
+        );
+      }
     });
   });
 }
