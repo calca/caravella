@@ -620,10 +620,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                           group: trip,
                           from: from,
                           onDismiss: _dismissWelcome,
-                          onAddExpense: () {
-                            _dismissWelcome();
-                            _showAddExpenseSheet();
-                          },
                         ),
                       ),
                     ),

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- A group received from another phone: its welcome card keeps only "OK" (the page's + is right below)
+
 ### Fixed
 - Search: the hint no longer runs under the rounded end of the search field on narrow phones (Galaxy S25)
 
