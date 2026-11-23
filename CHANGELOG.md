@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- Sync: paired phones now find each other on the same Wi-Fi and exchange expenses ("Sync now" too); before, they only synced right after scanning the QR code
 - Search: the hint no longer runs under the rounded end of the search field on narrow phones (Galaxy S25)
 
 ## [2.5.0] - 2026-11-23
