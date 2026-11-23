@@ -1607,7 +1607,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sync_bt_retry => '重试';
 
   @override
-  String get sync_bt_permission_denied => 'Caravella 没有“附近的设备”权限：请在手机设置中允许';
+  String get sync_bt_permission_denied =>
+      'Caravella 没有“附近的设备”和“位置信息”权限：请在手机设置中允许';
 
   @override
   String get sync_history_empty => '暂无同步记录';

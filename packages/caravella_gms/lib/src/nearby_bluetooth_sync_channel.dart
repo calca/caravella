@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/crypto/device_key_manager.dart';
 import 'package:caravella_core/sync/crypto/peer_key_store.dart';
@@ -38,9 +40,32 @@ const Duration _chunkReassemblyTimeout = Duration(seconds: 30);
 /// `hello_ack` before giving up.
 const Duration _handshakeTimeout = Duration(seconds: 15);
 
+/// How long [BluetoothSyncChannel.syncWithPeer] waits for the connection
+/// to the peer to be established before giving up.
+const Duration _connectTimeout = Duration(seconds: 20);
+
 /// How long [BluetoothSyncChannel.syncWithPeer] waits for the peer's sync
 /// response before giving up.
 const Duration _syncResponseTimeout = Duration(seconds: 30);
+
+/// The runtime permissions Nearby Connections needs on Android [sdkInt].
+///
+/// Location is required to discover nearby devices on every version (a
+/// Galaxy S25 on Android 17 fails with `MISSING_PERMISSION_ACCESS_COARSE_
+/// LOCATION` without it). The Bluetooth scan/connect/advertise permissions
+/// exist from Android 12 (API 31), nearby Wi-Fi devices from Android 13
+/// (API 33): asking for one on an older version always reports it denied,
+/// which used to block Bluetooth sync entirely on Android 12 (a Pixel 3).
+@visibleForTesting
+List<Permission> nearbyPermissionsFor(int sdkInt) => [
+  Permission.location,
+  if (sdkInt >= 31) ...[
+    Permission.bluetoothScan,
+    Permission.bluetoothConnect,
+    Permission.bluetoothAdvertise,
+  ],
+  if (sdkInt >= 33) Permission.nearbyWifiDevices,
+];
 
 // ---------------------------------------------------------------------------
 // Chunk envelope
@@ -126,6 +151,14 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   /// Completers for a pending `hello_ack`, keyed by endpoint ID.
   final Map<String, Completer<Map<String, dynamic>>> _handshakeCompleters = {};
 
+  /// Completers for a connection this device requested, completed by
+  /// [_onConnectionResult], keyed by endpoint ID.
+  final Map<String, Completer<void>> _connectCompleters = {};
+
+  /// Endpoints with an established connection (CONNECTED, not yet
+  /// disconnected).
+  final Set<String> _connected = {};
+
   bool _advertising = false;
   bool _discovering = false;
 
@@ -165,29 +198,31 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
   bool get isDiscovering => _discovering;
 
   /// Requests the Android runtime permissions required for Nearby
-  /// Connections: Bluetooth scan/connect/advertise (Android 12+) and nearby
-  /// Wi-Fi devices (Android 13+).
+  /// Connections — see [nearbyPermissionsFor] for which ones, by Android
+  /// version.
   ///
   /// These are declared in the manifest via the `nearby_connections` and
   /// `permission_handler` plugins, but — being dangerous permissions on
   /// modern Android — still need to be requested at runtime; the
-  /// `nearby_connections` plugin does not do this itself. No-ops (returns
-  /// `true`) on platforms/OS versions where a given permission doesn't
-  /// apply.
+  /// `nearby_connections` plugin does not do this itself.
   @override
   Future<bool> requestPermissions() async {
     if (_requestPermissions != null) return _requestPermissions();
-    final statuses = await [
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
-      Permission.bluetoothAdvertise,
-      Permission.nearbyWifiDevices,
-    ].request();
+    final sdkInt = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
+    final statuses = await nearbyPermissionsFor(sdkInt).request();
 
     final allGranted = statuses.values.every((status) => status.isGranted);
     if (!allGranted) {
       LoggerService.warning(
-        'Bluetooth sync permissions not fully granted: $statuses',
+        'Bluetooth sync permissions not fully granted (API $sdkInt): '
+        '$statuses',
+        name: _tag,
+      );
+    } else if (!await Permission.location.serviceStatus.isEnabled) {
+      // Nearby needs location services on to find the other phone; without
+      // them discovery may find nothing, or devices may disconnect.
+      LoggerService.warning(
+        'Location services are off: Bluetooth discovery may not work',
         name: _tag,
       );
     }
@@ -389,14 +424,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     try {
       final identity = DeviceIdentity.instance;
 
-      // Request connection
-      await _nearby.requestConnection(
-        identity.deviceName,
-        endpointId,
-        onConnectionInitiated: _onConnectionInitiated,
-        onConnectionResult: _onConnectionResult,
-        onDisconnected: _onDisconnected,
-      );
+      await _connect(endpointId, identity.deviceName);
 
       // 1. Handshake: exchange public keys, learn & grant the shared group.
       final myPublicKey = await DeviceKeyManager.publicKeyBase64();
@@ -501,6 +529,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
       }
 
       // Disconnect
+      _connected.remove(endpointId);
       await _nearby.disconnectFromEndpoint(endpointId);
 
       final result = SyncResult(
@@ -527,6 +556,14 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
     } catch (e, st) {
       _pendingResponses.remove(endpointId);
       _handshakeCompleters.remove(endpointId);
+      _connectCompleters.remove(endpointId);
+      // Drop the connection, so a retry starts from a clean one instead of
+      // failing with STATUS_ALREADY_CONNECTED_TO_ENDPOINT.
+      if (_connected.remove(endpointId)) {
+        unawaited(
+          _nearby.disconnectFromEndpoint(endpointId).catchError((_) {}),
+        );
+      }
       LoggerService.error(
         'Sync with $endpointId failed',
         name: _tag,
@@ -546,6 +583,40 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
         ),
       );
     }
+  }
+
+  /// Connects to [endpointId] and waits until the connection is
+  /// established: `requestConnection` returns as soon as the request is
+  /// sent, and a payload sent before `Status.CONNECTED` is lost (the hello
+  /// never reached the other phone, which timed out the handshake).
+  Future<void> _connect(String endpointId, String nickname) async {
+    if (_connected.contains(endpointId)) return;
+    final connected = Completer<void>();
+    _connectCompleters[endpointId] = connected;
+    try {
+      await _nearby.requestConnection(
+        nickname,
+        endpointId,
+        onConnectionInitiated: _onConnectionInitiated,
+        onConnectionResult: _onConnectionResult,
+        onDisconnected: _onDisconnected,
+      );
+    } on PlatformException catch (e) {
+      // The other phone connected to us first (in an update both phones
+      // discover each other): use that connection.
+      if (!'${e.message}'.contains('ALREADY_CONNECTED')) rethrow;
+      LoggerService.debug('Already connected to $endpointId', name: _tag);
+      _connectCompleters.remove(endpointId);
+      _connected.add(endpointId);
+      return;
+    }
+    await connected.future.timeout(
+      _connectTimeout,
+      onTimeout: () => throw TimeoutException(
+        'No connection to $endpointId',
+        _connectTimeout,
+      ),
+    );
   }
 
   /// Dispose the channel: stops any active advertising/discovery (so Nearby
@@ -584,7 +655,15 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
       name: _tag,
     );
 
-    if (status != Status.CONNECTED) {
+    if (status == Status.CONNECTED) {
+      _connected.add(endpointId);
+      final connect = _connectCompleters.remove(endpointId);
+      if (connect != null && !connect.isCompleted) connect.complete();
+    } else {
+      final connect = _connectCompleters.remove(endpointId);
+      if (connect != null && !connect.isCompleted) {
+        connect.completeError(StateError('Connection failed: $status'));
+      }
       // The connection never reached a usable state (rejected by the peer,
       // or a transport error) — fail any handshake/sync this endpoint was
       // waiting on immediately instead of leaving it to hit the full
@@ -608,6 +687,7 @@ class NearbyBluetoothSyncChannel implements BluetoothSyncChannel {
 
   void _onDisconnected(String endpointId) {
     LoggerService.info('Disconnected from $endpointId', name: _tag);
+    _connected.remove(endpointId);
     _dropChunkBuffer(endpointId);
   }
 
