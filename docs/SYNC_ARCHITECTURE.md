@@ -166,7 +166,7 @@ sequenceDiagram
     participant B as Device B (scans QR)
 
     Note over A: User enables sync for a group,<br/>taps "Invite a device"
-    A->>A: SyncOrchestrator.buildOwnPairingPayload(groupId, groupTitle)<br/>resolves local IPv4, embeds host:port + pubkey
+    A->>A: SyncOrchestrator.buildOwnPairingPayload(groupId, groupTitle)<br/>resolves the Wi-Fi IPv4 (LocalNetworkInfo: never mobile data or a VPN), embeds host:port + pubkey
     A-->>B: QR code (PairingPayload, valid 5 min)
     B->>B: PairingPayload.tryParse, check isExpired /<br/>isLikelyUnreachableEmulatorHost
     B->>A: POST /pair {device_id, device_name, platform,<br/>public_key, group_id}  (LanSyncChannel.pairWithHost)
