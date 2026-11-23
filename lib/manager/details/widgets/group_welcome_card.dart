@@ -5,19 +5,19 @@ import 'package:material_ui/material_ui.dart';
 
 /// One-time card on a group received from another device: who shared it
 /// ([from], empty when unknown), how many people and expenses it has and
-/// its total so far, then "OK" and "Add expense". Both dismiss it for good.
+/// its total so far, then "OK", which dismisses it for good. No "Add
+/// expense" here: the page's own + is right below, and the card is only a
+/// welcome.
 class GroupWelcomeCard extends StatelessWidget {
   final ExpenseGroup group;
   final String from;
   final VoidCallback onDismiss;
-  final VoidCallback onAddExpense;
 
   const GroupWelcomeCard({
     super.key,
     required this.group,
     required this.from,
     required this.onDismiss,
-    required this.onAddExpense,
   });
 
   @override
@@ -100,36 +100,19 @@ class GroupWelcomeCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton(
-                    onPressed: onDismiss,
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(44),
-                      shape: const StadiumBorder(),
-                      elevation: 0,
-                      backgroundColor: s.onSurface.withValues(alpha: 0.06),
-                      foregroundColor: s.onSurface,
-                    ),
-                    child: Text(gloc.ok),
-                  ),
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: FilledButton(
+                onPressed: onDismiss,
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size(96, 44),
+                  shape: const StadiumBorder(),
+                  elevation: 0,
+                  backgroundColor: s.onSurface.withValues(alpha: 0.06),
+                  foregroundColor: s.onSurface,
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: onAddExpense,
-                    icon: const Icon(Icons.add_rounded),
-                    label: Text(gloc.add_first_expense_button),
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(44),
-                      shape: const StadiumBorder(),
-                      backgroundColor: s.primary,
-                      foregroundColor: s.onPrimary,
-                    ),
-                  ),
-                ),
-              ],
+                child: Text(gloc.ok),
+              ),
             ),
           ],
         ),
