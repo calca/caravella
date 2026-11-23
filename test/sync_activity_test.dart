@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:caravella_core/caravella_core.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/sync/sync_activity.dart';
 
@@ -14,6 +17,26 @@ SyncCompleted _done({int applied = 1, int errors = 0, Set<String>? ids}) =>
         groupIds: ids ?? {'g1'},
       ),
     );
+
+/// Records the exchanges [SyncActivity] asks for.
+class _Recording extends SyncOrchestrator {
+  _Recording(SqliteExpenseGroupRepository repo)
+    : super(
+        lanChannel: LanSyncChannel(mdns: false),
+        syncManager: SyncManager(repository: repo),
+      );
+
+  final lan = <({Duration delay, bool rediscover})>[];
+
+  @override
+  void requestLanSync({
+    Duration delay = const Duration(seconds: 3),
+    bool rediscover = false,
+  }) => lan.add((delay: delay, rediscover: rediscover));
+
+  @override
+  void requestCloudSync({Duration delay = const Duration(seconds: 30)}) {}
+}
 
 void main() {
   test('changes from a sync refresh the touched groups', () {
@@ -84,5 +107,57 @@ void main() {
     expect(groups.updatedGroupIds, contains('g1'));
     expect(notified, 0);
     expect(activity.takeReceived(), isEmpty);
+  });
+
+  group('Wi-Fi exchanges asked for', () {
+    late Directory dir;
+    late SqliteExpenseGroupRepository repo;
+    late _Recording orchestrator;
+    late ExpenseGroupNotifier groups;
+    late SyncActivity activity;
+
+    setUp(() {
+      dir = Directory.systemTemp.createTempSync('sync_activity');
+      repo = SqliteExpenseGroupRepository(databasePath: '${dir.path}/a.db');
+      orchestrator = _Recording(repo);
+      groups = ExpenseGroupNotifier();
+      activity = SyncActivity(groups)..attach(orchestrator);
+    });
+
+    tearDown(() async {
+      activity.dispose();
+      await repo.close();
+      dir.deleteSync(recursive: true);
+    });
+
+    test('a change here asks for one', () {
+      groups.notifyGroupUpdated('g1');
+      expect(orchestrator.lan, [
+        (delay: const Duration(seconds: 3), rediscover: false),
+      ]);
+    });
+
+    test('changes that came from a sync do not ask for one back', () {
+      activity.handle(_done(applied: 1, ids: {'g1'}));
+      expect(groups.updatedGroupIds, contains('g1'));
+      expect(orchestrator.lan, isEmpty);
+    });
+
+    testWidgets('back in the app: look for the phones again; leaving: now', (
+      tester,
+    ) async {
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      expect(orchestrator.lan.last, (delay: Duration.zero, rediscover: false));
+
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      expect(orchestrator.lan.last, (
+        delay: const Duration(seconds: 1),
+        rediscover: true,
+      ));
+    });
   });
 }
