@@ -638,8 +638,8 @@
   ,"@sync_bt_error_detail": {"description": "Spiegazione generica mostrata sotto sync_bt_error per errori di connessione/timeout/decrittazione — non mostra intenzionalmente il testo grezzo dell'eccezione"}
   ,"sync_bt_retry": "Riprova"
   ,"@sync_bt_retry": {"description": "Pulsante per riprovare sync BT"}
-  ,"sync_bt_permission_denied": "Caravella non ha il permesso «Dispositivi nelle vicinanze»: concedilo nelle impostazioni del telefono"
-  ,"@sync_bt_permission_denied": {"description": "Errore mostrato quando i permessi Bluetooth/dispositivi vicini sono negati"}
+  ,"sync_bt_permission_denied": "Caravella non ha i permessi «Dispositivi nelle vicinanze» e «Posizione»: concedili nelle impostazioni del telefono"
+  ,"@sync_bt_permission_denied": {"description": "Errore mostrato quando i permessi Bluetooth/dispositivi vicini o posizione sono negati"}
   ,"sync_history_empty": "Nessuna sincronizzazione"
   ,"@sync_history_empty": {"description": "Stato vuoto per cronologia sync"}
   ,"sync_channel_lan": "LAN"

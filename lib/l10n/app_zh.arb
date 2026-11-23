@@ -825,7 +825,7 @@
   "@sync_bt_retry": {
     "description": "重试蓝牙同步按钮"
   },
-  "sync_bt_permission_denied": "Caravella 没有“附近的设备”权限：请在手机设置中允许",
+  "sync_bt_permission_denied": "Caravella 没有“附近的设备”和“位置信息”权限：请在手机设置中允许",
   "@sync_bt_permission_denied": {
     "description": "蓝牙/附近设备权限被拒绝时显示的错误"
   },
