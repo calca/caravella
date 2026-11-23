@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Google Drive sync now moves data (Play builds). Settings › Sync › "Sync devices" was there in 2.4, but it never uploaded and ignored what it downloaded. Each device now keeps its full snapshot (every group, deleted ones included) in the account's hidden Drive folder, applies the other devices' snapshots by last-writer-wins, and uploads its own. It runs when turned on, every 15 minutes, 30 seconds after a change, when the app comes back or goes to the background, and from "Sync now", which now says what was received and sent. It covers all your groups and needs no pairing, because the devices are yours. Groups from your other devices get no "shared with you" welcome. Photos and attachments stay on the device they were added on, as over Wi-Fi (#688)
 
 ### Changed
+- F-Droid build: each APK split by ABI now has F-Droid's versionCode, build number × 10 + 1 (armeabi-v7a), 2 (arm64-v8a) or 3 (x86_64), so 2.5.0+139 is 1391/1392/1393 instead of Flutter's 1139/2139/4139, as fdroiddata asked (!52814). The Play bundle and the universal APKs keep 139
 - Sync over Wi-Fi: a change reaches a paired phone on the same Wi-Fi within seconds, and coming back to the app looks for it again — no "Update now" needed (both apps open)
 - A group received from another phone: its welcome card keeps only "OK" (the page's + is right below)
 

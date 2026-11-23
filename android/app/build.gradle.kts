@@ -148,3 +148,20 @@ dependencies {
     testImplementation("androidx.test:core:1.7.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
 }
+
+// F-Droid builds one APK per ABI (`flutter build apk --split-per-abi`) and
+// needs each one's versionCode to be versionCode * 10 + the ABI's code
+// (F-Droid's Flutter template; fdroiddata!52814). Only APKs split by ABI
+// get it: the Play bundle and the universal APKs keep versionCode as is.
+val abiCodes = mapOf("armeabi-v7a" to 1, "arm64-v8a" to 2, "x86_64" to 3)
+// It starts from pubspec's build number (flutter.versionCode): the variant's
+// own versionCode already carries Flutter's split-ABI override (1000 + n).
+android.applicationVariants.configureEach {
+    outputs.forEach { output ->
+        val abiVersionCode = abiCodes[output.filters.find { it.filterType == "ABI" }?.identifier]
+        if (abiVersionCode != null) {
+            (output as com.android.build.gradle.internal.api.ApkVariantOutputImpl).versionCodeOverride =
+                flutter.versionCode * 10 + abiVersionCode
+        }
+    }
+}
