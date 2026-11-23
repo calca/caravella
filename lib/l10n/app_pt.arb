@@ -630,7 +630,7 @@
   ,"@sync_bt_error_detail": {"description": "Explicação genérica mostrada abaixo de sync_bt_error para falhas de conexão/tempo limite/descriptografia — deliberadamente não exibe o texto bruto da exceção"}
   ,"sync_bt_retry": "Tentar novamente"
   ,"@sync_bt_retry": {"description": "Botão para tentar novamente sync BT"}
-  ,"sync_bt_permission_denied": "O Caravella não tem a permissão «Dispositivos por perto»: conceda nas configurações do telefone"
+  ,"sync_bt_permission_denied": "O Caravella não tem as permissões «Dispositivos por perto» e «Localização»: conceda-as nas configurações do telefone"
   ,"@sync_bt_permission_denied": {"description": "Erro exibido quando as permissões de Bluetooth/dispositivos próximos são negadas"}
   ,"sync_history_empty": "Nenhuma sincronização"
   ,"@sync_history_empty": {"description": "Estado vazio para histórico de sync"}
