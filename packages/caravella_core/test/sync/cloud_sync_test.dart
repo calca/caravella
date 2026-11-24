@@ -19,7 +19,10 @@ class _FakeDrive extends CloudRelayChannel {
   Future<void> uploadShard(String deviceId, String jsonPayload) async {
     if (!signedIn) throw const CloudNotSignedInException();
     files[deviceId] = jsonPayload;
+    uploads++;
   }
+
+  int uploads = 0;
 
   @override
   Future<List<String>> downloadAllShards() async {
@@ -149,6 +152,26 @@ void main() {
     // And phone B gets phone A's group from it.
     await downloadOnB();
     expect((await phoneB.getGroupById('home')).unwrap(), isNotNull);
+  });
+
+  test('the same snapshot again is not uploaded', () async {
+    await orchestrator.syncCloudNow(); // the one started on start
+    await phoneA.saveGroup(_group('home'));
+    await orchestrator.syncCloudNow();
+    final before = drive.uploads;
+
+    final again = await orchestrator.syncCloudNow();
+    expect(drive.uploads, before);
+    expect(again.sent, 0);
+
+    // A change here: uploaded on the next cycle.
+    await phoneA.saveGroup(_group('home', title: 'Home 2'));
+    final changed = await orchestrator.syncCloudNow();
+    expect(drive.uploads, before + 1);
+    final mine = jsonDecode(drive.files['phone-a']!) as Map<String, dynamic>;
+    final groups = mine['groups'] as List;
+    expect(changed.sent, groups.length);
+    expect(groups.firstWhere((g) => g['id'] == 'home')['title'], 'Home 2');
   });
 
   test('its own old shard is not applied again', () async {

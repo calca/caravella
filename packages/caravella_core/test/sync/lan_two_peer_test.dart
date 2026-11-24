@@ -188,6 +188,15 @@ class _PhoneB {
         case '/sync/ping':
           answer = {'device_id': id};
         default: // /sync/delta
+          if (hang) return;
+          if (refuse case (final status, final error)) {
+            request.response
+              ..statusCode = status
+              ..headers.contentType = ContentType.json
+              ..write(jsonEncode(error));
+            await request.response.close();
+            return;
+          }
           final db = await repo.database;
           final dao = SyncDao(db);
           final reply = await DeltaBuilder(
@@ -216,6 +225,11 @@ class _PhoneB {
   }
 
   HttpServer? _server;
+
+  /// How B's server answers /sync/delta: normally, never (its app frozen
+  /// halfway), or with this HTTP error and body.
+  bool hang = false;
+  (int, Map<String, dynamic>)? refuse;
 
   Future<void> close() async {
     await _server?.close(force: true);
@@ -257,13 +271,20 @@ void main() {
 
     dir = Directory.systemTemp.createTempSync('lan_two_peer');
     phoneA = _database(dir, 'a');
-    lan = LanSyncChannel(port: 0, mdns: false);
+    lan = LanSyncChannel(
+      port: 0,
+      mdns: false,
+      exchangeTimeout: const Duration(seconds: 2),
+    );
     orchestrator = SyncOrchestrator(
       lanChannel: lan,
       syncManager: SyncManager(repository: phoneA),
     );
     await orchestrator.initialize();
     expect(lan.isActive, isTrue);
+    // A shows the invitations B scans.
+    orchestrator.openInvite('trip');
+    orchestrator.openInvite('ski');
 
     phoneB = _PhoneB(_database(dir, 'b'));
     await phoneB.init();
@@ -389,7 +410,7 @@ void main() {
       await phoneB.repo.saveGroup(_group('beach', title: 'Beach'));
       final bPort = await phoneB.serve();
 
-      final synced = lan.events.firstWhere((e) => e is SyncCompleted);
+      final synced = orchestrator.events.firstWhere((e) => e is SyncCompleted);
       expect(
         await lan.pairWithHost('127.0.0.1', bPort, groupId: 'beach'),
         isTrue,
@@ -409,7 +430,7 @@ void main() {
     Future<void> pairedWithServedB() async {
       await phoneB.repo.saveGroup(_group('beach', title: 'Beach'));
       final bPort = await phoneB.serve();
-      final synced = lan.events.firstWhere((e) => e is SyncCompleted);
+      final synced = orchestrator.events.firstWhere((e) => e is SyncCompleted);
       await lan.pairWithHost('127.0.0.1', bPort, groupId: 'beach');
       await synced.timeout(const Duration(seconds: 10));
     }
@@ -430,7 +451,7 @@ void main() {
       await pairedWithServedB();
       await addExpenseOnA();
 
-      final synced = lan.events.firstWhere((e) => e is SyncCompleted);
+      final synced = orchestrator.events.firstWhere((e) => e is SyncCompleted);
       orchestrator.requestLanSync(delay: Duration.zero);
       await synced.timeout(const Duration(seconds: 10));
 
@@ -455,6 +476,23 @@ void main() {
       expect(exchanges, 1);
     });
 
+    test('the same phone found twice at once: one exchange', () async {
+      await pairedWithServedB();
+      await addExpenseOnA();
+
+      var exchanges = 0;
+      final sub = lan.events.listen((e) {
+        if (e is SyncStarted) exchanges++;
+      });
+      await Future.wait([lan.syncKnownPeers(), lan.syncKnownPeers()]);
+      await later();
+      await sub.cancel();
+
+      expect(exchanges, 1);
+      final names = (await phoneB.group('beach'))!.expenses.map((e) => e.name);
+      expect(names, contains('Ice cream'));
+    });
+
     test('with Wi-Fi sync off, nothing is exchanged', () async {
       await pairedWithServedB();
       await lan.setEnabled(false);
@@ -472,5 +510,188 @@ void main() {
       final names = (await phoneB.group('beach'))!.expenses.map((e) => e.name);
       expect(names, isNot(contains('Ice cream')));
     });
+  });
+  group('pairing only while the invitation is open', () {
+    test('a group without an open invitation is refused', () async {
+      expect(await phoneB.pair(port(), 'beach'), HttpStatus.forbidden);
+      expect(await SyncDao(await phoneA.database).isPaired('phone-b'), isFalse);
+    });
+
+    test('closing the invitation refuses it again', () async {
+      orchestrator.closeInvite('trip');
+      expect(await phoneB.pair(port(), 'trip'), HttpStatus.forbidden);
+    });
+
+    test('an expired invitation is refused', () async {
+      orchestrator.openInvite('trip', validFor: const Duration(seconds: -1));
+      expect(orchestrator.isInviteOpen('trip'), isFalse);
+      expect(await phoneB.pair(port(), 'trip'), HttpStatus.forbidden);
+    });
+
+    test('a QR code built here opens it', () async {
+      orchestrator.closeInvite('trip');
+      final payload = await orchestrator.buildOwnPairingPayload(
+        groupId: 'trip',
+        groupTitle: 'Trip',
+      );
+      // No Wi-Fi address on the test machine: no code, nothing opened.
+      expect(orchestrator.isInviteOpen('trip'), payload != null);
+    });
+  });
+
+  group('history', () {
+    test('B starts: one entry on A, with what was sent and received', () async {
+      await phoneB.pair(port(), 'trip');
+      await phoneB.exchange(port());
+      await later();
+
+      final history = await orchestrator.getHistory();
+      expect(history, hasLength(1));
+      expect(history.single['channel'], 'lan');
+      expect(history.single['sent'], 1); // the trip
+      expect(history.single['applied'], 0);
+    });
+
+    test('A starts: one entry on A, with what was sent and received', () async {
+      await phoneB.repo.saveGroup(_group('beach', title: 'Beach'));
+      final bPort = await phoneB.serve();
+      final synced = orchestrator.events.firstWhere((e) => e is SyncCompleted);
+      await lan.pairWithHost('127.0.0.1', bPort, groupId: 'beach');
+      await synced.timeout(const Duration(seconds: 10));
+      await later();
+
+      final history = await orchestrator.getHistory();
+      expect(history, hasLength(1));
+      expect(history.single['peerId'], 'phone-b');
+      expect(history.single['applied'], 1); // the beach
+      expect(history.single['sent'], 0);
+    });
+
+    test('Bluetooth exchanges are recorded as Bluetooth', () async {
+      await phoneB.pair(port(), 'trip');
+      final dao = SyncDao(await phoneA.database);
+      await orchestrator.handleIncomingDelta({
+        'schema': DeltaBuilder.schemaVersion,
+        'device_id': 'phone-b',
+        'timestamp': 1,
+        'groups': <Object>[],
+        'deleted_groups': <Object>[],
+      }, 'phone-b');
+      await later();
+      final history = await orchestrator.getHistory();
+      expect(history.single['channel'], 'bluetooth');
+      expect(await dao.getLastSyncTime('phone-b'), isNotNull);
+    });
+  });
+
+  group('when B misbehaves', () {
+    Future<int> pairedWithServedB() async {
+      await phoneB.repo.saveGroup(_group('beach', title: 'Beach'));
+      final bPort = await phoneB.serve();
+      final synced = orchestrator.events.firstWhere((e) => e is SyncCompleted);
+      await lan.pairWithHost('127.0.0.1', bPort, groupId: 'beach');
+      await synced.timeout(const Duration(seconds: 10));
+      return bPort;
+    }
+
+    test('a phone that stops answering is dropped, and the next exchange '
+        'still runs', () async {
+      await pairedWithServedB();
+      phoneB.hang = true;
+
+      final failed = orchestrator.events.firstWhere((e) => e is SyncFailed);
+      orchestrator.requestLanSync(delay: Duration.zero);
+      final event = await failed.timeout(const Duration(seconds: 10));
+      expect((event as SyncFailed).unreachable, isTrue);
+      expect(event.peerId, 'phone-b');
+
+      phoneB.hang = false;
+      final synced = orchestrator.events.firstWhere((e) => e is SyncCompleted);
+      orchestrator.requestLanSync(delay: Duration.zero);
+      await synced.timeout(const Duration(seconds: 10));
+    });
+
+    test('a phone that forgot this one asks to pair again', () async {
+      await pairedWithServedB();
+      phoneB.refuse = (HttpStatus.forbidden, {'error': 'not_paired'});
+
+      final failed = orchestrator.events.firstWhere((e) => e is SyncFailed);
+      orchestrator.requestLanSync(delay: Duration.zero);
+      final event = await failed.timeout(const Duration(seconds: 10));
+      expect((event as SyncFailed).reason, SyncProblemReason.notPaired);
+    });
+
+    test('any other error is the peer\'s', () async {
+      await pairedWithServedB();
+      phoneB.refuse = (HttpStatus.internalServerError, {'error': 'boom'});
+
+      final failed = orchestrator.events.firstWhere((e) => e is SyncFailed);
+      orchestrator.requestLanSync(delay: Duration.zero);
+      final event = await failed.timeout(const Duration(seconds: 10));
+      expect((event as SyncFailed).reason, SyncProblemReason.peerError);
+    });
+
+    test('Update now exchanges with a known phone without restarting the '
+        'server', () async {
+      await pairedWithServedB();
+      final before = lan.port;
+
+      final synced = orchestrator.events.firstWhere(
+        (e) => e is SyncCompleted && e.result.peerId == 'phone-b',
+      );
+      await orchestrator.triggerManualSync('lan');
+      await synced.timeout(const Duration(seconds: 10));
+      expect(lan.isActive, isTrue);
+      expect(lan.port, before);
+    });
+  });
+
+  test('the group\'s state uses the latest exchange, logged or not', () async {
+    await phoneB.pair(port(), 'trip');
+    await phoneB.exchange(port());
+    await later();
+    // B changes the trip: A's history has an entry for it.
+    final trip = (await phoneB.group('trip'))!;
+    await phoneB.repo.saveGroup(trip.copyWith(title: 'Trip (B)'));
+    await later();
+    await phoneB.exchange(port());
+    expect(await orchestrator.getHistory(groupId: 'trip'), isNotEmpty);
+
+    // Two days on, an exchange that brought nothing for the trip: only in
+    // the sync log.
+    final later2d = DateTime.now().add(const Duration(days: 2));
+    await (await phoneA.database)
+        .insert(SqliteExpenseGroupRepository.tableSyncLog, {
+          'peer_id': 'phone-b',
+          'channel': 'lan',
+          'synced_at': later2d.millisecondsSinceEpoch,
+          'delta_sent': 0,
+          'delta_recv': 0,
+        });
+    final status = await orchestrator.getGroupSyncStatus(
+      'trip',
+      now: later2d.add(const Duration(hours: 1)),
+    );
+    expect(status.health, GroupSyncHealth.ok);
+  });
+
+  test('a port already taken: Wi-Fi sync starts on a free one', () async {
+    final taken = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
+    final other = LanSyncChannel(port: taken.port, mdns: false);
+    try {
+      await other.start(onDelta: (_, _, {sent}) async => {});
+      expect(other.isActive, isTrue);
+      expect(other.port, isNot(taken.port));
+      final client = HttpClient();
+      final request = await client.getUrl(
+        Uri.parse('http://127.0.0.1:${other.port}/sync/ping'),
+      );
+      expect((await request.close()).statusCode, 200);
+      client.close();
+    } finally {
+      await other.stop();
+      other.dispose();
+      await taken.close();
+    }
   });
 }
