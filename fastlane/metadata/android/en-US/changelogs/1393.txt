@@ -1,0 +1,9 @@
+Version 2.5.0 - Budget and two currencies
+
+• Group budget: what's left and how much a day keeps you within it
+• A second currency per group for trips abroad
+• Tick a payment as paid in Settle up
+• Redesigned group cards, a clearer expense page, faster everywhere
+• Sync no longer loses expenses
+
+Thanks for using Caravella!

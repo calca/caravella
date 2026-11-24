@@ -24,6 +24,7 @@ A CLEAR, CALM DESIGN
 SYNC WITH FRIENDS
 • Share a group with the people you travel with over Wi-Fi or Bluetooth
 • Pair once with a QR code — everything is end-to-end encrypted
+• Keep your own phones and tablets in sync through your Google Drive: all your groups, no pairing (Play version)
 • Sync is optional and never goes through our servers
 
 ADD EXPENSES IN SECONDS
