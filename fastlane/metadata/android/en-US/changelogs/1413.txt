@@ -1,0 +1,8 @@
+Version 2.5.1 - Steadier sync
+
+• Calmer group cards and page, with one quiet line under the title
+• Wi-Fi sync no longer stalls when the other phone stops answering
+• Sync history shows each exchange once, with what was really sent and received
+• Pairing works only while the invitation is open
+
+Thanks for using Caravella!

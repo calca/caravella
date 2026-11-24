@@ -1,0 +1,8 @@
+Versione 2.5.1 - Sincronizzazione più solida
+
+• Schede e pagina del gruppo più pulite, con una riga discreta sotto il titolo
+• La sincronizzazione via Wi-Fi non si blocca più se l'altro telefono smette di rispondere
+• La cronologia mostra ogni scambio una volta sola, con quanto inviato e ricevuto
+• L'abbinamento funziona solo con l'invito aperto
+
+Grazie per usare Caravella!

@@ -1,0 +1,8 @@
+Versão 2.5.1 - Sincronização mais firme
+
+• Cartões e página do grupo mais limpos, com uma linha discreta sob o título
+• A sincronização por Wi-Fi não trava mais se o outro celular parar de responder
+• O histórico mostra cada troca uma só vez, com o enviado e o recebido
+• O pareamento só funciona com o convite aberto
+
+Obrigado por usar o Caravella!

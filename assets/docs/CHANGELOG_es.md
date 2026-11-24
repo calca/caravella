@@ -1,3 +1,11 @@
+## 2.5.1 (24.11.2026)
+
+- **Cambios**: Las tarjetas de los grupos y la página del grupo son más limpias: una línea discreta bajo el título con favorito, estado compartido y tipo, y la barra superior toma el color del grupo al desplazarte
+- **Correcciones**: La sincronización por Wi-Fi ya no se atasca cuando el otro teléfono deja de responder, y "Actualizar ahora" ya no corta un intercambio en curso
+- **Correcciones**: El historial de sincronización muestra cada intercambio una sola vez, con lo que de verdad se envió y recibió
+- **Correcciones**: El emparejamiento solo funciona con la invitación del grupo abierta, y si el otro teléfono olvidó el tuyo te pide emparejarlo de nuevo
+- **Correcciones**: La barra de estado se lee bien sobre una foto clara del grupo en el tema oscuro
+
 ## 2.5.0 (23.11.2026)
 
 - **Novedad**: Presupuesto del grupo: en total o por mes, semana o día. El panel del presupuesto dice cuánto queda, cuánto puedes gastar al día y cuándo se acabaría a este ritmo

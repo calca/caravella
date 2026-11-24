@@ -1,0 +1,8 @@
+Versión 2.5.1 - Sincronización más sólida
+
+• Tarjetas y página del grupo más limpias, con una línea discreta bajo el título
+• La sincronización por Wi-Fi ya no se atasca si el otro teléfono deja de responder
+• El historial muestra cada intercambio una sola vez, con lo enviado y recibido
+• El emparejamiento solo funciona con la invitación abierta
+
+¡Gracias por usar Caravella!
