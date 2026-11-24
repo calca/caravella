@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Search: the hint no longer runs under the rounded end of the search field on narrow phones (Galaxy S25)
+- Sync history: each exchange shows once, with what was really sent and received. An exchange over Wi-Fi was listed two or three times, one of them with a made-up "6 received", "sent" counted the groups that were skipped, and Bluetooth exchanges were listed as Wi-Fi
+- Sync over Wi-Fi: a phone that stopped answering halfway (its app frozen in the background) could stop the automatic exchanges after a change until Caravella was restarted. An exchange now gives up after 30 seconds, like a phone out of reach
+- Sync over Wi-Fi: "Update now" no longer restarts Wi-Fi sync, which cut off an exchange another phone was making at that moment. It exchanges with the phones already found, or looks for them again
+- Sync: when the other phone has forgotten this one, the problem now says to pair again instead of "try again later"
+- Shared groups: the circle could go hollow ("not synced for a day") while the phones kept syncing, when the latest exchanges had nothing new for that group; after a restart it was filled. It now follows the latest exchange either way
+- Sync over Wi-Fi: pairing is accepted only while the group's invitation is open on this phone (its QR code, up to 5 minutes). Before, a phone on the same network that knew the group could pair for it at any time, even long after the code had expired
+- Google Drive sync (Play builds) uploads this device's snapshot only when its groups changed, not on every cycle (every 15 minutes and each time the app goes to the background); "Sync now" says "0 sent" then
 - Group page with a photo, dark theme: the clock and icons of the status bar were white over a bright sky at the top of the photo, hard to read. They now follow how light the top of the photo is (measured with its tone, once, also for photos set before)
 
 ## [2.5.0] - 2026-11-23

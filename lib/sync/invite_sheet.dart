@@ -104,6 +104,8 @@ class _InviteSheetState extends State<InviteSheet> {
 
   @override
   void dispose() {
+    // No more pairing requests for this group over Wi-Fi.
+    widget.orchestrator.closeInvite(widget.groupId);
     _ticker?.cancel();
     _syncEvents?.cancel();
     _btEvents?.cancel();

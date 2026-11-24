@@ -77,12 +77,14 @@ class SyncManager {
   /// Also broadcasts [SyncEvent]s on the [events] stream.
   ///
   /// [checkGrants] false only for Google Drive: see
-  /// [ConflictResolver.applyDelta].
+  /// [ConflictResolver.applyDelta]. [sent] is how many changes this device
+  /// sent the peer in the same exchange, for the history.
   Future<SyncResult> syncWithPeer(
     String peerId,
     Map<String, dynamic> remoteDelta,
     String channel, {
     bool checkGrants = true,
+    int sent = 0,
   }) async {
     _ensureStarted();
     _eventController.add(SyncStarted(channel));
@@ -90,12 +92,13 @@ class SyncManager {
     try {
       final db = await _repository.database;
 
-      final result = await _conflictResolver.applyDelta(
+      final applied = await _conflictResolver.applyDelta(
         db,
         remoteDelta,
         channel,
         checkGrants: checkGrants,
       );
+      final result = sent == 0 ? applied : applied.withSent(sent);
 
       _eventController.add(SyncCompleted(result));
 
