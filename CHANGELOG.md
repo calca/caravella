@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Home card and group page show the group the same way, with less on them: under the title one quiet line, read as a phrase, "♥ ● ✈ Travel · 12 – 20 Nov" ("· 4 people" on the group page). The heart is there for the favorite, the circle for a shared group (green when synced, ochre after a failed exchange, hollow when it hasn't synced for a day); no more "Favorite" and "Shared" pills, no type chip on top of the Home card, and the group page's line moved from above the title to under it. On the group page the sync state stays on the round sync button
 - Group page: the top bar no longer turns grey the moment you scroll. It fills with the group's own tint (or its photo's tone) as the header slides under it, so bar and header stay one color, and the group name appears once the title has gone. The round buttons (back, sync, search, ⋯) are no longer white circles: they take the header's text color, faint, so they don't shout over a dark color or photo
 
 ## [2.5.0] - 2026-11-23

@@ -24,6 +24,10 @@ class GroupSyncBadge extends StatefulWidget {
   /// group page's top bar) instead of the "Shared" pill.
   final bool round;
 
+  /// Only the status circle, no label (Home's card line, after the heart):
+  /// hollow until the status is known.
+  final bool dotOnly;
+
   const GroupSyncBadge({
     super.key,
     required this.group,
@@ -31,6 +35,7 @@ class GroupSyncBadge extends StatefulWidget {
     required this.foreground,
     this.onTap,
     this.round = false,
+    this.dotOnly = false,
   });
 
   @override
@@ -128,6 +133,35 @@ class _GroupSyncBadgeState extends State<GroupSyncBadge> {
           GroupSyncHealth.stale => gloc.sync_badge_stale,
         },
     ].join(', ');
+    if (widget.dotOnly) {
+      return Semantics(
+        label: semantics,
+        excludeSemantics: true,
+        child: SizedBox(
+          width: 10,
+          height: 10,
+          child: DecoratedBox(
+            decoration: switch (status?.health) {
+              GroupSyncHealth.ok => BoxDecoration(
+                shape: BoxShape.circle,
+                color: s.success,
+              ),
+              GroupSyncHealth.failed => BoxDecoration(
+                shape: BoxShape.circle,
+                color: s.warning,
+              ),
+              _ => BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: fg.withValues(alpha: 0.7),
+                  width: 1.5,
+                ),
+              ),
+            },
+          ),
+        ),
+      );
+    }
     if (widget.round) {
       // The icon says how the sync is doing, no dot: arrows when it synced
       // in the last 24 hours (or before the status is known), with "!" in

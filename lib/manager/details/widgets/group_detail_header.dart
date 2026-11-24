@@ -3,8 +3,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
 
-import '../../group/group_type/group_type_localization.dart';
-import '../pages/tabs/usecase/date_range_formatter.dart';
+import '../../../home/cards/widgets/group_meta_line.dart';
 import 'group_detail_top_bar.dart';
 
 /// The top of the group page: a block in the group's tint ([GroupLook]:
@@ -97,8 +96,9 @@ class GroupHeaderBand extends StatelessWidget {
   }
 }
 
-/// Title block of the group page: dates · people, the group name, and the
-/// key figures (total, today, per person) in small cards.
+/// Title block of the group page: the group name, the line of favorite,
+/// type, dates and people ([GroupMetaLine], as on Home's card), and the key
+/// figures (total, today).
 class GroupDetailHeader extends StatelessWidget {
   final ExpenseGroup group;
   final Color foreground;
@@ -117,53 +117,9 @@ class GroupDetailHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
-    final people = gloc.participant_count(group.participants.length);
-    final dates = (group.startDate != null || group.endDate != null)
-        ? formatDateRange(
-            start: group.startDate,
-            end: group.endDate,
-            locale: Localizations.localeOf(context),
-          )
-        : null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            // Favorite moved to the ⋯ menu: the heart here shows the state,
-            // then the group's type as an icon.
-            if (group.pinned) ...[
-              Icon(
-                Icons.favorite_rounded,
-                size: 16,
-                color: foreground,
-                semanticLabel: gloc.pin,
-              ),
-              const SizedBox(width: 6),
-            ],
-            Icon(
-              (group.groupType ?? ExpenseGroupType.other).icon,
-              size: 16,
-              color: foreground,
-              semanticLabel: GroupTypeLocalization.typeName(
-                gloc,
-                group.groupType ?? ExpenseGroupType.other,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                dates == null ? people : '$dates · $people',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: foreground.withValues(alpha: 0.8),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 2),
         Semantics(
           header: true,
           child: Text(
@@ -173,6 +129,15 @@ class GroupDetailHeader extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
+        ),
+        const SizedBox(height: 6),
+        // The same line as on Home's card, with the people; the sync state
+        // is on the top bar's round sync button.
+        GroupMetaLine(
+          group: group,
+          foreground: foreground,
+          showShared: false,
+          showPeople: true,
         ),
         const SizedBox(height: 14),
         // The budget is in the statistics (its card), not here.
