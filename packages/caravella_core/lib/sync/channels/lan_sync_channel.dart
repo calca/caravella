@@ -708,7 +708,28 @@ class LanSyncChannel {
   // Peer sync
   // ---------------------------------------------------------------------------
 
+  /// The peers an exchange started from here is running with.
+  final Set<String> _exchanging = {};
+
+  /// One exchange at a time with each peer: mDNS often reports the same
+  /// phone twice at once (resolved, then updated), and each report used to
+  /// start an exchange of its own.
   Future<void> _syncWithPeer(String peerId, String host, int port) async {
+    if (!_exchanging.add(peerId)) {
+      LoggerService.debug(
+        'Already exchanging with $peerId — skipping',
+        name: _tag,
+      );
+      return;
+    }
+    try {
+      await _exchangeWithPeer(peerId, host, port);
+    } finally {
+      _exchanging.remove(peerId);
+    }
+  }
+
+  Future<void> _exchangeWithPeer(String peerId, String host, int port) async {
     if (!_active || _onDelta == null) return;
 
     if (_isPeerAuthorized != null && !await _isPeerAuthorized!(peerId)) {
