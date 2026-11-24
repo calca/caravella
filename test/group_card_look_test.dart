@@ -13,18 +13,20 @@ import 'package:provider/provider.dart';
 void main() {
   const sky = Color(0xFFAED6EE);
 
-  ExpenseGroup group({int? color, bool pinned = false}) => ExpenseGroup(
-    id: 'g1',
-    title: 'Lisbon',
-    expenses: [],
-    participants: [ExpenseParticipant(id: '1', name: 'Anna')],
-    categories: [ExpenseCategory(id: '1', name: 'Food')],
-    currency: '€',
-    timestamp: DateTime(2026, 12, 1),
-    groupType: ExpenseGroupType.travel,
-    color: color,
-    pinned: pinned,
-  );
+  ExpenseGroup group({int? color, bool pinned = false, bool shared = false}) =>
+      ExpenseGroup(
+        id: 'g1',
+        title: 'Lisbon',
+        expenses: [],
+        participants: [ExpenseParticipant(id: '1', name: 'Anna')],
+        categories: [ExpenseCategory(id: '1', name: 'Food')],
+        currency: '€',
+        timestamp: DateTime(2026, 12, 1),
+        groupType: ExpenseGroupType.travel,
+        color: color,
+        pinned: pinned,
+        syncEnabled: shared,
+      );
 
   Widget app(Widget Function(BuildContext) child) => MaterialApp(
     localizationsDelegates: const [
@@ -122,5 +124,33 @@ void main() {
     final look = GroupLook.of(GroupLook.colorOf(g, s), s.brightness);
     expect(tester.widget<Text>(find.text('Lisbon')).style?.color, look.onTint);
     expect(find.byType(BudgetRing), findsNothing);
+  });
+
+  testWidgets('group page: a shared group has the sync circle in its line, '
+      'as on Home', (tester) async {
+    final g = group(shared: true);
+    await tester.pumpWidget(
+      app(
+        (context) => SingleChildScrollView(
+          child: GroupHeaderBand(
+            group: g,
+            topInset: 24,
+            header: (fg) => GroupDetailHeader(group: g, foreground: fg),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final circle = find.byWidgetPredicate(
+      (w) =>
+          w is DecoratedBox &&
+          w.decoration is BoxDecoration &&
+          (w.decoration as BoxDecoration).shape == BoxShape.circle,
+    );
+    expect(circle, findsOneWidget);
+    expect(
+      tester.getCenter(circle).dy,
+      closeTo(tester.getCenter(find.text('Travel · 1 participant')).dy, 2),
+    );
   });
 }

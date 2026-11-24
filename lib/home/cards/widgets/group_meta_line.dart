@@ -11,14 +11,13 @@ import '../../home_constants.dart';
 /// the group page: the state first, then what the group is, read as one
 /// phrase — "♥ ● ✈ Travel · 12 – 20 Nov" (· 4 people on the group page).
 /// The heart only for the favorite, the sync circle only for a shared group
-/// ([showShared]; the group page has its sync button instead); without dates
-/// the line is just the type, with no gap left for them.
+/// (the same state everywhere: Home, the group page, the Groups tiles);
+/// without dates the line is just the type, with no gap left for them.
 class GroupMetaLine extends StatelessWidget {
   final ExpenseGroup group;
   final Color foreground;
 
-  /// The shared group's sync circle (Home); the group page shows the sync
-  /// state on its round sync button instead.
+  /// The shared group's sync circle.
   final bool showShared;
 
   /// "· 4 people" at the end (the group page).

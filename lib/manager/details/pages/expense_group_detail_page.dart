@@ -733,8 +733,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                 foreground: barForeground,
                 overPhoto: photo != null,
                 onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
-                syncGroup: trip.syncEnabled ? trip : null,
-                onSync: _showSyncPage,
                 menuItems: [
                   if (!trip.archived)
                     GroupMenuItem(
@@ -744,14 +742,14 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                       trip.pinned ? gloc.unpin : gloc.pin,
                       _handlePinToggle,
                     ),
-                  // The map opens from its card in Statistics. A shared group
-                  // has its sync button in the bar instead.
-                  if (!trip.syncEnabled)
-                    GroupMenuItem(
-                      Icons.sync_rounded,
-                      gloc.sync_title,
-                      _showSyncPage,
-                    ),
+                  // The map opens from its card in Statistics; synchronization
+                  // is here for every group (a shared one shows its state as
+                  // the circle in the line under its name).
+                  GroupMenuItem(
+                    Icons.sync_rounded,
+                    gloc.sync_title,
+                    _showSyncPage,
+                  ),
                   // Share & export lives in the group's settings
                   // (rarely used, kept out of this menu).
                   GroupMenuItem(

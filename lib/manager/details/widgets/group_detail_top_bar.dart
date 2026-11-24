@@ -1,9 +1,6 @@
-import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:material_ui/material_ui.dart';
-
-import '../../../sync/group_sync_badge.dart';
 
 /// One entry of the group page's ⋯ menu.
 class GroupMenuItem {
@@ -14,7 +11,7 @@ class GroupMenuItem {
 }
 
 /// The group page's top bar, over the header band: round back, search and ⋯
-/// buttons at rest. As content scrolls under it the bar fills with the
+/// buttons at rest (synchronization is in the ⋯ menu). As content scrolls under it the bar fills with the
 /// band's own [tint] ([fill], 0 to 1), so bar and band stay one color with
 /// no grey strip between them, and shows [title] when [titleVisible].
 class GroupDetailTopBar extends StatelessWidget {
@@ -40,11 +37,6 @@ class GroupDetailTopBar extends StatelessWidget {
   final VoidCallback? onSearch;
   final List<GroupMenuItem> menuItems;
 
-  /// A shared group: a round sync button before search, with the dot of
-  /// how its sync is doing, opening the sync page ([onSync]).
-  final ExpenseGroup? syncGroup;
-  final VoidCallback? onSync;
-
   const GroupDetailTopBar({
     super.key,
     required this.title,
@@ -55,8 +47,6 @@ class GroupDetailTopBar extends StatelessWidget {
     this.overPhoto = false,
     required this.onSearch,
     required this.menuItems,
-    this.syncGroup,
-    this.onSync,
   });
 
   @override
@@ -114,16 +104,6 @@ class GroupDetailTopBar extends StatelessWidget {
                 ),
               ),
             ),
-            if (syncGroup case final group?) ...[
-              GroupSyncBadge(
-                group: group,
-                round: true,
-                background: buttonBackground,
-                foreground: foreground,
-                onTap: onSync,
-              ),
-              const SizedBox(width: 8),
-            ],
             if (onSearch case final search?) ...[
               roundButton(
                 icon: Icons.search_rounded,

@@ -134,14 +134,9 @@ class GroupDetailHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        // The same line as on Home's card, with the people; the sync state
-        // is on the top bar's round sync button.
-        GroupMetaLine(
-          group: group,
-          foreground: foreground,
-          showShared: false,
-          showPeople: true,
-        ),
+        // The same line as on Home's card (sync circle included), with the
+        // people.
+        GroupMetaLine(group: group, foreground: foreground, showPeople: true),
         const SizedBox(height: 14),
         // The budget is in the statistics (its card), not here.
         FigureRow(

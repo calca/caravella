@@ -140,7 +140,7 @@ Then uninstall and go on with the rc's own APK, as in the setup.
 |---|---|---|
 | 9.1 | Sync with others › Join a group: deny the camera | "Allow the camera?" opens once with Open settings. The panel keeps an Open settings button and the prompt doesn't loop |
 | 9.2 | With a second device or emulator: invite, join over Wi-Fi, add an expense on each **before** syncing, then sync | Both sides show both expenses, none is lost. An expense deleted on one side stays deleted on both. A deleted group stays deleted |
-| 9.3 | Shared group page | A round sync button next to search; after a failed exchange it shows "!" in amber |
+| 9.3 | Shared group page | The line under the name has the sync circle (filled in the text color when synced, ochre after a failed exchange); Synchronization is in the ⋯ menu, no sync button in the bar |
 | 9.4 | Wi-Fi sync with a phone still on 2.4.x | 2.4.1 and later refuse with "update Caravella on both devices"; a 2.4.0 phone doesn't erase this phone's payments |
 | 9.5 | Google Drive (Play build, two devices on the same account): Settings › Sync › Sync devices on both, add an expense on each, Sync now | "Sync now" says what was received and sent; both devices show all the groups and both expenses, with no "shared with you" welcome. Photos stay on the device they were added on |
 
