@@ -8,13 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Sync over Wi-Fi: a change reaches a paired phone on the same Wi-Fi within seconds, and coming back to the app looks for it again — no "Update now" needed (both apps open)
-- A group received from another phone: its welcome card keeps only "OK" (the page's + is right below)
+- Home card and group page show the group the same way, with less on them: under the title one quiet line, read as a phrase, "♥ ● ✈ Travel · 12 – 20 Nov" ("· 4 people" on the group page). The heart is there for the favorite, the circle for a shared group (in the text color: filled when synced, hollow when it hasn't synced for a day; ochre only after a failed exchange); no more "Favorite" and "Shared" pills, no type chip on top of the Home card, and the group page's line moved from above the title to under it. The group page shows the same circle; its round sync button is gone, and Synchronization is in the ⋯ menu for every group. The Groups page's tiles follow: no chip on top, and under the name "♥ ● ✈ 4 people" (no type name or dates, too narrow), so a shared group now shows there too. The creation wizard's preview card has the same line (type, then the dates)
+- Group page: the top bar no longer turns grey the moment you scroll. It fills with the group's own tint (or its photo's tone) as the header slides under it, so bar and header stay one color, and the group name appears only once the whole header has gone under it. Let go with the header half under the bar, the page settles to the nearest end, so its line is never left cut by the bar. The round buttons (back, search, ⋯) are no longer white circles: they take the header's text color, faint, so they don't shout over a dark color or photo
 
 ### Fixed
-- Sync: paired phones now find each other on the same Wi-Fi and exchange expenses ("Sync now" too); before, they only synced right after scanning the QR code
-- Sync: pairing with a QR code failed on phones with mobile data (or a VPN) on, e.g. a Galaxy S25: the code carried the mobile-data address instead of the Wi-Fi one
-- Sync over Bluetooth (Play builds): it never started. Android 12 phones (e.g. a Pixel 3) always reported a missing permission, and newer ones (e.g. a Galaxy S25) couldn't find the other phone because the location permission wasn't asked for; once connected, the first message was sent before the connection was ready and got lost
 - Search: the hint no longer runs under the rounded end of the search field on narrow phones (Galaxy S25)
 
 ## [2.5.0] - 2026-11-23
@@ -29,7 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settle up: tick a payment as paid. At the right of each suggested payment a clock turns into a check with one tap, for the full amount (nothing to type); the balances update and the payment stays in the list, struck through with "Paid · <date>", with no reminder button. Tap the check to tick it back. Under each name in Balances, what that person paid in all. The balances above now match Settle up to the cent (they used to show the exact share, so "+3.56 €" next to a 3.55 € payment, and 0.01 € left once everything was paid). Payments are not expenses: they never show in the expense list, totals or statistics. They're stored in the group (`ExpenseGroup.payments`, `SettlePayment`; SQLite schema v8 adds `groups.payments`) and synced with it (#604)
 - Google Drive sync now moves data (Play builds). Settings › Sync › "Sync devices" was there in 2.4, but it never uploaded and ignored what it downloaded. Each device now keeps its full snapshot (every group, deleted ones included) in the account's hidden Drive folder, applies the other devices' snapshots by last-writer-wins, and uploads its own. It runs when turned on, every 15 minutes, 30 seconds after a change, when the app comes back or goes to the background, and from "Sync now", which now says what was received and sent. It covers all your groups and needs no pairing, because the devices are yours. Groups from your other devices get no "shared with you" welcome. Photos and attachments stay on the device they were added on, as over Wi-Fi (#688)
 
+### Changed
+- F-Droid build: each APK split by ABI now has F-Droid's versionCode, build number × 10 + 1 (armeabi-v7a), 2 (arm64-v8a) or 3 (x86_64), so 2.5.0+139 is 1391/1392/1393 instead of Flutter's 1139/2139/4139, as fdroiddata asked (!52814). The Play bundle and the universal APKs keep 139
+- Sync over Wi-Fi: a change reaches a paired phone on the same Wi-Fi within seconds, and coming back to the app looks for it again — no "Update now" needed (both apps open)
+- A group received from another phone: its welcome card keeps only "OK" (the page's + is right below)
+
 ### Fixed
+- Sync: paired phones now find each other on the same Wi-Fi and exchange expenses ("Sync now" too); before, they only synced right after scanning the QR code
+- Sync: pairing with a QR code failed on phones with mobile data (or a VPN) on, e.g. a Galaxy S25: the code carried the mobile-data address instead of the Wi-Fi one
+- Sync over Bluetooth (Play builds): it never started. Android 12 phones (e.g. a Pixel 3) always reported a missing permission, and newer ones (e.g. a Galaxy S25) couldn't find the other phone because the location permission wasn't asked for; once connected, the first message was sent before the connection was ready and got lost
 - Expense page: tapping the note scrolls the whole note into view; only its first line showed, the rest stayed under the Save bar above the keyboard
 - Notifications sit at the bottom of the screen again on every page: away from Home and Groups they kept the room of the Home/Groups switch and hung high above the bottom. They still rise above the "+" button and the Save bar
 - The period calendar shows the whole month again: in months spanning six weeks, like November 2026, the last week was cut off

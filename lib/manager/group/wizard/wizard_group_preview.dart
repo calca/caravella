@@ -3,17 +3,17 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
-import '../../details/pages/tabs/usecase/date_range_formatter.dart';
+import '../../../home/cards/widgets/group_meta_line.dart';
 import '../data/group_form_state.dart';
 import '../group_type/group_type_localization.dart';
 
 /// The group as it's being created, on the card it will have on the Groups
-/// page ([GroupCardFace]), updated while typing: name, dates (or the type
-/// until there are any), currency and background.
+/// page ([GroupCardFace]), updated while typing: name, the line under it as
+/// on Home's card ([GroupMetaLine]: the type, then the dates once set),
+/// currency and background.
 /// Decorative for screen readers: the field and the pills say the same.
 class WizardGroupPreview extends StatelessWidget {
-  /// Shown until the group has a name, then as the line below it until it
-  /// has dates.
+  /// Shown until the group has a name.
   final String fallbackTitle;
 
   /// Shorter while the keyboard is up, so the name field stays in view.
@@ -30,8 +30,12 @@ class WizardGroupPreview extends StatelessWidget {
     final theme = Theme.of(context);
     final state = context.watch<GroupFormState>();
     final title = state.title.trim();
-    final hasDates = state.startDate != null || state.endDate != null;
     final radius = GroupCardFace.borderRadiusFor(wide: true);
+    final icon = state.customTemplateIconCodePoint != null
+        ? GroupTypeLocalization.iconFromCodePoint(
+            state.customTemplateIconCodePoint!,
+          )
+        : (state.groupType ?? ExpenseGroupType.other).icon;
 
     return ExcludeSemantics(
       child: CardOutline(
@@ -53,13 +57,22 @@ class WizardGroupPreview extends StatelessWidget {
                 children: [
                   GroupCardFace(
                     title: title.isEmpty ? fallbackTitle : title,
-                    subtitle: hasDates
-                        ? formatDateRange(
-                            start: state.startDate,
-                            end: state.endDate,
-                            locale: Localizations.localeOf(context),
-                          )
-                        : (title.isEmpty ? null : fallbackTitle),
+                    meta: (fg) => GroupMetaLine(
+                      group: ExpenseGroup(
+                        id: 'wizard-preview',
+                        title: title,
+                        expenses: const [],
+                        participants: const [],
+                        currency: '',
+                        startDate: state.startDate,
+                        endDate: state.endDate,
+                        groupType: state.groupType,
+                      ),
+                      foreground: fg,
+                      icon: icon,
+                      // Until there's a name the type is the title already.
+                      showTypeName: title.isNotEmpty,
+                    ),
                     total: 0,
                     currency:
                         state.currency['symbol'] ??
@@ -73,11 +86,7 @@ class WizardGroupPreview extends StatelessWidget {
                           ),
                       theme.colorScheme,
                     ),
-                    icon: state.customTemplateIconCodePoint != null
-                        ? GroupTypeLocalization.iconFromCodePoint(
-                            state.customTemplateIconCodePoint!,
-                          )
-                        : (state.groupType ?? ExpenseGroupType.other).icon,
+                    icon: icon,
                     wide: true,
                     compact: compact,
                   ),

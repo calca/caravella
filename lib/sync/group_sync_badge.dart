@@ -20,9 +20,11 @@ class GroupSyncBadge extends StatefulWidget {
   final Color foreground;
   final VoidCallback? onTap;
 
-  /// A round button with the sync icon and the dot on its corner (the
-  /// group page's top bar) instead of the "Shared" pill.
-  final bool round;
+  /// Only the status circle, no label (the line under a group's name, after
+  /// the heart), in the text color so it doesn't shout: filled when synced,
+  /// hollow when it hasn't synced for a day (or before the status is known);
+  /// ochre only when the last exchange failed, the one state to act on.
+  final bool dotOnly;
 
   const GroupSyncBadge({
     super.key,
@@ -30,7 +32,7 @@ class GroupSyncBadge extends StatefulWidget {
     required this.background,
     required this.foreground,
     this.onTap,
-    this.round = false,
+    this.dotOnly = false,
   });
 
   @override
@@ -128,32 +130,31 @@ class _GroupSyncBadgeState extends State<GroupSyncBadge> {
           GroupSyncHealth.stale => gloc.sync_badge_stale,
         },
     ].join(', ');
-    if (widget.round) {
-      // The icon says how the sync is doing, no dot: arrows when it synced
-      // in the last 24 hours (or before the status is known), with "!" in
-      // amber when the last exchange failed, struck through and faded when
-      // it hasn't synced for a day or ever.
-      final (icon, color) = switch (status?.health) {
-        GroupSyncHealth.failed => (Icons.sync_problem_rounded, s.warning),
-        GroupSyncHealth.stale => (
-          Icons.sync_disabled_rounded,
-          fg.withValues(alpha: 0.55),
-        ),
-        _ => (Icons.sync_rounded, fg),
-      };
+    if (widget.dotOnly) {
       return Semantics(
-        button: true,
         label: semantics,
         excludeSemantics: true,
-        onTap: widget.onTap,
-        child: Material(
-          color: widget.background,
-          shape: const CircleBorder(),
-          child: IconButton(
-            icon: Icon(icon),
-            color: color,
-            tooltip: gloc.sync_group_shared,
-            onPressed: widget.onTap,
+        child: SizedBox(
+          width: 10,
+          height: 10,
+          child: DecoratedBox(
+            decoration: switch (status?.health) {
+              GroupSyncHealth.ok => BoxDecoration(
+                shape: BoxShape.circle,
+                color: fg,
+              ),
+              GroupSyncHealth.failed => BoxDecoration(
+                shape: BoxShape.circle,
+                color: s.warning,
+              ),
+              _ => BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: fg.withValues(alpha: 0.7),
+                  width: 1.5,
+                ),
+              ),
+            },
           ),
         ),
       );

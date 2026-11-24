@@ -2,18 +2,18 @@ import 'package:material_ui/material_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../manager/group/group_type/group_type_localization.dart';
 import 'group_card_header.dart';
 import 'add_expense_controller.dart';
 
-/// The group card on Home (the first of the two): type chip, title and
-/// dates, then "Total | Today". The charts are in Statistics; the recent
+/// The group card on Home (the first of the two): title, the quiet line of
+/// favorite, sync circle, type and dates ([GroupMetaLine]), then
+/// "Total | Today". The charts are in Statistics; the recent
 /// expenses are in the second card ([GroupCardActivity]).
 ///
 /// The whole card is in the group's tint ([GroupLook]: neutral grey without
 /// a color) with the big faint type icon in the corner, or under a photo the
-/// photo's own tone ([PhotoTone]) that it melts into; chip on top, title and
-/// figures at the bottom.
+/// photo's own tone ([PhotoTone]) that it melts into; title and figures at
+/// the bottom (the type was a chip on top too: one place is enough).
 class GroupCardContent extends StatelessWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
@@ -70,13 +70,6 @@ class GroupCardContent extends StatelessWidget {
   }
 
   ExpenseGroupType get _type => group.groupType ?? ExpenseGroupType.other;
-
-  // Frosted glass on Home's one card (too costly on the Groups page).
-  Widget _chip() => TypeChip(
-    icon: _type.icon,
-    label: GroupTypeLocalization.typeName(localizations, _type),
-    frosted: true,
-  );
 
   Widget _header(Color fg) => MergeSemantics(
     child: Semantics(
@@ -143,8 +136,7 @@ class GroupCardContent extends StatelessWidget {
             mainAxisSize: bounded ? MainAxisSize.max : MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Align(alignment: Alignment.centerLeft, child: _chip()),
-              if (bounded) const Spacer() else const SizedBox(height: 96),
+              if (bounded) const Spacer() else const SizedBox(height: 120),
               _header(fg),
               const SizedBox(height: 8),
               _figures(fg),
