@@ -7,24 +7,26 @@ import 'package:io_caravella_egm/manager/details/widgets/group_detail_header.dar
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
-/// Home card and group page in the group's tint: chip (Home), big type
-/// icon, "Total | Today"; no color is neutral grey; on the group page the
-/// type is an icon on the favorite's row.
+/// Home card and group page in the group's tint: big type icon, the same
+/// quiet line under the title (type, dates), "Total | Today"; no color is
+/// neutral grey; no type chip on either.
 void main() {
   const sky = Color(0xFFAED6EE);
 
-  ExpenseGroup group({int? color, bool pinned = false}) => ExpenseGroup(
-    id: 'g1',
-    title: 'Lisbon',
-    expenses: [],
-    participants: [ExpenseParticipant(id: '1', name: 'Anna')],
-    categories: [ExpenseCategory(id: '1', name: 'Food')],
-    currency: '€',
-    timestamp: DateTime(2026, 12, 1),
-    groupType: ExpenseGroupType.travel,
-    color: color,
-    pinned: pinned,
-  );
+  ExpenseGroup group({int? color, bool pinned = false, bool shared = false}) =>
+      ExpenseGroup(
+        id: 'g1',
+        title: 'Lisbon',
+        expenses: [],
+        participants: [ExpenseParticipant(id: '1', name: 'Anna')],
+        categories: [ExpenseCategory(id: '1', name: 'Food')],
+        currency: '€',
+        timestamp: DateTime(2026, 12, 1),
+        groupType: ExpenseGroupType.travel,
+        color: color,
+        pinned: pinned,
+        syncEnabled: shared,
+      );
 
   Widget app(Widget Function(BuildContext) child) => MaterialApp(
     localizationsDelegates: const [
@@ -64,7 +66,7 @@ void main() {
       .evaluate()
       .isNotEmpty;
 
-  testWidgets('Home: tint, chip, mark, Total | Today, no chart', (
+  testWidgets('Home: tint, mark, type line, Total | Today, no chart', (
     tester,
   ) async {
     await pumpHome(tester, sky);
@@ -72,7 +74,6 @@ void main() {
     expect(tester.takeException(), isNull);
     final look = GroupLook.of(sky, Brightness.light);
     expect(hasFill(look.tint), isTrue);
-    expect(find.byType(TypeChip), findsOneWidget);
     expect(find.text('Travel'), findsOneWidget);
     expect(find.byType(TypeMark), findsOneWidget);
     expect(find.byType(FigureRow), findsOneWidget);
@@ -89,7 +90,7 @@ void main() {
     expect(find.byType(TypeMark), findsOneWidget);
   });
 
-  testWidgets('group page: type icon on the favorite row, no chip; '
+  testWidgets('group page: heart and type line under the title, no chip; '
       'no budget ring (the budget is in Statistics)', (tester) async {
     final index = ExpenseGroupColorPalette.defaultIndexFor(
       ExpenseGroupType.travel,
@@ -110,14 +111,46 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    expect(find.byType(TypeChip), findsNothing);
     expect(find.byType(TypeMark), findsOneWidget);
     expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
-    expect(find.bySemanticsLabel('Travel'), findsOneWidget);
+    expect(find.text('Travel · 1 participant'), findsOneWidget);
+    // The line is under the title.
+    expect(
+      tester.getTopLeft(find.text('Travel · 1 participant')).dy,
+      greaterThan(tester.getBottomLeft(find.text('Lisbon')).dy),
+    );
     expect(find.byType(FigureRow), findsOneWidget);
     final s = Theme.of(tester.element(find.text('Lisbon'))).colorScheme;
     final look = GroupLook.of(GroupLook.colorOf(g, s), s.brightness);
     expect(tester.widget<Text>(find.text('Lisbon')).style?.color, look.onTint);
     expect(find.byType(BudgetRing), findsNothing);
+  });
+
+  testWidgets('group page: a shared group has the sync circle in its line, '
+      'as on Home', (tester) async {
+    final g = group(shared: true);
+    await tester.pumpWidget(
+      app(
+        (context) => SingleChildScrollView(
+          child: GroupHeaderBand(
+            group: g,
+            topInset: 24,
+            header: (fg) => GroupDetailHeader(group: g, foreground: fg),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final circle = find.byWidgetPredicate(
+      (w) =>
+          w is DecoratedBox &&
+          w.decoration is BoxDecoration &&
+          (w.decoration as BoxDecoration).shape == BoxShape.circle,
+    );
+    expect(circle, findsOneWidget);
+    expect(
+      tester.getCenter(circle).dy,
+      closeTo(tester.getCenter(find.text('Travel · 1 participant')).dy, 2),
+    );
   });
 }

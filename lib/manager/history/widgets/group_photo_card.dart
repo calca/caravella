@@ -7,9 +7,12 @@ import '../../details/pages/expense_group_detail_page.dart';
 import '../../details/pages/tabs/usecase/date_range_formatter.dart';
 import '../../group/group_type/group_type_localization.dart';
 import 'group_options.dart';
+import '../../../home/cards/widgets/group_meta_line.dart';
 
-/// Card of the Groups page, a grid tile; the favorite has a heart on its
-/// chip. What it shows is a [GroupCardFace].
+/// Card of the Groups page, a grid tile: a [GroupCardFace] with, under the
+/// name, the same line as Home's card ([GroupMetaLine]: the favorite's
+/// heart, a shared group's sync circle, the type icon and the people; no
+/// dates, too narrow).
 ///
 /// Tap opens the group; long press opens [showGroupOptionsSheet].
 class GroupPhotoCard extends StatelessWidget {
@@ -61,6 +64,8 @@ class GroupPhotoCard extends StatelessWidget {
         label: [
           group.title,
           if (group.pinned) gloc.pin,
+          if (group.syncEnabled) gloc.sync_group_shared,
+          GroupTypeLocalization.typeName(gloc, type),
           ?dates,
           people,
           CurrencyDisplay.formatLocalizedText(
@@ -81,14 +86,19 @@ class GroupPhotoCard extends StatelessWidget {
             onLongPress: options,
             child: GroupCardFace(
               title: group.title,
-              subtitle: people,
               total: total,
               currency: group.currency,
               photoPath: group.file,
               color: color,
               icon: type.icon,
-              typeLabel: GroupTypeLocalization.typeName(gloc, type),
-              favorite: group.pinned,
+              meta: (fg) => GroupMetaLine(
+                group: group,
+                foreground: fg,
+                showTypeName: false,
+                showDates: false,
+                showPeople: true,
+                fontSize: 12,
+              ),
             ),
           ),
         ),
