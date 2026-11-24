@@ -95,9 +95,47 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   /// Horizontal travel of the current swipe over the content.
   double _swipeDistance = 0;
 
-  /// Scroll offset past which the collapsed title is shown.
-  double _collapsedTitleThreshold(BuildContext context) =>
-      MediaQuery.textScalerOf(context).scale(56.0);
+  /// The header band, measured to know when it has gone under the top bar.
+  final GlobalKey _bandKey = GlobalKey();
+
+  /// Scroll offset at which the band (title, its line and the figures) has
+  /// gone under the top bar: the bar shows the name from there. Before, the
+  /// name showed 56 dp in, with the band's line half cut under it.
+  double _bandCollapsedOffset(BuildContext context) {
+    final box = _bandKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return double.infinity;
+    final barBottom =
+        MediaQuery.paddingOf(context).top + GroupDetailTopBar.height;
+    // The band's box includes its 14 dp gap below the rounded corners.
+    return box.size.height - GroupHeaderBand.bottomGap - barBottom;
+  }
+
+  /// Let go with the band half under the bar (its line cut by it), the page
+  /// settles to the nearest end: the band whole, or gone under the bar.
+  bool _onScrollEnd(ScrollEndNotification n) {
+    if (n.depth != 0 || !_scrollController.hasClients) return false;
+    final collapsed = _bandCollapsedOffset(context);
+    final position = _scrollController.position;
+    final end = collapsed.clamp(0.0, position.maxScrollExtent);
+    final offset = position.pixels;
+    if (offset <= 0 || offset >= end || end <= 0) return false;
+    final target = offset < end / 2 ? 0.0 : end;
+    // After this frame: animating inside the notification fights the
+    // ballistic activity that just ended.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scrollController.hasClients) return;
+      if (MediaQuery.disableAnimationsOf(context)) {
+        _scrollController.jumpTo(target);
+      } else {
+        _scrollController.animateTo(
+          target,
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+        );
+      }
+    });
+    return false;
+  }
 
   @override
   void initState() {
@@ -476,7 +514,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
 
     // The group name shows in the top bar once the title has scrolled away
     final shouldShow =
-        _scrollController.offset > _collapsedTitleThreshold(context);
+        _scrollController.offset >= _bandCollapsedOffset(context) - 1;
     final fill = (_scrollController.offset / _barFillDistance).clamp(0.0, 1.0);
     _barFill.value = fill;
     final filled = fill >= 0.5;
@@ -628,55 +666,59 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                 );
                 if (next != null) _selectSection(next);
               },
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: GroupHeaderBand(
-                      group: trip,
-                      topInset: topInset,
-                      header: (foreground) => GroupDetailHeader(
+              child: NotificationListener<ScrollEndNotification>(
+                onNotification: _onScrollEnd,
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: GroupHeaderBand(
+                        key: _bandKey,
                         group: trip,
-                        foreground: foreground,
-                      ),
-                    ),
-                  ),
-                  if (_welcomeFrom case final from?)
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      sliver: SliverToBoxAdapter(
-                        child: GroupWelcomeCard(
+                        topInset: topInset,
+                        header: (foreground) => GroupDetailHeader(
                           group: trip,
-                          from: from,
-                          onDismiss: _dismissWelcome,
+                          foreground: foreground,
                         ),
                       ),
                     ),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverToBoxAdapter(
-                      child: PillSegmentedControl(
-                        labels: sections,
-                        selectedIndex: _section,
-                        onChanged: _selectSection,
-                        expand: true,
-                        disabled: trip.expenses.isEmpty
-                            ? const {1, 2}
-                            : const {},
+                    if (_welcomeFrom case final from?)
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                        sliver: SliverToBoxAdapter(
+                          child: GroupWelcomeCard(
+                            group: trip,
+                            from: from,
+                            onDismiss: _dismissWelcome,
+                          ),
+                        ),
+                      ),
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverToBoxAdapter(
+                        child: PillSegmentedControl(
+                          labels: sections,
+                          selectedIndex: _section,
+                          onChanged: _selectSection,
+                          expand: true,
+                          disabled: trip.expenses.isEmpty
+                              ? const {1, 2}
+                              : const {},
+                        ),
                       ),
                     ),
-                  ),
-                  SliverFadeTransition(
-                    opacity: CurvedAnimation(
-                      parent: _sectionFade,
-                      curve: Curves.easeOutCubic,
+                    SliverFadeTransition(
+                      opacity: CurvedAnimation(
+                        parent: _sectionFade,
+                        curve: Curves.easeOutCubic,
+                      ),
+                      sliver: content,
                     ),
-                    sliver: content,
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(height: _calculateBottomPadding()),
-                  ),
-                ],
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: _calculateBottomPadding()),
+                    ),
+                  ],
+                ),
               ),
             ),
             // Top bar over the band: round buttons at rest, an opaque bar

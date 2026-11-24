@@ -38,6 +38,9 @@ class GroupHeaderBand extends StatelessWidget {
     return (look.tint, look.onTint);
   }
 
+  /// The gap under the band's rounded corners, inside its box.
+  static const double bottomGap = 14;
+
   /// Under the top bar: where the band's content and the big icon start.
   double get _barBottom => topInset + GroupDetailTopBar.height;
 
@@ -51,7 +54,7 @@ class GroupHeaderBand extends StatelessWidget {
     final type = group.groupType ?? ExpenseGroupType.other;
 
     Widget band(Color background, Color fg, Color? markColor) => Padding(
-      padding: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.only(bottom: bottomGap),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
         child: Stack(

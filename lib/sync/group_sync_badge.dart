@@ -24,8 +24,10 @@ class GroupSyncBadge extends StatefulWidget {
   /// group page's top bar) instead of the "Shared" pill.
   final bool round;
 
-  /// Only the status circle, no label (Home's card line, after the heart):
-  /// hollow until the status is known.
+  /// Only the status circle, no label (the line under a group's name, after
+  /// the heart), in the text color so it doesn't shout: filled when synced,
+  /// hollow when it hasn't synced for a day (or before the status is known);
+  /// ochre only when the last exchange failed, the one state to act on.
   final bool dotOnly;
 
   const GroupSyncBadge({
@@ -144,7 +146,7 @@ class _GroupSyncBadgeState extends State<GroupSyncBadge> {
             decoration: switch (status?.health) {
               GroupSyncHealth.ok => BoxDecoration(
                 shape: BoxShape.circle,
-                color: s.success,
+                color: fg,
               ),
               GroupSyncHealth.failed => BoxDecoration(
                 shape: BoxShape.circle,
