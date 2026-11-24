@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/data/newer_format_exception.dart';
 import 'package:caravella_core/integrations/gms_integrations.dart';
+import 'package:caravella_core/sync/channels/bluetooth_sync_channel.dart';
 import 'package:caravella_core/sync/channels/cloud_relay_channel.dart';
 import 'package:caravella_core/sync/channels/lan_sync_channel.dart';
 import 'package:caravella_core/sync/device_identity.dart';
@@ -60,6 +61,14 @@ class SyncOrchestrator {
 
   /// The Wi-Fi exchanges asked for so far, one after the other.
   Future<void> _lanQueue = Future.value();
+
+  /// The groups whose invitation is open here, and until when (ms, UTC):
+  /// a pairing request over Wi-Fi is accepted only for one of them.
+  final Map<String, int> _openInvites = {};
+
+  /// What the last snapshot uploaded to Google Drive in this session held
+  /// (each group's sync times): one holding the same isn't uploaded again.
+  String? _lastCloudUpload;
 
   /// Creates a [SyncOrchestrator] with all channel instances.
   ///
@@ -123,6 +132,7 @@ class SyncOrchestrator {
           onDelta: _handleDelta,
           isPeerAuthorized: _syncManager.isPeerPaired,
           onPairingRequest: handlePairingCompleted,
+          canPair: isInviteOpen,
         );
         LoggerService.info('LAN channel started', name: _tag);
       } else {
@@ -181,15 +191,21 @@ class SyncOrchestrator {
 
     switch (channelName) {
       case 'lan':
-        // Restart LAN channel to re-discover peers and sync
+        // Running: exchange with the phones already found, or look for
+        // them again. The server keeps running, so an exchange another
+        // phone has started isn't cut off.
         if (_lanChannel.isActive) {
-          await _lanChannel.stop();
+          _lanQueue = _lanQueue.then(
+            (_) => _runLanRequest(rediscover: !_lanChannel.hasKnownPeers),
+          );
+        } else {
+          await _lanChannel.start(
+            onDelta: _handleDelta,
+            isPeerAuthorized: _syncManager.isPeerPaired,
+            onPairingRequest: handlePairingCompleted,
+            canPair: isInviteOpen,
+          );
         }
-        await _lanChannel.start(
-          onDelta: _handleDelta,
-          isPeerAuthorized: _syncManager.isPeerPaired,
-          onPairingRequest: handlePairingCompleted,
-        );
         // LAN sync is event-driven; return an empty result since the actual
         // sync happens asynchronously when peers are discovered.
         return SyncResult(
@@ -415,7 +431,25 @@ class SyncOrchestrator {
       }
 
       final snapshot = await _syncManager.getCloudSnapshot();
-      await cloud.uploadShard(ownId, jsonEncode(snapshot));
+      // The same groups as last time: nothing to upload. Compared by each
+      // group's sync times (any change here moves them), since parts of
+      // the JSON (the people's and categories' creation times) are new on
+      // every read.
+      final content = jsonEncode([
+        for (final g in snapshot['groups'] as List)
+          [(g as Map)['id'], g['_sync']],
+        snapshot['deleted_groups'],
+      ]);
+      final upload = content != _lastCloudUpload;
+      if (upload) {
+        await cloud.uploadShard(ownId, jsonEncode(snapshot));
+        _lastCloudUpload = content;
+      } else {
+        LoggerService.debug(
+          'Drive snapshot unchanged — not uploaded',
+          name: _tag,
+        );
+      }
       _problems.clearReason(SyncProblemReason.cloudUnreachable);
 
       final result = SyncResult(
@@ -425,7 +459,7 @@ class SyncOrchestrator {
         channel: channel,
         peerId: '',
         syncedAt: now(),
-        sent: (snapshot['groups'] as List).length,
+        sent: upload ? (snapshot['groups'] as List).length : 0,
         groupIds: groupIds,
         problems: problems,
       );
@@ -473,6 +507,7 @@ class SyncOrchestrator {
           onDelta: _handleDelta,
           isPeerAuthorized: _syncManager.isPeerPaired,
           onPairingRequest: handlePairingCompleted,
+          canPair: isInviteOpen,
         );
         LoggerService.info('LAN channel started', name: _tag);
       } catch (e, st) {
@@ -541,7 +576,7 @@ class SyncOrchestrator {
     }
 
     final identity = DeviceIdentity.instance;
-    return PairingPayload(
+    final payload = PairingPayload(
       deviceId: identity.deviceId,
       deviceName: identity.deviceName,
       platform: identity.platform.name,
@@ -551,6 +586,29 @@ class SyncOrchestrator {
       groupId: groupId,
       groupTitle: groupTitle,
     );
+    openInvite(groupId);
+    return payload;
+  }
+
+  /// Accepts pairing requests over Wi-Fi for [groupId] for [validFor] (a
+  /// QR code's life): done by [buildOwnPairingPayload], so only while an
+  /// invitation is shown. Before 2.5.1 any phone on the network that knew
+  /// a group's id could pair for it, at any time.
+  void openInvite(
+    String groupId, {
+    Duration validFor = const Duration(milliseconds: PairingPayload.validityMs),
+  }) {
+    _openInvites[groupId] = SyncClock.nowMs() + validFor.inMilliseconds;
+  }
+
+  /// The invitation for [groupId] is closed: pairing requests for it are
+  /// refused again.
+  void closeInvite(String groupId) => _openInvites.remove(groupId);
+
+  /// Whether a pairing request for [groupId] is accepted now.
+  bool isInviteOpen(String groupId) {
+    final until = _openInvites[groupId];
+    return until != null && SyncClock.nowMs() <= until;
   }
 
   /// Completes a pairing handshake with a device scanned from its QR code,
@@ -589,15 +647,18 @@ class SyncOrchestrator {
     String groupId, {
     DateTime? now,
   }) async {
+    // The latest of the two: an exchange that brought nothing new for the
+    // group is in the log, not among this session's entries for it.
     final recent = await getHistory(limit: 1, groupId: groupId);
-    final DateTime? at;
-    final bool hadErrors;
+    final logged = await _syncManager.getLastGroupSyncTime(groupId);
+    var at = logged;
+    var hadErrors = false;
     if (recent.isNotEmpty) {
-      at = DateTime.parse(recent.first['timestamp'] as String);
-      hadErrors = ((recent.first['errors'] as int?) ?? 0) > 0;
-    } else {
-      at = await _syncManager.getLastGroupSyncTime(groupId);
-      hadErrors = false;
+      final entryAt = DateTime.parse(recent.first['timestamp'] as String);
+      if (logged == null || !logged.isAfter(entryAt)) {
+        at = entryAt;
+        hadErrors = ((recent.first['errors'] as int?) ?? 0) > 0;
+      }
     }
     return GroupSyncStatus.from(
       lastSyncAt: at,
@@ -675,10 +736,14 @@ class SyncOrchestrator {
   /// Exposed publicly so that transports owned outside this class — e.g. a
   /// [BluetoothSyncChannel] created per pairing session by the UI — can
   /// share the same sync pipeline as the LAN channel.
+  ///
+  /// [channel] is the one the exchange is recorded under: Bluetooth unless
+  /// told otherwise (before 2.5.1 these were recorded as Wi-Fi).
   Future<Map<String, dynamic>> handleIncomingDelta(
     Map<String, dynamic> remoteDelta,
-    String peerId,
-  ) => _handleDelta(remoteDelta, peerId);
+    String peerId, {
+    String channel = 'bluetooth',
+  }) => _handleDelta(remoteDelta, peerId, channel: channel);
 
   // ---------------------------------------------------------------------------
   // Internal
@@ -691,20 +756,28 @@ class SyncOrchestrator {
   /// sync with [peerId], and a delta built after it would only hold changes
   /// made since then, so the ones this device made before the exchange
   /// (deletions included) would never reach the peer.
+  ///
+  /// [sent] is given by the device that started the exchange, applying the
+  /// answer: it already sent its delta (that many changes), so none is
+  /// built. The [SyncCompleted] the [SyncManager] emits goes in the history
+  /// once (it used to be recorded here too).
   Future<Map<String, dynamic>> _handleDelta(
     Map<String, dynamic> remoteDelta,
-    String peerId,
-  ) async {
-    final outgoing = await _outgoingDelta(peerId);
+    String peerId, {
+    String channel = 'lan',
+    int? sent,
+  }) async {
+    final outgoing = sent == null
+        ? await _outgoingDelta(peerId)
+        : <String, dynamic>{};
     if (remoteDelta.isNotEmpty) {
       try {
-        final result = await _syncManager.syncWithPeer(
+        await _syncManager.syncWithPeer(
           peerId,
           remoteDelta,
-          'lan',
+          channel,
+          sent: sent ?? BluetoothUpdate.countChanges(outgoing),
         );
-
-        _recordHistory(result);
       } catch (e, st) {
         LoggerService.error(
           'Error processing LAN delta from $peerId',
@@ -778,6 +851,7 @@ class SyncOrchestrator {
       'peerId': result.peerId,
       'applied': result.applied,
       'skipped': result.skipped,
+      'sent': result.sent,
       'errors': result.errors,
       'timestamp': result.syncedAt.toIso8601String(),
       'groupIds': result.groupIds.toList(),

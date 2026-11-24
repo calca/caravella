@@ -12,6 +12,7 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:caravella_core/services/logging/logger_service.dart';
 import 'package:caravella_core/sync/crypto/device_key_manager.dart';
 import 'package:caravella_core/sync/crypto/peer_key_store.dart';
+import 'package:caravella_core/sync/channels/bluetooth_sync_channel.dart';
 import 'package:caravella_core/sync/crypto/sync_envelope.dart';
 import 'package:caravella_core/sync/device_identity.dart';
 import 'package:caravella_core/sync/models/sync_problem.dart';
@@ -21,11 +22,20 @@ import 'package:caravella_core/sync/utils/sync_clock.dart';
 
 /// Callback invoked when a delta is received from a peer.
 /// Should process the delta and return the local delta to send back.
+///
+/// [sent] is given when this device started the exchange and is applying
+/// the answer: it already sent its own delta (that many changes), so none
+/// needs building.
 typedef DeltaCallback =
     Future<Map<String, dynamic>> Function(
       Map<String, dynamic> remoteDelta,
-      String peerId,
-    );
+      String peerId, {
+      int? sent,
+    });
+
+/// Whether a pairing request for [groupId] is accepted now: only while its
+/// invitation (the QR code) is shown.
+typedef PairingGate = bool Function(String groupId);
 
 /// Callback used to check whether [peerId] has completed the QR pairing
 /// handshake and is trusted for automatic sync.
@@ -70,6 +80,7 @@ class LanSyncChannel {
   DeltaCallback? _onDelta;
   PeerAuthCallback? _isPeerAuthorized;
   PairingCallback? _onPairingRequest;
+  PairingGate? _canPair;
 
   final StreamController<SyncEvent> _eventController =
       StreamController<SyncEvent>.broadcast();
@@ -84,11 +95,23 @@ class LanSyncChannel {
   /// HTTP server directly.
   final bool _mdns;
 
+  /// How long a phone has to accept a connection (ping, exchange, pairing).
+  static const Duration connectTimeout = Duration(seconds: 5);
+
+  /// How long an exchange or a pairing may take once connected: a phone
+  /// that stops answering halfway (its app frozen in the background) no
+  /// longer holds up the exchanges after it.
+  final Duration _exchangeTimeout;
+
   /// Creates a [LanSyncChannel] with the given [port] (default 8765; 0
   /// picks a free one, see [port]).
-  LanSyncChannel({int port = defaultPort, @visibleForTesting bool mdns = true})
-    : _port = port,
-      _mdns = mdns;
+  LanSyncChannel({
+    int port = defaultPort,
+    @visibleForTesting bool mdns = true,
+    @visibleForTesting Duration exchangeTimeout = const Duration(seconds: 30),
+  }) : _port = port,
+       _mdns = mdns,
+       _exchangeTimeout = exchangeTimeout;
 
   /// Whether the channel is currently active.
   bool get isActive => _active;
@@ -116,6 +139,7 @@ class LanSyncChannel {
     required DeltaCallback onDelta,
     PeerAuthCallback? isPeerAuthorized,
     PairingCallback? onPairingRequest,
+    PairingGate? canPair,
   }) async {
     if (_active) {
       LoggerService.debug(
@@ -128,6 +152,7 @@ class LanSyncChannel {
     _onDelta = onDelta;
     _isPeerAuthorized = isPeerAuthorized;
     _onPairingRequest = onPairingRequest;
+    _canPair = canPair;
 
     try {
       await _startHttpServer();
@@ -155,6 +180,7 @@ class LanSyncChannel {
     _onDelta = null;
     _isPeerAuthorized = null;
     _onPairingRequest = null;
+    _canPair = null;
     _peers.clear();
 
     await _stopDiscovery();
@@ -168,6 +194,9 @@ class LanSyncChannel {
   /// e.g. after a change here, so it reaches a phone that is already
   /// connected without waiting for it to be discovered again. Returns how
   /// many peers there were.
+  /// Whether any paired-or-not phone has been found on the network.
+  bool get hasKnownPeers => _peers.isNotEmpty;
+
   Future<int> syncKnownPeers() async {
     if (!_active) return 0;
     final peers = Map.of(_peers);
@@ -373,6 +402,20 @@ class LanSyncChannel {
         );
       }
 
+      // Only while this group's invitation is shown here.
+      final canPair = _canPair;
+      if (canPair != null && !canPair(groupId)) {
+        LoggerService.warning(
+          'Rejected pairing from $peerDeviceId for group=$groupId — no open '
+          'invitation',
+          name: _tag,
+        );
+        return shelf.Response.forbidden(
+          jsonEncode({'error': 'no_invite'}),
+          headers: {'content-type': 'application/json'},
+        );
+      }
+
       final sharedKey = await DeviceKeyManager.deriveSharedKey(peerPublicKey);
       await PeerKeyStore.save(peerDeviceId, sharedKey);
 
@@ -425,12 +468,11 @@ class LanSyncChannel {
   }) async {
     final identity = DeviceIdentity.instance;
     final myPublicKey = await DeviceKeyManager.publicKeyBase64();
-    final client = HttpClient();
+    final client = HttpClient()..connectionTimeout = connectTimeout;
     try {
       final uri = Uri.parse('http://$host:$port/pair');
-      final request = await client.postUrl(uri);
-      request.headers.contentType = ContentType.json;
-      request.write(
+      final (response, responseBody) = await _send(
+        client.postUrl(uri),
         jsonEncode({
           'device_id': identity.deviceId,
           'device_name': identity.deviceName,
@@ -439,8 +481,6 @@ class LanSyncChannel {
           'group_id': groupId,
         }),
       );
-      final response = await request.close();
-      final responseBody = await response.transform(utf8.decoder).join();
 
       if (response.statusCode != 200) {
         LoggerService.warning(
@@ -488,8 +528,25 @@ class LanSyncChannel {
       );
       return false;
     } finally {
-      client.close();
+      client.close(force: true);
     }
+  }
+
+  /// Sends [body] (JSON) on [open]'s request and reads the answer, within
+  /// [_exchangeTimeout].
+  Future<(HttpClientResponse, String)> _send(
+    Future<HttpClientRequest> open,
+    String body,
+  ) async {
+    Future<(HttpClientResponse, String)> run() async {
+      final request = await open;
+      request.headers.contentType = ContentType.json;
+      request.write(body);
+      final response = await request.close();
+      return (response, await response.transform(utf8.decoder).join());
+    }
+
+    return run().timeout(_exchangeTimeout);
   }
 
   Future<void> _stopHttpServer() async {
@@ -696,14 +753,12 @@ class LanSyncChannel {
         'envelope': envelope,
       });
 
-      final client = HttpClient();
+      final client = HttpClient()..connectionTimeout = connectTimeout;
       try {
-        final httpRequest = await client.postUrl(uri);
-        httpRequest.headers.contentType = ContentType.json;
-        httpRequest.write(requestBody);
-        final httpResponse = await httpRequest.close();
-
-        final responseBody = await httpResponse.transform(utf8.decoder).join();
+        final (httpResponse, responseBody) = await _send(
+          client.postUrl(uri),
+          requestBody,
+        );
 
         if (httpResponse.statusCode == 200) {
           final responseJson = jsonDecode(responseBody) as Map<String, dynamic>;
@@ -712,26 +767,32 @@ class LanSyncChannel {
               ? <String, dynamic>{}
               : await SyncEnvelope.decrypt(peerKey, responseEnvelope);
 
-          // 5. Process the response delta
-          await _onDelta!(remoteDelta, peerId);
-
-          final result = SyncResult(
-            applied: remoteDelta.length,
-            skipped: 0,
-            errors: 0,
-            channel: _channel,
-            peerId: peerId,
-            syncedAt: DateTime.fromMillisecondsSinceEpoch(
-              SyncClock.nowMs(),
-              isUtc: true,
-            ),
-          );
-
-          _eventController.add(SyncCompleted(result));
-          LoggerService.info(
-            'Sync with peer $peerId completed: $result',
-            name: _tag,
-          );
+          // 5. Process the response delta: applying it reports the
+          //    exchange (one SyncCompleted, with what was received and
+          //    sent). An empty answer is reported here.
+          final sent = BluetoothUpdate.countChanges(localDelta);
+          final onDelta = _onDelta;
+          if (remoteDelta.isNotEmpty && onDelta != null) {
+            await onDelta(remoteDelta, peerId, sent: sent);
+          } else {
+            _eventController.add(
+              SyncCompleted(
+                SyncResult(
+                  applied: 0,
+                  skipped: 0,
+                  errors: 0,
+                  channel: _channel,
+                  peerId: peerId,
+                  sent: sent,
+                  syncedAt: DateTime.fromMillisecondsSinceEpoch(
+                    SyncClock.nowMs(),
+                    isUtc: true,
+                  ),
+                ),
+              ),
+            );
+          }
+          LoggerService.info('Sync with peer $peerId completed', name: _tag);
         } else {
           LoggerService.warning(
             'Sync with peer $peerId failed: HTTP ${httpResponse.statusCode}',
@@ -740,15 +801,30 @@ class LanSyncChannel {
           _eventController.add(
             SyncFailed(
               'HTTP ${httpResponse.statusCode}: $responseBody',
-              reason: SyncProblemReason.peerError,
+              reason: _failureReason(httpResponse.statusCode, responseBody),
               peerId: peerId,
               channel: _channel,
             ),
           );
         }
       } finally {
-        client.close();
+        client.close(force: true);
       }
+    } on TimeoutException {
+      // Stopped answering halfway (frozen in the background, or gone):
+      // out of reach, like a failed ping.
+      LoggerService.warning(
+        'Peer $peerId stopped answering — exchange dropped',
+        name: _tag,
+      );
+      _eventController.add(
+        SyncFailed(
+          'Peer stopped answering',
+          unreachable: true,
+          peerId: peerId,
+          channel: _channel,
+        ),
+      );
     } catch (e, st) {
       LoggerService.error(
         'Error syncing with peer $peerId',
@@ -762,14 +838,33 @@ class LanSyncChannel {
     }
   }
 
+  /// Why the peer refused an exchange: it no longer knows this device or
+  /// its key (forgotten, or paired again elsewhere) is to be paired again;
+  /// anything else is its own error.
+  static SyncProblemReason _failureReason(int status, String body) {
+    if (status != 403) return SyncProblemReason.peerError;
+    try {
+      final error = (jsonDecode(body) as Map<String, dynamic>)['error'];
+      if (error == 'not_paired' ||
+          error == 'no_encryption_key' ||
+          error == 'decryption_failed') {
+        return SyncProblemReason.notPaired;
+      }
+    } catch (_) {}
+    return SyncProblemReason.peerError;
+  }
+
   Future<bool> _pingPeer(String host, int port) async {
     final client = HttpClient();
     try {
-      client.connectionTimeout = const Duration(seconds: 5);
+      client.connectionTimeout = connectTimeout;
       final uri = Uri.parse('http://$host:$port/sync/ping');
       final request = await client.getUrl(uri);
-      final response = await request.close();
-      final body = await response.transform(utf8.decoder).join();
+      final response = await request.close().timeout(connectTimeout);
+      final body = await response
+          .transform(utf8.decoder)
+          .join()
+          .timeout(connectTimeout);
 
       if (response.statusCode != 200) return false;
 
@@ -779,7 +874,7 @@ class LanSyncChannel {
       LoggerService.debug('Ping to $host:$port failed: $e', name: _tag);
       return false;
     } finally {
-      client.close();
+      client.close(force: true);
     }
   }
 }

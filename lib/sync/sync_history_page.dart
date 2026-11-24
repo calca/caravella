@@ -101,14 +101,13 @@ class SyncHistoryPage extends StatelessWidget {
     final channel = entry['channel'] as String? ?? '';
     final peerId = entry['peerId'] as String? ?? '';
     final applied = entry['applied'] as int? ?? 0;
-    final skipped = entry['skipped'] as int? ?? 0;
     final failed = entry['failed'] as bool? ?? false;
     final timestamp = entry['timestamp'] as String? ?? '';
     final problems = _problems(entry);
 
     final channelDisplay = _channelInfo(channel, loc);
     final relativeTime = _relativeTimestamp(timestamp);
-    final sent = skipped;
+    final sent = entry['sent'] as int? ?? 0;
     final received = applied;
     final device = peerId.isEmpty && channel != 'cloud'
         ? channelDisplay.$2

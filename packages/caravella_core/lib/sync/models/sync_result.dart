@@ -68,6 +68,21 @@ class SyncResult {
     ),
   );
 
+  /// This result, with [sent] changes sent to the peer.
+  SyncResult withSent(int sent) => SyncResult(
+    applied: applied,
+    skipped: skipped,
+    errors: errors,
+    channel: channel,
+    peerId: peerId,
+    syncedAt: syncedAt,
+    sent: sent,
+    groupIds: groupIds,
+    newGroupIds: newGroupIds,
+    peerName: peerName,
+    problems: problems,
+  );
+
   /// Merges two results by summing their counters.
   ///
   /// Keeps the [channel] and [peerId] of [a], and the later [syncedAt].
