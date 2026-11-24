@@ -25,45 +25,55 @@ void main() {
 
   {
     group('tile and wide card', () {
-      testWidgets('wide card: name, line, total; type icon on chip and mark', (
+      testWidgets('wide card: name, line, total; the type icon as the mark', (
         tester,
       ) async {
         await pump(
           tester,
           GroupCardFace(
             title: 'Lisbon',
-            subtitle: 'Trip',
             total: 0,
             currency: '€',
             icon: icon,
             color: sky,
             wide: true,
+            meta: (fg) => const Text('Trip'),
           ),
         );
         expect(find.text('Lisbon'), findsOneWidget);
         expect(find.text('Trip'), findsOneWidget);
         expect(find.byType(CurrencyDisplay), findsOneWidget);
         expect(find.byType(TypeMark), findsOneWidget);
-        expect(find.byIcon(icon), findsNWidgets(2));
-        expect(find.byIcon(Icons.favorite_rounded), findsNothing);
+        // Only the big faint one: there is no chip.
+        expect(find.byIcon(icon), findsOneWidget);
       });
 
-      testWidgets('the favorite has a heart on its chip', (tester) async {
+      testWidgets('the line is in the card\'s text color, under the name', (
+        tester,
+      ) async {
+        Color? given;
         await pump(
           tester,
           GroupCardFace(
             title: 'Lisbon',
-            total: 12.5,
+            total: 0,
             currency: '€',
             icon: icon,
-            favorite: true,
-            typeLabel: 'Travel',
+            color: sky,
+            meta: (fg) {
+              given = fg;
+              return const Text('♥ 4 participants');
+            },
           ),
-          width: 170,
-          height: 170,
+          width: 180,
+          height: GroupCardFace.tileHeight(TextScaler.noScaling),
         );
-        expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
-        expect(find.bySemanticsLabel('Travel'), findsOneWidget);
+        expect(find.text('♥ 4 participants'), findsOneWidget);
+        expect(given, GroupLook.of(sky, Brightness.light).onTint);
+        expect(
+          tester.getTopLeft(find.text('♥ 4 participants')).dy,
+          greaterThan(tester.getBottomLeft(find.text('Lisbon')).dy),
+        );
         expect(tester.takeException(), isNull);
       });
 
@@ -92,7 +102,7 @@ void main() {
           tester,
           GroupCardFace(
             title: 'A rather long name for a group of friends',
-            subtitle: '5/12/2030 - 5/18/2030',
+            meta: (fg) => const Text('Travel · 5/12/2030 - 5/18/2030'),
             total: 0,
             currency: '€',
             icon: icon,
@@ -114,7 +124,7 @@ void main() {
           tester,
           GroupCardFace(
             title: 'A rather long name for a group of friends',
-            subtitle: '12 people',
+            meta: (fg) => const Text('♥ 12 people'),
             total: 12345.67,
             currency: '€',
             icon: icon,

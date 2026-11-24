@@ -75,8 +75,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   Timer? _fabIdleTimer; // shows the FAB again after a pause
   bool _collapsedTitleVisible = false; // group name in the top bar
 
-  /// The top bar turns opaque as soon as content scrolls under it.
-  bool _barOpaque = false;
+  /// How much of the band's tint the top bar has (0 at rest, 1 once
+  /// scrolled [_barFillDistance]): only the bar listens to it.
+  final ValueNotifier<double> _barFill = ValueNotifier(0);
+
+  /// The bar is mostly filled: the status bar icons follow its color.
+  bool _barFilled = false;
+
+  /// Scroll over which the top bar fills with the band's tint.
+  static const double _barFillDistance = 96;
+
+  /// The tone of the group's photo, once [PhotoTone.load] has run for it.
+  String? _toneLoading;
   String? _newlyAddedExpenseId; // just added, to highlight
 
   /// Selected view: 0 expenses, 1 balances, 2 statistics.
@@ -85,9 +95,47 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   /// Horizontal travel of the current swipe over the content.
   double _swipeDistance = 0;
 
-  /// Scroll offset past which the collapsed title is shown.
-  double _collapsedTitleThreshold(BuildContext context) =>
-      MediaQuery.textScalerOf(context).scale(56.0);
+  /// The header band, measured to know when it has gone under the top bar.
+  final GlobalKey _bandKey = GlobalKey();
+
+  /// Scroll offset at which the band (title, its line and the figures) has
+  /// gone under the top bar: the bar shows the name from there. Before, the
+  /// name showed 56 dp in, with the band's line half cut under it.
+  double _bandCollapsedOffset(BuildContext context) {
+    final box = _bandKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return double.infinity;
+    final barBottom =
+        MediaQuery.paddingOf(context).top + GroupDetailTopBar.height;
+    // The band's box includes its 14 dp gap below the rounded corners.
+    return box.size.height - GroupHeaderBand.bottomGap - barBottom;
+  }
+
+  /// Let go with the band half under the bar (its line cut by it), the page
+  /// settles to the nearest end: the band whole, or gone under the bar.
+  bool _onScrollEnd(ScrollEndNotification n) {
+    if (n.depth != 0 || !_scrollController.hasClients) return false;
+    final collapsed = _bandCollapsedOffset(context);
+    final position = _scrollController.position;
+    final end = collapsed.clamp(0.0, position.maxScrollExtent);
+    final offset = position.pixels;
+    if (offset <= 0 || offset >= end || end <= 0) return false;
+    final target = offset < end / 2 ? 0.0 : end;
+    // After this frame: animating inside the notification fights the
+    // ballistic activity that just ended.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scrollController.hasClients) return;
+      if (MediaQuery.disableAnimationsOf(context)) {
+        _scrollController.jumpTo(target);
+      } else {
+        _scrollController.animateTo(
+          target,
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+        );
+      }
+    });
+    return false;
+  }
 
   @override
   void initState() {
@@ -118,6 +166,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     _groupNotifier = null;
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _barFill.dispose();
     _sectionFade.dispose();
     _fabIdleTimer?.cancel();
     super.dispose();
@@ -465,15 +514,32 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
 
     // The group name shows in the top bar once the title has scrolled away
     final shouldShow =
-        _scrollController.offset > _collapsedTitleThreshold(context);
-    final opaque = _scrollController.offset > 2;
-    if ((shouldShow != _collapsedTitleVisible || opaque != _barOpaque) &&
+        _scrollController.offset >= _bandCollapsedOffset(context) - 1;
+    final fill = (_scrollController.offset / _barFillDistance).clamp(0.0, 1.0);
+    _barFill.value = fill;
+    final filled = fill >= 0.5;
+    if ((shouldShow != _collapsedTitleVisible || filled != _barFilled) &&
         mounted) {
       setState(() {
         _collapsedTitleVisible = shouldShow;
-        _barOpaque = opaque;
+        _barFilled = filled;
       });
     }
+  }
+
+  /// The photo's tone and its text color, loading it the first time.
+  (Color, Color) _photoTone(String path, Brightness brightness) {
+    final tone = PhotoTone.cached(path, brightness);
+    if (tone == null && _toneLoading != path) {
+      _toneLoading = path;
+      unawaited(
+        PhotoTone.load(path, brightness).then((_) {
+          if (mounted) setState(() {});
+        }),
+      );
+    }
+    final t = tone ?? PhotoTone.fallbackDark;
+    return (t.tone, t.onTone);
   }
 
   double _calculateBottomPadding() {
@@ -536,16 +602,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     final pageColor = s.surfaceContainer;
     final topInset = MediaQuery.paddingOf(context).top;
 
-    // Over a group color the top bar and title use its contrasting color;
-    // once the bar turns opaque (scrolled) it follows the theme again.
-    final bandColor = GroupHeaderBand.colorOf(trip, s);
-    final bandForeground = GroupHeaderBand.foregroundOf(trip, s);
-    final hasPhoto = GroupHeaderBand.photoOf(trip) != null;
-    final bool? forceStatusBarLight = _barOpaque || hasPhoto
+    // The top bar is in the band's colors: the group's tint, or its photo's
+    // tone (the dark fallback until it's known, as the band itself).
+    final photo = GroupHeaderBand.photoOf(trip);
+    final (barTint, barForeground) = photo == null
+        ? GroupHeaderBand.lookOf(trip, s)
+        : _photoTone(photo, theme.brightness);
+    // Over a photo at rest the status bar sits on the photo itself: the
+    // theme decides, as before. Elsewhere it follows the band's text color.
+    final bool? forceStatusBarLight = photo != null && !_barFilled
         ? null
-        : bandColor != null
-        ? !ExpenseGroupColorPalette.isLightColor(bandColor)
-        : null;
+        : barForeground.computeLuminance() > 0.5;
 
     final sections = [gloc.expenses, gloc.balances, gloc.statistics];
     // A group with no expenses has nothing but its empty state to show.
@@ -599,93 +666,99 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
                 );
                 if (next != null) _selectSection(next);
               },
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: GroupHeaderBand(
-                      group: trip,
-                      topInset: topInset,
-                      header: (foreground) => GroupDetailHeader(
+              child: NotificationListener<ScrollEndNotification>(
+                onNotification: _onScrollEnd,
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: GroupHeaderBand(
+                        key: _bandKey,
                         group: trip,
-                        foreground: foreground,
-                      ),
-                    ),
-                  ),
-                  if (_welcomeFrom case final from?)
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      sliver: SliverToBoxAdapter(
-                        child: GroupWelcomeCard(
+                        topInset: topInset,
+                        header: (foreground) => GroupDetailHeader(
                           group: trip,
-                          from: from,
-                          onDismiss: _dismissWelcome,
+                          foreground: foreground,
                         ),
                       ),
                     ),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverToBoxAdapter(
-                      child: PillSegmentedControl(
-                        labels: sections,
-                        selectedIndex: _section,
-                        onChanged: _selectSection,
-                        expand: true,
-                        disabled: trip.expenses.isEmpty
-                            ? const {1, 2}
-                            : const {},
+                    if (_welcomeFrom case final from?)
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                        sliver: SliverToBoxAdapter(
+                          child: GroupWelcomeCard(
+                            group: trip,
+                            from: from,
+                            onDismiss: _dismissWelcome,
+                          ),
+                        ),
+                      ),
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverToBoxAdapter(
+                        child: PillSegmentedControl(
+                          labels: sections,
+                          selectedIndex: _section,
+                          onChanged: _selectSection,
+                          expand: true,
+                          disabled: trip.expenses.isEmpty
+                              ? const {1, 2}
+                              : const {},
+                        ),
                       ),
                     ),
-                  ),
-                  SliverFadeTransition(
-                    opacity: CurvedAnimation(
-                      parent: _sectionFade,
-                      curve: Curves.easeOutCubic,
+                    SliverFadeTransition(
+                      opacity: CurvedAnimation(
+                        parent: _sectionFade,
+                        curve: Curves.easeOutCubic,
+                      ),
+                      sliver: content,
                     ),
-                    sliver: content,
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(height: _calculateBottomPadding()),
-                  ),
-                ],
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: _calculateBottomPadding()),
+                    ),
+                  ],
+                ),
               ),
             ),
             // Top bar over the band: round buttons at rest, an opaque bar
             // with the group name once the title has scrolled away.
-            GroupDetailTopBar(
-              title: trip.title,
-              opaque: _barOpaque,
-              titleVisible: _collapsedTitleVisible,
-              bandForeground: bandForeground,
-              pageColor: pageColor,
-              onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
-              syncGroup: trip.syncEnabled ? trip : null,
-              onSync: _showSyncPage,
-              menuItems: [
-                if (!trip.archived)
-                  GroupMenuItem(
-                    trip.pinned
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    trip.pinned ? gloc.unpin : gloc.pin,
-                    _handlePinToggle,
-                  ),
-                // The map opens from its card in Statistics. A shared group
-                // has its sync button in the bar instead.
-                if (!trip.syncEnabled)
+            ValueListenableBuilder<double>(
+              valueListenable: _barFill,
+              builder: (context, fill, _) => GroupDetailTopBar(
+                title: trip.title,
+                fill: fill,
+                titleVisible: _collapsedTitleVisible,
+                tint: barTint,
+                foreground: barForeground,
+                overPhoto: photo != null,
+                onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
+                menuItems: [
+                  if (!trip.archived)
+                    GroupMenuItem(
+                      trip.pinned
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      trip.pinned ? gloc.unpin : gloc.pin,
+                      _handlePinToggle,
+                    ),
+                  // The map opens from its card in Statistics; synchronization
+                  // is here for every group (a shared one shows its state as
+                  // the circle in the line under its name).
                   GroupMenuItem(
                     Icons.sync_rounded,
                     gloc.sync_title,
                     _showSyncPage,
                   ),
-                // Share & export lives in the group's settings
-                // (rarely used, kept out of this menu).
-                GroupMenuItem(
-                  Icons.settings_outlined,
-                  gloc.settings,
-                  _showSettingsPage,
-                ),
-              ],
+                  // Share & export lives in the group's settings
+                  // (rarely used, kept out of this menu).
+                  GroupMenuItem(
+                    Icons.settings_outlined,
+                    gloc.settings,
+                    _showSettingsPage,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

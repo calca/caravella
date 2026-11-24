@@ -170,7 +170,8 @@ void main() {
       find.descendant(of: preview, matching: find.text('Lisbon')),
       findsOneWidget,
     );
-    // The type moves to the line below the name, until there are dates.
+    // The type moves to the line below the name, as on Home's card, and
+    // the dates follow it once set.
     expect(
       find.descendant(of: preview, matching: find.text('Personal')),
       findsOneWidget,
@@ -179,8 +180,11 @@ void main() {
     form(tester).setEndDate(DateTime(2030, 5, 18));
     await tester.pump();
     expect(
-      find.descendant(of: preview, matching: find.text('Personal')),
-      findsNothing,
+      find.descendant(
+        of: preview,
+        matching: find.textContaining('Personal · '),
+      ),
+      findsOneWidget,
     );
     expect(
       find.descendant(of: preview, matching: find.byType(CurrencyDisplay)),
