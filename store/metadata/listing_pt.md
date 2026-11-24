@@ -24,6 +24,7 @@ UM DESIGN CLARO E CALMO
 SINCRONIZE COM AMIGOS
 • Compartilhe um grupo com quem viaja com você por Wi-Fi ou Bluetooth
 • Pareie os dispositivos uma única vez com um QR code — tudo com criptografia de ponta a ponta
+• Mantenha seus celulares e tablets sincronizados pelo seu Google Drive: todos os seus grupos, sem pareamento (versão Play)
 • A sincronização é opcional e nunca passa pelos nossos servidores
 
 ADICIONE DESPESAS EM SEGUNDOS
