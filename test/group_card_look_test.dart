@@ -72,7 +72,6 @@ void main() {
     expect(tester.takeException(), isNull);
     final look = GroupLook.of(sky, Brightness.light);
     expect(hasFill(look.tint), isTrue);
-    expect(find.byType(TypeChip), findsNothing);
     expect(find.text('Travel'), findsOneWidget);
     expect(find.byType(TypeMark), findsOneWidget);
     expect(find.byType(FigureRow), findsOneWidget);
@@ -110,7 +109,6 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    expect(find.byType(TypeChip), findsNothing);
     expect(find.byType(TypeMark), findsOneWidget);
     expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
     expect(find.text('Travel · 1 participant'), findsOneWidget);

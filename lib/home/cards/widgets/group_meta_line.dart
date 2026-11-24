@@ -35,6 +35,10 @@ class GroupMetaLine extends StatelessWidget {
   /// The line's text size (smaller on the Groups page's tiles).
   final double fontSize;
 
+  /// The type's icon, when it isn't the type's own (a custom template's,
+  /// in the creation wizard).
+  final IconData? icon;
+
   const GroupMetaLine({
     super.key,
     required this.group,
@@ -45,6 +49,7 @@ class GroupMetaLine extends StatelessWidget {
     this.showTypeName = true,
     this.showDates = true,
     this.fontSize = 13,
+    this.icon,
   });
 
   @override
@@ -96,7 +101,7 @@ class GroupMetaLine extends StatelessWidget {
         ],
         // Its name is in the text; without it the icon says it.
         Icon(
-          type.icon,
+          icon ?? type.icon,
           size: 14,
           color: foreground,
           semanticLabel: showTypeName ? null : typeName,

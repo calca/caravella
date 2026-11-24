@@ -5,22 +5,18 @@ import 'package:material_ui/material_ui.dart';
 import 'currency_display.dart';
 import 'group_look.dart';
 
-/// What a group looks like on its card: background, type chip, name, a line
-/// below it and the total. Shared by the Groups page (grid tiles) and the
+/// What a group looks like on its card: background, name, a line below it
+/// ([meta]) and the total. Shared by the Groups page (grid tiles) and the
 /// creation wizard's preview (the [wide] card), so a new group looks the
 /// same before and after saving. The caller adds the outline, the clipping
 /// and any tap.
 ///
 /// The whole card is in the group's tint ([GroupLook]: neutral grey without
 /// a color) with the big faint type icon cropped by the corner, or under a
-/// photo the photo's own tone ([PhotoTone]) that it melts into; the type
-/// chip on top (unless a [meta] line replaces it) and the text at the
-/// bottom.
+/// photo the photo's own tone ([PhotoTone]) that it melts into; the text at
+/// the bottom.
 class GroupCardFace extends StatelessWidget {
   final String title;
-
-  /// The line under the name.
-  final String? subtitle;
 
   final double total;
   final String currency;
@@ -29,17 +25,11 @@ class GroupCardFace extends StatelessWidget {
   final String? photoPath;
   final Color? color;
 
+  /// The type's icon, drawn large and faint in the corner.
   final IconData icon;
 
-  /// The type's name, read by screen readers on the chip.
-  final String? typeLabel;
-
-  /// A heart before the type icon on the chip.
-  final bool favorite;
-
-  /// The line under the name in the card's text color, in place of both
-  /// the type chip and [subtitle] (the Groups page: favorite, sync circle,
-  /// type icon and people, as on Home's card).
+  /// The line under the name, built in the card's text color (the app's
+  /// `GroupMetaLine`: favorite, sync circle, type, dates or people).
   final Widget Function(Color foreground)? meta;
 
   /// The wide card (wizard) instead of a grid tile.
@@ -54,11 +44,8 @@ class GroupCardFace extends StatelessWidget {
     required this.total,
     required this.currency,
     required this.icon,
-    this.subtitle,
     this.photoPath,
     this.color,
-    this.typeLabel,
-    this.favorite = false,
     this.meta,
     this.wide = false,
     this.compact = false,
@@ -90,17 +77,8 @@ class GroupCardFace extends StatelessWidget {
     );
   }
 
-  Widget _chip(BuildContext context) => TypeChip(
-    icon: icon,
-    favorite: favorite,
-    semanticLabel: typeLabel,
-    height: wide && !compact ? 30 : 26,
-  );
-
   Widget _text(BuildContext context, Color fg) {
     final theme = Theme.of(context);
-    final fgSecondary = fg.withValues(alpha: 0.8);
-    final line = subtitle;
     final amount = CurrencyDisplay(
       value: total,
       currency: currency,
@@ -117,18 +95,10 @@ class GroupCardFace extends StatelessWidget {
       style: (wide ? theme.textTheme.titleLarge : theme.textTheme.titleMedium)
           ?.copyWith(color: fg, fontWeight: FontWeight.w700, height: 1.15),
     );
-    final Widget? sub = meta != null
-        ? Padding(padding: const EdgeInsets.only(top: 2), child: meta!(fg))
-        : line == null
+    final line = meta;
+    final Widget? sub = line == null
         ? null
-        : Text(
-            line,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style:
-                (wide ? theme.textTheme.bodyMedium : theme.textTheme.bodySmall)
-                    ?.copyWith(color: fgSecondary),
-          );
+        : Padding(padding: const EdgeInsets.only(top: 2), child: line(fg));
     if (wide) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -184,11 +154,7 @@ class GroupCardFace extends StatelessWidget {
             padding: EdgeInsets.all(padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (meta == null) _chip(context),
-                const Spacer(),
-                _text(context, fg),
-              ],
+              children: [const Spacer(), _text(context, fg)],
             ),
           ),
         ],

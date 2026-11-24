@@ -91,8 +91,6 @@ class GroupPhotoCard extends StatelessWidget {
               photoPath: group.file,
               color: color,
               icon: type.icon,
-              typeLabel: GroupTypeLocalization.typeName(gloc, type),
-              favorite: group.pinned,
               meta: (fg) => GroupMetaLine(
                 group: group,
                 foreground: fg,
