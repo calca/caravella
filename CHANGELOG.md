@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Search: the hint no longer runs under the rounded end of the search field on narrow phones (Galaxy S25)
+- Group page with a photo, dark theme: the clock and icons of the status bar were white over a bright sky at the top of the photo, hard to read. They now follow how light the top of the photo is (measured with its tone, once, also for photos set before)
 
 ## [2.5.0] - 2026-11-23
 

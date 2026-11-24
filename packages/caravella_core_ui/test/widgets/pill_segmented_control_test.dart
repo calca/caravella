@@ -83,4 +83,33 @@ void main() {
     expect(mid, greaterThan(start));
     expect(mid, lessThan(end));
   });
+
+  // A route sliding in, or a parent mid-animation, can lay the control out
+  // with no width at all: that threw "BoxConstraints has a negative
+  // minimum width" (w=-8, the padding) in debug builds.
+  for (final expand in [true, false]) {
+    testWidgets('no room at all: nothing negative (expand: $expand)', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 0,
+                child: PillSegmentedControl(
+                  labels: const ['Expenses', 'Balances', 'Statistics'],
+                  selectedIndex: 0,
+                  onChanged: (_) {},
+                  expand: expand,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+    });
+  }
 }

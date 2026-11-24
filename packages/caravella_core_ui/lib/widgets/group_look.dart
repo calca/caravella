@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:caravella_core/caravella_core.dart';
@@ -93,7 +94,14 @@ class PhotoTone {
   /// Keyed by [_key]: the path and the file's modification time, so a photo
   /// replaced at the same path is measured again.
   static final Map<String, Color> _averages = {};
-  static final Map<String, Future<Color?>> _pending = {};
+
+  /// The average of the photo's top strip, where the status bar sits over
+  /// it (the group page at rest), by the same key.
+  static final Map<String, Color> _tops = {};
+  static final Map<String, Future<({Color lower, Color top})?>> _pending = {};
+
+  /// Stored next to the tones: the top strip's average of each photo.
+  static const String _topSuffix = '#top';
 
   /// Called with every measured photo (key → ARGB) after a new one, for the
   /// app to store; [seed] gives them back at the next launch, so cards
@@ -102,7 +110,12 @@ class PhotoTone {
 
   static void seed(Map<String, int> stored) {
     for (final e in stored.entries) {
-      _averages.putIfAbsent(e.key, () => Color(e.value));
+      if (e.key.endsWith(_topSuffix)) {
+        final key = e.key.substring(0, e.key.length - _topSuffix.length);
+        _tops.putIfAbsent(key, () => Color(e.value));
+      } else {
+        _averages.putIfAbsent(e.key, () => Color(e.value));
+      }
     }
   }
 
@@ -119,12 +132,15 @@ class PhotoTone {
   /// group uses any more.
   static Future<void> warmUp(Iterable<String> paths) async {
     final used = paths.toSet();
-    final before = _averages.length;
-    _averages.removeWhere((key, _) {
+    final before = _averages.length + _tops.length;
+    bool unused(String key, Color _) {
       final at = key.lastIndexOf('@');
       return !used.contains(at < 0 ? key : key.substring(0, at));
-    });
-    if (_averages.length != before) _notify();
+    }
+
+    _averages.removeWhere(unused);
+    _tops.removeWhere(unused);
+    if (_averages.length + _tops.length != before) _notify();
     for (final path in used) {
       await load(path, Brightness.dark);
     }
@@ -132,7 +148,16 @@ class PhotoTone {
 
   static void _notify() => onChanged?.call({
     for (final e in _averages.entries) e.key: e.value.toARGB32(),
+    for (final e in _tops.entries) '${e.key}$_topSuffix': e.value.toARGB32(),
   });
+
+  /// Whether the top of the photo at [path] is light, so the status bar over
+  /// it needs dark icons; null until [load] has measured it.
+  static bool? topIsLight(String path) {
+    final key = _key(path);
+    final top = key == null ? null : _tops[key];
+    return top == null ? null : top.computeLuminance() > 0.4;
+  }
 
   /// The tone for [average] (the photo's lower part) in [brightness].
   static PhotoTone fromAverage(Color average, Brightness brightness) {
@@ -164,25 +189,32 @@ class PhotoTone {
     return average == null ? null : fromAverage(average, brightness);
   }
 
-  /// Averages the lower 45% of the photo at [path] (decoded 24 px wide).
+  /// Averages the lower 45% of the photo at [path] (decoded 24 px wide),
+  /// and its top 15% ([topIsLight]). Photos measured before the top was
+  /// (2.5.0) are measured again once, for it.
   static Future<PhotoTone?> load(String path, Brightness brightness) async {
     final key = _key(path);
     if (key == null) return null;
     final known = _averages[key];
-    if (known != null) return fromAverage(known, brightness);
-    final average = await (_pending[key] ??= _average(path).whenComplete(() {
+    if (known != null && _tops[key] != null) {
+      return fromAverage(known, brightness);
+    }
+    final measured = await (_pending[key] ??= _average(path).whenComplete(() {
       // A block: returning the removed future would wait on itself.
       _pending.remove(key);
     }));
-    if (average == null) return null;
-    if (_averages[key] == null) {
-      _averages[key] = average;
+    if (measured == null) {
+      return known == null ? null : fromAverage(known, brightness);
+    }
+    if (_averages[key] == null || _tops[key] == null) {
+      _averages[key] ??= measured.lower;
+      _tops[key] = measured.top;
       _notify();
     }
-    return fromAverage(average, brightness);
+    return fromAverage(_averages[key]!, brightness);
   }
 
-  static Future<Color?> _average(String path) async {
+  static Future<({Color lower, Color top})?> _average(String path) async {
     try {
       final bytes = await File(path).readAsBytes();
       final codec = await ui.instantiateImageCodec(bytes, targetWidth: 24);
@@ -194,18 +226,24 @@ class PhotoTone {
       image.dispose();
       codec.dispose();
       if (data == null || width == 0 || height == 0) return null;
-      var r = 0, g = 0, b = 0, n = 0;
-      for (var y = (height * 0.55).floor(); y < height; y++) {
-        for (var x = 0; x < width; x++) {
-          final i = (y * width + x) * 4;
-          r += data.getUint8(i);
-          g += data.getUint8(i + 1);
-          b += data.getUint8(i + 2);
-          n++;
+      Color? mean(int from, int to) {
+        var r = 0, g = 0, b = 0, n = 0;
+        for (var y = from; y < to; y++) {
+          for (var x = 0; x < width; x++) {
+            final i = (y * width + x) * 4;
+            r += data.getUint8(i);
+            g += data.getUint8(i + 1);
+            b += data.getUint8(i + 2);
+            n++;
+          }
         }
+        return n == 0 ? null : Color.fromARGB(255, r ~/ n, g ~/ n, b ~/ n);
       }
-      if (n == 0) return null;
-      return Color.fromARGB(255, r ~/ n, g ~/ n, b ~/ n);
+
+      final lower = mean((height * 0.55).floor(), height);
+      final top = mean(0, math.max(1, (height * 0.15).ceil()));
+      if (lower == null || top == null) return null;
+      return (lower: lower, top: top);
     } catch (e) {
       LoggerService.warning('Photo tone not computed: $e', name: 'ui.card');
       return null;
