@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 
 import 'floating_nav_bar.dart';
@@ -110,7 +112,9 @@ class PillSegmentedControl extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final available = constraints.maxWidth - 2 * _padding;
+        // Never below zero: with no width at all (a route sliding in, a
+        // parent mid-animation) the segments got negative widths.
+        final available = math.max(0.0, constraints.maxWidth - 2 * _padding);
         final each = available / labels.length;
         // Natural widths when they fit; otherwise (large text) equal shares
         // of the width, so no segment gets clipped below its touch target.
