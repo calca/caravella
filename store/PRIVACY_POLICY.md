@@ -1,6 +1,6 @@
 # Privacy Policy for Caravella
 
-**Last updated: November 2026**
+**Last updated: 24 November 2026**
 
 ## Overview
 
@@ -29,10 +29,10 @@ Caravella is a group expense management application that helps you track shared 
 - **Backup and Export**: To enable data backup and export features
 
 ### Optional Device Sync
-Caravella can optionally share a group with other people's devices or keep it in sync across your own. This is off by default, enabled group by group, and works two ways:
+Caravella can optionally share a group with other people's devices or keep your own devices in sync. Both are off by default and work two ways:
 
 - **Direct device-to-device sync (Wi-Fi / Bluetooth)**: expense and group data for a synced group is exchanged directly between paired devices over your local Wi-Fi network or Bluetooth — never through a server we operate. Data is end-to-end encrypted, and each pairing only grants access to the group it was made for. Anyone you share a group with receives that group's data, including its expenses and participant names, on their device.
-- **Google Drive relay (optional, off by default even when device sync is used)**: if you choose to also enable cloud sync and sign in with your own Google account, a copy of your synced groups' data is stored in a hidden, app-private folder in *your own* Google Drive (not visible in your normal Drive file list, not accessible to other apps, and not accessible to us — we never receive or store this data on any server we operate). You can disable this and/or sign out at any time from Settings, and the app itself may not even offer this option — it depends on how the specific build you installed was compiled.
+- **Google Drive sync between your own devices (optional, off by default even when device sync is used)**: if you turn on "Sync devices" and sign in with your own Google account, each of your devices stores a full copy of all your groups — every group, including ones you deleted, so the deletion reaches your other devices — in a hidden, app-private folder in *your own* Google Drive, and reads the copies your other devices left there. It covers all your groups at once and needs no pairing, since every device signed in to that account is yours. Photos and attachments are not uploaded. The folder is not visible in your normal Drive file list, not accessible to other apps, and not accessible to us — we never receive or store this data on any server we operate. You can disable this and/or sign out at any time from Settings, and the app itself may not even offer this option — it depends on how the specific build you installed was compiled.
 
 ### Optional Google Drive Backup
 In builds that offer it, you can back up your data to your own Google Drive, on demand or weekly. Backups are stored in the same hidden, app-private folder of your Google account described above, and we never receive them. Google Drive backup is off until you sign in and turn it on.
@@ -41,6 +41,7 @@ In builds that offer it, you can back up your data to your own Google Drive, on 
 - **Optional Feature**: Location data is only collected when you explicitly choose to add location information to an expense
 - **User Control**: You can use the app without ever providing location access
 - **Purpose**: To help you remember where expenses occurred for better record-keeping
+- **Bluetooth sync**: on some Android versions, finding a nearby phone over Bluetooth requires the location permission, so Bluetooth sync asks for it. Caravella does not read or store your location for this; the permission only lets Android discover the other device
 
 ### Camera and Photos
 - **Optional Feature**: Camera access is only used when you choose to take photos for group backgrounds or expense attachments
@@ -59,7 +60,7 @@ In builds that offer it, you can back up your data to your own Google Drive, on 
 
 ### Local Storage
 - **Primary Storage**: All your data is stored locally on your device by default
-- **No Automatic Cloud Sync**: Nothing leaves your device unless you explicitly enable sync for a specific group — see "Optional Device Sync" above. There is no company-run backend server; direct device sync stays between paired devices, and the optional Google Drive relay and backup store data only in your own Google account
+- **No Automatic Cloud Sync**: Nothing leaves your device unless you explicitly turn on sync — device sync for a specific group, or Google Drive sync for all your groups on your own devices; see "Optional Device Sync" above. There is no company-run backend server; direct device sync stays between paired devices, and the optional Google Drive relay and backup store data only in your own Google account
 - **User Control**: You control all data backups, exports, and whether sync is enabled at all
 
 ### Security Measures
@@ -110,7 +111,7 @@ The OpenStreetMap and Unsplash requests are only made when you actively use the 
 - **Storage**: To save your expense groups, trips, and data locally
 
 ### Optional Permissions
-- **Location (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)**: Only when you choose to add location to expenses
+- **Location (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)**: When you choose to add location to expenses, and for Bluetooth sync, where Android requires it to discover nearby devices (your location is not read for this)
 - **Camera**: Only when you choose to take photos for backgrounds or attachments, or to scan a receipt
 - **Microphone (RECORD_AUDIO)**: Only while you dictate an expense
 - **Notifications (POST_NOTIFICATIONS)**: Only for the notifications you choose to turn on
