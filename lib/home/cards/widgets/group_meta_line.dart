@@ -27,6 +27,14 @@ class GroupMetaLine extends StatelessWidget {
   /// The heart of the favorite (off where the favorite is shown otherwise).
   final bool showFavorite;
 
+  /// The type's name after its icon, and the dates: off on the Groups
+  /// page's tiles, too narrow for them ("♥ ● ✈ 4 participants").
+  final bool showTypeName;
+  final bool showDates;
+
+  /// The line's text size (smaller on the Groups page's tiles).
+  final double fontSize;
+
   const GroupMetaLine({
     super.key,
     required this.group,
@@ -34,6 +42,9 @@ class GroupMetaLine extends StatelessWidget {
     this.showShared = true,
     this.showPeople = false,
     this.showFavorite = true,
+    this.showTypeName = true,
+    this.showDates = true,
+    this.fontSize = 13,
   });
 
   @override
@@ -41,9 +52,11 @@ class GroupMetaLine extends StatelessWidget {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
     final type = group.groupType ?? ExpenseGroupType.other;
-    final hasDates = group.startDate != null || group.endDate != null;
+    final hasDates =
+        showDates && (group.startDate != null || group.endDate != null);
+    final typeName = GroupTypeLocalization.typeName(gloc, type);
     final text = [
-      GroupTypeLocalization.typeName(gloc, type),
+      if (showTypeName) typeName,
       if (hasDates)
         formatDateRange(
           start: group.startDate,
@@ -55,7 +68,7 @@ class GroupMetaLine extends StatelessWidget {
     // Quiet by size, not by fading: the text color keeps its 4.5:1.
     final style = theme.textTheme.bodySmall?.copyWith(
       color: foreground,
-      fontSize: 13,
+      fontSize: fontSize,
     );
     final large = HomeLayoutConstants.isLargeText(context);
     return Row(
@@ -81,7 +94,13 @@ class GroupMetaLine extends StatelessWidget {
           ),
           const SizedBox(width: 6),
         ],
-        ExcludeSemantics(child: Icon(type.icon, size: 14, color: foreground)),
+        // Its name is in the text; without it the icon says it.
+        Icon(
+          type.icon,
+          size: 14,
+          color: foreground,
+          semanticLabel: showTypeName ? null : typeName,
+        ),
         const SizedBox(width: 6),
         Flexible(
           child: Text(

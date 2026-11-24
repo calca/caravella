@@ -48,6 +48,39 @@ void main() {
         expect(find.byIcon(Icons.favorite_rounded), findsNothing);
       });
 
+      testWidgets('a meta line replaces the chip and the subtitle', (
+        tester,
+      ) async {
+        Color? given;
+        await pump(
+          tester,
+          GroupCardFace(
+            title: 'Lisbon',
+            subtitle: 'Trip',
+            total: 0,
+            currency: '€',
+            icon: icon,
+            color: sky,
+            meta: (fg) {
+              given = fg;
+              return const Text('♥ 4 participants');
+            },
+          ),
+          width: 180,
+          height: GroupCardFace.tileHeight(TextScaler.noScaling),
+        );
+        expect(find.byType(TypeChip), findsNothing);
+        expect(find.text('Trip'), findsNothing);
+        expect(find.text('♥ 4 participants'), findsOneWidget);
+        // In the card's own text color, under the name.
+        expect(given, GroupLook.of(sky, Brightness.light).onTint);
+        expect(
+          tester.getTopLeft(find.text('♥ 4 participants')).dy,
+          greaterThan(tester.getBottomLeft(find.text('Lisbon')).dy),
+        );
+        expect(tester.takeException(), isNull);
+      });
+
       testWidgets('the favorite has a heart on its chip', (tester) async {
         await pump(
           tester,

@@ -14,7 +14,8 @@ import 'group_look.dart';
 /// The whole card is in the group's tint ([GroupLook]: neutral grey without
 /// a color) with the big faint type icon cropped by the corner, or under a
 /// photo the photo's own tone ([PhotoTone]) that it melts into; the type
-/// chip on top and the text at the bottom.
+/// chip on top (unless a [meta] line replaces it) and the text at the
+/// bottom.
 class GroupCardFace extends StatelessWidget {
   final String title;
 
@@ -36,6 +37,11 @@ class GroupCardFace extends StatelessWidget {
   /// A heart before the type icon on the chip.
   final bool favorite;
 
+  /// The line under the name in the card's text color, in place of both
+  /// the type chip and [subtitle] (the Groups page: favorite, sync circle,
+  /// type icon and people, as on Home's card).
+  final Widget Function(Color foreground)? meta;
+
   /// The wide card (wizard) instead of a grid tile.
   final bool wide;
 
@@ -53,6 +59,7 @@ class GroupCardFace extends StatelessWidget {
     this.color,
     this.typeLabel,
     this.favorite = false,
+    this.meta,
     this.wide = false,
     this.compact = false,
   });
@@ -110,7 +117,9 @@ class GroupCardFace extends StatelessWidget {
       style: (wide ? theme.textTheme.titleLarge : theme.textTheme.titleMedium)
           ?.copyWith(color: fg, fontWeight: FontWeight.w700, height: 1.15),
     );
-    final sub = line == null
+    final Widget? sub = meta != null
+        ? Padding(padding: const EdgeInsets.only(top: 2), child: meta!(fg))
+        : line == null
         ? null
         : Text(
             line,
@@ -175,7 +184,11 @@ class GroupCardFace extends StatelessWidget {
             padding: EdgeInsets.all(padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [_chip(context), const Spacer(), _text(context, fg)],
+              children: [
+                if (meta == null) _chip(context),
+                const Spacer(),
+                _text(context, fg),
+              ],
             ),
           ),
         ],
