@@ -1,3 +1,11 @@
+## 2.5.1 (24.11.2026)
+
+- **Mudanças**: Os cartões dos grupos e a página do grupo estão mais limpos: uma linha discreta sob o título com favorito, compartilhamento e tipo, e a barra superior ganha a cor do grupo ao rolar
+- **Correções**: A sincronização por Wi-Fi não trava mais quando o outro celular para de responder, e "Atualizar agora" não interrompe mais uma troca em andamento
+- **Correções**: O histórico de sincronização mostra cada troca uma só vez, com o que foi realmente enviado e recebido
+- **Correções**: O pareamento só funciona com o convite do grupo aberto, e se o outro celular esqueceu o seu, ele pede para parear de novo
+- **Correções**: A barra de status fica legível sobre uma foto clara do grupo no tema escuro
+
 ## 2.5.0 (23.11.2026)
 
 - **Novidade**: Orçamento do grupo: no total ou por mês, semana ou dia. O painel do orçamento mostra quanto resta, quanto pode gastar por dia e quando acabaria neste ritmo

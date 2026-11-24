@@ -1,3 +1,11 @@
+## 2.5.1 (24.11.2026)
+
+- **Changed**: Group cards and the group page are calmer: one quiet line under the title with favorite, sharing state and type, and the top bar takes the group's color as you scroll
+- **Fixed**: Sync over Wi-Fi no longer stalls when the other phone stops answering, and "Update now" no longer cuts off an exchange in progress
+- **Fixed**: Sync history shows each exchange once, with what was really sent and received
+- **Fixed**: Pairing works only while the group's invitation is open, and a phone that forgot yours asks you to pair again
+- **Fixed**: The status bar stays readable over a bright group photo in dark theme
+
 ## 2.5.0 (23.11.2026)
 
 - **New**: Group budget: in total or per month, week or day. The budget sheet shows what's left, how much a day keeps you within it and when it would run out at this pace
