@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Sync history: each exchange shows once, with what was really sent and received. An exchange over Wi-Fi was listed two or three times, one of them with a made-up "6 received", "sent" counted the groups that were skipped, and Bluetooth exchanges were listed as Wi-Fi
 - Sync over Wi-Fi: a phone that stopped answering halfway (its app frozen in the background) could stop the automatic exchanges after a change until Caravella was restarted. An exchange now gives up after 30 seconds, like a phone out of reach
+- Sync over Wi-Fi: coming back to the app often made two identical exchanges at once with the same phone (it was found twice). One at a time now
 - Sync over Wi-Fi: "Update now" no longer restarts Wi-Fi sync, which cut off an exchange another phone was making at that moment. It exchanges with the phones already found, or looks for them again
 - Sync: when the other phone has forgotten this one, the problem now says to pair again instead of "try again later"
 - Shared groups: the circle could go hollow ("not synced for a day") while the phones kept syncing, when the latest exchanges had nothing new for that group; after a restart it was filled. It now follows the latest exchange either way

@@ -476,6 +476,23 @@ void main() {
       expect(exchanges, 1);
     });
 
+    test('the same phone found twice at once: one exchange', () async {
+      await pairedWithServedB();
+      await addExpenseOnA();
+
+      var exchanges = 0;
+      final sub = lan.events.listen((e) {
+        if (e is SyncStarted) exchanges++;
+      });
+      await Future.wait([lan.syncKnownPeers(), lan.syncKnownPeers()]);
+      await later();
+      await sub.cancel();
+
+      expect(exchanges, 1);
+      final names = (await phoneB.group('beach'))!.expenses.map((e) => e.name);
+      expect(names, contains('Ice cream'));
+    });
+
     test('with Wi-Fi sync off, nothing is exchanged', () async {
       await pairedWithServedB();
       await lan.setEnabled(false);
