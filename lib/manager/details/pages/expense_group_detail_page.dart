@@ -608,10 +608,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     final (barTint, barForeground) = photo == null
         ? GroupHeaderBand.lookOf(trip, s)
         : _photoTone(photo, theme.brightness);
-    // Over a photo at rest the status bar sits on the photo itself: the
-    // theme decides, as before. Elsewhere it follows the band's text color.
+    // Over a photo at rest the status bar sits on the photo's top: its icons
+    // follow how light that strip is (white icons over a bright sky were
+    // lost in the dark theme); the theme decides until it's measured.
+    // Elsewhere they follow the band's text color.
+    final topLight = photo == null ? null : PhotoTone.topIsLight(photo);
     final bool? forceStatusBarLight = photo != null && !_barFilled
-        ? null
+        ? (topLight == null ? null : !topLight)
         : barForeground.computeLuminance() > 0.5;
 
     final sections = [gloc.expenses, gloc.balances, gloc.statistics];
