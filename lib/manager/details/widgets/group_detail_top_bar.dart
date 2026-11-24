@@ -14,18 +14,27 @@ class GroupMenuItem {
 }
 
 /// The group page's top bar, over the header band: round back, search and ⋯
-/// buttons at rest; once content scrolls under it ([opaque]) it takes the
-/// page color and shows [title] when [titleVisible].
+/// buttons at rest. As content scrolls under it the bar fills with the
+/// band's own [tint] ([fill], 0 to 1), so bar and band stay one color with
+/// no grey strip between them, and shows [title] when [titleVisible].
 class GroupDetailTopBar extends StatelessWidget {
   static const double height = 64.0;
 
   final String title;
-  final bool opaque;
+
+  /// How much of [tint] the bar has: 0 at rest (see-through), 1 once the
+  /// band has scrolled under it.
+  final double fill;
   final bool titleVisible;
 
-  /// Title color while [opaque] is false (the group color's contrast).
-  final Color bandForeground;
-  final Color pageColor;
+  /// The band's color (the group's tint, or its photo's tone) and the text
+  /// color on it: icons and title use [foreground] at every [fill].
+  final Color tint;
+  final Color foreground;
+
+  /// Under a photo the round buttons sit on the photo itself, not on its
+  /// tone: they get a stronger veil of the tone so the icons stay legible.
+  final bool overPhoto;
 
   /// Null hides the search button (a group with no expenses).
   final VoidCallback? onSearch;
@@ -39,10 +48,11 @@ class GroupDetailTopBar extends StatelessWidget {
   const GroupDetailTopBar({
     super.key,
     required this.title,
-    required this.opaque,
+    required this.fill,
     required this.titleVisible,
-    required this.bandForeground,
-    required this.pageColor,
+    required this.tint,
+    required this.foreground,
+    this.overPhoto = false,
     required this.onSearch,
     required this.menuItems,
     this.syncGroup,
@@ -52,10 +62,14 @@ class GroupDetailTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final s = theme.colorScheme;
     final gloc = gen.AppLocalizations.of(context);
     final topInset = MediaQuery.paddingOf(context).top;
-    final buttonBackground = opaque ? Colors.transparent : s.raisedSurface;
+    final f = fill.clamp(0.0, 1.0);
+    // Faint circles in the band's own colors, not white ones: white circles
+    // shouted over a dark color or photo. They fade out as the bar fills.
+    final buttonBackground = overPhoto
+        ? tint.withValues(alpha: 0.6 * (1 - f))
+        : foreground.withValues(alpha: 0.16 * (1 - f));
 
     Widget roundButton({
       required IconData icon,
@@ -66,15 +80,14 @@ class GroupDetailTopBar extends StatelessWidget {
       shape: const CircleBorder(),
       child: IconButton(
         icon: Icon(icon),
-        color: s.onSurface,
+        color: foreground,
         tooltip: tooltip,
         onPressed: onPressed,
       ),
     );
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      color: opaque ? pageColor : pageColor.withValues(alpha: 0),
+    return Container(
+      color: tint.withValues(alpha: f),
       padding: EdgeInsets.fromLTRB(16, topInset + 4, 16, 4),
       child: SizedBox(
         height: height - 8,
@@ -95,7 +108,7 @@ class GroupDetailTopBar extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    color: opaque ? s.onSurface : bandForeground,
+                    color: foreground,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -106,7 +119,7 @@ class GroupDetailTopBar extends StatelessWidget {
                 group: group,
                 round: true,
                 background: buttonBackground,
-                foreground: s.onSurface,
+                foreground: foreground,
                 onTap: onSync,
               ),
               const SizedBox(width: 8),
@@ -119,7 +132,11 @@ class GroupDetailTopBar extends StatelessWidget {
               ),
               const SizedBox(width: 8),
             ],
-            _GroupMenuButton(background: buttonBackground, items: menuItems),
+            _GroupMenuButton(
+              background: buttonBackground,
+              foreground: foreground,
+              items: menuItems,
+            ),
           ],
         ),
       ),
@@ -131,13 +148,19 @@ class GroupDetailTopBar extends StatelessWidget {
 /// frequent actions, so the top bar keeps only back and search.
 class _GroupMenuButton extends StatelessWidget {
   final Color background;
+  final Color foreground;
   final List<GroupMenuItem> items;
 
-  const _GroupMenuButton({required this.background, required this.items});
+  const _GroupMenuButton({
+    required this.background,
+    required this.foreground,
+    required this.items,
+  });
 
   @override
   Widget build(BuildContext context) => RoundMenuButton(
     background: background,
+    foreground: foreground,
     tooltip: gen.AppLocalizations.of(context).more_options,
     items: [
       for (final item in items)

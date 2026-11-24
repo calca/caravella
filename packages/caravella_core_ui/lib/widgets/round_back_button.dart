@@ -76,17 +76,20 @@ class RoundMenuItem {
 
 /// A round ⋯ matching [RoundBackButton], opening a menu with the less
 /// frequent actions of a page (the group page, an expense), whose end lines
-/// up with the button. [background] defaults to the raised surface.
+/// up with the button. [background] defaults to the raised surface,
+/// [foreground] (the ⋯ icon) to the theme's `onSurface`.
 class RoundMenuButton extends StatelessWidget {
   final List<RoundMenuItem> items;
   final String tooltip;
   final Color? background;
+  final Color? foreground;
 
   const RoundMenuButton({
     super.key,
     required this.items,
     required this.tooltip,
     this.background,
+    this.foreground,
   });
 
   /// Items at least this wide give the menu a known width, so its end lines
@@ -127,7 +130,7 @@ class RoundMenuButton extends StatelessWidget {
         shape: const CircleBorder(),
         child: IconButton(
           icon: const Icon(Icons.more_horiz_rounded),
-          color: s.onSurface,
+          color: foreground ?? s.onSurface,
           tooltip: tooltip,
           onPressed: () =>
               controller.isOpen ? controller.close() : controller.open(),

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Group page: the top bar no longer turns grey the moment you scroll. It fills with the group's own tint (or its photo's tone) as the header slides under it, so bar and header stay one color, and the group name appears once the title has gone. The round buttons (back, sync, search, ⋯) are no longer white circles: they take the header's text color, faint, so they don't shout over a dark color or photo
+
 ## [2.5.0] - 2026-11-23
 
 ### Added

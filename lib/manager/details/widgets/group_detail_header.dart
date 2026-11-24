@@ -33,12 +33,11 @@ class GroupHeaderBand extends StatelessWidget {
 
   static String? photoOf(ExpenseGroup group) => GroupLook.photoOf(group);
 
-  /// Text color for the top bar's title over the band, before it turns
-  /// opaque.
-  static Color foregroundOf(ExpenseGroup group, ColorScheme s) =>
-      photoOf(group) != null
-      ? s.onSurface
-      : GroupLook.of(colorOf(group, s), s.brightness).onTint;
+  /// The band's tint and its text color, for a group without a photo.
+  static (Color, Color) lookOf(ExpenseGroup group, ColorScheme s) {
+    final look = GroupLook.of(colorOf(group, s), s.brightness);
+    return (look.tint, look.onTint);
+  }
 
   /// Under the top bar: where the band's content and the big icon start.
   double get _barBottom => topInset + GroupDetailTopBar.height;

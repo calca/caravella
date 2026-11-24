@@ -75,8 +75,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
   Timer? _fabIdleTimer; // shows the FAB again after a pause
   bool _collapsedTitleVisible = false; // group name in the top bar
 
-  /// The top bar turns opaque as soon as content scrolls under it.
-  bool _barOpaque = false;
+  /// How much of the band's tint the top bar has (0 at rest, 1 once
+  /// scrolled [_barFillDistance]): only the bar listens to it.
+  final ValueNotifier<double> _barFill = ValueNotifier(0);
+
+  /// The bar is mostly filled: the status bar icons follow its color.
+  bool _barFilled = false;
+
+  /// Scroll over which the top bar fills with the band's tint.
+  static const double _barFillDistance = 96;
+
+  /// The tone of the group's photo, once [PhotoTone.load] has run for it.
+  String? _toneLoading;
   String? _newlyAddedExpenseId; // just added, to highlight
 
   /// Selected view: 0 expenses, 1 balances, 2 statistics.
@@ -118,6 +128,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     _groupNotifier = null;
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _barFill.dispose();
     _sectionFade.dispose();
     _fabIdleTimer?.cancel();
     super.dispose();
@@ -466,14 +477,31 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     // The group name shows in the top bar once the title has scrolled away
     final shouldShow =
         _scrollController.offset > _collapsedTitleThreshold(context);
-    final opaque = _scrollController.offset > 2;
-    if ((shouldShow != _collapsedTitleVisible || opaque != _barOpaque) &&
+    final fill = (_scrollController.offset / _barFillDistance).clamp(0.0, 1.0);
+    _barFill.value = fill;
+    final filled = fill >= 0.5;
+    if ((shouldShow != _collapsedTitleVisible || filled != _barFilled) &&
         mounted) {
       setState(() {
         _collapsedTitleVisible = shouldShow;
-        _barOpaque = opaque;
+        _barFilled = filled;
       });
     }
+  }
+
+  /// The photo's tone and its text color, loading it the first time.
+  (Color, Color) _photoTone(String path, Brightness brightness) {
+    final tone = PhotoTone.cached(path, brightness);
+    if (tone == null && _toneLoading != path) {
+      _toneLoading = path;
+      unawaited(
+        PhotoTone.load(path, brightness).then((_) {
+          if (mounted) setState(() {});
+        }),
+      );
+    }
+    final t = tone ?? PhotoTone.fallbackDark;
+    return (t.tone, t.onTone);
   }
 
   double _calculateBottomPadding() {
@@ -536,16 +564,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
     final pageColor = s.surfaceContainer;
     final topInset = MediaQuery.paddingOf(context).top;
 
-    // Over a group color the top bar and title use its contrasting color;
-    // once the bar turns opaque (scrolled) it follows the theme again.
-    final bandColor = GroupHeaderBand.colorOf(trip, s);
-    final bandForeground = GroupHeaderBand.foregroundOf(trip, s);
-    final hasPhoto = GroupHeaderBand.photoOf(trip) != null;
-    final bool? forceStatusBarLight = _barOpaque || hasPhoto
+    // The top bar is in the band's colors: the group's tint, or its photo's
+    // tone (the dark fallback until it's known, as the band itself).
+    final photo = GroupHeaderBand.photoOf(trip);
+    final (barTint, barForeground) = photo == null
+        ? GroupHeaderBand.lookOf(trip, s)
+        : _photoTone(photo, theme.brightness);
+    // Over a photo at rest the status bar sits on the photo itself: the
+    // theme decides, as before. Elsewhere it follows the band's text color.
+    final bool? forceStatusBarLight = photo != null && !_barFilled
         ? null
-        : bandColor != null
-        ? !ExpenseGroupColorPalette.isLightColor(bandColor)
-        : null;
+        : barForeground.computeLuminance() > 0.5;
 
     final sections = [gloc.expenses, gloc.balances, gloc.statistics];
     // A group with no expenses has nothing but its empty state to show.
@@ -652,40 +681,44 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage>
             ),
             // Top bar over the band: round buttons at rest, an opaque bar
             // with the group name once the title has scrolled away.
-            GroupDetailTopBar(
-              title: trip.title,
-              opaque: _barOpaque,
-              titleVisible: _collapsedTitleVisible,
-              bandForeground: bandForeground,
-              pageColor: pageColor,
-              onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
-              syncGroup: trip.syncEnabled ? trip : null,
-              onSync: _showSyncPage,
-              menuItems: [
-                if (!trip.archived)
+            ValueListenableBuilder<double>(
+              valueListenable: _barFill,
+              builder: (context, fill, _) => GroupDetailTopBar(
+                title: trip.title,
+                fill: fill,
+                titleVisible: _collapsedTitleVisible,
+                tint: barTint,
+                foreground: barForeground,
+                overPhoto: photo != null,
+                onSearch: trip.expenses.isNotEmpty ? _openSearchPage : null,
+                syncGroup: trip.syncEnabled ? trip : null,
+                onSync: _showSyncPage,
+                menuItems: [
+                  if (!trip.archived)
+                    GroupMenuItem(
+                      trip.pinned
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      trip.pinned ? gloc.unpin : gloc.pin,
+                      _handlePinToggle,
+                    ),
+                  // The map opens from its card in Statistics. A shared group
+                  // has its sync button in the bar instead.
+                  if (!trip.syncEnabled)
+                    GroupMenuItem(
+                      Icons.sync_rounded,
+                      gloc.sync_title,
+                      _showSyncPage,
+                    ),
+                  // Share & export lives in the group's settings
+                  // (rarely used, kept out of this menu).
                   GroupMenuItem(
-                    trip.pinned
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    trip.pinned ? gloc.unpin : gloc.pin,
-                    _handlePinToggle,
+                    Icons.settings_outlined,
+                    gloc.settings,
+                    _showSettingsPage,
                   ),
-                // The map opens from its card in Statistics. A shared group
-                // has its sync button in the bar instead.
-                if (!trip.syncEnabled)
-                  GroupMenuItem(
-                    Icons.sync_rounded,
-                    gloc.sync_title,
-                    _showSyncPage,
-                  ),
-                // Share & export lives in the group's settings
-                // (rarely used, kept out of this menu).
-                GroupMenuItem(
-                  Icons.settings_outlined,
-                  gloc.settings,
-                  _showSettingsPage,
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
