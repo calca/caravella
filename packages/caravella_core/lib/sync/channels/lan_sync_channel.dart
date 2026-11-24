@@ -270,7 +270,24 @@ class LanSyncChannel {
         )
         .addHandler(router.call);
 
-    _httpServer = await shelf_io.serve(handler, InternetAddress.anyIPv4, _port);
+    try {
+      _httpServer = await shelf_io.serve(
+        handler,
+        InternetAddress.anyIPv4,
+        _port,
+      );
+    } on SocketException catch (e) {
+      // The port is taken (another Caravella flavor on the same phone, or
+      // this app's previous process not gone yet): any free one will do,
+      // since the QR code and the mDNS announcement carry the port. Before
+      // 2.5.1 Wi-Fi sync stayed off and the QR code named a closed port.
+      if (_port == 0) rethrow;
+      LoggerService.warning(
+        'Port $_port unavailable ($e) — using a free one',
+        name: _tag,
+      );
+      _httpServer = await shelf_io.serve(handler, InternetAddress.anyIPv4, 0);
+    }
     LoggerService.info(
       'HTTP server listening on ${_httpServer!.address.address}:${_httpServer!.port}',
       name: _tag,
