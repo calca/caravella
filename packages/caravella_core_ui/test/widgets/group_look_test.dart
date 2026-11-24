@@ -78,11 +78,99 @@ void main() {
     });
   });
 
+  Future<File> photo(Directory dir, String name, Color top, Color rest) async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    canvas.drawRect(const Rect.fromLTWH(0, 0, 40, 60), Paint()..color = rest);
+    canvas.drawRect(const Rect.fromLTWH(0, 0, 40, 9), Paint()..color = top);
+    final image = await recorder.endRecording().toImage(40, 60);
+    final png = await image.toByteData(format: ui.ImageByteFormat.png);
+    final file = File('${dir.path}/$name.png');
+    await file.writeAsBytes(png!.buffer.asUint8List());
+    return file;
+  }
+
+  testWidgets('the top of a photo is measured too: a bright sky over a dark '
+      'lake wants dark status bar icons', (tester) async {
+    await tester.runAsync(() async {
+      Map<String, int>? stored;
+      PhotoTone.onChanged = (all) => stored = all;
+      addTearDown(() => PhotoTone.onChanged = null);
+      final dir = await Directory.systemTemp.createTemp('top');
+      final sky = await photo(
+        dir,
+        'sky',
+        const Color(0xFFDDE6F2),
+        const Color(0xFF1E2A33),
+      );
+      final night = await photo(
+        dir,
+        'night',
+        const Color(0xFF101418),
+        const Color(0xFF1E2A33),
+      );
+      expect(PhotoTone.topIsLight(sky.path), isNull);
+      final tone = await PhotoTone.load(
+        sky.path,
+        Brightness.dark,
+      ).timeout(const Duration(seconds: 10));
+      // The band's tone still comes from the lower part: dark.
+      expect(tone!.onTone, Colors.white);
+      expect(PhotoTone.topIsLight(sky.path), isTrue);
+      await PhotoTone.load(night.path, Brightness.dark);
+      expect(PhotoTone.topIsLight(night.path), isFalse);
+      // Stored with the tones, for the next launch.
+      for (final f in [sky, night]) {
+        expect(
+          stored!.keys,
+          contains(
+            '${f.path}@${f.lastModifiedSync().millisecondsSinceEpoch}#top',
+          ),
+        );
+      }
+      await dir.delete(recursive: true);
+    });
+  });
+
+  testWidgets('a photo measured before 2.5.1 (no top yet) is measured again '
+      'once', (tester) async {
+    await tester.runAsync(() async {
+      final dir = await Directory.systemTemp.createTemp('old');
+      final file = await photo(
+        dir,
+        'old',
+        const Color(0xFFF0F0F0),
+        const Color(0xFF202020),
+      );
+      final key =
+          '${file.path}@${file.lastModifiedSync().millisecondsSinceEpoch}';
+      PhotoTone.seed({key: 0xFF202020});
+      expect(PhotoTone.topIsLight(file.path), isNull);
+      await PhotoTone.load(file.path, Brightness.dark);
+      expect(PhotoTone.topIsLight(file.path), isTrue);
+      await dir.delete(recursive: true);
+    });
+  });
+
+  test('the top strips are seeded back with the tones', () async {
+    final dir = await Directory.systemTemp.createTemp('seed');
+    final file = File('${dir.path}/seeded.png')..writeAsBytesSync([0]);
+    final key =
+        '${file.path}@${file.lastModifiedSync().millisecondsSinceEpoch}';
+    PhotoTone.seed({key: 0xFF202020, '$key#top': 0xFFF0F0F0});
+    expect(PhotoTone.topIsLight(file.path), isTrue);
+    expect(PhotoTone.cached(file.path, Brightness.dark), isNotNull);
+    await dir.delete(recursive: true);
+  });
+
   test('startup forgets the tones of photos no group uses', () async {
     Map<String, int>? stored;
     PhotoTone.onChanged = (all) => stored = all;
     addTearDown(() => PhotoTone.onChanged = null);
-    PhotoTone.seed({'/gone/old.jpg@1': 0xFF102030});
+    PhotoTone.seed({
+      '/gone/old.jpg@1': 0xFF102030,
+      '/gone/old.jpg@1#top': 0xFFF0F0F0,
+    });
     await PhotoTone.warmUp(const []);
     expect(stored, isEmpty);
   });
