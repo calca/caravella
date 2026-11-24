@@ -657,4 +657,24 @@ void main() {
     );
     expect(status.health, GroupSyncHealth.ok);
   });
+
+  test('a port already taken: Wi-Fi sync starts on a free one', () async {
+    final taken = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
+    final other = LanSyncChannel(port: taken.port, mdns: false);
+    try {
+      await other.start(onDelta: (_, _, {sent}) async => {});
+      expect(other.isActive, isTrue);
+      expect(other.port, isNot(taken.port));
+      final client = HttpClient();
+      final request = await client.getUrl(
+        Uri.parse('http://127.0.0.1:${other.port}/sync/ping'),
+      );
+      expect((await request.close()).statusCode, 200);
+      client.close();
+    } finally {
+      await other.stop();
+      other.dispose();
+      await taken.close();
+    }
+  });
 }
